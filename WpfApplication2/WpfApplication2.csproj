@@ -35,6 +35,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Irony">
+      <HintPath>irony\Irony.dll</HintPath>
+    </Reference>
+    <Reference Include="Irony.Interpreter">
+      <HintPath>irony\Irony.Interpreter.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\Json90r1\Bin\Net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -74,6 +83,36 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="plotterView\PlotterView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="plotterView\PlotterView.Designer.cs">
+      <DependentUpon>PlotterView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="plotter\CadFigure.cs" />
+    <Compile Include="plotter\CadFigureAssembler.cs" />
+    <Compile Include="plotter\CadLayer.cs" />
+    <Compile Include="plotter\CadMouse.cs" />
+    <Compile Include="plotter\CadObjectDB.cs" />
+    <Compile Include="plotter\CadOpe.cs" />
+    <Compile Include="plotter\CadPoint.cs" />
+    <Compile Include="plotter\CadSelection.cs" />
+    <Compile Include="plotter\CadUtil.cs" />
+    <Compile Include="plotter\DiffData.cs" />
+    <Compile Include="plotter\DrawContext.cs" />
+    <Compile Include="plotter\Drawer.cs" />
+    <Compile Include="plotter\DrawSettings.cs" />
+    <Compile Include="plotter\HistoryManager.cs" />
+    <Compile Include="plotter\Log.cs" />
+    <Compile Include="plotter\MyScript.cs" />
+    <Compile Include="plotter\PlotterCommon.cs" />
+    <Compile Include="plotter\PlotterController.cs" />
+    <Compile Include="plotter\PlotterController_Debug.cs" />
+    <Compile Include="plotter\PlotterController_EditFigure.cs" />
+    <Compile Include="plotter\PlotterController_Input.cs" />
+    <Compile Include="plotter\PlotterController_Script.cs" />
+    <Compile Include="plotter\PlotterController_ViewControl.cs" />
+    <Compile Include="plotter\Searcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -100,6 +139,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
