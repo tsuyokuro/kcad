@@ -117,6 +117,11 @@ namespace Plotter
 
                     firstSizeChange = false;
                 }
+
+                DrawContext dc = startDraw();
+                Controller.clear(dc);
+                Controller.draw(dc);
+                endDraw(dc);
             }
         }
 
@@ -127,7 +132,7 @@ namespace Plotter
             return mDrawContext;
         }
 
-        private void endDraw(DrawContext dc, bool log = true)
+        private void endDraw(DrawContext dc)
         {
             mDrawContext.disposeGraphics();
             Image = mImage;
@@ -139,7 +144,7 @@ namespace Plotter
 
             mController.Mouse.pointerMoved(g, e.X, e.Y);
 
-            endDraw(g, false);
+            endDraw(g);
         }
 
         private void mouseDown(Object sender, MouseEventArgs e)

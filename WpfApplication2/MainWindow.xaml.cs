@@ -25,13 +25,13 @@ namespace WpfApplication2
         {
             InitializeComponent();
 
-            pictureBox1.MouseMove += pic1_MouseMove;
-            pictureBox1.BackColor = System.Drawing.Color.AliceBlue;
+            plotterView1.MouseMove += pic1_MouseMove;
+            plotterView1.BackColor = System.Drawing.Color.AliceBlue;
         }
 
         private void pic1_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            Graphics g = pictureBox1.CreateGraphics();
+            Graphics g = plotterView1.CreateGraphics();
         }
 
 

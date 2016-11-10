@@ -5,15 +5,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApplication2"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
-        xmlns:self="clr-namespace:Plotter"
+        xmlns:pl="clr-namespace:Plotter"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525"
+        Title="MainWindow" Height="410.667" Width="589.667"
         PreviewKeyDown="preview_key_down">
     <Grid>
-        <WindowsFormsHost Margin="80,0,0,39">
-            <self:PlotterView x:Name="pictureBox1"/>
-        </WindowsFormsHost>
-        <Frame x:Name="frame" Content="Frame" HorizontalAlignment="Left" Height="319" VerticalAlignment="Top" Width="75"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="auto" MinWidth="2"/>
+            <ColumnDefinition Width="95*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}"/>
+
+
+        <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Center" Background="#FF9B9B9B"/>
+
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="247*"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="67*"/>
+            </Grid.RowDefinitions>
+
+            <WindowsFormsHost Grid.Row="0">
+                <pl:PlotterView x:Name="plotterView1"/>
+            </WindowsFormsHost>
+
+
+            <GridSplitter Grid.Row="1"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center"
+              Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" 
+              ShowsPreview="False"
+              Height="3"
+            />
+
+
+            <StackPanel Grid.Row="2" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" ></StackPanel>
+        </Grid>
     </Grid>
 </Window>
