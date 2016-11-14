@@ -36,12 +36,6 @@ namespace Plotter
 
         ContextMenuEx mCurrentContextMenu = null;
 
-        public PlotterController.Interaction Interact = 
-            new PlotterController.Interaction();
-
-        public PlotterController.Interaction InteractCtrl =
-            new PlotterController.Interaction();
-
         public PlotterView()
         {
             InitializeComponent();
@@ -88,14 +82,6 @@ namespace Plotter
 
             mController.RequestContextMenu += ShowContextMenu;
 
-            InteractCtrl.print = MessageOut;
-
-            mController.Interact = InteractCtrl;
-        }
-
-        private void MessageOut(String s)
-        {
-            Interact.print(s);
         }
 
         private void onSizeChanged(object sender, System.EventArgs e)
@@ -121,30 +107,29 @@ namespace Plotter
                 DrawContext dc = startDraw();
                 Controller.clear(dc);
                 Controller.draw(dc);
-                endDraw(dc);
+                endDraw();
             }
         }
 
-        private DrawContext startDraw(bool log = true)
+        public DrawContext startDraw()
         {
-            Graphics g = Graphics.FromImage(mImage);
-            mDrawContext.graphics = g;
+            mDrawContext.startDraw(mImage);
             return mDrawContext;
         }
 
-        private void endDraw(DrawContext dc)
+        public void endDraw()
         {
-            mDrawContext.disposeGraphics();
+            mDrawContext.endDraw();
             Image = mImage;
         }
 
         private void mouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            DrawContext g = startDraw(false);
+            DrawContext g = startDraw();
 
             mController.Mouse.pointerMoved(g, e.X, e.Y);
 
-            endDraw(g);
+            endDraw();
         }
 
         private void mouseDown(Object sender, MouseEventArgs e)
@@ -162,7 +147,7 @@ namespace Plotter
 
             mController.Mouse.down(dc, e.Button, e.X, e.Y);
 
-            endDraw(dc);
+            endDraw();
         }
 
         private void mouseUp(Object sender, MouseEventArgs e)
@@ -171,7 +156,7 @@ namespace Plotter
 
             mController.Mouse.up(g, e.Button, e.X, e.Y);
 
-            endDraw(g);
+            endDraw();
         }
 
         private void mouseWheel(object sender, MouseEventArgs e)
@@ -180,7 +165,7 @@ namespace Plotter
 
             mController.Mouse.wheel(g, e.X, e.Y, e.Delta);
 
-            endDraw(g);
+            endDraw();
         }
 
         public void ShowContextMenu(PlotterController sender, PlotterController.StateInfo state, int x, int y)
@@ -212,19 +197,22 @@ namespace Plotter
             }
         }
 
+        /*
         public void startCreateFigure(CadFigure.Types type)
         {
             mController.startCreateFigure(type);
         }
+        */
 
+        /*
         public void endCreateFigure()
         {
+            mController.endCreateFigure();
             DrawContext dc = startDraw();
-
-            mController.endCreateFigure(dc);
-
-            endDraw(dc);
+            mController.draw(dc);
+            endDraw();
         }
+        */
 
         public void print(Graphics g)
         {
@@ -251,70 +239,70 @@ namespace Plotter
         {
             DrawContext dc = startDraw();
             mController.undo(dc);
-            endDraw(dc);
+            endDraw();
         }
 
         public void redo()
         {
             DrawContext dc = startDraw();
             mController.redo(dc);
-            endDraw(dc);
+            endDraw();
         }
 
         public void remove()
         {
             DrawContext dc = startDraw();
             mController.remove(dc);
-            endDraw(dc);
+            endDraw();
         }
 
         public void separateFigure()
         {
             DrawContext dc = startDraw();
             mController.separateFigures(dc);
-            endDraw(dc);
+            endDraw();
         }
 
         public void bondFigure()
         {
             DrawContext g = startDraw();
             mController.bondFigures(g);
-            endDraw(g);
+            endDraw();
         }
 
         public void toBezier()
         {
             DrawContext dc = startDraw();
             mController.toBezier(dc);
-            endDraw(dc);
+            endDraw();
         }
 
         public void cutSegment()
         {
             DrawContext dc = startDraw();
             mController.cutSegment(dc);
-            endDraw(dc);
+            endDraw();
         }
 
         public void addCenterPoint()
         {
             DrawContext dc = startDraw();
             mController.addCenterPoint(dc);
-            endDraw(dc);
+            endDraw();
         }
 
         public void Copy()
         {
             DrawContext dc = startDraw();
             mController.Copy(dc);
-            endDraw(dc);
+            endDraw();
         }
 
         public void Paste()
         {
             DrawContext dc = startDraw();
             mController.Paste(dc);
-            endDraw(dc);
+            endDraw();
         }
 
         public void onKeyUp(object sender, KeyEventArgs e)
@@ -371,17 +359,18 @@ namespace Plotter
             {
                 DrawContext g = startDraw();
                 mController.closeFigure(g);
-                endDraw(g);
+                endDraw();
             }
             else if (sender == mMnItemEndPolyLines || sender == mMnItemQuitRect)
             {
                 DrawContext g = startDraw();
                 mController.endCreateFigureState(g);
-                endDraw(g);
+                endDraw();
 
             }
         }
 
+        /*
         public void command(String s)
         {
             mController.command(s);
@@ -390,35 +379,20 @@ namespace Plotter
 
             mController.draw(g);
 
-            endDraw(g);
+            endDraw();
         }
+        */
 
-
+        /*
         public void debugCommand(string s)
         {
             DrawContext g = startDraw();
 
             mController.debugCommand(g, s);
 
-            endDraw(g);
+            endDraw();
         }
+        */
 
-        public void SaveFile(String fname)
-        {
-            mController.SaveToJsonFile(fname);
-        }
-
-        public void LoadFile(String fname)
-        {
-            mController.LoadFromJsonFile(fname);
-
-            DrawContext g = startDraw();
-
-            mController.clear(g);
-
-            mController.draw(g);
-
-            endDraw(g);
-        }
     }
 }

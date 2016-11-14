@@ -54,7 +54,7 @@ namespace Plotter
             {
                 return mSelList.isSelected(mp);
             }
-            else if (SelectMode == SelectModes.OBJCT)
+            else if (SelectMode == SelectModes.OBJECT)
             {
                 return mSelList.isSelectedFigure(mp.FigureID);
             }
@@ -68,7 +68,7 @@ namespace Plotter
             {
                 return mSelectedSegs.isSelected(ms);
             }
-            else if (SelectMode == SelectModes.OBJCT)
+            else if (SelectMode == SelectModes.OBJECT)
             {
                 return mSelectedSegs.isSelectedFigure(ms.FigureID);
             }
@@ -136,7 +136,7 @@ namespace Plotter
                             mSelList.add(mp);
                             fig.selectPointAt(mp.PointIndex, true);
                         }
-                        else if (SelectMode == SelectModes.OBJCT)
+                        else if (SelectMode == SelectModes.OBJECT)
                         {
                             mSelList.add(mDB.getFigure(mp.FigureID));
                             fig.SelectWithGroup();
@@ -172,7 +172,7 @@ namespace Plotter
                                 fig.selectPointAt(mseg.PtIndexA, true);
                                 fig.selectPointAt(mseg.PtIndexB, true);
                             }
-                            else if (SelectMode == SelectModes.OBJCT)
+                            else if (SelectMode == SelectModes.OBJECT)
                             {
                                 mSelList.add(mDB.getFigure(mseg.FigureID));
                                 fig.SelectWithGroup();

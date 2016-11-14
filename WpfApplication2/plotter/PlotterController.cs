@@ -31,7 +31,7 @@ namespace Plotter
         public enum SelectModes
         {
             POINT,
-            OBJCT,
+            OBJECT,
         }
 
         public struct StateInfo
@@ -89,11 +89,19 @@ namespace Plotter
         } = SelectModes.POINT;
 
 
+        CadFigure.Types mCreatingFigType = CadFigure.Types.NONE;
+
         public CadFigure.Types CreatingFigType
         {
-            private set;
-            get;
-        } = CadFigure.Types.NONE;
+            private set
+            {
+                mCreatingFigType = value;
+            }
+            get
+            {
+                return mCreatingFigType;
+            }
+        }
 
         private CadFigure CreatingFigure { set; get; } = null;
 
@@ -139,6 +147,8 @@ namespace Plotter
             initHid();
         }
 
+
+        #region Notify
         private void NotifyLayerInfo()
         {
             LayerListInfo layerInfo = default(LayerListInfo);
@@ -148,18 +158,32 @@ namespace Plotter
             mLayerListChanged(this, layerInfo);
         }
 
+        private void NotifyStateChange()
+        {
+            if (StateChanged == null)
+            {
+                return;
+            }
+
+            StateInfo si = default(StateInfo);
+            si.set(this);
+
+            StateChanged(this, si);
+        }
+        #endregion
+
         public void startCreateFigure(CadFigure.Types type)
         {
             State = States.START_CREATE;
             CreatingFigType = type;
 
-            NotifyStateChange();
+            //NotifyStateChange();
 
             // Creation start when specify the first coordinate.
             // So, at the moment, not yet a creation start.
         }
 
-        public void endCreateFigure(DrawContext g)
+        public void endCreateFigure()
         {
             CreatingFigType = CadFigure.Types.NONE;
 
@@ -170,8 +194,6 @@ namespace Plotter
                 CreatingFigure.endCreate();
                 CreatingFigure = null;
             }
-
-            draw(g);
 
             NotifyStateChange();
         }
@@ -268,20 +290,7 @@ namespace Plotter
         //-----------------------------------------------------------------------------------------
         // Edit figure methods
 
-        #region "Private editing figure methods"
-
-        private void NotifyStateChange()
-        {
-            if (StateChanged == null)
-            {
-                return;
-            }
-
-            StateInfo si = default(StateInfo);
-            si.set(this);
-
-            StateChanged(this, si);
-        }
+        #region Private editing figure methods
 
         private void nextState()
         {
@@ -296,6 +305,7 @@ namespace Plotter
                 else
                 {
                     CreatingFigure = null;
+                    CreatingFigType = CadFigure.Types.NONE;
                     State = States.SELECT;
                     NotifyStateChange();
                 }

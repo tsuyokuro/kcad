@@ -1,18 +1,13 @@
-﻿using System;
+﻿using Plotter;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Windows;
+using System.Windows.Automation.Peers;
+using System.Windows.Automation.Provider;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WpfApplication2
 {
@@ -21,23 +16,64 @@ namespace WpfApplication2
     /// </summary>
     public partial class MainWindow : Window
     {
+        public PlotterViewModel ViewModel;
+
+        private DebugInputThread InputThread;
+
+        private ObservableCollection<string> messageList = new ObservableCollection<string>();
+
         public MainWindow()
         {
             InitializeComponent();
 
-            plotterView1.MouseMove += pic1_MouseMove;
-            plotterView1.BackColor = System.Drawing.Color.AliceBlue;
+            InputThread = new DebugInputThread(debugCommand);
+            InputThread.start();
+
+            ViewModel = new PlotterViewModel(plotterView1);
+
+            PreviewKeyDown += ViewModel.perviewKeyDown;
+
+            SlsectModePanel.DataContext = ViewModel;
+            FigurePanel.DataContext = ViewModel;
+
+            textCommand.KeyDown += textCommand_KeyDown;
+
+            ViewModel.InteractOut.print = MessageOut;
         }
 
-        private void pic1_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void textCommand_KeyDown(object sender, KeyEventArgs e)
         {
-            Graphics g = plotterView1.CreateGraphics();
+            if (e.Key == Key.Enter)
+            {
+                var s = textCommand.Text;
+                if (s.Length > 0)
+                {
+                    ViewModel.textCommand(s);
+                }
+
+                plotterView1.Focus();
+            }
         }
 
-
-        private void preview_key_down(object sender, KeyEventArgs e)
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            MenuItem menuitem = (MenuItem)sender;
+            var tag = menuitem.Tag.ToString();
+            ViewModel.menuCommand(tag);
+        }
 
+        private void debugCommand(String s)
+        {
+            ViewModel.debugCommand(s);
+        }
+
+        private void MessageOut(string s)
+        {
+            listMessage.Items.Add(s);
+
+            var peer = ItemsControlAutomationPeer.CreatePeerForElement(this.listMessage);
+            var scrollProvider = peer.GetPattern(PatternInterface.Scroll) as IScrollProvider;
+            scrollProvider.SetScrollPercent(scrollProvider.HorizontalScrollPercent, 100.0);
         }
     }
 }

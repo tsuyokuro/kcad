@@ -8,43 +8,145 @@
         xmlns:pl="clr-namespace:Plotter"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="410.667" Width="589.667"
-        PreviewKeyDown="preview_key_down">
+        Title="MainWindow" Height="579.667" Width="1073.667"
+        >
+
+    <Window.Resources>
+
+        <pl:SelectModeConverter x:Key="SelModeConv"/>
+        <pl:FigureTypeConverter x:Key="FigTypeConv"/>
+
+        <Style x:Key="ToggleRadio" TargetType="{x:Type RadioButton}"
+             BasedOn="{StaticResource {x:Type ToggleButton} }">
+        </Style>
+
+    </Window.Resources>
+
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="15*"/>
-            <ColumnDefinition Width="auto" MinWidth="2"/>
-            <ColumnDefinition Width="95*"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="1000*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Tag="load" Header="Load" Click="MenuItem_Click"/>
+                <MenuItem Tag="save" Header="Save" Click="MenuItem_Click"/>
+            </MenuItem>
+        </Menu>
 
-        <StackPanel Grid.Column="0" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="95*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}">
+                <StackPanel x:Name="SlsectModePanel">
+                    <Label />
+                    <RadioButton
+                    Style="{StaticResource ToggleRadio}"
+                    Tag="OBJECT"
+                    Content="  Select Figure  " 
+                    IsChecked="{
+                        Binding SelectMode,
+                        ConverterParameter=OBJECT,
+                        Converter={StaticResource SelModeConv}
+                    }"
+                    FontSize="9" />
+
+                    <RadioButton
+                    Style="{StaticResource ToggleRadio}"
+                    Tag="POINT"
+                    Content="  Select Point  " 
+                    IsChecked="{
+                        Binding SelectMode,
+                        ConverterParameter=POINT,
+                        Converter={StaticResource SelModeConv}
+                    }"
+                    FontSize="9" />
+                </StackPanel>
+
+                <StackPanel x:Name="FigurePanel">
+                    <Label />
+                    <RadioButton
+                    Style="{StaticResource ToggleRadio}"
+                    Tag="LINE"
+                    Content="Line" 
+                    IsChecked="{
+                        Binding FigureType,
+                        ConverterParameter=LINE,
+                        Converter={StaticResource FigTypeConv}
+                    }"
+                    FontSize="9" />
+
+                    <RadioButton
+                    Style="{StaticResource ToggleRadio}"
+                    Tag="RECT"
+                    Content="Rect" 
+                    IsChecked="{
+                        Binding FigureType,
+                        ConverterParameter=RECT,
+                        Converter={StaticResource FigTypeConv}
+                    }"
+                    FontSize="9" />
+
+                    <RadioButton
+                    Style="{StaticResource ToggleRadio}"
+                    Tag="POLY_LINES"
+                    Content="Poly lines" 
+                    IsChecked="{
+                        Binding FigureType,
+                        ConverterParameter=POLY_LINES,
+                        Converter={StaticResource FigTypeConv}
+                    }"
+                    FontSize="9" />
+
+                    <RadioButton
+                    Style="{StaticResource ToggleRadio}"
+                    Tag="CIRCLE"
+                    Content="Circle" 
+                    IsChecked="{
+                        Binding FigureType,
+                        ConverterParameter=CIRCLE,
+                        Converter={StaticResource FigTypeConv}
+                    }"
+                    FontSize="9" />
+
+                </StackPanel>
+            </StackPanel>
 
 
-        <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Center" Background="#FF9B9B9B"/>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="247*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="67*"/>
+                </Grid.RowDefinitions>
+
+                <WindowsFormsHost Grid.Row="0">
+                    <pl:PlotterView x:Name="plotterView1"/>
+                </WindowsFormsHost>
 
 
-        <Grid Grid.Column="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="247*"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="67*"/>
-            </Grid.RowDefinitions>
-
-            <WindowsFormsHost Grid.Row="0">
-                <pl:PlotterView x:Name="plotterView1"/>
-            </WindowsFormsHost>
+                <GridSplitter Grid.Row="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" 
+                    ShowsPreview="False"
+                    Height="3"
+                    />
 
 
-            <GridSplitter Grid.Row="1"
-              HorizontalAlignment="Stretch"
-              VerticalAlignment="Center"
-              Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" 
-              ShowsPreview="False"
-              Height="3"
-            />
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
 
-
-            <StackPanel Grid.Row="2" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" ></StackPanel>
+                    <ListBox Grid.Row="0" x:Name="listMessage"/>
+                    <TextBox Grid.Row="1" x:Name="textCommand"></TextBox>
+                </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

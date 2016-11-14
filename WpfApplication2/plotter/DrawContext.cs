@@ -94,6 +94,8 @@ namespace Plotter
             set { mGraphics = value; }
         }
 
+        private int GraphicsRef = 0;
+
         public DrawSettings Tools = new DrawSettings();
 
         public DrawContext()
@@ -101,6 +103,25 @@ namespace Plotter
             setDotPerMilli(4, 4); // 1mm = 4dot
             mViewOrg.x = 0;
             mViewOrg.y = 0;
+        }
+
+        public void startDraw(Bitmap image)
+        {
+            if (mGraphics == null)
+            {
+                mGraphics = Graphics.FromImage(image);
+            }
+            GraphicsRef++;
+        }
+
+        public void endDraw()
+        {
+            GraphicsRef--;
+            if (GraphicsRef <= 0)
+            {
+                disposeGraphics();
+                GraphicsRef = 0;
+            }
         }
 
         public void disposeGraphics()
