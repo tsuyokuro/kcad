@@ -197,42 +197,9 @@ namespace Plotter
             }
         }
 
-        /*
-        public void startCreateFigure(CadFigure.Types type)
+        public PageSize getPageSize()
         {
-            mController.startCreateFigure(type);
-        }
-        */
-
-        /*
-        public void endCreateFigure()
-        {
-            mController.endCreateFigure();
-            DrawContext dc = startDraw();
-            mController.draw(dc);
-            endDraw();
-        }
-        */
-
-        public void print(Graphics g)
-        {
-            DrawContext dc = new DrawContext();
-
-            dc.graphics = g;
-            dc.Tools.setupPrinterSet();
-            dc.PageSize = mDrawContext.PageSize.clone();
-
-            // Default printers's unit is 1/100 inch
-            dc.setUnitPerInch(100.0, 100.0);
-
-            CadPixelPoint org = default(CadPixelPoint);
-
-            org.x = dc.PageSize.widthInch / 2.0 * 100;
-            org.y = dc.PageSize.heightInch / 2.0 * 100;
-
-            dc.ViewOrg = org;
-
-            mController.print(dc);
+            return mDrawContext.PageSize.clone();
         }
 
         public void undo()

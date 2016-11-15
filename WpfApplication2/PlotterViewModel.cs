@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
 
+
 namespace Plotter
 {
     public class EnumBoolConverter<T> : IValueConverter
@@ -144,7 +145,19 @@ namespace Plotter
 
         public void menuCommand(string tag)
         {
+            switch (tag)
+            {
+                case "load":
+                    break;
 
+                case "save":
+                    break;
+
+                case "print":
+                    startPrint();
+                    break;
+
+            }
         }
 
         public void textCommand(string s)
@@ -155,7 +168,7 @@ namespace Plotter
             mPlotterView.endDraw();
         }
 
-        public void perviewKeyDown(object sender, KeyEventArgs e)
+        public void perviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
 
         }
@@ -182,5 +195,52 @@ namespace Plotter
 
             mPlotterView.endDraw();
         }
+
+        #region "print"
+        public void startPrint()
+        {
+            System.Drawing.Printing.PrintDocument pd =
+                new System.Drawing.Printing.PrintDocument();
+
+            pd.PrintPage += printPage;
+                //new System.Drawing.Printing.PrintPageEventHandler(printPage);
+
+            System.Windows.Forms.PrintDialog pdlg = new System.Windows.Forms.PrintDialog();
+
+            pdlg.Document = pd;
+
+            if (pdlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                pd.Print();
+            }
+        }
+
+        private void printPage(object sender,
+            System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            drawPage(e.Graphics);
+        }
+
+        private void drawPage(System.Drawing.Graphics g)
+        {
+            DrawContext dc = new DrawContext();
+
+            dc.graphics = g;
+            dc.Tools.setupPrinterSet();
+            dc.PageSize = mPlotterView.getPageSize();
+
+            // Default printers's unit is 1/100 inch
+            dc.setUnitPerInch(100.0, 100.0);
+
+            CadPixelPoint org = default(CadPixelPoint);
+
+            org.x = dc.PageSize.widthInch / 2.0 * 100;
+            org.y = dc.PageSize.heightInch / 2.0 * 100;
+
+            dc.ViewOrg = org;
+
+            mPlotter.print(dc);
+        }
+        #endregion
     }
 }

@@ -31,6 +31,7 @@
             <MenuItem Header="File">
                 <MenuItem Tag="load" Header="Load" Click="MenuItem_Click"/>
                 <MenuItem Tag="save" Header="Save" Click="MenuItem_Click"/>
+                <MenuItem Tag="print" Header="Print" Click="MenuItem_Click"/>
             </MenuItem>
         </Menu>
 
