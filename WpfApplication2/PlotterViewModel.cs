@@ -62,6 +62,9 @@ namespace Plotter
             set
             {
                 mSelectMode = value;
+                mPlotter.SelectMode = mSelectMode;
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectMode)));
             }
 
             get
@@ -101,7 +104,7 @@ namespace Plotter
                     mPlotterView.endDraw();
                 }
 
-                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FigureType)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FigureType)));
             }
 
             get

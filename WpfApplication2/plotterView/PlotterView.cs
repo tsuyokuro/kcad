@@ -369,30 +369,5 @@ namespace Plotter
 
             }
         }
-
-        /*
-        public void command(String s)
-        {
-            mController.command(s);
-
-            DrawContext g = startDraw();
-
-            mController.draw(g);
-
-            endDraw();
-        }
-        */
-
-        /*
-        public void debugCommand(string s)
-        {
-            DrawContext g = startDraw();
-
-            mController.debugCommand(g, s);
-
-            endDraw();
-        }
-        */
-
     }
 }
