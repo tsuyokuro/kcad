@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace Plotter
 {
-    public class PageSize
+    public class PaperPageSize
     {
         public double width;
         public double height;
@@ -39,7 +39,7 @@ namespace Plotter
             }
         }
 
-        public PageSize()
+        public PaperPageSize()
         {
             A4Land();
         }
@@ -56,16 +56,16 @@ namespace Plotter
             height = 210.0;
         }
 
-        public PageSize clone()
+        public PaperPageSize clone()
         {
-            return (PageSize)MemberwiseClone();
+            return (PaperPageSize)MemberwiseClone();
         }
     }
 
 
     public class DrawContext
     {
-        public PageSize PageSize = new PageSize();
+        public PaperPageSize PageSize = new PaperPageSize();
 
         public double UnitPerMilliX = 1; // Output unit per milli X.
         public double UnitPerMilliY = 1; // Output unit per milli Y.

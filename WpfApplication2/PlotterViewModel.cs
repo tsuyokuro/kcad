@@ -148,9 +148,21 @@ namespace Plotter
             switch (tag)
             {
                 case "load":
+                    System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
+                    if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        LoadFile(ofd.FileName);
+                    }
+
                     break;
 
                 case "save":
+                    System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
+                    if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        SaveFile(sfd.FileName);
+                    }
+
                     break;
 
                 case "print":
@@ -171,6 +183,57 @@ namespace Plotter
         public void perviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
 
+        }
+
+        public void onKeyDown(object sender, KeyEventArgs e)
+        {
+
+            ModifierKeys modifierKeys = Keyboard.Modifiers;
+
+            if ((modifierKeys & ModifierKeys.Control) != ModifierKeys.None)
+            {
+                switch (e.Key)
+                {
+                    case Key.Z:
+                        undo();
+                        break;
+
+                    case Key.Y:
+                        redo();
+                        break;
+
+                    case Key.C:
+                    case Key.Insert:
+                        Copy();
+                        break;
+
+                    case Key.V:
+                        Paste();
+                        break;
+                }
+            }
+            else if ((modifierKeys & ModifierKeys.Shift) != ModifierKeys.None)
+            {
+                switch (e.Key)
+                {
+                    case Key.Insert:
+                        Paste();
+                        break;
+                }
+            }
+            else
+            {
+                switch (e.Key)
+                {
+                    case Key.Delete:
+                        remove();
+                        break;
+                }
+            }
+        }
+
+        public void onKeyUp(object sender, KeyEventArgs e)
+        {
         }
 
         private void MessageOut(String s)
@@ -194,6 +257,87 @@ namespace Plotter
             mPlotter.draw(dc);
 
             mPlotterView.endDraw();
+        }
+
+        private DrawContext startDraw()
+        {
+            return mPlotterView.startDraw();
+        }
+
+        private void endDraw()
+        {
+            mPlotterView.endDraw();
+        }
+
+
+        public void undo()
+        {
+            DrawContext dc = startDraw();
+            mPlotter.undo(dc);
+            endDraw();
+        }
+
+        public void redo()
+        {
+            DrawContext dc = startDraw();
+            mPlotter.redo(dc);
+            endDraw();
+        }
+
+        public void remove()
+        {
+            DrawContext dc = startDraw();
+            mPlotter.remove(dc);
+            endDraw();
+        }
+
+        public void separateFigure()
+        {
+            DrawContext dc = startDraw();
+            mPlotter.separateFigures(dc);
+            endDraw();
+        }
+
+        public void bondFigure()
+        {
+            DrawContext g = startDraw();
+            mPlotter.bondFigures(g);
+            endDraw();
+        }
+
+        public void toBezier()
+        {
+            DrawContext dc = startDraw();
+            mPlotter.toBezier(dc);
+            endDraw();
+        }
+
+        public void cutSegment()
+        {
+            DrawContext dc = startDraw();
+            mPlotter.cutSegment(dc);
+            endDraw();
+        }
+
+        public void addCenterPoint()
+        {
+            DrawContext dc = startDraw();
+            mPlotter.addCenterPoint(dc);
+            endDraw();
+        }
+
+        public void Copy()
+        {
+            DrawContext dc = startDraw();
+            mPlotter.Copy(dc);
+            endDraw();
+        }
+
+        public void Paste()
+        {
+            DrawContext dc = startDraw();
+            mPlotter.Paste(dc);
+            endDraw();
         }
 
         #region "print"
@@ -227,7 +371,7 @@ namespace Plotter
 
             dc.graphics = g;
             dc.Tools.setupPrinterSet();
-            dc.PageSize = mPlotterView.getPageSize();
+            dc.PageSize = mPlotterView.PageSize;
 
             // Default printers's unit is 1/100 inch
             dc.setUnitPerInch(100.0, 100.0);

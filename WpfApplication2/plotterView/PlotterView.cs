@@ -36,6 +36,14 @@ namespace Plotter
 
         ContextMenuEx mCurrentContextMenu = null;
 
+        public PaperPageSize PageSize
+        {
+            get
+            {
+                return mDrawContext.PageSize.clone();
+            }
+        }
+
         public PlotterView()
         {
             InitializeComponent();
@@ -192,129 +200,6 @@ namespace Plotter
                     case CadFigure.Types.RECT:
                         mCurrentContextMenu = mRectContextMenu;
                         mCurrentContextMenu.Show(this, new Point(x, y));
-                        break;
-                }
-            }
-        }
-
-        public PageSize getPageSize()
-        {
-            return mDrawContext.PageSize.clone();
-        }
-
-        public void undo()
-        {
-            DrawContext dc = startDraw();
-            mController.undo(dc);
-            endDraw();
-        }
-
-        public void redo()
-        {
-            DrawContext dc = startDraw();
-            mController.redo(dc);
-            endDraw();
-        }
-
-        public void remove()
-        {
-            DrawContext dc = startDraw();
-            mController.remove(dc);
-            endDraw();
-        }
-
-        public void separateFigure()
-        {
-            DrawContext dc = startDraw();
-            mController.separateFigures(dc);
-            endDraw();
-        }
-
-        public void bondFigure()
-        {
-            DrawContext g = startDraw();
-            mController.bondFigures(g);
-            endDraw();
-        }
-
-        public void toBezier()
-        {
-            DrawContext dc = startDraw();
-            mController.toBezier(dc);
-            endDraw();
-        }
-
-        public void cutSegment()
-        {
-            DrawContext dc = startDraw();
-            mController.cutSegment(dc);
-            endDraw();
-        }
-
-        public void addCenterPoint()
-        {
-            DrawContext dc = startDraw();
-            mController.addCenterPoint(dc);
-            endDraw();
-        }
-
-        public void Copy()
-        {
-            DrawContext dc = startDraw();
-            mController.Copy(dc);
-            endDraw();
-        }
-
-        public void Paste()
-        {
-            DrawContext dc = startDraw();
-            mController.Paste(dc);
-            endDraw();
-        }
-
-        public void onKeyUp(object sender, KeyEventArgs e)
-        {
-        }
-
-        public void onKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Control)
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.Z:
-                        undo();
-                        break;
-
-                    case Keys.Y:
-                        redo();
-                        break;
-
-                    case Keys.C:
-                    case Keys.Insert:
-                        Copy();
-                        break;
-
-                    case Keys.V:
-                        Paste();
-                        break;
-                }
-            }
-            else if (e.Shift)
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.Insert:
-                        Paste();
-                        break;
-                }
-            }
-            else
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.Delete:
-                        remove();
                         break;
                 }
             }

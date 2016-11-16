@@ -16,8 +16,33 @@
         <pl:SelectModeConverter x:Key="SelModeConv"/>
         <pl:FigureTypeConverter x:Key="FigTypeConv"/>
 
+        <DataTemplate x:Key="ToggleRadioCheckedBG">
+            <Grid Background="#FFAAAAAA" >
+                <TextBlock HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
+                       TextAlignment="Center" 
+                       Text="{Binding}"/>
+            </Grid>
+        </DataTemplate>
+
         <Style x:Key="ToggleRadio" TargetType="{x:Type RadioButton}"
              BasedOn="{StaticResource {x:Type ToggleButton} }">
+
+            <Setter Property="Background" Value="#FF252526"/>
+            <Setter Property="Foreground" Value="#FFFFFFFF"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    <Setter Property="ContentTemplate" Value="{StaticResource ToggleRadioCheckedBG}"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    <Setter Property="ContentTemplate" Value="{StaticResource ToggleRadioCheckedBG}"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
     </Window.Resources>
@@ -33,6 +58,16 @@
                 <MenuItem Tag="save" Header="Save" Click="MenuItem_Click"/>
                 <MenuItem Tag="print" Header="Print" Click="MenuItem_Click"/>
             </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Tag="undo" Header="Undo" Click="MenuItem_Click"/>
+                <MenuItem Tag="redo" Header="Redo" Click="MenuItem_Click"/>
+                <MenuItem Tag="copy" Header="Copy" Click="MenuItem_Click"/>
+                <MenuItem Tag="paste" Header="Paste" Click="MenuItem_Click"/>
+                <MenuItem Tag="separate" Header="Separate" Click="MenuItem_Click"/>
+                <MenuItem Tag="bond" Header="Bond" Click="MenuItem_Click"/>
+                <MenuItem Tag="to_bezier" Header="To Bezier" Click="MenuItem_Click"/>
+                <MenuItem Tag="cut_segment" Header="Cut Segment" Click="MenuItem_Click"/>
+            </MenuItem>
         </Menu>
 
         <Grid Grid.Row="1">
@@ -41,7 +76,7 @@
                 <ColumnDefinition Width="95*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}">
+            <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="#FF1C2125">
                 <StackPanel x:Name="SlsectModePanel">
                     <Label />
                     <RadioButton

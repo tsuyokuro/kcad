@@ -33,6 +33,9 @@ namespace WpfApplication2
 
             PreviewKeyDown += ViewModel.perviewKeyDown;
 
+            KeyDown += onKeyDown;
+            KeyUp += onKeyUp;
+
             SlsectModePanel.DataContext = ViewModel;
             FigurePanel.DataContext = ViewModel;
 
@@ -75,5 +78,23 @@ namespace WpfApplication2
             var scrollProvider = peer.GetPattern(PatternInterface.Scroll) as IScrollProvider;
             scrollProvider.SetScrollPercent(scrollProvider.HorizontalScrollPercent, 100.0);
         }
+
+        #region "Key handling"
+        private void onKeyDown(object sender, KeyEventArgs e)
+        {
+            if (!textCommand.IsFocused)
+            {
+                ViewModel.onKeyDown(sender, e);
+            }
+        }
+
+        private void onKeyUp(object sender, KeyEventArgs e)
+        {
+            if (!textCommand.IsFocused)
+            {
+                ViewModel.onKeyUp(sender, e);
+            }
+        }
+        #endregion
     }
 }
