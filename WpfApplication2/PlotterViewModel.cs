@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -55,6 +56,8 @@ namespace Plotter
 
         public PlotterController.Interaction InteractIn =
             new PlotterController.Interaction();
+
+        private Dictionary<string, Action> commandMap;
 
         private PlotterController.SelectModes mSelectMode = PlotterController.SelectModes.POINT;
 
@@ -116,6 +119,8 @@ namespace Plotter
 
         public PlotterViewModel(PlotterView plotterView)
         {
+            initCommandMap();
+
             mPlotterView = plotterView;
             mPlotter = mPlotterView.Controller;
             SelectMode = mPlotter.SelectMode;
@@ -128,6 +133,24 @@ namespace Plotter
             mPlotter.Interact = InteractIn;
         }
 
+        public void initCommandMap()
+        {
+            commandMap = new Dictionary<string, Action>{
+                { "load", load },
+                { "save",save},
+                { "print",startPrint},
+                { "undo",undo},
+                { "redo",redo},
+                { "copy",Copy},
+                { "paste",Paste},
+                { "separate",separateFigure},
+                { "bond",bondFigure},
+                { "to_bezier",toBezier},
+                { "cut_segment",cutSegment},
+                { "add_center_point", addCenterPoint},
+            };
+        }
+
         public void StateChanged(PlotterController sender, PlotterController.StateInfo si)
         {
             if (FigureType != si.CreatingFigureType)
@@ -136,45 +159,8 @@ namespace Plotter
             }
         }
 
-        public void debugCommand(string s)
+        private void draw()
         {
-            DrawContext dc = mPlotterView.startDraw();
-            mPlotter.debugCommand(dc, s);
-            mPlotterView.endDraw();
-        }
-
-        public void menuCommand(string tag)
-        {
-            switch (tag)
-            {
-                case "load":
-                    System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
-                    if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        LoadFile(ofd.FileName);
-                    }
-
-                    break;
-
-                case "save":
-                    System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
-                    if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        SaveFile(sfd.FileName);
-                    }
-
-                    break;
-
-                case "print":
-                    startPrint();
-                    break;
-
-            }
-        }
-
-        public void textCommand(string s)
-        {
-            mPlotter.command(s);
             DrawContext dc = mPlotterView.startDraw();
             mPlotter.draw(dc);
             mPlotterView.endDraw();
@@ -340,6 +326,24 @@ namespace Plotter
             endDraw();
         }
 
+        public void load()
+        {
+            System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                LoadFile(ofd.FileName);
+            }
+        }
+
+        public void save()
+        {
+            System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
+            if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                SaveFile(sfd.FileName);
+            }
+        }
+
         #region "print"
         public void startPrint()
         {
@@ -384,6 +388,27 @@ namespace Plotter
             dc.ViewOrg = org;
 
             mPlotter.print(dc);
+        }
+        #endregion
+
+
+        #region Command handling
+        public void textCommand(string s)
+        {
+            mPlotter.command(s);
+        }
+
+        public void menuCommand(string tag)
+        {
+            Action action = commandMap[tag];
+            action?.Invoke();
+        }
+
+        public void debugCommand(string s)
+        {
+            DrawContext dc = mPlotterView.startDraw();
+            mPlotter.debugCommand(dc, s);
+            mPlotterView.endDraw();
         }
         #endregion
     }

@@ -12,38 +12,15 @@
         >
 
     <Window.Resources>
+        <ResourceDictionary>
+            <pl:SelectModeConverter x:Key="SelModeConv"/>
+            <pl:FigureTypeConverter x:Key="FigTypeConv"/>
 
-        <pl:SelectModeConverter x:Key="SelModeConv"/>
-        <pl:FigureTypeConverter x:Key="FigTypeConv"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ToggleBtnRadio.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <DataTemplate x:Key="ToggleRadioCheckedBG">
-            <Grid Background="#FFAAAAAA" >
-                <TextBlock HorizontalAlignment="Center" 
-                       VerticalAlignment="Center" 
-                       TextAlignment="Center" 
-                       Text="{Binding}"/>
-            </Grid>
-        </DataTemplate>
-
-        <Style x:Key="ToggleRadio" TargetType="{x:Type RadioButton}"
-             BasedOn="{StaticResource {x:Type ToggleButton} }">
-
-            <Setter Property="Background" Value="#FF252526"/>
-            <Setter Property="Foreground" Value="#FFFFFFFF"/>
-
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="ContentTemplate" Value="{StaticResource ToggleRadioCheckedBG}"/>
-                </Trigger>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="ContentTemplate" Value="{StaticResource ToggleRadioCheckedBG}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+        </ResourceDictionary>
 
     </Window.Resources>
 
@@ -67,6 +44,7 @@
                 <MenuItem Tag="bond" Header="Bond" Click="MenuItem_Click"/>
                 <MenuItem Tag="to_bezier" Header="To Bezier" Click="MenuItem_Click"/>
                 <MenuItem Tag="cut_segment" Header="Cut Segment" Click="MenuItem_Click"/>
+                <MenuItem Tag="add_center_point" Header="Add crnter point" Click="MenuItem_Click"/>
             </MenuItem>
         </Menu>
 
@@ -88,7 +66,7 @@
                         ConverterParameter=OBJECT,
                         Converter={StaticResource SelModeConv}
                     }"
-                    FontSize="9" />
+                    />
 
                     <RadioButton
                     Style="{StaticResource ToggleRadio}"
@@ -99,7 +77,7 @@
                         ConverterParameter=POINT,
                         Converter={StaticResource SelModeConv}
                     }"
-                    FontSize="9" />
+                    />
                 </StackPanel>
 
                 <StackPanel x:Name="FigurePanel">
@@ -113,7 +91,7 @@
                         ConverterParameter=LINE,
                         Converter={StaticResource FigTypeConv}
                     }"
-                    FontSize="9" />
+                    />
 
                     <RadioButton
                     Style="{StaticResource ToggleRadio}"
@@ -124,7 +102,7 @@
                         ConverterParameter=RECT,
                         Converter={StaticResource FigTypeConv}
                     }"
-                    FontSize="9" />
+                    />
 
                     <RadioButton
                     Style="{StaticResource ToggleRadio}"
@@ -135,7 +113,7 @@
                         ConverterParameter=POLY_LINES,
                         Converter={StaticResource FigTypeConv}
                     }"
-                    FontSize="9" />
+                    />
 
                     <RadioButton
                     Style="{StaticResource ToggleRadio}"
@@ -146,7 +124,7 @@
                         ConverterParameter=CIRCLE,
                         Converter={StaticResource FigTypeConv}
                     }"
-                    FontSize="9" />
+                    />
 
                 </StackPanel>
             </StackPanel>
