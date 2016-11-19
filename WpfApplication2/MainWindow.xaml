@@ -25,6 +25,32 @@
                 </StackPanel>
             </DataTemplate>
 
+            <DataTemplate x:Key="NameField">
+                <StackPanel>
+                    <TextBlock Text="{Binding Path=Name}"/>
+                </StackPanel>
+            </DataTemplate>
+
+
+            <Style x:Key="MyContainer" TargetType="{x:Type ListViewItem}">
+
+                <Setter Property="Background" Value="#FF252526"/>
+                <Setter Property="Foreground" Value="#FFFFFFFF"/>
+
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="true">
+                        <Setter Property="Background" Value="Aqua" />
+                        <Setter Property="Foreground" Value="Black" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="HeaderContStyle" TargetType="{x:Type GridViewColumnHeader}">
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Setter Property="Background" Value="#FF252526"/>
+                <Setter Property="Foreground" Value="#FFFFFFFF"/>
+            </Style>
+            
             <pl:SelectModeConverter x:Key="SelModeConv"/>
             <pl:FigureTypeConverter x:Key="FigTypeConv"/>
 
@@ -65,7 +91,7 @@
                 <ColumnDefinition Width="95*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="#FF1C2125">
+            <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="#FF252526">
                 <StackPanel x:Name="SlsectModePanel">
                     <Label />
                     <RadioButton
@@ -143,12 +169,19 @@
 
                 <Grid x:Name="LayerListPanel" Height="250">
 
-                    <ListView x:Name="LayerListView" ItemsSource="{Binding}" SelectionMode="Single">
+                    <ListView
+                        x:Name="LayerListView"
+                        ItemsSource="{Binding}"
+                        SelectionMode="Single"
+                        ItemContainerStyle="{StaticResource MyContainer}"
+                        Background="#FF252526"
+                        >
+
                         <ListView.View>
-                            <GridView>
+                            <GridView ColumnHeaderContainerStyle="{StaticResource HeaderContStyle}">
                                 <GridViewColumn Header="V" CellTemplate = "{StaticResource VisibleCheck}" Width="16"/>
                                 <GridViewColumn Header="L" CellTemplate = "{StaticResource LockCheck}" Width="16"/>
-                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}" />
+                                <GridViewColumn Header="Name" CellTemplate = "{StaticResource NameField}" Width="60"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
