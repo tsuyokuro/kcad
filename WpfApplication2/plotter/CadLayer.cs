@@ -35,6 +35,16 @@ namespace Plotter
             }
         }
 
+        public bool Locked
+        {
+            set; get;
+        } = false;
+
+        public bool Visible
+        {
+            set; get;
+        } = true;
+
         private List<CadFigure> mFigureList = new List<CadFigure>();
         private List<CadFigure> mStoreFigureList = null;
 

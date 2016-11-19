@@ -13,13 +13,24 @@
 
     <Window.Resources>
         <ResourceDictionary>
+            <DataTemplate x:Key="VisibleCheck">
+                <StackPanel HorizontalAlignment="Center">
+                    <CheckBox Margin="-8" IsChecked="{Binding Path=Visible}"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="LockCheck">
+                <StackPanel HorizontalAlignment="Center">
+                    <CheckBox Margin="-8" IsChecked="{Binding Path=Locked}"/>
+                </StackPanel>
+            </DataTemplate>
+
             <pl:SelectModeConverter x:Key="SelModeConv"/>
             <pl:FigureTypeConverter x:Key="FigTypeConv"/>
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ToggleBtnRadio.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
         </ResourceDictionary>
 
     </Window.Resources>
@@ -127,8 +138,24 @@
                     />
 
                 </StackPanel>
-            </StackPanel>
 
+                <Label/>
+
+                <Grid x:Name="LayerListPanel" Height="250">
+
+                    <ListView x:Name="LayerListView" ItemsSource="{Binding}" SelectionMode="Single">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="V" CellTemplate = "{StaticResource VisibleCheck}" Width="16"/>
+                                <GridViewColumn Header="L" CellTemplate = "{StaticResource LockCheck}" Width="16"/>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </Grid>
+
+            </StackPanel>
 
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -61,6 +63,8 @@ namespace Plotter
 
         private PlotterController.SelectModes mSelectMode = PlotterController.SelectModes.POINT;
 
+        public ObservableCollection<CadLayer> LayerList = new ObservableCollection<CadLayer>();
+
         public PlotterController.SelectModes SelectMode
         {
             set
@@ -117,6 +121,35 @@ namespace Plotter
             }
         }
 
+        ListView mLayerListView;
+
+        public ListView LayerListView
+        {
+            set
+            {
+                if (value == null)
+                {
+                    if (mLayerListView != null)
+                    {
+                        mLayerListView.SelectionChanged -= LayerListSelectionChanged;
+                    }
+                }
+                else
+                {
+                    value.SelectionChanged += LayerListSelectionChanged;
+                    int idx = getLayerListIndex(mPlotter.CurrentLayer.ID);
+                    value.SelectedIndex = idx;
+                }
+
+                mLayerListView = value;
+            }
+
+            get
+            {
+                return mLayerListView;
+            }
+        }
+
         public PlotterViewModel(PlotterView plotterView)
         {
             initCommandMap();
@@ -131,6 +164,8 @@ namespace Plotter
             InteractIn.print = MessageOut;
 
             mPlotter.Interact = InteractIn;
+
+            mPlotter.LayerListChanged =  LayerListChanged;
         }
 
         public void initCommandMap()
@@ -159,11 +194,58 @@ namespace Plotter
             }
         }
 
+        public void LayerListChanged(PlotterController sender, PlotterController.LayerListInfo layerListInfo)
+        {
+            LayerList.Clear();
+
+            foreach (CadLayer layer in layerListInfo.LayerList)
+            {
+                LayerList.Add(layer);
+            }
+
+            if (mLayerListView != null)
+            {
+                int idx = getLayerListIndex(layerListInfo.CurrentID);
+                mLayerListView.SelectedIndex = idx;
+            }
+        }
+
+        public void LayerListSelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (args.AddedItems.Count > 0)
+            {
+                CadLayer layer = (CadLayer)args.AddedItems[0];
+
+                if (mPlotter.CurrentLayer.ID != layer.ID)
+                {
+                    mPlotter.setCurrentLayer(layer.ID);
+                }
+            }
+            else
+            {
+            }
+        }
+
         private void draw()
         {
             DrawContext dc = mPlotterView.startDraw();
             mPlotter.draw(dc);
             mPlotterView.endDraw();
+        }
+
+        private int getLayerListIndex(uint id)
+        {
+            int idx = 0;
+            foreach (CadLayer layer in LayerList)
+            {
+                if (layer.ID == id)
+                {
+                    return idx;
+                }
+                idx++;
+            }
+
+            return -1;
         }
 
         public void perviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)

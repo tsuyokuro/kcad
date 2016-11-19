@@ -31,6 +31,10 @@ namespace WpfApplication2
 
             ViewModel = new PlotterViewModel(plotterView1);
 
+            LayerListView.DataContext = ViewModel.LayerList;
+
+            ViewModel.LayerListView = LayerListView;
+
             PreviewKeyDown += ViewModel.perviewKeyDown;
 
             KeyDown += onKeyDown;

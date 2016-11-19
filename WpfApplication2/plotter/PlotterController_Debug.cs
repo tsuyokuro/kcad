@@ -79,8 +79,6 @@ namespace Plotter
 
                 mDB = db;
 
-                mCurrentLayer = mDB.getLayer(mDB.CurrentLayerID);
-
                 draw(dc);
             }
             else if (s == "test3")
@@ -93,7 +91,7 @@ namespace Plotter
             }
             else if (s == "fig_list")
             {
-                List<CadFigure> figList = mCurrentLayer.FigureList;
+                List<CadFigure> figList = CurrentLayer.FigureList;
 
                 Log.d("Figure List");
 
@@ -140,7 +138,6 @@ namespace Plotter
                 db.dump(dout);
 
                 mDB = db;
-                mCurrentLayer = mDB.getLayer(mDB.CurrentLayerID);
             }
             else if (s == "savej")
             {
@@ -185,7 +182,6 @@ namespace Plotter
                 db.dump(dout);
 
                 mDB = db;
-                mCurrentLayer = mDB.getLayer(mDB.CurrentLayerID);
 
                 clear(dc);
                 draw(dc);

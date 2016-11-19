@@ -10,12 +10,39 @@ namespace Plotter
     {
         #region "Manage Layer"
 
-        private uint mCurrentLayerID = 0;
-
         public uint CurrentLayerID
         {
-            get { return mCurrentLayerID; }
-            set { mCurrentLayerID = value; }
+            get
+            {
+                if (mCurrentLayer == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return mCurrentLayer.ID;
+                }
+            }
+
+            set
+            {
+                mCurrentLayer = getLayer(value);
+            }
+        }
+
+        private CadLayer mCurrentLayer;
+
+        public CadLayer CurrentLayer
+        {
+            get
+            {
+                return mCurrentLayer;
+            }
+
+            set
+            {
+                mCurrentLayer = value;
+            }
         }
 
         private Dictionary<uint, CadLayer> mLayerIdMap = new Dictionary<uint, CadLayer>();
@@ -257,7 +284,9 @@ namespace Plotter
 
             LayerList = DUtil.IdListToObjList(layerOrder, LayerMap);
 
-            CurrentLayerID = (uint)jo["current_layer_id"];
+            uint currentLayerID = (uint)jo["current_layer_id"];
+
+            CurrentLayer = getLayer(currentLayerID);
 
             ja = (JArray)jo["group_info"];
             GroupInfoFromJson(ja);

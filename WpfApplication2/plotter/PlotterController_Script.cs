@@ -140,9 +140,9 @@ namespace Plotter
                     fig.addPoint(p1);
                     fig.endCreate();
 
-                    CadOpe ope = CadOpe.getAddFigureOpe(mCurrentLayer.ID, fig.ID);
+                    CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
                     mHistoryManager.foward(ope);
-                    mCurrentLayer.addFigure(fig);
+                    CurrentLayer.addFigure(fig);
 
                     stack.push(0);
                 }
@@ -172,9 +172,9 @@ namespace Plotter
                 fig.addPoint(p0);
                 fig.addPoint(p1);
 
-                CadOpe ope = CadOpe.getAddFigureOpe(mCurrentLayer.ID, fig.ID);
+                CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
                 mHistoryManager.foward(ope);
-                mCurrentLayer.addFigure(fig);
+                CurrentLayer.addFigure(fig);
 
                 stack.push(0);
             }
@@ -197,10 +197,9 @@ namespace Plotter
                 layer.Name = name.getString();
             }
 
-            mCurrentLayer = layer;
+            CurrentLayer = layer;
 
-            mDB.LayerList.Add(mCurrentLayer);
-            mDB.CurrentLayerID = mCurrentLayer.ID;
+            mDB.LayerList.Add(layer);
 
             NotifyLayerInfo();
 

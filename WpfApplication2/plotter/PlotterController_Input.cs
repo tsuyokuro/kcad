@@ -115,9 +115,9 @@ namespace Plotter
 
                     mPointSearcher.clean();
                     mPointSearcher.setRangePixel(dc, SnapRange);
-                    mPointSearcher.search(cp, mDB, mCurrentLayer.ID);
+                    mPointSearcher.search(cp, mDB, CurrentLayer.ID);
 
-                    mPointSearcher.checkRelativePoints(mCurrentLayer.RelPointList);
+                    mPointSearcher.checkRelativePoints(CurrentLayer.RelPointList);
 
                     MarkPoint mp = mPointSearcher.getXYMatch();
 
@@ -148,14 +148,14 @@ namespace Plotter
                     }
                     else if (mp.Type == MarkPoint.Types.RELATIVE_POINT)
                     {
-                        CadRelativePoint rp = mCurrentLayer.RelPointList[mp.PointIndex];
+                        CadRelativePoint rp = CurrentLayer.RelPointList[mp.PointIndex];
                         rp.Selected = true;
                     }
                     else
                     {
                         mSegSearcher.clean();
                         mSegSearcher.setRangePixel(dc, SnapRange);
-                        mSegSearcher.search(cp, mDB, mCurrentLayer.ID);
+                        mSegSearcher.search(cp, mDB, CurrentLayer.ID);
                         MarkSeg mseg = mSegSearcher.getMatch();
 
                         if (mseg.FigureID != 0)
@@ -362,10 +362,10 @@ namespace Plotter
             }
             */
 
-            mPointSearcher.checkRelativePoints(mCurrentLayer.RelPointList);
+            mPointSearcher.checkRelativePoints(CurrentLayer.RelPointList);
 
             // Search point
-            mPointSearcher.search(mDB, mCurrentLayer.ID);
+            mPointSearcher.search(mDB, CurrentLayer.ID);
 
             MarkPoint mx = mPointSearcher.getXMatch();
             MarkPoint my = mPointSearcher.getYMatch();
@@ -389,7 +389,7 @@ namespace Plotter
             // Search segment
             mSegSearcher.clean();
             mSegSearcher.setRangePixel(dc, SnapRange);
-            mSegSearcher.search(cp, mDB, mCurrentLayer.ID);
+            mSegSearcher.search(cp, mDB, CurrentLayer.ID);
 
             MarkSeg seg = mSegSearcher.getMatch();
 

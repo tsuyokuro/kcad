@@ -10,7 +10,7 @@ namespace Plotter
 
             removeSelectedPoints();
 
-            markRemoveSelectedRelPoints(mCurrentLayer);
+            markRemoveSelectedRelPoints(CurrentLayer);
 
             endEdit();
 
@@ -22,7 +22,7 @@ namespace Plotter
         {
             CreatingFigure.Closed = true;
 
-            CadOpe ope = CadOpe.getSetCloseOpe(mCurrentLayer.ID, CreatingFigure.ID, true);
+            CadOpe ope = CadOpe.getSetCloseOpe(CurrentLayer.ID, CreatingFigure.ID, true);
             mHistoryManager.foward(ope);
 
             nextState();
@@ -49,7 +49,7 @@ namespace Plotter
             if (num > 0)
             {
                 CadOpe ope = CadOpe.getInsertPointsOpe(
-                    mCurrentLayer.ID, fig.ID, seg.PtIndexA + 1, num);
+                    CurrentLayer.ID, fig.ID, seg.PtIndexA + 1, num);
 
                 mHistoryManager.foward(ope);
             }
@@ -68,7 +68,7 @@ namespace Plotter
 
         public void separateFigures(List<SelectItem> selList)
         {
-            CadFigureCutter fa = new CadFigureCutter(mDB, mCurrentLayer);
+            CadFigureCutter fa = new CadFigureCutter(mDB, CurrentLayer);
 
             var res = fa.cut(selList);
 
@@ -82,18 +82,18 @@ namespace Plotter
 
             foreach (CadFigure fig in res.AddList)
             {
-                ope = CadOpe.getAddFigureOpe(mCurrentLayer.ID, fig.ID);
+                ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
                 opeRoot.OpeList.Add(ope);
 
-                mCurrentLayer.addFigure(fig);
+                CurrentLayer.addFigure(fig);
             }
 
             foreach (CadFigure fig in res.RemoveList)
             {
-                ope = CadOpe.getRemoveFigureOpe(mCurrentLayer, fig.ID);
+                ope = CadOpe.getRemoveFigureOpe(CurrentLayer, fig.ID);
                 opeRoot.OpeList.Add(ope);
 
-                mCurrentLayer.removeFigureByID(fig.ID);
+                CurrentLayer.removeFigureByID(fig.ID);
             }
 
             mHistoryManager.foward(opeRoot);
@@ -108,7 +108,7 @@ namespace Plotter
 
         public void bondFigures(List<SelectItem> selList)
         {
-            CadFigureBonder fa = new CadFigureBonder(mDB, mCurrentLayer);
+            CadFigureBonder fa = new CadFigureBonder(mDB, CurrentLayer);
 
             var res = fa.bond(selList);
 
@@ -122,18 +122,18 @@ namespace Plotter
 
             foreach (CadFigure fig in res.AddList)
             {
-                ope = CadOpe.getAddFigureOpe(mCurrentLayer.ID, fig.ID);
+                ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
                 opeRoot.OpeList.Add(ope);
 
-                mCurrentLayer.addFigure(fig);
+                CurrentLayer.addFigure(fig);
             }
 
             foreach (CadFigure fig in res.RemoveList)
             {
-                ope = CadOpe.getRemoveFigureOpe(mCurrentLayer, fig.ID);
+                ope = CadOpe.getRemoveFigureOpe(CurrentLayer, fig.ID);
                 opeRoot.OpeList.Add(ope);
 
-                mCurrentLayer.removeFigureByID(fig.ID);
+                CurrentLayer.removeFigureByID(fig.ID);
             }
 
             mHistoryManager.foward(opeRoot);
@@ -160,7 +160,7 @@ namespace Plotter
                 return;
             }
 
-            CadSegmentCutter segCutter = new CadSegmentCutter(mDB, mCurrentLayer);
+            CadSegmentCutter segCutter = new CadSegmentCutter(mDB, CurrentLayer);
 
             var res = segCutter.cutSegment(ms, mObjDownPoint.Value);
 
@@ -174,18 +174,18 @@ namespace Plotter
 
             foreach (CadFigure fig in res.AddList)
             {
-                ope = CadOpe.getAddFigureOpe(mCurrentLayer.ID, fig.ID);
+                ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
                 opeRoot.OpeList.Add(ope);
 
-                mCurrentLayer.addFigure(fig);
+                CurrentLayer.addFigure(fig);
             }
 
             foreach (CadFigure fig in res.RemoveList)
             {
-                ope = CadOpe.getRemoveFigureOpe(mCurrentLayer, fig.ID);
+                ope = CadOpe.getRemoveFigureOpe(CurrentLayer, fig.ID);
                 opeRoot.OpeList.Add(ope);
 
-                mCurrentLayer.removeFigureByID(fig.ID);
+                CurrentLayer.removeFigureByID(fig.ID);
             }
 
             mHistoryManager.foward(opeRoot);
@@ -209,7 +209,7 @@ namespace Plotter
                         fig, seg.PtIndexB
                         );
 
-                    mCurrentLayer.RelPointList.Add(rp);
+                    CurrentLayer.RelPointList.Add(rp);
                 }
 
                 draw(dc);
@@ -232,7 +232,7 @@ namespace Plotter
                     fig1, si1.PointIndex
                     );
 
-                mCurrentLayer.RelPointList.Add(rp);
+                CurrentLayer.RelPointList.Add(rp);
 
             }
 
