@@ -74,13 +74,38 @@ namespace WpfApplication2
             ViewModel.debugCommand(s);
         }
 
+
+        // In the case of the String class Eqauls() returns true
+        // even for different instances when the contents are the same.
+        // Therefore, ListBox.ScrollIntoView() does not work properly.
+        // So, we wrap string for suppressing this behavior.
+        public class MessageLine
+        {
+            private string Line;
+            public MessageLine(string s)
+            {
+                Line = s;
+            }
+
+            override public String ToString()
+            {
+                return Line;
+            }
+        }
+
         private void MessageOut(string s)
         {
-            listMessage.Items.Add(s);
+            if (listMessage.Items.Count > 30)
+            {
+                listMessage.Items.RemoveAt(0);
+            }
 
-            var peer = ItemsControlAutomationPeer.CreatePeerForElement(this.listMessage);
-            var scrollProvider = peer.GetPattern(PatternInterface.Scroll) as IScrollProvider;
-            scrollProvider.SetScrollPercent(scrollProvider.HorizontalScrollPercent, 100.0);
+            var line = new MessageLine(s);
+            listMessage.Items.Add(line);
+
+            Object obj = listMessage.Items[listMessage.Items.Count - 1];
+
+            listMessage.ScrollIntoView(obj);
         }
 
         #region "Key handling"

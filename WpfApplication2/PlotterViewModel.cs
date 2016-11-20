@@ -121,9 +121,9 @@ namespace Plotter
             }
         }
 
-        ListView mLayerListView;
+        ListBox mLayerListView;
 
-        public ListView LayerListView
+        public ListBox LayerListView
         {
             set
             {

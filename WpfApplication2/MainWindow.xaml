@@ -13,42 +13,33 @@
 
     <Window.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="VisibleCheck">
-                <StackPanel HorizontalAlignment="Center">
-                    <CheckBox Margin="-8" IsChecked="{Binding Path=Visible}"/>
-                </StackPanel>
-            </DataTemplate>
 
-            <DataTemplate x:Key="LockCheck">
-                <StackPanel HorizontalAlignment="Center">
-                    <CheckBox Margin="-8" IsChecked="{Binding Path=Locked}"/>
-                </StackPanel>
-            </DataTemplate>
-
-            <DataTemplate x:Key="NameField">
-                <StackPanel>
-                    <TextBlock Text="{Binding Path=Name}"/>
-                </StackPanel>
-            </DataTemplate>
-
-
-            <Style x:Key="MyContainer" TargetType="{x:Type ListViewItem}">
+            <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
 
                 <Setter Property="Background" Value="#FF252526"/>
                 <Setter Property="Foreground" Value="#FFFFFFFF"/>
 
-                <Style.Triggers>
-                    <Trigger Property="IsSelected" Value="true">
-                        <Setter Property="Background" Value="Aqua" />
-                        <Setter Property="Foreground" Value="Black" />
-                    </Trigger>
-                </Style.Triggers>
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Border Name="Border" Padding="0" SnapsToDevicePixels="true">
+                                <ContentPresenter />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="true">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter TargetName="Border" Property="Background" Value="#FF3399FF"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
+
 
             <Style x:Key="HeaderContStyle" TargetType="{x:Type GridViewColumnHeader}">
                 <Setter Property="Visibility" Value="Collapsed"/>
-                <Setter Property="Background" Value="#FF252526"/>
-                <Setter Property="Foreground" Value="#FFFFFFFF"/>
             </Style>
             
             <pl:SelectModeConverter x:Key="SelModeConv"/>
@@ -169,22 +160,24 @@
 
                 <Grid x:Name="LayerListPanel" Height="250">
 
-                    <ListView
+                    <ListBox
                         x:Name="LayerListView"
                         ItemsSource="{Binding}"
                         SelectionMode="Single"
-                        ItemContainerStyle="{StaticResource MyContainer}"
+                        ItemContainerStyle="{StaticResource SimpleListBoxItem}"
                         Background="#FF252526"
                         >
 
-                        <ListView.View>
-                            <GridView ColumnHeaderContainerStyle="{StaticResource HeaderContStyle}">
-                                <GridViewColumn Header="V" CellTemplate = "{StaticResource VisibleCheck}" Width="16"/>
-                                <GridViewColumn Header="L" CellTemplate = "{StaticResource LockCheck}" Width="16"/>
-                                <GridViewColumn Header="Name" CellTemplate = "{StaticResource NameField}" Width="60"/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" >
+                                    <CheckBox IsChecked="{Binding Path=Visible}" Foreground="White"/>
+                                    <CheckBox IsChecked="{Binding Path=Locked}" Foreground="White"/>
+                                    <TextBlock Text="{Binding Path=Name}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
 
                 </Grid>
 
@@ -217,8 +210,8 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <ListBox Grid.Row="0" x:Name="listMessage"/>
-                    <TextBox Grid.Row="1" x:Name="textCommand"></TextBox>
+                    <ListBox Grid.Row="0" x:Name="listMessage" Background="#FF252526" Foreground="White"/>
+                    <TextBox Grid.Row="1" x:Name="textCommand" Background="#FF252526" Foreground="White"/>
                 </Grid>
             </Grid>
         </Grid>
