@@ -305,6 +305,7 @@ namespace Plotter
         public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             LayerHolder lh = (LayerHolder)sender;
+            draw(clearFlag:true);
         }
 
         public void LayerListSelectionChanged(object sender, SelectionChangedEventArgs args)
@@ -412,9 +413,13 @@ namespace Plotter
             mPlotterView.endDraw();
         }
 
-        private void draw()
+        private void draw(bool clearFlag)
         {
             DrawContext dc = mPlotterView.startDraw();
+            if (clearFlag)
+            {
+                mPlotter.clear(dc);
+            }
             mPlotter.draw(dc);
             mPlotterView.endDraw();
         }
@@ -564,7 +569,9 @@ namespace Plotter
         #region Command handling
         public void textCommand(string s)
         {
+            MessageOut(s);
             mPlotter.command(s);
+            draw(true);
         }
 
         public void menuCommand(string tag)

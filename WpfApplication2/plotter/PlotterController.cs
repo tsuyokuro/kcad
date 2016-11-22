@@ -260,9 +260,14 @@ namespace Plotter
             Drawer.drawAxis(dc);
             Drawer.drawPageFrame(dc);
 
-            Drawer.draw(dc, CurrentLayer);
-
-            drawRelPoints(dc, CurrentLayer.RelPointList);
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                if (layer.Visible)
+                {
+                    Drawer.draw(dc, layer);
+                    drawRelPoints(dc, layer.RelPointList);
+                }
+            }
         }
 
         public void drawSelectedItems(DrawContext dc)

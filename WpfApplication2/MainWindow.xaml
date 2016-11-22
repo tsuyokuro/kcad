@@ -29,7 +29,7 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsSelected" Value="true">
                                     <Setter Property="Foreground" Value="White"/>
-                                    <Setter TargetName="Border" Property="Background" Value="#FF3399FF"/>
+                                    <Setter TargetName="Border" Property="Background" Value="#FF773f1d"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -82,7 +82,8 @@
                 <ColumnDefinition Width="95*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="#FF252526">
+            <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="#FF252526" >
+
                 <StackPanel x:Name="SlsectModePanel">
                     <Label />
                     <RadioButton
@@ -182,7 +183,7 @@
                 </Grid>
 
             </StackPanel>
-
+                
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="247*"/>
