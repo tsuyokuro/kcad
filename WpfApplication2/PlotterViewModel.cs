@@ -44,6 +44,57 @@ namespace Plotter
     public class FigureTypeConverter : EnumBoolConverter<CadFigure.Types> { }
 
 
+    public class LayerHolder : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private CadLayer mLayer;
+
+        public uint ID
+        {
+            get{ return mLayer.ID; }
+        }
+
+        public bool Locked
+        {
+            set
+            {
+                mLayer.Locked = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Locked)));
+            }
+
+            get { return mLayer.Locked; }
+        }
+
+        public bool Visible
+        {
+            set
+            {
+                mLayer.Visible = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Visible)));
+            }
+
+            get { return mLayer.Visible; }
+        }
+
+        public string Name
+        {
+            set
+            {
+                mLayer.Name = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
+            }
+
+            get { return mLayer.Name; }
+        }
+
+        public LayerHolder(CadLayer layer)
+        {
+            mLayer = layer;
+        }
+    }
+
+
 
     public class PlotterViewModel : INotifyPropertyChanged
     {
@@ -61,9 +112,11 @@ namespace Plotter
 
         private Dictionary<string, Action> commandMap;
 
+        private Dictionary<string, Action> keyMap;
+
         private PlotterController.SelectModes mSelectMode = PlotterController.SelectModes.POINT;
 
-        public ObservableCollection<CadLayer> LayerList = new ObservableCollection<CadLayer>();
+        public ObservableCollection<LayerHolder> LayerList = new ObservableCollection<LayerHolder>();
 
         public PlotterController.SelectModes SelectMode
         {
@@ -153,6 +206,7 @@ namespace Plotter
         public PlotterViewModel(PlotterView plotterView)
         {
             initCommandMap();
+            initKeyMap();
 
             mPlotterView = plotterView;
             mPlotter = mPlotterView.Controller;
@@ -168,7 +222,7 @@ namespace Plotter
             mPlotter.LayerListChanged =  LayerListChanged;
         }
 
-        public void initCommandMap()
+        private void initCommandMap()
         {
             commandMap = new Dictionary<string, Action>{
                 { "load", load },
@@ -186,6 +240,22 @@ namespace Plotter
             };
         }
 
+        private void initKeyMap()
+        {
+            keyMap = new Dictionary<string, Action>
+            {
+                { "ctrl+z", undo },
+                { "ctrl+y", redo },
+                { "ctrl+c", Copy },
+                { "ctrl+insert", Copy },
+                { "ctrl+v", Paste },
+                { "shift+insert", Paste },
+                { "delete", remove },
+                { "ctrl+s", save },
+            };
+        }
+
+        #region Event From PlotterController
         public void StateChanged(PlotterController sender, PlotterController.StateInfo si)
         {
             if (FigureType != si.CreatingFigureType)
@@ -200,7 +270,10 @@ namespace Plotter
 
             foreach (CadLayer layer in layerListInfo.LayerList)
             {
-                LayerList.Add(layer);
+                LayerHolder layerHolder = new LayerHolder(layer);
+                layerHolder.PropertyChanged += LayerListItemPropertyChanged;
+
+                LayerList.Add(layerHolder);
             }
 
             if (mLayerListView != null)
@@ -210,33 +283,10 @@ namespace Plotter
             }
         }
 
-        public void LayerListSelectionChanged(object sender, SelectionChangedEventArgs args)
-        {
-            if (args.AddedItems.Count > 0)
-            {
-                CadLayer layer = (CadLayer)args.AddedItems[0];
-
-                if (mPlotter.CurrentLayer.ID != layer.ID)
-                {
-                    mPlotter.setCurrentLayer(layer.ID);
-                }
-            }
-            else
-            {
-            }
-        }
-
-        private void draw()
-        {
-            DrawContext dc = mPlotterView.startDraw();
-            mPlotter.draw(dc);
-            mPlotterView.endDraw();
-        }
-
         private int getLayerListIndex(uint id)
         {
             int idx = 0;
-            foreach (CadLayer layer in LayerList)
+            foreach (LayerHolder layer in LayerList)
             {
                 if (layer.ID == id)
                 {
@@ -247,74 +297,95 @@ namespace Plotter
 
             return -1;
         }
+        #endregion
 
+
+
+        #region LayerList
+        public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            LayerHolder lh = (LayerHolder)sender;
+        }
+
+        public void LayerListSelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (args.AddedItems.Count > 0)
+            {
+                LayerHolder layer = (LayerHolder)args.AddedItems[0];
+
+                if (mPlotter.CurrentLayer.ID != layer.ID)
+                {
+                    mPlotter.setCurrentLayer(layer.ID);
+                }
+            }
+            else
+            {
+            }
+        }
+        #endregion
+
+
+        #region Keyboard handling
         public void perviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
 
         }
 
-        public void onKeyDown(object sender, KeyEventArgs e)
+        private string ModifyerKeysStr()
         {
-
             ModifierKeys modifierKeys = Keyboard.Modifiers;
+
+            string s = "";
 
             if ((modifierKeys & ModifierKeys.Control) != ModifierKeys.None)
             {
-                switch (e.Key)
-                {
-                    case Key.Z:
-                        undo();
-                        break;
-
-                    case Key.Y:
-                        redo();
-                        break;
-
-                    case Key.C:
-                    case Key.Insert:
-                        Copy();
-                        break;
-
-                    case Key.V:
-                        Paste();
-                        break;
-                }
+                s += "ctrl+";
             }
-            else if ((modifierKeys & ModifierKeys.Shift) != ModifierKeys.None)
+
+            if ((modifierKeys & ModifierKeys.Shift) != ModifierKeys.None)
             {
-                switch (e.Key)
-                {
-                    case Key.Insert:
-                        Paste();
-                        break;
-                }
+                s += "shift+";
             }
-            else
+
+            if ((modifierKeys & ModifierKeys.Alt) != ModifierKeys.None)
             {
-                switch (e.Key)
-                {
-                    case Key.Delete:
-                        remove();
-                        break;
-                }
+                s += "alt+";
             }
+
+            return s;
+        }
+
+
+        public void onKeyDown(object sender, KeyEventArgs e)
+        {
         }
 
         public void onKeyUp(object sender, KeyEventArgs e)
         {
-        }
+            string ks = ModifyerKeysStr();
 
-        private void MessageOut(String s)
-        {
-            InteractOut.print(s);
-        }
+            ks += e.Key.ToString().ToLower();
 
-        public void SaveFile(String fname)
+            if (!keyMap.ContainsKey(ks))
+            {
+                return;
+            }
+
+            Action action = keyMap[ks];
+
+            action?.Invoke();
+        }
+        #endregion
+
+
+
+        #region File
+        private void SaveFile(String fname)
         {
             mPlotter.SaveToJsonFile(fname);
         }
 
-        public void LoadFile(String fname)
+        private void LoadFile(String fname)
         {
             mPlotter.LoadFromJsonFile(fname);
 
@@ -326,7 +397,11 @@ namespace Plotter
 
             mPlotterView.endDraw();
         }
+        #endregion
 
+
+
+        #region helper
         private DrawContext startDraw()
         {
             return mPlotterView.startDraw();
@@ -337,7 +412,17 @@ namespace Plotter
             mPlotterView.endDraw();
         }
 
+        private void draw()
+        {
+            DrawContext dc = mPlotterView.startDraw();
+            mPlotter.draw(dc);
+            mPlotterView.endDraw();
+        }
+        #endregion
 
+
+
+        #region Actions
         public void undo()
         {
             DrawContext dc = startDraw();
@@ -425,6 +510,8 @@ namespace Plotter
                 SaveFile(sfd.FileName);
             }
         }
+        #endregion
+
 
         #region "print"
         public void startPrint()
@@ -491,6 +578,13 @@ namespace Plotter
             DrawContext dc = mPlotterView.startDraw();
             mPlotter.debugCommand(dc, s);
             mPlotterView.endDraw();
+        }
+        #endregion
+
+        #region
+        private void MessageOut(String s)
+        {
+            InteractOut.print(s);
         }
         #endregion
     }
