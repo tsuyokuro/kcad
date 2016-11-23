@@ -88,6 +88,14 @@ namespace Plotter
 
     public class PointSearcher
     {
+        enum CheckFlag : uint
+        {
+            XMatch = 1,
+            YMatch = 2,
+            XYMatch = 4,
+            All = XMatch | YMatch | XYMatch,
+        }
+
         private MarkPoint xmatch = default(MarkPoint);
         private MarkPoint ymatch = default(MarkPoint);
         private MarkPoint xymatch = default(MarkPoint);
@@ -96,6 +104,13 @@ namespace Plotter
 
         private CadPoint TargetPoint;
         private double mRange;
+
+        private uint Check = (uint)CheckFlag.All;
+
+        public uint CurrentLayerID
+        {
+            set; get;
+        } = 0;
 
         public PointSearcher()
         {
@@ -140,25 +155,42 @@ namespace Plotter
             return xymatch;
         }
 
-        public void search(CadPoint p, CadObjectDB db, uint layerId)
+        public void searchAllLayer(CadPoint p, CadObjectDB db)
         {
             TargetPoint = p;
-            search(db, layerId);
+            searchAllLayer(db);
         }
 
-        public void search(CadObjectDB db, uint layerId)
+        public void searchAllLayer(CadObjectDB db)
         {
-            CadLayer layer = db.getLayer(layerId);
+            search(db, db.CurrentLayer);
 
+            foreach (CadLayer layer in db.LayerList)
+            {
+                if (layer.ID == db.CurrentLayerID)
+                {
+                    continue;
+                }
+
+                search(db, layer);
+            }
+        }
+
+        public void search(CadPoint p, CadObjectDB db, CadLayer layer)
+        {
+            TargetPoint = p;
+            search(db, layer);
+        }
+
+        public void search(CadObjectDB db, CadLayer layer)
+        {
             if (layer == null)
             {
                 return;
             }
 
-            List<CadFigure> figList = layer.FigureList;
-
             // In order to give priority to the new Obj, to scan in reverse order
-            IEnumerable<CadFigure> list = figList;
+            IEnumerable<CadFigure> list = layer.FigureList;
             foreach (CadFigure fig in list.Reverse())
             {
                 checkFig(fig);
@@ -314,26 +346,44 @@ namespace Plotter
             return seg;
         }
 
-        public void search(CadPoint p, CadObjectDB db, uint layerId)
+        public void searchAllLayer(CadPoint p, CadObjectDB db)
         {
             TargetPoint = p;
-            search(db, layerId);
+            searchAllLayer(db);
         }
 
-        public void search(CadObjectDB db, uint layerId)
+        public void searchAllLayer(CadObjectDB db)
         {
-            CadLayer layer = db.getLayer(layerId);
+            search(db, db.CurrentLayer);
 
+            foreach (CadLayer layer in db.LayerList)
+            {
+                if (layer.ID == db.CurrentLayerID)
+                {
+                    continue;
+                }
+
+                search(db, layer);
+            }
+        }
+
+        public void search(CadPoint p, CadObjectDB db, CadLayer layer)
+        {
+            TargetPoint = p;
+            search(db, layer);
+        }
+
+        public void search(CadObjectDB db, CadLayer layer)
+        {
             if (layer == null)
             {
                 return;
             }
 
-            List<CadFigure> figList = layer.FigureList;
-
             minDist = Double.MaxValue;
 
-            foreach (CadFigure fig in figList)
+            IEnumerable<CadFigure> list = layer.FigureList;
+            foreach (CadFigure fig in list.Reverse())
             {
                 checkFig(fig);
             }

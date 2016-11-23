@@ -272,7 +272,10 @@ namespace Plotter
 
         public void drawSelectedItems(DrawContext dc)
         {
-            Drawer.drawSelected(dc, CurrentLayer);
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                Drawer.drawSelected(dc, layer);
+            }
         }
 
         public void drawSubItems(DrawContext dc)
@@ -373,7 +376,11 @@ namespace Plotter
         {
             mSelList.clear();
             mSelectedSegs.Clear();
-            CurrentLayer.clearSelectedFlags();
+
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                layer.clearSelectedFlags();
+            }
         }
 
         private HashSet<uint> SelListToIDSet()
