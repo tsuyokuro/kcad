@@ -37,11 +37,6 @@
                 </Setter>
             </Style>
 
-
-            <Style x:Key="HeaderContStyle" TargetType="{x:Type GridViewColumnHeader}">
-                <Setter Property="Visibility" Value="Collapsed"/>
-            </Style>
-            
             <pl:SelectModeConverter x:Key="SelModeConv"/>
             <pl:FigureTypeConverter x:Key="FigTypeConv"/>
 
@@ -53,6 +48,7 @@
     </Window.Resources>
 
     <Grid>
+        <!--Menu space-->
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="1000*"/>
@@ -76,13 +72,17 @@
             </MenuItem>
         </Menu>
 
+
+        <!--Work space-->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="95*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="#FF252526" >
+            <!--Left panel-->
+            <Border BorderBrush="YellowGreen" BorderThickness="2">
+                <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="#FF252526" >
 
                 <StackPanel x:Name="SlsectModePanel">
                     <Label />
@@ -183,7 +183,9 @@
                 </Grid>
 
             </StackPanel>
-                
+            </Border>
+
+            <!--Plotter view and Command view-->
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="247*"/>

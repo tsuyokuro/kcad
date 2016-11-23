@@ -3,97 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 
 namespace Plotter
 {
-    public class EnumBoolConverter<T> : IValueConverter
-    {
-        // Convert parameter to Enum
-        private T ConvertParameter(object parameter)
-        {
-            string parameterString = parameter as string;
-            return (T)Enum.Parse(typeof(T), parameterString);
-        }
-
-        // Enum -> bool
-        public object Convert(object value, Type targetType, object parameter,
-                              System.Globalization.CultureInfo culture)
-        {
-            T parameterValue = ConvertParameter(parameter);
-
-            return parameterValue.Equals(value);
-        }
-
-        // bool -> Enum
-        public object ConvertBack(object value, Type targetType, object parameter,
-                                  System.Globalization.CultureInfo culture)
-        {
-            // ignore case that true->false
-            if (!(bool)value)
-                return System.Windows.DependencyProperty.UnsetValue;
-
-            return ConvertParameter(parameter);
-        }
-    }
-
     public class SelectModeConverter : EnumBoolConverter<PlotterController.SelectModes> { }
-
     public class FigureTypeConverter : EnumBoolConverter<CadFigure.Types> { }
-
-
-    public class LayerHolder : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private CadLayer mLayer;
-
-        public uint ID
-        {
-            get{ return mLayer.ID; }
-        }
-
-        public bool Locked
-        {
-            set
-            {
-                mLayer.Locked = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Locked)));
-            }
-
-            get { return mLayer.Locked; }
-        }
-
-        public bool Visible
-        {
-            set
-            {
-                mLayer.Visible = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Visible)));
-            }
-
-            get { return mLayer.Visible; }
-        }
-
-        public string Name
-        {
-            set
-            {
-                mLayer.Name = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
-            }
-
-            get { return mLayer.Name; }
-        }
-
-        public LayerHolder(CadLayer layer)
-        {
-            mLayer = layer;
-        }
-    }
-
 
 
     public class PlotterViewModel : INotifyPropertyChanged
