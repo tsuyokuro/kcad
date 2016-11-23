@@ -227,7 +227,7 @@ namespace Plotter
             clearSelection();
             mHistoryManager.undo();
 
-            updateRelPoints(CurrentLayer.RelPointList);
+            updateRelPoints();
 
             Drawer.clear(dc);
             draw(dc);
@@ -238,7 +238,7 @@ namespace Plotter
             clearSelection();
             mHistoryManager.redo();
 
-            updateRelPoints(CurrentLayer.RelPointList);
+            updateRelPoints();
 
             Drawer.clear(dc);
             draw(dc);
@@ -307,7 +307,10 @@ namespace Plotter
 
         public void print(DrawContext dc)
         {
-            Drawer.draw(dc, CurrentLayer);
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                Drawer.draw(dc, layer);
+            }
         }
         #endregion
 
@@ -402,18 +405,20 @@ namespace Plotter
         {
             List<uint> idList = new List<uint>();
 
-            foreach (CadFigure fig in CurrentLayer.FigureList)
+            foreach (CadLayer layer in mDB.LayerList)
             {
-                foreach (CadPoint p in fig.PointList)
+                foreach (CadFigure fig in layer.FigureList)
                 {
-                    if (p.Selected)
+                    foreach (CadPoint p in fig.PointList)
                     {
-                        idList.Add(fig.ID);
-                        break;
+                        if (p.Selected)
+                        {
+                            idList.Add(fig.ID);
+                            break;
+                        }
                     }
                 }
             }
-
             return idList;
         }
 
@@ -435,9 +440,7 @@ namespace Plotter
         {
             DiffDataList ddl = new DiffDataList();
 
-            ddl.LayerID = CurrentLayer.ID;
-
-            CadLayer layer = mDB.getLayer(CurrentLayer.ID);
+            //CadLayer layer = mDB.getLayer(CurrentLayer.ID);
 
             List<uint> figIDList = EditIdList;  //getSelectedFigIDList();
 
@@ -450,49 +453,58 @@ namespace Plotter
 
                     if (dd != null)
                     {
-                        Log.d("endEditSelected() fig id=" + dd.FigureID);
-
-                        if (fig.PointCount == 0)
-                        {
-                            DiffItem diffItem = new DiffItem();
-                            diffItem.Type = DiffItem.Types.REMOVE_FIGURE;
-                            diffItem.index = layer.getFigureIndex(id);
-
-                            dd.Items.Add(diffItem);
-
-                            layer.removeFigureByID(id);
-                        }
-
                         ddl.DiffDatas.Add(dd);
                     }
                 }
             }
 
-
             if (ddl.DiffDatas.Count > 0)
             {
-                CadOpe ope = CadOpe.getDiffOpe(ddl);
-
                 CadOpeList root = CadOpe.getListOpe();
 
+                CadOpeList ropeList = removeInvalidRelPoints(CurrentLayer);
+                root.OpeList.Add(ropeList);
+
+                CadOpe ope = CadOpe.getDiffOpe(ddl);
                 root.OpeList.Add(ope);
 
-                List<CadOpe> rope = removeInvalidRelPoints(CurrentLayer);
-
-                CadOpeList branch = CadOpe.getListOpe(rope);
-
-                root.OpeList.Add(branch);
-
+                CadOpeList fopeList = removeInvalidFigure();
+                root.OpeList.Add(fopeList);
 
                 mHistoryManager.foward(root);
             }
             else
             {
-                List<CadOpe> rope = removeInvalidRelPoints(CurrentLayer);
-                CadOpeList root = CadOpe.getListOpe(rope);
-
-                mHistoryManager.foward(root);
+                CadOpeList ropeList = removeInvalidRelPoints(CurrentLayer);
+                mHistoryManager.foward(ropeList);
             }
+        }
+
+        private CadOpeList removeInvalidFigure()
+        {
+            CadOpeList opeList = new CadOpeList();
+
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                List<CadFigure> list = layer.FigureList;
+
+                int i = list.Count - 1;
+
+                for (; i>=0; i--)
+                {
+                    CadFigure fig = list[i];
+
+                    if (fig.PointCount == 0)
+                    {
+                        CadOpe ope = CadOpe.getRemoveFigureOpe(layer, fig.ID);
+                        opeList.OpeList.Add(ope);
+
+                        list.RemoveAt(i);
+                    }
+                }
+            }
+
+            return opeList;
         }
 
         private void moveSelectedPoints(CadPoint delta)
@@ -508,7 +520,7 @@ namespace Plotter
                 }
             }
 
-            updateRelPoints(CurrentLayer.RelPointList);
+            updateRelPoints();
         }
 
         private void removeSelectedPoints()
@@ -518,6 +530,14 @@ namespace Plotter
             {
                 CadFigure fig = mDB.getFigure(id);
                 fig.removeSelected();
+            }
+        }
+
+        private void updateRelPoints()
+        {
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                updateRelPoints(layer.RelPointList);
             }
         }
 
@@ -537,6 +557,15 @@ namespace Plotter
             }
         }
 
+        private void markRemoveSelectedRelPoints()
+        {
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                markRemoveSelectedRelPoints(layer);
+            }
+        }
+
+
         private void markRemoveSelectedRelPoints(CadLayer layer)
         {
             List<CadRelativePoint> list = layer.RelPointList;
@@ -555,11 +584,11 @@ namespace Plotter
             }
         }
 
-        private List<CadOpe> removeInvalidRelPoints(CadLayer layer)
+        private CadOpeList removeInvalidRelPoints(CadLayer layer)
         {
             List<CadRelativePoint> list = layer.RelPointList;
 
-            List<CadOpe> opeList = new List<CadOpe>();
+            CadOpeList opeList = new CadOpeList();
 
             CadOpe ope = null;
 
@@ -572,7 +601,7 @@ namespace Plotter
                 if (rp.RemoveMark)
                 {
                     ope = CadOpe.getRemoveRelPoint(CurrentLayer, rp);
-                    opeList.Add(ope);
+                    opeList.OpeList.Add(ope);
 
                     list.RemoveAt(i);
                     continue;
@@ -591,7 +620,7 @@ namespace Plotter
                 }
 
                 ope = CadOpe.getRemoveRelPoint(CurrentLayer, rp);
-                opeList.Add(ope);
+                opeList.OpeList.Add(ope);
 
                 list.RemoveAt(i);
             }

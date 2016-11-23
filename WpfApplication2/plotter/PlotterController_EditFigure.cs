@@ -10,7 +10,7 @@ namespace Plotter
 
             removeSelectedPoints();
 
-            markRemoveSelectedRelPoints(CurrentLayer);
+            markRemoveSelectedRelPoints();
 
             endEdit();
 

@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Plotter
 {
+    public struct FigureBelong
+    {
+        public CadLayer Layer;
+        public int Index;
+    }
 
     [Serializable]
     public class CadObjectDB
@@ -84,7 +89,30 @@ namespace Plotter
 
         public CadLayer getLayer(uint id)
         {
+            if (id == 0)
+            {
+                return null;
+            }
+
             return mLayerIdMap[id];
+        }
+
+        public FigureBelong getFigureBelong(uint figID)
+        {
+            FigureBelong fb = default(FigureBelong);
+
+            foreach (CadLayer layer in LayerList)
+            {
+                int idx = layer.getFigureIndex(figID);
+                if (idx >= 0)
+                {
+                    fb.Layer = layer;
+                    fb.Index = idx;
+                    break;
+                }
+            }
+
+            return fb;
         }
 
         public CadLayer newLayer()
