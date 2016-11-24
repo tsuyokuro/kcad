@@ -5,6 +5,19 @@ namespace Plotter
     using Newtonsoft.Json.Linq;
     using System;
 
+    public class CadFigureList : List<CadFigure>
+    {
+        public CadLayer Layer
+        {
+            get; set;
+        }
+
+        new public void Add(CadFigure fig)
+        {
+            base.Add(fig);
+        }
+    }
+
     [Serializable]
     public class CadLayer
     {
@@ -35,25 +48,33 @@ namespace Plotter
             }
         }
 
+        private bool mLocked = false;
+
         public bool Locked
         {
-            set; get;
-        } = false;
+            set
+            {
+                mLocked = value;
+            }
+
+            get
+            {
+                return mLocked;
+            }
+        }
 
         public bool Visible
         {
             set; get;
         } = true;
 
-        private List<CadFigure> mFigureList = new List<CadFigure>();
-        private List<CadFigure> mStoreFigureList = null;
+        private CadFigureList mFigureList = new CadFigureList();
 
         private List<CadRelativePoint> mRelPointList = new List<CadRelativePoint>();
         private List<CadRelativePoint> mStoreRelPointList = null;
 
 
         public List<CadFigure> FigureList { get { return mFigureList; } }
-        public List<CadFigure> StoreFigureList { get { return mStoreFigureList; } }
 
         public List<CadRelativePoint> RelPointList { get { return mRelPointList; } }
         public List<CadRelativePoint> StoreRelPointList { get { return mStoreRelPointList; } }
@@ -61,6 +82,7 @@ namespace Plotter
 
         public CadLayer()
         {
+            mFigureList.Layer = this;
         }
 
         public void addFigure(CadFigure fig)
@@ -165,7 +187,10 @@ namespace Plotter
                 
             ja = (JArray)jo["fig_id_list"];
             idList = JsonUtil.JsonIdListToList(ja);
-            mFigureList = DUtil.IdListToObjList(idList, db.FigureMap);
+
+            List<CadFigure> figList = DUtil.IdListToObjList(idList, db.FigureMap);
+            figList.ForEach(a => mFigureList.Add(a));
+            mFigureList.Layer = this;
 
             ja = (JArray)jo["rel_point_id_list"];
             idList = JsonUtil.JsonIdListToList(ja);

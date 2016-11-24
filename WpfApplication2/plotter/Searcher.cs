@@ -25,6 +25,7 @@ namespace Plotter
         public static UInt32 Y_MATCH = 2;
         public static UInt32 Z_MATCH = 4;
 
+        public uint LayerID;
         public uint FigureID;
         public int PointIndex;
 
@@ -56,6 +57,7 @@ namespace Plotter
 
     public struct MarkSeg
     {
+        public uint LayerID;
         public uint FigureID;
         public int PtIndexA;
         public int PtIndexB;
@@ -88,14 +90,6 @@ namespace Plotter
 
     public class PointSearcher
     {
-        enum CheckFlag : uint
-        {
-            XMatch = 1,
-            YMatch = 2,
-            XYMatch = 4,
-            All = XMatch | YMatch | XYMatch,
-        }
-
         private MarkPoint xmatch = default(MarkPoint);
         private MarkPoint ymatch = default(MarkPoint);
         private MarkPoint xymatch = default(MarkPoint);
@@ -104,8 +98,6 @@ namespace Plotter
 
         private CadPoint TargetPoint;
         private double mRange;
-
-        private uint Check = (uint)CheckFlag.All;
 
         public uint CurrentLayerID
         {
@@ -193,16 +185,16 @@ namespace Plotter
             IEnumerable<CadFigure> list = layer.FigureList;
             foreach (CadFigure fig in list.Reverse())
             {
-                checkFig(fig);
+                checkFig(layer, fig);
             }
         }
 
         public void check(CadPoint pt)
         {
-            checkFigPoint(pt, 0, 0, MarkPoint.Types.IDEPEND_POINT);
+            checkFigPoint(pt, 0, 0, 0, MarkPoint.Types.IDEPEND_POINT);
         }
 
-        private void checkFig(CadFigure fig)
+        private void checkFig(CadLayer layer, CadFigure fig)
         {
             List<CadPoint> pointList = fig.PointList;
 
@@ -216,7 +208,7 @@ namespace Plotter
             foreach (CadPoint pt in pointList)
             {
                 idx++;
-                checkFigPoint(pt, fig.ID, idx, MarkPoint.Types.POINT);
+                checkFigPoint(pt, layer.ID, fig.ID, idx, MarkPoint.Types.POINT);
             }
         }
 
@@ -225,12 +217,12 @@ namespace Plotter
             int idx = 0;
             foreach (CadRelativePoint rp in list)
             {
-                checkFigPoint(rp.point, 0, idx, MarkPoint.Types.RELATIVE_POINT);
+                checkFigPoint(rp.point, 0, 0, idx, MarkPoint.Types.RELATIVE_POINT);
                 idx++;
             }
         }
 
-        private void checkFigPoint(CadPoint pt, uint figID, int ptIdx, MarkPoint.Types type)
+        private void checkFigPoint(CadPoint pt, uint layerID, uint figID, int ptIdx, MarkPoint.Types type)
         {
             if (isIgnore(figID, ptIdx))
             {
@@ -245,6 +237,7 @@ namespace Plotter
                 if (dx < xmatch.DistX || (dx == xmatch.DistX && dy < xmatch.DistY))
                 {
                     xmatch.Type = type;
+                    xmatch.LayerID = layerID;
                     xmatch.FigureID = figID;
                     xmatch.PointIndex = ptIdx;
                     xmatch.Point = pt;
@@ -259,6 +252,7 @@ namespace Plotter
                 if (dy < ymatch.DistY || (dy == ymatch.DistY && dx < ymatch.DistX))
                 {
                     ymatch.Type = type;
+                    ymatch.LayerID = layerID;
                     ymatch.FigureID = figID;
                     ymatch.PointIndex = ptIdx;
                     ymatch.Point = pt;
@@ -273,6 +267,7 @@ namespace Plotter
                 if (dx < xymatch.DistX || dy < xymatch.DistY)
                 {
                     xymatch.Type = type;
+                    xymatch.LayerID = layerID;
                     xymatch.FigureID = figID;
                     xymatch.PointIndex = ptIdx;
                     xymatch.Point = pt;
@@ -385,11 +380,11 @@ namespace Plotter
             IEnumerable<CadFigure> list = layer.FigureList;
             foreach (CadFigure fig in list.Reverse())
             {
-                checkFig(fig);
+                checkFig(layer, fig);
             }
         }
 
-        private void checkSeg(uint figId, int idxA, int idxB, CadPoint a, CadPoint b)
+        private void checkSeg(uint layerID, uint figId, int idxA, int idxB, CadPoint a, CadPoint b)
         {
             if (isIgnore(figId, idxA))
             {
@@ -420,6 +415,7 @@ namespace Plotter
 
             if (dist < minDist)
             {
+                seg.LayerID = layerID;
                 seg.FigureID = figId;
                 seg.PtIndexA = idxA;
                 seg.PtIndexB = idxB;
@@ -433,7 +429,7 @@ namespace Plotter
             }
         }
 
-        private void checkCircle(CadFigure fig)
+        private void checkCircle(CadLayer layer, CadFigure fig)
         {
             if (isIgnore(fig.ID, 0))
             {
@@ -466,6 +462,7 @@ namespace Plotter
 
             if (dist < minDist)
             {
+                seg.LayerID = layer.ID;
                 seg.FigureID = fig.ID;
                 seg.PtIndexA = 0;
                 seg.PtIndexB = 1;
@@ -479,7 +476,7 @@ namespace Plotter
             }
         }
 
-        private void checkSegs(CadFigure fig)
+        private void checkSegs(CadLayer layer, CadFigure fig)
         {
             List<CadPoint> pl = fig.PointList;
 
@@ -523,7 +520,7 @@ namespace Plotter
                     continue;
                 }
 
-                checkSeg(fig.ID, ia, ib, a, b);
+                checkSeg(layer.ID, fig.ID, ia, ib, a, b);
 
                 a = b;
 
@@ -535,21 +532,21 @@ namespace Plotter
             if (fig.Closed)
             {
                 b = pl[0];
-                checkSeg(fig.ID, pl.Count - 1, 0, a, b);
+                checkSeg(layer.ID, fig.ID, pl.Count - 1, 0, a, b);
             }
         }
 
-        private void checkFig(CadFigure fig)
+        private void checkFig(CadLayer layer, CadFigure fig)
         {
             switch (fig.Type)
             {
                 case CadFigure.Types.LINE:
                 case CadFigure.Types.POLY_LINES:
                 case CadFigure.Types.RECT:
-                    checkSegs(fig);
+                    checkSegs(layer, fig);
                     break;
                 case CadFigure.Types.CIRCLE:
-                    checkCircle(fig);
+                    checkCircle(layer, fig);
                     break;
                 default:
                     break;

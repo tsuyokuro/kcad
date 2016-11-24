@@ -440,9 +440,7 @@ namespace Plotter
         {
             DiffDataList ddl = new DiffDataList();
 
-            //CadLayer layer = mDB.getLayer(CurrentLayer.ID);
-
-            List<uint> figIDList = EditIdList;  //getSelectedFigIDList();
+            List<uint> figIDList = EditIdList;
 
             foreach (uint id in figIDList)
             {
