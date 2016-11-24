@@ -74,6 +74,8 @@ namespace Plotter
                 return mStoreList;
             }
         }
+
+        public bool Locked  { set; get; } = false;
         #endregion
 
         private List<CadPoint> mPointList = new List<CadPoint>();
@@ -143,11 +145,13 @@ namespace Plotter
 
         public void copyPoints(CadFigure fig)
         {
+            if (Locked) return;
             copyPointList(mPointList, fig.mPointList);
         }
 
         public void addPoints(List<CadPoint> points, int sp, int num)
         {
+            if (Locked) return;
             for (int i = 0; i < num; i++)
             {
                 CadPoint p = points[i + sp];
@@ -157,11 +161,13 @@ namespace Plotter
 
         public void addPoints(List<CadPoint> points, int sp)
         {
+            if (Locked) return;
             addPoints(points, sp, points.Count - sp);
         }
 
         public void addPoints(List<CadPoint> points)
         {
+            if (Locked) return;
             foreach (CadPoint p in points)
             {
                 addPoint(p);
@@ -170,6 +176,8 @@ namespace Plotter
 
         public void addPointsReverse(List<CadPoint> points)
         {
+            if (Locked) return;
+
             int cnt = points.Count;
             int i = cnt - 1;
 
@@ -181,6 +189,8 @@ namespace Plotter
 
         public void addPointsReverse(List<CadPoint> points, int sp)
         {
+            if (Locked) return;
+
             int cnt = points.Count;
             int i = cnt - 1 - sp;
 
@@ -192,6 +202,8 @@ namespace Plotter
 
         public void insertPointAt(int index, CadPoint pt)
         {
+            if (Locked) return;
+
             if (index >= mPointList.Count)
             {
                 mPointList.Add(pt);
@@ -203,6 +215,8 @@ namespace Plotter
 
         public void removePointAt(int index)
         {
+            if (Locked) return;
+
             if (mPointList == null)
             {
                 return;
@@ -216,13 +230,10 @@ namespace Plotter
             return mPointList[index];
         }
 
-        public CadPoint setPointTypeAt(int index)
-        {
-            return mPointList[index];
-        }
-
         public void selectPointAt(int index, bool sel)
         {
+            if (Locked) return;
+
             CadPoint p = mPointList[index];
             p.Selected = sel;
             mPointList[index] = p;
@@ -239,6 +250,8 @@ namespace Plotter
 
         public void Select()
         {
+            if (Locked) return;
+
             // Set select flag to all points
             int i;
             for (i = 0; i < mPointList.Count; i++)
@@ -249,6 +262,8 @@ namespace Plotter
 
         public void startEdit()
         {
+            if (Locked) return;
+
             if (mStoreList != null)
             {
                 return;
@@ -260,6 +275,8 @@ namespace Plotter
 
         public DiffData endEdit()
         {
+            if (Locked) return null;
+
             DiffData diff = DiffData.create(this);
             mStoreList = null;
             return diff;
@@ -288,17 +305,23 @@ namespace Plotter
 
         public void reversePointList()
         {
+            if (Locked) return;
+
             mPointList.Reverse();
         }
 
         public void addChild(CadFigure fig)
         {
+            if (Locked) return;
+
             mChildList.Add(fig);
             fig.setParent(this);
         }
 
         public void releaseAllChildlen()
         {
+            if (Locked) return;
+
             foreach (CadFigure fig in mChildList)
             {
                 fig.Parent = null;
@@ -474,26 +497,36 @@ namespace Plotter
 
         public void moveSelectedPoints(CadPoint delta)
         {
+            if (Locked) return;
+
             Behavior.moveSelectedPoint(delta);
         }
 
         public void moveAllPoints(CadPoint delta)
         {
+            if (Locked) return;
+
             Behavior.moveAllPoints(delta);
         }
 
         public void addPoint(CadPoint p)
         {
+            if (Locked) return;
+
             Behavior.addPoint(p);
         }
 
         public void removeSelected()
         {
+            if (Locked) return;
+
             Behavior.removeSelected();
         }
 
         public void setPointAt(int index, CadPoint pt)
         {
+            if (Locked) return;
+
             Behavior.setPointAt(index, pt);
         }
 

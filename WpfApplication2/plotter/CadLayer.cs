@@ -14,6 +14,7 @@ namespace Plotter
 
         new public void Add(CadFigure fig)
         {
+            fig.Locked = Layer.Locked;
             base.Add(fig);
         }
     }
@@ -55,6 +56,7 @@ namespace Plotter
             set
             {
                 mLocked = value;
+                mFigureList.ForEach(a => a.Locked = value);
             }
 
             get
