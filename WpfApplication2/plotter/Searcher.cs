@@ -155,11 +155,19 @@ namespace Plotter
 
         public void searchAllLayer(CadObjectDB db)
         {
-            search(db, db.CurrentLayer);
+            if (db.CurrentLayer.Visible)
+            {
+                search(db, db.CurrentLayer);
+            }
 
             foreach (CadLayer layer in db.LayerList)
             {
                 if (layer.ID == db.CurrentLayerID)
+                {
+                    continue;
+                }
+
+                if (!layer.Visible)
                 {
                     continue;
                 }
@@ -381,6 +389,11 @@ namespace Plotter
         public void search(CadObjectDB db, CadLayer layer)
         {
             if (layer == null)
+            {
+                return;
+            }
+
+            if (!layer.Visible)
             {
                 return;
             }
