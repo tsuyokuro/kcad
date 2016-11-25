@@ -29,7 +29,7 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsSelected" Value="true">
                                     <Setter Property="Foreground" Value="White"/>
-                                    <Setter TargetName="Border" Property="Background" Value="#FF773f1d"/>
+                                    <Setter TargetName="Border" Property="Background" Value="#FF228b22"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -171,11 +171,18 @@
 
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" >
-                                    <CheckBox IsChecked="{Binding Path=Visible}" Foreground="White"/>
-                                    <CheckBox IsChecked="{Binding Path=Locked}" Foreground="White"/>
-                                    <TextBlock Text="{Binding Path=Name}" />
-                                </StackPanel>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <StackPanel Grid.Row="0" Orientation="Horizontal" >
+                                        <CheckBox IsChecked="{Binding Path=Visible}" Foreground="White"/>
+                                        <CheckBox IsChecked="{Binding Path=Locked}" Foreground="White"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="1" Margin="4" Text="{Binding Path=Name}" />
+                                </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
