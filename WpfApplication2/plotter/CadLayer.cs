@@ -15,6 +15,7 @@ namespace Plotter
         new public void Add(CadFigure fig)
         {
             fig.Locked = Layer.Locked;
+            fig.LayerID = Layer.ID;
             base.Add(fig);
         }
     }
@@ -40,7 +41,7 @@ namespace Plotter
                     return mName;
                 }
 
-                return "Layer-" + mId;
+                return "layer" + mId;
             }
 
             set

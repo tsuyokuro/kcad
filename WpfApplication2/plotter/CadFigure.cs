@@ -76,6 +76,8 @@ namespace Plotter
         }
 
         public bool Locked  { set; get; } = false;
+
+        public uint LayerID { set; get; } = 0;
         #endregion
 
         private List<CadPoint> mPointList = new List<CadPoint>();

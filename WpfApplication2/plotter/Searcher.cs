@@ -48,7 +48,7 @@ namespace Plotter
 
         public void dump(DebugOut dout)
         {
-            dout.println("MarkSeg {");
+            dout.println("MarkPoint {");
             dout.println("FigureID:" + FigureID.ToString());
             dout.println("PointIndex:" + PointIndex.ToString());
             dout.println("}");

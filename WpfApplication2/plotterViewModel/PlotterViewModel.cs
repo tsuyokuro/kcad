@@ -138,6 +138,7 @@ namespace Plotter
             mPlotter.LayerListChanged =  LayerListChanged;
         }
 
+        #region Maps
         private void initCommandMap()
         {
             commandMap = new Dictionary<string, Action>{
@@ -170,7 +171,9 @@ namespace Plotter
                 { "ctrl+s", save },
             };
         }
+        #endregion
 
+        // Handle events from PlotterController
         #region Event From PlotterController
         public void StateChanged(PlotterController sender, PlotterController.StateInfo si)
         {
@@ -182,6 +185,11 @@ namespace Plotter
 
         public void LayerListChanged(PlotterController sender, PlotterController.LayerListInfo layerListInfo)
         {
+            foreach (LayerHolder lh in LayerList)
+            {
+                lh.PropertyChanged -= LayerListItemPropertyChanged;
+            }
+
             LayerList.Clear();
 
             foreach (CadLayer layer in layerListInfo.LayerList)
@@ -216,7 +224,7 @@ namespace Plotter
         #endregion
 
 
-
+        // Layer list handling
         #region LayerList
         public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -242,6 +250,7 @@ namespace Plotter
         #endregion
 
 
+        // Keyboard handling
         #region Keyboard handling
         public void perviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
@@ -295,7 +304,7 @@ namespace Plotter
         #endregion
 
 
-
+        // Save / Load
         #region File
         private void SaveFile(String fname)
         {
@@ -315,7 +324,6 @@ namespace Plotter
             mPlotterView.endDraw();
         }
         #endregion
-
 
 
         #region helper
@@ -340,7 +348,6 @@ namespace Plotter
             mPlotterView.endDraw();
         }
         #endregion
-
 
 
         #region Actions
@@ -504,7 +511,8 @@ namespace Plotter
         }
         #endregion
 
-        #region
+
+        #region Others
         private void MessageOut(String s)
         {
             InteractOut.print(s);

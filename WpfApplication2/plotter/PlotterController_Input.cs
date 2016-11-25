@@ -129,22 +129,27 @@ namespace Plotter
                         State = States.START_DRAGING_POINTS;
                         CadFigure fig = mDB.getFigure(mp.FigureID);
 
-                        clearSelListConditional(pointer, mp);
+                        CadLayer layer = mDB.getLayer(mp.LayerID);
 
-                        if (SelectMode == SelectModes.POINT)
+                        if (!layer.Locked)
                         {
-                            mSelList.add(mp);
-                            fig.selectPointAt(mp.PointIndex, true);
-                        }
-                        else if (SelectMode == SelectModes.OBJECT)
-                        {
-                            mSelList.add(mDB.getFigure(mp.FigureID));
-                            fig.SelectWithGroup();
-                        }
+                            clearSelListConditional(pointer, mp);
 
-                        // Set ignore liset for snap cursor
-                        mPointSearcher.setIgnoreList(mSelList.List);
-                        mSegSearcher.setIgnoreList(mSelList.List);
+                            if (SelectMode == SelectModes.POINT)
+                            {
+                                mSelList.add(mp);
+                                fig.selectPointAt(mp.PointIndex, true);
+                            }
+                            else if (SelectMode == SelectModes.OBJECT)
+                            {
+                                mSelList.add(mDB.getFigure(mp.FigureID));
+                                fig.SelectWithGroup();
+                            }
+
+                            // Set ignore liset for snap cursor
+                            mPointSearcher.setIgnoreList(mSelList.List);
+                            mSegSearcher.setIgnoreList(mSelList.List);
+                        }
                     }
                     else if (mp.Type == MarkPoint.Types.RELATIVE_POINT)
                     {
@@ -158,7 +163,9 @@ namespace Plotter
                         mSegSearcher.searchAllLayer(cp, mDB);
                         MarkSeg mseg = mSegSearcher.getMatch();
 
-                        if (mseg.FigureID != 0)
+                        CadLayer layer = mDB.getLayer(mseg.LayerID);
+
+                        if (mseg.FigureID != 0 && !layer.Locked)
                         {
                             mObjDownPoint = mSnapCursorPos;
 
