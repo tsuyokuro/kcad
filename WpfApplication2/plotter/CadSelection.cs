@@ -4,60 +4,56 @@ using System.Drawing;
 
 namespace Plotter
 {
-    public struct PointSpec
-    {
-        public uint FigureID;
-        public int PointIndex;
-        public CadPoint Point;
-    }
-
-
     public class SelectItem
     {
-        //public uint LayerID = 0;
+        public MarkPoint mMarkPoint;
 
-        PointSpec mPointSpec;
+        public uint LayerID
+        {
+            get { return mMarkPoint.LayerID; }
+            set { mMarkPoint.LayerID = value; }
+        }
 
         public uint FigureID
         {
-            get { return mPointSpec.FigureID; }
-            set { mPointSpec.FigureID = value; }
+            get { return mMarkPoint.FigureID; }
+            set { mMarkPoint.FigureID = value; }
         }
 
         public int PointIndex
         {
-            get { return mPointSpec.PointIndex; }
-            set { mPointSpec.PointIndex = value; }
+            get { return mMarkPoint.PointIndex; }
+            set { mMarkPoint.PointIndex = value; }
         }
 
         public CadPoint Point
         {
-            get { return mPointSpec.Point; }
-            set { mPointSpec.Point = value; }
+            get { return mMarkPoint.Point; }
+            set { mMarkPoint.Point = value; }
         }
-
 
         public SelectItem()
         {
-            mPointSpec = default(PointSpec);
+            mMarkPoint = default(MarkPoint);
+        }
+
+        public SelectItem(MarkPoint mp)
+        {
+            mMarkPoint = mp;
         }
 
         public SelectItem(SelectItem src)
         {
-            //LayerID = src.LayerID;
-            FigureID = src.FigureID;
-
-            PointIndex = src.PointIndex;
-            Point = src.Point;
+            mMarkPoint = src.mMarkPoint;
         }
 
         public void dump(DebugOut dout)
         {
             dout.println("SelectItem {");
             dout.Indent++;
+            dout.println("LayerID:" + LayerID.ToString());
             dout.println("FigureID:" + FigureID.ToString());
             dout.println("PointIndex:" + PointIndex.ToString());
-            mPointSpec.Point.dump(dout);
             dout.Indent--;
             dout.println("}");
         }
@@ -72,7 +68,7 @@ namespace Plotter
             get { return mList; }
         }
 
-        public void add(uint figureId, int pointIndex, CadPoint point)
+        public void add(uint layerID, uint figureId, int pointIndex, CadPoint point)
         {
             SelectItem f = find(figureId, pointIndex);
 
@@ -84,6 +80,7 @@ namespace Plotter
 
             SelectItem item = new SelectItem();
 
+            item.LayerID = layerID;
             item.FigureID = figureId;
             item.PointIndex = pointIndex;
 
@@ -91,26 +88,26 @@ namespace Plotter
             mList.Add(item);
         }
 
-        public void add(CadFigure fig)
+        public void add(uint layerID, CadFigure fig)
         {
             for (int idx = 0; idx < fig.PointCount; idx++)
             {
-                add(fig.ID, idx, fig.getPointAt(idx));
+                add(layerID, fig.ID, idx, fig.getPointAt(idx));
             }
         }
 
         public void add(MarkPoint mp)
         {
-            add(mp.FigureID, mp.PointIndex, mp.Point);
+            mList.Add(new SelectItem(mp));
         }
 
         public void add(MarkSeg ms)
         {
-            add(ms.FigureID, ms.PtIndexA, ms.pA);
-            add(ms.FigureID, ms.PtIndexB, ms.pB);
+            add(ms.LayerID, ms.FigureID, ms.PtIndexA, ms.pA);
+            add(ms.LayerID, ms.FigureID, ms.PtIndexB, ms.pB);
         }
 
-        public void add(CadFigure fig, int a, int b)
+        public void add(uint layerID, CadFigure fig, int a, int b)
         {
             int si = Math.Min(a, b);
             int ei = Math.Max(a, b);
@@ -118,7 +115,7 @@ namespace Plotter
             for (int i = si; i <= ei; i++)
             {
                 CadPoint p = fig.getPointAt(i);
-                add(fig.ID, i, p);
+                add(layerID, fig.ID, i, p);
             }
         }
 

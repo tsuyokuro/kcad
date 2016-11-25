@@ -212,12 +212,22 @@ namespace Plotter
             }
         }
 
-        public void checkRelativePoints(List<CadRelativePoint> list)
+        public void checkRelativePoints(CadObjectDB db)
         {
+            foreach (CadLayer layer in db.LayerList)
+            {
+                checkRelativePoints(layer);
+            }
+        }
+
+        public void checkRelativePoints(CadLayer layer)
+        {
+            List<CadRelativePoint> list = layer.RelPointList;
+
             int idx = 0;
             foreach (CadRelativePoint rp in list)
             {
-                checkFigPoint(rp.point, 0, 0, idx, MarkPoint.Types.RELATIVE_POINT);
+                checkFigPoint(rp.point, layer.ID, 0, idx, MarkPoint.Types.RELATIVE_POINT);
                 idx++;
             }
         }

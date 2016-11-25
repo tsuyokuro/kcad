@@ -190,11 +190,21 @@ namespace Plotter
 
         public Result bond(List<SelectItem> selList)
         {
-            SelectList = selList;
+            SelectList = new List<SelectItem>();
+
+            foreach (SelectItem item in selList)
+            {
+                if (item.LayerID != Layer.ID)
+                {
+                    continue;
+                }
+
+                SelectList.Add(item);
+            }
 
             // Collect endpoint (first and last point) items
             // to ItemList 
-            collectEndPoint(selList);
+            collectEndPoint(SelectList);
 
             // joint end points
             bondMain();

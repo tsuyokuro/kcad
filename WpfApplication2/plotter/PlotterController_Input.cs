@@ -117,7 +117,7 @@ namespace Plotter
                     mPointSearcher.setRangePixel(dc, SnapRange);
                     mPointSearcher.searchAllLayer(cp, mDB);
 
-                    mPointSearcher.checkRelativePoints(CurrentLayer.RelPointList);
+                    mPointSearcher.checkRelativePoints(mDB);
 
                     MarkPoint mp = mPointSearcher.getXYMatch();
 
@@ -142,7 +142,7 @@ namespace Plotter
                             }
                             else if (SelectMode == SelectModes.OBJECT)
                             {
-                                mSelList.add(mDB.getFigure(mp.FigureID));
+                                mSelList.add(mp.LayerID, mDB.getFigure(mp.FigureID));
                                 fig.SelectWithGroup();
                             }
 
@@ -153,7 +153,8 @@ namespace Plotter
                     }
                     else if (mp.Type == MarkPoint.Types.RELATIVE_POINT)
                     {
-                        CadRelativePoint rp = CurrentLayer.RelPointList[mp.PointIndex];
+                        CadLayer layer = mDB.getLayer(mp.LayerID);
+                        CadRelativePoint rp = layer.RelPointList[mp.PointIndex];
                         rp.Selected = true;
                     }
                     else
@@ -175,13 +176,13 @@ namespace Plotter
 
                             if (SelectMode == SelectModes.POINT)
                             {
-                                mSelList.add(mDB.getFigure(mseg.FigureID), mseg.PtIndexA, mseg.PtIndexB);
+                                mSelList.add(mseg.LayerID, mDB.getFigure(mseg.FigureID), mseg.PtIndexA, mseg.PtIndexB);
                                 fig.selectPointAt(mseg.PtIndexA, true);
                                 fig.selectPointAt(mseg.PtIndexB, true);
                             }
                             else if (SelectMode == SelectModes.OBJECT)
                             {
-                                mSelList.add(mDB.getFigure(mseg.FigureID));
+                                mSelList.add(mseg.LayerID, mDB.getFigure(mseg.FigureID));
                                 fig.SelectWithGroup();
                             }
 
@@ -369,7 +370,7 @@ namespace Plotter
             }
             */
 
-            mPointSearcher.checkRelativePoints(CurrentLayer.RelPointList);
+            mPointSearcher.checkRelativePoints(mDB);
 
             // Search point
             mPointSearcher.searchAllLayer(mDB);

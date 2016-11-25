@@ -196,6 +196,10 @@ namespace Plotter
                 Evaluator.Value name = stack.pop();
                 layer.Name = name.getString();
             }
+            else
+            {
+                layer.Name = null;
+            }
 
             CurrentLayer = layer;
 
