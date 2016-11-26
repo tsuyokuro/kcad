@@ -91,14 +91,28 @@ namespace Plotter
             }
             else if (s == "fig_list")
             {
-                List<CadFigure> figList = CurrentLayer.FigureList;
+                DebugOut dout = new DebugOut();
 
-                Log.d("Figure List");
-
-                foreach (CadFigure fig in figList)
+                dout.println("fig_list {");
+                dout.Indent++;
+                foreach (CadLayer layer in mDB.LayerList)
                 {
-                    Log.d("ID={0:d} Type={1:s} class={2:s}", fig.ID, fig.Type.ToString(), fig.getBehaviorType().Name);
+                    List<CadFigure> figList = layer.FigureList;
+
+                    dout.println("Layer:" + layer.Name + "{");
+                    dout.Indent++;
+
+                    foreach (CadFigure fig in figList)
+                    {
+                        Log.d("ID={0:d} Type={1:s} class={2:s}", fig.ID, fig.Type.ToString(), fig.getBehaviorType().Name);
+                    }
+
+                    dout.Indent--;
+                    dout.println("}");
                 }
+
+                dout.Indent--;
+                dout.println("}");
             }
             else if (s == "sel_list")
             {

@@ -75,7 +75,7 @@ namespace Plotter
             return ope;
         }
 
-        public static CadOpe getRemoveRelPoint(CadLayer layer, CadRelativePoint rp)
+        public static CadOpe getRemoveRelPointOpe(CadLayer layer, CadRelativePoint rp)
         {
             CadOpe ope = new CadOpeRemoveRelPoint(layer.ID, rp);
             return ope;

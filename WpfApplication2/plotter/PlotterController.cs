@@ -460,7 +460,7 @@ namespace Plotter
             {
                 CadOpeList root = CadOpe.getListOpe();
 
-                CadOpeList ropeList = removeInvalidRelPoints(CurrentLayer);
+                CadOpeList ropeList = removeInvalidRelPoints();
                 root.OpeList.Add(ropeList);
 
                 CadOpe ope = CadOpe.getDiffOpe(ddl);
@@ -473,7 +473,7 @@ namespace Plotter
             }
             else
             {
-                CadOpeList ropeList = removeInvalidRelPoints(CurrentLayer);
+                CadOpeList ropeList = removeInvalidRelPoints();
                 mHistoryManager.foward(ropeList);
             }
         }
@@ -582,7 +582,20 @@ namespace Plotter
             }
         }
 
-        private CadOpeList removeInvalidRelPoints(CadLayer layer)
+        private CadOpeList removeInvalidRelPoints()
+        {
+            CadOpeList opeList = new CadOpeList();
+
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                CadOpeList subList = removeInvalidRelPointsWithLayer(layer);
+                opeList.OpeList.Add(subList);
+            }
+
+            return opeList;
+        }
+
+        private CadOpeList removeInvalidRelPointsWithLayer(CadLayer layer)
         {
             List<CadRelativePoint> list = layer.RelPointList;
 
@@ -598,7 +611,7 @@ namespace Plotter
 
                 if (rp.RemoveMark)
                 {
-                    ope = CadOpe.getRemoveRelPoint(CurrentLayer, rp);
+                    ope = CadOpe.getRemoveRelPointOpe(layer, rp);
                     opeList.OpeList.Add(ope);
 
                     list.RemoveAt(i);
@@ -606,8 +619,8 @@ namespace Plotter
                 }
 
 
-                CadFigure figA = CurrentLayer.getFigureByID(rp.FigureIdA);
-                CadFigure figB = CurrentLayer.getFigureByID(rp.FigureIdB);
+                CadFigure figA = layer.getFigureByID(rp.FigureIdA);
+                CadFigure figB = layer.getFigureByID(rp.FigureIdB);
 
                 if (
                     (figA != null && figA.PointList.Count > rp.IndexA) &&
@@ -617,7 +630,7 @@ namespace Plotter
                     continue;
                 }
 
-                ope = CadOpe.getRemoveRelPoint(CurrentLayer, rp);
+                ope = CadOpe.getRemoveRelPointOpe(layer, rp);
                 opeList.OpeList.Add(ope);
 
                 list.RemoveAt(i);

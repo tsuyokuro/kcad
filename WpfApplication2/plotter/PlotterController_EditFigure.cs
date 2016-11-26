@@ -49,7 +49,7 @@ namespace Plotter
             if (num > 0)
             {
                 CadOpe ope = CadOpe.getInsertPointsOpe(
-                    CurrentLayer.ID, fig.ID, seg.PtIndexA + 1, num);
+                    fig.LayerID, fig.ID, seg.PtIndexA + 1, num);
 
                 mHistoryManager.foward(ope);
             }
@@ -68,7 +68,11 @@ namespace Plotter
 
         public void separateFigures(List<SelectItem> selList)
         {
-            CadFigureCutter fa = new CadFigureCutter(mDB, CurrentLayer);
+            // TODO Fix separateFigures function
+            // Currently, Only CurrentLayer will be processed.
+            // Make sure that other layers are also processed.
+
+            CadFigureCutter fa = new CadFigureCutter(mDB, CurrentLayer.ID);
 
             var res = fa.cut(selList);
 
@@ -160,7 +164,7 @@ namespace Plotter
                 return;
             }
 
-            CadSegmentCutter segCutter = new CadSegmentCutter(mDB, CurrentLayer);
+            CadSegmentCutter segCutter = new CadSegmentCutter(mDB);
 
             var res = segCutter.cutSegment(ms, mObjDownPoint.Value);
 
@@ -174,15 +178,17 @@ namespace Plotter
 
             foreach (CadFigure fig in res.AddList)
             {
-                ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
+                ope = CadOpe.getAddFigureOpe(ms.LayerID, fig.ID);
                 opeRoot.OpeList.Add(ope);
 
                 CurrentLayer.addFigure(fig);
             }
 
+            CadLayer layer = mDB.getLayer(ms.LayerID);
+
             foreach (CadFigure fig in res.RemoveList)
             {
-                ope = CadOpe.getRemoveFigureOpe(CurrentLayer, fig.ID);
+                ope = CadOpe.getRemoveFigureOpe(layer, fig.ID);
                 opeRoot.OpeList.Add(ope);
 
                 CurrentLayer.removeFigureByID(fig.ID);
@@ -209,7 +215,9 @@ namespace Plotter
                         fig, seg.PtIndexB
                         );
 
-                    CurrentLayer.RelPointList.Add(rp);
+                    CadLayer layer = mDB.getLayer(seg.LayerID);
+
+                    layer.RelPointList.Add(rp);
                 }
 
                 draw(dc);
@@ -221,19 +229,22 @@ namespace Plotter
                 SelectItem si0 = mSelList.List[0];
                 SelectItem si1 = mSelList.List[1];
 
-                CadFigure fig0 = mDB.getFigure(si0.FigureID);
-                CadFigure fig1 = mDB.getFigure(si1.FigureID);
+                if (si0.LayerID == si1.LayerID)
+                {
+                    CadFigure fig0 = mDB.getFigure(si0.FigureID);
+                    CadFigure fig1 = mDB.getFigure(si1.FigureID);
 
-                CadRelativePoint rp = mDB.newRelPoint();
+                    CadRelativePoint rp = mDB.newRelPoint();
 
-                rp.set(
-                    CadRelativePoint.Types.CENTER,
-                    fig0, si0.PointIndex,
-                    fig1, si1.PointIndex
-                    );
+                    rp.set(
+                        CadRelativePoint.Types.CENTER,
+                        fig0, si0.PointIndex,
+                        fig1, si1.PointIndex
+                        );
 
-                CurrentLayer.RelPointList.Add(rp);
-
+                    CadLayer layer = mDB.getLayer(si0.LayerID);
+                    layer.RelPointList.Add(rp);
+                }
             }
 
             draw(dc);

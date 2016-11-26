@@ -10,7 +10,6 @@ namespace Plotter
     class CadFigureAssembler
     {
         protected CadObjectDB DB;
-        protected CadLayer Layer;
         protected Result ProcResult = new Result();
 
         public class Result
@@ -30,22 +29,28 @@ namespace Plotter
             }
         }
 
-        public CadFigureAssembler(CadObjectDB db, CadLayer layer)
+        public CadFigureAssembler(CadObjectDB db)
         {
             DB = db;
-            Layer = layer;
         }
     }
 
     class CadFigureCutter : CadFigureAssembler
     {
-        public CadFigureCutter(CadObjectDB db, CadLayer layer) : base(db, layer)
+        private uint LayerID = 0;
+
+        public CadFigureCutter(CadObjectDB db, uint layerID) : base(db)
         {
+            LayerID = layerID;
         }
 
         public Result cut(List<SelectItem> selList)
         {
-            var sels = (from a in selList orderby a.FigureID, a.PointIndex ascending select a);
+            var sels = (
+                from a in selList
+                where a.LayerID == LayerID
+                orderby a.FigureID, a.PointIndex ascending
+                select a);
 
             uint figId = 0;
             CadFigure fig = null;
@@ -151,12 +156,15 @@ namespace Plotter
 
     class CadFigureBonder : CadFigureAssembler
     {
+        private CadLayer Layer = null;
+
         private List<CadFigure> Work;
         private List<SelectItem> SelectList;
         private List<Item> ItemList;
 
-        public CadFigureBonder(CadObjectDB db, CadLayer layer) : base(db, layer)
+        public CadFigureBonder(CadObjectDB db, CadLayer layer) : base(db)
         {
+            Layer = layer;
             // Copy figure list to Work
             Work = new List<CadFigure>(layer.FigureList);
         }
@@ -466,7 +474,7 @@ namespace Plotter
 
     class CadSegmentCutter : CadFigureAssembler
     {
-        public CadSegmentCutter(CadObjectDB db, CadLayer layer) : base(db, layer)
+        public CadSegmentCutter(CadObjectDB db) : base(db)
         {
         }
 
