@@ -14,10 +14,14 @@
     <Window.Resources>
         <ResourceDictionary>
 
+            <SolidColorBrush x:Key="BGColor" Color="#FF252526" />
+            <SolidColorBrush x:Key="TextColor" Color="White" />
+            <SolidColorBrush x:Key="ListBoxSelColor" Color="#FF228b22" />
+
             <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
 
-                <Setter Property="Background" Value="#FF252526"/>
-                <Setter Property="Foreground" Value="#FFFFFFFF"/>
+                <Setter Property="Background" Value="{StaticResource BGColor}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
 
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 <Setter Property="Template">
@@ -29,7 +33,87 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsSelected" Value="true">
                                     <Setter Property="Foreground" Value="White"/>
-                                    <Setter TargetName="Border" Property="Background" Value="#FF228b22"/>
+                                    <Setter TargetName="Border"
+                                            Property="Background"
+                                            Value="{StaticResource ListBoxSelColor}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="MsgListBoxItem" TargetType="ListBoxItem">
+
+                <Setter Property="Background" Value="{StaticResource BGColor}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Border Name="Border" Padding="0" SnapsToDevicePixels="true">
+                                <ContentPresenter />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="true">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter TargetName="Border"
+                                            Property="Background"
+                                            Value="{StaticResource ListBoxSelColor}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+            <Style x:Key="VisibleCheckBox" TargetType="{x:Type CheckBox}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="CheckBox">
+                            <BulletDecorator>
+                                <BulletDecorator.Bullet>
+                                    <!--off image-->
+                                    <Image Name="TickImage" Source="Images\invisible.png" Grid.Column="0"/>
+                                </BulletDecorator.Bullet>
+                                <ContentPresenter VerticalAlignment="Center" Grid.Column="1"/>
+                            </BulletDecorator>
+                            <ControlTemplate.Triggers>
+                                <!--on image-->
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="TickImage" Property="Source" Value="Images\visible.png" />
+                                </Trigger>
+                                <!--other image-->
+                                <Trigger Property="IsChecked" Value="{x:Null}">
+                                    <Setter TargetName="TickImage" Property="Source" Value="Images\visible.png" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="LockedCheckBox" TargetType="{x:Type CheckBox}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="CheckBox">
+                            <BulletDecorator>
+                                <BulletDecorator.Bullet>
+                                    <!--off image-->
+                                    <Image Name="TickImage" Source="Images\unlocked.png" Grid.Column="0"/>
+                                </BulletDecorator.Bullet>
+                                <ContentPresenter VerticalAlignment="Center" Grid.Column="1"/>
+                            </BulletDecorator>
+                            <ControlTemplate.Triggers>
+                                <!--on image-->
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="TickImage" Property="Source" Value="Images\locked.png" />
+                                </Trigger>
+                                <!--other image-->
+                                <Trigger Property="IsChecked" Value="{x:Null}">
+                                    <Setter TargetName="TickImage" Property="Source" Value="Images\unlocked.png" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -53,9 +137,9 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="1000*"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0">
+        <Menu Grid.Row="0" >
             <MenuItem Header="File">
-                <MenuItem Tag="load" Header="Load" Click="MenuItem_Click"/>
+                <MenuItem Tag="load" Header="Load" Click="MenuItem_Click" />
                 <MenuItem Tag="save" Header="Save" Click="MenuItem_Click"/>
                 <MenuItem Tag="print" Header="Print" Click="MenuItem_Click"/>
             </MenuItem>
@@ -178,8 +262,13 @@
                                     </Grid.RowDefinitions>
 
                                     <StackPanel Grid.Row="0" Orientation="Horizontal" >
-                                        <CheckBox IsChecked="{Binding Path=Visible}" Foreground="White"/>
-                                        <CheckBox IsChecked="{Binding Path=Locked}" Foreground="White"/>
+                                        <CheckBox IsChecked="{Binding Path=Visible}"
+                                                  Style="{StaticResource VisibleCheckBox}"
+                                                  Foreground="White"/>
+                                        
+                                        <CheckBox IsChecked="{Binding Path=Locked}"
+                                                  Style="{StaticResource LockedCheckBox}"
+                                                  Foreground="White"/>
                                     </StackPanel>
                                     <TextBlock Grid.Row="1" Margin="4" Text="{Binding Path=Name}" />
                                 </Grid>
@@ -220,8 +309,18 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <ListBox Grid.Row="0" x:Name="listMessage" Background="#FF252526" Foreground="White"/>
-                    <TextBox Grid.Row="1" x:Name="textCommand" Background="#FF252526" Foreground="White"/>
+                    <ListBox Grid.Row="0"
+                             x:Name="listMessage"
+                             Foreground="{StaticResource TextColor}"
+                             Background="{StaticResource BGColor}"
+                             ItemContainerStyle="{StaticResource MsgListBoxItem}"
+                             />
+                    
+                    <TextBox Grid.Row="1"
+                             x:Name="textCommand"
+                             Foreground="{StaticResource TextColor}"
+                             Background="{StaticResource BGColor}"
+                             />
                 </Grid>
             </Grid>
         </Grid>

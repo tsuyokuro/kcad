@@ -11,6 +11,7 @@ namespace Plotter
     [Serializable]
     public class CadFigure
     {
+        #region Enums
         public enum Types : byte
         {
             NONE,
@@ -30,6 +31,7 @@ namespace Plotter
             CONTINUE,
             FULL,
         }
+        #endregion
 
         #region  "public properties"
         public uint ID { get; set; }
