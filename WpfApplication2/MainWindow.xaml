@@ -136,6 +136,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="1000*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" >
             <MenuItem Header="File">
@@ -324,5 +325,10 @@
                 </Grid>
             </Grid>
         </Grid>
+        
+        <!--Status bar-->
+        <StackPanel Grid.Row="2" Background="{StaticResource BGColor}" Height="16" HorizontalAlignment="Stretch">
+
+        </StackPanel>
     </Grid>
 </Window>

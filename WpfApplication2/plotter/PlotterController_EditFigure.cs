@@ -68,11 +68,7 @@ namespace Plotter
 
         public void separateFigures(List<SelectItem> selList)
         {
-            // TODO Fix separateFigures function
-            // Currently, Only CurrentLayer will be processed.
-            // Make sure that other layers are also processed.
-
-            CadFigureCutter fa = new CadFigureCutter(mDB, CurrentLayer.ID);
+            CadFigureCutter fa = new CadFigureCutter(mDB);
 
             var res = fa.cut(selList);
 
@@ -84,20 +80,24 @@ namespace Plotter
             CadOpeList opeRoot = CadOpe.getListOpe();
             CadOpe ope;
 
-            foreach (CadFigure fig in res.AddList)
+            foreach (CadFigureAssembler.ResultItem ri in res.AddList)
             {
-                ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
+                CadLayer layer = mDB.getLayer(ri.LayerID);
+
+                ope = CadOpe.getAddFigureOpe(ri.LayerID, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
-                CurrentLayer.addFigure(fig);
+                layer.addFigure(ri.Figure);
             }
 
-            foreach (CadFigure fig in res.RemoveList)
+            foreach (CadFigureAssembler.ResultItem ri in res.RemoveList)
             {
-                ope = CadOpe.getRemoveFigureOpe(CurrentLayer, fig.ID);
+                CadLayer layer = mDB.getLayer(ri.LayerID);
+
+                ope = CadOpe.getRemoveFigureOpe(layer, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
-                CurrentLayer.removeFigureByID(fig.ID);
+                layer.removeFigureByID(ri.FigureID);
             }
 
             mHistoryManager.foward(opeRoot);
@@ -124,20 +124,24 @@ namespace Plotter
             CadOpeList opeRoot = CadOpe.getListOpe();
             CadOpe ope;
 
-            foreach (CadFigure fig in res.AddList)
+            foreach (CadFigureAssembler.ResultItem ri in res.AddList)
             {
-                ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
+                CadLayer layer = mDB.getLayer(ri.LayerID);
+
+                ope = CadOpe.getAddFigureOpe(ri.LayerID, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
-                CurrentLayer.addFigure(fig);
+                layer.addFigure(ri.Figure);
             }
 
-            foreach (CadFigure fig in res.RemoveList)
+            foreach (CadFigureAssembler.ResultItem ri in res.RemoveList)
             {
-                ope = CadOpe.getRemoveFigureOpe(CurrentLayer, fig.ID);
+                CadLayer layer = mDB.getLayer(ri.LayerID);
+
+                ope = CadOpe.getRemoveFigureOpe(layer, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
-                CurrentLayer.removeFigureByID(fig.ID);
+                layer.removeFigureByID(ri.FigureID);
             }
 
             mHistoryManager.foward(opeRoot);
@@ -176,22 +180,24 @@ namespace Plotter
             CadOpeList opeRoot = CadOpe.getListOpe();
             CadOpe ope;
 
-            foreach (CadFigure fig in res.AddList)
+            foreach (CadFigureAssembler.ResultItem ri in res.AddList)
             {
-                ope = CadOpe.getAddFigureOpe(ms.LayerID, fig.ID);
+                CadLayer layer = mDB.getLayer(ri.LayerID);
+
+                ope = CadOpe.getAddFigureOpe(ri.LayerID, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
-                CurrentLayer.addFigure(fig);
+                layer.addFigure(ri.Figure);
             }
 
-            CadLayer layer = mDB.getLayer(ms.LayerID);
-
-            foreach (CadFigure fig in res.RemoveList)
+            foreach (CadFigureAssembler.ResultItem ri in res.RemoveList)
             {
-                ope = CadOpe.getRemoveFigureOpe(layer, fig.ID);
+                CadLayer layer = mDB.getLayer(ri.LayerID);
+
+                ope = CadOpe.getRemoveFigureOpe(layer, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
-                CurrentLayer.removeFigureByID(fig.ID);
+                layer.removeFigureByID(ri.FigureID);
             }
 
             mHistoryManager.foward(opeRoot);
@@ -199,8 +205,6 @@ namespace Plotter
 
         public void addCenterPoint(DrawContext dc)
         {
-            //MarkSeg ms = mSelectedSegs.LastSel;
-
             if (mSelectedSegs.List.Count > 0)
             {
                 foreach (MarkSeg seg in mSelectedSegs.List)

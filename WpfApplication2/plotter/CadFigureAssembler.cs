@@ -12,10 +12,53 @@ namespace Plotter
         protected CadObjectDB DB;
         protected Result ProcResult = new Result();
 
+        public class ResultItem
+        {
+            public uint LayerID { set; get; }=0;
+
+            private CadFigure mFigure;
+
+            public CadFigure Figure
+            {
+                set
+                {
+                    mFigure = value;
+                }
+
+                get
+                {
+                    return mFigure;
+                }
+            }
+
+            public uint FigureID
+            {
+                get
+                {
+                    if (mFigure == null)
+                    {
+                        return 0;
+                    }
+
+                    return mFigure.ID;
+                }
+            }
+
+            public ResultItem()
+            {
+            }
+
+            public ResultItem(uint layerID, CadFigure fig)
+            {
+                LayerID = layerID;
+                Figure = fig;
+            }
+        }
+
         public class Result
         {
-            public List<CadFigure> AddList = new List<CadFigure>();
-            public List<CadFigure> RemoveList = new List<CadFigure>();
+            public List<ResultItem> AddList = new List<ResultItem>();
+            public List<ResultItem> RemoveList = new List<ResultItem>();
 
             public bool isValid()
             {
@@ -37,18 +80,14 @@ namespace Plotter
 
     class CadFigureCutter : CadFigureAssembler
     {
-        private uint LayerID = 0;
-
-        public CadFigureCutter(CadObjectDB db, uint layerID) : base(db)
+        public CadFigureCutter(CadObjectDB db) : base(db)
         {
-            LayerID = layerID;
         }
 
         public Result cut(List<SelectItem> selList)
         {
             var sels = (
                 from a in selList
-                where a.LayerID == LayerID
                 orderby a.FigureID, a.PointIndex ascending
                 select a);
 
@@ -61,13 +100,13 @@ namespace Plotter
 
             List<SelectItem> figSet = new List<SelectItem>();
 
-            VoidFunc endFig = () =>
+            Action<CadFigure> endFig = (f) =>
             {
                 num = pcnt - sp;
 
                 CadFigure nfig = null;
 
-                if (fig.Closed)
+                if (f.Closed)
                 {
                     if (num >= 1)
                     {
@@ -89,7 +128,7 @@ namespace Plotter
 
                 if (nfig != null)
                 {
-                    ProcResult.AddList.Add(nfig);
+                    ProcResult.AddList.Add(new ResultItem(f.LayerID, nfig));
                 }
             };
 
@@ -99,7 +138,7 @@ namespace Plotter
                 {
                     if (sp != -1)
                     {
-                        endFig();
+                        endFig(fig);
                     }
 
                     figId = si.FigureID;
@@ -128,7 +167,7 @@ namespace Plotter
                     CadFigure nfig = DB.newFigure(CadFigure.Types.POLY_LINES);
                     nfig.addPoints(fig.PointList, sp, num);
 
-                    ProcResult.AddList.Add(nfig);
+                    ProcResult.AddList.Add(new ResultItem(si.LayerID, nfig));
                 }
 
                 sp = cp;
@@ -136,16 +175,16 @@ namespace Plotter
 
             if (sp != -1)
             {
-                endFig();
+                endFig(fig);
             }
 
             foreach (SelectItem si in figSet)
             {
-                CadFigure rmfig = DB.getFigure(si.FigureID);
+                CadFigure removefig = DB.getFigure(si.FigureID);
 
-                if (rmfig != null)
+                if (removefig != null)
                 {
-                    ProcResult.RemoveList.Add(rmfig);
+                    ProcResult.RemoveList.Add(new ResultItem(si.LayerID, removefig));
                 }
             }
 
@@ -274,9 +313,9 @@ namespace Plotter
                 {
                     updateItemList(bondInfo);
 
-                    ProcResult.AddList.Add(bondInfo.BondedFigure);
-                    ProcResult.RemoveList.Add(bondInfo.figA);
-                    ProcResult.RemoveList.Add(bondInfo.figB);
+                    ProcResult.AddList.Add(new ResultItem(Layer.ID, bondInfo.BondedFigure));
+                    ProcResult.RemoveList.Add(new ResultItem(bondInfo.figA.LayerID, bondInfo.figA));
+                    ProcResult.RemoveList.Add(new ResultItem(bondInfo.figB.LayerID, bondInfo.figB));
 
                     Work.RemoveAll(a =>
                         a.ID == bondInfo.figA.ID ||
@@ -509,10 +548,9 @@ namespace Plotter
                 fb.addPoint(fa.getPointAt(0));
             }
 
-            ProcResult.AddList.Add(fa);
-            ProcResult.AddList.Add(fb);
-
-            ProcResult.RemoveList.Add(org);
+            ProcResult.AddList.Add(new ResultItem(seg.LayerID, fa));
+            ProcResult.AddList.Add(new ResultItem(seg.LayerID, fb));
+            ProcResult.RemoveList.Add(new ResultItem(org.LayerID, org));
 
             return ProcResult;
         }
