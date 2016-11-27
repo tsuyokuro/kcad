@@ -66,10 +66,20 @@ namespace Plotter
             }
         }
 
+        private bool mVisible = true;
+
         public bool Visible
         {
-            set; get;
-        } = true;
+            set
+            {
+                mVisible = value;
+            }
+
+            get
+            {
+                return mVisible;
+            }
+        }
 
         private CadFigureList mFigureList = new CadFigureList();
 
@@ -173,6 +183,9 @@ namespace Plotter
                 jo.Add("name", mName);
             }
 
+            jo.Add("visible", mVisible);
+            jo.Add("locked", mLocked);
+
             jo.Add("fig_id_list", JsonUtil.ListToJsonIdList(mFigureList));
             jo.Add("rel_point_id_list", JsonUtil.ListToJsonIdList(mRelPointList));
 
@@ -185,6 +198,17 @@ namespace Plotter
             List<uint> idList;
 
             mName = (String)jo["name"];
+
+            if (jo["visible"] == null)
+            {
+                mVisible = true;
+            }
+            else
+            {
+                mVisible = (bool)jo["visible"];
+            }
+
+            mLocked = (bool)jo["locked"];
 
             JArray ja;
                 

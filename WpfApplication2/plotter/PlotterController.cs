@@ -733,6 +733,8 @@ namespace Plotter
             db.FromJson(jo);
 
             mDB = db;
+
+            NotifyLayerInfo();
         }
 
         #endregion

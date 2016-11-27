@@ -390,6 +390,7 @@ namespace Plotter
             jo.Add("id", ID);
             jo.Add("type", (byte)Type);
             jo.Add("closed", Closed);
+            jo.Add("locked", Locked);
 
             jo.Add("point_list", JsonUtil.ListToJsonList(PointList));
             return jo;
@@ -400,6 +401,7 @@ namespace Plotter
             ID = (uint)jo["id"];
             Type = (Types)(byte)jo["type"];
             Closed = (bool)jo["closed"];
+            Locked = (bool)jo["locked"];
 
             mPointList = JsonUtil.JsonListToObjectList<CadPoint>((JArray)jo["point_list"]);
         }
