@@ -18,6 +18,20 @@
             <SolidColorBrush x:Key="TextColor" Color="White" />
             <SolidColorBrush x:Key="ListBoxSelColor" Color="#FF228b22" />
 
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="#FF252526"/>
+                <Setter Property="Foreground" Value="#FFFFFFFF"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="BorderBrush" Value="#FF252526"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                        <Setter Property="ContentTemplate" Value="{StaticResource ToggleRadioCheckedBG}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
             <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
 
                 <Setter Property="Background" Value="{StaticResource BGColor}"/>
@@ -169,117 +183,126 @@
             <Border BorderBrush="YellowGreen" BorderThickness="2">
                 <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="#FF252526" >
 
-                <StackPanel x:Name="SlsectModePanel">
-                    <Label />
-                    <RadioButton
-                    Style="{StaticResource ToggleRadio}"
-                    Tag="OBJECT"
-                    Content="  Select Figure  " 
-                    IsChecked="{
-                        Binding SelectMode,
-                        ConverterParameter=OBJECT,
-                        Converter={StaticResource SelModeConv}
-                    }"
-                    />
+                    <StackPanel x:Name="SlsectModePanel">
+                        <Label />
+                        <RadioButton
+                        Style="{StaticResource ToggleRadio}"
+                        Tag="OBJECT"
+                        Content="  Select Figure  " 
+                        IsChecked="{
+                            Binding SelectMode,
+                            ConverterParameter=OBJECT,
+                            Converter={StaticResource SelModeConv}
+                        }"
+                        />
 
-                    <RadioButton
-                    Style="{StaticResource ToggleRadio}"
-                    Tag="POINT"
-                    Content="  Select Point  " 
-                    IsChecked="{
-                        Binding SelectMode,
-                        ConverterParameter=POINT,
-                        Converter={StaticResource SelModeConv}
-                    }"
-                    />
-                </StackPanel>
+                        <RadioButton
+                        Style="{StaticResource ToggleRadio}"
+                        Tag="POINT"
+                        Content="  Select Point  " 
+                        IsChecked="{
+                            Binding SelectMode,
+                            ConverterParameter=POINT,
+                            Converter={StaticResource SelModeConv}
+                        }"
+                        />
+                    </StackPanel>
 
-                <StackPanel x:Name="FigurePanel">
-                    <Label />
-                    <RadioButton
-                    Style="{StaticResource ToggleRadio}"
-                    Tag="LINE"
-                    Content="Line" 
-                    IsChecked="{
-                        Binding FigureType,
-                        ConverterParameter=LINE,
-                        Converter={StaticResource FigTypeConv}
-                    }"
-                    />
+                    <StackPanel x:Name="FigurePanel">
+                        <Label />
+                        <RadioButton
+                        Style="{StaticResource ToggleRadio}"
+                        Tag="LINE"
+                        Content="Line" 
+                        IsChecked="{
+                            Binding FigureType,
+                            ConverterParameter=LINE,
+                            Converter={StaticResource FigTypeConv}
+                        }"
+                        />
 
-                    <RadioButton
-                    Style="{StaticResource ToggleRadio}"
-                    Tag="RECT"
-                    Content="Rect" 
-                    IsChecked="{
-                        Binding FigureType,
-                        ConverterParameter=RECT,
-                        Converter={StaticResource FigTypeConv}
-                    }"
-                    />
+                        <RadioButton
+                        Style="{StaticResource ToggleRadio}"
+                        Tag="RECT"
+                        Content="Rect" 
+                        IsChecked="{
+                            Binding FigureType,
+                            ConverterParameter=RECT,
+                            Converter={StaticResource FigTypeConv}
+                        }"
+                        />
 
-                    <RadioButton
-                    Style="{StaticResource ToggleRadio}"
-                    Tag="POLY_LINES"
-                    Content="Poly lines" 
-                    IsChecked="{
-                        Binding FigureType,
-                        ConverterParameter=POLY_LINES,
-                        Converter={StaticResource FigTypeConv}
-                    }"
-                    />
+                        <RadioButton
+                        Style="{StaticResource ToggleRadio}"
+                        Tag="POLY_LINES"
+                        Content="Poly lines" 
+                        IsChecked="{
+                            Binding FigureType,
+                            ConverterParameter=POLY_LINES,
+                            Converter={StaticResource FigTypeConv}
+                        }"
+                        />
 
-                    <RadioButton
-                    Style="{StaticResource ToggleRadio}"
-                    Tag="CIRCLE"
-                    Content="Circle" 
-                    IsChecked="{
-                        Binding FigureType,
-                        ConverterParameter=CIRCLE,
-                        Converter={StaticResource FigTypeConv}
-                    }"
-                    />
+                        <RadioButton
+                        Style="{StaticResource ToggleRadio}"
+                        Tag="CIRCLE"
+                        Content="Circle" 
+                        IsChecked="{
+                            Binding FigureType,
+                            ConverterParameter=CIRCLE,
+                            Converter={StaticResource FigTypeConv}
+                        }"
+                        />
 
-                </StackPanel>
+                    </StackPanel>
 
-                <Label/>
+                    <Label/>
 
-                <Grid x:Name="LayerListPanel" Height="250">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Width="24" Content=" + " Style="{StaticResource ButtonStyle}" FontSize="20" FontWeight="ExtraBold" />
+                        <Button Grid.Column="1" Width="24" Content=" - " Style="{StaticResource ButtonStyle}" FontSize="20" FontWeight="ExtraBold" />
+                    </Grid>
+                        
+                    <Grid x:Name="LayerListPanel" Height="250">
 
-                    <ListBox
-                        x:Name="LayerListView"
-                        ItemsSource="{Binding}"
-                        SelectionMode="Single"
-                        ItemContainerStyle="{StaticResource SimpleListBoxItem}"
-                        Background="#FF252526"
-                        >
+                        <ListBox
+                            x:Name="LayerListView"
+                            ItemsSource="{Binding}"
+                            SelectionMode="Single"
+                            ItemContainerStyle="{StaticResource SimpleListBoxItem}"
+                            Background="#FF252526"
+                            >
 
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                    </Grid.RowDefinitions>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="auto"/>
+                                        </Grid.RowDefinitions>
 
-                                    <StackPanel Grid.Row="0" Orientation="Horizontal" >
-                                        <CheckBox IsChecked="{Binding Path=Visible}"
-                                                  Style="{StaticResource VisibleCheckBox}"
-                                                  Foreground="White"/>
+                                        <StackPanel Grid.Row="0" Orientation="Horizontal" >
+                                            <CheckBox IsChecked="{Binding Path=Visible}"
+                                                      Style="{StaticResource VisibleCheckBox}"
+                                                      Foreground="White"/>
                                         
-                                        <CheckBox IsChecked="{Binding Path=Locked}"
-                                                  Style="{StaticResource LockedCheckBox}"
-                                                  Foreground="White"/>
-                                    </StackPanel>
-                                    <TextBlock Grid.Row="1" Margin="4" Text="{Binding Path=Name}" />
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                                            <CheckBox IsChecked="{Binding Path=Locked}"
+                                                      Style="{StaticResource LockedCheckBox}"
+                                                      Foreground="White"/>
+                                        </StackPanel>
+                                        <TextBlock Grid.Row="1" Margin="4" Text="{Binding Path=Name}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
 
-                </Grid>
+                    </Grid>
 
-            </StackPanel>
+                </StackPanel>
             </Border>
 
             <!--Plotter view and Command view-->

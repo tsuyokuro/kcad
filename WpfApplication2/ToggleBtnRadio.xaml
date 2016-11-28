@@ -1,12 +1,18 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:WpfApplication2">
+
+
+    <ResourceDictionary.MergedDictionaries>
     
+    </ResourceDictionary.MergedDictionaries>
+
+
     <DataTemplate x:Key="ToggleRadioCheckedBG">
-        <Grid Background="#FFAAAAAA" >
+        <Grid Background="#FF505050" >
             <TextBlock HorizontalAlignment="Center" 
                        VerticalAlignment="Center" 
-                       TextAlignment="Center" 
+                       TextAlignment="Center"
                        Text="{Binding}"/>
         </Grid>
     </DataTemplate>
