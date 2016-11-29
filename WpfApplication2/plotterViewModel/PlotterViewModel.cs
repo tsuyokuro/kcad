@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -302,6 +303,22 @@ namespace Plotter
             action?.Invoke();
         }
         #endregion
+
+
+        // Button handler
+        public void ButtonClicked(object sender, RoutedEventArgs e)
+        {
+            // TODO implements function for add layer and remove layer.
+            Button btn = (Button)sender;
+            switch (btn.Tag.ToString())
+            {
+                case "add_layer":
+                    mPlotter.addLayer(null);
+                    break;
+                case "remove_layer":
+                    break;
+            }
+        }
 
 
         // Save / Load

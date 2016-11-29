@@ -188,18 +188,24 @@ namespace Plotter
 
         private int addLayer(int argCount, Evaluator.ValueStack stack)
         {
-            CadLayer layer = mDB.newLayer();
-
+            String name = null;
 
             if (argCount > 0)
             {
-                Evaluator.Value name = stack.pop();
-                layer.Name = name.getString();
+                Evaluator.Value namev = stack.pop();
+                name = namev.getString();
             }
-            else
-            {
-                layer.Name = null;
-            }
+
+            addLayer(name);
+
+            return 0;
+        }
+
+        public void addLayer(string name)
+        {
+            CadLayer layer = mDB.newLayer();
+
+            layer.Name = name;
 
             CurrentLayer = layer;
 
@@ -208,10 +214,7 @@ namespace Plotter
             NotifyLayerInfo();
 
             Interact.print("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
-
-            return 0;
         }
-
 
         public void command(string s)
         {

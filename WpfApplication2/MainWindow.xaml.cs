@@ -43,6 +43,9 @@ namespace WpfApplication2
             textCommand.KeyDown += textCommand_KeyDown;
 
             ViewModel.InteractOut.print = MessageOut;
+
+            AddLayerButton.Click += ViewModel.ButtonClicked;
+            RemoveLayerButton.Click += ViewModel.ButtonClicked;
         }
 
         private void textCommand_KeyDown(object sender, KeyEventArgs e)

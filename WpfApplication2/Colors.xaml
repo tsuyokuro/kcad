@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WpfApplication2.plotter">
+
+    <SolidColorBrush x:Key="BaseColor" Color="#FF252526" />
+    <SolidColorBrush x:Key="TextColor" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="BGColor" Color="#FF252526" />
+    <!--<SolidColorBrush x:Key="ListBoxSelColor" Color="#FF228b22" />-->
+    <SolidColorBrush x:Key="ListBoxSelColor" Color="#FF5050A0" />
+    <SolidColorBrush x:Key="ToggleButtonChecked" Color="#FF5050A0" />
+
+</ResourceDictionary>

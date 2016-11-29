@@ -13,28 +13,16 @@
 
     <Window.Resources>
         <ResourceDictionary>
-
-            <SolidColorBrush x:Key="BGColor" Color="#FF252526" />
-            <SolidColorBrush x:Key="TextColor" Color="White" />
-            <SolidColorBrush x:Key="ListBoxSelColor" Color="#FF228b22" />
-
-            <Style x:Key="ButtonStyle" TargetType="Button">
-                <Setter Property="Background" Value="#FF252526"/>
-                <Setter Property="Foreground" Value="#FFFFFFFF"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="BorderBrush" Value="#FF252526"/>
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                        <Setter Property="ContentTemplate" Value="{StaticResource ToggleRadioCheckedBG}"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ToggleBtnRadio.xaml"/>
+                <ResourceDictionary Source="Colors.xaml"/>
+                <ResourceDictionary Source="ButtonStyle.xaml"/>
+                <ResourceDictionary Source="ImageCheckBoxs.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
 
-                <Setter Property="Background" Value="{StaticResource BGColor}"/>
+                <Setter Property="Background" Value="{StaticResource BaseColor}"/>
                 <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
 
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -83,64 +71,9 @@
             </Style>
 
 
-            <Style x:Key="VisibleCheckBox" TargetType="{x:Type CheckBox}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="CheckBox">
-                            <BulletDecorator>
-                                <BulletDecorator.Bullet>
-                                    <!--off image-->
-                                    <Image Name="TickImage" Source="Images\invisible.png" Grid.Column="0"/>
-                                </BulletDecorator.Bullet>
-                                <ContentPresenter VerticalAlignment="Center" Grid.Column="1"/>
-                            </BulletDecorator>
-                            <ControlTemplate.Triggers>
-                                <!--on image-->
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter TargetName="TickImage" Property="Source" Value="Images\visible.png" />
-                                </Trigger>
-                                <!--other image-->
-                                <Trigger Property="IsChecked" Value="{x:Null}">
-                                    <Setter TargetName="TickImage" Property="Source" Value="Images\visible.png" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <Style x:Key="LockedCheckBox" TargetType="{x:Type CheckBox}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="CheckBox">
-                            <BulletDecorator>
-                                <BulletDecorator.Bullet>
-                                    <!--off image-->
-                                    <Image Name="TickImage" Source="Images\unlocked.png" Grid.Column="0"/>
-                                </BulletDecorator.Bullet>
-                                <ContentPresenter VerticalAlignment="Center" Grid.Column="1"/>
-                            </BulletDecorator>
-                            <ControlTemplate.Triggers>
-                                <!--on image-->
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter TargetName="TickImage" Property="Source" Value="Images\locked.png" />
-                                </Trigger>
-                                <!--other image-->
-                                <Trigger Property="IsChecked" Value="{x:Null}">
-                                    <Setter TargetName="TickImage" Property="Source" Value="Images\unlocked.png" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
             <pl:SelectModeConverter x:Key="SelModeConv"/>
             <pl:FigureTypeConverter x:Key="FigTypeConv"/>
 
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ToggleBtnRadio.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 
     </Window.Resources>
@@ -181,7 +114,7 @@
 
             <!--Left panel-->
             <Border BorderBrush="YellowGreen" BorderThickness="2">
-                <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="#FF252526" >
+                <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
 
                     <StackPanel x:Name="SlsectModePanel">
                         <Label />
@@ -256,15 +189,34 @@
 
                     </StackPanel>
 
-                    <Label/>
+                    <Label Height="20"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Width="24" Content=" + " Style="{StaticResource ButtonStyle}" FontSize="20" FontWeight="ExtraBold" />
-                        <Button Grid.Column="1" Width="24" Content=" - " Style="{StaticResource ButtonStyle}" FontSize="20" FontWeight="ExtraBold" />
+
+                        <Label Grid.Column="0" Content="Layer" Background="{StaticResource BaseColor}" Foreground="{StaticResource TextColor}"/>
+
+                        <Button Grid.Column="1"
+                                Name="AddLayerButton"
+                                Tag="add_layer"
+                                Width="20"
+                                Content="+"
+                                Style="{StaticResource ButtonStyle}"
+                                FontSize="20"
+                                FontWeight="ExtraBold" />
+                        
+                        <Button Grid.Column="2"
+                                Name="RemoveLayerButton"
+                                Tag="remove_layer"
+                                Width="20"
+                                Content="-"
+                                Style="{StaticResource ButtonStyle}"
+                                FontSize="20"
+                                FontWeight="ExtraBold" />
                     </Grid>
                         
                     <Grid x:Name="LayerListPanel" Height="250">
@@ -274,7 +226,7 @@
                             ItemsSource="{Binding}"
                             SelectionMode="Single"
                             ItemContainerStyle="{StaticResource SimpleListBoxItem}"
-                            Background="#FF252526"
+                            Background="{StaticResource BaseColor}"
                             >
 
                             <ListBox.ItemTemplate>
