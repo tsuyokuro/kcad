@@ -14,10 +14,10 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ToggleBtnRadio.xaml"/>
-                <ResourceDictionary Source="Colors.xaml"/>
-                <ResourceDictionary Source="ButtonStyle.xaml"/>
-                <ResourceDictionary Source="ImageCheckBoxs.xaml"/>
+                <ResourceDictionary Source="ResDict/ToggleBtnRadio.xaml"/>
+                <ResourceDictionary Source="ResDict/Colors.xaml"/>
+                <ResourceDictionary Source="ResDict/ButtonStyle.xaml"/>
+                <ResourceDictionary Source="ResDict/ImageCheckBoxs.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
