@@ -36,6 +36,9 @@ namespace Plotter
             public Pen BalckThinPen = new Pen(Brushes.Black, 0);
             public Brush DarkBgBrush = Brushes.Black;
 
+            public Pen DarkAxisPen = new Pen(Color.FromArgb(60,60,92), 0);
+            public Pen DarkFramePen = new Pen(Color.FromArgb(92, 92, 92), 0);
+
             public Original()
             {
                 DarkBgBrush = new SolidBrush(DarkBgColor);
@@ -45,6 +48,9 @@ namespace Plotter
             {
                 BalckThinPen.Dispose();
                 DarkBgBrush.Dispose();
+
+                DarkAxisPen.Dispose();
+                DarkFramePen.Dispose();
             }
         }
 
@@ -103,8 +109,8 @@ namespace Plotter
             BackgroundColor = org.DarkBgColor;
             BackgroundBrush = org.DarkBgBrush;
 
-            AxesPen = Pens.Black;
-            PageFramePen = Pens.Black;
+            AxesPen = org.DarkAxisPen;
+            PageFramePen = org.DarkFramePen;
 
             RelativePointPen = Pens.CornflowerBlue;
         }

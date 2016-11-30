@@ -62,10 +62,18 @@ namespace Plotter
                 return;
             }
 
+            CadRect vr = dc.getViewRect();
+
+            double x0 = vr.p0.x;
+            double x1 = vr.p1.x;
+
+            double y0 = vr.p0.y;
+            double y1 = vr.p1.y;
+
             double w = dc.PageSize.width / 2;
             double h = dc.PageSize.height / 2;
-            Drawer.drawLine(dc, dc.Tools.AxesPen, -w, 0, w, 0);
-            Drawer.drawLine(dc, dc.Tools.AxesPen, 0, h, 0, -h);
+            Drawer.drawLine(dc, dc.Tools.AxesPen, x0, 0, x1, 0);
+            Drawer.drawLine(dc, dc.Tools.AxesPen, 0, y0, 0, y1);
         }
 
         public static void drawPageFrame(DrawContext dc)

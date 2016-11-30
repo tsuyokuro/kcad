@@ -736,7 +736,59 @@ namespace Plotter
 
             NotifyLayerInfo();
         }
-
         #endregion
+
+
+        public void addLayer(string name)
+        {
+            CadLayer layer = mDB.newLayer();
+
+            layer.Name = name;
+
+            CurrentLayer = layer;
+
+            mDB.LayerList.Add(layer);
+
+            NotifyLayerInfo();
+
+            Interact.print("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
+        }
+
+        public void removeLayer(uint id)
+        {
+            if (mDB.LayerList.Count == 1)
+            {
+                return;
+            }
+
+            CadLayer layer = mDB.getLayer(id);
+
+            if (layer == null)
+            {
+                return;
+            }
+
+            int nextCurrentIdx = -1;
+
+            if (CurrentLayer.ID == id)
+            {
+                nextCurrentIdx = mDB.layerIndex(CurrentLayer.ID);
+            }
+
+            mDB.removeLayer(id);
+
+            if (nextCurrentIdx >= 0)
+            {
+                if (nextCurrentIdx > mDB.LayerList.Count-1)
+                {
+                    nextCurrentIdx = mDB.LayerList.Count - 1;
+                }
+
+                CurrentLayer = mDB.LayerList[nextCurrentIdx];
+            }
+
+            NotifyLayerInfo();
+            Interact.print("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
+        }
     }
 }

@@ -316,6 +316,8 @@ namespace Plotter
                     mPlotter.addLayer(null);
                     break;
                 case "remove_layer":
+                    mPlotter.removeLayer(mPlotter.CurrentLayer.ID);
+                    draw();
                     break;
             }
         }
@@ -354,7 +356,7 @@ namespace Plotter
             mPlotterView.endDraw();
         }
 
-        private void draw(bool clearFlag)
+        private void draw(bool clearFlag=true)
         {
             DrawContext dc = mPlotterView.startDraw();
             if (clearFlag)

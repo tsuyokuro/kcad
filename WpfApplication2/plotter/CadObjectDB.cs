@@ -129,10 +129,28 @@ namespace Plotter
             return layer.ID;
         }
 
-        public void relaseLayer(uint id)
+        public void removeLayer(uint id)
         {
             mLayerIdMap.Remove(id);
+            mLayerList.RemoveAll(a => a.ID == id);
         }
+
+        public int layerIndex(uint id)
+        {
+            int idx = 0;
+            foreach (CadLayer layer in mLayerList)
+            {
+                if (layer.ID == id)
+                {
+                    return idx;
+                }
+
+                idx++;
+            }
+
+            return -1;
+        }
+        
         #endregion
 
 

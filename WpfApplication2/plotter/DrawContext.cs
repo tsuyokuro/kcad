@@ -194,6 +194,15 @@ namespace Plotter
             return p;
         }
 
+        public CadRect getViewRect()
+        {
+            CadRect rect = default(CadRect);
+            rect.p0 = pixelPointToCadPoint(0, 0);
+            rect.p1 = pixelPointToCadPoint(ViewWidth, ViewHeight);
+
+            return rect;
+        }
+
         public double pixelVToCadV(int d)
         {
             return ((double)(d) / UnitPerMilliX) * XDir;

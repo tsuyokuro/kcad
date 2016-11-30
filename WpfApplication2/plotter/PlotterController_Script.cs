@@ -201,21 +201,6 @@ namespace Plotter
             return 0;
         }
 
-        public void addLayer(string name)
-        {
-            CadLayer layer = mDB.newLayer();
-
-            layer.Name = name;
-
-            CurrentLayer = layer;
-
-            mDB.LayerList.Add(layer);
-
-            NotifyLayerInfo();
-
-            Interact.print("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
-        }
-
         public void command(string s)
         {
             s = s.Trim();
