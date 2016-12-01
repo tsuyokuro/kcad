@@ -69,10 +69,7 @@ namespace Plotter
 
         public Interaction Interact { set; get; } = new Interaction();
 
-        //private CadLayer mCurrentLayer = null;
-
         private CadObjectDB mDB = new CadObjectDB();
-
 
         public States State
         {
@@ -146,6 +143,8 @@ namespace Plotter
                 NotifyLayerInfo();
             }
         }
+
+        private List<CadFigure> TempFigureList = new List<CadFigure>();
 
         public PlotterController()
         {
@@ -268,6 +267,8 @@ namespace Plotter
                     drawRelPoints(dc, layer.RelPointList);
                 }
             }
+
+            Drawer.draw(dc, TempFigureList, System.Drawing.Pens.Yellow);
         }
 
         public void drawSelectedItems(DrawContext dc)

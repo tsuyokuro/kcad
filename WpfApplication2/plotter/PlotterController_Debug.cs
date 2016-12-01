@@ -89,6 +89,28 @@ namespace Plotter
                 Log.d("" + Drawer.Factorial(3));
                 Log.d("" + Drawer.Factorial(4));
             }
+            else if (s == "test4")
+            {
+                TempFigureList.Clear();
+
+                CadFigureBonder fa = new CadFigureBonder(mDB, CurrentLayer);
+
+                var res = fa.bond(mSelList.List);
+
+                if (!res.isValid())
+                {
+                    return;
+                }
+
+                foreach (CadFigureAssembler.ResultItem ri in res.AddList)
+                {
+                    TempFigureList.Add(ri.Figure);
+                }
+            }
+            else if (s == "clean temp")
+            {
+                TempFigureList.Clear();
+            }
             else if (s == "fig_list")
             {
                 DebugOut dout = new DebugOut();

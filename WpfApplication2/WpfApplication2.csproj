@@ -115,6 +115,7 @@
     </Compile>
     <Compile Include="plotter\CadFigure.cs" />
     <Compile Include="plotter\CadFigureAssembler.cs" />
+    <Compile Include="plotter\CadFigureBonder.cs" />
     <Compile Include="plotter\CadLayer.cs" />
     <Compile Include="plotter\CadMouse.cs" />
     <Compile Include="plotter\CadObjectDB.cs" />

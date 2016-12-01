@@ -24,11 +24,16 @@ namespace Plotter
             draw(context, layer.FigureList);
         }
 
-        public static void draw(DrawContext dc, List<CadFigure> list)
+        public static void draw(DrawContext dc, List<CadFigure> list, Pen pen=null)
         {
+            if (pen == null)
+            {
+                pen = dc.Tools.DefaultFigurePen;
+            }
+
             foreach (CadFigure fig in list)
             {
-                fig.draw(dc, dc.Tools.DefaultFigurePen);
+                fig.draw(dc, pen);
             }
         }
 
