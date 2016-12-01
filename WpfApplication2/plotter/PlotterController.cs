@@ -483,20 +483,40 @@ namespace Plotter
 
         private void updateSelectItemPoints()
         {
+            HashSet<SelectItem> removeSels = new HashSet<SelectItem>();
+
             foreach (SelectItem item in mSelList.List)
             {
                 CadFigure fig = mDB.getFigure(item.FigureID);
-                item.Point = fig.PointList[item.PointIndex];
+                if (fig.PointList.Count > item.PointIndex)
+                {
+                    item.Point = fig.PointList[item.PointIndex];
+                }
+                else
+                {
+                    removeSels.Add(item);
+                }
             }
+
+            mSelList.List.RemoveAll(a => removeSels.Contains(a));
+
+
+            HashSet<MarkSeg> removeSegs = new HashSet<MarkSeg>();
 
             for (int i=0; i<mSelectedSegs.List.Count; i++)
             {
                 MarkSeg item = mSelectedSegs.List[i];
 
                 CadFigure fig = mDB.getFigure(item.FigureID);
-                item.pA = fig.PointList[item.PtIndexA];
-                item.pB = fig.PointList[item.PtIndexB];
+
+                if (fig.PointList.Count > item.PtIndexA && fig.PointList.Count > item.PtIndexB)
+                {
+                    item.pA = fig.PointList[item.PtIndexA];
+                    item.pB = fig.PointList[item.PtIndexB];
+                }
             }
+
+            mSelectedSegs.List.RemoveAll(a => removeSegs.Contains(a));
         }
 
         private CadOpeList removeInvalidFigure()
