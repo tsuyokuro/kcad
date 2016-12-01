@@ -477,6 +477,26 @@ namespace Plotter
                 CadOpeList ropeList = removeInvalidRelPoints();
                 mHistoryManager.foward(ropeList);
             }
+
+            updateSelectItemPoints();
+        }
+
+        private void updateSelectItemPoints()
+        {
+            foreach (SelectItem item in mSelList.List)
+            {
+                CadFigure fig = mDB.getFigure(item.FigureID);
+                item.Point = fig.PointList[item.PointIndex];
+            }
+
+            for (int i=0; i<mSelectedSegs.List.Count; i++)
+            {
+                MarkSeg item = mSelectedSegs.List[i];
+
+                CadFigure fig = mDB.getFigure(item.FigureID);
+                item.pA = fig.PointList[item.PtIndexA];
+                item.pB = fig.PointList[item.PtIndexB];
+            }
         }
 
         private CadOpeList removeInvalidFigure()
