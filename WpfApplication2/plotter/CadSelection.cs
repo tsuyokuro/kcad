@@ -17,7 +17,12 @@ namespace Plotter
         public uint FigureID
         {
             get { return mMarkPoint.FigureID; }
-            set { mMarkPoint.FigureID = value; }
+        }
+
+        public CadFigure Figure
+        {
+            get { return mMarkPoint.Figure; }
+            set { mMarkPoint.Figure = value; }
         }
 
         public int PointIndex
@@ -57,6 +62,24 @@ namespace Plotter
             dout.Indent--;
             dout.println("}");
         }
+
+        public bool update()
+        {
+            if (Figure == null)
+            {
+                return true;
+            }
+
+            if (PointIndex >= Figure.PointList.Count)
+            {
+                return false;
+            }
+
+
+            Point = Figure.PointList[PointIndex];
+
+            return true;
+        }
     }
 
     public class SelectList
@@ -68,9 +91,14 @@ namespace Plotter
             get { return mList; }
         }
 
-        public void add(uint layerID, uint figureId, int pointIndex, CadPoint point)
+        public void add(uint layerID, CadFigure fig, int pointIndex, CadPoint point)
         {
-            SelectItem f = find(figureId, pointIndex);
+            SelectItem f = null;
+
+            if (fig != null)
+            {
+                find(fig.ID, pointIndex);
+            }
 
             if (f != null)
             {
@@ -81,7 +109,7 @@ namespace Plotter
             SelectItem item = new SelectItem();
 
             item.LayerID = layerID;
-            item.FigureID = figureId;
+            item.Figure = fig;
             item.PointIndex = pointIndex;
 
             item.Point = point;
@@ -92,7 +120,7 @@ namespace Plotter
         {
             for (int idx = 0; idx < fig.PointCount; idx++)
             {
-                add(layerID, fig.ID, idx, fig.getPointAt(idx));
+                add(layerID, fig, idx, fig.getPointAt(idx));
             }
         }
 
@@ -103,8 +131,8 @@ namespace Plotter
 
         public void add(MarkSeg ms)
         {
-            add(ms.LayerID, ms.FigureID, ms.PtIndexA, ms.pA);
-            add(ms.LayerID, ms.FigureID, ms.PtIndexB, ms.pB);
+            add(ms.LayerID, ms.Figure, ms.PtIndexA, ms.pA);
+            add(ms.LayerID, ms.Figure, ms.PtIndexB, ms.pB);
         }
 
         public void add(uint layerID, CadFigure fig, int a, int b)
@@ -115,7 +143,7 @@ namespace Plotter
             for (int i = si; i <= ei; i++)
             {
                 CadPoint p = fig.getPointAt(i);
-                add(layerID, fig.ID, i, p);
+                add(layerID, fig, i, p);
             }
         }
 

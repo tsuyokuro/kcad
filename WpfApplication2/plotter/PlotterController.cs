@@ -487,12 +487,7 @@ namespace Plotter
 
             foreach (SelectItem item in mSelList.List)
             {
-                CadFigure fig = mDB.getFigure(item.FigureID);
-                if (fig.PointList.Count > item.PointIndex)
-                {
-                    item.Point = fig.PointList[item.PointIndex];
-                }
-                else
+                if (!item.update())
                 {
                     removeSels.Add(item);
                 }
@@ -503,16 +498,11 @@ namespace Plotter
 
             HashSet<MarkSeg> removeSegs = new HashSet<MarkSeg>();
 
-            for (int i=0; i<mSelectedSegs.List.Count; i++)
+            foreach (MarkSeg item in mSelectedSegs.List)
             {
-                MarkSeg item = mSelectedSegs.List[i];
-
-                CadFigure fig = mDB.getFigure(item.FigureID);
-
-                if (fig.PointList.Count > item.PtIndexA && fig.PointList.Count > item.PtIndexB)
+                if (!item.update())
                 {
-                    item.pA = fig.PointList[item.PtIndexA];
-                    item.pB = fig.PointList[item.PtIndexB];
+                    removeSegs.Add(item);
                 }
             }
 

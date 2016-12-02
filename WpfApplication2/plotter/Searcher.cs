@@ -26,7 +26,20 @@ namespace Plotter
         public static UInt32 Z_MATCH = 4;
 
         public uint LayerID;
-        public uint FigureID;
+        public uint FigureID
+        {
+            get
+            {
+                if (Figure == null)
+                {
+                    return 0;
+                }
+
+                return Figure.ID;
+            }
+        }
+
+        public CadFigure Figure;
         public int PointIndex;
 
         public CadPoint Point;
@@ -58,7 +71,21 @@ namespace Plotter
     public struct MarkSeg
     {
         public uint LayerID;
-        public uint FigureID;
+        public uint FigureID
+        {
+            get
+            {
+                if (Figure == null)
+                {
+                    return 0;
+                }
+
+                return Figure.ID;
+            }
+        }
+
+        public CadFigure Figure;
+
         public int PtIndexA;
         public int PtIndexB;
 
@@ -71,7 +98,7 @@ namespace Plotter
 
         public void clean()
         {
-            FigureID = 0;
+            Figure = null;
         }
 
         public bool Valid { get { return FigureID != 0; } }
@@ -85,6 +112,30 @@ namespace Plotter
             dout.println("PtIndexB:" + PtIndexB.ToString());
             dout.Indent--;
             dout.println("}");
+        }
+
+        public bool update()
+        {
+            if (Figure == null)
+            {
+                return true;
+            }
+
+            if (PtIndexA >= Figure.PointList.Count)
+            {
+                return false;
+            }
+
+            if (PtIndexB >= Figure.PointList.Count)
+            {
+                return false;
+            }
+
+
+            pA = Figure.PointList[PtIndexA];
+            pB = Figure.PointList[PtIndexB];
+
+            return true;
         }
     }
 
@@ -199,7 +250,7 @@ namespace Plotter
 
         public void check(CadPoint pt)
         {
-            checkFigPoint(pt, 0, 0, 0, MarkPoint.Types.IDEPEND_POINT);
+            checkFigPoint(pt, 0, null, 0, MarkPoint.Types.IDEPEND_POINT);
         }
 
         private void checkFig(CadLayer layer, CadFigure fig)
@@ -216,7 +267,7 @@ namespace Plotter
             foreach (CadPoint pt in pointList)
             {
                 idx++;
-                checkFigPoint(pt, layer.ID, fig.ID, idx, MarkPoint.Types.POINT);
+                checkFigPoint(pt, layer.ID, fig, idx, MarkPoint.Types.POINT);
             }
         }
 
@@ -235,14 +286,14 @@ namespace Plotter
             int idx = 0;
             foreach (CadRelativePoint rp in list)
             {
-                checkFigPoint(rp.point, layer.ID, 0, idx, MarkPoint.Types.RELATIVE_POINT);
+                checkFigPoint(rp.point, layer.ID, null, idx, MarkPoint.Types.RELATIVE_POINT);
                 idx++;
             }
         }
 
-        private void checkFigPoint(CadPoint pt, uint layerID, uint figID, int ptIdx, MarkPoint.Types type)
+        private void checkFigPoint(CadPoint pt, uint layerID, CadFigure fig, int ptIdx, MarkPoint.Types type)
         {
-            if (isIgnore(figID, ptIdx))
+            if (fig != null && isIgnore(fig.ID, ptIdx))
             {
                 return;
             }
@@ -256,7 +307,7 @@ namespace Plotter
                 {
                     xmatch.Type = type;
                     xmatch.LayerID = layerID;
-                    xmatch.FigureID = figID;
+                    xmatch.Figure = fig;
                     xmatch.PointIndex = ptIdx;
                     xmatch.Point = pt;
                     xmatch.Flag |= MarkPoint.X_MATCH;
@@ -271,7 +322,7 @@ namespace Plotter
                 {
                     ymatch.Type = type;
                     ymatch.LayerID = layerID;
-                    ymatch.FigureID = figID;
+                    ymatch.Figure = fig;
                     ymatch.PointIndex = ptIdx;
                     ymatch.Point = pt;
                     ymatch.Flag |= MarkPoint.Y_MATCH;
@@ -286,7 +337,7 @@ namespace Plotter
                 {
                     xymatch.Type = type;
                     xymatch.LayerID = layerID;
-                    xymatch.FigureID = figID;
+                    xymatch.Figure = fig;
                     xymatch.PointIndex = ptIdx;
                     xymatch.Point = pt;
                     xymatch.Flag |= MarkPoint.X_MATCH;
@@ -407,14 +458,14 @@ namespace Plotter
             }
         }
 
-        private void checkSeg(uint layerID, uint figId, int idxA, int idxB, CadPoint a, CadPoint b)
+        private void checkSeg(uint layerID, CadFigure fig, int idxA, int idxB, CadPoint a, CadPoint b)
         {
-            if (isIgnore(figId, idxA))
+            if (fig!=null && isIgnore(fig.ID, idxA))
             {
                 return;
             }
 
-            if (isIgnore(figId, idxB))
+            if (fig != null && isIgnore(fig.ID, idxB))
             {
                 return;
             }
@@ -439,7 +490,7 @@ namespace Plotter
             if (dist < minDist)
             {
                 seg.LayerID = layerID;
-                seg.FigureID = figId;
+                seg.Figure = fig;
                 seg.PtIndexA = idxA;
                 seg.PtIndexB = idxB;
                 seg.CrossPoint = ret.CrossPoint;
@@ -486,7 +537,7 @@ namespace Plotter
             if (dist < minDist)
             {
                 seg.LayerID = layer.ID;
-                seg.FigureID = fig.ID;
+                seg.Figure = fig;
                 seg.PtIndexA = 0;
                 seg.PtIndexB = 1;
                 seg.CrossPoint = td;
@@ -543,7 +594,7 @@ namespace Plotter
                     continue;
                 }
 
-                checkSeg(layer.ID, fig.ID, ia, ib, a, b);
+                checkSeg(layer.ID, fig, ia, ib, a, b);
 
                 a = b;
 
@@ -555,7 +606,7 @@ namespace Plotter
             if (fig.Closed)
             {
                 b = pl[0];
-                checkSeg(layer.ID, fig.ID, pl.Count - 1, 0, a, b);
+                checkSeg(layer.ID, fig, pl.Count - 1, 0, a, b);
             }
         }
 
