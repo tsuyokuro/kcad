@@ -14,15 +14,55 @@ namespace Plotter
 
     public class CadUtil
     {
-        public static double innrProduct2D(CadPoint vl, CadPoint vr)
+        // 内積
+        public static double innrProduct2D(CadPoint v1, CadPoint v2)
         {
-            return (vl.x * vr.x) + (vl.y * vr.y);
+            return (v1.x * v2.x) + (v1.y * v2.y);
         }
 
-        public static double exteriorProduct2D(CadPoint vl, CadPoint vr)
+        public static double innrProduct2D(CadPoint v0, CadPoint v1, CadPoint v2)
         {
-            return (vl.x * vr.y) - (vl.y * vr.x);
+            return innrProduct2D(v1-v0, v2-v0);
         }
+
+        public static double innerProduct3D(CadPoint v1, CadPoint v2)
+        {
+            return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+        }
+
+        public static double innerProduct3D(CadPoint v0, CadPoint v1, CadPoint v2)
+        {
+            return innerProduct3D(v1-v0, v2-v0);
+        }
+
+        // 外積
+        public static double crossProduct2D(CadPoint v1, CadPoint v2)
+        {
+            return (v1.x * v2.y) - (v1.y * v2.x);
+        }
+
+        public static double crossProduct2D(CadPoint v0, CadPoint v1, CadPoint v2)
+        {
+            return crossProduct2D(v1 - v0, v2 - v0);
+        }
+
+        public static CadPoint crossProduct3D(CadPoint v1, CadPoint v2)
+        {
+            CadPoint res = default(CadPoint);
+
+            res.x = v1.y * v2.z - v1.z * v2.y;
+            res.y = v1.z * v2.x - v1.x * v2.z;
+            res.z = v1.x * v2.y - v1.y * v2.x;
+
+            return res;
+        }
+
+        public static CadPoint crossProduct3D(CadPoint v0, CadPoint v1, CadPoint v2)
+        {
+            return crossProduct3D(v1-v0, v2-v0);
+        }
+
+
 
         public static double distancePtoSeg2D(CadPoint a, CadPoint b, CadPoint p)
         {
@@ -48,7 +88,7 @@ namespace Plotter
                 return vectAbs2D(bp);
             }
 
-            double d = Math.Abs(exteriorProduct2D(ab, ap));
+            double d = Math.Abs(crossProduct2D(ab, ap));
             double abl = vectAbs2D(ab);
 
             return d / abl;

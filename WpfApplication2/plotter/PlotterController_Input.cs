@@ -199,7 +199,10 @@ namespace Plotter
                         }
                         else
                         {
-                            clearSelection();
+                            if (!pointer.isDownCombiKey(CadMouse.CombiKeys.CTRL))
+                            {
+                                clearSelection();
+                            }
                         }
                     }
 

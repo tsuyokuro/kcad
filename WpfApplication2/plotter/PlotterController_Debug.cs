@@ -13,6 +13,257 @@ namespace Plotter
 {
     public partial class PlotterController
     {
+        private void splitToTriangle()
+        {
+            TempFigureList.Clear();
+
+            CadFigureBonder fa = new CadFigureBonder(mDB, CurrentLayer);
+
+            var res = fa.bond(mSelList.List);
+
+            if (!res.isValid())
+            {
+                return;
+            }
+
+            if (res.AddList.Count == 0)
+            {
+                return;
+            }
+
+            CadFigureAssembler.ResultItem ri = res.AddList[0];
+
+            TempFigureList.Add(ri.Figure);
+
+            splitToTriangle(ri.Figure);
+        }
+
+        private List<CadFigure> splitToTriangle(CadFigure fig)
+        {
+            CadPoint p0 = default(CadPoint);
+
+            CadFigure tfig = new CadFigure();
+
+            tfig.copyPoints(fig);
+
+            var triangles = new List<CadFigure>();
+
+            int i1 = -1;
+
+            int state = 0;
+
+            CadFigure triangle;
+
+            i1 = findMaxDistantPoint(p0, tfig);
+
+            if (i1 == -1)
+            {
+                return triangles;
+            }
+
+            triangle = getTriangleWithCenterPoint(tfig, i1);
+
+            CadPoint tp0 = triangle.PointList[0];
+            CadPoint tp1 = triangle.PointList[1];
+            CadPoint tp2 = triangle.PointList[2];
+
+            double dir = CadUtil.crossProduct2D(tp1, tp0, tp2);
+            double currentDir = 0;
+
+            while (tfig.PointCount > 3)
+            {
+                if (state == 0)
+                {
+                    i1 = findMaxDistantPoint(p0, tfig);
+                    if (i1 == -1)
+                    {
+                        return triangles;
+                    }
+                }
+
+                triangle = getTriangleWithCenterPoint(tfig, i1);
+
+                tp0 = triangle.PointList[0];
+                tp1 = triangle.PointList[1];
+                tp2 = triangle.PointList[2];
+
+                currentDir = CadUtil.crossProduct2D(tp1, tp0, tp2);
+
+                bool hasIn = isFigPointInTriangle(tfig, triangle);
+                if (!hasIn && (Math.Sign(dir) == Math.Sign(currentDir)))
+                {
+                    triangles.Add(triangle);
+                    tfig.PointList.RemoveAt(i1);
+                    state = 0;
+                    continue;
+                }
+
+                if (state == 0)
+                {
+                    state = 1;
+                    i1 = 0;
+                }
+                else if (state == 1)
+                {
+                    i1++;
+                    if (i1 >= tfig.PointCount)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (tfig.PointCount == 3)
+            {
+                triangle = new CadFigure(CadFigure.Types.POLY_LINES);
+
+                triangle.copyPoints(tfig);
+                triangle.Closed = true;
+
+                triangles.Add(triangle);
+            }
+
+            return triangles;
+        }
+
+        private CadFigure getTriangleWithCenterPoint(CadFigure fig, int cpIndex)
+        {
+            int i1 = cpIndex;
+            int endi = fig.PointCount - 1;
+
+            int i0 = i1 - 1;
+            int i2 = i1 + 1;
+
+            if (i0 < 0) { i0 = endi; }
+            if (i2 > endi) { i2 = 0; }
+
+            var triangle = new CadFigure(CadFigure.Types.POLY_LINES);
+
+            CadPoint tp0 = fig.PointList[i0];
+            CadPoint tp1 = fig.PointList[i1];
+            CadPoint tp2 = fig.PointList[i2];
+
+            triangle.addPoint(tp0);
+            triangle.addPoint(tp1);
+            triangle.addPoint(tp2);
+
+            triangle.Closed = true;
+
+            return triangle;
+        }
+
+        private bool isFigPointInTriangle(CadFigure check, CadFigure triangle)
+        {
+            var tps = triangle.PointList;
+
+            foreach (CadPoint cp in check.PointList)
+            {
+                if　(
+                    cp.coordEquals(tps[0]) ||
+                    cp.coordEquals(tps[1]) ||
+                    cp.coordEquals(tps[2])
+                    )
+                {
+                    continue;
+                }
+
+                bool ret = isPointInTriangle(cp, triangle);
+                if (ret)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool isPointInTriangle(CadPoint p, CadFigure triangle)
+        {
+            if (triangle.PointCount < 3)
+            {
+                return false;
+            }
+
+            double c1 = CadUtil.crossProduct2D(p, triangle.PointList[0], triangle.PointList[1]);
+            double c2 = CadUtil.crossProduct2D(p, triangle.PointList[1], triangle.PointList[2]);
+            double c3 = CadUtil.crossProduct2D(p, triangle.PointList[2], triangle.PointList[0]);
+
+
+            // All corossProduct result's sign are same, Point is in triangle
+            if ((c1 > 0 && c2 > 0 && c3 > 0) || (c1 < 0 && c2 < 0 && c3 < 0))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private int findMaxDistantPoint(CadPoint p0, CadFigure fig)
+        {
+            int ret = -1;
+            int i;
+
+            CadPoint t;
+
+            double maxd = 0;
+
+            for (i=0; i<fig.PointList.Count; i++)
+            {
+                CadPoint fp = fig.PointList[i];
+
+                t = fp - p0;
+                double d = t.length();
+
+                if (d > maxd)
+                {
+                    maxd = d;
+                    ret = i;
+                }
+            }
+
+            return ret;
+        }
+
+        private void calcTest(DrawContext dc)
+        {
+            if (mSelList.List.Count == 0)
+            {
+                return;
+            }
+
+            SelectItem si = mSelList.List[0];
+
+            CadFigure fig = si.Figure;
+
+            CadPoint pt = mFreeDownPoint.Value;
+
+            DebugOut dout = new DebugOut();
+
+
+            bool isIn = isPointInTriangle(pt, fig);
+
+            dout.println("isIn=" + isIn);
+        }
+
+        private void splitTriangleTest(DrawContext dc)
+        {
+            TempFigureList.Clear();
+
+            if (mSelList.List.Count == 0)
+            {
+                return;
+            }
+
+            SelectItem si = mSelList.List[0];
+            CadFigure fig = si.Figure;
+
+            List<CadFigure> triangles = splitToTriangle(fig);
+
+            triangles.ForEach(a=>TempFigureList.Add(a));
+
+            draw(dc);
+        }
+
         private void test001(DrawContext dc, String arg)
         {
             draw(dc);
@@ -65,6 +316,16 @@ namespace Plotter
 
                 Log.dr(js + "\n");
             }
+            else if (s == "calct")
+            {
+                calcTest(dc);
+            }
+
+            else if (s == "stt")
+            {
+                splitTriangleTest(dc);
+            }
+
             else if (s == "test2")
             {
                 JObject jo = mDB.ToJson();
@@ -81,31 +342,9 @@ namespace Plotter
 
                 draw(dc);
             }
-            else if (s == "test3")
+            else if (s == "tri")
             {
-                Log.d("" + Drawer.Factorial(0));
-                Log.d("" + Drawer.Factorial(1));
-                Log.d("" + Drawer.Factorial(2));
-                Log.d("" + Drawer.Factorial(3));
-                Log.d("" + Drawer.Factorial(4));
-            }
-            else if (s == "test4")
-            {
-                TempFigureList.Clear();
-
-                CadFigureBonder fa = new CadFigureBonder(mDB, CurrentLayer);
-
-                var res = fa.bond(mSelList.List);
-
-                if (!res.isValid())
-                {
-                    return;
-                }
-
-                foreach (CadFigureAssembler.ResultItem ri in res.AddList)
-                {
-                    TempFigureList.Add(ri.Figure);
-                }
+                splitToTriangle();
             }
             else if (s == "clean temp")
             {
