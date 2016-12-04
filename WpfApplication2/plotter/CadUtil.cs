@@ -12,6 +12,12 @@ namespace Plotter
         public CadPoint CrossPoint;
     }
 
+    public struct Centroid
+    {
+        public double Weight;
+        public CadPoint Point;
+    }
+
     public class CadUtil
     {
         // 内積
@@ -76,7 +82,7 @@ namespace Plotter
         }
 
         // 三角形の重心を求める
-        public static CadPoint getTriangleCenterOfGravity(List<CadPoint> triangle)
+        public static CadPoint getTriangleCentroid(List<CadPoint> triangle)
         {
             CadPoint gp = default(CadPoint);
 
@@ -86,6 +92,93 @@ namespace Plotter
 
             return gp;
         }
+
+        // 三角形群の重心を求める
+        public static Centroid getTriangleListCentroid(List<CadFigure> triangles)
+        {
+            Centroid c0;
+            Centroid c1;
+            Centroid ct;
+
+            int i = 1;
+
+            c0.Weight= getTriangleArea(triangles[0].PointList);
+            c0.Point = getTriangleCentroid(triangles[0].PointList);
+
+            for (; i < triangles.Count; i++)
+            {
+                c1.Weight = getTriangleArea(triangles[i].PointList);
+                c1.Point = getTriangleCentroid(triangles[i].PointList);
+
+                ct = getCentroid(c0, c1);
+
+                c0 = ct;
+            }
+
+            return c0;
+        }
+
+
+        // 二つの重心情報から重心を求める
+        public static Centroid getCentroid(Centroid c0, Centroid c1)
+        {
+            CadPoint gpt = default(CadPoint);
+
+            double ratio = c1.Weight / (c0.Weight + c1.Weight);
+
+            gpt.x = (c1.Point.x - c0.Point.x) * ratio + c0.Point.x;
+            gpt.y = (c1.Point.y - c0.Point.y) * ratio + c0.Point.y;
+            gpt.z = (c1.Point.z - c0.Point.z) * ratio + c0.Point.z;
+
+            Centroid ret;
+
+            ret.Weight = c0.Weight + c1.Weight;
+            ret.Point = gpt;
+
+            return ret;
+        }
+
+        /*
+        public static Centroid getTriangleListCentroid(List<CadFigure> triangles)
+        {
+            CadPoint gp0 = default(CadPoint);
+            CadPoint gp1 = default(CadPoint);
+            CadPoint gpt = default(CadPoint);
+
+            double w0 = 0;
+            double w1 = 0;
+
+            int i = 1;
+
+            w0 = getTriangleArea(triangles[0].PointList);
+            gp0 = getTriangleCentroid(triangles[0].PointList);
+
+            for (; i < triangles.Count; i++)
+            {
+                w1 = getTriangleArea(triangles[i].PointList);
+                gp1 = getTriangleCentroid(triangles[i].PointList);
+
+                double ratio = w1 / (w0 + w1);
+
+                gpt.x = (gp1.x - gp0.x) * ratio + gp0.x;
+                gpt.y = (gp1.y - gp0.y) * ratio + gp0.y;
+                gpt.z = (gp1.z - gp0.z) * ratio + gp0.z;
+
+                gp0 = gpt;
+                w0 = w0 + w1;
+            }
+
+            Centroid ret = default(Centroid);
+
+            ret.Weight = w0;
+            ret.Point = gp0;
+
+            return ret;
+        }
+        */
+
+
+
 
         public static bool isPointInTriangle(CadPoint p, List<CadPoint> triangle)
         {

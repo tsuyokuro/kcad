@@ -177,6 +177,7 @@ namespace Plotter
             return false;
         }
 
+
         private void calcTest(DrawContext dc)
         {
             TempFigureList.Clear();
@@ -198,13 +199,14 @@ namespace Plotter
 
             dout.println("res=" + res);
 
-            CadPoint gp = CadUtil.getTriangleCenterOfGravity(fig.PointList);
+            CadPoint gp = CadUtil.getTriangleCentroid(fig.PointList);
 
             CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
             tfig.addPoint(gp);
 
             TempFigureList.Add(tfig);
 
+            clear(dc);
             draw(dc);
         }
 
@@ -225,6 +227,13 @@ namespace Plotter
             triangles.ForEach(a=>TempFigureList.Add(a));
 
             draw(dc);
+
+            Centroid gp = CadUtil.getTriangleListCentroid(triangles);
+
+            CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
+            tfig.addPoint(gp.Point);
+
+            TempFigureList.Add(tfig);
         }
 
         private void test001(DrawContext dc, String arg)
