@@ -179,6 +179,8 @@ namespace Plotter
 
         private void calcTest(DrawContext dc)
         {
+            TempFigureList.Clear();
+
             if (mSelList.List.Count == 0)
             {
                 return;
@@ -195,6 +197,15 @@ namespace Plotter
             double res = CadUtil.getTriangleArea(fig.PointList);
 
             dout.println("res=" + res);
+
+            CadPoint gp = CadUtil.getTriangleCenterOfGravity(fig.PointList);
+
+            CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
+            tfig.addPoint(gp);
+
+            TempFigureList.Add(tfig);
+
+            draw(dc);
         }
 
         private void splitTriangleTest(DrawContext dc)

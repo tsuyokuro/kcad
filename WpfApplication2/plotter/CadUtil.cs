@@ -75,6 +75,18 @@ namespace Plotter
             return area;
         }
 
+        // 三角形の重心を求める
+        public static CadPoint getTriangleCenterOfGravity(List<CadPoint> triangle)
+        {
+            CadPoint gp = default(CadPoint);
+
+            gp.x = (triangle[0].x + triangle[1].x + triangle[2].x) / 3.0;
+            gp.y = (triangle[0].y + triangle[1].y + triangle[2].y) / 3.0;
+            gp.z = (triangle[0].z + triangle[1].z + triangle[2].z) / 3.0;
+
+            return gp;
+        }
+
         public static bool isPointInTriangle(CadPoint p, List<CadPoint> triangle)
         {
             if (triangle.Count < 3)
