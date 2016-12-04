@@ -62,7 +62,65 @@ namespace Plotter
             return crossProduct3D(v1-v0, v2-v0);
         }
 
+        // 三角形の面積 3D対応
+        public static double getTriangleArea(List<CadPoint> triangle)
+        {
+            CadPoint v1 = triangle[0] - triangle[1];
+            CadPoint v2 = triangle[2] - triangle[1];
 
+            CadPoint cp = CadUtil.crossProduct3D(v1, v2);
+
+            double area = cp.length();
+
+            return area;
+        }
+
+        public static bool isPointInTriangle(CadPoint p, List<CadPoint> triangle)
+        {
+            if (triangle.Count < 3)
+            {
+                return false;
+            }
+
+            double c1 = CadUtil.crossProduct2D(p, triangle[0], triangle[1]);
+            double c2 = CadUtil.crossProduct2D(p, triangle[1], triangle[2]);
+            double c3 = CadUtil.crossProduct2D(p, triangle[2], triangle[0]);
+
+
+            // When all corossProduct result's sign are same, Point is in triangle
+            if ((c1 > 0 && c2 > 0 && c3 > 0) || (c1 < 0 && c2 < 0 && c3 < 0))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static int findMaxDistantPointIndex(CadPoint p0, List<CadPoint> points)
+        {
+            int ret = -1;
+            int i;
+
+            CadPoint t;
+
+            double maxd = 0;
+
+            for (i = 0; i < points.Count; i++)
+            {
+                CadPoint fp = points[i];
+
+                t = fp - p0;
+                double d = t.length();
+
+                if (d > maxd)
+                {
+                    maxd = d;
+                    ret = i;
+                }
+            }
+
+            return ret;
+        }
 
         public static double distancePtoSeg2D(CadPoint a, CadPoint b, CadPoint p)
         {

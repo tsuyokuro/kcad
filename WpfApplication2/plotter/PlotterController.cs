@@ -14,6 +14,8 @@ namespace Plotter
 
     public delegate void RequestContextMenu(PlotterController sender, PlotterController.StateInfo si, int x, int y);
 
+    public delegate void DataChanged(PlotterController sender, bool redraw);
+
     public partial class PlotterController
     {
         const int SnapRange = 6;
@@ -133,7 +135,7 @@ namespace Plotter
 
         public RequestContextMenu RequestContextMenu;
 
-        public LayerListChanged mLayerListChanged = (a, b) => { };
+        private LayerListChanged mLayerListChanged = (a, b) => { };
 
         public LayerListChanged LayerListChanged
         {
@@ -141,6 +143,16 @@ namespace Plotter
             {
                 mLayerListChanged = value;
                 NotifyLayerInfo();
+            }
+        }
+
+        private DataChanged mDataChanged = (a, b) => { };
+
+        public DataChanged DataChanged
+        {
+            set
+            {
+                mDataChanged = value;
             }
         }
 
@@ -161,6 +173,16 @@ namespace Plotter
 
 
         #region Notify
+        private void NotifyDataChanged()
+        {
+            mDataChanged(this, false);
+        }
+
+        private void RequestRedraw()
+        {
+            mDataChanged(this, true);
+        }
+
         private void NotifyLayerInfo()
         {
             LayerListInfo layerInfo = default(LayerListInfo);

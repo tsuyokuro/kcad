@@ -137,6 +137,8 @@ namespace Plotter
             mPlotter.Interact = InteractIn;
 
             mPlotter.LayerListChanged =  LayerListChanged;
+
+            mPlotter.DataChanged = DataChanged; 
         }
 
         #region Maps
@@ -176,6 +178,15 @@ namespace Plotter
 
         // Handle events from PlotterController
         #region Event From PlotterController
+
+        public void DataChanged(PlotterController sender, bool redraw)
+        {
+            if (redraw)
+            {
+                draw(true);
+            }
+        }
+
         public void StateChanged(PlotterController sender, PlotterController.StateInfo si)
         {
             if (FigureType != si.CreatingFigureType)

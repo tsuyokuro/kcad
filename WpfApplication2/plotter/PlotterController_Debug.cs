@@ -54,7 +54,7 @@ namespace Plotter
 
             CadFigure triangle;
 
-            i1 = findMaxDistantPoint(p0, tfig);
+            i1 = CadUtil.findMaxDistantPointIndex(p0, tfig.PointList);
 
             if (i1 == -1)
             {
@@ -74,7 +74,7 @@ namespace Plotter
             {
                 if (state == 0)
                 {
-                    i1 = findMaxDistantPoint(p0, tfig);
+                    i1 = CadUtil.findMaxDistantPointIndex(p0, tfig.PointList);
                     if (i1 == -1)
                     {
                         return triangles;
@@ -167,7 +167,7 @@ namespace Plotter
                     continue;
                 }
 
-                bool ret = isPointInTriangle(cp, triangle);
+                bool ret = CadUtil.isPointInTriangle(cp, triangle.PointList);
                 if (ret)
                 {
                     return true;
@@ -175,53 +175,6 @@ namespace Plotter
             }
 
             return false;
-        }
-
-        private bool isPointInTriangle(CadPoint p, CadFigure triangle)
-        {
-            if (triangle.PointCount < 3)
-            {
-                return false;
-            }
-
-            double c1 = CadUtil.crossProduct2D(p, triangle.PointList[0], triangle.PointList[1]);
-            double c2 = CadUtil.crossProduct2D(p, triangle.PointList[1], triangle.PointList[2]);
-            double c3 = CadUtil.crossProduct2D(p, triangle.PointList[2], triangle.PointList[0]);
-
-
-            // All corossProduct result's sign are same, Point is in triangle
-            if ((c1 > 0 && c2 > 0 && c3 > 0) || (c1 < 0 && c2 < 0 && c3 < 0))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private int findMaxDistantPoint(CadPoint p0, CadFigure fig)
-        {
-            int ret = -1;
-            int i;
-
-            CadPoint t;
-
-            double maxd = 0;
-
-            for (i=0; i<fig.PointList.Count; i++)
-            {
-                CadPoint fp = fig.PointList[i];
-
-                t = fp - p0;
-                double d = t.length();
-
-                if (d > maxd)
-                {
-                    maxd = d;
-                    ret = i;
-                }
-            }
-
-            return ret;
         }
 
         private void calcTest(DrawContext dc)
@@ -239,10 +192,9 @@ namespace Plotter
 
             DebugOut dout = new DebugOut();
 
+            double res = CadUtil.getTriangleArea(fig.PointList);
 
-            bool isIn = isPointInTriangle(pt, fig);
-
-            dout.println("isIn=" + isIn);
+            dout.println("res=" + res);
         }
 
         private void splitTriangleTest(DrawContext dc)
