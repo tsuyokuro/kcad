@@ -787,6 +787,10 @@ namespace Plotter
 
             mDB = db;
 
+            mHistoryManager.DB = mDB;
+
+            mHistoryManager = new HistoryManager(mDB);
+
             NotifyLayerInfo();
         }
         #endregion

@@ -237,4 +237,56 @@ namespace Plotter
             return ProcResult;
         }
     }
+
+
+    class AreaCollecter
+    {
+        public CadObjectDB DB;
+
+        public AreaCollecter(CadObjectDB db)
+        {
+            DB = db;
+        }
+
+        public List<CadFigure> collect(List<SelectItem> selList)
+        {
+            List<CadFigure> res = new List<CadFigure>();
+
+            CadFigureBonder bonder = new CadFigureBonder(DB, null);
+
+            var bondRes = bonder.bond(selList);
+
+            foreach (SelectItem si in selList)
+            {
+                if (bondRes.RemoveList.Find(a => a.FigureID == si.Figure.ID) != null)
+                {
+                    continue;
+                }
+
+                if (res.Find(a => a.ID == si.Figure.ID) != null)
+                {
+                    continue;
+                }
+
+                if (si.Figure.PointCount < 3)
+                {
+                    continue;
+                }
+
+                res.Add(si.Figure);
+            }
+
+            foreach (var item in bondRes.AddList)
+            {
+                if (item.Figure.PointCount < 3)
+                {
+                    continue;
+                }
+
+                res.Add(item.Figure);
+            }
+
+            return res;
+        }
+    }
 }

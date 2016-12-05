@@ -7,7 +7,16 @@ namespace Plotter
 
     class HistoryManager
     {
-        CadObjectDB mDB;
+        private CadObjectDB mDB;
+
+        public CadObjectDB DB
+        {
+            set
+            {
+                Clear();
+                mDB = value;
+            }
+        }
 
         public Stack<CadOpe> mUndoStack = new Stack<CadOpe>();
         public Stack<CadOpe> mRedoStack = new Stack<CadOpe>();
@@ -15,6 +24,12 @@ namespace Plotter
         public HistoryManager(CadObjectDB db)
         {
             mDB = db;
+        }
+
+        public void Clear()
+        {
+            mUndoStack.Clear();
+            mRedoStack.Clear();
         }
 
         public void foward(CadOpe ope)

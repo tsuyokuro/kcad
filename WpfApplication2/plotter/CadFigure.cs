@@ -122,6 +122,21 @@ namespace Plotter
             Type = type;
         }
 
+        public CadFigure deepCopy()
+        {
+            CadFigure fig = new CadFigure(Type);
+            fig.Closed = Closed;
+            fig.copyPoints(this);
+
+            foreach (CadFigure c in ChildList)
+            {
+                CadFigure cc = c.deepCopy();
+                fig.addChild(cc);
+            }
+
+            return fig;
+        } 
+
         private void setBehavior(Types type)
         {
             switch (type)

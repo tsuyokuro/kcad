@@ -14,11 +14,40 @@ namespace Plotter
         private List<SelectItem> SelectList;
         private List<Item> ItemList;
 
+        private uint LayerID
+        {
+            get
+            {
+                if (Layer == null)
+                {
+                    return 0;
+                }
+
+                return Layer.ID;
+            }
+        }
+
         public CadFigureBonder(CadObjectDB db, CadLayer layer) : base(db)
         {
             Layer = layer;
+
             // Copy figure list to Work
-            Work = new List<CadFigure>(layer.FigureList);
+            if (layer != null)
+            {
+                Work = new List<CadFigure>(layer.FigureList);
+            }
+            else
+            {
+                Work = new List<CadFigure>();
+
+                foreach (CadLayer la in db.LayerList)
+                {
+                    foreach (CadFigure fig in la.FigureList)
+                    {
+                        Work.Add(fig);
+                    }
+                }
+            }
         }
 
         private class Item
@@ -58,9 +87,12 @@ namespace Plotter
 
             foreach (SelectItem item in selList)
             {
-                if (item.LayerID != Layer.ID)
+                if (Layer != null)
                 {
-                    continue;
+                    if (item.LayerID != LayerID)
+                    {
+                        continue;
+                    }
                 }
 
                 SelectList.Add(item);
@@ -72,6 +104,21 @@ namespace Plotter
 
             // joint end points
             bondMain();
+
+            foreach (ResultItem ri in ProcResult.AddList)
+            {
+                if (ri.Figure.PointCount > 2)
+                {
+                    CadPoint sp = ri.Figure.PointList[0];
+                    CadPoint ep = ri.Figure.PointList[ri.Figure.PointList.Count-1];
+
+                    if (ep.coordEquals(sp))
+                    {
+                        ri.Figure.PointList.RemoveAt(ri.Figure.PointList.Count - 1);
+                        ri.Figure.Closed = true;
+                    }
+                }
+            }
 
             return ProcResult;
         }
@@ -130,7 +177,7 @@ namespace Plotter
                 {
                     updateItemList(bondInfo);
 
-                    ProcResult.AddList.Add(new ResultItem(Layer.ID, bondInfo.BondedFigure));
+                    ProcResult.AddList.Add(new ResultItem(LayerID, bondInfo.BondedFigure));
                     ProcResult.RemoveList.Add(new ResultItem(bondInfo.figA.LayerID, bondInfo.figA));
                     ProcResult.RemoveList.Add(new ResultItem(bondInfo.figB.LayerID, bondInfo.figB));
 
@@ -262,7 +309,7 @@ namespace Plotter
 
             // Create figure that will be marged fig0 and fig1.
             CadFigure rfig = DB.newFigure(CadFigure.Types.POLY_LINES);
-            rfig.LayerID = Layer.ID;
+            rfig.LayerID = LayerID;
 
             BondInfo ret = new BondInfo();
 

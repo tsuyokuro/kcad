@@ -236,6 +236,18 @@ namespace Plotter
             TempFigureList.Add(tfig);
         }
 
+        private void areaCollectorTest()
+        {
+            TempFigureList.Clear();
+
+            AreaCollecter ac = new AreaCollecter(mDB);
+            List<CadFigure> figs = ac.collect(mSelList.List);
+
+            figs.ForEach(a => { TempFigureList.Add(a); });
+
+            RequestRedraw();
+        }
+
         private void test001(DrawContext dc, String arg)
         {
             draw(dc);
@@ -288,6 +300,20 @@ namespace Plotter
 
                 Log.dr(js + "\n");
             }
+            else if (s == "dump_temp")
+            {
+                DebugOut dout = new DebugOut();
+
+                dout.println("dump_temp {");
+                dout.Indent++;
+                foreach (CadFigure fig in TempFigureList)
+                {
+                    fig.dump(dout);
+                }
+                dout.Indent--;
+                dout.println("}");
+            }
+
             else if (s == "calct")
             {
                 calcTest(dc);
@@ -296,6 +322,11 @@ namespace Plotter
             else if (s == "stt")
             {
                 splitTriangleTest(dc);
+            }
+
+            else if (s == "act")
+            {
+                areaCollectorTest();
             }
 
             else if (s == "test2")
@@ -322,7 +353,7 @@ namespace Plotter
             {
                 TempFigureList.Clear();
             }
-            else if (s == "fig_list")
+            else if (s == "dump figs")
             {
                 DebugOut dout = new DebugOut();
 
@@ -347,12 +378,12 @@ namespace Plotter
                 dout.Indent--;
                 dout.println("}");
             }
-            else if (s == "sel_list")
+            else if (s == "dump sels")
             {
                 DebugOut dout = new DebugOut();
                 mSelList.dump(dout);
             }
-            else if (s == "selseg_list")
+            else if (s == "dump selsegs")
             {
                 DebugOut dout = new DebugOut();
                 mSelList.dump(dout);
