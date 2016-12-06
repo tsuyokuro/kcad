@@ -67,7 +67,7 @@ namespace Plotter
             CadPoint tp1 = triangle.PointList[1];
             CadPoint tp2 = triangle.PointList[2];
 
-            double dir = CadUtil.crossProduct2D(tp1, tp0, tp2);
+            double dir = CadMath.crossProduct2D(tp1, tp0, tp2);
             double currentDir = 0;
 
             while (tfig.PointCount > 3)
@@ -87,7 +87,7 @@ namespace Plotter
                 tp1 = triangle.PointList[1];
                 tp2 = triangle.PointList[2];
 
-                currentDir = CadUtil.crossProduct2D(tp1, tp0, tp2);
+                currentDir = CadMath.crossProduct2D(tp1, tp0, tp2);
 
                 bool hasIn = isFigPointInTriangle(tfig, triangle);
                 if (!hasIn && (Math.Sign(dir) == Math.Sign(currentDir)))
@@ -353,6 +353,7 @@ namespace Plotter
             {
                 TempFigureList.Clear();
             }
+
             else if (s == "dump figs")
             {
                 DebugOut dout = new DebugOut();
@@ -387,6 +388,16 @@ namespace Plotter
             {
                 DebugOut dout = new DebugOut();
                 mSelList.dump(dout);
+            }
+            else if (s == "dump layer")
+            {
+                DebugOut dout = new DebugOut();
+                CurrentLayer.dump(dout);
+            }
+            else if (s == "sdump layer")
+            {
+                DebugOut dout = new DebugOut();
+                CurrentLayer.sdump(dout);
             }
             else if (s == "dump")
             {

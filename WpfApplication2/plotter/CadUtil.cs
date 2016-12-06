@@ -20,61 +20,13 @@ namespace Plotter
 
     public class CadUtil
     {
-        // 内積
-        public static double innrProduct2D(CadPoint v1, CadPoint v2)
-        {
-            return (v1.x * v2.x) + (v1.y * v2.y);
-        }
-
-        public static double innrProduct2D(CadPoint v0, CadPoint v1, CadPoint v2)
-        {
-            return innrProduct2D(v1-v0, v2-v0);
-        }
-
-        public static double innerProduct3D(CadPoint v1, CadPoint v2)
-        {
-            return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
-        }
-
-        public static double innerProduct3D(CadPoint v0, CadPoint v1, CadPoint v2)
-        {
-            return innerProduct3D(v1-v0, v2-v0);
-        }
-
-        // 外積
-        public static double crossProduct2D(CadPoint v1, CadPoint v2)
-        {
-            return (v1.x * v2.y) - (v1.y * v2.x);
-        }
-
-        public static double crossProduct2D(CadPoint v0, CadPoint v1, CadPoint v2)
-        {
-            return crossProduct2D(v1 - v0, v2 - v0);
-        }
-
-        public static CadPoint crossProduct3D(CadPoint v1, CadPoint v2)
-        {
-            CadPoint res = default(CadPoint);
-
-            res.x = v1.y * v2.z - v1.z * v2.y;
-            res.y = v1.z * v2.x - v1.x * v2.z;
-            res.z = v1.x * v2.y - v1.y * v2.x;
-
-            return res;
-        }
-
-        public static CadPoint crossProduct3D(CadPoint v0, CadPoint v1, CadPoint v2)
-        {
-            return crossProduct3D(v1-v0, v2-v0);
-        }
-
         // 三角形の面積 3D対応
         public static double getTriangleArea(List<CadPoint> triangle)
         {
             CadPoint v1 = triangle[0] - triangle[1];
             CadPoint v2 = triangle[2] - triangle[1];
 
-            CadPoint cp = CadUtil.crossProduct3D(v1, v2);
+            CadPoint cp = CadMath.crossProduct3D(v1, v2);
 
             double area = cp.length();
 
@@ -187,9 +139,9 @@ namespace Plotter
                 return false;
             }
 
-            double c1 = CadUtil.crossProduct2D(p, triangle[0], triangle[1]);
-            double c2 = CadUtil.crossProduct2D(p, triangle[1], triangle[2]);
-            double c3 = CadUtil.crossProduct2D(p, triangle[2], triangle[0]);
+            double c1 = CadMath.crossProduct2D(p, triangle[0], triangle[1]);
+            double c2 = CadMath.crossProduct2D(p, triangle[1], triangle[2]);
+            double c3 = CadMath.crossProduct2D(p, triangle[2], triangle[0]);
 
 
             // When all corossProduct result's sign are same, Point is in triangle
@@ -234,7 +186,7 @@ namespace Plotter
             CadPoint ab = b - a;
             CadPoint ap = p - a;
 
-            t = innrProduct2D(ab, ap);
+            t = CadMath.innrProduct2D(ab, ap);
 
             if (t < 0)
             {
@@ -244,14 +196,14 @@ namespace Plotter
             CadPoint ba = a - b;
             CadPoint bp = p - b;
 
-            t = innrProduct2D(ba, bp);
+            t = CadMath.innrProduct2D(ba, bp);
 
             if (t < 0)
             {
                 return vectAbs2D(bp);
             }
 
-            double d = Math.Abs(crossProduct2D(ab, ap));
+            double d = Math.Abs(CadMath.crossProduct2D(ab, ap));
             double abl = vectAbs2D(ab);
 
             return d / abl;
@@ -266,7 +218,7 @@ namespace Plotter
             CadPoint ab = b - a;
             CadPoint ap = p - a;
 
-            t1 = innrProduct2D(ab, ap);
+            t1 = CadMath.innrProduct2D(ab, ap);
 
             if (t1 < 0)
             {
@@ -278,7 +230,7 @@ namespace Plotter
             CadPoint ba = a - b;
             CadPoint bp = p - b;
 
-            t2 = innrProduct2D(ba, bp);
+            t2 = CadMath.innrProduct2D(ba, bp);
 
             if (t2 < 0)
             {
@@ -318,16 +270,6 @@ namespace Plotter
             CadPoint v = b - a;
 
             return v.length();
-        }
-
-        public static double rad2deg(double rad)
-        {
-            return 180.0 * rad / Math.PI;
-        }
-
-        public static double deg2rad(double deg)
-        {
-            return Math.PI * deg / 180.0;
         }
 
         public static void movePoints(List<CadPoint> list, CadPoint delta)
