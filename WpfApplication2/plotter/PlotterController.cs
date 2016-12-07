@@ -537,7 +537,7 @@ namespace Plotter
 
             foreach (CadLayer layer in mDB.LayerList)
             {
-                List<CadFigure> list = layer.FigureList;
+                IReadOnlyList<CadFigure> list = layer.FigureList;
 
                 int i = list.Count - 1;
 
@@ -550,7 +550,7 @@ namespace Plotter
                         CadOpe ope = CadOpe.getRemoveFigureOpe(layer, fig.ID);
                         opeList.OpeList.Add(ope);
 
-                        list.RemoveAt(i);
+                        layer.removeFigureByIndex(i);
                     }
                 }
             }

@@ -20,7 +20,7 @@ namespace Plotter
             draw(context, layer.FigureList);
         }
 
-        public static void draw(DrawContext dc, List<CadFigure> list, Pen pen=null)
+        public static void draw(DrawContext dc, IReadOnlyList<CadFigure> list, Pen pen=null)
         {
             if (pen == null)
             {
@@ -39,7 +39,7 @@ namespace Plotter
             drawSelected(dc, layer.RelPointList);
         }
 
-        public static void drawSelected(DrawContext dc, List<CadFigure> list)
+        public static void drawSelected(DrawContext dc, IReadOnlyList<CadFigure> list)
         {
             foreach (CadFigure fig in list)
             {

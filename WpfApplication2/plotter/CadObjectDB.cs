@@ -387,23 +387,27 @@ namespace Plotter
                 dout.println("}");
             }
 
-            {
-                List<uint> ids = new List<uint>(mFigureIdMap.Keys);
-
-                dout.println("Figure map {");
-                dout.Indent++;
-                foreach (uint id in ids)
-                {
-                    CadFigure fig = mFigureIdMap[id];
-                    fig.dump(dout);
-                }
-                dout.Indent--;
-                dout.println("}");
-            }
+            dumpFigureMap(dout);
 
             dout.Indent--;
             dout.println("}");
         }
+
+        public void dumpFigureMap(DebugOut dout)
+        {
+            List<uint> ids = new List<uint>(mFigureIdMap.Keys);
+
+            dout.println("Figure map {");
+            dout.Indent++;
+            foreach (uint id in ids)
+            {
+                CadFigure fig = mFigureIdMap[id];
+                fig.dump(dout);
+            }
+            dout.Indent--;
+            dout.println("}");
+        }
+
         #endregion
     }
 

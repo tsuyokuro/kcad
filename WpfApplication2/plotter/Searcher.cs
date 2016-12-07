@@ -242,7 +242,10 @@ namespace Plotter
 
             // In order to give priority to the new Obj, to scan in reverse order
             IEnumerable<CadFigure> list = layer.FigureList;
-            foreach (CadFigure fig in list.Reverse())
+
+            var rev = list.Reverse();
+
+            foreach (CadFigure fig in rev)
             {
                 checkFig(layer, fig);
             }

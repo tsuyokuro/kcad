@@ -300,19 +300,6 @@ namespace Plotter
 
                 Log.dr(js + "\n");
             }
-            else if (s == "dump_temp")
-            {
-                DebugOut dout = new DebugOut();
-
-                dout.println("dump_temp {");
-                dout.Indent++;
-                foreach (CadFigure fig in TempFigureList)
-                {
-                    fig.dump(dout);
-                }
-                dout.Indent--;
-                dout.println("}");
-            }
 
             else if (s == "calct")
             {
@@ -354,56 +341,56 @@ namespace Plotter
                 TempFigureList.Clear();
             }
 
-            else if (s == "dump figs")
-            {
-                DebugOut dout = new DebugOut();
-
-                dout.println("fig_list {");
-                dout.Indent++;
-                foreach (CadLayer layer in mDB.LayerList)
-                {
-                    List<CadFigure> figList = layer.FigureList;
-
-                    dout.println("Layer:" + layer.Name + "{");
-                    dout.Indent++;
-
-                    foreach (CadFigure fig in figList)
-                    {
-                        Log.d("ID={0:d} Type={1:s} class={2:s}", fig.ID, fig.Type.ToString(), fig.getBehaviorType().Name);
-                    }
-
-                    dout.Indent--;
-                    dout.println("}");
-                }
-
-                dout.Indent--;
-                dout.println("}");
-            }
             else if (s == "dump sels")
             {
                 DebugOut dout = new DebugOut();
                 mSelList.dump(dout);
             }
+
             else if (s == "dump selsegs")
             {
                 DebugOut dout = new DebugOut();
                 mSelList.dump(dout);
             }
+
             else if (s == "dump layer")
             {
                 DebugOut dout = new DebugOut();
                 CurrentLayer.dump(dout);
             }
+
             else if (s == "sdump layer")
             {
                 DebugOut dout = new DebugOut();
                 CurrentLayer.sdump(dout);
             }
+
             else if (s == "dump")
             {
                 DebugOut dst = new DebugOut();
                 dump(dst);
             }
+
+            else if (s == "dump figs")
+            {
+                DebugOut dout = new DebugOut();
+                mDB.dumpFigureMap(dout);
+            }
+
+            else if (s == "dump temp")
+            {
+                DebugOut dout = new DebugOut();
+
+                dout.println("dump temp {");
+                dout.Indent++;
+                foreach (CadFigure fig in TempFigureList)
+                {
+                    fig.dump(dout);
+                }
+                dout.Indent--;
+                dout.println("}");
+            }
+
             else if (s == "save")
             {
                 IFormatter formatter = new BinaryFormatter();

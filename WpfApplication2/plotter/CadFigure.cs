@@ -472,6 +472,7 @@ namespace Plotter
             dout.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
             dout.Indent++;
             dout.println("ID=" + ID.ToString());
+            dout.println("LayerID=" + LayerID.ToString());
             dout.println("Type=" + Type.ToString());
             dout.println("State=" + State.ToString());
 

@@ -5,21 +5,6 @@ namespace Plotter
     using Newtonsoft.Json.Linq;
     using System;
 
-    public class CadFigureList : List<CadFigure>
-    {
-        public CadLayer Layer
-        {
-            get; set;
-        }
-
-        new public void Add(CadFigure fig)
-        {
-            fig.Locked = Layer.Locked;
-            fig.LayerID = Layer.ID;
-            base.Add(fig);
-        }
-    }
-
     [Serializable]
     public class CadLayer
     {
@@ -81,13 +66,19 @@ namespace Plotter
             }
         }
 
-        private CadFigureList mFigureList = new CadFigureList();
+        private List<CadFigure> mFigureList = new List<CadFigure>();
 
         private List<CadRelativePoint> mRelPointList = new List<CadRelativePoint>();
         private List<CadRelativePoint> mStoreRelPointList = null;
 
 
-        public List<CadFigure> FigureList { get { return mFigureList; } }
+        public IReadOnlyList<CadFigure> FigureList
+        {
+            get
+            {
+                return mFigureList;
+            }
+        }
 
         public List<CadRelativePoint> RelPointList { get { return mRelPointList; } }
         public List<CadRelativePoint> StoreRelPointList { get { return mStoreRelPointList; } }
@@ -95,11 +86,11 @@ namespace Plotter
 
         public CadLayer()
         {
-            mFigureList.Layer = this;
         }
 
         public void addFigure(CadFigure fig)
         {
+            fig.LayerID = ID;
             mFigureList.Add(fig);
         }
 
@@ -110,6 +101,7 @@ namespace Plotter
 
         public void insertFigure(int index, CadFigure fig)
         {
+            fig.LayerID = ID;
             mFigureList.Insert(index, fig);
         }
 
@@ -117,6 +109,7 @@ namespace Plotter
         {
             CadFigure fig = db.getFigure(id);
             mFigureList.Remove(fig);
+            fig.LayerID = 0;
         }
 
         public void removeFigureByID(uint id)
@@ -128,13 +121,15 @@ namespace Plotter
                 return;
             }
 
+            mFigureList[index].LayerID = 0;
+
             mFigureList.RemoveAt(index);
         }
 
+
         public void removeFigureByIndex(int index)
         {
-            Log.d("Layer#removeFigure index={0:d}", index);
-
+            mFigureList[index].LayerID = 0;
             mFigureList.RemoveAt(index);
         }
 
@@ -156,9 +151,7 @@ namespace Plotter
 
         public void clearSelectedFlags()
         {
-            List<CadFigure> figList = FigureList;
-
-            foreach (CadFigure fig in figList)
+            foreach (CadFigure fig in FigureList)
             {
                 fig.clearSelectFlags();
             }
@@ -216,8 +209,10 @@ namespace Plotter
             idList = JsonUtil.JsonIdListToList(ja);
 
             List<CadFigure> figList = DUtil.IdListToObjList(idList, db.FigureMap);
-            figList.ForEach(a => mFigureList.Add(a));
-            mFigureList.Layer = this;
+            figList.ForEach(a => {
+                    a.LayerID = ID;
+                    mFigureList.Add(a);
+                });
 
             ja = (JArray)jo["rel_point_id_list"];
             idList = JsonUtil.JsonIdListToList(ja);
