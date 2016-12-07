@@ -129,7 +129,7 @@ namespace Plotter
 
 
 
-        public static bool isPointInTriangle(CadPoint p, List<CadPoint> triangle)
+        public static bool isPointInTriangle2D(CadPoint p, IReadOnlyList<CadPoint> triangle)
         {
             if (triangle.Count < 3)
             {
@@ -143,6 +143,30 @@ namespace Plotter
 
             // When all corossProduct result's sign are same, Point is in triangle
             if ((c1 > 0 && c2 > 0 && c3 > 0) || (c1 < 0 && c2 < 0 && c3 < 0))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool isPointInTriangle3D(CadPoint p, IReadOnlyList<CadPoint> triangle)
+        {
+            if (triangle.Count < 3)
+            {
+                return false;
+            }
+
+            CadPoint c1 = CadMath.crossProduct3D(p, triangle[0], triangle[1]);
+            CadPoint c2 = CadMath.crossProduct3D(p, triangle[1], triangle[2]);
+            CadPoint c3 = CadMath.crossProduct3D(p, triangle[2], triangle[0]);
+
+            double ip12 = CadMath.innerProduct3D(c1, c2);
+            double ip13 = CadMath.innerProduct3D(c1, c3);
+
+
+            // When all corossProduct result's sign are same, Point is in triangle
+            if (ip12 > 0 && ip13>0)
             {
                 return true;
             }

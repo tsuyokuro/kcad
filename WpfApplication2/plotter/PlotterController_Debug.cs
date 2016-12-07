@@ -167,7 +167,7 @@ namespace Plotter
                     continue;
                 }
 
-                bool ret = CadUtil.isPointInTriangle(cp, triangle.PointList);
+                bool ret = CadUtil.isPointInTriangle3D(cp, triangle.PointList);
                 if (ret)
                 {
                     return true;
@@ -208,6 +208,28 @@ namespace Plotter
 
             clear(dc);
             draw(dc);
+        }
+
+        private void test_isPointInTriangle3D(DrawContext dc)
+        {
+            TempFigureList.Clear();
+
+            if (mSelList.List.Count == 0)
+            {
+                return;
+            }
+
+            SelectItem si = mSelList.List[0];
+
+            CadFigure fig = si.Figure;
+
+            CadPoint pt = mFreeDownPoint.Value;
+
+            DebugOut dout = new DebugOut();
+
+            bool ret = CadUtil.isPointInTriangle3D(pt, fig.PointList);
+
+            dout.println("ret=" + ret);
         }
 
         private void splitTriangleTest(DrawContext dc)
@@ -336,6 +358,11 @@ namespace Plotter
             {
                 splitToTriangle();
             }
+            else if (s == "intri")
+            {
+                test_isPointInTriangle3D(dc);
+            }
+
             else if (s == "clean temp")
             {
                 TempFigureList.Clear();
