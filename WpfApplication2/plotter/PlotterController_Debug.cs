@@ -232,6 +232,35 @@ namespace Plotter
             dout.println("ret=" + ret);
         }
 
+        private void test_getPoints(DrawContext dc)
+        {
+            TempFigureList.Clear();
+
+            if (mSelList.List.Count == 0)
+            {
+                return;
+            }
+
+            SelectItem si = mSelList.List[0];
+
+            CadFigure fig = si.Figure;
+
+            IReadOnlyList<CadPoint> list = fig.getPoints(64);
+
+            CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
+
+            tfig.addPoints(list);
+
+            TempFigureList.Add(tfig);
+
+            List<CadFigure> tl = splitToTriangle(tfig);
+
+            tl.ForEach(a => TempFigureList.Add(a));
+
+            clear(dc);
+            draw(dc);
+        }
+
         private void splitTriangleTest(DrawContext dc)
         {
             TempFigureList.Clear();
@@ -326,6 +355,11 @@ namespace Plotter
             else if (s == "calct")
             {
                 calcTest(dc);
+            }
+
+            else if (s == "test getPoints")
+            {
+                test_getPoints(dc);
             }
 
             else if (s == "stt")

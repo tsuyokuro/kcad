@@ -168,7 +168,7 @@ namespace Plotter
             copyPointList(mPointList, fig.mPointList);
         }
 
-        public void addPoints(List<CadPoint> points, int sp, int num)
+        public void addPoints(IReadOnlyList<CadPoint> points, int sp, int num)
         {
             if (Locked) return;
             for (int i = 0; i < num; i++)
@@ -178,13 +178,13 @@ namespace Plotter
             }
         }
 
-        public void addPoints(List<CadPoint> points, int sp)
+        public void addPoints(IReadOnlyList<CadPoint> points, int sp)
         {
             if (Locked) return;
             addPoints(points, sp, points.Count - sp);
         }
 
-        public void addPoints(List<CadPoint> points)
+        public void addPoints(IReadOnlyList<CadPoint> points)
         {
             if (Locked) return;
             foreach (CadPoint p in points)
@@ -193,7 +193,7 @@ namespace Plotter
             }
         }
 
-        public void addPointsReverse(List<CadPoint> points)
+        public void addPointsReverse(IReadOnlyList<CadPoint> points)
         {
             if (Locked) return;
 
@@ -206,7 +206,7 @@ namespace Plotter
             }
         }
 
-        public void addPointsReverse(List<CadPoint> points, int sp)
+        public void addPointsReverse(IReadOnlyList<CadPoint> points, int sp)
         {
             if (Locked) return;
 
@@ -586,6 +586,11 @@ namespace Plotter
         {
             return Behavior.getContainsRect();
         }
+
+        public IReadOnlyList<CadPoint> getPoints(int curveSplitNum)
+        {
+            return Behavior.getPoints(curveSplitNum);
+        }
         #endregion
 
         #region "Utilities"
@@ -646,6 +651,11 @@ namespace Plotter
         public virtual CadRect getContainsRect()
         {
             return CadUtil.getContainsRect(Fig.PointList);
+        }
+
+        public virtual IReadOnlyList<CadPoint> getPoints(int curveSplitNum)
+        {
+            return Fig.PointList;
         }
     }
 
@@ -852,6 +862,60 @@ namespace Plotter
                 b = pl[0];
                 Drawer.drawLine(dc, pen, a, b);
             }
+        }
+
+        public override IReadOnlyList<CadPoint> getPoints(int curveSplitNum)
+        {
+            List<CadPoint> ret = new List<CadPoint>();
+
+            List<CadPoint> pl = Fig.PointList;
+
+            if (pl.Count <= 0)
+            {
+                return ret;
+            }
+
+            int i = 0;
+
+            for (;i<pl.Count;)
+            {
+                if (i + 3 < pl.Count)
+                {
+                    if (pl[i + 1].Type == CadPoint.Types.HANDLE &&
+                        pl[i + 2].Type == CadPoint.Types.HANDLE)
+                    {
+                        CadUtil.BezierPoints(pl[i], pl[i + 1], pl[i + 2], pl[i + 3], curveSplitNum, ret);
+
+                        i += 4;
+                        continue;
+                    }
+                    else if (pl[i + 1].Type == CadPoint.Types.HANDLE &&
+                        pl[i + 2].Type == CadPoint.Types.STD)
+                    {
+                        CadUtil.BezierPoints(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, ret);
+
+                        i += 3;
+                        continue;
+                    }
+                }
+
+                if (i + 2 < pl.Count)
+                {
+                    if (pl[i + 1].Type == CadPoint.Types.HANDLE &&
+                                            pl[i + 2].Type == CadPoint.Types.STD)
+                    {
+                        CadUtil.BezierPoints(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, ret);
+
+                        i += 3;
+                        continue;
+                    }
+                }
+
+                ret.Add(pl[i]);
+                i++;
+            }
+
+            return ret;
         }
 
         private void drawSelected_Lines(DrawContext dc, Pen pen)

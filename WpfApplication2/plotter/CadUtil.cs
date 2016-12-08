@@ -87,6 +87,68 @@ namespace Plotter
             return ret;
         }
 
+
+        public static void BezierPoints(
+            CadPoint p0, CadPoint p1, CadPoint p2, int s, List<CadPoint> ret)
+        {
+            double t = 0;
+            double d = 1.0 / (double)s;
+
+            t = d;
+
+            int n = 3;
+
+            CadPoint t0 = p0;
+            CadPoint t1 = p0;
+
+            ret.Add(t0);
+
+            while (t <= 1.0)
+            {
+                t1 = default(CadPoint);
+                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
+                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
+                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
+
+                ret.Add(t1);
+
+                t0 = t1;
+
+                t += d;
+            }
+        }
+
+        public static void BezierPoints(
+            CadPoint p0, CadPoint p1, CadPoint p2, CadPoint p3, int s, List<CadPoint> ret)
+        {
+            double t = 0;
+            double d = 1.0 / (double)s;
+
+            t = d;
+
+            int n = 4;
+
+            CadPoint t0 = p0;
+            CadPoint t1 = p0;
+
+            ret.Add(t0);
+
+            while (t <= 1.0)
+            {
+                t1 = default(CadPoint);
+                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
+                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
+                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
+                t1 += p3 * CadMath.BernsteinBasisF(n - 1, 3, t);
+
+                ret.Add(t1);
+
+                t0 = t1;
+
+                t += d;
+            }
+        }
+
         /*
         public static Centroid getTriangleListCentroid(List<CadFigure> triangles)
         {
@@ -200,6 +262,8 @@ namespace Plotter
             return ret;
         }
 
+        // 線分apと点pの距離
+        // 垂線がab内に無い場合は、点a,bで近い方への距離を返す
         public static double distancePtoSeg2D(CadPoint a, CadPoint b, CadPoint p)
         {
             double t;
@@ -230,6 +294,7 @@ namespace Plotter
             return d / abl;
         }
 
+        // 点pから線分abに向かう垂線との交点を求める
         public static CrossInfo getNormCross2D(CadPoint a, CadPoint b, CadPoint p)
         {
             CrossInfo ret = default(CrossInfo);
