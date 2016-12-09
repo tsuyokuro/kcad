@@ -18,7 +18,7 @@ namespace Plotter
     public class CadUtil
     {
         // 三角形の面積 3D対応
-        public static double getTriangleArea(List<CadPoint> triangle)
+        public static double getTriangleArea(IReadOnlyList<CadPoint> triangle)
         {
             CadPoint v1 = triangle[0] - triangle[1];
             CadPoint v2 = triangle[2] - triangle[1];
@@ -31,7 +31,7 @@ namespace Plotter
         }
 
         // 三角形の重心を求める
-        public static CadPoint getTriangleCentroid(List<CadPoint> triangle)
+        public static CadPoint getTriangleCentroid(IReadOnlyList<CadPoint> triangle)
         {
             CadPoint gp = default(CadPoint);
 
@@ -236,7 +236,7 @@ namespace Plotter
             return false;
         }
 
-        public static int findMaxDistantPointIndex(CadPoint p0, List<CadPoint> points)
+        public static int findMaxDistantPointIndex(CadPoint p0, IReadOnlyList<CadPoint> points)
         {
             int ret = -1;
             int i;
@@ -367,7 +367,7 @@ namespace Plotter
             }
         }
 
-        public static CadRect getContainsRect(List<CadPoint> list)
+        public static CadRect getContainsRect(IReadOnlyList<CadPoint> list)
         {
             CadRect rect = default(CadRect);
 
