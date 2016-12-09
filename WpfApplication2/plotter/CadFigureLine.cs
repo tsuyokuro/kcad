@@ -7,41 +7,42 @@ using System.Drawing;
 
 namespace Plotter
 {
-    using static CadFigure;
-
-    [Serializable]
-    public class CadFigureLine : CadFigurePolyLines
+    public partial class CadFigure
     {
-        public override States State
+
+        [Serializable]
+        public class CadFigureLine : CadFigurePolyLines
         {
-            get
+            // Do not have data member.
+
+            public override States getState(CadFigure fig)
             {
-                if (Fig.PointList.Count < 1)
+                if (fig.PointList.Count < 1)
                 {
                     return States.NOT_ENOUGH;
                 }
-                else if (Fig.PointList.Count < 2)
+                else if (fig.PointList.Count < 2)
                 {
                     return States.WAIT_LAST_POINT;
                 }
 
                 return States.FULL;
             }
-        }
 
-        public CadFigureLine(CadFigure fig) : base(fig)
-        {
-        }
+            public CadFigureLine()
+            {
+            }
 
-        public override void addPoint(CadPoint p)
-        {
-            Fig.PointList.Add(p);
-        }
+            public override void addPoint(CadFigure fig, CadPoint p)
+            {
+                fig.PointList.Add(p);
+            }
 
-        public override CadFigure.Types endCreate()
-        {
-            Fig.Type = Types.POLY_LINES;
-            return Fig.Type;
+            public override CadFigure.Types endCreate(CadFigure fig)
+            {
+                fig.Type = Types.POLY_LINES;
+                return fig.Type;
+            }
         }
     }
 }

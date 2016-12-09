@@ -7,117 +7,111 @@ using System.Drawing;
 
 namespace Plotter
 {
-    using static CadFigure;
-
-    [Serializable]
-    public abstract class CadFigureBehavior
+    public partial class CadFigure
     {
-        protected CadFigure Fig;
-
-        public CadFigureBehavior(CadFigure fig)
+        [Serializable]
+        public abstract class CadFigureBehavior
         {
-            Fig = fig;
-        }
+            // Do not have data member.
 
-        public abstract States State { get; }
-        public abstract void addPoint(CadPoint p);
-        public abstract void setPointAt(int index, CadPoint pt);
-        public abstract void removeSelected();
-        public abstract void draw(DrawContext dc, Pen pen);
-        public abstract void drawSeg(DrawContext dc, Pen pen, int idxA, int idxB);
-        public abstract void drawSelected(DrawContext dc, Pen pen);
-        public abstract void drawTemp(DrawContext dc, CadPoint tp, Pen pen);
-        public abstract void startCreate();
-        public abstract Types endCreate();
-
-        public virtual void moveSelectedPoint(CadPoint delta)
-        {
-            for (int i = 0; i < Fig.StoreList.Count; i++)
+            public CadFigureBehavior()
             {
-                CadPoint op = Fig.StoreList[i];
+            }
 
-                if (!op.Selected)
-                {
-                    continue;
-                }
+            public abstract States getState(CadFigure fig);
+            public abstract void addPoint(CadFigure fig, CadPoint p);
+            public abstract void setPointAt(CadFigure fig, int index, CadPoint pt);
+            public abstract void removeSelected(CadFigure fig);
+            public abstract void draw(CadFigure fig, DrawContext dc, Pen pen);
+            public abstract void drawSeg(CadFigure fig, DrawContext dc, Pen pen, int idxA, int idxB);
+            public abstract void drawSelected(CadFigure fig, DrawContext dc, Pen pen);
+            public abstract void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, Pen pen);
+            public abstract void startCreate(CadFigure fig);
+            public abstract Types endCreate(CadFigure fig);
 
-                if (i < Fig.PointList.Count)
+            public virtual void moveSelectedPoint(CadFigure fig, CadPoint delta)
+            {
+                for (int i = 0; i < fig.StoreList.Count; i++)
                 {
-                    Fig.PointList[i] = op + delta;
+                    CadPoint op = fig.StoreList[i];
+
+                    if (!op.Selected)
+                    {
+                        continue;
+                    }
+
+                    if (i < fig.PointList.Count)
+                    {
+                        fig.PointList[i] = op + delta;
+                    }
                 }
+            }
+
+            public virtual void moveAllPoints(CadFigure fig, CadPoint delta)
+            {
+                CadUtil.movePoints(fig.PointList, delta);
+            }
+
+            public virtual CadRect getContainsRect(CadFigure fig)
+            {
+                return CadUtil.getContainsRect(fig.PointList);
+            }
+
+            public virtual IReadOnlyList<CadPoint> getPoints(CadFigure fig, int curveSplitNum)
+            {
+                return fig.PointList;
             }
         }
 
-        public virtual void moveAllPoints(CadPoint delta)
+        #region Nop Behavior
+        public class CadNopBehavior : CadFigureBehavior
         {
-            CadUtil.movePoints(Fig.PointList, delta);
-        }
+            public CadNopBehavior()
+            {
+            }
 
-        public virtual CadRect getContainsRect()
-        {
-            return CadUtil.getContainsRect(Fig.PointList);
-        }
-
-        public virtual IReadOnlyList<CadPoint> getPoints(int curveSplitNum)
-        {
-            return Fig.PointList;
-        }
-    }
-
-    #region Nop Behavior
-    public class CadNopBehavior : CadFigureBehavior
-    {
-        CadFigure.Types Type;
-
-        public CadNopBehavior(CadFigure fig, Types t) : base(fig)
-        {
-            Type = t;
-        }
-
-        public override States State
-        {
-            get
+            public override States getState(CadFigure fig)
             {
                 return States.NONE;
             }
-        }
 
-        public override void addPoint(CadPoint p)
-        {
-        }
+            public override void addPoint(CadFigure fig, CadPoint p)
+            {
+            }
 
-        public override void draw(DrawContext dc, Pen pen)
-        {
-        }
+            public override void draw(CadFigure fig, DrawContext dc, Pen pen)
+            {
+            }
 
-        public override void drawSeg(DrawContext dc, Pen pen, int idxA, int idxB)
-        {
-        }
+            public override void drawSeg(CadFigure fig, DrawContext dc, Pen pen, int idxA, int idxB)
+            {
+            }
 
-        public override void drawSelected(DrawContext dc, Pen pen)
-        {
-        }
+            public override void drawSelected(CadFigure fig, DrawContext dc, Pen pen)
+            {
+            }
 
-        public override void drawTemp(DrawContext dc, CadPoint tp, Pen pen)
-        {
-        }
+            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, Pen pen)
+            {
+            }
 
-        public override Types endCreate()
-        {
-            return Type;
-        }
+            public override Types endCreate(CadFigure fig)
+            {
+                return fig.Type;
+            }
 
-        public override void removeSelected()
-        {
-        }
+            public override void removeSelected(CadFigure fig)
+            {
+            }
 
-        public override void setPointAt(int index, CadPoint pt)
-        {
-        }
+            public override void setPointAt(CadFigure fig, int index, CadPoint pt)
+            {
+            }
 
-        public override void startCreate()
-        {
+            public override void startCreate(CadFigure fig)
+            {
+            }
         }
+        #endregion
     }
-    #endregion
 }

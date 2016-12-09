@@ -9,7 +9,7 @@ namespace Plotter
     using static CadFigure;
 
     [Serializable]
-    public class CadFigure
+    public partial class CadFigure
     {
         #region Enums
         public enum Types : byte
@@ -20,6 +20,7 @@ namespace Plotter
             POLY_LINES,
             CIRCLE,
             GROUP,
+            MAX,
         }
 
         public enum States : byte
@@ -108,6 +109,18 @@ namespace Plotter
 
         private CadFigureBehavior Behavior = null;
 
+        private static CadFigureBehavior[] BehaviorTbl = null;
+
+        static CadFigure()
+        {
+            BehaviorTbl = new CadFigureBehavior[(int)Types.MAX];
+            BehaviorTbl[(int)Types.LINE] = new CadFigureLine();
+            BehaviorTbl[(int)Types.RECT] = new CadFigureRect();
+            BehaviorTbl[(int)Types.POLY_LINES] = new CadFigurePolyLines();
+            BehaviorTbl[(int)Types.CIRCLE] = new CadFigureCircle();
+            BehaviorTbl[(int)Types.GROUP] = new CadNopBehavior();
+        }
+
         public CadFigure()
         {
             ID = 0;
@@ -135,30 +148,40 @@ namespace Plotter
             }
 
             return fig;
-        } 
+        }
 
+        /*
         private void setBehavior(Types type)
         {
             switch (type)
             {
                 case Types.LINE:
-                    Behavior = new CadFigureLine(this);
+                    Behavior = new CadFigureLine();
                     break;
                 case Types.RECT:
-                    Behavior = new CadFigureRect(this);
+                    Behavior = new CadFigureRect();
                     break;
                 case Types.POLY_LINES:
-                    Behavior = new CadFigurePolyLines(this);
+                    Behavior = new CadFigurePolyLines();
                     break;
                 case Types.CIRCLE:
-                    Behavior = new CadFigureCircle(this);
+                    Behavior = new CadFigureCircle();
                     break;
                 case Types.GROUP:
-                    Behavior = new CadNopBehavior(this, type);
+                    Behavior = new CadNopBehavior();
                     break;
                 default:
                     Behavior = null;
                     break;
+            }
+        }
+        */
+
+        private void setBehavior(Types type)
+        {
+            if (type > Types.NONE && type < Types.MAX)
+            {
+                Behavior = BehaviorTbl[(int)type];
             }
         }
 
@@ -507,7 +530,7 @@ namespace Plotter
         {
             get
             {
-                States st = Behavior.State;
+                States st = Behavior.getState(this);
                 return st;
             }
         }
@@ -521,75 +544,75 @@ namespace Plotter
         {
             if (Locked) return;
 
-            Behavior.moveSelectedPoint(delta);
+            Behavior.moveSelectedPoint(this, delta);
         }
 
         public void moveAllPoints(CadPoint delta)
         {
             if (Locked) return;
 
-            Behavior.moveAllPoints(delta);
+            Behavior.moveAllPoints(this, delta);
         }
 
         public void addPoint(CadPoint p)
         {
             if (Locked) return;
 
-            Behavior.addPoint(p);
+            Behavior.addPoint(this, p);
         }
 
         public void removeSelected()
         {
             if (Locked) return;
 
-            Behavior.removeSelected();
+            Behavior.removeSelected(this);
         }
 
         public void setPointAt(int index, CadPoint pt)
         {
             if (Locked) return;
 
-            Behavior.setPointAt(index, pt);
+            Behavior.setPointAt(this, index, pt);
         }
 
         public void draw(DrawContext dc, Pen pen)
         {
-            Behavior.draw(dc, pen);
+            Behavior.draw(this, dc, pen);
         }
 
         public void drawSeg(DrawContext dc, Pen pen, int idxA, int idxB)
         {
-            Behavior.drawSeg(dc, pen, idxA, idxB);
+            Behavior.drawSeg(this, dc, pen, idxA, idxB);
         }
 
         public void drawSelected(DrawContext dc, Pen pen)
         {
-            Behavior.drawSelected(dc, pen);
+            Behavior.drawSelected(this, dc, pen);
         }
 
         public void drawTemp(DrawContext dc, CadPoint tp, Pen pen)
         {
-            Behavior.drawTemp(dc, tp, pen);
+            Behavior.drawTemp(this, dc, tp, pen);
         }
 
         public void startCreate()
         {
-            Behavior.startCreate();
+            Behavior.startCreate(this);
         }
 
         public Types endCreate()
         {
-            return Behavior.endCreate();
+            return Behavior.endCreate(this);
         }
 
         public CadRect getContainsRect()
         {
-            return Behavior.getContainsRect();
+            return Behavior.getContainsRect(this);
         }
 
         public IReadOnlyList<CadPoint> getPoints(int curveSplitNum)
         {
-            return Behavior.getPoints(curveSplitNum);
+            return Behavior.getPoints(this, curveSplitNum);
         }
         #endregion
 
