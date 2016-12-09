@@ -115,7 +115,12 @@
     </Compile>
     <Compile Include="plotter\CadFigure.cs" />
     <Compile Include="plotter\CadFigureAssembler.cs" />
+    <Compile Include="plotter\CadFigureBehavior.cs" />
     <Compile Include="plotter\CadFigureBonder.cs" />
+    <Compile Include="plotter\CadFigureCircle.cs" />
+    <Compile Include="plotter\CadFigureLine.cs" />
+    <Compile Include="plotter\CadFigurePolyLines.cs" />
+    <Compile Include="plotter\CadFigureRect.cs" />
     <Compile Include="plotter\CadLayer.cs" />
     <Compile Include="plotter\CadMath.cs" />
     <Compile Include="plotter\CadMouse.cs" />
