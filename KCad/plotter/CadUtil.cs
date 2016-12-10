@@ -25,7 +25,7 @@ namespace Plotter
 
             CadPoint cp = CadMath.crossProduct3D(v1, v2);
 
-            double area = cp.length();
+            double area = cp.length() / 2.0;
 
             return area;
         }
