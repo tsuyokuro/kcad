@@ -39,14 +39,14 @@ namespace Plotter
 
                     if (i < fig.PointList.Count)
                     {
-                        fig.PointList[i] = op + delta;
+                        fig.mPointList[i] = op + delta;
                     }
                 }
             }
 
             public virtual void moveAllPoints(CadFigure fig, CadPoint delta)
             {
-                CadUtil.movePoints(fig.PointList, delta);
+                CadUtil.movePoints(fig.mPointList, delta);
             }
 
             public virtual CadRect getContainsRect(CadFigure fig)

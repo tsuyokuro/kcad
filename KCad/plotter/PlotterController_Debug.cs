@@ -93,7 +93,7 @@ namespace Plotter
                 if (!hasIn && (Math.Sign(dir) == Math.Sign(currentDir)))
                 {
                     triangles.Add(triangle);
-                    tfig.PointList.RemoveAt(i1);
+                    tfig.removePointAt(i1);
                     state = 0;
                     continue;
                 }

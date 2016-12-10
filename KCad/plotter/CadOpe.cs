@@ -253,14 +253,14 @@ namespace Plotter
                 mPointList.Add(fig.getPointAt(idx + i));
             }
 
-            fig.PointList.RemoveRange(idx, InsertNum);
+            fig.removePointsRange(idx, InsertNum);
         }
 
         public override void redo(CadObjectDB db)
         {
             CadLayer layer = db.getLayer(LayerID);
             CadFigure fig = db.getFigure(FigureID);
-            fig.PointList.InsertRange(PointIndex, mPointList);
+            fig.insertPointsRange(PointIndex, mPointList);
         }
     }
     #endregion

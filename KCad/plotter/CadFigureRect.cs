@@ -30,9 +30,9 @@ namespace Plotter
 
             public override void addPoint(CadFigure fig, CadPoint p)
             {
-                if (fig.PointList.Count == 0)
+                if (fig.mPointList.Count == 0)
                 {
-                    fig.PointList.Add(p);
+                    fig.mPointList.Add(p);
                 }
                 else
                 {
@@ -45,9 +45,9 @@ namespace Plotter
                     CadPoint p3 = p0;
                     p3.y = p2.y;
 
-                    fig.PointList.Add(p1);
-                    fig.PointList.Add(p2);
-                    fig.PointList.Add(p3);
+                    fig.mPointList.Add(p1);
+                    fig.mPointList.Add(p2);
+                    fig.mPointList.Add(p3);
 
                     fig.Closed = true;
                 }

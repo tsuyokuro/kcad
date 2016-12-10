@@ -30,7 +30,7 @@ namespace Plotter
 
             public override void addPoint(CadFigure fig, CadPoint p)
             {
-                fig.PointList.Add(p);
+                fig.mPointList.Add(p);
             }
 
             public override CadFigure.Types endCreate(CadFigure fig)

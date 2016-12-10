@@ -54,7 +54,7 @@ namespace Plotter
 
         public bool Closed { get; set; }
 
-        public List<CadPoint> PointList
+        public IReadOnlyList<CadPoint> PointList
         {
             get
             {
@@ -70,7 +70,7 @@ namespace Plotter
             }
         }
 
-        public List<CadPoint> StoreList
+        public IReadOnlyList<CadPoint> StoreList
         {
             get
             {
@@ -88,6 +88,7 @@ namespace Plotter
         private List<CadPoint> mStoreList = null;
 
 
+        #region Group management
         private CadFigure mParent = null;
 
         public CadFigure Parent
@@ -106,11 +107,13 @@ namespace Plotter
                 return mChildList;
             }
         }
+        #endregion
 
         private CadFigureBehavior Behavior = null;
 
         private static CadFigureBehavior[] BehaviorTbl = null;
 
+        // Static initializer
         static CadFigure()
         {
             BehaviorTbl = new CadFigureBehavior[(int)Types.MAX];
@@ -149,33 +152,6 @@ namespace Plotter
 
             return fig;
         }
-
-        /*
-        private void setBehavior(Types type)
-        {
-            switch (type)
-            {
-                case Types.LINE:
-                    Behavior = new CadFigureLine();
-                    break;
-                case Types.RECT:
-                    Behavior = new CadFigureRect();
-                    break;
-                case Types.POLY_LINES:
-                    Behavior = new CadFigurePolyLines();
-                    break;
-                case Types.CIRCLE:
-                    Behavior = new CadFigureCircle();
-                    break;
-                case Types.GROUP:
-                    Behavior = new CadNopBehavior();
-                    break;
-                default:
-                    Behavior = null;
-                    break;
-            }
-        }
-        */
 
         private void setBehavior(Types type)
         {
@@ -265,6 +241,16 @@ namespace Plotter
             }
 
             mPointList.RemoveAt(index);
+        }
+
+        public void removePointsRange(int index, int count)
+        {
+            mPointList.RemoveRange(index, count);
+        }
+
+        public void insertPointsRange(int index, IEnumerable<CadPoint> collection)
+        {
+            mPointList.InsertRange(index, collection);
         }
 
         public CadPoint getPointAt(int index)
@@ -617,7 +603,7 @@ namespace Plotter
         #endregion
 
         #region "Utilities"
-        private static void copyPointList(List<CadPoint> dest, List<CadPoint> src)
+        private static void copyPointList(List<CadPoint> dest, IReadOnlyList<CadPoint> src)
         {
             foreach (CadPoint p in src)
             {

@@ -108,8 +108,8 @@ namespace Plotter
         public static DiffData create(CadFigure fig)
         {
             uint figID = fig.ID;
-            List<CadPoint> oldList = fig.StoreList;
-            List<CadPoint> newList = fig.PointList;
+            IReadOnlyList<CadPoint> oldList = fig.StoreList;
+            IReadOnlyList<CadPoint> newList = fig.PointList;
 
             if (oldList == null)
             {

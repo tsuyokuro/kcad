@@ -114,7 +114,7 @@ namespace Plotter
 
                     if (ep.coordEquals(sp))
                     {
-                        ri.Figure.PointList.RemoveAt(ri.Figure.PointList.Count - 1);
+                        ri.Figure.removePointAt(ri.Figure.PointList.Count - 1);
                         ri.Figure.Closed = true;
                     }
                 }

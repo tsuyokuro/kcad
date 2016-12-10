@@ -258,7 +258,7 @@ namespace Plotter
 
         private void checkFig(CadLayer layer, CadFigure fig)
         {
-            List<CadPoint> pointList = fig.PointList;
+            IReadOnlyList<CadPoint> pointList = fig.PointList;
 
             if (pointList == null)
             {
@@ -555,7 +555,7 @@ namespace Plotter
 
         private void checkSegs(CadLayer layer, CadFigure fig)
         {
-            List<CadPoint> pl = fig.PointList;
+            IReadOnlyList<CadPoint> pl = fig.PointList;
 
             int num = pl.Count;
 

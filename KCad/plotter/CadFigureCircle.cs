@@ -31,22 +31,22 @@ namespace Plotter
             public override void addPoint(CadFigure fig, CadPoint p)
             {
                 p.Type = CadPoint.Types.BREAK;
-                fig.PointList.Add(p);
+                fig.mPointList.Add(p);
             }
 
             public override void setPointAt(CadFigure fig, int index, CadPoint pt)
             {
                 pt.Type = CadPoint.Types.BREAK;
-                fig.PointList[index] = pt;
+                fig.mPointList[index] = pt;
             }
 
             public override void removeSelected(CadFigure fig)
             {
-                fig.PointList.RemoveAll(a => a.Selected);
+                fig.mPointList.RemoveAll(a => a.Selected);
 
                 if (fig.PointCount < 2)
                 {
-                    fig.PointList.Clear();
+                    fig.mPointList.Clear();
                 }
             }
 
@@ -118,12 +118,12 @@ namespace Plotter
 
                 if (cp.Selected)
                 {
-                    fig.PointList[0] = cp + delta;
-                    fig.PointList[1] = rp + delta;
+                    fig.mPointList[0] = cp + delta;
+                    fig.mPointList[1] = rp + delta;
                     return;
                 }
 
-                fig.PointList[1] = rp + delta;
+                fig.mPointList[1] = rp + delta;
             }
         }
     }

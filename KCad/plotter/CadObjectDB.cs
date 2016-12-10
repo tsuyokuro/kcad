@@ -460,7 +460,7 @@ namespace Plotter
             return ja;
         }
 
-        public static JArray ListToJsonList<T>(List<T> list)
+        public static JArray ListToJsonList<T>(IReadOnlyList<T> list)
         {
             JArray ja = new JArray();
 

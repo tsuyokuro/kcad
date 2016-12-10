@@ -35,17 +35,17 @@ namespace Plotter
 
             public override void removeSelected(CadFigure fig)
             {
-                fig.PointList.RemoveAll(a => a.Selected);
+                fig.mPointList.RemoveAll(a => a.Selected);
 
                 if (fig.PointCount < 2)
                 {
-                    fig.PointList.Clear();
+                    fig.mPointList.Clear();
                 }
             }
 
             public override void addPoint(CadFigure fig, CadPoint p)
             {
-                fig.PointList.Add(p);
+                fig.mPointList.Add(p);
             }
 
             public override void draw(CadFigure fig, DrawContext dc, Pen pen)
@@ -68,7 +68,7 @@ namespace Plotter
 
             protected void drawLines(CadFigure fig, DrawContext dc, Pen pen)
             {
-                List<CadPoint> pl = fig.PointList;
+                IReadOnlyList<CadPoint> pl = fig.PointList;
 
                 if (pl.Count <= 0)
                 {
@@ -158,7 +158,7 @@ namespace Plotter
             {
                 List<CadPoint> ret = new List<CadPoint>();
 
-                List<CadPoint> pl = fig.PointList;
+                IReadOnlyList<CadPoint> pl = fig.PointList;
 
                 if (pl.Count <= 0)
                 {
@@ -291,7 +291,7 @@ namespace Plotter
 
             public override void setPointAt(CadFigure fig, int index, CadPoint pt)
             {
-                fig.PointList[index] = pt;
+                fig.mPointList[index] = pt;
             }
 
             public override void startCreate(CadFigure fig)

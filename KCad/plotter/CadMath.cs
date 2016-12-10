@@ -2,7 +2,7 @@
 
 namespace Plotter
 {
-    class CadMath
+    public class CadMath
     {
         // 単位ベクトル
         public static CadPoint unitVector(CadPoint v)
