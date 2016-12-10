@@ -9,7 +9,7 @@ using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace WpfApplication2
+namespace KCad
 {
     public partial class MainWindow : Window
     {

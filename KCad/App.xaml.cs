@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace WpfApplication2
+namespace KCad
 {
     /// <summary>
     /// App.xaml の相互作用ロジック

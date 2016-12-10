@@ -4,7 +4,7 @@ using System.Threading;
 using System.Windows.Threading;
 using System.Windows;
 
-namespace WpfApplication2
+namespace KCad
 {
     public class DebugInputThread
     {
