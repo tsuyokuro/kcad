@@ -264,14 +264,14 @@ namespace Plotter
 
         // 線分apと点pの距離
         // 垂線がab内に無い場合は、点a,bで近い方への距離を返す
-        public static double distancePtoSeg2D(CadPoint a, CadPoint b, CadPoint p)
+        public static double distancePtoSeg(CadPoint a, CadPoint b, CadPoint p)
         {
             double t;
 
             CadPoint ab = b - a;
             CadPoint ap = p - a;
 
-            t = CadMath.innrProduct2D(ab, ap);
+            t = CadMath.innerProduct3D(ab, ap);
 
             if (t < 0)
             {
@@ -281,54 +281,58 @@ namespace Plotter
             CadPoint ba = a - b;
             CadPoint bp = p - b;
 
-            t = CadMath.innrProduct2D(ba, bp);
+            t = CadMath.innerProduct3D(ba, bp);
 
             if (t < 0)
             {
-                return vectAbs2D(bp);
+                return vectAbs(bp);
             }
 
-            double d = Math.Abs(CadMath.crossProduct2D(ab, ap));
-            double abl = vectAbs2D(ab);
 
-            return d / abl;
+            CadPoint norm = CadMath.crossProduct3D(ab, ap);
+
+            double d = norm.length();
+
+            double abL = vectAbs(ab);
+
+            return d / abL;
         }
 
         // 点pから線分abに向かう垂線との交点を求める
-        public static CrossInfo getNormCross2D(CadPoint a, CadPoint b, CadPoint p)
+        public static CrossInfo getNormCross(CadPoint a, CadPoint b, CadPoint p)
         {
             CrossInfo ret = default(CrossInfo);
-
-            double t1;
 
             CadPoint ab = b - a;
             CadPoint ap = p - a;
 
-            t1 = CadMath.innrProduct2D(ab, ap);
-
-            if (t1 < 0)
-            {
-                return ret;
-            }
-
-            double t2;
-
             CadPoint ba = a - b;
             CadPoint bp = p - b;
 
-            t2 = CadMath.innrProduct2D(ba, bp);
+            // A-B 単位ベクトル
+            CadPoint unit_ab = CadMath.unitVector(ab);
 
-            if (t2 < 0)
+            // B-A 単位ベクトル　(A-B単位ベクトルを反転) B側の中外判定に使用
+            CadPoint unit_ba = unit_ab * -1.0;
+
+            // Aから交点までの距離 
+            // A->交点->B or A->B->交点なら +
+            // 交点<-A->B なら -
+            double dist_ax = CadMath.innerProduct3D(unit_ab, ap);
+
+            // Bから交点までの距離 B側の中外判定に使用
+            double dist_bx = CadMath.innerProduct3D(unit_ba, bp);
+
+            //Console.WriteLine("getNormCross dist_ax={0} dist_bx={1}" , dist_ax.ToString(), dist_bx.ToString());
+
+            if (dist_ax > 0 && dist_bx > 0)
             {
-                return ret;
+                ret.isCross = true;
             }
 
-            double abl = vectAbs2D(ab);
-            double abl2 = abl * abl;
-
-            ret.isCross = true;
-            ret.CrossPoint.x = ab.x * t1 / abl2 + a.x;
-            ret.CrossPoint.y = ab.y * t1 / abl2 + a.y;
+            ret.CrossPoint.x = a.x + (unit_ab.x * dist_ax);
+            ret.CrossPoint.y = a.y + (unit_ab.y * dist_ax);
+            ret.CrossPoint.z = a.z + (unit_ab.z * dist_ax);
 
             return ret;
         }

@@ -4,6 +4,13 @@ namespace Plotter
 {
     class CadMath
     {
+        // 単位ベクトル
+        public static CadPoint unitVector(CadPoint v)
+        {
+            double len = v.length();
+            return v / len;
+        }
+
         // 内積
         #region inner product
         public static double innrProduct2D(CadPoint v1, CadPoint v2)

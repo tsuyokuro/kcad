@@ -473,7 +473,7 @@ namespace Plotter
                 return;
             }
 
-            CrossInfo ret = CadUtil.getNormCross2D(a, b, TargetPoint);
+            CrossInfo ret = CadUtil.getNormCross(a, b, TargetPoint);
 
             if (!ret.isCross)
             {

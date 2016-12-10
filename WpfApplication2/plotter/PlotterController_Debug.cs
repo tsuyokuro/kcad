@@ -261,6 +261,40 @@ namespace Plotter
             draw(dc);
         }
 
+        private void test_crossPoint(DrawContext dc)
+        {
+            TempFigureList.Clear();
+
+            MarkSeg seg = mSelectedSegs.LastSel;
+
+            if (seg.FigureID == 0)
+            {
+                return;
+            }
+
+            CadFigure fig = mDB.getFigure(seg.FigureID);
+
+            CadPoint a = fig.getPointAt(seg.PtIndexA);
+            CadPoint b = fig.getPointAt(seg.PtIndexB);
+
+            CadPoint pt = mFreeDownPoint.Value;
+
+            CrossInfo ret = CadUtil.getNormCross(a, b, pt);
+
+            if (ret.isCross)
+            {
+                CadFigure figx = new CadFigure(CadFigure.Types.POLY_LINES);
+
+                figx.addPoint(pt);
+                figx.addPoint(ret.CrossPoint);
+
+                TempFigureList.Add(figx);
+            }
+
+            clear(dc);
+            draw(dc);
+        }
+
         private void splitTriangleTest(DrawContext dc)
         {
             TempFigureList.Clear();
@@ -315,7 +349,7 @@ namespace Plotter
             CadPoint a = fig.getPointAt(seg.PtIndexA);
             CadPoint b = fig.getPointAt(seg.PtIndexB);
 
-            CrossInfo ret = CadUtil.getNormCross2D(a, b, mRawPos);
+            CrossInfo ret = CadUtil.getNormCross(a, b, mRawPos);
 
             if (ret.isCross)
             {
@@ -360,6 +394,11 @@ namespace Plotter
             else if (s == "test getPoints")
             {
                 test_getPoints(dc);
+            }
+
+            else if (s == "test cross")
+            {
+                test_crossPoint(dc);
             }
 
             else if (s == "stt")
