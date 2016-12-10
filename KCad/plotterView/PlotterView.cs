@@ -94,6 +94,11 @@ namespace Plotter
 
         private void onSizeChanged(object sender, System.EventArgs e)
         {
+            if (mImage != null)
+            {
+                mImage.Dispose();
+            }
+
             if (Width > 0 && Height > 0)
             {
                 mImage = new Bitmap(Width, Height);
