@@ -114,9 +114,9 @@
       <DependentUpon>PlotterView.cs</DependentUpon>
     </Compile>
     <Compile Include="plotter\Figure\CadFigure.cs" />
-    <Compile Include="plotter\CadFigureAssembler.cs" />
+    <Compile Include="plotter\Assembler\CadFigureAssembler.cs" />
     <Compile Include="plotter\Figure\CadFigureBehavior.cs" />
-    <Compile Include="plotter\CadFigureBonder.cs" />
+    <Compile Include="plotter\Assembler\CadFigureBonder.cs" />
     <Compile Include="plotter\Figure\CadFigureCircle.cs" />
     <Compile Include="plotter\Figure\CadFigureLine.cs" />
     <Compile Include="plotter\Figure\CadFigurePolyLines.cs" />
