@@ -125,5 +125,58 @@ namespace Plotter
             return r;
         }
         #endregion
+
+        //
+        // | v11, v12, v13, v14 |  | x |
+        // | v21, v22, v23, v24 |  | y |
+        // | v31, v32, v33, v34 |  | z |
+        // | v41, v42, v43, v44 |  | 1 |
+        //
+        public static CadPoint matrixProduct(Matrix44 m, CadPoint p)
+        {
+            CadPoint rp = default(CadPoint);
+
+            rp.x = m.v11 * p.x + m.v12 * p.y + m.v13 * p.z + m.v14;
+            rp.y = m.v21 * p.x + m.v22 * p.y + m.v23 * p.z + m.v24;
+            rp.z = m.v31 * p.x + m.v32 * p.y + m.v33 * p.z + m.v34;
+            // w = m.v41 * p.x + m.v42 * p.y + m.v43 * p.z + m.v44;
+
+            return rp;
+        }
+    }
+
+    public struct Matrix44
+    {
+        // v11, v12, v13, v14
+        // v21, v22, v23, v24
+        // v31, v32, v33, v34
+        // v41, v42, v43, v44
+        public double v11, v12, v13, v14;
+        public double v21, v22, v23, v24;
+        public double v31, v32, v33, v34;
+        public double v41, v42, v43, v44;
+
+        public void setXRote(double t)
+        {
+            v11 = 1.0;
+            v12 = 0;
+            v13 = 0;
+            v14 = 0;
+
+            v21 = 0;
+            v22 = Math.Cos(t);
+            v23 = -Math.Sin(t);
+            v24 = 0;
+
+            v31 = 0;
+            v32 = Math.Sin(t);
+            v33 = Math.Cos(t);
+            v34 = 0;
+
+            v41 = 0;
+            v42 = 0;
+            v43 = 0;
+            v44 = 1.0;
+        }
     }
 }

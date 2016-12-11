@@ -39,6 +39,29 @@ namespace Plotter.Tests
             double area = CadUtil.getTriangleArea(pl);
 
             Assert.IsTrue(area == 50.0);
+
+            Matrix44 m = default(Matrix44);
+
+            m.setXRote(Math.PI / 8.0);
+
+            p1 = CadMath.matrixProduct(m, p1);
+            p2 = CadMath.matrixProduct(m, p2);
+            p3 = CadMath.matrixProduct(m, p3);
+
+            pl.Clear();
+            pl.Add(p1);
+            pl.Add(p2);
+            pl.Add(p3);
+
+            area = CadUtil.getTriangleArea(pl);
+
+            Assert.IsTrue(area == 50.0);
+
+            DebugOut dout = new DebugOutVS();
+
+            p1.dump(dout);
+            p2.dump(dout);
+            p3.dump(dout);
         }
     }
 }

@@ -89,7 +89,7 @@ namespace Plotter
 
                 currentDir = CadMath.crossProduct2D(tp1, tp0, tp2);
 
-                bool hasIn = isFigPointInTriangle(tfig, triangle);
+                bool hasIn = listContainsPointInTriangle(tfig.PointList, triangle);
                 if (!hasIn && (Math.Sign(dir) == Math.Sign(currentDir)))
                 {
                     triangles.Add(triangle);
@@ -152,11 +152,11 @@ namespace Plotter
             return triangle;
         }
 
-        private bool isFigPointInTriangle(CadFigure check, CadFigure triangle)
+        private bool listContainsPointInTriangle(IReadOnlyList<CadPoint> check, CadFigure triangle)
         {
             var tps = triangle.PointList;
 
-            foreach (CadPoint cp in check.PointList)
+            foreach (CadPoint cp in check)
             {
                 if　(
                     cp.coordEquals(tps[0]) ||
@@ -208,6 +208,49 @@ namespace Plotter
 
             clear(dc);
             draw(dc);
+        }
+
+
+        public void getTriangleAreaTest()
+        {
+            CadPoint p1 = default(CadPoint);
+            CadPoint p2 = default(CadPoint);
+            CadPoint p3 = default(CadPoint);
+
+            p1.x = 10;
+            p1.y = 10;
+            p1.z = 0;
+
+            p2.x = 10;
+            p2.y = 20;
+            p2.z = 0;
+
+            p3.x = 20;
+            p3.y = 10;
+            p3.z = 0;
+
+            List<CadPoint> pl = new List<CadPoint>();
+
+            pl.Add(p1);
+            pl.Add(p2);
+            pl.Add(p3);
+
+            double area = CadUtil.getTriangleArea(pl);
+
+            Matrix44 m = default(Matrix44);
+
+            m.setXRote(Math.PI / 8.0);
+
+            p1 = CadMath.matrixProduct(m, p1);
+            p2 = CadMath.matrixProduct(m, p2);
+            p3 = CadMath.matrixProduct(m, p3);
+
+            pl.Clear();
+            pl.Add(p1);
+            pl.Add(p2);
+            pl.Add(p3);
+
+            area = CadUtil.getTriangleArea(pl);
         }
 
         private void test_isPointInTriangle3D(DrawContext dc)
@@ -390,7 +433,10 @@ namespace Plotter
             {
                 calcTest(dc);
             }
-
+            else if (s == "test area")
+            {
+                getTriangleAreaTest();
+            }
             else if (s == "test getPoints")
             {
                 test_getPoints(dc);

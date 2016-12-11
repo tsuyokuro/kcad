@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Plotter
 {
@@ -23,12 +24,12 @@ namespace Plotter
 
     public class DebugOut
     {
-        private int mIndent = 0;
-        private int IndentUnit = 2;
+        protected int mIndent = 0;
+        protected int IndentUnit = 2;
 
-        private String space = "";
+        protected String space = "";
 
-        public int Indent
+        public virtual int Indent
         {
             set
             {
@@ -42,19 +43,37 @@ namespace Plotter
             }
         }
 
-        public void printIndent()
+        public virtual void printIndent()
         {
             Console.Write(space);
         }
 
-        public void print(String s)
+        public virtual void print(String s)
         {
             Console.Write(s);
         }
 
-        public void println(String s)
+        public virtual void println(String s)
         {
             Console.WriteLine(space + s);
+        }
+    }
+
+    public class DebugOutVS : DebugOut
+    {
+        public override void printIndent()
+        {
+            Debug.Write(space);
+        }
+
+        public override void print(String s)
+        {
+            Debug.Write(s);
+        }
+
+        public override void println(String s)
+        {
+            Debug.WriteLine(space + s);
         }
     }
 }
