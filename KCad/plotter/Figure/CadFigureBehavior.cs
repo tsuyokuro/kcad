@@ -25,6 +25,7 @@ namespace Plotter
             public abstract void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, Pen pen);
             public abstract void startCreate(CadFigure fig);
             public abstract Types endCreate(CadFigure fig);
+            public abstract Centroid getCentroid(CadFigure fig);
 
             public virtual void moveSelectedPoint(CadFigure fig, CadPoint delta)
             {
@@ -107,6 +108,11 @@ namespace Plotter
 
             public override void startCreate(CadFigure fig)
             {
+            }
+
+            public override Centroid getCentroid(CadFigure fig)
+            {
+                return default(Centroid);
             }
         }
         #endregion

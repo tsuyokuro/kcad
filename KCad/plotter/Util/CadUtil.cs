@@ -11,8 +11,10 @@ namespace Plotter
 
     public struct Centroid
     {
-        public double Weight;
+        public bool isInvalid;
+        public double Area;
         public CadPoint Point;
+        public List<CadFigure> SplitList;
     }
 
     public class CadUtil
@@ -45,24 +47,26 @@ namespace Plotter
         // 三角形群の重心を求める
         public static Centroid getTriangleListCentroid(List<CadFigure> triangles)
         {
-            Centroid c0;
-            Centroid c1;
-            Centroid ct;
+            Centroid c0 = default(Centroid);
+            Centroid c1 = default(Centroid);
+            Centroid ct = default(Centroid);
 
             int i = 1;
 
-            c0.Weight= getTriangleArea(triangles[0].PointList);
+            c0.Area= getTriangleArea(triangles[0].PointList);
             c0.Point = getTriangleCentroid(triangles[0].PointList);
 
             for (; i < triangles.Count; i++)
             {
-                c1.Weight = getTriangleArea(triangles[i].PointList);
+                c1.Area = getTriangleArea(triangles[i].PointList);
                 c1.Point = getTriangleCentroid(triangles[i].PointList);
 
                 ct = getCentroid(c0, c1);
 
                 c0 = ct;
             }
+
+            c0.SplitList = triangles;
 
             return c0;
         }
@@ -73,15 +77,15 @@ namespace Plotter
         {
             CadPoint gpt = default(CadPoint);
 
-            double ratio = c1.Weight / (c0.Weight + c1.Weight);
+            double ratio = c1.Area / (c0.Area + c1.Area);
 
             gpt.x = (c1.Point.x - c0.Point.x) * ratio + c0.Point.x;
             gpt.y = (c1.Point.y - c0.Point.y) * ratio + c0.Point.y;
             gpt.z = (c1.Point.z - c0.Point.z) * ratio + c0.Point.z;
 
-            Centroid ret;
+            Centroid ret = default(Centroid); ;
 
-            ret.Weight = c0.Weight + c1.Weight;
+            ret.Area = c0.Area + c1.Area;
             ret.Point = gpt;
 
             return ret;

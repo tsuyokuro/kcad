@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Plotter
@@ -124,6 +125,25 @@ namespace Plotter
                 }
 
                 fig.mPointList[1] = rp + delta;
+            }
+
+            public override Centroid getCentroid(CadFigure fig)
+            {
+                Centroid ret = default(Centroid);
+
+                CadPoint cp = fig.StoreList[0];
+                CadPoint rp = fig.StoreList[1];
+
+                CadPoint d = rp - cp;
+
+                double r = d.length();
+
+                ret.Point = cp;
+                ret.Area = r * r * Math.PI;
+                ret.SplitList = new List<CadFigure>();
+                ret.SplitList.Add(fig);
+
+                return ret;
             }
         }
     }

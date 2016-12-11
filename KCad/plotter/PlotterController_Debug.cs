@@ -110,6 +110,36 @@ namespace Plotter
             RequestRedraw();
         }
 
+        private void test_getCentroid(DrawContext dc)
+        {
+            TempFigureList.Clear();
+
+            if (mSelList.List.Count == 0)
+            {
+                return;
+            }
+
+            SelectItem si = mSelList.List[0];
+
+            CadFigure fig = si.Figure;
+
+            Centroid cent = fig.getCentroid();
+
+            if (cent.SplitList != null)
+            {
+                cent.SplitList.ForEach(a => TempFigureList.Add(a));
+            }
+
+            CadFigure centfig = new CadFigure(CadFigure.Types.POLY_LINES);
+
+            centfig.addPoint(cent.Point);
+
+            TempFigureList.Add(centfig);
+
+            clear(dc);
+            draw(dc);
+        }
+
         public void debugCommand(DrawContext dc, string s)
         {
             if (s == "test")
@@ -118,6 +148,11 @@ namespace Plotter
             else if (s == "clean temp")
             {
                 TempFigureList.Clear();
+            }
+
+            else if (s == "test centroid")
+            {
+                test_getCentroid(dc);
             }
 
             else if (s == "test getPoints")

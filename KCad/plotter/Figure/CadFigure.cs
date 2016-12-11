@@ -600,6 +600,11 @@ namespace Plotter
         {
             return Behavior.getPoints(this, curveSplitNum);
         }
+
+        public Centroid getCentroid()
+        {
+            return Behavior.getCentroid(this);
+        }
         #endregion
 
         #region "Utilities"

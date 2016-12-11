@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Plotter
 {
@@ -12,10 +9,6 @@ namespace Plotter
         {
             CadPoint p0 = default(CadPoint);
 
-            CadFigure tfig = new CadFigure();
-
-            tfig.copyPoints(fig);
-
             var triangles = new List<CadFigure>();
 
             int i1 = -1;
@@ -24,14 +17,18 @@ namespace Plotter
 
             CadFigure triangle;
 
-            i1 = CadUtil.findMaxDistantPointIndex(p0, tfig.PointList);
+            IReadOnlyList<CadPoint> orgList = fig.getPoints(64);
+
+            List<CadPoint> pointList = new List<CadPoint>(orgList);
+
+            i1 = CadUtil.findMaxDistantPointIndex(p0, pointList);
 
             if (i1 == -1)
             {
                 return triangles;
             }
 
-            triangle = getTriangleWithCenterPoint(tfig, i1);
+            triangle = getTriangleWithCenterPoint(pointList, i1);
 
             CadPoint tp0 = triangle.PointList[0];
             CadPoint tp1 = triangle.PointList[1];
@@ -40,18 +37,18 @@ namespace Plotter
             double dir = CadMath.crossProduct2D(tp1, tp0, tp2);
             double currentDir = 0;
 
-            while (tfig.PointCount > 3)
+            while (pointList.Count > 3)
             {
                 if (state == 0)
                 {
-                    i1 = CadUtil.findMaxDistantPointIndex(p0, tfig.PointList);
+                    i1 = CadUtil.findMaxDistantPointIndex(p0, pointList);
                     if (i1 == -1)
                     {
                         return triangles;
                     }
                 }
 
-                triangle = getTriangleWithCenterPoint(tfig, i1);
+                triangle = getTriangleWithCenterPoint(pointList, i1);
 
                 tp0 = triangle.PointList[0];
                 tp1 = triangle.PointList[1];
@@ -59,11 +56,11 @@ namespace Plotter
 
                 currentDir = CadMath.crossProduct2D(tp1, tp0, tp2);
 
-                bool hasIn = listContainsPointInTriangle(tfig.PointList, triangle);
+                bool hasIn = listContainsPointInTriangle(pointList, triangle);
                 if (!hasIn && (Math.Sign(dir) == Math.Sign(currentDir)))
                 {
                     triangles.Add(triangle);
-                    tfig.removePointAt(i1);
+                    pointList.RemoveAt(i1);
                     state = 0;
                     continue;
                 }
@@ -76,18 +73,18 @@ namespace Plotter
                 else if (state == 1)
                 {
                     i1++;
-                    if (i1 >= tfig.PointCount)
+                    if (i1 >= pointList.Count)
                     {
                         break;
                     }
                 }
             }
 
-            if (tfig.PointCount == 3)
+            if (pointList.Count == 3)
             {
                 triangle = new CadFigure(CadFigure.Types.POLY_LINES);
 
-                triangle.copyPoints(tfig);
+                triangle.addPoints(pointList,0,3);
                 triangle.Closed = true;
 
                 triangles.Add(triangle);
@@ -96,10 +93,10 @@ namespace Plotter
             return triangles;
         }
 
-        private static CadFigure getTriangleWithCenterPoint(CadFigure fig, int cpIndex)
+        private static CadFigure getTriangleWithCenterPoint(IReadOnlyList<CadPoint> pointList, int cpIndex)
         {
             int i1 = cpIndex;
-            int endi = fig.PointCount - 1;
+            int endi = pointList.Count - 1;
 
             int i0 = i1 - 1;
             int i2 = i1 + 1;
@@ -109,9 +106,9 @@ namespace Plotter
 
             var triangle = new CadFigure(CadFigure.Types.POLY_LINES);
 
-            CadPoint tp0 = fig.PointList[i0];
-            CadPoint tp1 = fig.PointList[i1];
-            CadPoint tp2 = fig.PointList[i2];
+            CadPoint tp0 = pointList[i0];
+            CadPoint tp1 = pointList[i1];
+            CadPoint tp2 = pointList[i2];
 
             triangle.addPoint(tp0);
             triangle.addPoint(tp1);

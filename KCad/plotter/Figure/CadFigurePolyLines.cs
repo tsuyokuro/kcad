@@ -303,6 +303,66 @@ namespace Plotter
             {
                 return fig.Type;
             }
+
+            public override Centroid getCentroid(CadFigure fig)
+            {
+                if (fig.PointList.Count == 0)
+                {
+                    return default(Centroid);
+                }
+
+                if (fig.PointList.Count == 1)
+                {
+                    return getPointCentroid(fig);
+                }
+
+                if (fig.PointList.Count < 3)
+                {
+                    return getSegCentroid(fig);
+                }
+
+                return getPointListCentroid(fig);
+            }
+
+            private Centroid getPointListCentroid(CadFigure fig)
+            {
+                Centroid ret = default(Centroid);
+
+                List<CadFigure> triangles = TriangleSplitter.split(fig);
+
+                ret = CadUtil.getTriangleListCentroid(triangles);
+
+                return ret;
+            }
+
+            private Centroid getPointCentroid(CadFigure fig)
+            {
+                Centroid ret = default(Centroid);
+
+                ret.Point = fig.PointList[0];
+                ret.Area = 0;
+
+                ret.SplitList = new List<CadFigure>();
+                ret.SplitList.Add(fig);
+
+                return ret;
+            }
+
+            private Centroid getSegCentroid(CadFigure fig)
+            {
+                Centroid ret = default(Centroid);
+
+                CadPoint d = fig.PointList[1] - fig.PointList[0];
+
+                d /= 2.0;
+
+                ret.Point = fig.PointList[0] + d;
+                ret.Area = 0;
+                ret.SplitList = new List<CadFigure>();
+                ret.SplitList.Add(fig);
+
+                return ret;
+            }
         }
     }
 }
