@@ -1,7 +1,8 @@
-﻿using System;
+﻿#define LOG_DEBUG
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-
 
 namespace Plotter
 {
@@ -138,27 +139,17 @@ namespace Plotter
             Type = type;
         }
 
-        public CadFigure deepCopy()
-        {
-            CadFigure fig = new CadFigure(Type);
-            fig.Closed = Closed;
-            fig.copyPoints(this);
-
-            foreach (CadFigure c in ChildList)
-            {
-                CadFigure cc = c.deepCopy();
-                fig.addChild(cc);
-            }
-
-            return fig;
-        }
-
         private void setBehavior(Types type)
         {
             if (type > Types.NONE && type < Types.MAX)
             {
                 Behavior = BehaviorTbl[(int)type];
             }
+        }
+
+        public void clearPoints()
+        {
+            mPointList.Clear();
         }
 
         public void copyPoints(CadFigure fig)
@@ -169,7 +160,6 @@ namespace Plotter
 
         public void addPoints(IReadOnlyList<CadPoint> points, int sp, int num)
         {
-            if (Locked) return;
             for (int i = 0; i < num; i++)
             {
                 CadPoint p = points[i + sp];
@@ -179,13 +169,11 @@ namespace Plotter
 
         public void addPoints(IReadOnlyList<CadPoint> points, int sp)
         {
-            if (Locked) return;
             addPoints(points, sp, points.Count - sp);
         }
 
         public void addPoints(IReadOnlyList<CadPoint> points)
         {
-            if (Locked) return;
             foreach (CadPoint p in points)
             {
                 addPoint(p);
@@ -194,8 +182,6 @@ namespace Plotter
 
         public void addPointsReverse(IReadOnlyList<CadPoint> points)
         {
-            if (Locked) return;
-
             int cnt = points.Count;
             int i = cnt - 1;
 
@@ -207,8 +193,6 @@ namespace Plotter
 
         public void addPointsReverse(IReadOnlyList<CadPoint> points, int sp)
         {
-            if (Locked) return;
-
             int cnt = points.Count;
             int i = cnt - 1 - sp;
 
@@ -220,8 +204,6 @@ namespace Plotter
 
         public void insertPointAt(int index, CadPoint pt)
         {
-            if (Locked) return;
-
             if (index >= mPointList.Count)
             {
                 mPointList.Add(pt);
@@ -233,8 +215,6 @@ namespace Plotter
 
         public void removePointAt(int index)
         {
-            if (Locked) return;
-
             if (mPointList == null)
             {
                 return;
@@ -260,8 +240,6 @@ namespace Plotter
 
         public void selectPointAt(int index, bool sel)
         {
-            if (Locked) return;
-
             CadPoint p = mPointList[index];
             p.Selected = sel;
             mPointList[index] = p;
@@ -278,8 +256,6 @@ namespace Plotter
 
         public void Select()
         {
-            if (Locked) return;
-
             // Set select flag to all points
             int i;
             for (i = 0; i < mPointList.Count; i++)
@@ -529,7 +505,11 @@ namespace Plotter
         public void moveSelectedPoints(CadPoint delta)
         {
             if (Locked) return;
-
+            Log.d("moveSelectedPoints" + 
+                " dx=" + delta.x.ToString() +
+                " dy=" + delta.y.ToString() +
+                " dz=" + delta.z.ToString()
+                );
             Behavior.moveSelectedPoint(this, delta);
         }
 
@@ -542,8 +522,6 @@ namespace Plotter
 
         public void addPoint(CadPoint p)
         {
-            if (Locked) return;
-
             Behavior.addPoint(this, p);
         }
 
@@ -556,8 +534,6 @@ namespace Plotter
 
         public void setPointAt(int index, CadPoint pt)
         {
-            if (Locked) return;
-
             Behavior.setPointAt(this, index, pt);
         }
 

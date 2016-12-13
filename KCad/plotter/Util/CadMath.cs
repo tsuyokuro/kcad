@@ -143,6 +143,33 @@ namespace Plotter
 
             return rp;
         }
+
+        public static Matrix44 matrixProduct(Matrix44 m1, Matrix44 m2)
+        {
+            Matrix44 r;
+
+            r.v11 = m1.v11 * m2.v11 + m1.v12 * m2.v21 + m1.v13 * m2.v31 + m1.v14 * m2.v41;
+            r.v12 = m1.v11 * m2.v12 + m1.v12 * m2.v22 + m1.v13 * m2.v32 + m1.v14 * m2.v42;
+            r.v13 = m1.v11 * m2.v13 + m1.v12 * m2.v23 + m1.v13 * m2.v33 + m1.v14 * m2.v43;
+            r.v14 = m1.v11 * m2.v14 + m1.v12 * m2.v24 + m1.v13 * m2.v34 + m1.v14 * m2.v44;
+
+            r.v21 = m1.v21 * m2.v11 + m1.v22 * m2.v21 + m1.v23 * m2.v31 + m1.v24 * m2.v41;
+            r.v22 = m1.v21 * m2.v12 + m1.v22 * m2.v22 + m1.v23 * m2.v32 + m1.v24 * m2.v42;
+            r.v23 = m1.v21 * m2.v13 + m1.v22 * m2.v23 + m1.v23 * m2.v33 + m1.v24 * m2.v43;
+            r.v24 = m1.v21 * m2.v14 + m1.v22 * m2.v24 + m1.v23 * m2.v34 + m1.v24 * m2.v44;
+
+            r.v31 = m1.v31 * m2.v11 + m1.v32 * m2.v21 + m1.v33 * m2.v31 + m1.v34 * m2.v41;
+            r.v32 = m1.v31 * m2.v12 + m1.v32 * m2.v22 + m1.v33 * m2.v32 + m1.v34 * m2.v42;
+            r.v33 = m1.v31 * m2.v13 + m1.v32 * m2.v23 + m1.v33 * m2.v33 + m1.v34 * m2.v43;
+            r.v34 = m1.v31 * m2.v14 + m1.v32 * m2.v24 + m1.v33 * m2.v34 + m1.v34 * m2.v44;
+
+            r.v41 = m1.v41 * m2.v11 + m1.v42 * m2.v21 + m1.v43 * m2.v31 + m1.v44 * m2.v41;
+            r.v42 = m1.v41 * m2.v12 + m1.v42 * m2.v22 + m1.v43 * m2.v32 + m1.v44 * m2.v42;
+            r.v43 = m1.v41 * m2.v13 + m1.v42 * m2.v23 + m1.v43 * m2.v33 + m1.v44 * m2.v43;
+            r.v44 = m1.v41 * m2.v14 + m1.v42 * m2.v24 + m1.v43 * m2.v34 + m1.v44 * m2.v44;
+
+            return r;
+        }
     }
 
     public struct Matrix44
@@ -155,6 +182,19 @@ namespace Plotter
         public double v21, v22, v23, v24;
         public double v31, v32, v33, v34;
         public double v41, v42, v43, v44;
+
+        public void set(
+            double a11, double a12, double a13, double a14,
+            double a21, double a22, double a23, double a24,
+            double a31, double a32, double a33, double a34,
+            double a41, double a42, double a43, double a44
+            )
+        {
+            v11 = a11; v12 = a12; v13 = a13; v14 = a14;
+            v21 = a21; v22 = a22; v23 = a23; v24 = a24;
+            v31 = a31; v32 = a32; v33 = a33; v34 = a34;
+            v41 = a41; v42 = a42; v43 = a43; v44 = a44;
+        }
 
         public void setXRote(double t)
         {
@@ -177,6 +217,18 @@ namespace Plotter
             v42 = 0;
             v43 = 0;
             v44 = 1.0;
+        }
+
+        public void dump(DebugOut o)
+        {
+            o.println("{");
+            o.Indent++;
+            o.println(v11.ToString() + "," + v12.ToString() + "," + v13.ToString() + "," + v14.ToString());
+            o.println(v21.ToString() + "," + v22.ToString() + "," + v23.ToString() + "," + v24.ToString());
+            o.println(v31.ToString() + "," + v32.ToString() + "," + v33.ToString() + "," + v34.ToString());
+            o.println(v41.ToString() + "," + v42.ToString() + "," + v43.ToString() + "," + v44.ToString());
+            o.Indent--;
+            o.println("}");
         }
     }
 }

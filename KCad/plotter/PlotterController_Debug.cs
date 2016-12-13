@@ -13,6 +13,20 @@ namespace Plotter
 {
     public partial class PlotterController
     {
+        private CadFigure getSelFig()
+        {
+            if (mSelList.List.Count == 0)
+            {
+                return null;
+            }
+
+            SelectItem si = mSelList.List[0];
+
+            CadFigure fig = si.Figure;
+
+            return fig;
+        }
+
         private void test_isPointInTriangle3D(DrawContext dc)
         {
             TempFigureList.Clear();
@@ -140,6 +154,74 @@ namespace Plotter
             draw(dc);
         }
 
+        private void test_quaternion(DrawContext dc)
+        {
+            TempFigureList.Clear();
+
+            CadFigure fig = getSelFig();
+            if (fig == null) return;
+
+            CadPoint axis = default(CadPoint);
+            //axis.y = -1.0;
+            axis.x = -1.0;
+            //axis.z = -1.0;
+
+            axis = axis.unitVector();
+
+            double rad = CadMath.deg2rad(-45);
+
+            Quaternion q = Quaternion.CreateRotateQuaternion(rad, axis);
+            Quaternion r = q.Conjugate();
+
+            CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
+
+            CadPoint tp = default(CadPoint);
+
+            int i = 0;
+
+            for (;i<fig.PointList.Count;i++)
+            {
+                CadPoint p = fig.PointList[i];
+                Quaternion qp = Quaternion.FromPoint(p);
+
+                qp = r * qp;
+                qp = qp * q;
+
+                tp.x = qp.x;
+                tp.y = qp.y;
+                tp.z = qp.z;
+
+                tfig.addPoint(tp);
+            }
+
+            fig.clearPoints();
+            fig.addPoints(tfig.PointList);
+
+            TempFigureList.Add(tfig);
+        }
+
+        private void test_matrix()
+        {
+            Matrix44 m1 = default(Matrix44);
+            m1.set(
+                1, 2, 3, 4,
+                5, 6, 7, 8,
+                9, 10, 11, 12,
+                13, 14, 15, 16);
+
+            Matrix44 m2 = default(Matrix44);
+            m2.set(
+                10, 20, 30, 40,
+                50, 60, 70, 80,
+                90, 100, 110, 120,
+                130, 140, 150, 160);
+
+            Matrix44 m = CadMath.matrixProduct(m1, m2);
+            DebugOut o = new DebugOut();
+
+            m.dump(o);
+        }
+
         public void debugCommand(DrawContext dc, string s)
         {
             if (s == "test")
@@ -148,6 +230,16 @@ namespace Plotter
             else if (s == "clean temp")
             {
                 TempFigureList.Clear();
+            }
+
+            else if (s == "test q")
+            {
+                test_quaternion(dc);
+            }
+
+            else if (s == "test matrix")
+            {
+                test_matrix();
             }
 
             else if (s == "test centroid")

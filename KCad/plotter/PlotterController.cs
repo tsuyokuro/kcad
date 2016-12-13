@@ -562,6 +562,8 @@ namespace Plotter
         {
             List<uint> figIDList = getSelectedFigIDList();
 
+            delta.z = 0;
+
             foreach (uint id in figIDList)
             {
                 CadFigure fig = mDB.getFigure(id);
@@ -740,6 +742,8 @@ namespace Plotter
                 CadRect cr = CadUtil.getContainsRect(list);
 
                 CadPoint d = pp - cr.p0;
+
+                d.z = 0;
 
                 CadOpeList opeRoot = CadOpe.getListOpe();
 

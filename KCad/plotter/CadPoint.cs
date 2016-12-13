@@ -16,6 +16,10 @@ namespace Plotter
             HANDLE = 2,
         }
 
+        public const byte IGNORE_X = 1;
+        public const byte IGNORE_Y = 2;
+        public const byte IGNORE_Z = 4;
+
         public static class Flags
         {
             public static uint SELECTED = 0x0001;
@@ -112,6 +116,26 @@ namespace Plotter
             return coordEquals(p) && (Type == p.Type);
         }
 
+        public static CadPoint condAdd(CadPoint p1, CadPoint p2, byte ignore)
+        {
+            CadPoint rp = p1;
+
+            if ((ignore & CadPoint.IGNORE_X) == 0)
+            {
+                rp.x = p1.x + p2.x;
+            }
+            if ((ignore & CadPoint.IGNORE_Y) == 0)
+            {
+                rp.y = p1.y + p2.y;
+            }
+            if ((ignore & CadPoint.IGNORE_Z) == 0)
+            {
+                rp.z = p1.z + p2.z;
+            }
+
+            return rp;
+        }
+
         public static CadPoint operator +(CadPoint p1, CadPoint p2)
         {
             p1.x += p2.x;
@@ -169,6 +193,20 @@ namespace Plotter
         public double length()
         {
             return System.Math.Sqrt((x*x) + (y*y) + (z*z));
+        }
+
+        public CadPoint unitVector()
+        {
+            CadPoint ret = default(CadPoint);
+
+            double norm = length();
+            double f = 1.0 / norm;
+
+            ret.x = x * f;
+            ret.y = y * f;
+            ret.z = z * f;
+
+            return ret;
         }
 
         public void dump(DebugOut dout)
