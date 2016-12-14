@@ -164,13 +164,13 @@ namespace Plotter
             CadPoint axis = default(CadPoint);
             //axis.y = -1.0;
             axis.x = -1.0;
-            //axis.z = -1.0;
+            axis.z = -1.0;
 
             axis = axis.unitVector();
 
-            double rad = CadMath.deg2rad(-45);
+            double rad = CadMath.deg2rad(10);
 
-            Quaternion q = Quaternion.CreateRotateQuaternion(rad, axis);
+            Quaternion q = Quaternion.RotateQuaternion(rad, axis);
             Quaternion r = q.Conjugate();
 
             CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
@@ -197,7 +197,10 @@ namespace Plotter
             fig.clearPoints();
             fig.addPoints(tfig.PointList);
 
-            TempFigureList.Add(tfig);
+            //TempFigureList.Add(tfig);
+
+            clear(dc);
+            draw(dc);
         }
 
         private void test_matrix()

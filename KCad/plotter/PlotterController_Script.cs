@@ -106,7 +106,7 @@ namespace Plotter
 
                 CadPoint d = a - b;
 
-                Interact.print("" + d.length() + "(mm)");
+                Interact.print("" + d.norm() + "(mm)");
             }
             else
             {

@@ -190,16 +190,18 @@ namespace Plotter
             return p1;
         }
 
-        public double length()
+        // ベクトルのノルム(長さ)を求める
+        public double norm()
         {
             return System.Math.Sqrt((x*x) + (y*y) + (z*z));
         }
 
+        // 単位ベクトルを求める
         public CadPoint unitVector()
         {
             CadPoint ret = default(CadPoint);
 
-            double norm = length();
+            double norm = this.norm();
             double f = 1.0 / norm;
 
             ret.x = x * f;

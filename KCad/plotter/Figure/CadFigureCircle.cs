@@ -136,7 +136,7 @@ namespace Plotter
 
                 CadPoint d = rp - cp;
 
-                double r = d.length();
+                double r = d.norm();
 
                 ret.Point = cp;
                 ret.Area = r * r * Math.PI;

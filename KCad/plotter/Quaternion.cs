@@ -21,48 +21,18 @@ namespace Plotter
             this.z = z;
         }
 
-        public static Quaternion operator *(Quaternion right, Quaternion left)
+
+        //-----------------------------------------------------------------------------------------
+        // ノルム(長さ)
+        //
+        public double norm()
         {
-            return Product(right, left);
+            return Math.Sqrt((t * t) + (x * x) + (y * y) + (z * z));
         }
 
-        public static Quaternion Product(Quaternion left, Quaternion right)
-        {
-            // A = (a; U)
-            // B = (b; V)
-            // AB = (ab - U・V; aV + bU + U×V)
-            Quaternion ans;
-            double d1, d2, d3, d4;
-
-            d1 = left.t * right.t;
-            d2 = left.x * right.x;
-            d3 = left.y * right.y;
-            d4 = left.z * right.z;
-            // ab - U・V
-            ans.t = d1 - (d2 + d3 + d4);
-
-            d1 = left.t * right.x;
-            d2 = right.t * left.x;
-            d3 = left.y * right.z;
-            d4 = -left.z * right.y;
-            ans.x = d1 + d2 + d3 + d4;
-
-            d1 = left.t * right.y;
-            d2 = right.t * left.y;
-            d3 = left.z * right.x;
-            d4 = -left.x * right.z;
-            ans.y = d1 + d2 + d3 + d4;
-
-            d1 = left.t * right.z;
-            d2 = right.t * left.z;
-            d3 = left.x * right.y;
-            d4 = -left.y * right.x;
-            ans.z = d1 + d2 + d3 + d4;
-
-            return ans;
-        }
-
+        //-----------------------------------------------------------------------------------------
         // 共役四元数を返す
+        //
         public Quaternion Conjugate()
         {
             Quaternion q = this;
@@ -75,34 +45,118 @@ namespace Plotter
             return q;
         }
 
-        public static Quaternion CreateRotateQuaternion(double radian, double axisX, double axisY, double axisZ)
+        //-----------------------------------------------------------------------------------------
+        // 掛け算
+        //
+        public static Quaternion operator *(Quaternion q, Quaternion r)
+        {
+            return Product(q, r);
+        }
+
+        //-----------------------------------------------------------------------------------------
+        // 和を求める
+        //
+        public static Quaternion operator +(Quaternion q, Quaternion r)
+        {
+            Quaternion res;
+
+            res.t = q.t + r.t;
+            res.x = q.x + r.x;
+            res.y = q.y + r.y;
+            res.z = q.z + r.z;
+
+            return res;
+        }
+
+        //-----------------------------------------------------------------------------------------
+        // 四元数の積を求める
+        // q * r
+        //
+        public static Quaternion Product(Quaternion q, Quaternion r)
+        {
+            // A = (a; U)
+            // B = (b; V)
+            // AB = (ab - U・V; aV + bU + U×V)
+            Quaternion ans;
+            double d1, d2, d3, d4;
+
+            d1 = q.t * r.t;
+            d2 = q.x * r.x;
+            d3 = q.y * r.y;
+            d4 = q.z * r.z;
+            ans.t = d1 - d2 - d3 - d4;
+
+            d1 = q.t * r.x;
+            d2 = r.t * q.x;
+            d3 = q.y * r.z;
+            d4 = -q.z * r.y;
+            ans.x = d1 + d2 + d3 + d4;
+
+            d1 = q.t * r.y;
+            d2 = r.t * q.y;
+            d3 = q.z * r.x;
+            d4 = -q.x * r.z;
+            ans.y = d1 + d2 + d3 + d4;
+
+            d1 = q.t * r.z;
+            d2 = r.t * q.z;
+            d3 = q.x * r.y;
+            d4 = -q.y * r.x;
+            ans.z = d1 + d2 + d3 + d4;
+
+            return ans;
+        }
+
+        //-----------------------------------------------------------------------------------------
+        // 単位元を作成
+        //
+        public static Quaternion Unit()
+        {
+            Quaternion res;
+
+            res.t = 1.0;
+            res.x = 0;
+            res.y = 0;
+            res.z = 0;
+
+            return res;
+        }
+
+        //-----------------------------------------------------------------------------------------
+        // Vector (vx, vy, vz)を回転軸としてradianだけ回転する四元数を作成
+        //
+        public static Quaternion RotateQuaternion(double radian, double vx, double vy, double vz)
         {
             Quaternion ans = default(Quaternion);
             double norm;
             double c, s;
 
-            norm = axisX * axisX + axisY * axisY + axisZ * axisZ;
+            norm = vx * vx + vy * vy + vz * vz;
             if (norm <= 0.0) return ans;
 
             norm = 1.0 / Math.Sqrt(norm);
-            axisX *= norm;
-            axisY *= norm;
-            axisZ *= norm;
+            vx *= norm;
+            vy *= norm;
+            vz *= norm;
 
             c = Math.Cos(0.5 * radian);
             s = Math.Sin(0.5 * radian);
 
             ans.t = c;
-            ans.x = s * axisX;
-            ans.y = s * axisY;
-            ans.z = s * axisZ;
+            ans.x = s * vx;
+            ans.y = s * vy;
+            ans.z = s * vz;
 
             return ans;
         }
 
-        // axisは、単位vectorでなければならない
-        public static Quaternion CreateRotateQuaternion(double radian, CadPoint axis)
+        //-----------------------------------------------------------------------------------------
+        // Vector (v.x, v.y, v.z)を回転軸としてradianだけ回転する四元数を作成
+        //
+        public static Quaternion RotateQuaternion(double radian, CadPoint v)
         {
+            v = v.unitVector();
+
             Quaternion ans = default(Quaternion);
             double c, s;
 
@@ -110,13 +164,16 @@ namespace Plotter
             s = Math.Sin(0.5 * radian);
 
             ans.t = c;
-            ans.x = s * axis.x;
-            ans.y = s * axis.y;
-            ans.z = s * axis.z;
+            ans.x = s * v.x;
+            ans.y = s * v.y;
+            ans.z = s * v.z;
 
             return ans;
         }
 
+        //-----------------------------------------------------------------------------------------
+        // CadPointから四元数を作成
+        //
         public static Quaternion FromPoint(CadPoint point)
         {
             Quaternion q;

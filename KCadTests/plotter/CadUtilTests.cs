@@ -63,5 +63,21 @@ namespace Plotter.Tests
             p2.dump(dout);
             p3.dump(dout);
         }
+
+        [TestMethod()]
+        public void unitVectorTest()
+        {
+            CadPoint p = default(CadPoint);
+
+            p.x = 10;
+            p.y = 10;
+            p.z = 10;
+
+            p = p.unitVector();
+
+            double n = p.norm();
+
+            Assert.IsTrue(n == 1.0);
+        }
     }
 }

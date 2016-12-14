@@ -27,7 +27,7 @@ namespace Plotter
 
             CadPoint cp = CadMath.crossProduct3D(v1, v2);
 
-            double area = cp.length() / 2.0;
+            double area = cp.norm() / 2.0;
 
             return area;
         }
@@ -254,7 +254,7 @@ namespace Plotter
                 CadPoint fp = points[i];
 
                 t = fp - p0;
-                double d = t.length();
+                double d = t.norm();
 
                 if (d > maxd)
                 {
@@ -295,7 +295,7 @@ namespace Plotter
 
             CadPoint norm = CadMath.crossProduct3D(ab, ap);
 
-            double d = norm.length();
+            double d = norm.norm();
 
             double abL = vectAbs(ab);
 
@@ -356,14 +356,14 @@ namespace Plotter
 
         public static double vectAbs(CadPoint v)
         {
-            return v.length();
+            return v.norm();
         }
 
         public static double lineAbs(CadPoint a, CadPoint b)
         {
             CadPoint v = b - a;
 
-            return v.length();
+            return v.norm();
         }
 
         public static void movePoints(List<CadPoint> list, CadPoint delta)

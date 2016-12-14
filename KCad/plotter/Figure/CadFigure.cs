@@ -1,4 +1,4 @@
-﻿#define LOG_DEBUG
+﻿//#define LOG_DEBUG
 
 using System;
 using System.Collections.Generic;

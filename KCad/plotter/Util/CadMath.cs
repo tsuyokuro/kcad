@@ -7,7 +7,7 @@ namespace Plotter
         // 単位ベクトル
         public static CadPoint unitVector(CadPoint v)
         {
-            double len = v.length();
+            double len = v.norm();
             return v / len;
         }
 
