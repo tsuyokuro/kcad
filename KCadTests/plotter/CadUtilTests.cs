@@ -44,9 +44,9 @@ namespace Plotter.Tests
 
             m.setXRote(Math.PI / 8.0);
 
-            p1 = CadMath.matrixProduct(m, p1);
-            p2 = CadMath.matrixProduct(m, p2);
-            p3 = CadMath.matrixProduct(m, p3);
+            p1 = Matrix44.product(m, p1);
+            p2 = Matrix44.product(m, p2);
+            p3 = Matrix44.product(m, p3);
 
             pl.Clear();
             pl.Add(p1);

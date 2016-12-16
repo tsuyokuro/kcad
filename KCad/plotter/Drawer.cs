@@ -333,7 +333,7 @@ namespace Plotter
 
         public static void drawCircle(DrawContext dc, Pen pen, CadPoint cp, CadPoint p1)
         {
-            double r = CadUtil.lineAbs2D(cp, p1);
+            double r = CadUtil.segNorm2D(cp, p1);
 
             CadPixelPoint cpp =  dc.pointToPixelPoint(cp);
 

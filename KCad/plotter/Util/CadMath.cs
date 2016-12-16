@@ -4,13 +4,6 @@ namespace Plotter
 {
     public class CadMath
     {
-        // 単位ベクトル
-        public static CadPoint unitVector(CadPoint v)
-        {
-            double len = v.norm();
-            return v / len;
-        }
-
         // 内積
         #region inner product
         public static double innrProduct2D(CadPoint v1, CadPoint v2)
@@ -125,59 +118,10 @@ namespace Plotter
             return r;
         }
         #endregion
-
-        //
-        // | v11, v12, v13, v14 |  | x |
-        // | v21, v22, v23, v24 |  | y |
-        // | v31, v32, v33, v34 |  | z |
-        // | v41, v42, v43, v44 |  | 1 |
-        //
-        public static CadPoint matrixProduct(Matrix44 m, CadPoint p)
-        {
-            CadPoint rp = default(CadPoint);
-
-            rp.x = m.v11 * p.x + m.v12 * p.y + m.v13 * p.z + m.v14;
-            rp.y = m.v21 * p.x + m.v22 * p.y + m.v23 * p.z + m.v24;
-            rp.z = m.v31 * p.x + m.v32 * p.y + m.v33 * p.z + m.v34;
-            // w = m.v41 * p.x + m.v42 * p.y + m.v43 * p.z + m.v44;
-
-            return rp;
-        }
-
-        public static Matrix44 matrixProduct(Matrix44 m1, Matrix44 m2)
-        {
-            Matrix44 r;
-
-            r.v11 = m1.v11 * m2.v11 + m1.v12 * m2.v21 + m1.v13 * m2.v31 + m1.v14 * m2.v41;
-            r.v12 = m1.v11 * m2.v12 + m1.v12 * m2.v22 + m1.v13 * m2.v32 + m1.v14 * m2.v42;
-            r.v13 = m1.v11 * m2.v13 + m1.v12 * m2.v23 + m1.v13 * m2.v33 + m1.v14 * m2.v43;
-            r.v14 = m1.v11 * m2.v14 + m1.v12 * m2.v24 + m1.v13 * m2.v34 + m1.v14 * m2.v44;
-
-            r.v21 = m1.v21 * m2.v11 + m1.v22 * m2.v21 + m1.v23 * m2.v31 + m1.v24 * m2.v41;
-            r.v22 = m1.v21 * m2.v12 + m1.v22 * m2.v22 + m1.v23 * m2.v32 + m1.v24 * m2.v42;
-            r.v23 = m1.v21 * m2.v13 + m1.v22 * m2.v23 + m1.v23 * m2.v33 + m1.v24 * m2.v43;
-            r.v24 = m1.v21 * m2.v14 + m1.v22 * m2.v24 + m1.v23 * m2.v34 + m1.v24 * m2.v44;
-
-            r.v31 = m1.v31 * m2.v11 + m1.v32 * m2.v21 + m1.v33 * m2.v31 + m1.v34 * m2.v41;
-            r.v32 = m1.v31 * m2.v12 + m1.v32 * m2.v22 + m1.v33 * m2.v32 + m1.v34 * m2.v42;
-            r.v33 = m1.v31 * m2.v13 + m1.v32 * m2.v23 + m1.v33 * m2.v33 + m1.v34 * m2.v43;
-            r.v34 = m1.v31 * m2.v14 + m1.v32 * m2.v24 + m1.v33 * m2.v34 + m1.v34 * m2.v44;
-
-            r.v41 = m1.v41 * m2.v11 + m1.v42 * m2.v21 + m1.v43 * m2.v31 + m1.v44 * m2.v41;
-            r.v42 = m1.v41 * m2.v12 + m1.v42 * m2.v22 + m1.v43 * m2.v32 + m1.v44 * m2.v42;
-            r.v43 = m1.v41 * m2.v13 + m1.v42 * m2.v23 + m1.v43 * m2.v33 + m1.v44 * m2.v43;
-            r.v44 = m1.v41 * m2.v14 + m1.v42 * m2.v24 + m1.v43 * m2.v34 + m1.v44 * m2.v44;
-
-            return r;
-        }
     }
 
     public struct Matrix44
     {
-        // v11, v12, v13, v14
-        // v21, v22, v23, v24
-        // v31, v32, v33, v34
-        // v41, v42, v43, v44
         public double v11, v12, v13, v14;
         public double v21, v22, v23, v24;
         public double v31, v32, v33, v34;
@@ -219,14 +163,143 @@ namespace Plotter
             v44 = 1.0;
         }
 
+        //
+        // | v11, v12, v13, v14 |  | x |
+        // | v21, v22, v23, v24 |  | y |
+        // | v31, v32, v33, v34 |  | z |
+        // | v41, v42, v43, v44 |  | 1 |
+        //
+        public static CadPoint product(Matrix44 m, CadPoint p)
+        {
+            CadPoint rp = default(CadPoint);
+
+            rp.x = m.v11 * p.x + m.v12 * p.y + m.v13 * p.z + m.v14;
+            rp.y = m.v21 * p.x + m.v22 * p.y + m.v23 * p.z + m.v24;
+            rp.z = m.v31 * p.x + m.v32 * p.y + m.v33 * p.z + m.v34;
+            // w = m.v41 * p.x + m.v42 * p.y + m.v43 * p.z + m.v44;
+
+            return rp;
+        }
+
+        public static Matrix44 product(Matrix44 m1, Matrix44 m2)
+        {
+            Matrix44 r;
+
+            r.v11 = m1.v11 * m2.v11 + m1.v12 * m2.v21 + m1.v13 * m2.v31 + m1.v14 * m2.v41;
+            r.v12 = m1.v11 * m2.v12 + m1.v12 * m2.v22 + m1.v13 * m2.v32 + m1.v14 * m2.v42;
+            r.v13 = m1.v11 * m2.v13 + m1.v12 * m2.v23 + m1.v13 * m2.v33 + m1.v14 * m2.v43;
+            r.v14 = m1.v11 * m2.v14 + m1.v12 * m2.v24 + m1.v13 * m2.v34 + m1.v14 * m2.v44;
+
+            r.v21 = m1.v21 * m2.v11 + m1.v22 * m2.v21 + m1.v23 * m2.v31 + m1.v24 * m2.v41;
+            r.v22 = m1.v21 * m2.v12 + m1.v22 * m2.v22 + m1.v23 * m2.v32 + m1.v24 * m2.v42;
+            r.v23 = m1.v21 * m2.v13 + m1.v22 * m2.v23 + m1.v23 * m2.v33 + m1.v24 * m2.v43;
+            r.v24 = m1.v21 * m2.v14 + m1.v22 * m2.v24 + m1.v23 * m2.v34 + m1.v24 * m2.v44;
+
+            r.v31 = m1.v31 * m2.v11 + m1.v32 * m2.v21 + m1.v33 * m2.v31 + m1.v34 * m2.v41;
+            r.v32 = m1.v31 * m2.v12 + m1.v32 * m2.v22 + m1.v33 * m2.v32 + m1.v34 * m2.v42;
+            r.v33 = m1.v31 * m2.v13 + m1.v32 * m2.v23 + m1.v33 * m2.v33 + m1.v34 * m2.v43;
+            r.v34 = m1.v31 * m2.v14 + m1.v32 * m2.v24 + m1.v33 * m2.v34 + m1.v34 * m2.v44;
+
+            r.v41 = m1.v41 * m2.v11 + m1.v42 * m2.v21 + m1.v43 * m2.v31 + m1.v44 * m2.v41;
+            r.v42 = m1.v41 * m2.v12 + m1.v42 * m2.v22 + m1.v43 * m2.v32 + m1.v44 * m2.v42;
+            r.v43 = m1.v41 * m2.v13 + m1.v42 * m2.v23 + m1.v43 * m2.v33 + m1.v44 * m2.v43;
+            r.v44 = m1.v41 * m2.v14 + m1.v42 * m2.v24 + m1.v43 * m2.v34 + m1.v44 * m2.v44;
+
+            return r;
+        }
+
         public void dump(DebugOut o)
         {
-            o.println("{");
+            o.println(nameof(Matrix33) + "{");
             o.Indent++;
             o.println(v11.ToString() + "," + v12.ToString() + "," + v13.ToString() + "," + v14.ToString());
             o.println(v21.ToString() + "," + v22.ToString() + "," + v23.ToString() + "," + v24.ToString());
             o.println(v31.ToString() + "," + v32.ToString() + "," + v33.ToString() + "," + v34.ToString());
             o.println(v41.ToString() + "," + v42.ToString() + "," + v43.ToString() + "," + v44.ToString());
+            o.Indent--;
+            o.println("}");
+        }
+    }
+
+    public struct Matrix33
+    {
+        public double v11, v12, v13;
+        public double v21, v22, v23;
+        public double v31, v32, v33;
+
+        public void set(
+            double a11, double a12, double a13,
+            double a21, double a22, double a23,
+            double a31, double a32, double a33
+            )
+        {
+            v11 = a11; v12 = a12; v13 = a13;
+            v21 = a21; v22 = a22; v23 = a23;
+            v31 = a31; v32 = a32; v33 = a33;
+        }
+
+        //
+        // | v11, v12, v13 |  | x |
+        // | v21, v22, v23 |  | y |
+        // | v31, v32, v33 |  | z |
+        //
+        public static CadPoint product(Matrix33 m, CadPoint p)
+        {
+            CadPoint rp = default(CadPoint);
+
+            rp.x = m.v11 * p.x + m.v12 * p.y + m.v13 * p.z;
+            rp.y = m.v21 * p.x + m.v22 * p.y + m.v23 * p.z;
+            rp.z = m.v31 * p.x + m.v32 * p.y + m.v33 * p.z;
+
+            return rp;
+        }
+
+        public static Matrix33 product(Matrix33 m1, Matrix33 m2)
+        {
+            Matrix33 r;
+
+            r.v11 = m1.v11 * m2.v11 + m1.v12 * m2.v21 + m1.v13 * m2.v31;
+            r.v12 = m1.v11 * m2.v12 + m1.v12 * m2.v22 + m1.v13 * m2.v32;
+            r.v13 = m1.v11 * m2.v13 + m1.v12 * m2.v23 + m1.v13 * m2.v33;
+
+            r.v21 = m1.v21 * m2.v11 + m1.v22 * m2.v21 + m1.v23 * m2.v31;
+            r.v22 = m1.v21 * m2.v12 + m1.v22 * m2.v22 + m1.v23 * m2.v32;
+            r.v23 = m1.v21 * m2.v13 + m1.v22 * m2.v23 + m1.v23 * m2.v33;
+
+            r.v31 = m1.v31 * m2.v11 + m1.v32 * m2.v21 + m1.v33 * m2.v31;
+            r.v32 = m1.v31 * m2.v12 + m1.v32 * m2.v22 + m1.v33 * m2.v32;
+            r.v33 = m1.v31 * m2.v13 + m1.v32 * m2.v23 + m1.v33 * m2.v33;
+
+            return r;
+        }
+
+        // 逆行列
+        public Matrix33 invers()
+        {
+            Matrix33 r;
+
+            r.v11 = v22 * v33 - v23 * v32;
+            r.v12 = v13 * v32 - v12 * v33;
+            r.v13 = v12 * v23 - v13 * v22;
+
+            r.v21 = v23 * v31 - v21 * v33;
+            r.v22 = v11 * v33 - v13 * v31;
+            r.v23 = v13 * v21 - v11 * v23;
+
+            r.v31 = v21 * v32 - v22 * v31;
+            r.v32 = v12 * v31 - v11 * v32;
+            r.v33 = v11 * v22 - v12 * v21;
+
+            return r;
+        }
+
+        public void dump(DebugOut o)
+        {
+            o.println(nameof(Matrix33) + "{");
+            o.Indent++;
+            o.println(v11.ToString() + "," + v12.ToString() + "," + v13.ToString());
+            o.println(v21.ToString() + "," + v22.ToString() + "," + v23.ToString());
+            o.println(v31.ToString() + "," + v32.ToString() + "," + v33.ToString());
             o.Indent--;
             o.println("}");
         }

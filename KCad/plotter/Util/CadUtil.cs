@@ -153,48 +153,6 @@ namespace Plotter
             }
         }
 
-        /*
-        public static Centroid getTriangleListCentroid(List<CadFigure> triangles)
-        {
-            CadPoint gp0 = default(CadPoint);
-            CadPoint gp1 = default(CadPoint);
-            CadPoint gpt = default(CadPoint);
-
-            double w0 = 0;
-            double w1 = 0;
-
-            int i = 1;
-
-            w0 = getTriangleArea(triangles[0].PointList);
-            gp0 = getTriangleCentroid(triangles[0].PointList);
-
-            for (; i < triangles.Count; i++)
-            {
-                w1 = getTriangleArea(triangles[i].PointList);
-                gp1 = getTriangleCentroid(triangles[i].PointList);
-
-                double ratio = w1 / (w0 + w1);
-
-                gpt.x = (gp1.x - gp0.x) * ratio + gp0.x;
-                gpt.y = (gp1.y - gp0.y) * ratio + gp0.y;
-                gpt.z = (gp1.z - gp0.z) * ratio + gp0.z;
-
-                gp0 = gpt;
-                w0 = w0 + w1;
-            }
-
-            Centroid ret = default(Centroid);
-
-            ret.Weight = w0;
-            ret.Point = gp0;
-
-            return ret;
-        }
-        */
-
-
-
-
         public static bool isPointInTriangle2D(CadPoint p, IReadOnlyList<CadPoint> triangle)
         {
             if (triangle.Count < 3)
@@ -268,6 +226,40 @@ namespace Plotter
 
         // 線分apと点pの距離
         // 垂線がab内に無い場合は、点a,bで近い方への距離を返す
+        // 2D
+        public static double distancePtoSeg2D(CadPoint a, CadPoint b, CadPoint p)
+        {
+            double t;
+
+            CadPoint ab = b - a;
+            CadPoint ap = p - a;
+
+            t = CadMath.innrProduct2D(ab, ap);
+
+            if (t < 0)
+            {
+                return vectNorm2D(ap);
+            }
+
+            CadPoint ba = a - b;
+            CadPoint bp = p - b;
+
+            t = CadMath.innrProduct2D(ba, bp);
+
+            if (t < 0)
+            {
+                return vectNorm2D(bp);
+            }
+
+            double d = Math.Abs(CadMath.crossProduct2D(ab, ap));
+            double abl = vectNorm2D(ab);
+
+            return d / abl;
+        }
+
+        // 線分apと点pの距離
+        // 垂線がab内に無い場合は、点a,bで近い方への距離を返す
+        // 3D対応
         public static double distancePtoSeg(CadPoint a, CadPoint b, CadPoint p)
         {
             double t;
@@ -279,7 +271,7 @@ namespace Plotter
 
             if (t < 0)
             {
-                return vectAbs2D(ap);
+                return ap.norm();
             }
 
             CadPoint ba = a - b;
@@ -289,21 +281,20 @@ namespace Plotter
 
             if (t < 0)
             {
-                return vectAbs(bp);
+                return bp.norm();
             }
 
+            CadPoint cp = CadMath.crossProduct3D(ab, ap);
 
-            CadPoint norm = CadMath.crossProduct3D(ab, ap);
+            // 外積結果の長さが a->p a->b を辺とする平行四辺形の面積になる
+            double s = cp.norm();
 
-            double d = norm.norm();
-
-            double abL = vectAbs(ab);
-
-            return d / abL;
+            // 面積を底辺で割って高さを求める
+            return s / ab.norm();
         }
 
         // 点pから線分abに向かう垂線との交点を求める
-        public static CrossInfo getNormCross(CadPoint a, CadPoint b, CadPoint p)
+        public static CrossInfo getPerpCrossSeg(CadPoint a, CadPoint b, CadPoint p)
         {
             CrossInfo ret = default(CrossInfo);
 
@@ -314,7 +305,8 @@ namespace Plotter
             CadPoint bp = p - b;
 
             // A-B 単位ベクトル
-            CadPoint unit_ab = CadMath.unitVector(ab);
+            //CadPoint unit_ab = CadMath.unitVector(ab);
+            CadPoint unit_ab = ab.unitVector();
 
             // B-A 単位ベクトル　(A-B単位ベクトルを反転) B側の中外判定に使用
             CadPoint unit_ba = unit_ab * -1.0;
@@ -341,29 +333,106 @@ namespace Plotter
             return ret;
         }
 
-        public static double vectAbs2D(CadPoint v)
+        // 点pから線分abに向かう垂線との交点を求める2D
+        public static CrossInfo getPerpCrossSeg2D(CadPoint a, CadPoint b, CadPoint p)
+        {
+            CrossInfo ret = default(CrossInfo);
+
+            double t1;
+
+            CadPoint ab = b - a;
+            CadPoint ap = p - a;
+
+            t1 = CadMath.innrProduct2D(ab, ap);
+
+            if (t1 < 0)
+            {
+                return ret;
+            }
+
+            double t2;
+
+            CadPoint ba = a - b;
+            CadPoint bp = p - b;
+
+            t2 = CadMath.innrProduct2D(ba, bp);
+
+            if (t2 < 0)
+            {
+                return ret;
+            }
+
+            double abl = vectNorm2D(ab);
+            double abl2 = abl * abl;
+
+            ret.isCross = true;
+            ret.CrossPoint.x = ab.x * t1 / abl2 + a.x;
+            ret.CrossPoint.y = ab.y * t1 / abl2 + a.y;
+
+            return ret;
+        }
+
+
+        // 点pから直線abに向かう垂線との交点を求める
+        public static CrossInfo getNormalCrossLine(CadPoint a, CadPoint b, CadPoint p)
+        {
+            CrossInfo ret = default(CrossInfo);
+
+            CadPoint ab = b - a;
+            CadPoint ap = p - a;
+
+            // A-B 単位ベクトル
+            CadPoint unit_ab = ab.unitVector();
+
+            // Aから交点までの距離 
+            double dist_ax = CadMath.innerProduct3D(unit_ab, ap);
+
+            ret.CrossPoint.x = a.x + (unit_ab.x * dist_ax);
+            ret.CrossPoint.y = a.y + (unit_ab.y * dist_ax);
+            ret.CrossPoint.z = a.z + (unit_ab.z * dist_ax);
+
+            return ret;
+        }
+
+        // 点pから直線abに向かう垂線との交点を求める2D
+        public static CrossInfo getNormCrossLine2D(CadPoint a, CadPoint b, CadPoint p)
+        {
+            CrossInfo ret = default(CrossInfo);
+
+            double t1;
+
+            CadPoint ab = b - a;
+            CadPoint ap = p - a;
+
+            t1 = CadMath.innrProduct2D(ab, ap);
+
+            double norm = vectNorm2D(ab);
+            double norm2 = norm * norm;
+
+            ret.isCross = true;
+            ret.CrossPoint.x = ab.x * t1 / norm2 + a.x;
+            ret.CrossPoint.y = ab.y * t1 / norm2 + a.y;
+
+            return ret;
+        }
+
+        public static double vectNorm2D(CadPoint v)
         {
             return Math.Sqrt(v.x * v.x + v.y * v.y);
         }
 
-        public static double lineAbs2D(CadPoint a, CadPoint b)
+        public static double segNorm(CadPoint a, CadPoint b)
+        {
+            CadPoint v = b - a;
+            return v.norm();
+        }
+
+        public static double segNorm2D(CadPoint a, CadPoint b)
         {
             double dx = b.x - a.x;
             double dy = b.y - a.y;
 
             return Math.Sqrt((dx * dx) + (dy * dy));
-        }
-
-        public static double vectAbs(CadPoint v)
-        {
-            return v.norm();
-        }
-
-        public static double lineAbs(CadPoint a, CadPoint b)
-        {
-            CadPoint v = b - a;
-
-            return v.norm();
         }
 
         public static void movePoints(List<CadPoint> list, CadPoint delta)

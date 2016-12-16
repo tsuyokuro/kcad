@@ -473,7 +473,7 @@ namespace Plotter
                 return;
             }
 
-            CrossInfo ret = CadUtil.getNormCross(a, b, TargetPoint);
+            CrossInfo ret = CadUtil.getPerpCrossSeg(a, b, TargetPoint);
 
             if (!ret.isCross)
             {
@@ -521,8 +521,8 @@ namespace Plotter
             CadPoint c = fig.getPointAt(0);
             CadPoint a = fig.getPointAt(1);
 
-            double r = CadUtil.lineAbs2D(a, c);
-            double tr = CadUtil.lineAbs2D(TargetPoint, c);
+            double r = CadUtil.segNorm2D(a, c);
+            double tr = CadUtil.segNorm2D(TargetPoint, c);
 
             double dist = Math.Abs(tr - r);
 

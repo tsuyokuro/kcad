@@ -96,7 +96,7 @@ namespace Plotter
 
             CadPoint pt = mFreeDownPoint.Value;
 
-            CrossInfo ret = CadUtil.getNormCross(a, b, pt);
+            CrossInfo ret = CadUtil.getPerpCrossSeg2D(a, b, pt);
 
             if (ret.isCross)
             {
@@ -205,30 +205,42 @@ namespace Plotter
 
         private void test_matrix()
         {
-            Matrix44 m1 = default(Matrix44);
+            Matrix33 m1 = default(Matrix33);
+
             m1.set(
-                1, 2, 3, 4,
-                5, 6, 7, 8,
-                9, 10, 11, 12,
-                13, 14, 15, 16);
+                0, 1, 0,
+                0, 0, 1,
+                1, 0, 0);
 
-            Matrix44 m2 = default(Matrix44);
-            m2.set(
-                10, 20, 30, 40,
-                50, 60, 70, 80,
-                90, 100, 110, 120,
-                130, 140, 150, 160);
+            Matrix33 m2 = m1.invers();
 
-            Matrix44 m = CadMath.matrixProduct(m1, m2);
             DebugOut o = new DebugOut();
+            //m1.dump(o);
+            //m2.dump(o);
 
-            m.dump(o);
+            CadPoint p1 = default(CadPoint);
+            p1.x = 10;
+            p1.y = 20;
+            p1.z = 30;
+
+            CadPoint p2 = Matrix33.product(m1, p1);
+
+            CadPoint p3 = Matrix33.product(m2, p2);
+
+            p1.dump(o);
+            p2.dump(o);
+            p3.dump(o);
+        }
+
+        private void test()
+        {
         }
 
         public void debugCommand(DrawContext dc, string s)
         {
             if (s == "test")
             {
+                test();
             }
             else if (s == "clean temp")
             {

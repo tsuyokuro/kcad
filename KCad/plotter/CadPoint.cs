@@ -26,7 +26,7 @@ namespace Plotter
             public static uint REMOVE_MARK = 0x0002;
         }
 
-        public Types Type { get; set; }
+        public Types Type;
         public uint Flag;
 
         public double x;
@@ -202,6 +202,8 @@ namespace Plotter
             CadPoint ret = default(CadPoint);
 
             double norm = this.norm();
+
+            // 掛け算にして高速化
             double f = 1.0 / norm;
 
             ret.x = x * f;
@@ -229,7 +231,6 @@ namespace Plotter
         public CadPoint p0;
         public CadPoint p1;
     }
-
 
     [Serializable]
     public class CadRelativePoint
