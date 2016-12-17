@@ -162,7 +162,7 @@ namespace Plotter
 
         public void setRangePixel(DrawContext dc, int pixel)
         {
-            double d = dc.pixelVToCadV(pixel);
+            double d = dc.pixelsToMilli(pixel);
             mRange = d;
         }
 
@@ -384,7 +384,7 @@ namespace Plotter
 
         public void setRangePixel(DrawContext dc, int pixel)
         {
-            double d = dc.pixelVToCadV(pixel);
+            double d = dc.pixelsToMilli(pixel);
             mRange = d;
         }
 

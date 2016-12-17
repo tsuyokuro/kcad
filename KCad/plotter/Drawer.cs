@@ -56,6 +56,7 @@ namespace Plotter
         }
 
         #region "Draw base"
+        /*
         public static void drawAxis(DrawContext dc)
         {
             if (dc.Tools.AxesPen == null)
@@ -76,6 +77,47 @@ namespace Plotter
             Drawer.drawLine(dc, dc.Tools.AxesPen, x0, 0, x1, 0);
             Drawer.drawLine(dc, dc.Tools.AxesPen, 0, y0, 0, y1);
         }
+        */
+
+        public static void drawAxis(DrawContext dc)
+        {
+            if (dc.Tools.AxesPen == null)
+            {
+                return;
+            }
+
+            CadRect vr = dc.getViewRect();
+
+            CadPoint p0;
+            CadPoint p1;
+
+            // X軸
+            p0 = vr.p0;
+            p0.y = p0.z = 0;
+
+            p1 = vr.p1;
+            p1.y = p1.z = 0;
+
+            Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
+
+            // Y軸
+            p0 = vr.p0;
+            p0.x = p0.z = 0;
+
+            p1 = vr.p1;
+            p1.x = p1.z = 0;
+
+            Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
+
+            // Z軸
+            p0 = vr.p0;
+            p0.x = p0.y = 0;
+
+            p1 = vr.p1;
+            p1.x = p1.y = 0;
+
+            Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
+        }
 
         public static void drawPageFrame(DrawContext dc)
         {
@@ -84,12 +126,41 @@ namespace Plotter
                 return;
             }
 
-            double x0 = -dc.PageSize.width / 2;
-            double y0 = dc.PageSize.height / 2;
-            double x1 = dc.PageSize.width / 2;
-            double y1 = -dc.PageSize.height / 2;
+            CadPoint p0 = default(CadPoint);
+            CadPoint p1 = default(CadPoint);
 
-            Drawer.drawRect(dc, dc.Tools.PageFramePen, x0, y0, x1, y1);
+            p0.x = -dc.PageSize.width / 2;
+            p0.y = dc.PageSize.height / 2;
+
+            p1.x = dc.PageSize.width / 2;
+            p1.y = -dc.PageSize.height / 2;
+
+            p0.z = 0;
+            p1.z = 0;
+
+            Drawer.drawRect(dc, dc.Tools.PageFramePen, p0, p1);
+
+            p0.x = -dc.PageSize.width / 2;
+            p0.z = dc.PageSize.height / 2;
+
+            p1.x = dc.PageSize.width / 2;
+            p1.z = -dc.PageSize.height / 2;
+
+            p0.y = 0;
+            p1.y = 0;
+
+            Drawer.drawRect(dc, dc.Tools.PageFramePen, p0, p1);
+
+            p0.z = -dc.PageSize.width / 2;
+            p0.y = dc.PageSize.height / 2;
+
+            p1.z = dc.PageSize.width / 2;
+            p1.y = -dc.PageSize.height / 2;
+
+            p0.x = 0;
+            p1.x = 0;
+
+            Drawer.drawRect(dc, dc.Tools.PageFramePen, p0, p1);
         }
         #endregion
 
@@ -144,6 +215,7 @@ namespace Plotter
             dc.graphics.DrawLine(pen, (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
         }
 
+        /*
         public static void drawLine(DrawContext dc, Pen pen, double x0, double y0, double x1, double y1)
         {
             CadPoint p0 = default(CadPoint);
@@ -157,6 +229,7 @@ namespace Plotter
 
             drawLine(dc, pen, p0, p1);
         }
+        */
 
         public static void drawRect(DrawContext dc, Pen pen, CadPoint p0, CadPoint p1)
         {
@@ -166,6 +239,7 @@ namespace Plotter
             drawRect(dc.graphics, pen, (int)pp0.x, (int)pp0.y, (int)pp1.x, (int)pp1.y);
         }
 
+        /*
         public static void drawRect(DrawContext dc, Pen pen, double x0, double y0, double x1, double y1)
         {
             CadPoint p0 = default(CadPoint);
@@ -178,6 +252,7 @@ namespace Plotter
 
             drawRect(dc, pen, p0, p1);
         }
+        */
 
         private static void drawRect(Graphics g, Pen pen, int x0, int y0, int x1, int y1)
         {
@@ -337,7 +412,7 @@ namespace Plotter
 
             CadPixelPoint cpp =  dc.pointToPixelPoint(cp);
 
-            r = dc.cadVToPixelV(r);
+            r = dc.milliToPixels(r);
 
             dc.graphics.DrawEllipse(
                 pen, (int)(cpp.x - r), (int)(cpp.y - r), (int)(r*2), (int)(r *2));

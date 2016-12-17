@@ -6,8 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
+using static System.Math;
+
 namespace Plotter
 {
+
     public class PaperPageSize
     {
         public double width;
@@ -72,11 +75,42 @@ namespace Plotter
 
         private const double MILLI_PER_INCH = 25.4;
 
-        private double XDir = 1;
+        //private double XDir = 1;
         private double YDir = -1;
-        private double ZDir = 1;
+        //private double ZDir = 1;
 
         private CadPixelPoint mViewOrg;
+
+        Matrix33 mMatrixTo3D;
+
+        Matrix33 mMatrixTo2D;
+
+
+        Matrix33 MatrixTo3D
+        {
+            set
+            {
+                mMatrixTo3D = value;
+                mMatrixTo2D = mMatrixTo3D.invers();
+            }
+            get
+            {
+                return mMatrixTo3D;
+            }
+        }
+
+        Matrix33 MatrixTo2D
+        {
+            set
+            {
+                mMatrixTo2D = value;
+                mMatrixTo3D = mMatrixTo2D.invers();
+            }
+            get
+            {
+                return mMatrixTo2D;
+            }
+        }
 
         public CadPixelPoint ViewOrg
         {
@@ -98,11 +132,40 @@ namespace Plotter
 
         public DrawSettings Tools = new DrawSettings();
 
+        private Matrix33 MatrixXY = new Matrix33
+            (
+                1, 0, 0,
+                0, 1, 0,
+                0, 0, 1
+            );
+
+        // 1, 0, 0,
+        // 0, Cos(PI/2), -Sin(PI/2),
+        // 0, Sin(PI/2), Cos(PI/2)
+        private Matrix33 MatrixXZ = new Matrix33
+            (
+                1, 0, 0,
+                0, 0, -1,
+                0, 1, 0
+            );
+
+        // Cos(PI/2), 0, Sin(PI/2),
+        // 0, 1, 0,
+        // -Sin(PI/2), 0, Cos(PI/2)
+        private Matrix33 MatrixZY = new Matrix33
+            (
+                0, 0, 1,
+                0, 1, 0,
+                -1, 0, 0
+            );
+
         public DrawContext()
         {
             setDotPerMilli(4, 4); // 1mm = 4dot
             mViewOrg.x = 0;
             mViewOrg.y = 0;
+
+            MatrixTo3D = MatrixZY;
         }
 
         public void startDraw(Bitmap image)
@@ -151,32 +214,26 @@ namespace Plotter
 
         public CadPixelPoint pointToPixelPoint(CadPoint pt)
         {
+            pt = mMatrixTo2D * pt;
+
             CadPixelPoint p;
-            p.x = (int)((pt.x) * UnitPerMilliX * XDir);
+            p.x = (int)((pt.x) * UnitPerMilliX);
             p.y = (int)((pt.y) * UnitPerMilliY * YDir);
 
             p += mViewOrg;
-
             return p;
         }
 
-        public CadPixelPoint pointToPixelPoint0(CadPoint pt)
-        {
-            CadPixelPoint p;
-            p.x = (int)((pt.x) * UnitPerMilliX * XDir);
-            p.y = (int)((pt.y) * UnitPerMilliY * YDir);
-
-            return p;
-        }
-
-        public CadPoint pixelPointToCadPoint(ref CadPixelPoint pt)
+        public CadPoint pixelPointToCadPoint(CadPixelPoint pt)
         {
             pt -= mViewOrg;
 
             CadPoint p = default(CadPoint);
-            p.x = ((double)(pt.x) / UnitPerMilliX) * XDir;
+            p.x = ((double)(pt.x) / UnitPerMilliX);
             p.y = ((double)(pt.y) / UnitPerMilliY) * YDir;
-            p.z = ((double)0 / UnitPerMilliX) * ZDir;
+            p.z = ((double)0 / UnitPerMilliX);
+
+            p = mMatrixTo3D * p;
 
             return p;
         }
@@ -187,9 +244,11 @@ namespace Plotter
             y -= mViewOrg.y;
 
             CadPoint p = default(CadPoint);
-            p.x = ((double)(x) / UnitPerMilliX) * XDir;
+            p.x = ((double)(x) / UnitPerMilliX);
             p.y = ((double)(y) / UnitPerMilliY) * YDir;
-            p.z = ((double)0 / UnitPerMilliX) * ZDir;
+            p.z = ((double)0 / UnitPerMilliX);
+
+            p = mMatrixTo3D * p;
 
             return p;
         }
@@ -197,18 +256,18 @@ namespace Plotter
         public CadRect getViewRect()
         {
             CadRect rect = default(CadRect);
-            rect.p0 = pixelPointToCadPoint(0, 0);
-            rect.p1 = pixelPointToCadPoint(ViewWidth, ViewHeight);
+            rect.p0 = pixelPointToCadPoint(new CadPixelPoint(0,0));
+            rect.p1 = pixelPointToCadPoint(new CadPixelPoint(ViewWidth, ViewHeight));
 
             return rect;
         }
 
-        public double pixelVToCadV(int d)
+        public double pixelsToMilli(int d)
         {
-            return ((double)(d) / UnitPerMilliX) * XDir;
+            return ((double)(d) / UnitPerMilliX);
         }
 
-        public double cadVToPixelV(double d)
+        public double milliToPixels(double d)
         {
             return d * UnitPerMilliX;
         }

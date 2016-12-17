@@ -364,7 +364,7 @@ namespace Plotter
 
         public void draw(DrawContext dc)
         {
-            double d = dc.pixelVToCadV(4);
+            double d = dc.pixelsToMilli(4);
 
             CadPoint p0 = point;
             CadPoint p1 = point;
@@ -401,6 +401,12 @@ namespace Plotter
         public double y;
 
         public CadPixelPoint(double x, double y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+        public CadPixelPoint(int x, int y)
         {
             this.x = x;
             this.y = y;

@@ -250,6 +250,17 @@ namespace Plotter
             v31 = a31; v32 = a32; v33 = a33;
         }
 
+        public Matrix33(
+            double a11, double a12, double a13,
+            double a21, double a22, double a23,
+            double a31, double a32, double a33
+            )
+        {
+            v11 = a11; v12 = a12; v13 = a13;
+            v21 = a21; v22 = a22; v23 = a23;
+            v31 = a31; v32 = a32; v33 = a33;
+        }
+
         public static Matrix33 operator *(Matrix33 m1, Matrix33 m2)
         {
             return product(m1, m2);

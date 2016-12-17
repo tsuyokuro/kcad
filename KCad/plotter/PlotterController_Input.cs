@@ -102,7 +102,7 @@ namespace Plotter
         private void LDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
             //Log.d("LDown");
-            CadPoint cp = dc.pixelPointToCadPoint(x, y);
+            CadPoint cp = dc.pixelPointToCadPoint(x,y);
 
             mOffset = mSnapCursorPos - cp;
 
