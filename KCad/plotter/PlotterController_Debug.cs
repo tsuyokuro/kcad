@@ -232,6 +232,31 @@ namespace Plotter
             p3.dump(o);
         }
 
+        private void test_matrix2()
+        {
+            DebugOut o = new DebugOut();
+
+            MatrixMN m1 = new MatrixMN(new double[,]
+            {
+                { 11, 12, 13 },
+                { 21, 22, 23 },
+                { 31, 32, 33 }
+            });
+
+            MatrixMN m2 = new MatrixMN(new double[,]
+            {
+                { 11, 12, 13 },
+                { 21, 22, 23 },
+                { 31, 32, 33 }
+            });
+
+            MatrixMN m3 = m1.product(m2);
+
+            m1.dump(o);
+            m2.dump(o);
+            m3.dump(o);
+        }
+
         private void test()
         {
         }
@@ -255,6 +280,11 @@ namespace Plotter
             else if (s == "test matrix")
             {
                 test_matrix();
+            }
+
+            else if (s == "test matrix2")
+            {
+                test_matrix2();
             }
 
             else if (s == "test centroid")
