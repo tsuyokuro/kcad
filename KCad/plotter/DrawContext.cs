@@ -70,8 +70,7 @@ namespace Plotter
     {
         public PaperPageSize PageSize = new PaperPageSize();
 
-        public double UnitPerMilliX = 1; // Output unit per milli X.
-        public double UnitPerMilliY = 1; // Output unit per milli Y.
+        public double UnitPerMilli = 1; // Output unit per milli X.
 
         private const double MILLI_PER_INCH = 25.4;
 
@@ -161,11 +160,11 @@ namespace Plotter
 
         public DrawContext()
         {
-            setDotPerMilli(4, 4); // 1mm = 4dot
+            setDotPerMilli(4); // 1mm = 4dot
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
-            MatrixTo3D = MatrixZY;
+            MatrixTo3D = MatrixXY;
         }
 
         public void startDraw(Bitmap image)
@@ -199,17 +198,15 @@ namespace Plotter
         }
 
         // set dots per milli.
-        public void setDotPerMilli(double dpmx, double dpmy)
+        public void setDotPerMilli(double dpm)
         {
-            UnitPerMilliX = dpmx;
-            UnitPerMilliY = dpmy;
+            UnitPerMilli = dpm;
         }
 
         // Calc inch units per milli.
-        public void setUnitPerInch(double unitX, double unitY)
+        public void setUnitPerInch(double unit)
         {
-            UnitPerMilliX = unitX / MILLI_PER_INCH;
-            UnitPerMilliY = unitY / MILLI_PER_INCH;
+            UnitPerMilli = unit / MILLI_PER_INCH;
         }
 
         public CadPixelPoint pointToPixelPoint(CadPoint pt)
@@ -217,8 +214,9 @@ namespace Plotter
             pt = mMatrixTo2D * pt;
 
             CadPixelPoint p;
-            p.x = (int)((pt.x) * UnitPerMilliX);
-            p.y = (int)((pt.y) * UnitPerMilliY * YDir);
+            p.x = pt.x * UnitPerMilli;
+            p.y = pt.y * UnitPerMilli * YDir;
+            p.z = pt.z * UnitPerMilli;
 
             p += mViewOrg;
             return p;
@@ -229,24 +227,24 @@ namespace Plotter
             pt -= mViewOrg;
 
             CadPoint p = default(CadPoint);
-            p.x = ((double)(pt.x) / UnitPerMilliX);
-            p.y = ((double)(pt.y) / UnitPerMilliY) * YDir;
-            p.z = ((double)0 / UnitPerMilliX);
+            p.x = pt.x / UnitPerMilli;
+            p.y = pt.y / UnitPerMilli * YDir;
+            p.z = pt.z / UnitPerMilli;
 
             p = mMatrixTo3D * p;
 
             return p;
         }
 
-        public CadPoint pixelPointToCadPoint(double x, double y)
+        public CadPoint pixelPointToCadPoint(double x, double y, double z)
         {
             x -= mViewOrg.x;
             y -= mViewOrg.y;
 
             CadPoint p = default(CadPoint);
-            p.x = ((double)(x) / UnitPerMilliX);
-            p.y = ((double)(y) / UnitPerMilliY) * YDir;
-            p.z = ((double)0 / UnitPerMilliX);
+            p.x = x / UnitPerMilli;
+            p.y = y / UnitPerMilli * YDir;
+            p.z = z / UnitPerMilli;
 
             p = mMatrixTo3D * p;
 
@@ -264,12 +262,12 @@ namespace Plotter
 
         public double pixelsToMilli(int d)
         {
-            return ((double)(d) / UnitPerMilliX);
+            return ((double)(d) / UnitPerMilli);
         }
 
         public double milliToPixels(double d)
         {
-            return d * UnitPerMilliX;
+            return d * UnitPerMilli;
         }
     }
 }

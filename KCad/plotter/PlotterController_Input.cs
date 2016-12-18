@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define LOG_DEBUG
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +21,7 @@ namespace Plotter
         private CadPixelPoint StoreViewOrg = default(CadPixelPoint);
 
         private CadPoint mSnapCursorPos;
+        private CadPixelPoint mMoveOrgPixelPoint;
 
         private CadPoint? mFreeDownPoint = null;
 
@@ -101,8 +104,7 @@ namespace Plotter
 
         private void LDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
-            //Log.d("LDown");
-            CadPoint cp = dc.pixelPointToCadPoint(x,y);
+            CadPoint cp = dc.pixelPointToCadPoint(x,y,0);
 
             mOffset = mSnapCursorPos - cp;
 
@@ -123,9 +125,15 @@ namespace Plotter
 
                     if (mp.FigureID != 0 && mp.Type == MarkPoint.Types.POINT)
                     {
+                        MoveOrigin = mp.Point;
+
+                        mSnapCursorPos = MoveOrigin;
                         mObjDownPoint = mSnapCursorPos;
 
-                        MoveOrigin = mp.Point;
+                        mMoveOrgPixelPoint = dc.pointToPixelPoint(MoveOrigin);
+
+                        mMoveOrgPixelPoint.dump(new DebugOut());
+
                         State = States.START_DRAGING_POINTS;
                         CadFigure fig = mDB.getFigure(mp.FigureID);
 
@@ -336,10 +344,10 @@ namespace Plotter
                 startEdit();
             }
 
-            CadPoint cp = dc.pixelPointToCadPoint(x, y);
+            CadPoint cp = dc.pixelPointToCadPoint((double)x, (double)y, mMoveOrgPixelPoint.z);
 
 
-            mSnapCursorPos = cp + mOffset;
+            mSnapCursorPos = cp; // + mOffset;
 
             mRawPos = cp;
 
@@ -420,7 +428,10 @@ namespace Plotter
                 case States.DRAGING_POINTS:
                     {
                         CadPoint delta = mSnapCursorPos - MoveOrigin;
-                        //mSelList.moveSelectedItems(mDB, dp);
+
+                        DebugOut o = new DebugOut();
+                        mSnapCursorPos.dump(o);
+
                         moveSelectedPoints(delta);
 
                         break;

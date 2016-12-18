@@ -562,7 +562,7 @@ namespace Plotter
         {
             List<uint> figIDList = getSelectedFigIDList();
 
-            delta.z = 0;
+            //delta.z = 0;
 
             foreach (uint id in figIDList)
             {

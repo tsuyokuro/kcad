@@ -23,7 +23,7 @@ namespace Plotter
         {
             CadPixelPoint op = dc.ViewOrg;
 
-            op.add(pixDx, pixDy);
+            op.add(pixDx, pixDy, 0);
 
             dc.ViewOrg = op;
 
@@ -55,8 +55,7 @@ namespace Plotter
 
             dc.ViewOrg = op;
 
-            dc.UnitPerMilliX *= f;
-            dc.UnitPerMilliY *= f;
+            dc.UnitPerMilli *= f;
 
             clear(dc);
             draw(dc);

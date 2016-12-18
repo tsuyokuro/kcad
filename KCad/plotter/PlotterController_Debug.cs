@@ -257,15 +257,16 @@ namespace Plotter
             m3.dump(o);
         }
 
-        private void test()
+        private void test(DrawContext dc)
         {
+    
         }
 
         public void debugCommand(DrawContext dc, string s)
         {
             if (s == "test")
             {
-                test();
+                test(dc);
             }
             else if (s == "clean temp")
             {

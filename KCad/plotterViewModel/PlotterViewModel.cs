@@ -505,7 +505,7 @@ namespace Plotter
             dc.PageSize = mPlotterView.PageSize;
 
             // Default printers's unit is 1/100 inch
-            dc.setUnitPerInch(100.0, 100.0);
+            dc.setUnitPerInch(100.0);
 
             CadPixelPoint org = default(CadPixelPoint);
 
