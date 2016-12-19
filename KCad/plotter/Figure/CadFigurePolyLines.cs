@@ -43,6 +43,11 @@ namespace Plotter
                 }
             }
 
+            public override void addPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            {
+                fig.mPointList.Add(p);
+            }
+
             public override void addPoint(CadFigure fig, CadPoint p)
             {
                 fig.mPointList.Add(p);

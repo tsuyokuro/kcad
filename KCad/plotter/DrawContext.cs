@@ -164,7 +164,7 @@ namespace Plotter
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
-            MatrixTo3D = MatrixXY;
+            MatrixTo3D = MatrixZY;
         }
 
         public void startDraw(Bitmap image)

@@ -56,29 +56,6 @@ namespace Plotter
         }
 
         #region "Draw base"
-        /*
-        public static void drawAxis(DrawContext dc)
-        {
-            if (dc.Tools.AxesPen == null)
-            {
-                return;
-            }
-
-            CadRect vr = dc.getViewRect();
-
-            double x0 = vr.p0.x;
-            double x1 = vr.p1.x;
-
-            double y0 = vr.p0.y;
-            double y1 = vr.p1.y;
-
-            double w = dc.PageSize.width / 2;
-            double h = dc.PageSize.height / 2;
-            Drawer.drawLine(dc, dc.Tools.AxesPen, x0, 0, x1, 0);
-            Drawer.drawLine(dc, dc.Tools.AxesPen, 0, y0, 0, y1);
-        }
-        */
-
         public static void drawAxis(DrawContext dc)
         {
             if (dc.Tools.AxesPen == null)
@@ -117,6 +94,70 @@ namespace Plotter
             p1.x = p1.y = 0;
 
             Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
+
+            drawAxisDir(dc);
+        }
+
+        public static void drawAxisDir(DrawContext dc)
+        {
+            if (dc.Tools.AxesPen == null)
+            {
+                return;
+            }
+
+            CadPoint rp0 = dc.pixelPointToCadPoint(new CadPixelPoint(16, 16));
+            CadPoint rpc = dc.pixelPointToCadPoint(new CadPixelPoint(16 + 20, 16 + 20));
+            CadPoint rp1 = dc.pixelPointToCadPoint(new CadPixelPoint(16 + 40, 16 + 40));
+
+            Drawer.drawRect(dc, dc.Tools.AxesPen, rp0, rp1);
+
+            CadPoint p0;
+            CadPoint p1;
+
+            CadPoint np = default(CadPoint);
+
+            // X軸
+            p0 = rp0;
+            p0.y = rpc.y;
+            p0.z = rpc.z;
+
+            p1 = rp1;
+            p1.y = rpc.y;
+            p1.z = rpc.z;
+
+            Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
+
+            np = p0.x > p1.x ? p0 : p1;
+
+
+
+            // Y軸
+            p0 = rp0;
+            p0.x = rpc.x;
+            p0.z = rpc.z;
+
+            p1 = rp1;
+            p1.x = rpc.x;
+            p1.z = rpc.z;
+
+            Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
+
+            np = p0.y > p1.y ? p0 : p1;
+
+
+            // Z軸
+            p0 = rp0;
+            p0.x = rpc.x;
+            p0.y = rpc.y;
+
+            p1 = rp1;
+            p1.x = rpc.x;
+            p1.y = rpc.y;
+
+            Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
+
+            np = p0.z > p1.z ? p0 : p1;
+
         }
 
         public static void drawPageFrame(DrawContext dc)
@@ -408,7 +449,7 @@ namespace Plotter
 
         public static void drawCircle(DrawContext dc, Pen pen, CadPoint cp, CadPoint p1)
         {
-            double r = CadUtil.segNorm2D(cp, p1);
+            double r = CadUtil.segNorm(cp, p1);
 
             CadPixelPoint cpp =  dc.pointToPixelPoint(cp);
 

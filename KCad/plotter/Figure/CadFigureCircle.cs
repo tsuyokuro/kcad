@@ -29,6 +29,12 @@ namespace Plotter
             {
             }
 
+            public override void addPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            {
+                p.Type = CadPoint.Types.BREAK;
+                fig.mPointList.Add(p);
+            }
+
             public override void addPoint(CadFigure fig, CadPoint p)
             {
                 p.Type = CadPoint.Types.BREAK;

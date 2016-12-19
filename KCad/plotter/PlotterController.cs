@@ -363,9 +363,9 @@ namespace Plotter
             }
         }
 
-        private void setPoint(CadPoint p)
+        private void setPointInCreating(DrawContext dc, CadPoint p)
         {
-            CreatingFigure.addPoint(p);
+            CreatingFigure.addPointInCreating(dc, p);
 
             CadFigure.States state = CreatingFigure.State;
 

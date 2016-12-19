@@ -525,6 +525,11 @@ namespace Plotter
             Behavior.addPoint(this, p);
         }
 
+        public void addPointInCreating(DrawContext dc, CadPoint p)
+        {
+            Behavior.addPointInCreating(this, dc, p);
+        }
+
         public void removeSelected()
         {
             if (Locked) return;

@@ -132,7 +132,7 @@ namespace Plotter
 
                         mMoveOrgPixelPoint = dc.pointToPixelPoint(MoveOrigin);
 
-                        mMoveOrgPixelPoint.dump(new DebugOut());
+                        //mMoveOrgPixelPoint.dump(new DebugOut());
 
                         State = States.START_DRAGING_POINTS;
                         CadFigure fig = mDB.getFigure(mp.FigureID);
@@ -228,7 +228,7 @@ namespace Plotter
 
                     CreatingFigure.startCreate();
 
-                    setPoint(mSnapCursorPos);
+                    setPointInCreating(dc, mSnapCursorPos);
                     draw(dc);
 
                     break;
@@ -236,7 +236,7 @@ namespace Plotter
                 case States.CREATING:
                     mFreeDownPoint = mSnapCursorPos;
 
-                    setPoint(mSnapCursorPos);
+                    setPointInCreating(dc, mSnapCursorPos);
                     draw(dc);
 
                     break;
@@ -429,8 +429,8 @@ namespace Plotter
                     {
                         CadPoint delta = mSnapCursorPos - MoveOrigin;
 
-                        DebugOut o = new DebugOut();
-                        mSnapCursorPos.dump(o);
+                        //DebugOut o = new DebugOut();
+                        //mSnapCursorPos.dump(o);
 
                         moveSelectedPoints(delta);
 

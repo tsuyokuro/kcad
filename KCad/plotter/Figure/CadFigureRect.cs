@@ -28,7 +28,7 @@ namespace Plotter
             {
             }
 
-            public override void addPoint(CadFigure fig, CadPoint p)
+            public override void addPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
             {
                 if (fig.mPointList.Count == 0)
                 {
@@ -36,18 +36,18 @@ namespace Plotter
                 }
                 else
                 {
-                    CadPoint p0 = fig.PointList[0];
-                    CadPoint p2 = p;
+                    CadPixelPoint pp0 = dc.pointToPixelPoint(fig.PointList[0]);
+                    CadPixelPoint pp2 = dc.pointToPixelPoint(p);
 
-                    CadPoint p1 = p0;
-                    p1.x = p2.x;
+                    CadPixelPoint pp1 = pp0;
+                    pp1.x = pp2.x;
 
-                    CadPoint p3 = p0;
-                    p3.y = p2.y;
+                    CadPixelPoint pp3 = pp0;
+                    pp3.y = pp2.y;
 
-                    fig.mPointList.Add(p1);
-                    fig.mPointList.Add(p2);
-                    fig.mPointList.Add(p3);
+                    fig.mPointList.Add(dc.pixelPointToCadPoint(pp1));
+                    fig.mPointList.Add(dc.pixelPointToCadPoint(pp2));
+                    fig.mPointList.Add(dc.pixelPointToCadPoint(pp3));
 
                     fig.Closed = true;
                 }

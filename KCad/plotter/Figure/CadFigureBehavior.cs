@@ -16,6 +16,7 @@ namespace Plotter
             }
 
             public abstract States getState(CadFigure fig);
+            public abstract void addPointInCreating(CadFigure fig, DrawContext dc, CadPoint p);
             public abstract void addPoint(CadFigure fig, CadPoint p);
             public abstract void setPointAt(CadFigure fig, int index, CadPoint pt);
             public abstract void removeSelected(CadFigure fig);
@@ -71,6 +72,10 @@ namespace Plotter
             public override States getState(CadFigure fig)
             {
                 return States.NONE;
+            }
+
+            public override void addPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            {
             }
 
             public override void addPoint(CadFigure fig, CadPoint p)
