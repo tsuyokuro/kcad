@@ -108,7 +108,7 @@ namespace Plotter
 
                 if (firstSizeChange)
                 {
-                    CadPixelPoint org = default(CadPixelPoint);
+                    CadPoint org = default(CadPoint);
                     org.x = Width / 2;
                     org.y = Height / 2;
 

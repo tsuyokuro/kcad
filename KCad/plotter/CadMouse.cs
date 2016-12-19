@@ -42,8 +42,8 @@ namespace Plotter
             ALT = 1 << CombiKeys.ALT,
         }
 
-        public CadPixelPoint DownPoint = default(CadPixelPoint);
-        public CadPixelPoint Point = default(CadPixelPoint);
+        public CadPoint DownPoint = default(CadPoint);
+        public CadPoint Point = default(CadPoint);
 
         private ButtonHandler[] ButtonDownProcs = { null, null, null, null };
         private ButtonHandler[] ButtonUpProcs = { null, null, null, null };
@@ -154,8 +154,8 @@ namespace Plotter
         public void down(DrawContext dc, Buttons button, int x, int y)
         {
             addDownedButton(button);
-            DownPoint.set(x, y);
-            Point.set(x, y);
+            DownPoint.set(x, y, 0);
+            Point.set(x, y, 0);
 
             ButtonHandler bh = ButtonDownProcs[(uint)button];
             if (bh != null)
@@ -172,7 +172,7 @@ namespace Plotter
 
         public void up(DrawContext dc, Buttons button, int x, int y)
         {
-            Point.set(x, y);
+            Point.set(x, y, 0);
 
             ButtonHandler bh = ButtonUpProcs[(uint)button];
             if (bh != null)
@@ -227,7 +227,7 @@ namespace Plotter
                 }
             }
 
-            Point.set(x, y);
+            Point.set(x, y, 0);
         }
 
         public void wheel(DrawContext dc, int x, int y, int delta)

@@ -507,7 +507,7 @@ namespace Plotter
             // Default printers's unit is 1/100 inch
             dc.setUnitPerInch(100.0);
 
-            CadPixelPoint org = default(CadPixelPoint);
+            CadPoint org = default(CadPoint);
 
             org.x = dc.PageSize.widthInch / 2.0 * 100;
             org.y = dc.PageSize.heightInch / 2.0 * 100;

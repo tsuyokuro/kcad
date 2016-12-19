@@ -105,9 +105,9 @@ namespace Plotter
                 return;
             }
 
-            CadPoint rp0 = dc.pixelPointToCadPoint(new CadPixelPoint(16, 16));
-            CadPoint rpc = dc.pixelPointToCadPoint(new CadPixelPoint(16 + 20, 16 + 20));
-            CadPoint rp1 = dc.pixelPointToCadPoint(new CadPixelPoint(16 + 40, 16 + 40));
+            CadPoint rp0 = dc.pixelPointToCadPoint(16, 16);
+            CadPoint rpc = dc.pixelPointToCadPoint(16 + 40, 16 + 40);
+            CadPoint rp1 = dc.pixelPointToCadPoint(16 + 80, 16 + 80);
 
             Drawer.drawRect(dc, dc.Tools.AxesPen, rp0, rp1);
 
@@ -115,6 +115,7 @@ namespace Plotter
             CadPoint p1;
 
             CadPoint np = default(CadPoint);
+            CadPoint pp = default(CadPoint);
 
             // X軸
             p0 = rp0;
@@ -125,10 +126,14 @@ namespace Plotter
             p1.y = rpc.y;
             p1.z = rpc.z;
 
-            Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
+            drawLine(dc, dc.Tools.AxesPen, p0, p1);
 
             np = p0.x > p1.x ? p0 : p1;
 
+            pp = dc.pointToPixelPoint(np);
+            if (pp.x >= 16 + 80) pp.x -= 9;
+            if (pp.y >= 16 + 80) pp.y -= 9;
+            dc.graphics.DrawString("x", dc.Tools.SmallFont, dc.Tools.TextBrush, (int)pp.x, (int)pp.y);
 
 
             // Y軸
@@ -140,9 +145,14 @@ namespace Plotter
             p1.x = rpc.x;
             p1.z = rpc.z;
 
-            Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
+            drawLine(dc, dc.Tools.AxesPen, p0, p1);
 
             np = p0.y > p1.y ? p0 : p1;
+
+            pp = dc.pointToPixelPoint(np);
+            if (pp.x >= 16 + 80) pp.x -= 9;
+            if (pp.y >= 16 + 80) pp.y -= 9;
+            dc.graphics.DrawString("y", dc.Tools.SmallFont, dc.Tools.TextBrush, (int)pp.x, (int)pp.y);
 
 
             // Z軸
@@ -154,10 +164,14 @@ namespace Plotter
             p1.x = rpc.x;
             p1.y = rpc.y;
 
-            Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
+            drawLine(dc, dc.Tools.AxesPen, p0, p1);
 
             np = p0.z > p1.z ? p0 : p1;
 
+            pp = dc.pointToPixelPoint(np);
+            if (pp.x >= 16 + 80) pp.x -= 9;
+            if (pp.y >= 16 + 80) pp.y -= 9;
+            dc.graphics.DrawString("z", dc.Tools.SmallFont, dc.Tools.TextBrush, (int)pp.x, (int)pp.y);
         }
 
         public static void drawPageFrame(DrawContext dc)
@@ -208,14 +222,14 @@ namespace Plotter
         #region "Draw marker"
         public static void drawHighlitePoint(DrawContext dc, CadPoint pt)
         {
-            CadPixelPoint pp = dc.pointToPixelPoint(pt);
+            CadPoint pp = dc.pointToPixelPoint(pt);
 
             dc.graphics.DrawEllipse(dc.Tools.PointHighlitePen, (int)pp.x - 6, (int)pp.y - 6, 12, 12);
         }
 
         public static void drawSelectedPoint(DrawContext dc, CadPoint pt)
         {
-            CadPixelPoint pp = dc.pointToPixelPoint(pt);
+            CadPoint pp = dc.pointToPixelPoint(pt);
 
             int size = 3;
 
@@ -238,7 +252,7 @@ namespace Plotter
 
         public static void drawCursor(DrawContext dc, Pen pen, CadPoint pt)
         {
-            CadPixelPoint pp = dc.pointToPixelPoint(pt);
+            CadPoint pp = dc.pointToPixelPoint(pt);
 
             int size = 16;
 
@@ -250,11 +264,18 @@ namespace Plotter
         #region "draw primitive"
         public static void drawLine(DrawContext dc, Pen pen, CadPoint a, CadPoint b)
         {
-            CadPixelPoint pa = dc.pointToPixelPoint(a);
-            CadPixelPoint pb = dc.pointToPixelPoint(b);
+            CadPoint pa = dc.pointToPixelPoint(a);
+            CadPoint pb = dc.pointToPixelPoint(b);
 
             dc.graphics.DrawLine(pen, (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
         }
+
+        public static void drawText(DrawContext dc, Font fnt, Brush brush, CadPoint a, string s)
+        {
+            CadPoint pa = dc.pointToPixelPoint(a);
+            dc.graphics.DrawString(s, fnt, brush, (int)pa.x, (int)pa.y);
+        }
+
 
         /*
         public static void drawLine(DrawContext dc, Pen pen, double x0, double y0, double x1, double y1)
@@ -274,8 +295,8 @@ namespace Plotter
 
         public static void drawRect(DrawContext dc, Pen pen, CadPoint p0, CadPoint p1)
         {
-            CadPixelPoint pp0 = dc.pointToPixelPoint(p0);
-            CadPixelPoint pp1 = dc.pointToPixelPoint(p1);
+            CadPoint pp0 = dc.pointToPixelPoint(p0);
+            CadPoint pp1 = dc.pointToPixelPoint(p1);
 
             drawRect(dc.graphics, pen, (int)pp0.x, (int)pp0.y, (int)pp1.x, (int)pp1.y);
         }
@@ -451,7 +472,7 @@ namespace Plotter
         {
             double r = CadUtil.segNorm(cp, p1);
 
-            CadPixelPoint cpp =  dc.pointToPixelPoint(cp);
+            CadPoint cpp =  dc.pointToPixelPoint(cp);
 
             r = dc.milliToPixels(r);
 
@@ -461,7 +482,7 @@ namespace Plotter
 
         public static void drawCross(DrawContext dc, Pen pen, CadPoint p, int size)
         {
-            CadPixelPoint a = dc.pointToPixelPoint(p);
+            CadPoint a = dc.pointToPixelPoint(p);
 
             dc.graphics.DrawLine(pen, (int)a.x - size, (int)a.y + 0, (int)a.x + size, (int)a.y + 0);
             dc.graphics.DrawLine(pen, (int)a.x + 0, (int)a.y + size, (int)a.x + 0, (int)a.y - size);

@@ -36,13 +36,13 @@ namespace Plotter
                 }
                 else
                 {
-                    CadPixelPoint pp0 = dc.pointToPixelPoint(fig.PointList[0]);
-                    CadPixelPoint pp2 = dc.pointToPixelPoint(p);
+                    CadPoint pp0 = dc.pointToPixelPoint(fig.PointList[0]);
+                    CadPoint pp2 = dc.pointToPixelPoint(p);
 
-                    CadPixelPoint pp1 = pp0;
+                    CadPoint pp1 = pp0;
                     pp1.x = pp2.x;
 
-                    CadPixelPoint pp3 = pp0;
+                    CadPoint pp3 = pp0;
                     pp3.y = pp2.y;
 
                     fig.mPointList.Add(dc.pixelPointToCadPoint(pp1));

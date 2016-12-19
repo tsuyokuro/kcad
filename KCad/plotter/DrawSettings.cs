@@ -29,6 +29,10 @@ namespace Plotter
 
         public Pen RelativePointPen;
 
+        public Brush TextBrush;
+
+        public Font SmallFont;
+
         class Original : IDisposable
         {
             public Color DarkBgColor = Color.FromArgb(20, 20, 30);
@@ -39,9 +43,12 @@ namespace Plotter
             public Pen DarkAxisPen = new Pen(Color.FromArgb(60,60,92), 0);
             public Pen DarkFramePen = new Pen(Color.FromArgb(92, 92, 92), 0);
 
+            public Font SmallFont;
+
             public Original()
             {
                 DarkBgBrush = new SolidBrush(DarkBgColor);
+                SmallFont = new Font("MS UI Gothic", 9);
             }
 
             public void Dispose()
@@ -51,6 +58,8 @@ namespace Plotter
 
                 DarkAxisPen.Dispose();
                 DarkFramePen.Dispose();
+
+                SmallFont.Dispose();
             }
         }
 
@@ -90,6 +99,9 @@ namespace Plotter
             AxesPen = null;
             PageFramePen = null;
             RelativePointPen = null;
+
+            TextBrush = Brushes.Black;
+            SmallFont = org.SmallFont;
         }
 
         public void darkSet()
@@ -113,6 +125,9 @@ namespace Plotter
             PageFramePen = org.DarkFramePen;
 
             RelativePointPen = Pens.CornflowerBlue;
+
+            TextBrush = Brushes.White;
+            SmallFont = org.SmallFont;
         }
 
         public void whiteSet()
@@ -136,6 +151,9 @@ namespace Plotter
             PageFramePen = Pens.Gray;
 
             RelativePointPen = Pens.CornflowerBlue;
+
+            TextBrush = Brushes.Black;
+            SmallFont = org.SmallFont;
         }
     }
 }

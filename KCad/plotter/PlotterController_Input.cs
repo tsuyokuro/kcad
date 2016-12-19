@@ -18,10 +18,10 @@ namespace Plotter
 
         private CadPoint MoveOrigin = default(CadPoint);
 
-        private CadPixelPoint StoreViewOrg = default(CadPixelPoint);
+        private CadPoint StoreViewOrg = default(CadPoint);
 
         private CadPoint mSnapCursorPos;
-        private CadPixelPoint mMoveOrgPixelPoint;
+        private CadPoint mMoveOrgPixelPoint;
 
         private CadPoint? mFreeDownPoint = null;
 
@@ -262,10 +262,12 @@ namespace Plotter
 
         private void MDrag(CadMouse pointer, DrawContext dc, int x, int y)
         {
-            CadPixelPoint cp = new CadPixelPoint(x, y);
-            CadPixelPoint d = cp - pointer.DownPoint;
+            CadPoint cp = default(CadPoint);
+            cp.set(x, y, 0);
 
-            CadPixelPoint op = StoreViewOrg + d;
+            CadPoint d = cp - pointer.DownPoint;
+
+            CadPoint op = StoreViewOrg + d;
 
             setOrigin(dc, (int)op.x, (int)op.y);
         }

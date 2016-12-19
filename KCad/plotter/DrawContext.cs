@@ -78,7 +78,7 @@ namespace Plotter
         private double YDir = -1;
         //private double ZDir = 1;
 
-        private CadPixelPoint mViewOrg;
+        private CadPoint mViewOrg;
 
         Matrix33 mMatrixTo3D;
 
@@ -111,7 +111,7 @@ namespace Plotter
             }
         }
 
-        public CadPixelPoint ViewOrg
+        public CadPoint ViewOrg
         {
             set { mViewOrg = value; }
             get { return mViewOrg; }
@@ -209,11 +209,11 @@ namespace Plotter
             UnitPerMilli = unit / MILLI_PER_INCH;
         }
 
-        public CadPixelPoint pointToPixelPoint(CadPoint pt)
+        public CadPoint pointToPixelPoint(CadPoint pt)
         {
             pt = mMatrixTo2D * pt;
 
-            CadPixelPoint p;
+            CadPoint p = default(CadPoint);
             p.x = pt.x * UnitPerMilli;
             p.y = pt.y * UnitPerMilli * YDir;
             p.z = pt.z * UnitPerMilli;
@@ -222,7 +222,7 @@ namespace Plotter
             return p;
         }
 
-        public CadPoint pixelPointToCadPoint(CadPixelPoint pt)
+        public CadPoint pixelPointToCadPoint(CadPoint pt)
         {
             pt -= mViewOrg;
 
@@ -236,7 +236,7 @@ namespace Plotter
             return p;
         }
 
-        public CadPoint pixelPointToCadPoint(double x, double y, double z)
+        public CadPoint pixelPointToCadPoint(double x, double y, double z = 0)
         {
             x -= mViewOrg.x;
             y -= mViewOrg.y;
@@ -254,8 +254,15 @@ namespace Plotter
         public CadRect getViewRect()
         {
             CadRect rect = default(CadRect);
-            rect.p0 = pixelPointToCadPoint(new CadPixelPoint(0,0));
-            rect.p1 = pixelPointToCadPoint(new CadPixelPoint(ViewWidth, ViewHeight));
+
+            CadPoint p0 = default(CadPoint);
+            CadPoint p1 = default(CadPoint);
+
+            p0.set(0, 0, 0);
+            p1.set(ViewWidth, ViewHeight, 0);
+
+            rect.p0 = pixelPointToCadPoint(p0);
+            rect.p1 = pixelPointToCadPoint(p1);
 
             return rect;
         }

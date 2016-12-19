@@ -193,7 +193,7 @@ namespace Plotter
         // ベクトルのノルム(長さ)を求める
         public double norm()
         {
-            return System.Math.Sqrt((x*x) + (y*y) + (z*z));
+            return System.Math.Sqrt((x * x) + (y * y) + (z * z));
         }
 
         // 単位ベクトルを求める
@@ -211,6 +211,13 @@ namespace Plotter
             ret.z = z * f;
 
             return ret;
+        }
+
+        public static CadPoint GetNew(double x, double y, double z=0)
+        {
+            CadPoint p = default(CadPoint);
+            p.set(x, y, z);
+            return p;
         }
 
         public void dump(DebugOut dout)
@@ -394,7 +401,7 @@ namespace Plotter
         }
     }
 
-
+    /*
     public struct CadPixelPoint
     {
         public double x;
@@ -407,15 +414,6 @@ namespace Plotter
             this.y = y;
             this.z = z;
         }
-
-        /*
-        public CadPixelPoint(int x, int y, int z=0)
-        {
-            this.x = (double)x;
-            this.y = (double)y;
-            this.z = (double)z;
-        }
-        */
 
         public void set(double x, double y, double z=0)
         {
@@ -499,6 +497,7 @@ namespace Plotter
             dout.println("}");
         }
     }
+    */
 
     class CadPointUtil
     {
