@@ -104,6 +104,7 @@ namespace Plotter
 
         private void LDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
+            CadPoint pixp = CadPoint.GetNew(x, y, 0);
             CadPoint cp = dc.pixelPointToCadPoint(x,y,0);
 
             mOffset = mSnapCursorPos - cp;
@@ -117,9 +118,9 @@ namespace Plotter
 
                     mPointSearcher.clean();
                     mPointSearcher.setRangePixel(dc, SnapRange);
-                    mPointSearcher.searchAllLayer(cp, mDB);
+                    mPointSearcher.searchAllLayer(dc, pixp, mDB);
 
-                    mPointSearcher.checkRelativePoints(mDB);
+                    mPointSearcher.checkRelativePoints(dc, mDB);
 
                     MarkPoint mp = mPointSearcher.getXYMatch();
 
@@ -169,7 +170,7 @@ namespace Plotter
                     {
                         mSegSearcher.clean();
                         mSegSearcher.setRangePixel(dc, SnapRange);
-                        mSegSearcher.searchAllLayer(cp, mDB);
+                        mSegSearcher.searchAllLayer(dc, pixp, mDB);
                         MarkSeg mseg = mSegSearcher.getMatch();
 
                         CadLayer layer = mDB.getLayer(mseg.LayerID);
@@ -346,6 +347,7 @@ namespace Plotter
                 startEdit();
             }
 
+            CadPoint pixp = CadPoint.GetNew(x, y, 0);
             CadPoint cp = dc.pixelPointToCadPoint((double)x, (double)y, mMoveOrgPixelPoint.z);
 
 
@@ -359,13 +361,13 @@ namespace Plotter
 
             mPointSearcher.clean();
             mPointSearcher.setRangePixel(dc, SnapRange);
-            mPointSearcher.setTargetPoint(cp);
+            mPointSearcher.setTargetPoint(pixp);
 
             if (CreatingFigure != null)
             {
                 if (CreatingFigure.PointCount == 1)
                 {
-                    mPointSearcher.check(CreatingFigure.getPointAt(0));
+                    mPointSearcher.check(dc, CreatingFigure.getPointAt(0));
                 }
             }
 
@@ -383,10 +385,10 @@ namespace Plotter
             }
             */
 
-            mPointSearcher.checkRelativePoints(mDB);
+            mPointSearcher.checkRelativePoints(dc, mDB);
 
             // Search point
-            mPointSearcher.searchAllLayer(mDB);
+            mPointSearcher.searchAllLayer(dc, mDB);
 
             MarkPoint mx = mPointSearcher.getXMatch();
             MarkPoint my = mPointSearcher.getYMatch();
@@ -410,7 +412,7 @@ namespace Plotter
             // Search segment
             mSegSearcher.clean();
             mSegSearcher.setRangePixel(dc, SnapRange);
-            mSegSearcher.searchAllLayer(cp, mDB);
+            mSegSearcher.searchAllLayer(dc, pixp, mDB);
 
             MarkSeg seg = mSegSearcher.getMatch();
 

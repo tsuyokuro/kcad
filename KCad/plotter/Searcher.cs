@@ -44,7 +44,7 @@ namespace Plotter
 
         public CadPoint Point;
 
-        public UInt32 Flag;
+        public uint Flag;
 
         public double DistX;
         public double DistY;
@@ -162,8 +162,8 @@ namespace Plotter
 
         public void setRangePixel(DrawContext dc, int pixel)
         {
-            double d = dc.pixelsToMilli(pixel);
-            mRange = d;
+            //double d = dc.pixelsToMilli(pixel);
+            mRange = pixel;
         }
 
         public void clean()
@@ -198,17 +198,17 @@ namespace Plotter
             return xymatch;
         }
 
-        public void searchAllLayer(CadPoint p, CadObjectDB db)
+        public void searchAllLayer(DrawContext dc, CadPoint p, CadObjectDB db)
         {
             TargetPoint = p;
-            searchAllLayer(db);
+            searchAllLayer(dc, db);
         }
 
-        public void searchAllLayer(CadObjectDB db)
+        public void searchAllLayer(DrawContext dc, CadObjectDB db)
         {
             if (db.CurrentLayer.Visible)
             {
-                search(db, db.CurrentLayer);
+                search(dc, db, db.CurrentLayer);
             }
 
             foreach (CadLayer layer in db.LayerList)
@@ -223,17 +223,17 @@ namespace Plotter
                     continue;
                 }
 
-                search(db, layer);
+                search(dc, db, layer);
             }
         }
 
-        public void search(CadPoint p, CadObjectDB db, CadLayer layer)
+        public void search(DrawContext dc, CadPoint p, CadObjectDB db, CadLayer layer)
         {
             TargetPoint = p;
-            search(db, layer);
+            search(dc, db, layer);
         }
 
-        public void search(CadObjectDB db, CadLayer layer)
+        public void search(DrawContext dc, CadObjectDB db, CadLayer layer)
         {
             if (layer == null)
             {
@@ -247,16 +247,16 @@ namespace Plotter
 
             foreach (CadFigure fig in rev)
             {
-                checkFig(layer, fig);
+                checkFig(dc, layer, fig);
             }
         }
 
-        public void check(CadPoint pt)
+        public void check(DrawContext dc, CadPoint pt)
         {
-            checkFigPoint(pt, 0, null, 0, MarkPoint.Types.IDEPEND_POINT);
+            checkFigPoint(dc, pt, 0, null, 0, MarkPoint.Types.IDEPEND_POINT);
         }
 
-        private void checkFig(CadLayer layer, CadFigure fig)
+        private void checkFig(DrawContext dc, CadLayer layer, CadFigure fig)
         {
             IReadOnlyList<CadPoint> pointList = fig.PointList;
 
@@ -270,39 +270,41 @@ namespace Plotter
             foreach (CadPoint pt in pointList)
             {
                 idx++;
-                checkFigPoint(pt, layer.ID, fig, idx, MarkPoint.Types.POINT);
+                checkFigPoint(dc, pt, layer.ID, fig, idx, MarkPoint.Types.POINT);
             }
         }
 
-        public void checkRelativePoints(CadObjectDB db)
+        public void checkRelativePoints(DrawContext dc, CadObjectDB db)
         {
             foreach (CadLayer layer in db.LayerList)
             {
-                checkRelativePoints(layer);
+                checkRelativePoints(dc, layer);
             }
         }
 
-        public void checkRelativePoints(CadLayer layer)
+        public void checkRelativePoints(DrawContext dc, CadLayer layer)
         {
             List<CadRelativePoint> list = layer.RelPointList;
 
             int idx = 0;
             foreach (CadRelativePoint rp in list)
             {
-                checkFigPoint(rp.point, layer.ID, null, idx, MarkPoint.Types.RELATIVE_POINT);
+                checkFigPoint(dc, rp.point, layer.ID, null, idx, MarkPoint.Types.RELATIVE_POINT);
                 idx++;
             }
         }
 
-        private void checkFigPoint(CadPoint pt, uint layerID, CadFigure fig, int ptIdx, MarkPoint.Types type)
+        private void checkFigPoint(DrawContext dc, CadPoint pt, uint layerID, CadFigure fig, int ptIdx, MarkPoint.Types type)
         {
             if (fig != null && isIgnore(fig.ID, ptIdx))
             {
                 return;
             }
 
-            double dx = Math.Abs(pt.x - TargetPoint.x);
-            double dy = Math.Abs(pt.y - TargetPoint.y);
+            CadPoint ppt = dc.pointToPixelPoint(pt);
+
+            double dx = Math.Abs(ppt.x - TargetPoint.x);
+            double dy = Math.Abs(ppt.y - TargetPoint.y);
 
             if (dx <= mRange)
             {
@@ -384,8 +386,8 @@ namespace Plotter
 
         public void setRangePixel(DrawContext dc, int pixel)
         {
-            double d = dc.pixelsToMilli(pixel);
-            mRange = d;
+            //double d = dc.pixelsToMilli(pixel);
+            mRange = pixel;
         }
 
         public void clean()
@@ -413,15 +415,15 @@ namespace Plotter
             return seg;
         }
 
-        public void searchAllLayer(CadPoint p, CadObjectDB db)
+        public void searchAllLayer(DrawContext dc, CadPoint p, CadObjectDB db)
         {
             TargetPoint = p;
-            searchAllLayer(db);
+            searchAllLayer(dc, db);
         }
 
-        public void searchAllLayer(CadObjectDB db)
+        public void searchAllLayer(DrawContext dc, CadObjectDB db)
         {
-            search(db, db.CurrentLayer);
+            search(dc, db, db.CurrentLayer);
 
             foreach (CadLayer layer in db.LayerList)
             {
@@ -430,17 +432,17 @@ namespace Plotter
                     continue;
                 }
 
-                search(db, layer);
+                search(dc, db, layer);
             }
         }
 
-        public void search(CadPoint p, CadObjectDB db, CadLayer layer)
+        public void search(DrawContext dc, CadPoint p, CadObjectDB db, CadLayer layer)
         {
             TargetPoint = p;
-            search(db, layer);
+            search(dc, db, layer);
         }
 
-        public void search(CadObjectDB db, CadLayer layer)
+        public void search(DrawContext dc, CadObjectDB db, CadLayer layer)
         {
             if (layer == null)
             {
@@ -457,11 +459,11 @@ namespace Plotter
             IEnumerable<CadFigure> list = layer.FigureList;
             foreach (CadFigure fig in list.Reverse())
             {
-                checkFig(layer, fig);
+                checkFig(dc, layer, fig);
             }
         }
 
-        private void checkSeg(uint layerID, CadFigure fig, int idxA, int idxB, CadPoint a, CadPoint b)
+        private void checkSeg(DrawContext dc, uint layerID, CadFigure fig, int idxA, int idxB, CadPoint a, CadPoint b)
         {
             if (fig!=null && isIgnore(fig.ID, idxA))
             {
@@ -473,7 +475,10 @@ namespace Plotter
                 return;
             }
 
-            CrossInfo ret = CadUtil.getPerpCrossSeg(a, b, TargetPoint);
+            CadPoint pa = dc.pointToPixelPoint(a);
+            CadPoint pb = dc.pointToPixelPoint(b);
+
+            CrossInfo ret = CadUtil.getPerpCrossSeg2D(pa, pb, TargetPoint);
 
             if (!ret.isCross)
             {
@@ -492,11 +497,14 @@ namespace Plotter
 
             if (dist < minDist)
             {
+                CadPoint tp = dc.pixelPointToCadPoint(TargetPoint);
+                CrossInfo ret3d = CadUtil.getPerpCrossLine(a, b, tp);
+
                 seg.LayerID = layerID;
                 seg.Figure = fig;
                 seg.PtIndexA = idxA;
                 seg.PtIndexB = idxB;
-                seg.CrossPoint = ret.CrossPoint;
+                seg.CrossPoint = ret3d.CrossPoint;
                 seg.Distance = dist;
 
                 seg.pA = a;
@@ -506,7 +514,7 @@ namespace Plotter
             }
         }
 
-        private void checkCircle(CadLayer layer, CadFigure fig)
+        private void checkCircle(DrawContext dc, CadLayer layer, CadFigure fig)
         {
             if (isIgnore(fig.ID, 0))
             {
@@ -521,8 +529,11 @@ namespace Plotter
             CadPoint c = fig.getPointAt(0);
             CadPoint a = fig.getPointAt(1);
 
-            double r = CadUtil.segNorm2D(a, c);
-            double tr = CadUtil.segNorm2D(TargetPoint, c);
+            CadPoint pc = dc.pointToPixelPoint(c);
+            CadPoint pa = dc.pointToPixelPoint(a);
+
+            double r = CadUtil.segNorm2D(pa, pc);
+            double tr = CadUtil.segNorm2D(TargetPoint, pc);
 
             double dist = Math.Abs(tr - r);
 
@@ -531,14 +542,17 @@ namespace Plotter
                 return;
             }
 
-            CadPoint td = TargetPoint - c;
-
-            td *= (r / tr);
-            td += c;
-
-
             if (dist < minDist)
             {
+                CadPoint tp = dc.pixelPointToCadPoint(TargetPoint);
+                r = CadUtil.segNorm(a, c);
+                tr = CadUtil.segNorm(tp, c);
+
+                CadPoint td = tp - c;
+
+                td *= (r / tr);
+                td += c;
+
                 seg.LayerID = layer.ID;
                 seg.Figure = fig;
                 seg.PtIndexA = 0;
@@ -553,7 +567,7 @@ namespace Plotter
             }
         }
 
-        private void checkSegs(CadLayer layer, CadFigure fig)
+        private void checkSegs(DrawContext dc, CadLayer layer, CadFigure fig)
         {
             IReadOnlyList<CadPoint> pl = fig.PointList;
 
@@ -597,7 +611,7 @@ namespace Plotter
                     continue;
                 }
 
-                checkSeg(layer.ID, fig, ia, ib, a, b);
+                checkSeg(dc, layer.ID, fig, ia, ib, a, b);
 
                 a = b;
 
@@ -609,21 +623,21 @@ namespace Plotter
             if (fig.Closed)
             {
                 b = pl[0];
-                checkSeg(layer.ID, fig, pl.Count - 1, 0, a, b);
+                checkSeg(dc, layer.ID, fig, pl.Count - 1, 0, a, b);
             }
         }
 
-        private void checkFig(CadLayer layer, CadFigure fig)
+        private void checkFig(DrawContext dc, CadLayer layer, CadFigure fig)
         {
             switch (fig.Type)
             {
                 case CadFigure.Types.LINE:
                 case CadFigure.Types.POLY_LINES:
                 case CadFigure.Types.RECT:
-                    checkSegs(layer, fig);
+                    checkSegs(dc, layer, fig);
                     break;
                 case CadFigure.Types.CIRCLE:
-                    checkCircle(layer, fig);
+                    checkCircle(dc, layer, fig);
                     break;
                 default:
                     break;

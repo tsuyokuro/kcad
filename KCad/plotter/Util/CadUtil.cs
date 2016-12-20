@@ -374,7 +374,7 @@ namespace Plotter
 
 
         // 点pから直線abに向かう垂線との交点を求める
-        public static CrossInfo getNormalCrossLine(CadPoint a, CadPoint b, CadPoint p)
+        public static CrossInfo getPerpCrossLine(CadPoint a, CadPoint b, CadPoint p)
         {
             CrossInfo ret = default(CrossInfo);
 
@@ -395,7 +395,7 @@ namespace Plotter
         }
 
         // 点pから直線abに向かう垂線との交点を求める2D
-        public static CrossInfo getNormCrossLine2D(CadPoint a, CadPoint b, CadPoint p)
+        public static CrossInfo getPerpCrossLine2D(CadPoint a, CadPoint b, CadPoint p)
         {
             CrossInfo ret = default(CrossInfo);
 
