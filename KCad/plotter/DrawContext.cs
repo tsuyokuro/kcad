@@ -158,13 +158,28 @@ namespace Plotter
                 -1, 0, 0
             );
 
+        private Matrix33 MatrixXY_XQ = new Matrix33
+            (
+                1, 0, 0,
+                0, Cos(PI / 4), -Sin(PI / 4),
+                0, Sin(PI / 4), Cos(PI / 4)
+            );
+
+        private Matrix33 MatrixXY_YQ = new Matrix33
+            (
+                Cos(PI / 4), 0, Sin(PI / 4),
+                0, 1, 0,
+                -Sin(PI / 4), 0, Cos(PI / 4)
+            );
+
+
         public DrawContext()
         {
             setDotPerMilli(4); // 1mm = 4dot
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
-            MatrixTo3D = MatrixZY;
+            MatrixTo3D = MatrixXY;
         }
 
         public void startDraw(Bitmap image)
