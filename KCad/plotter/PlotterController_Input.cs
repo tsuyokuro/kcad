@@ -16,12 +16,14 @@ namespace Plotter
 
         private SegSearcher mSegSearcher = new SegSearcher();
 
-        private CadPoint MoveOrigin = default(CadPoint);
 
         private CadPoint StoreViewOrg = default(CadPoint);
 
-        private CadPoint mSnapCursorPos;
-        private CadPoint mMoveOrgPixelPoint;
+        private CadPoint mSnapPoint;
+
+        private CadPoint mSnapScrnPoint;
+
+        private CadPoint mMoveOrgScrnPoint;
 
         private CadPoint? mFreeDownPoint = null;
 
@@ -107,14 +109,14 @@ namespace Plotter
             CadPoint pixp = CadPoint.GetNew(x, y, 0);
             CadPoint cp = dc.pixelPointToCadPoint(x,y,0);
 
-            mOffset = mSnapCursorPos - cp;
-
             switch (State)
             {
                 case States.SELECT:
                     draw(dc);
 
                     //double d = dc.pixelDeltaToCadDelta(SnapRange);
+
+                    mObjDownPoint = null;
 
                     mPointSearcher.clean();
                     mPointSearcher.setRangePixel(dc, SnapRange);
@@ -126,14 +128,11 @@ namespace Plotter
 
                     if (mp.FigureID != 0 && mp.Type == MarkPoint.Types.POINT)
                     {
-                        MoveOrigin = mp.Point;
+                        mObjDownPoint = mp.Point;
 
-                        mSnapCursorPos = MoveOrigin;
-                        mObjDownPoint = mSnapCursorPos;
+                        mMoveOrgScrnPoint = pixp;
 
-                        mMoveOrgPixelPoint = dc.pointToPixelPoint(MoveOrigin);
-
-                        //mMoveOrgPixelPoint.dump(new DebugOut());
+                        //mMoveOrgScrnPoint.dump(DebugOut.Out);
 
                         State = States.START_DRAGING_POINTS;
                         CadFigure fig = mDB.getFigure(mp.FigureID);
@@ -177,7 +176,7 @@ namespace Plotter
 
                         if (mseg.FigureID != 0 && !layer.Locked)
                         {
-                            mObjDownPoint = mSnapCursorPos;
+                            mObjDownPoint = mseg.CrossPoint;
 
                             CadFigure fig = mDB.getFigure(mseg.FigureID);
 
@@ -197,7 +196,7 @@ namespace Plotter
 
                             mSelectedSegs.Add(mseg);
 
-                            MoveOrigin = mseg.CrossPoint;
+                            mMoveOrgScrnPoint = pixp;
 
                             State = States.START_DRAGING_POINTS;
 
@@ -215,31 +214,45 @@ namespace Plotter
                         }
                     }
 
-                    mFreeDownPoint = mSnapCursorPos;
+                    if (mObjDownPoint == null)
+                    {
+                        mFreeDownPoint = cp;
+                    }
+                    else
+                    {
+                        mFreeDownPoint = mObjDownPoint;
+                    }
 
                     drawSelectedItems(dc);
 
                     return;
 
                 case States.START_CREATE:
-                    mFreeDownPoint = mSnapCursorPos;
+                    {
+                        mFreeDownPoint = mSnapPoint;
 
-                    CreatingFigure = mDB.newFigure(CreatingFigType);
-                    State = States.CREATING;
+                        CreatingFigure = mDB.newFigure(CreatingFigType);
+                        State = States.CREATING;
 
-                    CreatingFigure.startCreate();
+                        CreatingFigure.startCreate();
 
-                    setPointInCreating(dc, mSnapCursorPos);
-                    draw(dc);
 
+                        CadPoint p = dc.pixelPointToCadPoint(mSnapScrnPoint);
+
+                        setPointInCreating(dc, p);
+                        draw(dc);
+                    }
                     break;
 
                 case States.CREATING:
-                    mFreeDownPoint = mSnapCursorPos;
+                    {
+                        mFreeDownPoint = mSnapPoint;
 
-                    setPointInCreating(dc, mSnapCursorPos);
-                    draw(dc);
+                        CadPoint p = dc.pixelPointToCadPoint(mSnapScrnPoint);
 
+                        setPointInCreating(dc, p);
+                        draw(dc);
+                    }
                     break;
 
                 default:
@@ -348,15 +361,12 @@ namespace Plotter
             }
 
             CadPoint pixp = CadPoint.GetNew(x, y, 0);
-            CadPoint cp = dc.pixelPointToCadPoint((double)x, (double)y, mMoveOrgPixelPoint.z);
+            CadPoint cp = dc.pixelPointToCadPoint(pixp);
 
-
-            mSnapCursorPos = cp; // + mOffset;
-
-            mRawPos = cp;
+            mSnapScrnPoint = pixp;
+            mSnapPoint = cp;
 
             clear(dc);
-
             draw(dc);
 
             mPointSearcher.clean();
@@ -371,20 +381,6 @@ namespace Plotter
                 }
             }
 
-            /*
-            if (mFreeDownPoint != null)
-            {
-                mPointSearcher.check(mFreeDownPoint.Value);
-            }
-            */
-
-            /*
-            if (mObjDownPoint != null)
-            {
-                mPointSearcher.check(mObjDownPoint.Value);
-            }
-            */
-
             mPointSearcher.checkRelativePoints(dc, mDB);
 
             // Search point
@@ -398,14 +394,24 @@ namespace Plotter
             if ((mx.Flag & MarkPoint.X_MATCH) != 0)
             {
                 Drawer.drawHighlitePoint(dc, mx.Point);
-                mSnapCursorPos.x = mx.Point.x;
+
+                mSnapPoint.x = mx.Point.x;
+
+                mSnapScrnPoint = dc.pointToPixelPoint(mSnapPoint);
+                mSnapScrnPoint.z = 0;
+
                 dist = Math.Min(mx.DistX, dist);
             }
 
             if ((my.Flag & MarkPoint.Y_MATCH) != 0)
             {
                 Drawer.drawHighlitePoint(dc, my.Point);
-                mSnapCursorPos.y = my.Point.y;
+
+                mSnapPoint.y = my.Point.y;
+
+                mSnapScrnPoint = dc.pointToPixelPoint(mSnapPoint);
+                mSnapScrnPoint.z = 0;
+
                 dist = Math.Min(my.DistY, dist);
             }
 
@@ -423,7 +429,10 @@ namespace Plotter
                     CadFigure fig = mDB.getFigure(seg.FigureID);
                     fig.drawSeg(dc, dc.Tools.MatchSegPen, seg.PtIndexA, seg.PtIndexB);
 
-                    mSnapCursorPos = seg.CrossPoint;
+                    mSnapPoint = seg.CrossPoint;
+
+                    mSnapScrnPoint = dc.pointToPixelPoint(mSnapPoint);
+                    mSnapScrnPoint.z = 0;
                 }
             }
 
@@ -431,7 +440,10 @@ namespace Plotter
             {
                 case States.DRAGING_POINTS:
                     {
-                        CadPoint delta = mSnapCursorPos - MoveOrigin;
+                        CadPoint p0 = dc.pixelPointToCadPoint(mMoveOrgScrnPoint);
+                        CadPoint p1 = dc.pixelPointToCadPoint(mSnapScrnPoint);
+
+                        CadPoint delta = p1 - p0;
 
                         //DebugOut o = new DebugOut();
                         //mSnapCursorPos.dump(o);
@@ -445,7 +457,7 @@ namespace Plotter
                     {
                         if (CreatingFigure != null)
                         {
-                            CreatingFigure.drawTemp(dc, mSnapCursorPos, dc.Tools.TempFigurePen);
+                            CreatingFigure.drawTemp(dc, mSnapPoint, dc.Tools.TempFigurePen);
                         }
                         break;
                     }

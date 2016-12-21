@@ -305,7 +305,7 @@ namespace Plotter
         {
             drawSelectedItems(dc);
 
-            Drawer.drawCursor(dc, mSnapCursorPos);
+            Drawer.drawCursorScrn(dc, mSnapScrnPoint);
 
             if (mFreeDownPoint != null)
             {

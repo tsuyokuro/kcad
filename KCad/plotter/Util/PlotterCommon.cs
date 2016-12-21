@@ -24,6 +24,17 @@ namespace Plotter
 
     public class DebugOut
     {
+        public static DebugOut inst = new DebugOut();
+
+        public static DebugOut Out {
+            get
+            {
+                inst.reset();
+                return inst;
+            }
+        }
+
+
         protected int mIndent = 0;
         protected int IndentUnit = 2;
 
@@ -41,6 +52,13 @@ namespace Plotter
             {
                 return mIndent;
             }
+        }
+
+        public void reset()
+        {
+            mIndent = 0;
+            IndentUnit = 2;
+            space = "";
         }
 
         public virtual void printIndent()

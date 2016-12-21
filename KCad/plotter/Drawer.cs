@@ -259,6 +259,20 @@ namespace Plotter
             dc.graphics.DrawLine(pen, (int)pp.x - size, (int)pp.y, (int)pp.x + size, (int)pp.y);
             dc.graphics.DrawLine(pen, (int)pp.x, (int)pp.y - size, (int)pp.x, (int)pp.y + size);
         }
+
+        public static void drawCursorScrn(DrawContext dc, CadPoint pt)
+        {
+            drawCursorScrn(dc, dc.Tools.CursorPen, pt);
+        }
+
+
+        public static void drawCursorScrn(DrawContext dc, Pen pen, CadPoint pp)
+        {
+            int size = 16;
+
+            dc.graphics.DrawLine(pen, (int)pp.x - size, (int)pp.y, (int)pp.x + size, (int)pp.y);
+            dc.graphics.DrawLine(pen, (int)pp.x, (int)pp.y - size, (int)pp.x, (int)pp.y + size);
+        }
         #endregion
 
         #region "draw primitive"
