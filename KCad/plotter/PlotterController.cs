@@ -307,11 +307,8 @@ namespace Plotter
 
             Drawer.drawCursorScrn(dc, mSnapScrnPoint);
 
-            if (mFreeDownPoint != null)
-            {
-                Drawer.drawLastPointMarker(
-                    dc, dc.Tools.LastPointMarkerPen1, mFreeDownPoint.Value);
-            }
+            Drawer.drawLastPointMarker(
+                dc, dc.Tools.LastPointMarkerPen1, mFreeDownPoint);
 
             if (mObjDownPoint != null)
             {
@@ -731,10 +728,7 @@ namespace Plotter
             {
                 CadPoint pp = default(CadPoint);
 
-                if (mFreeDownPoint.HasValue)
-                {
-                    pp = mFreeDownPoint.Value;
-                }
+                pp = mFreeDownPoint;
 
                 Log.d("paste");
                 List<CadFigure> list = (List<CadFigure>)Clipboard.GetData("List.CadFiguer");

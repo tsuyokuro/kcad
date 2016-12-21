@@ -40,7 +40,7 @@ namespace Plotter
 
             CadFigure fig = si.Figure;
 
-            CadPoint pt = mFreeDownPoint.Value;
+            CadPoint pt = mFreeDownPoint;
 
             DebugOut dout = new DebugOut();
 
@@ -94,7 +94,7 @@ namespace Plotter
             CadPoint a = fig.getPointAt(seg.PtIndexA);
             CadPoint b = fig.getPointAt(seg.PtIndexB);
 
-            CadPoint pt = mFreeDownPoint.Value;
+            CadPoint pt = mFreeDownPoint;
 
             CrossInfo ret = CadUtil.getPerpCrossSeg2D(a, b, pt);
 

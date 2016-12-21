@@ -128,28 +128,21 @@ namespace Plotter
 
                 CadFigure fig = mDB.newFigure(CadFigure.Types.RECT);
 
-                if (mFreeDownPoint != null)
-                {
-                    CadPoint p0 = mFreeDownPoint.Value;
-                    CadPoint p1 = p0;
+                CadPoint p0 = mFreeDownPoint;
+                CadPoint p1 = p0;
 
-                    p1.x += w;
-                    p1.y += h;
+                p1.x += w;
+                p1.y += h;
 
-                    fig.addPoint(p0);
-                    fig.addPoint(p1);
-                    fig.endCreate();
+                fig.addPoint(p0);
+                fig.addPoint(p1);
+                fig.endCreate();
 
-                    CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
-                    mHistoryManager.foward(ope);
-                    CurrentLayer.addFigure(fig);
+                CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
+                mHistoryManager.foward(ope);
+                CurrentLayer.addFigure(fig);
 
-                    stack.push(0);
-                }
-                else
-                {
-                    stack.push(1);
-                }
+                stack.push(0);
             }
             else if (argCount == 4)
             {

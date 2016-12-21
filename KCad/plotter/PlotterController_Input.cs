@@ -25,7 +25,7 @@ namespace Plotter
 
         private CadPoint mMoveOrgScrnPoint;
 
-        private CadPoint? mFreeDownPoint = null;
+        private CadPoint mFreeDownPoint = default(CadPoint);
 
         private CadPoint? mObjDownPoint = null;
 
@@ -220,7 +220,7 @@ namespace Plotter
                     }
                     else
                     {
-                        mFreeDownPoint = mObjDownPoint;
+                        mFreeDownPoint = mObjDownPoint.Value;
                     }
 
                     drawSelectedItems(dc);
