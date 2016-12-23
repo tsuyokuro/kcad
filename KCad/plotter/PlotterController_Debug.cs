@@ -259,7 +259,16 @@ namespace Plotter
 
         private void test(DrawContext dc)
         {
-    
+            CadPoint p = CadPoint.GetNew(12, 34, 0);
+
+            CadPoint pp = dc.pixelPointToCadPoint(p);
+
+            CadPoint p0 = dc.pointToPixelPoint(pp);
+
+            dc.ViewOrg.dump(DebugOut.Out);
+            p.dump(DebugOut.Out);
+            pp.dump(DebugOut.Out);
+            p0.dump(DebugOut.Out);
         }
 
         public void debugCommand(DrawContext dc, string s)

@@ -55,6 +55,26 @@ namespace Plotter
             }
         }
 
+        public static void drawViewRect(DrawContext dc, double s)
+        {
+            CadRect vr = dc.getViewRect();
+
+            CadPoint vc = CadPoint.GetNew(dc.ViewWidth, dc.ViewHeight, 0);
+            vc = vc / 2;
+            vc = dc.pixelPointToCadPoint(vc);
+
+            CadPoint d = vr.p1 - vr.p0;
+
+            s = s / 2.0;
+
+            CadPoint nd = d * s;
+
+            CadPoint p0 = vc - nd;
+            CadPoint p1 = vc + nd;
+
+            drawRect(dc, dc.Tools.PageFramePen, p0, p1);
+        }
+
         #region "Draw base"
         public static void drawAxis(DrawContext dc)
         {
@@ -65,33 +85,41 @@ namespace Plotter
 
             CadRect vr = dc.getViewRect();
 
-            CadPoint p0;
-            CadPoint p1;
+            //drawViewRect(dc, 0.5);
+
+            CadPoint p0 = default(CadPoint);
+            CadPoint p1 = default(CadPoint);
 
             // X軸
-            p0 = vr.p0;
-            p0.y = p0.z = 0;
+            p0.x = -100000;
+            p0.y = 0;
+            p0.z = 0;
 
-            p1 = vr.p1;
-            p1.y = p1.z = 0;
+            p1.x = 100000;
+            p1.y = 0;
+            p1.z = 0;
 
             Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
 
             // Y軸
-            p0 = vr.p0;
-            p0.x = p0.z = 0;
+            p0.x = 0;
+            p0.y = -100000;
+            p0.z = 0;
 
-            p1 = vr.p1;
-            p1.x = p1.z = 0;
+            p1.x = 0;
+            p1.y = 100000;
+            p1.z = 0;
 
             Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
 
             // Z軸
-            p0 = vr.p0;
-            p0.x = p0.y = 0;
+            p0.x = 0;
+            p0.y = 0;
+            p0.z = -100000;
 
-            p1 = vr.p1;
-            p1.x = p1.y = 0;
+            p1.x = 0;
+            p1.y = 0;
+            p1.z = 100000;
 
             Drawer.drawLine(dc, dc.Tools.AxesPen, p0, p1);
 
@@ -105,73 +133,65 @@ namespace Plotter
                 return;
             }
 
-            CadPoint rp0 = dc.pixelPointToCadPoint(16, 16);
-            CadPoint rpc = dc.pixelPointToCadPoint(16 + 40, 16 + 40);
-            CadPoint rp1 = dc.pixelPointToCadPoint(16 + 80, 16 + 80);
+            double ltpx = 16;
+            double ltpy = 16;
 
-            Drawer.drawRect(dc, dc.Tools.AxesPen, rp0, rp1);
+            double w = 80;
+
+
+            CadPoint sp0 = CadPoint.GetNew(ltpx, ltpy, 0);
+            CadPoint sp1 = CadPoint.GetNew(ltpx + w, ltpy + w, 0);
+
+            CadPoint spc = CadPoint.GetNew(ltpx + w/2, ltpy + w/2, 0);
+
+            Drawer.drawCircleScrn(dc, dc.Tools.AxesPen, spc, w/2);
+
+            //Drawer.drawRectScrn(dc, dc.Tools.AxesPen, sp0, sp1);
+
+            CadPoint wc = dc.pixelPointToCadPoint(spc);
 
             CadPoint p0;
             CadPoint p1;
 
-            CadPoint np = default(CadPoint);
-            CadPoint pp = default(CadPoint);
+            CadPoint sp = default(CadPoint);
 
             // X軸
-            p0 = rp0;
-            p0.y = rpc.y;
-            p0.z = rpc.z;
+            p0 = wc;
+            p0.x = wc.x - dc.pixelsToMilli(w/2);
 
-            p1 = rp1;
-            p1.y = rpc.y;
-            p1.z = rpc.z;
+            p1 = wc;
+            p1.x = wc.x + dc.pixelsToMilli(w/2);
 
             drawLine(dc, dc.Tools.AxesPen, p0, p1);
 
-            np = p0.x > p1.x ? p0 : p1;
-
-            pp = dc.pointToPixelPoint(np);
-            if (pp.x >= 16 + 80) pp.x -= 9;
-            if (pp.y >= 16 + 80) pp.y -= 9;
-            dc.graphics.DrawString("x", dc.Tools.SmallFont, dc.Tools.TextBrush, (int)pp.x, (int)pp.y);
+            sp = dc.pointToPixelPoint(p1);
+            dc.graphics.DrawString("x", dc.Tools.SmallFont, dc.Tools.TextBrush, (int)sp.x, (int)sp.y);
 
 
             // Y軸
-            p0 = rp0;
-            p0.x = rpc.x;
-            p0.z = rpc.z;
+            p0 = wc;
+            p0.y = wc.y - dc.pixelsToMilli(w/2);
 
-            p1 = rp1;
-            p1.x = rpc.x;
-            p1.z = rpc.z;
+            p1 = wc;
+            p1.y = wc.y + dc.pixelsToMilli(w/2);
 
             drawLine(dc, dc.Tools.AxesPen, p0, p1);
 
-            np = p0.y > p1.y ? p0 : p1;
-
-            pp = dc.pointToPixelPoint(np);
-            if (pp.x >= 16 + 80) pp.x -= 9;
-            if (pp.y >= 16 + 80) pp.y -= 9;
-            dc.graphics.DrawString("y", dc.Tools.SmallFont, dc.Tools.TextBrush, (int)pp.x, (int)pp.y);
+            sp = dc.pointToPixelPoint(p1);
+            dc.graphics.DrawString("y", dc.Tools.SmallFont, dc.Tools.TextBrush, (int)sp.x, (int)sp.y);
 
 
             // Z軸
-            p0 = rp0;
-            p0.x = rpc.x;
-            p0.y = rpc.y;
+            p0 = wc;
+            p0.z = wc.z - dc.pixelsToMilli(w/2);
 
-            p1 = rp1;
-            p1.x = rpc.x;
-            p1.y = rpc.y;
+            p1 = wc;
+            p1.z = wc.z + dc.pixelsToMilli(w/2);
 
             drawLine(dc, dc.Tools.AxesPen, p0, p1);
 
-            np = p0.z > p1.z ? p0 : p1;
-
-            pp = dc.pointToPixelPoint(np);
-            if (pp.x >= 16 + 80) pp.x -= 9;
-            if (pp.y >= 16 + 80) pp.y -= 9;
-            dc.graphics.DrawString("z", dc.Tools.SmallFont, dc.Tools.TextBrush, (int)pp.x, (int)pp.y);
+            sp = dc.pointToPixelPoint(p1);
+            dc.graphics.DrawString("z", dc.Tools.SmallFont, dc.Tools.TextBrush, (int)sp.x, (int)sp.y);
         }
 
         public static void drawPageFrame(DrawContext dc)
@@ -181,41 +201,31 @@ namespace Plotter
                 return;
             }
 
+            CadPoint pt = default(CadPoint);
+
+            // p0
+            pt.x = -dc.PageSize.width / 2;
+            pt.y = dc.PageSize.height / 2;
+            pt.z = 0;
+
             CadPoint p0 = default(CadPoint);
+            p0.x = pt.x * dc.UnitPerMilli;
+            p0.y = pt.y * dc.UnitPerMilli * dc.YDir;
+
+            p0 += dc.ViewOrg;
+
+            // p1
+            pt.x = dc.PageSize.width / 2;
+            pt.y = -dc.PageSize.height / 2;
+            pt.z = 0;
+
             CadPoint p1 = default(CadPoint);
+            p1.x = pt.x * dc.UnitPerMilli;
+            p1.y = pt.y * dc.UnitPerMilli * dc.YDir;
 
-            p0.x = -dc.PageSize.width / 2;
-            p0.y = dc.PageSize.height / 2;
+            p1 += dc.ViewOrg;
 
-            p1.x = dc.PageSize.width / 2;
-            p1.y = -dc.PageSize.height / 2;
-
-            p0.z = 0;
-            p1.z = 0;
-
-            Drawer.drawRect(dc, dc.Tools.PageFramePen, p0, p1);
-
-            p0.x = -dc.PageSize.width / 2;
-            p0.z = dc.PageSize.height / 2;
-
-            p1.x = dc.PageSize.width / 2;
-            p1.z = -dc.PageSize.height / 2;
-
-            p0.y = 0;
-            p1.y = 0;
-
-            Drawer.drawRect(dc, dc.Tools.PageFramePen, p0, p1);
-
-            p0.z = -dc.PageSize.width / 2;
-            p0.y = dc.PageSize.height / 2;
-
-            p1.z = dc.PageSize.width / 2;
-            p1.y = -dc.PageSize.height / 2;
-
-            p0.x = 0;
-            p1.x = 0;
-
-            Drawer.drawRect(dc, dc.Tools.PageFramePen, p0, p1);
+            Drawer.drawRectScrn(dc, dc.Tools.PageFramePen, p0, p1);
         }
         #endregion
 
@@ -312,6 +322,11 @@ namespace Plotter
             CadPoint pp0 = dc.pointToPixelPoint(p0);
             CadPoint pp1 = dc.pointToPixelPoint(p1);
 
+            drawRect(dc.graphics, pen, (int)pp0.x, (int)pp0.y, (int)pp1.x, (int)pp1.y);
+        }
+
+        public static void drawRectScrn(DrawContext dc, Pen pen, CadPoint pp0, CadPoint pp1)
+        {
             drawRect(dc.graphics, pen, (int)pp0.x, (int)pp0.y, (int)pp1.x, (int)pp1.y);
         }
 
@@ -492,6 +507,21 @@ namespace Plotter
 
             dc.graphics.DrawEllipse(
                 pen, (int)(cpp.x - r), (int)(cpp.y - r), (int)(r*2), (int)(r *2));
+        }
+
+
+        public static void drawCircleScrn(DrawContext dc, Pen pen, CadPoint cp, CadPoint p1)
+        {
+            double r = CadUtil.segNorm(cp, p1);
+
+            dc.graphics.DrawEllipse(
+                pen, (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
+        }
+
+        public static void drawCircleScrn(DrawContext dc, Pen pen, CadPoint cp, double r)
+        {
+            dc.graphics.DrawEllipse(
+                pen, (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
         }
 
         public static void drawCross(DrawContext dc, Pen pen, CadPoint p, int size)

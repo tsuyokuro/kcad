@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
+﻿using System.Drawing;
 
 using static System.Math;
 
@@ -68,46 +62,51 @@ namespace Plotter
 
     public class DrawContext
     {
+        // 用紙サイズ
         public PaperPageSize PageSize = new PaperPageSize();
 
-        public double UnitPerMilli = 1; // Output unit per milli X.
+        // 画素/Milli
+        // 1ミリあたりの画素数
+        public double UnitPerMilli = 1;
 
-        private const double MILLI_PER_INCH = 25.4;
+        // 1inchは何ミリ?
+        public const double MILLI_PER_INCH = 25.4;
 
         //private double XDir = 1;
-        private double YDir = -1;
+        public double YDir = -1;
         //private double ZDir = 1;
 
-        private CadPoint mViewOrg;
+        // Screen 座標系の原点 
+        public CadPoint mViewOrg;
 
-        Matrix33 mMatrixTo3D;
+        // Screen座標系からワールド座標系への変換行列
+        Matrix33 mMatrixToWorld;
 
-        Matrix33 mMatrixTo2D;
+        // ワールド座標系からScreen座標系への変換行列
+        Matrix33 mMatrixToView;
 
 
-        Matrix33 MatrixTo3D
+        Matrix33 MatrixToWorld
         {
             set
             {
-                mMatrixTo3D = value;
-                mMatrixTo2D = mMatrixTo3D.invers();
+                mMatrixToWorld = value;
             }
             get
             {
-                return mMatrixTo3D;
+                return mMatrixToWorld;
             }
         }
 
-        Matrix33 MatrixTo2D
+        Matrix33 MatrixToView
         {
             set
             {
-                mMatrixTo2D = value;
-                mMatrixTo3D = mMatrixTo2D.invers();
+                mMatrixToView = value;
             }
             get
             {
-                return mMatrixTo2D;
+                return mMatrixToView;
             }
         }
 
@@ -117,6 +116,7 @@ namespace Plotter
             get { return mViewOrg; }
         }
 
+        // Screenのサイズ
         public int ViewWidth { get; set; } = 100;
         public int ViewHeight { get; set; } = 100;
 
@@ -158,28 +158,51 @@ namespace Plotter
                 -1, 0, 0
             );
 
-        private Matrix33 MatrixXY_XQ = new Matrix33
+
+        private static double xt = PI / 10.0;
+        private static double yt = -PI / 6.0;
+
+        private static Matrix33 MatrixXY_XQ_F = new Matrix33
             (
                 1, 0, 0,
-                0, Cos(PI / 4), -Sin(PI / 4),
-                0, Sin(PI / 4), Cos(PI / 4)
+                0, Cos(xt), -Sin(xt),
+                0, Sin(xt), Cos(xt)
             );
 
-        private Matrix33 MatrixXY_YQ = new Matrix33
+        private static Matrix33 MatrixXY_YQ_F = new Matrix33
             (
-                Cos(PI / 4), 0, Sin(PI / 4),
+                Cos(yt), 0, Sin(yt),
                 0, 1, 0,
-                -Sin(PI / 4), 0, Cos(PI / 4)
+                -Sin(yt), 0, Cos(yt)
+            );
+
+
+        private static Matrix33 MatrixXY_XQ_R = new Matrix33
+            (
+                1, 0, 0,
+                0, Cos(-xt), -Sin(-xt),
+                0, Sin(-xt), Cos(-xt)
+            );
+
+        private static Matrix33 MatrixXY_YQ_R = new Matrix33
+            (
+                Cos(-yt), 0, Sin(-yt),
+                0, 1, 0,
+                -Sin(-yt), 0, Cos(-yt)
             );
 
 
         public DrawContext()
         {
-            setDotPerMilli(4); // 1mm = 4dot
+            setUnitPerMilli(4); // 1mm = 2.5dot
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
-            MatrixTo3D = MatrixXY;
+            MatrixToWorld = MatrixXY;
+            MatrixToView = MatrixXY.invers();
+
+            //MatrixTo3D = MatrixXY_YQ_F * MatrixXY_XQ_F;
+            //MatrixTo2D = MatrixXY_XQ_R * MatrixXY_YQ_R;
         }
 
         public void startDraw(Bitmap image)
@@ -213,9 +236,9 @@ namespace Plotter
         }
 
         // set dots per milli.
-        public void setDotPerMilli(double dpm)
+        public void setUnitPerMilli(double upm)
         {
-            UnitPerMilli = dpm;
+            UnitPerMilli = upm;
         }
 
         // Calc inch units per milli.
@@ -226,27 +249,27 @@ namespace Plotter
 
         public CadPoint pointToPixelPoint(CadPoint pt)
         {
-            pt = mMatrixTo2D * pt;
+            pt = mMatrixToView * pt;
 
             CadPoint p = default(CadPoint);
             p.x = pt.x * UnitPerMilli;
             p.y = pt.y * UnitPerMilli * YDir;
             p.z = pt.z * UnitPerMilli;
 
-            p += mViewOrg;
+            p = p + mViewOrg;
             return p;
         }
 
         public CadPoint pixelPointToCadPoint(CadPoint pt)
         {
-            pt -= mViewOrg;
+            pt = pt - mViewOrg;
 
             CadPoint p = default(CadPoint);
             p.x = pt.x / UnitPerMilli;
             p.y = pt.y / UnitPerMilli * YDir;
             p.z = pt.z / UnitPerMilli;
 
-            p = mMatrixTo3D * p;
+            p = mMatrixToWorld * p;
 
             return p;
         }
@@ -261,7 +284,7 @@ namespace Plotter
             p.y = y / UnitPerMilli * YDir;
             p.z = z / UnitPerMilli;
 
-            p = mMatrixTo3D * p;
+            p = mMatrixToWorld * p;
 
             return p;
         }
@@ -282,9 +305,9 @@ namespace Plotter
             return rect;
         }
 
-        public double pixelsToMilli(int d)
+        public double pixelsToMilli(double d)
         {
-            return ((double)(d) / UnitPerMilli);
+            return d / UnitPerMilli;
         }
 
         public double milliToPixels(double d)

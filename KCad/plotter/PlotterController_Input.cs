@@ -10,6 +10,8 @@ namespace Plotter
 {
     public partial class PlotterController
     {
+        const int SnapRange = 16;
+
         public CadMouse Mouse { get; } = new CadMouse();
 
         private PointSearcher mPointSearcher = new PointSearcher();
@@ -29,9 +31,10 @@ namespace Plotter
 
         private CadPoint? mObjDownPoint = null;
 
-        private CadPoint mRawPos;
 
-        private CadPoint mOffset = default(CadPoint);
+        private CadPoint mOffsetScrn = default(CadPoint);
+
+        private CadPoint mOffsetWld = default(CadPoint);
 
         private void initHid()
         {
@@ -109,6 +112,9 @@ namespace Plotter
             CadPoint pixp = CadPoint.GetNew(x, y, 0);
             CadPoint cp = dc.pixelPointToCadPoint(x,y,0);
 
+            mOffsetScrn = pixp - mSnapScrnPoint;
+            mOffsetWld = cp - mSnapPoint;
+
             switch (State)
             {
                 case States.SELECT:
@@ -130,9 +136,7 @@ namespace Plotter
                     {
                         mObjDownPoint = mp.Point;
 
-                        mMoveOrgScrnPoint = pixp;
-
-                        //mMoveOrgScrnPoint.dump(DebugOut.Out);
+                        mMoveOrgScrnPoint = dc.pointToPixelPoint(mp.Point);
 
                         State = States.START_DRAGING_POINTS;
                         CadFigure fig = mDB.getFigure(mp.FigureID);
@@ -196,7 +200,7 @@ namespace Plotter
 
                             mSelectedSegs.Add(mseg);
 
-                            mMoveOrgScrnPoint = pixp;
+                            mMoveOrgScrnPoint = dc.pointToPixelPoint(mObjDownPoint.Value);
 
                             State = States.START_DRAGING_POINTS;
 
@@ -343,7 +347,8 @@ namespace Plotter
                     break;
             }
 
-            mOffset = default(CadPoint);
+            mOffsetScrn = default(CadPoint);
+            mOffsetWld = default(CadPoint);
         }
 
         private void RUp(CadMouse pointer, DrawContext dc, int x, int y)
@@ -363,8 +368,8 @@ namespace Plotter
             CadPoint pixp = CadPoint.GetNew(x, y, 0);
             CadPoint cp = dc.pixelPointToCadPoint(pixp);
 
-            mSnapScrnPoint = pixp;
-            mSnapPoint = cp;
+            mSnapScrnPoint = pixp - mOffsetScrn;
+            mSnapPoint = cp - mOffsetWld;
 
             clear(dc);
             draw(dc);
@@ -394,6 +399,9 @@ namespace Plotter
             if ((mx.Flag & MarkPoint.X_MATCH) != 0)
             {
                 Drawer.drawHighlitePoint(dc, mx.Point);
+
+                DebugOut.Out.println("mx");
+                mx.Point.dump(DebugOut.Out);
 
                 mSnapPoint.x = mx.Point.x;
 

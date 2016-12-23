@@ -8,7 +8,7 @@
         xmlns:pl="clr-namespace:Plotter"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="579.667" Width="1073.667"
+        Title="MainWindow" Height="856" Width="1171.667"
         >
 
     <Window.Resources>
@@ -208,7 +208,7 @@
                                 Style="{StaticResource ButtonStyle}"
                                 FontSize="20"
                                 FontWeight="ExtraBold" />
-                        
+
                         <Button Grid.Column="2"
                                 Name="RemoveLayerButton"
                                 Tag="remove_layer"
@@ -218,7 +218,7 @@
                                 FontSize="20"
                                 FontWeight="ExtraBold" />
                     </Grid>
-                        
+
                     <Grid x:Name="LayerListPanel" Height="250">
 
                         <ListBox
@@ -241,7 +241,7 @@
                                             <CheckBox IsChecked="{Binding Path=Visible}"
                                                       Style="{StaticResource VisibleCheckBox}"
                                                       Foreground="White"/>
-                                        
+
                                             <CheckBox IsChecked="{Binding Path=Locked}"
                                                       Style="{StaticResource LockedCheckBox}"
                                                       Foreground="White"/>
@@ -291,7 +291,7 @@
                              Background="{StaticResource BGColor}"
                              ItemContainerStyle="{StaticResource MsgListBoxItem}"
                              />
-                    
+
                     <TextBox Grid.Row="1"
                              x:Name="textCommand"
                              Foreground="{StaticResource TextColor}"
@@ -300,7 +300,7 @@
                 </Grid>
             </Grid>
         </Grid>
-        
+
         <!--Status bar-->
         <StackPanel Grid.Row="2" Background="{StaticResource BGColor}" Height="16" HorizontalAlignment="Stretch">
 

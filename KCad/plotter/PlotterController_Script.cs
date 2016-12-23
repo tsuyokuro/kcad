@@ -126,16 +126,25 @@ namespace Plotter
                 double w = v1.getDouble();
                 double h = v2.getDouble();
 
-                CadFigure fig = mDB.newFigure(CadFigure.Types.RECT);
+                CadFigure fig = mDB.newFigure(CadFigure.Types.POLY_LINES);
 
                 CadPoint p0 = mFreeDownPoint;
                 CadPoint p1 = p0;
 
-                p1.x += w;
-                p1.y += h;
-
                 fig.addPoint(p0);
+
+                p1.x = p0.x + w;
                 fig.addPoint(p1);
+
+                p1.y = p0.y + h;
+                fig.addPoint(p1);
+
+                p1 = p0;
+                p1.y = p0.y + h;
+                fig.addPoint(p1);
+
+                fig.Closed = true;
+
                 fig.endCreate();
 
                 CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
@@ -146,24 +155,35 @@ namespace Plotter
             }
             else if (argCount == 4)
             {
-                Evaluator.Value h = stack.pop();
-                Evaluator.Value w = stack.pop();
+                Evaluator.Value vh = stack.pop();
+                Evaluator.Value vw = stack.pop();
                 Evaluator.Value y = stack.pop();
                 Evaluator.Value x = stack.pop();
 
                 CadFigure fig = mDB.newFigure(CadFigure.Types.RECT);
 
                 CadPoint p0 = default(CadPoint);
-                p0.x = x.getDouble();
-                p0.y = y.getDouble();
+
+                double w = vw.getDouble();
+                double h = vh.getDouble();
 
                 CadPoint p1 = p0;
 
-                p1.x += w.getDouble();
-                p1.y += h.getDouble();
-
                 fig.addPoint(p0);
+
+                p1.x = p0.x + w;
                 fig.addPoint(p1);
+
+                p1.y = p0.y + h;
+                fig.addPoint(p1);
+
+                p1 = p0;
+                p1.y = p0.y + h;
+                fig.addPoint(p1);
+
+                fig.Closed = true;
+
+                fig.endCreate();
 
                 CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
                 mHistoryManager.foward(ope);

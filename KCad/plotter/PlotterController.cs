@@ -18,9 +18,6 @@ namespace Plotter
 
     public partial class PlotterController
     {
-        const int SnapRange = 8;
-
-
         public enum States
         {
             SELECT,
