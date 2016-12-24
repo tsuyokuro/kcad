@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.RegularExpressions;
 
 namespace Plotter
 {
@@ -277,6 +278,41 @@ namespace Plotter
             {
                 test(dc);
             }
+            else if (s.StartsWith("cv "))
+            {
+                var m = Regex.Match(s, @"cv[ ]+(.+)");
+
+                if (m != null && m.Groups.Count > 1)
+                {
+                    string para = m.Groups[1].Value;
+                    DebugOut.Out.println(para);
+
+                    if (para == "xy")
+                    {
+                        dc.MatrixToWorld = DrawContext.MatrixXY;
+                        dc.MatrixToView = DrawContext.MatrixXY.invers();
+                    }
+                    else if (para == "xz")
+                    {
+                        dc.MatrixToWorld = DrawContext.MatrixXZ;
+                        dc.MatrixToView = DrawContext.MatrixXZ.invers();
+                    }
+                    else if (para == "zy")
+                    {
+                        dc.MatrixToWorld = DrawContext.MatrixZY;
+                        dc.MatrixToView = DrawContext.MatrixZY.invers();
+                    }
+                    else if (para == "q")
+                    {
+                        dc.MatrixToWorld = DrawContext.MatrixXY_YQ_F * DrawContext.MatrixXY_XQ_F;
+                        dc.MatrixToView = DrawContext.MatrixXY_XQ_R * DrawContext.MatrixXY_YQ_R;
+                    }
+
+                    clear(dc);
+                    draw(dc);
+                }
+            }
+
             else if (s == "clean temp")
             {
                 TempFigureList.Clear();

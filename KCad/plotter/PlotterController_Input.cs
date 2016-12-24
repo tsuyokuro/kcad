@@ -367,6 +367,7 @@ namespace Plotter
 
             CadPoint pixp = CadPoint.GetNew(x, y, 0);
             CadPoint cp = dc.pixelPointToCadPoint(pixp);
+            CadPoint tp = default(CadPoint);
 
             mSnapScrnPoint = pixp - mOffsetScrn;
             mSnapPoint = cp - mOffsetWld;
@@ -400,13 +401,12 @@ namespace Plotter
             {
                 Drawer.drawHighlitePoint(dc, mx.Point);
 
-                DebugOut.Out.println("mx");
-                mx.Point.dump(DebugOut.Out);
+                tp = dc.pointToPixelPoint(mx.Point);
 
-                mSnapPoint.x = mx.Point.x;
-
-                mSnapScrnPoint = dc.pointToPixelPoint(mSnapPoint);
+                mSnapScrnPoint.x = tp.x;
                 mSnapScrnPoint.z = 0;
+
+                mSnapPoint = dc.pixelPointToCadPoint(mSnapScrnPoint);
 
                 dist = Math.Min(mx.DistX, dist);
             }
@@ -415,10 +415,12 @@ namespace Plotter
             {
                 Drawer.drawHighlitePoint(dc, my.Point);
 
-                mSnapPoint.y = my.Point.y;
+                tp = dc.pointToPixelPoint(my.Point);
 
-                mSnapScrnPoint = dc.pointToPixelPoint(mSnapPoint);
+                mSnapScrnPoint.y = tp.y;
                 mSnapScrnPoint.z = 0;
+
+                mSnapPoint = dc.pixelPointToCadPoint(mSnapScrnPoint);
 
                 dist = Math.Min(my.DistY, dist);
             }
@@ -439,7 +441,7 @@ namespace Plotter
 
                     mSnapPoint = seg.CrossPoint;
 
-                    mSnapScrnPoint = dc.pointToPixelPoint(mSnapPoint);
+                    mSnapScrnPoint = seg.CrossViewPoint;
                     mSnapScrnPoint.z = 0;
                 }
             }
@@ -465,7 +467,8 @@ namespace Plotter
                     {
                         if (CreatingFigure != null)
                         {
-                            CreatingFigure.drawTemp(dc, mSnapPoint, dc.Tools.TempFigurePen);
+                            CadPoint p = dc.pixelPointToCadPoint(mSnapScrnPoint);
+                            CreatingFigure.drawTemp(dc, p, dc.Tools.TempFigurePen);
                         }
                         break;
                     }

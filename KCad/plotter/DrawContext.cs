@@ -86,7 +86,7 @@ namespace Plotter
         Matrix33 mMatrixToView;
 
 
-        Matrix33 MatrixToWorld
+        public Matrix33 MatrixToWorld
         {
             set
             {
@@ -98,7 +98,7 @@ namespace Plotter
             }
         }
 
-        Matrix33 MatrixToView
+        public Matrix33 MatrixToView
         {
             set
             {
@@ -131,7 +131,7 @@ namespace Plotter
 
         public DrawSettings Tools = new DrawSettings();
 
-        private Matrix33 MatrixXY = new Matrix33
+        public static readonly Matrix33 MatrixXY = new Matrix33
             (
                 1, 0, 0,
                 0, 1, 0,
@@ -141,7 +141,7 @@ namespace Plotter
         // 1, 0, 0,
         // 0, Cos(PI/2), -Sin(PI/2),
         // 0, Sin(PI/2), Cos(PI/2)
-        private Matrix33 MatrixXZ = new Matrix33
+        public static readonly Matrix33 MatrixXZ = new Matrix33
             (
                 1, 0, 0,
                 0, 0, -1,
@@ -151,7 +151,7 @@ namespace Plotter
         // Cos(PI/2), 0, Sin(PI/2),
         // 0, 1, 0,
         // -Sin(PI/2), 0, Cos(PI/2)
-        private Matrix33 MatrixZY = new Matrix33
+        public static readonly Matrix33 MatrixZY = new Matrix33
             (
                 0, 0, 1,
                 0, 1, 0,
@@ -162,14 +162,14 @@ namespace Plotter
         private static double xt = PI / 10.0;
         private static double yt = -PI / 6.0;
 
-        private static Matrix33 MatrixXY_XQ_F = new Matrix33
+        public static readonly Matrix33 MatrixXY_XQ_F = new Matrix33
             (
                 1, 0, 0,
                 0, Cos(xt), -Sin(xt),
                 0, Sin(xt), Cos(xt)
             );
 
-        private static Matrix33 MatrixXY_YQ_F = new Matrix33
+        public static readonly Matrix33 MatrixXY_YQ_F = new Matrix33
             (
                 Cos(yt), 0, Sin(yt),
                 0, 1, 0,
@@ -177,14 +177,14 @@ namespace Plotter
             );
 
 
-        private static Matrix33 MatrixXY_XQ_R = new Matrix33
+        public static readonly Matrix33 MatrixXY_XQ_R = new Matrix33
             (
                 1, 0, 0,
                 0, Cos(-xt), -Sin(-xt),
                 0, Sin(-xt), Cos(-xt)
             );
 
-        private static Matrix33 MatrixXY_YQ_R = new Matrix33
+        public static readonly Matrix33 MatrixXY_YQ_R = new Matrix33
             (
                 Cos(-yt), 0, Sin(-yt),
                 0, 1, 0,
@@ -198,11 +198,14 @@ namespace Plotter
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
-            MatrixToWorld = MatrixXY;
-            MatrixToView = MatrixXY.invers();
+            //MatrixToWorld = MatrixXY;
+            //MatrixToView = MatrixXY.invers();
 
-            //MatrixTo3D = MatrixXY_YQ_F * MatrixXY_XQ_F;
-            //MatrixTo2D = MatrixXY_XQ_R * MatrixXY_YQ_R;
+            //MatrixToWorld = MatrixXZ;
+            //MatrixToView = MatrixXZ.invers();
+
+            MatrixToWorld = MatrixXY_YQ_F * MatrixXY_XQ_F;
+            MatrixToView = MatrixXY_XQ_R * MatrixXY_YQ_R;
         }
 
         public void startDraw(Bitmap image)
