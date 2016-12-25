@@ -25,6 +25,14 @@ namespace Plotter
             get { return mController; }
         }
 
+        public DrawContext DrawContext
+        {
+            get
+            {
+                return mDrawContext;
+            }
+        }
+
         private bool firstSizeChange = true;
 
         ContextMenuEx mPolyLineContextMenu;
@@ -90,6 +98,10 @@ namespace Plotter
 
             mController.RequestContextMenu += ShowContextMenu;
 
+        }
+
+        override protected void OnPaintBackground(PaintEventArgs pevent)
+        {
         }
 
         private void onSizeChanged(object sender, System.EventArgs e)

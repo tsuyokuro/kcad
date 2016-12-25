@@ -49,6 +49,11 @@ namespace KCad
 
             AddLayerButton.Click += ViewModel.ButtonClicked;
             RemoveLayerButton.Click += ViewModel.ButtonClicked;
+
+            btnAxisXY.Click += ViewModel.ButtonClicked;
+            btnAxisXZ.Click += ViewModel.ButtonClicked;
+            btnAxisZY.Click += ViewModel.ButtonClicked;
+            btnAxisXYZ.Click += ViewModel.ButtonClicked;
         }
 
         private void textCommand_KeyDown(object sender, KeyEventArgs e)

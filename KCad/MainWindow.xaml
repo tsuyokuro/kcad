@@ -302,7 +302,7 @@
         </Grid>
 
         <!--Status bar-->
-        <StackPanel Grid.Row="2" Background="{StaticResource BGColor}" Height="16" HorizontalAlignment="Stretch"
+        <StackPanel Grid.Row="2" Background="{StaticResource BGColor}" Height="20" HorizontalAlignment="Stretch"
                     Orientation="Horizontal">
             <Rectangle
                 VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="48"/>
@@ -310,6 +310,11 @@
             <TextBlock x:Name="textBlockXYZ" TextWrapping="Wrap" Text="{Binding StrCursorPos}"
                 VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="240" Foreground="White">
             </TextBlock>
+
+            <Button Name="btnAxisXY" Tag="axis_xy" Content=" XY " Style="{StaticResource ButtonStyle}"></Button>
+            <Button Name="btnAxisXZ" Tag="axis_xz" Content=" XZ " Style="{StaticResource ButtonStyle}"></Button>
+            <Button Name="btnAxisZY" Tag="axis_zy" Content=" ZY " Style="{StaticResource ButtonStyle}"></Button>
+            <Button Name="btnAxisXYZ" Tag="axis_xyz" Content=" XYZ " Style="{StaticResource ButtonStyle}"></Button>
 
         </StackPanel>
     </Grid>

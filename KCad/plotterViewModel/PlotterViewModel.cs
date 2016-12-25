@@ -376,8 +376,33 @@ namespace Plotter
                 case "add_layer":
                     mPlotter.addLayer(null);
                     break;
+
                 case "remove_layer":
                     mPlotter.removeLayer(mPlotter.CurrentLayer.ID);
+                    draw();
+                    break;
+
+                case "axis_xy":
+                    mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixXY;
+                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixXY.invers();
+                    draw();
+                    break;
+
+                case "axis_xz":
+                    mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixXZ;
+                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixXZ.invers();
+                    draw();
+                    break;
+
+                case "axis_zy":
+                    mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixZY;
+                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixZY.invers();
+                    draw();
+                    break;
+
+                case "axis_xyz":
+                    mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixXY_YQ_F * DrawContext.MatrixXY_XQ_F;
+                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixXY_XQ_R * DrawContext.MatrixXY_YQ_R;
                     draw();
                     break;
             }
