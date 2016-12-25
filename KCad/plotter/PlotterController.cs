@@ -16,6 +16,8 @@ namespace Plotter
 
     public delegate void DataChanged(PlotterController sender, bool redraw);
 
+    public delegate void CursorPosChanged(PlotterController sender, CadPoint pt);
+
     public partial class PlotterController
     {
         public enum States
@@ -132,6 +134,7 @@ namespace Plotter
 
         public RequestContextMenu RequestContextMenu;
 
+        #region Delegators
         private LayerListChanged mLayerListChanged = (a, b) => { };
 
         public LayerListChanged LayerListChanged
@@ -139,6 +142,11 @@ namespace Plotter
             set
             {
                 mLayerListChanged = value;
+                if (mLayerListChanged == null)
+                {
+                    mLayerListChanged = (a, b) => { };
+                }
+
                 NotifyLayerInfo();
             }
         }
@@ -150,8 +158,31 @@ namespace Plotter
             set
             {
                 mDataChanged = value;
+                if (mDataChanged == null)
+                {
+                    mDataChanged = (a, b) => { };
+                }
             }
         }
+
+        private CursorPosChanged mCursorPosChanged = (a, b) => { };
+
+        public CursorPosChanged CursorPosChanged
+        {
+            set
+            {
+                mCursorPosChanged = value;
+                if (mCursorPosChanged == null)
+                {
+                    mCursorPosChanged = (a, b) => { };
+                }
+            }
+            get
+            {
+                return mCursorPosChanged;
+            }
+        }
+        #endregion
 
         private List<CadFigure> TempFigureList = new List<CadFigure>();
 
@@ -302,7 +333,7 @@ namespace Plotter
         {
             drawSelectedItems(dc);
 
-            Drawer.drawCursorScrn(dc, mSnapScrnPoint);
+            //Drawer.drawCursorScrn(dc, mSnapScrnPoint);
 
             Drawer.drawLastPointMarker(
                 dc, dc.Tools.LastPointMarkerPen1, mFreeDownPoint);

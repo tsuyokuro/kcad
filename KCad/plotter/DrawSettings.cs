@@ -11,6 +11,7 @@ namespace Plotter
     {
         public Pen SelectedPointPen;
         public Pen CursorPen;
+        public Pen CursorPen2;
         public Pen DefaultFigurePen;
         public Pen TempFigurePen;
         public Pen PointHighlitePen;
@@ -108,6 +109,7 @@ namespace Plotter
         {
             SelectedPointPen = Pens.LightGreen;
             CursorPen = Pens.LightBlue;
+            CursorPen2 = Pens.DarkSlateBlue;
             DefaultFigurePen = Pens.White;
             TempFigurePen = Pens.Blue;
             PointHighlitePen = Pens.BlueViolet;
@@ -134,6 +136,7 @@ namespace Plotter
         {
             SelectedPointPen = Pens.Blue;
             CursorPen = Pens.Blue;
+            CursorPen2 = Pens.LightGray;
             DefaultFigurePen = Pens.Black;
             TempFigurePen = Pens.Blue;
             PointHighlitePen = Pens.BlueViolet;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Plotter
 {
+    using System;
     using System.Drawing;
 
     public class Drawer
@@ -254,31 +255,29 @@ namespace Plotter
         #endregion
 
         #region "Draw cursor"
+
         public static void drawCursor(DrawContext dc, CadPoint pt)
         {
-            drawCursor(dc, dc.Tools.CursorPen, pt);
-        }
-
-
-        public static void drawCursor(DrawContext dc, Pen pen, CadPoint pt)
-        {
+            Pen pen = dc.Tools.CursorPen;
             CadPoint pp = dc.pointToPixelPoint(pt);
 
-            int size = 16;
+            //int size = 16;
+            int size = Math.Max(dc.ViewWidth, dc.ViewHeight);
 
             dc.graphics.DrawLine(pen, (int)pp.x - size, (int)pp.y, (int)pp.x + size, (int)pp.y);
             dc.graphics.DrawLine(pen, (int)pp.x, (int)pp.y - size, (int)pp.x, (int)pp.y + size);
         }
 
-        public static void drawCursorScrn(DrawContext dc, CadPoint pt)
+        public static void drawCursorScrn(DrawContext dc, CadPoint pp)
         {
-            drawCursorScrn(dc, dc.Tools.CursorPen, pt);
-        }
+            Pen pen = dc.Tools.CursorPen;
+            Pen pen2 = dc.Tools.CursorPen2;
 
-
-        public static void drawCursorScrn(DrawContext dc, Pen pen, CadPoint pp)
-        {
             int size = 16;
+            int size2 = Math.Max(dc.ViewWidth, dc.ViewHeight);
+
+            dc.graphics.DrawLine(pen2, (int)pp.x - size2, (int)pp.y, (int)pp.x + size2, (int)pp.y);
+            dc.graphics.DrawLine(pen2, (int)pp.x, (int)pp.y - size2, (int)pp.x, (int)pp.y + size2);
 
             dc.graphics.DrawLine(pen, (int)pp.x - size, (int)pp.y, (int)pp.x + size, (int)pp.y);
             dc.graphics.DrawLine(pen, (int)pp.x, (int)pp.y - size, (int)pp.x, (int)pp.y + size);

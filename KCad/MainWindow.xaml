@@ -302,7 +302,14 @@
         </Grid>
 
         <!--Status bar-->
-        <StackPanel Grid.Row="2" Background="{StaticResource BGColor}" Height="16" HorizontalAlignment="Stretch">
+        <StackPanel Grid.Row="2" Background="{StaticResource BGColor}" Height="16" HorizontalAlignment="Stretch"
+                    Orientation="Horizontal">
+            <Rectangle
+                VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="48"/>
+
+            <TextBlock x:Name="textBlockXYZ" TextWrapping="Wrap" Text="{Binding StrCursorPos}"
+                VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="240" Foreground="White">
+            </TextBlock>
 
         </StackPanel>
     </Grid>

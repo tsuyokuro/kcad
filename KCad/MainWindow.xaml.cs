@@ -42,6 +42,9 @@ namespace KCad
 
             textCommand.KeyDown += textCommand_KeyDown;
 
+            textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
+
+
             ViewModel.InteractOut.print = MessageOut;
 
             AddLayerButton.Click += ViewModel.ButtonClicked;

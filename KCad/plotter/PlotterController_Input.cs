@@ -446,6 +446,8 @@ namespace Plotter
                 }
             }
 
+            Drawer.drawCursorScrn(dc, mSnapScrnPoint);
+
             switch (State)
             {
                 case States.DRAGING_POINTS:
@@ -475,6 +477,8 @@ namespace Plotter
             }
 
             drawSubItems(dc);
+
+            CursorPosChanged(this, mSnapPoint);
         }
 
         private void LDrag(CadMouse pointer, DrawContext dc, int x, int y)

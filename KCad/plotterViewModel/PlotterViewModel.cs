@@ -12,6 +12,46 @@ namespace Plotter
     public class SelectModeConverter : EnumBoolConverter<PlotterController.SelectModes> { }
     public class FigureTypeConverter : EnumBoolConverter<CadFigure.Types> { }
 
+    public class FreqChangedInfo : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private string mStrCursorPos;
+
+        public string StrCursorPos
+        {
+            set
+            {
+                mStrCursorPos = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StrCursorPos)));
+            }
+
+            get
+            {
+                return mStrCursorPos;
+            }
+        }
+
+        private CadPoint mCursorPos;
+
+        public CadPoint CursorPos
+        {
+            set
+            {
+                mCursorPos = value;
+
+                String s = string.Format("({0:0.000},{1:0.000},{2:0.000})",
+                    mCursorPos.x, mCursorPos.y, mCursorPos.z);
+
+                StrCursorPos = s;
+            }
+
+            get
+            {
+                return mCursorPos;
+            }
+        }
+    }
 
     public class PlotterViewModel : INotifyPropertyChanged
     {
@@ -34,6 +74,8 @@ namespace Plotter
         private PlotterController.SelectModes mSelectMode = PlotterController.SelectModes.POINT;
 
         public ObservableCollection<LayerHolder> LayerList = new ObservableCollection<LayerHolder>();
+
+        public FreqChangedInfo FreqChangedInfo = new FreqChangedInfo();
 
         public PlotterController.SelectModes SelectMode
         {
@@ -138,7 +180,9 @@ namespace Plotter
 
             mPlotter.LayerListChanged =  LayerListChanged;
 
-            mPlotter.DataChanged = DataChanged; 
+            mPlotter.DataChanged = DataChanged;
+
+            mPlotter.CursorPosChanged = CursorPosChanged;
         }
 
         #region Maps
@@ -233,6 +277,12 @@ namespace Plotter
 
             return -1;
         }
+
+        private void CursorPosChanged(PlotterController sender, CadPoint pt)
+        {
+            FreqChangedInfo.CursorPos = pt;
+        }
+
         #endregion
 
 
