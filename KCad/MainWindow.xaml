@@ -265,10 +265,8 @@
                     <RowDefinition Height="67*"/>
                 </Grid.RowDefinitions>
 
-                <WindowsFormsHost Grid.Row="0">
-                    <pl:PlotterView x:Name="plotterView1"/>
+                <WindowsFormsHost x:Name="viewContainer" Grid.Row="0">
                 </WindowsFormsHost>
-
 
                 <GridSplitter Grid.Row="1"
                     HorizontalAlignment="Stretch"

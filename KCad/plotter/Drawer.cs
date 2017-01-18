@@ -321,6 +321,8 @@ namespace Plotter
         #region "draw primitive"
         public static void drawLine(DrawContext dc, Pen pen, CadPoint a, CadPoint b)
         {
+            if (dc.graphics == null) return;
+
             CadPoint pa = dc.pointToPixelPoint(a);
             CadPoint pb = dc.pointToPixelPoint(b);
 
@@ -329,11 +331,13 @@ namespace Plotter
 
         public static void drawLineScrn(DrawContext dc, Pen pen, CadPoint a, CadPoint b)
         {
+            if (dc.graphics == null) return;
             dc.graphics.DrawLine(pen, (int)a.x, (int)a.y, (int)b.x, (int)b.y);
         }
 
         public static void drawText(DrawContext dc, Font fnt, Brush brush, CadPoint a, string s)
         {
+            if (dc.graphics == null) return;
             CadPoint pa = dc.pointToPixelPoint(a);
             dc.graphics.DrawString(s, fnt, brush, (int)pa.x, (int)pa.y);
         }
@@ -357,6 +361,8 @@ namespace Plotter
 
         public static void drawRect(DrawContext dc, Pen pen, CadPoint p0, CadPoint p1)
         {
+            if (dc.graphics == null) return;
+
             CadPoint pp0 = dc.pointToPixelPoint(p0);
             CadPoint pp1 = dc.pointToPixelPoint(p1);
 
@@ -480,6 +486,8 @@ namespace Plotter
             DrawContext dc, Pen pen,
             CadPoint p0, CadPoint p1, CadPoint p2)
         {
+            if (dc.graphics == null) return;
+
             double t = 0;
             double d = 1.0 / 64;
 
@@ -509,6 +517,8 @@ namespace Plotter
             DrawContext dc, Pen pen,
             CadPoint p0, CadPoint p1, CadPoint p2, CadPoint p3)
         {
+            if (dc.graphics == null) return;
+
             double t = 0;
             double d = 1.0 / 64;
 
@@ -537,6 +547,8 @@ namespace Plotter
 
         public static void drawCircle(DrawContext dc, Pen pen, CadPoint cp, CadPoint p1)
         {
+            if (dc.graphics == null) return;
+
             double r = CadUtil.segNorm(cp, p1);
 
             CadPoint cpp =  dc.pointToPixelPoint(cp);
@@ -550,6 +562,8 @@ namespace Plotter
 
         public static void drawCircleScrn(DrawContext dc, Pen pen, CadPoint cp, CadPoint p1)
         {
+            if (dc.graphics == null) return;
+
             double r = CadUtil.segNorm(cp, p1);
 
             dc.graphics.DrawEllipse(
@@ -558,12 +572,16 @@ namespace Plotter
 
         public static void drawCircleScrn(DrawContext dc, Pen pen, CadPoint cp, double r)
         {
+            if (dc.graphics == null) return;
+
             dc.graphics.DrawEllipse(
                 pen, (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
         }
 
         public static void drawCross(DrawContext dc, Pen pen, CadPoint p, int size)
         {
+            if (dc.graphics == null) return;
+
             CadPoint a = dc.pointToPixelPoint(p);
 
             dc.graphics.DrawLine(pen, (int)a.x - size, (int)a.y + 0, (int)a.x + size, (int)a.y + 0);

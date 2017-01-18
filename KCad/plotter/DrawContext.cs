@@ -274,6 +274,11 @@ namespace Plotter
 
         public void startDraw(Bitmap image)
         {
+            if (image == null)
+            {
+                return;
+            }
+
             if (mGraphics == null)
             {
                 mGraphics = Graphics.FromImage(image);

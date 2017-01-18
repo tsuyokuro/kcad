@@ -19,12 +19,18 @@ namespace KCad
 
         private ObservableCollection<string> messageList = new ObservableCollection<string>();
 
+        private PlotterView plotterView1;
+
         public MainWindow()
         {
             InitializeComponent();
 
             InputThread = new DebugInputThread(debugCommand);
             InputThread.start();
+
+            plotterView1 = new PlotterView();
+
+            viewContainer.Child = plotterView1;
 
             ViewModel = new PlotterViewModel(plotterView1);
 
@@ -50,10 +56,10 @@ namespace KCad
             AddLayerButton.Click += ViewModel.ButtonClicked;
             RemoveLayerButton.Click += ViewModel.ButtonClicked;
 
-            btnAxisXY.Click += ViewModel.ButtonClicked;
-            btnAxisXZ.Click += ViewModel.ButtonClicked;
-            btnAxisZY.Click += ViewModel.ButtonClicked;
-            btnAxisXYZ.Click += ViewModel.ButtonClicked;
+            btnAxisXY.Click += ButtonClicked;
+            btnAxisXZ.Click += ButtonClicked;
+            btnAxisZY.Click += ButtonClicked;
+            btnAxisXYZ.Click += ButtonClicked;
         }
 
         private void textCommand_KeyDown(object sender, KeyEventArgs e)
@@ -114,6 +120,27 @@ namespace KCad
             Object obj = listMessage.Items[listMessage.Items.Count - 1];
 
             listMessage.ScrollIntoView(obj);
+        }
+
+        public void ButtonClicked(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+            switch (btn.Tag.ToString())
+            {
+                case "axis_xy":
+                    break;
+
+                case "axis_xz":
+                    break;
+
+                case "axis_zy":
+                    break;
+
+                case "axis_xyz":
+                    break;
+            }
+
+            ViewModel.ButtonClicked(sender, e);
         }
 
         #region "Key handling"

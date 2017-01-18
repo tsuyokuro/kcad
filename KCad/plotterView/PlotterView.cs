@@ -54,7 +54,7 @@ namespace Plotter
 
         public PlotterView()
         {
-            InitializeComponent();
+            //InitializeComponent();
             base.SizeChanged += onSizeChanged;
 
             mDrawContext.Tools.darkSet();
@@ -98,6 +98,16 @@ namespace Plotter
 
             mController.RequestContextMenu += ShowContextMenu;
 
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (mImage != null)
+            {
+                mImage.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
         override protected void OnPaintBackground(PaintEventArgs pevent)
