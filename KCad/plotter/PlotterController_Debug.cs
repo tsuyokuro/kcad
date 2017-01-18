@@ -258,6 +258,28 @@ namespace Plotter
             m3.dump(o);
         }
 
+        private void test_dc(DrawContext dc)
+        {
+            DrawContext tdc = new DrawContext();
+
+            tdc.MatrixToView = DrawContext.MatrixXY;
+            tdc.MatrixToWorld = DrawContext.MatrixXY;
+
+            CadPoint p = CadPoint.GetNew(0, 0, -100);
+
+            CadPoint vp = tdc.pointToPixelPoint(p);
+
+            vp.dump(DebugOut.Out);
+        }
+
+        private void dump_figv(DrawContext dc)
+        {
+            CadFigure fig = getSelFig();
+            if (fig == null) return;
+
+            fig.dumpv(DebugOut.Out, dc);
+        }
+
         private void test(DrawContext dc)
         {
             CadPoint p = CadPoint.GetNew(12, 34, 0);
@@ -294,13 +316,13 @@ namespace Plotter
                     }
                     else if (para == "xz")
                     {
-                        dc.MatrixToWorld = DrawContext.MatrixXZ;
-                        dc.MatrixToView = DrawContext.MatrixXZ.invers();
+                        dc.MatrixToWorld = DrawContext.MatrixXZ_F;
+                        dc.MatrixToView = DrawContext.MatrixXZ_F.invers();
                     }
                     else if (para == "zy")
                     {
-                        dc.MatrixToWorld = DrawContext.MatrixZY;
-                        dc.MatrixToView = DrawContext.MatrixZY.invers();
+                        dc.MatrixToWorld = DrawContext.MatrixZY_F;
+                        dc.MatrixToView = DrawContext.MatrixZY_F.invers();
                     }
                     else if (para == "q")
                     {
@@ -321,6 +343,11 @@ namespace Plotter
             else if (s == "test q")
             {
                 test_quaternion(dc);
+            }
+
+            else if (s == "test dc")
+            {
+                test_dc(dc);
             }
 
             else if (s == "test matrix")
@@ -356,6 +383,11 @@ namespace Plotter
             else if (s == "test isPointInTriangle")
             {
                 test_isPointInTriangle3D(dc);
+            }
+
+            else if (s == "dump figv")
+            {
+                dump_figv(dc);
             }
 
             else if (s == "dump sels")

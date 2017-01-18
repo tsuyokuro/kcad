@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace Plotter
         public Brush BackgroundBrush;
 
         public Pen AxesPen;
+        public Pen ArrowAxesPen;
         public Pen PageFramePen;
 
         public Pen RelativePointPen;
@@ -39,17 +41,22 @@ namespace Plotter
             public Color DarkBgColor = Color.FromArgb(20, 20, 30);
 
             public Pen BalckThinPen = new Pen(Brushes.Black, 0);
-            public Brush DarkBgBrush = Brushes.Black;
+            public Brush DarkBgBrush = null;
 
             public Pen DarkAxisPen = new Pen(Color.FromArgb(60,60,92), 0);
+            public Pen DarkArrowAxesPen = new Pen(Color.FromArgb(82, 82, 112), 0);
             public Pen DarkFramePen = new Pen(Color.FromArgb(92, 92, 92), 0);
 
-            public Font SmallFont;
+            public Font SmallFont = new Font("MS UI Gothic", 9);
+
+            public AdjustableArrowCap ArrowCapL = new AdjustableArrowCap(10, 10);
+            public AdjustableArrowCap ArrowCapM = new AdjustableArrowCap(6, 6);
+            public AdjustableArrowCap ArrowCapS = new AdjustableArrowCap(4, 4);
 
             public Original()
             {
                 DarkBgBrush = new SolidBrush(DarkBgColor);
-                SmallFont = new Font("MS UI Gothic", 9);
+                DarkArrowAxesPen.CustomEndCap = ArrowCapS;
             }
 
             public void Dispose()
@@ -61,6 +68,12 @@ namespace Plotter
                 DarkFramePen.Dispose();
 
                 SmallFont.Dispose();
+
+                DarkArrowAxesPen.Dispose();
+
+                ArrowCapL.Dispose();
+                ArrowCapM.Dispose();
+                ArrowCapS.Dispose();
             }
         }
 
@@ -98,6 +111,7 @@ namespace Plotter
             BackgroundBrush = Brushes.Transparent;
 
             AxesPen = null;
+            ArrowAxesPen = null;
             PageFramePen = null;
             RelativePointPen = null;
 
@@ -124,6 +138,7 @@ namespace Plotter
             BackgroundBrush = org.DarkBgBrush;
 
             AxesPen = org.DarkAxisPen;
+            ArrowAxesPen = org.DarkArrowAxesPen;
             PageFramePen = org.DarkFramePen;
 
             RelativePointPen = Pens.CornflowerBlue;

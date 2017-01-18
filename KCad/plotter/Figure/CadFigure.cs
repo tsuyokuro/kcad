@@ -485,6 +485,41 @@ namespace Plotter
             dout.Indent--;
             dout.println("}");
         }
+
+        public void dumpv(DebugOut dout, DrawContext dc)
+        {
+            dout.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
+            dout.Indent++;
+            dout.println("ID=" + ID.ToString());
+            dout.println("LayerID=" + LayerID.ToString());
+            dout.println("Type=" + Type.ToString());
+            dout.println("State=" + State.ToString());
+
+            dout.println("PointList (View)[");
+            dout.Indent++;
+            foreach (CadPoint point in PointList)
+            {
+                CadPoint vp = dc.pointToPixelPoint(point);
+                vp.dump(dout);
+            }
+            dout.Indent--;
+            dout.println("]");
+
+
+            dout.println("ParentID=" + (mParent != null ? mParent.ID : 0));
+
+            dout.println("Child [");
+            dout.Indent++;
+            foreach (CadFigure fig in mChildList)
+            {
+                dout.println("" + fig.ID);
+            }
+            dout.Indent--;
+            dout.println("]");
+
+            dout.Indent--;
+            dout.println("}");
+        }
         #endregion
 
         #region "Behavior"

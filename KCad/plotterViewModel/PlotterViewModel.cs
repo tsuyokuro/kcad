@@ -384,19 +384,19 @@ namespace Plotter
 
                 case "axis_xy":
                     mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixXY;
-                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixXY.invers();
+                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixXY;
                     draw();
                     break;
 
                 case "axis_xz":
-                    mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixXZ;
-                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixXZ.invers();
+                    mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixXZ_F;
+                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixXZ_R;
                     draw();
                     break;
 
                 case "axis_zy":
-                    mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixZY;
-                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixZY.invers();
+                    mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixZY_F;
+                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixZY_R;
                     draw();
                     break;
 

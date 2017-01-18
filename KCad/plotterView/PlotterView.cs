@@ -115,8 +115,7 @@ namespace Plotter
             {
                 mImage = new Bitmap(Width, Height);
 
-                mDrawContext.ViewWidth = Width;
-                mDrawContext.ViewHeight = Height;
+                mDrawContext.setViewSize(Width, Height);
 
                 if (firstSizeChange)
                 {

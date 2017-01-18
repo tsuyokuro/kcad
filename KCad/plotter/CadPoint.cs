@@ -1,5 +1,6 @@
 ﻿
 using Newtonsoft.Json.Linq;
+using OpenTK;
 using Plotter;
 using System;
 using System.Collections.Generic;
@@ -29,10 +30,59 @@ namespace Plotter
         public Types Type;
         public uint Flag;
 
-        public double x;
-        public double y;
-        public double z;
+        public double x
+        {
+            set
+            {
+                vector.X = (float)value;
+            }
 
+            get
+            {
+                return vector.X;
+            }
+        }
+
+        public double y
+        {
+            set
+            {
+                vector.Y = (float)value;
+            }
+
+            get
+            {
+                return vector.Y;
+            }
+        }
+
+        public double z
+        {
+            set
+            {
+                vector.Z = (float)value;
+            }
+
+            get
+            {
+                return vector.Z;
+            }
+        }
+
+        public double w
+        {
+            set
+            {
+                vector.W = (float)value;
+            }
+
+            get
+            {
+                return vector.W;
+            }
+        }
+
+        public Vector4 vector;
 
         public bool Selected
         {
@@ -62,9 +112,11 @@ namespace Plotter
 
         public CadPoint(double x, double y, double z, Types type = Types.STD)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            vector.X = (float)x;
+            vector.Y = (float)y;
+            vector.Z = (float)z;
+            vector.W = 1f;
+
             this.Flag = 0;
             this.Type = type;
         }
@@ -89,6 +141,7 @@ namespace Plotter
             x = (double)jo["x"];
             y = (double)jo["y"];
             z = (double)jo["z"];
+            w = 1f;
         }
 
         public void set(double x, double y, double z)
@@ -96,6 +149,7 @@ namespace Plotter
             this.x = x;
             this.y = y;
             this.z = z;
+            w = 1f;
         }
 
         public void set(ref CadPoint p)
@@ -104,6 +158,7 @@ namespace Plotter
             x = p.x;
             y = p.y;
             z = p.z;
+            w = p.w;
         }
 
         public bool coordEquals(CadPoint p)
@@ -114,26 +169,6 @@ namespace Plotter
         public bool dataEquals(CadPoint p)
         {
             return coordEquals(p) && (Type == p.Type);
-        }
-
-        public static CadPoint condAdd(CadPoint p1, CadPoint p2, byte ignore)
-        {
-            CadPoint rp = p1;
-
-            if ((ignore & CadPoint.IGNORE_X) == 0)
-            {
-                rp.x = p1.x + p2.x;
-            }
-            if ((ignore & CadPoint.IGNORE_Y) == 0)
-            {
-                rp.y = p1.y + p2.y;
-            }
-            if ((ignore & CadPoint.IGNORE_Z) == 0)
-            {
-                rp.z = p1.z + p2.z;
-            }
-
-            return rp;
         }
 
         public static CadPoint operator +(CadPoint p1, CadPoint p2)
@@ -203,7 +238,6 @@ namespace Plotter
 
             double norm = this.norm();
 
-            // 掛け算にして高速化
             double f = 1.0 / norm;
 
             ret.x = x * f;
@@ -213,7 +247,7 @@ namespace Plotter
             return ret;
         }
 
-        public static CadPoint GetNew(double x, double y, double z=0)
+        public static CadPoint GetNew(double x, double y, double z)
         {
             CadPoint p = default(CadPoint);
             p.set(x, y, z);

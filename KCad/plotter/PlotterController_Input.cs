@@ -274,7 +274,7 @@ namespace Plotter
         {
             if (pointer.DownPoint.x == x && pointer.DownPoint.y == y)
             {
-                adjustOrigin(dc, x, y, dc.ViewWidth, dc.ViewHeight);
+                adjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
             }
         }
 
