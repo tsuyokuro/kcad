@@ -118,6 +118,9 @@
     <Compile Include="plotterView\PlotterView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="plotterView\PlotterViewGL.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="plotter\Assembler\TriangleSplitter.cs" />
     <Compile Include="plotter\Figure\CadFigure.cs" />
     <Compile Include="plotter\Assembler\CadFigureAssembler.cs" />
