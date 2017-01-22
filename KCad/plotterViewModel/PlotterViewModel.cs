@@ -383,27 +383,27 @@ namespace Plotter
                     break;
 
                 case "axis_xy":
-                    mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixXY;
-                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixXY;
+                    mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXY;
+                    mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXYInv;
+                    mPlotterView.DrawContext.Perspective = false;
                     draw();
                     break;
 
                 case "axis_xz":
-                    mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixXZ_F;
-                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixXZ_R;
+                    mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXZ;
+                    mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXZInv;
+                    mPlotterView.DrawContext.Perspective = false;
                     draw();
                     break;
 
                 case "axis_zy":
-                    mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixZY_F;
-                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixZY_R;
+                    mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewZY;
+                    mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewZYInv;
+                    mPlotterView.DrawContext.Perspective = false;
                     draw();
                     break;
 
                 case "axis_xyz":
-                    mPlotterView.DrawContext.MatrixToWorld = DrawContext.MatrixXY_YQ_F * DrawContext.MatrixXY_XQ_F;
-                    mPlotterView.DrawContext.MatrixToView = DrawContext.MatrixXY_XQ_R * DrawContext.MatrixXY_YQ_R;
-                    draw();
                     break;
             }
         }
@@ -573,7 +573,7 @@ namespace Plotter
 
         private void drawPage(System.Drawing.Graphics g)
         {
-            DrawContext dc = new DrawContext();
+            DrawContextWin dc = new DrawContextWin();
 
             dc.graphics = g;
             dc.Tools.setupPrinterSet();

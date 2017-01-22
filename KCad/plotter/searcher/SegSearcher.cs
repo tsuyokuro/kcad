@@ -182,8 +182,8 @@ namespace Plotter
                 return;
             }
 
-            CadPoint pa = dc.pointToPixelPoint(a);
-            CadPoint pb = dc.pointToPixelPoint(b);
+            CadPoint pa = dc.CadPointToUnitPoint(a);
+            CadPoint pb = dc.CadPointToUnitPoint(b);
 
             CrossInfo ret = CadUtil.getPerpCrossSeg2D(pa, pb, TargetPoint);
 
@@ -204,7 +204,7 @@ namespace Plotter
 
             if (dist < minDist)
             {
-                CadPoint tp = dc.pixelPointToCadPoint(TargetPoint);
+                CadPoint tp = dc.UnitPointToCadPoint(TargetPoint);
                 CrossInfo ret3d = CadUtil.getPerpCrossLine(a, b, tp);
 
                 seg.LayerID = layerID;
@@ -237,8 +237,8 @@ namespace Plotter
             CadPoint c = fig.getPointAt(0);
             CadPoint a = fig.getPointAt(1);
 
-            CadPoint pc = dc.pointToPixelPoint(c);
-            CadPoint pa = dc.pointToPixelPoint(a);
+            CadPoint pc = dc.CadPointToUnitPoint(c);
+            CadPoint pa = dc.CadPointToUnitPoint(a);
 
             double r = CadUtil.segNorm2D(pa, pc);
             double tr = CadUtil.segNorm2D(TargetPoint, pc);
@@ -252,7 +252,7 @@ namespace Plotter
 
             if (dist < minDist)
             {
-                CadPoint tp = dc.pixelPointToCadPoint(TargetPoint);
+                CadPoint tp = dc.UnitPointToCadPoint(TargetPoint);
                 r = CadUtil.segNorm(a, c);
                 tr = CadUtil.segNorm(tp, c);
 

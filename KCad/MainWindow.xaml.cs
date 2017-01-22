@@ -21,6 +21,8 @@ namespace KCad
 
         private PlotterView plotterView1;
 
+        private PlotterViewGL plotterViewGL1;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,6 +31,8 @@ namespace KCad
             InputThread.start();
 
             plotterView1 = new PlotterView();
+
+            plotterViewGL1 = PlotterViewGL.Create();
 
             viewContainer.Child = plotterView1;
 
@@ -128,19 +132,25 @@ namespace KCad
             switch (btn.Tag.ToString())
             {
                 case "axis_xy":
+                    viewContainer.Child = plotterView1;
+                    ViewModel.ButtonClicked(sender, e);
                     break;
 
                 case "axis_xz":
+                    viewContainer.Child = plotterView1;
+                    ViewModel.ButtonClicked(sender, e);
                     break;
 
                 case "axis_zy":
+                    viewContainer.Child = plotterView1;
+                    ViewModel.ButtonClicked(sender, e);
                     break;
 
                 case "axis_xyz":
+                    viewContainer.Child = plotterViewGL1;
                     break;
             }
 
-            ViewModel.ButtonClicked(sender, e);
         }
 
         #region "Key handling"

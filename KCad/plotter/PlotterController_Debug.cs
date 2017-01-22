@@ -206,31 +206,6 @@ namespace Plotter
 
         private void test_matrix()
         {
-            Matrix33 m1 = default(Matrix33);
-
-            m1.set(
-                0, 1, 0,
-                0, 0, 1,
-                1, 0, 0);
-
-            Matrix33 m2 = m1.invers();
-
-            DebugOut o = new DebugOut();
-            //m1.dump(o);
-            //m2.dump(o);
-
-            CadPoint p1 = default(CadPoint);
-            p1.x = 10;
-            p1.y = 20;
-            p1.z = 30;
-
-            CadPoint p2 = Matrix33.product(m1, p1);
-
-            CadPoint p3 = Matrix33.product(m2, p2);
-
-            p1.dump(o);
-            p2.dump(o);
-            p3.dump(o);
         }
 
         private void test_matrix2()
@@ -262,12 +237,12 @@ namespace Plotter
         {
             DrawContext tdc = new DrawContext();
 
-            tdc.MatrixToView = DrawContext.MatrixXY;
-            tdc.MatrixToWorld = DrawContext.MatrixXY;
+            tdc.ViewMatrix = UMatrixs.ViewXY;
+            tdc.ViewMatrixInv = UMatrixs.ViewXYInv;
 
             CadPoint p = CadPoint.GetNew(0, 0, -100);
 
-            CadPoint vp = tdc.pointToPixelPoint(p);
+            CadPoint vp = tdc.CadPointToUnitPoint(p);
 
             vp.dump(DebugOut.Out);
         }
@@ -284,9 +259,9 @@ namespace Plotter
         {
             CadPoint p = CadPoint.GetNew(12, 34, 0);
 
-            CadPoint pp = dc.pixelPointToCadPoint(p);
+            CadPoint pp = dc.UnitPointToCadPoint(p);
 
-            CadPoint p0 = dc.pointToPixelPoint(pp);
+            CadPoint p0 = dc.CadPointToUnitPoint(pp);
 
             dc.ViewOrg.dump(DebugOut.Out);
             p.dump(DebugOut.Out);
@@ -311,23 +286,23 @@ namespace Plotter
 
                     if (para == "xy")
                     {
-                        dc.MatrixToWorld = DrawContext.MatrixXY;
-                        dc.MatrixToView = DrawContext.MatrixXY.invers();
+                        dc.ViewMatrixInv = UMatrixs.ViewXY;
+                        dc.ViewMatrix = UMatrixs.ViewXYInv;
                     }
                     else if (para == "xz")
                     {
-                        dc.MatrixToWorld = DrawContext.MatrixXZ_F;
-                        dc.MatrixToView = DrawContext.MatrixXZ_F.invers();
+                        dc.ViewMatrixInv = UMatrixs.ViewXZ;
+                        dc.ViewMatrix = UMatrixs.ViewXZInv;
                     }
                     else if (para == "zy")
                     {
-                        dc.MatrixToWorld = DrawContext.MatrixZY_F;
-                        dc.MatrixToView = DrawContext.MatrixZY_F.invers();
+                        dc.ViewMatrixInv = UMatrixs.ViewZY;
+                        dc.ViewMatrix = UMatrixs.ViewZYInv;
                     }
                     else if (para == "q")
                     {
-                        dc.MatrixToWorld = DrawContext.MatrixXY_YQ_F * DrawContext.MatrixXY_XQ_F;
-                        dc.MatrixToView = DrawContext.MatrixXY_XQ_R * DrawContext.MatrixXY_YQ_R;
+                        //dc.MatrixToWorld = DrawContext.MatrixXY_YQ_F * DrawContext.MatrixXY_XQ_F;
+                        //dc.MatrixToView = DrawContext.MatrixXY_XQ_R * DrawContext.MatrixXY_YQ_R;
                     }
 
                     clear(dc);

@@ -499,7 +499,7 @@ namespace Plotter
             dout.Indent++;
             foreach (CadPoint point in PointList)
             {
-                CadPoint vp = dc.pointToPixelPoint(point);
+                CadPoint vp = dc.CadPointToUnitPoint(point);
                 vp.dump(dout);
             }
             dout.Indent--;

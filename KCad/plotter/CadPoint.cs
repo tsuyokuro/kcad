@@ -405,7 +405,7 @@ namespace Plotter
 
         public void draw(DrawContext dc)
         {
-            double d = dc.pixelsToMilli(4);
+            double d = dc.UnitToMilli(4);
 
             CadPoint p0 = point;
             CadPoint p1 = point;

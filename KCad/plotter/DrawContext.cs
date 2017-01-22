@@ -59,7 +59,6 @@ namespace Plotter
         }
     }
 
-
     public class DrawContext
     {
         // 用紙サイズ
@@ -79,36 +78,21 @@ namespace Plotter
         // Screen 座標系の原点 
         public CadPoint mViewOrg;
 
-        // Screen座標系からワールド座標系への変換行列
-        Matrix33 mMatrixToWorld;
 
-        // ワールド座標系からScreen座標系への変換行列
-        Matrix33 mMatrixToView;
+        // 視点座標系からワールド座標系への変換行列
+        public UMatrix4 ViewMatrixInv;
+
+        // ワールド座標系から視点座標系への変換行列
+        public UMatrix4 ViewMatrix;
 
 
-        public Matrix33 MatrixToWorld
-        {
-            set
-            {
-                mMatrixToWorld = value;
-            }
-            get
-            {
-                return mMatrixToWorld;
-            }
-        }
+        // 視点座標系から投影座標系への変換行列
+        public UMatrix4 ProjectionMatrix;
 
-        public Matrix33 MatrixToView
-        {
-            set
-            {
-                mMatrixToView = value;
-            }
-            get
-            {
-                return mMatrixToView;
-            }
-        }
+        // 投影座標系から視点座標系への変換行列
+        public UMatrix4 ProjectionMatrixInv;
+
+        public bool Perspective = false;
 
         public CadPoint ViewOrg
         {
@@ -146,116 +130,16 @@ namespace Plotter
 
         public CadPoint ViewCenter = default(CadPoint);
 
-        private Graphics mGraphics = null;
+        public DrawSettings Tools = new DrawSettings();
 
-        public Graphics graphics {
+        protected Graphics mGraphics = null;
+
+        public Graphics graphics
+        {
             get { return mGraphics; }
             set { mGraphics = value; }
         }
 
-        private int GraphicsRef = 0;
-
-        public DrawSettings Tools = new DrawSettings();
-
-        public static readonly Matrix33 MatrixXY = new Matrix33
-            (
-                1, 0, 0,
-                0, 1, 0,
-                0, 0, 1
-            );
-
-        // 1, 0, 0,
-        // 0, Cos(PI/2), -Sin(PI/2),
-        // 0, Sin(PI/2), Cos(PI/2)
-        public static readonly Matrix33 MatrixXZ_F = new Matrix33
-            (
-                1, 0, 0,
-                0, 0, -1,
-                0, 1, 0
-            );
-
-        // 1, 0, 0,
-        // 0, Cos(-PI/2), -Sin(-PI/2),
-        // 0, Sin(-PI/2), Cos(-PI/2)
-        public static readonly Matrix33 MatrixXZ_R = new Matrix33
-            (
-                1, 0, 0,
-                0, 0, 1,
-                0, -1, 0
-            );
-
-
-        // Cos(PI/2), 0, Sin(PI/2),
-        // 0, 1, 0,
-        // -Sin(PI/2), 0, Cos(PI/2)
-        public static readonly Matrix33 MatrixZY_F = new Matrix33
-            (
-                0, 0, 1,
-                0, 1, 0,
-                -1, 0, 0
-            );
-
-        // Cos(PI/2), 0, Sin(PI/2),
-        // 0, 1, 0,
-        // -Sin(PI/2), 0, Cos(PI/2)
-        public static readonly Matrix33 MatrixZY_R = new Matrix33
-            (
-                0, 0, -1,
-                0, 1, 0,
-                1, 0, 0
-            );
-
-
-        private static double xt = -PI / 10.0;
-        private static double yt = PI / 10.0;
-
-        public static readonly Matrix33 MatrixXY_XQ_F = new Matrix33
-            (
-                1, 0, 0,
-                0, Cos(xt), -Sin(xt),
-                0, Sin(xt), Cos(xt)
-            );
-
-        public static readonly Matrix33 MatrixXY_YQ_F = new Matrix33
-            (
-                Cos(yt), 0, Sin(yt),
-                0, 1, 0,
-                -Sin(yt), 0, Cos(yt)
-            );
-
-
-        public static readonly Matrix33 MatrixXY_XQ_R = new Matrix33
-            (
-                1, 0, 0,
-                0, Cos(-xt), -Sin(-xt),
-                0, Sin(-xt), Cos(-xt)
-            );
-
-        public static readonly Matrix33 MatrixXY_YQ_R = new Matrix33
-            (
-                Cos(-yt), 0, Sin(-yt),
-                0, 1, 0,
-                -Sin(-yt), 0, Cos(-yt)
-            );
-
-
-        public bool Perspective = true;
-
-        public DrawContext()
-        {
-            setUnitPerMilli(4); // 1mm = 2.5dot
-            mViewOrg.x = 0;
-            mViewOrg.y = 0;
-
-            //MatrixToWorld = MatrixXY;
-            //MatrixToView = MatrixXY.invers();
-
-            //MatrixToWorld = MatrixXZ;
-            //MatrixToView = MatrixXZ.invers();
-
-            MatrixToWorld = MatrixXY_YQ_F * MatrixXY_XQ_F;
-            MatrixToView = MatrixXY_XQ_R * MatrixXY_YQ_R;
-        }
 
         public void calcViewCenter()
         {
@@ -272,7 +156,107 @@ namespace Plotter
             ViewCenter = t;
         }
 
-        public void startDraw(Bitmap image)
+        public void setViewSize(double w, double h)
+        {
+            mViewWidth = w;
+            mViewHeight = h;
+        }
+
+        public virtual void startDraw()
+        {
+        }
+
+        public virtual void startDraw(Bitmap image)
+        {
+        }
+
+        public virtual void endDraw()
+        {
+        }
+
+
+        // set dots per milli.
+        public virtual void setUnitPerMilli(double upm)
+        {
+            UnitPerMilli = upm;
+        }
+
+        // Calc inch units per milli.
+        public virtual void setUnitPerInch(double unit)
+        {
+            UnitPerMilli = unit / MILLI_PER_INCH;
+        }
+
+        public virtual CadPoint CadPointToUnitPoint(CadPoint pt)
+        {
+            return default(CadPoint);
+        }
+
+        public virtual CadPoint UnitPointToCadPoint(CadPoint pt)
+        {
+            return default(CadPoint);
+        }
+
+        public virtual CadPoint UnitPointToCadPoint(double x, double y, double z = 0)
+        {
+            return default(CadPoint);
+        }
+
+        public virtual CadRect getViewRect()
+        {
+            CadRect rect = default(CadRect);
+
+            CadPoint p0 = default(CadPoint);
+            CadPoint p1 = default(CadPoint);
+
+            p0.set(0, 0, 0);
+            p1.set(ViewWidth, ViewHeight, 0);
+
+            rect.p0 = UnitPointToCadPoint(p0);
+            rect.p1 = UnitPointToCadPoint(p1);
+
+            return rect;
+        }
+
+        public virtual double UnitToMilli(double d)
+        {
+            return d / UnitPerMilli;
+        }
+
+        public virtual double MilliToUnit(double d)
+        {
+            return d * UnitPerMilli;
+        }
+
+        public virtual void dump(DebugOut dout)
+        {
+        }
+    }
+
+
+    public class DrawContextWin : DrawContext
+    {
+        private int GraphicsRef = 0;
+
+        public DrawContextWin()
+        {
+            setUnitPerMilli(4); // 1mm = 2.5dot
+            mViewOrg.x = 0;
+            mViewOrg.y = 0;
+
+            ViewMatrix = UMatrixs.ViewXY;
+            ViewMatrixInv = UMatrixs.ViewXYInv;
+
+            ProjectionMatrix = UMatrixs.Unit;
+
+            //MatrixToWorld = MatrixXZ;
+            //MatrixToView = MatrixXZ.invers();
+
+            //MatrixToWorld = MatrixXY_YQ_F * MatrixXY_XQ_F;
+            //MatrixToView = MatrixXY_XQ_R * MatrixXY_YQ_R;
+        }
+
+        public override void startDraw(Bitmap image)
         {
             if (image == null)
             {
@@ -286,7 +270,7 @@ namespace Plotter
             GraphicsRef++;
         }
 
-        public void endDraw()
+        public override void endDraw()
         {
             GraphicsRef--;
             if (GraphicsRef <= 0)
@@ -296,7 +280,7 @@ namespace Plotter
             }
         }
 
-        public void disposeGraphics()
+        private void disposeGraphics()
         {
             if (mGraphics == null)
             {
@@ -308,20 +292,20 @@ namespace Plotter
         }
 
         // set dots per milli.
-        public void setUnitPerMilli(double upm)
+        public override void setUnitPerMilli(double upm)
         {
             UnitPerMilli = upm;
         }
 
         // Calc inch units per milli.
-        public void setUnitPerInch(double unit)
+        public override void setUnitPerInch(double unit)
         {
             UnitPerMilli = unit / MILLI_PER_INCH;
         }
 
-        public CadPoint pointToPixelPoint(CadPoint pt)
+        public override CadPoint CadPointToUnitPoint(CadPoint pt)
         {
-            pt = mMatrixToView * pt;
+            pt = ViewMatrix * pt;
 
 
             if (Perspective)
@@ -348,7 +332,7 @@ namespace Plotter
             return p;
         }
 
-        public CadPoint pixelPointToCadPoint(CadPoint pt)
+        public override CadPoint UnitPointToCadPoint(CadPoint pt)
         {
             pt = pt - mViewOrg;
 
@@ -370,12 +354,12 @@ namespace Plotter
                 p = vp + ViewCenter;
             }
 
-            p = mMatrixToWorld * p;
+            p = ViewMatrixInv * p;
 
             return p;
         }
 
-        public CadPoint pixelPointToCadPoint(double x, double y, double z = 0)
+        public override CadPoint UnitPointToCadPoint(double x, double y, double z = 0)
         {
             CadPoint p = default(CadPoint);
 
@@ -383,42 +367,10 @@ namespace Plotter
             p.y = y;
             p.z = z;
 
-            return pixelPointToCadPoint(p);
+            return UnitPointToCadPoint(p);
         }
 
-        public CadRect getViewRect()
-        {
-            CadRect rect = default(CadRect);
-
-            CadPoint p0 = default(CadPoint);
-            CadPoint p1 = default(CadPoint);
-
-            p0.set(0, 0, 0);
-            p1.set(ViewWidth, ViewHeight, 0);
-
-            rect.p0 = pixelPointToCadPoint(p0);
-            rect.p1 = pixelPointToCadPoint(p1);
-
-            return rect;
-        }
-
-        public double pixelsToMilli(double d)
-        {
-            return d / UnitPerMilli;
-        }
-
-        public double milliToPixels(double d)
-        {
-            return d * UnitPerMilli;
-        }
-
-        public void setViewSize(double w, double h)
-        {
-            mViewWidth = w;
-            mViewHeight = h;
-        }
-
-        public void dump(DebugOut dout)
+        public override void dump(DebugOut dout)
         {
             dout.println("ViewOrg");
             ViewOrg.dump(dout);

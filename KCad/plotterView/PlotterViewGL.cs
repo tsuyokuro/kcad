@@ -1,16 +1,20 @@
 ﻿using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Plotter
 {
     class PlotterViewGL : GLControl
     {
+        Matrix4 Projection;
+        Matrix4 ModelView;
+
+        Vector3 Eye = default(Vector3);
+        Vector3 LookAt = default(Vector3);
+        Vector3 UpVector = default(Vector3);
+
         public static PlotterViewGL Create()
         {
             GraphicsMode mode = GraphicsMode.Default;
@@ -29,6 +33,14 @@ namespace Plotter
             Resize += onResize;
             Paint += onPaint;
             MouseMove += onMouseMove;
+            SwapBuffers();
+        }
+
+        private void onLoad(object sender, EventArgs e)
+        {
+            GL.ClearColor(Color4.Black);
+            GL.Enable(EnableCap.DepthTest);
+            SwapBuffers();
         }
 
         private void onMouseMove(object sender, MouseEventArgs e)
@@ -37,13 +49,10 @@ namespace Plotter
 
         private void onPaint(object sender, PaintEventArgs e)
         {
+            SwapBuffers();
         }
 
         private void onResize(object sender, EventArgs e)
-        {
-        }
-
-        private void onLoad(object sender, EventArgs e)
         {
         }
     }

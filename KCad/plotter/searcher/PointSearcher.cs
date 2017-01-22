@@ -233,7 +233,7 @@ namespace Plotter
                 return;
             }
 
-            CadPoint ppt = dc.pointToPixelPoint(pt);
+            CadPoint ppt = dc.CadPointToUnitPoint(pt);
 
             double dx = Math.Abs(ppt.x - TargetPoint.x);
             double dy = Math.Abs(ppt.y - TargetPoint.y);

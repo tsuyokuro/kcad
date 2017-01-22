@@ -18,7 +18,7 @@ namespace Plotter
         private Bitmap mImage;
         private PlotterController mController = new PlotterController();
 
-        private DrawContext mDrawContext = new DrawContext();
+        private DrawContext mDrawContext = new DrawContextWin();
 
         public PlotterController Controller
         {

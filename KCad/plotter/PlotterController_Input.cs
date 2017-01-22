@@ -110,7 +110,7 @@ namespace Plotter
         private void LDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
             CadPoint pixp = CadPoint.GetNew(x, y, 0);
-            CadPoint cp = dc.pixelPointToCadPoint(x,y,0);
+            CadPoint cp = dc.UnitPointToCadPoint(x,y,0);
 
             mOffsetScrn = pixp - mSnapScrnPoint;
             mOffsetWld = cp - mSnapPoint;
@@ -136,7 +136,7 @@ namespace Plotter
                     {
                         mObjDownPoint = mp.Point;
 
-                        mMoveOrgScrnPoint = dc.pointToPixelPoint(mp.Point);
+                        mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mp.Point);
 
                         State = States.START_DRAGING_POINTS;
                         CadFigure fig = mDB.getFigure(mp.FigureID);
@@ -200,7 +200,7 @@ namespace Plotter
 
                             mSelectedSegs.Add(mseg);
 
-                            mMoveOrgScrnPoint = dc.pointToPixelPoint(mObjDownPoint.Value);
+                            mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mObjDownPoint.Value);
 
                             State = States.START_DRAGING_POINTS;
 
@@ -241,7 +241,7 @@ namespace Plotter
                         CreatingFigure.startCreate();
 
 
-                        CadPoint p = dc.pixelPointToCadPoint(mSnapScrnPoint);
+                        CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                         setPointInCreating(dc, p);
                         draw(dc);
@@ -252,7 +252,7 @@ namespace Plotter
                     {
                         mFreeDownPoint = mSnapPoint;
 
-                        CadPoint p = dc.pixelPointToCadPoint(mSnapScrnPoint);
+                        CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                         setPointInCreating(dc, p);
                         draw(dc);
@@ -366,7 +366,7 @@ namespace Plotter
             }
 
             CadPoint pixp = CadPoint.GetNew(x, y, 0);
-            CadPoint cp = dc.pixelPointToCadPoint(pixp);
+            CadPoint cp = dc.UnitPointToCadPoint(pixp);
             CadPoint tp = default(CadPoint);
 
             mSnapScrnPoint = pixp - mOffsetScrn;
@@ -401,12 +401,12 @@ namespace Plotter
             {
                 Drawer.drawHighlitePoint(dc, mx.Point);
 
-                tp = dc.pointToPixelPoint(mx.Point);
+                tp = dc.CadPointToUnitPoint(mx.Point);
 
                 mSnapScrnPoint.x = tp.x;
                 mSnapScrnPoint.z = 0;
 
-                mSnapPoint = dc.pixelPointToCadPoint(mSnapScrnPoint);
+                mSnapPoint = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                 dist = Math.Min(mx.DistX, dist);
             }
@@ -415,12 +415,12 @@ namespace Plotter
             {
                 Drawer.drawHighlitePoint(dc, my.Point);
 
-                tp = dc.pointToPixelPoint(my.Point);
+                tp = dc.CadPointToUnitPoint(my.Point);
 
                 mSnapScrnPoint.y = tp.y;
                 mSnapScrnPoint.z = 0;
 
-                mSnapPoint = dc.pixelPointToCadPoint(mSnapScrnPoint);
+                mSnapPoint = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                 dist = Math.Min(my.DistY, dist);
             }
@@ -452,8 +452,8 @@ namespace Plotter
             {
                 case States.DRAGING_POINTS:
                     {
-                        CadPoint p0 = dc.pixelPointToCadPoint(mMoveOrgScrnPoint);
-                        CadPoint p1 = dc.pixelPointToCadPoint(mSnapScrnPoint);
+                        CadPoint p0 = dc.UnitPointToCadPoint(mMoveOrgScrnPoint);
+                        CadPoint p1 = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                         CadPoint delta = p1 - p0;
 
@@ -469,7 +469,7 @@ namespace Plotter
                     {
                         if (CreatingFigure != null)
                         {
-                            CadPoint p = dc.pixelPointToCadPoint(mSnapScrnPoint);
+                            CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);
                             CreatingFigure.drawTemp(dc, p, dc.Tools.TempFigurePen);
                         }
                         break;

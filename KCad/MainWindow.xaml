@@ -258,7 +258,7 @@
             </Border>
 
             <!--Plotter view and Command view-->
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="1" Background="{DynamicResource BGColor}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="247*"/>
                     <RowDefinition Height="auto"/>

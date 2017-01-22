@@ -62,7 +62,7 @@ namespace Plotter
 
             CadPoint vc = CadPoint.GetNew(dc.ViewWidth, dc.ViewHeight, 0);
             vc = vc / 2;
-            vc = dc.pixelPointToCadPoint(vc);
+            vc = dc.UnitPointToCadPoint(vc);
 
             CadPoint d = vr.p1 - vr.p0;
 
@@ -135,7 +135,7 @@ namespace Plotter
             }
 
             double w = 64;
-            double vl = dc.pixelsToMilli(w/2);
+            double vl = dc.UnitToMilli(w/2);
             double ltvx = 12;
             double ltvy = 12;
 
@@ -157,8 +157,8 @@ namespace Plotter
             p1 = vc;
             p1.x = vl;
 
-            vp0 = dc.pointToPixelPoint(p0);
-            vp1 = dc.pointToPixelPoint(p1);
+            vp0 = dc.CadPointToUnitPoint(p0);
+            vp1 = dc.CadPointToUnitPoint(p1);
 
             c = vp1 - vp0;
             c /= 2.0;
@@ -184,8 +184,8 @@ namespace Plotter
             p1 = vc;
             p1.y = vl;
 
-            vp0 = dc.pointToPixelPoint(p0);
-            vp1 = dc.pointToPixelPoint(p1);
+            vp0 = dc.CadPointToUnitPoint(p0);
+            vp1 = dc.CadPointToUnitPoint(p1);
 
             c = vp1 - vp0;
             c /= 2.0;
@@ -210,8 +210,8 @@ namespace Plotter
             p1 = vc;
             p1.z = vl;
 
-            vp0 = dc.pointToPixelPoint(p0);
-            vp1 = dc.pointToPixelPoint(p1);
+            vp0 = dc.CadPointToUnitPoint(p0);
+            vp1 = dc.CadPointToUnitPoint(p1);
 
             c = vp1 - vp0;
             c /= 2.0;
@@ -267,14 +267,14 @@ namespace Plotter
         #region "Draw marker"
         public static void drawHighlitePoint(DrawContext dc, CadPoint pt)
         {
-            CadPoint pp = dc.pointToPixelPoint(pt);
+            CadPoint pp = dc.CadPointToUnitPoint(pt);
 
             dc.graphics.DrawEllipse(dc.Tools.PointHighlitePen, (int)pp.x - 6, (int)pp.y - 6, 12, 12);
         }
 
         public static void drawSelectedPoint(DrawContext dc, CadPoint pt)
         {
-            CadPoint pp = dc.pointToPixelPoint(pt);
+            CadPoint pp = dc.CadPointToUnitPoint(pt);
 
             int size = 3;
 
@@ -293,7 +293,7 @@ namespace Plotter
         public static void drawCursor(DrawContext dc, CadPoint pt)
         {
             Pen pen = dc.Tools.CursorPen;
-            CadPoint pp = dc.pointToPixelPoint(pt);
+            CadPoint pp = dc.CadPointToUnitPoint(pt);
 
             //int size = 16;
             int size = (int)Math.Max(dc.ViewWidth, dc.ViewHeight);
@@ -323,8 +323,8 @@ namespace Plotter
         {
             if (dc.graphics == null) return;
 
-            CadPoint pa = dc.pointToPixelPoint(a);
-            CadPoint pb = dc.pointToPixelPoint(b);
+            CadPoint pa = dc.CadPointToUnitPoint(a);
+            CadPoint pb = dc.CadPointToUnitPoint(b);
 
             dc.graphics.DrawLine(pen, (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
         }
@@ -338,7 +338,7 @@ namespace Plotter
         public static void drawText(DrawContext dc, Font fnt, Brush brush, CadPoint a, string s)
         {
             if (dc.graphics == null) return;
-            CadPoint pa = dc.pointToPixelPoint(a);
+            CadPoint pa = dc.CadPointToUnitPoint(a);
             dc.graphics.DrawString(s, fnt, brush, (int)pa.x, (int)pa.y);
         }
 
@@ -363,8 +363,8 @@ namespace Plotter
         {
             if (dc.graphics == null) return;
 
-            CadPoint pp0 = dc.pointToPixelPoint(p0);
-            CadPoint pp1 = dc.pointToPixelPoint(p1);
+            CadPoint pp0 = dc.CadPointToUnitPoint(p0);
+            CadPoint pp1 = dc.CadPointToUnitPoint(p1);
 
             drawRect(dc.graphics, pen, (int)pp0.x, (int)pp0.y, (int)pp1.x, (int)pp1.y);
         }
@@ -551,9 +551,9 @@ namespace Plotter
 
             double r = CadUtil.segNorm(cp, p1);
 
-            CadPoint cpp =  dc.pointToPixelPoint(cp);
+            CadPoint cpp =  dc.CadPointToUnitPoint(cp);
 
-            r = dc.milliToPixels(r);
+            r = dc.MilliToUnit(r);
 
             dc.graphics.DrawEllipse(
                 pen, (int)(cpp.x - r), (int)(cpp.y - r), (int)(r*2), (int)(r *2));
@@ -582,7 +582,7 @@ namespace Plotter
         {
             if (dc.graphics == null) return;
 
-            CadPoint a = dc.pointToPixelPoint(p);
+            CadPoint a = dc.CadPointToUnitPoint(p);
 
             dc.graphics.DrawLine(pen, (int)a.x - size, (int)a.y + 0, (int)a.x + size, (int)a.y + 0);
             dc.graphics.DrawLine(pen, (int)a.x + 0, (int)a.y + size, (int)a.x + 0, (int)a.y - size);

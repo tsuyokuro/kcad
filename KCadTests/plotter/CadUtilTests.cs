@@ -40,6 +40,7 @@ namespace Plotter.Tests
 
             Assert.IsTrue(area == 50.0);
 
+            /*
             Matrix44 m = default(Matrix44);
 
             m.setXRote(Math.PI / 8.0);
@@ -62,6 +63,7 @@ namespace Plotter.Tests
             p1.dump(dout);
             p2.dump(dout);
             p3.dump(dout);
+            */
         }
 
         [TestMethod()]

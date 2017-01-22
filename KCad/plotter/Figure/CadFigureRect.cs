@@ -36,8 +36,8 @@ namespace Plotter
                 }
                 else
                 {
-                    CadPoint pp0 = dc.pointToPixelPoint(fig.PointList[0]);
-                    CadPoint pp2 = dc.pointToPixelPoint(p);
+                    CadPoint pp0 = dc.CadPointToUnitPoint(fig.PointList[0]);
+                    CadPoint pp2 = dc.CadPointToUnitPoint(p);
 
                     CadPoint pp1 = pp0;
                     pp1.x = pp2.x;
@@ -45,9 +45,9 @@ namespace Plotter
                     CadPoint pp3 = pp0;
                     pp3.y = pp2.y;
 
-                    fig.mPointList.Add(dc.pixelPointToCadPoint(pp1));
-                    fig.mPointList.Add(dc.pixelPointToCadPoint(pp2));
-                    fig.mPointList.Add(dc.pixelPointToCadPoint(pp3));
+                    fig.mPointList.Add(dc.UnitPointToCadPoint(pp1));
+                    fig.mPointList.Add(dc.UnitPointToCadPoint(pp2));
+                    fig.mPointList.Add(dc.UnitPointToCadPoint(pp3));
 
                     fig.Closed = true;
                 }
