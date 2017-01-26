@@ -103,7 +103,7 @@ namespace Plotter
             MatchFigurePen = Pens.Black;
             MatchSegPen = Pens.Black;
 
-            AuxiliaryLinePen = Pens.Black;
+            //AuxiliaryLinePen = Pens.Black;
             LastPointMarkerPen1 = Pens.Black;
             LastPointMarkerPen2 = Pens.Black;
 
@@ -130,7 +130,7 @@ namespace Plotter
             MatchFigurePen = Pens.Red;
             MatchSegPen = Pens.Green;
 
-            AuxiliaryLinePen = Pens.Coral;
+            //AuxiliaryLinePen = Pens.Coral;
             LastPointMarkerPen1 = Pens.Aqua;
             LastPointMarkerPen2 = Pens.YellowGreen;
 
@@ -158,7 +158,7 @@ namespace Plotter
             MatchFigurePen = Pens.Red;
             MatchSegPen = Pens.Green;
 
-            AuxiliaryLinePen = Pens.Coral;
+            //AuxiliaryLinePen = Pens.Coral;
             LastPointMarkerPen1 = Pens.DarkBlue;
             LastPointMarkerPen2 = Pens.DarkGreen;
 

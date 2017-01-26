@@ -122,6 +122,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="plotter\Assembler\TriangleSplitter.cs" />
+    <Compile Include="plotter\DrawTools.cs" />
     <Compile Include="plotter\Figure\CadFigure.cs" />
     <Compile Include="plotter\Assembler\CadFigureAssembler.cs" />
     <Compile Include="plotter\Figure\CadFigureBehavior.cs" />
