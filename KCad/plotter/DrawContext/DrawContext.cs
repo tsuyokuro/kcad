@@ -130,15 +130,7 @@ namespace Plotter
 
         public CadPoint ViewCenter = default(CadPoint);
 
-        public DrawSettings Tools = new DrawSettings();
-
-        protected Graphics mGraphics = null;
-
-        public Graphics graphics
-        {
-            get { return mGraphics; }
-            set { mGraphics = value; }
-        }
+        protected DrawTools Tools = new DrawTools();
 
 
         public void calcViewCenter()
@@ -154,6 +146,11 @@ namespace Plotter
             t /= UnitPerMilli;
 
             ViewCenter = t;
+        }
+
+        public void setupTools(DrawTools.ToolsType type)
+        {
+            Tools.Setup(type);
         }
 
         public void setViewSize(double w, double h)
@@ -230,148 +227,6 @@ namespace Plotter
 
         public virtual void dump(DebugOut dout)
         {
-        }
-    }
-
-
-    public class DrawContextWin : DrawContext
-    {
-        private int GraphicsRef = 0;
-
-        public DrawContextWin()
-        {
-            setUnitPerMilli(4); // 1mm = 2.5dot
-            mViewOrg.x = 0;
-            mViewOrg.y = 0;
-
-            ViewMatrix = UMatrixs.ViewXY;
-            ViewMatrixInv = UMatrixs.ViewXYInv;
-
-            ProjectionMatrix = UMatrixs.Unit;
-
-            //MatrixToWorld = MatrixXZ;
-            //MatrixToView = MatrixXZ.invers();
-
-            //MatrixToWorld = MatrixXY_YQ_F * MatrixXY_XQ_F;
-            //MatrixToView = MatrixXY_XQ_R * MatrixXY_YQ_R;
-        }
-
-        public override void startDraw(Bitmap image)
-        {
-            if (image == null)
-            {
-                return;
-            }
-
-            if (mGraphics == null)
-            {
-                mGraphics = Graphics.FromImage(image);
-            }
-            GraphicsRef++;
-        }
-
-        public override void endDraw()
-        {
-            GraphicsRef--;
-            if (GraphicsRef <= 0)
-            {
-                disposeGraphics();
-                GraphicsRef = 0;
-            }
-        }
-
-        private void disposeGraphics()
-        {
-            if (mGraphics == null)
-            {
-                return;
-            }
-
-            mGraphics.Dispose();
-            mGraphics = null;
-        }
-
-        // set dots per milli.
-        public override void setUnitPerMilli(double upm)
-        {
-            UnitPerMilli = upm;
-        }
-
-        // Calc inch units per milli.
-        public override void setUnitPerInch(double unit)
-        {
-            UnitPerMilli = unit / MILLI_PER_INCH;
-        }
-
-        public override CadPoint CadPointToUnitPoint(CadPoint pt)
-        {
-            pt = ViewMatrix * pt;
-
-
-            if (Perspective)
-            {
-                CadPoint vp = pt - ViewCenter;
-
-                double d = 1 + (-vp.z / 400);
-
-                vp.x = vp.x / d;
-                vp.y = vp.y / d;
-                vp.z = 0;
-
-                pt = vp + ViewCenter;
-            }
-
-
-            CadPoint p = default(CadPoint);
-
-            p.x = pt.x * UnitPerMilli;
-            p.y = pt.y * UnitPerMilli * YDir;
-            p.z = pt.z * UnitPerMilli;
-
-            p = p + mViewOrg;
-            return p;
-        }
-
-        public override CadPoint UnitPointToCadPoint(CadPoint pt)
-        {
-            pt = pt - mViewOrg;
-
-            CadPoint p = default(CadPoint);
-            p.x = pt.x / UnitPerMilli;
-            p.y = pt.y / UnitPerMilli * YDir;
-            p.z = pt.z / UnitPerMilli;
-
-            if (Perspective)
-            {
-                CadPoint vp = p - ViewCenter;
-
-                double d = 1 + (-vp.z / 400);
-
-                vp.x = vp.x * d;
-                vp.y = vp.y * d;
-                vp.z = 0;
-
-                p = vp + ViewCenter;
-            }
-
-            p = ViewMatrixInv * p;
-
-            return p;
-        }
-
-        public override CadPoint UnitPointToCadPoint(double x, double y, double z = 0)
-        {
-            CadPoint p = default(CadPoint);
-
-            p.x = x;
-            p.y = y;
-            p.z = z;
-
-            return UnitPointToCadPoint(p);
-        }
-
-        public override void dump(DebugOut dout)
-        {
             dout.println("ViewOrg");
             ViewOrg.dump(dout);
 
@@ -379,6 +234,54 @@ namespace Plotter
             ViewCenter.dump(dout);
 
             dout.println("View Width=" + mViewWidth.ToString() + " Height=" + mViewHeight.ToString());
+        }
+
+        public virtual void FillRectangleScrn(int brush, double x1, double y1, double x2, double y2) {
+
+        }
+
+        public virtual void DrawCircle(int pen, CadPoint cp, CadPoint p1)
+        {
+        }
+
+        public virtual void DrawCircle(int pen, CadPoint cp, double r)
+        {
+        }
+
+        public virtual void DrawCircleScrn(int pen, CadPoint cp, CadPoint p1)
+        {
+        }
+
+        public virtual void DrawCircleScrn(int pen, CadPoint cp, double r)
+        {
+        }
+
+        public virtual void DrawLine(int pen, CadPoint a, CadPoint b)
+        {
+        }
+
+        public virtual void DrawLineScrn(int pen, CadPoint a, CadPoint b)
+        {
+        }
+
+        public virtual void DrawLineScrn(int pen, double x1, double y1, double x2, double y2)
+        {
+        }
+
+        public virtual void DrawText(int font, int brush, CadPoint a, string s)
+        {
+        }
+
+        public virtual void DrawTextScrn(int font, int brush, CadPoint a, string s)
+        {
+        }
+
+        public virtual void DrawTextScrn(int font, int brush, double x, double y, string s)
+        {
+        }
+
+        public virtual void DrawRectangleScrn(int pen, double x1, double y1, double x2, double y2)
+        {
         }
     }
 }

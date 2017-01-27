@@ -7,7 +7,7 @@ using System.Drawing.Drawing2D;
 namespace Plotter
 {
     using PenHolder = ToolHolder<Pen>;
-    using BrushHolder = ToolHolder<SolidBrush>;
+    using BrushHolder = ToolHolder<Brush>;
     using ColorHolder = ToolHolder<Color>;
     using FontHolder = ToolHolder<Font>;
     using ArrowCapHolder = ToolHolder<AdjustableArrowCap>;
@@ -75,7 +75,8 @@ namespace Plotter
         public const int PEN_ARROW_AXIS = 12;
         public const int PEN_PAGE_FRAME = 13;
         public const int PEN_RELATIVE_POINT = 14;
-        public const int PEN_TBL_SIZE = 15;
+        public const int PEN_TEST_FIGURE = 15;
+        public const int PEN_TBL_SIZE = 16;
 
         public const int BRUSH_DEFAULT = 0;
         public const int BRUSH_BACKGROUND = 1;
@@ -95,6 +96,13 @@ namespace Plotter
         public const int FONT_DEFAULT = 0;
         public const int FONT_SMALL = 1;
         public const int FONT_TBL_SIZE = 2;
+
+        public enum ToolsType
+        {
+            DARK,
+            PRINTER,
+            DARK_GL,
+        }
 
 
         PenHolder[] PenTbl = null;
@@ -121,7 +129,23 @@ namespace Plotter
             GLColorTbl = new Color4[COLOR_TBL_SIZE];
         }
 
-        public void InitDarkSet()
+        public void Setup(ToolsType t)
+        {
+            if (t == ToolsType.DARK)
+            {
+                setupDarkSet();
+            }
+            else if (t == ToolsType.PRINTER)
+            {
+                setupPrinterSet();
+            }
+            else if (t == ToolsType.DARK_GL)
+            {
+                setupDarkSetGL();
+            }
+        }
+
+        private void setupDarkSet()
         {
             allocGDITbl();
 
@@ -139,19 +163,21 @@ namespace Plotter
             PenTbl[PEN_AXIS]                = new PenHolder(new Pen(Color.FromArgb(60, 60, 92), 0), true);
             PenTbl[PEN_ARROW_AXIS]          = new PenHolder(new Pen(Color.FromArgb(82, 82, 112), 0), true);
             PenTbl[PEN_PAGE_FRAME]          = new PenHolder(new Pen(Color.FromArgb(92, 92, 92), 0), true);
-            PenTbl[PEN_RELATIVE_POINT]      = new PenHolder(new Pen(Pens.CornflowerBlue.Color, 0), false);
+            PenTbl[PEN_RELATIVE_POINT]      = new PenHolder(Pens.CornflowerBlue, false);
+            PenTbl[PEN_TEST_FIGURE]         = new PenHolder(Pens.Yellow, false);
 
             ColorTbl[COLOR_DEFAULT]         = new ColorHolder(Color.FromArgb(255, 255, 255), false);
             ColorTbl[COLOR_BACKGROUND]      = new ColorHolder(Color.FromArgb(20, 20, 30), false);
 
             BrushTbl[BRUSH_DEFAULT]         = new BrushHolder(new SolidBrush(ColorTbl[COLOR_DEFAULT]), true);
             BrushTbl[BRUSH_BACKGROUND]      = new BrushHolder(new SolidBrush(ColorTbl[COLOR_BACKGROUND]), true);
+            BrushTbl[BRUSH_TEXT]            = new BrushHolder(new SolidBrush(Color.White), true);
 
             FontTbl[FONT_DEFAULT]           = new FontHolder(new Font("MS UI Gothic", 9), true);
             FontTbl[FONT_SMALL]             = new FontHolder(new Font("MS UI Gothic", 9), true);
         }
 
-        public void InitPrinterSet()
+        private void setupPrinterSet()
         {
             allocGDITbl();
 
@@ -170,18 +196,20 @@ namespace Plotter
             PenTbl[PEN_ARROW_AXIS]          = new PenHolder(null, false);
             PenTbl[PEN_PAGE_FRAME]          = new PenHolder(null, false);
             PenTbl[PEN_RELATIVE_POINT]      = new PenHolder(null, false);
+            PenTbl[PEN_TEST_FIGURE]         = new PenHolder(null, false);
 
             ColorTbl[COLOR_DEFAULT]         = new ColorHolder(Color.Black, false);
             ColorTbl[COLOR_BACKGROUND]      = new ColorHolder(Color.Black, false);
 
             BrushTbl[BRUSH_DEFAULT]         = new BrushHolder(new SolidBrush(ColorTbl[COLOR_DEFAULT]), false);
             BrushTbl[BRUSH_BACKGROUND]      = new BrushHolder(null, false);
+            BrushTbl[BRUSH_TEXT]            = new BrushHolder(new SolidBrush(ColorTbl[COLOR_DEFAULT]), false);
 
             FontTbl[FONT_DEFAULT]           = new FontHolder(new Font("MS UI Gothic", 9), true);
             FontTbl[FONT_SMALL]             = new FontHolder(new Font("MS UI Gothic", 9), true);
         }
 
-        public void InitDarkSetGL()
+        private void setupDarkSetGL()
         {
             allocGLTbl();
 
@@ -202,6 +230,7 @@ namespace Plotter
             GLPenTbl[PEN_ARROW_AXIS] = new  GLPen(Color.FromArgb(82, 82, 112), lw);
             GLPenTbl[PEN_PAGE_FRAME] = new  GLPen(Color.FromArgb(92, 92, 92), lw);
             GLPenTbl[PEN_RELATIVE_POINT] = new  GLPen(Pens.CornflowerBlue.Color, lw);
+            GLPenTbl[PEN_TEST_FIGURE] = new GLPen(Pens.Yellow.Color, lw);
 
             GLColorTbl[COLOR_DEFAULT] = Color.FromArgb(255, 255, 255);
             GLColorTbl[COLOR_BACKGROUND] = Color.FromArgb(20, 20, 30);
@@ -225,7 +254,7 @@ namespace Plotter
 
             if (BrushTbl != null)
             {
-                foreach (ToolHolder<SolidBrush> brushHolder in BrushTbl)
+                foreach (ToolHolder<Brush> brushHolder in BrushTbl)
                 {
                     if (brushHolder != null)
                     {
@@ -270,38 +299,38 @@ namespace Plotter
             Dispose();
         }
 
-        Pen pen(int id)
+        public Pen pen(int id)
         {
             return PenTbl[id].toolObj;
         }
 
-        Brush brush(int id)
+        public Brush brush(int id)
         {
             return BrushTbl[id].toolObj;
         }
 
-        Color color(int id)
+        public Color color(int id)
         {
             return ColorTbl[id].toolObj;
         }
 
-        Font font(int id)
+        public Font font(int id)
         {
             return FontTbl[id].toolObj;
         }
 
-        AdjustableArrowCap arrowCap(int id)
+        public AdjustableArrowCap arrowCap(int id)
         {
             return ArrowCapTbl[id].toolObj;
         }
 
 
-        GLPen glpen(int id)
+        public GLPen glpen(int id)
         {
             return GLPenTbl[id];
         }
 
-        Color4 glcolor(int id)
+        public Color4 glcolor(int id)
         {
             return GLColorTbl[id];
         }

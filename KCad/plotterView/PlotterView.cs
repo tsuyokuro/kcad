@@ -54,12 +54,9 @@ namespace Plotter
 
         public PlotterView()
         {
-            //InitializeComponent();
             base.SizeChanged += onSizeChanged;
 
-            mDrawContext.Tools.darkSet();
-
-            BackColor = mDrawContext.Tools.BackgroundColor;
+            mDrawContext.setupTools(DrawTools.ToolsType.DARK);
 
             base.MouseMove += mouseMove;
             base.MouseDown += mouseDown;

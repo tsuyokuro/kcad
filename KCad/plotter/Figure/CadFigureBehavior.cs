@@ -20,10 +20,10 @@ namespace Plotter
             public abstract void addPoint(CadFigure fig, CadPoint p);
             public abstract void setPointAt(CadFigure fig, int index, CadPoint pt);
             public abstract void removeSelected(CadFigure fig);
-            public abstract void draw(CadFigure fig, DrawContext dc, Pen pen);
-            public abstract void drawSeg(CadFigure fig, DrawContext dc, Pen pen, int idxA, int idxB);
-            public abstract void drawSelected(CadFigure fig, DrawContext dc, Pen pen);
-            public abstract void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, Pen pen);
+            public abstract void draw(CadFigure fig, DrawContext dc, int pen);
+            public abstract void drawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB);
+            public abstract void drawSelected(CadFigure fig, DrawContext dc, int pen);
+            public abstract void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen);
             public abstract void startCreate(CadFigure fig);
             public abstract Types endCreate(CadFigure fig);
             public abstract Centroid getCentroid(CadFigure fig);
@@ -82,19 +82,19 @@ namespace Plotter
             {
             }
 
-            public override void draw(CadFigure fig, DrawContext dc, Pen pen)
+            public override void draw(CadFigure fig, DrawContext dc, int pen)
             {
             }
 
-            public override void drawSeg(CadFigure fig, DrawContext dc, Pen pen, int idxA, int idxB)
+            public override void drawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB)
             {
             }
 
-            public override void drawSelected(CadFigure fig, DrawContext dc, Pen pen)
+            public override void drawSelected(CadFigure fig, DrawContext dc, int pen)
             {
             }
 
-            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, Pen pen)
+            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
             {
             }
 

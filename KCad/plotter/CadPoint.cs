@@ -422,8 +422,8 @@ namespace Plotter
             p3.x += d;
             p3.y += d;
 
-            Drawer.drawLine(dc, dc.Tools.RelativePointPen, p0, p1);
-            Drawer.drawLine(dc, dc.Tools.RelativePointPen, p2, p3);
+            Drawer.drawLine(dc, DrawTools.PEN_RELATIVE_POINT, p0, p1);
+            Drawer.drawLine(dc, DrawTools.PEN_RELATIVE_POINT, p2, p3);
         }
 
         public void drawSelected(DrawContext dc)

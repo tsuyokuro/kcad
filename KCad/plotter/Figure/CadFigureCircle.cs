@@ -57,22 +57,22 @@ namespace Plotter
                 }
             }
 
-            public override void draw(CadFigure fig, DrawContext dc, Pen pen)
+            public override void draw(CadFigure fig, DrawContext dc, int pen)
             {
                 drawCircle(fig, dc, pen);
             }
 
-            public override void drawSeg(CadFigure fig, DrawContext dc, Pen pen, int idxA, int idxB)
+            public override void drawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB)
             {
                 drawCircle(fig, dc, pen);
             }
 
-            public override void drawSelected(CadFigure fig, DrawContext dc, Pen pen)
+            public override void drawSelected(CadFigure fig, DrawContext dc, int pen)
             {
                 drawSelected_Circle(fig, dc, pen);
             }
 
-            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, Pen pen)
+            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
             {
                 if (fig.PointList.Count <= 0)
                 {
@@ -85,7 +85,7 @@ namespace Plotter
                 Drawer.drawCircle(dc, pen, cp, tp);
             }
 
-            private void drawCircle(CadFigure fig, DrawContext dc, Pen pen)
+            private void drawCircle(CadFigure fig, DrawContext dc, int pen)
             {
                 if (fig.PointList.Count == 0)
                 {
@@ -102,7 +102,7 @@ namespace Plotter
                 Drawer.drawCircle(dc, pen, fig.PointList[0], fig.PointList[1]);
             }
 
-            private void drawSelected_Circle(CadFigure fig, DrawContext dc, Pen pen)
+            private void drawSelected_Circle(CadFigure fig, DrawContext dc, int pen)
             {
                 if (fig.PointList[0].Selected) Drawer.drawSelectedPoint(dc, fig.PointList[0]);
                 if (fig.PointList[1].Selected) Drawer.drawSelectedPoint(dc, fig.PointList[1]);

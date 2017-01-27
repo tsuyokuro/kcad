@@ -122,6 +122,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="plotter\Assembler\TriangleSplitter.cs" />
+    <Compile Include="plotter\DrawContext\DrawContextWin.cs" />
     <Compile Include="plotter\DrawTools.cs" />
     <Compile Include="plotter\Figure\CadFigure.cs" />
     <Compile Include="plotter\Assembler\CadFigureAssembler.cs" />
@@ -143,9 +144,8 @@
     <Compile Include="plotter\CadSelection.cs" />
     <Compile Include="plotter\Util\CadUtil.cs" />
     <Compile Include="plotter\DiffData.cs" />
-    <Compile Include="plotter\DrawContext.cs" />
+    <Compile Include="plotter\DrawContext\DrawContext.cs" />
     <Compile Include="plotter\Drawer.cs" />
-    <Compile Include="plotter\DrawSettings.cs" />
     <Compile Include="plotter\HistoryManager.cs" />
     <Compile Include="plotter\Log.cs" />
     <Compile Include="plotter\MyScript.cs" />

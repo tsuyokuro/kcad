@@ -576,7 +576,7 @@ namespace Plotter
             DrawContextWin dc = new DrawContextWin();
 
             dc.graphics = g;
-            dc.Tools.setupPrinterSet();
+            dc.setupTools(DrawTools.ToolsType.PRINTER);
             dc.PageSize = mPlotterView.PageSize;
 
             // Default printers's unit is 1/100 inch

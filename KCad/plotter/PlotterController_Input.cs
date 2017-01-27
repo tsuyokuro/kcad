@@ -437,7 +437,7 @@ namespace Plotter
                 if (seg.Distance < dist)
                 {
                     CadFigure fig = mDB.getFigure(seg.FigureID);
-                    fig.drawSeg(dc, dc.Tools.MatchSegPen, seg.PtIndexA, seg.PtIndexB);
+                    fig.drawSeg(dc, DrawTools.PEN_MATCH_SEG, seg.PtIndexA, seg.PtIndexB);
 
                     mSnapPoint = seg.CrossPoint;
 
@@ -470,7 +470,7 @@ namespace Plotter
                         if (CreatingFigure != null)
                         {
                             CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);
-                            CreatingFigure.drawTemp(dc, p, dc.Tools.TempFigurePen);
+                            CreatingFigure.drawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
                         }
                         break;
                     }

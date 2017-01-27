@@ -15,7 +15,7 @@ namespace Plotter.Tests
         public void InitDarkSetTest()
         {
             DrawTools dt = new DrawTools();
-            dt.InitDarkSet();
+            dt.setupDarkSet();
             dt.Dispose();
         }
 
@@ -23,7 +23,7 @@ namespace Plotter.Tests
         public void InitPrinterSetTest()
         {
             DrawTools dt = new DrawTools();
-            dt.InitPrinterSet();
+            dt.setupPrinterSet();
             dt.Dispose();
         }
     }

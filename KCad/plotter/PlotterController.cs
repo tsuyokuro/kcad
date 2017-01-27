@@ -318,7 +318,7 @@ namespace Plotter
                 }
             }
 
-            Drawer.draw(dc, TempFigureList, System.Drawing.Pens.Yellow);
+            Drawer.draw(dc, TempFigureList, DrawTools.PEN_TEST_FIGURE);
         }
 
         public void drawSelectedItems(DrawContext dc)
@@ -336,12 +336,12 @@ namespace Plotter
             //Drawer.drawCursorScrn(dc, mSnapScrnPoint);
 
             Drawer.drawLastPointMarker(
-                dc, dc.Tools.LastPointMarkerPen1, mFreeDownPoint);
+                dc, DrawTools.PEN_LAST_POINT_MARKER, mFreeDownPoint);
 
             if (mObjDownPoint != null)
             {
                 Drawer.drawLastPointMarker(
-                    dc, dc.Tools.LastPointMarkerPen2, mObjDownPoint.Value);
+                    dc, DrawTools.PEN_LAST_POINT_MARKER2, mObjDownPoint.Value);
             }
         }
 

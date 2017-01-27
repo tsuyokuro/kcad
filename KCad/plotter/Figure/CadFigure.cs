@@ -577,22 +577,22 @@ namespace Plotter
             Behavior.setPointAt(this, index, pt);
         }
 
-        public void draw(DrawContext dc, Pen pen)
+        public void draw(DrawContext dc, int pen)
         {
             Behavior.draw(this, dc, pen);
         }
 
-        public void drawSeg(DrawContext dc, Pen pen, int idxA, int idxB)
+        public void drawSeg(DrawContext dc, int pen, int idxA, int idxB)
         {
             Behavior.drawSeg(this, dc, pen, idxA, idxB);
         }
 
-        public void drawSelected(DrawContext dc, Pen pen)
+        public void drawSelected(DrawContext dc, int pen)
         {
             Behavior.drawSelected(this, dc, pen);
         }
 
-        public void drawTemp(DrawContext dc, CadPoint tp, Pen pen)
+        public void drawTemp(DrawContext dc, CadPoint tp, int pen)
         {
             Behavior.drawTemp(this, dc, tp, pen);
         }

@@ -11,8 +11,8 @@ namespace Plotter
     {
         public static void clear(DrawContext dc)
         {
-            dc.graphics.FillRectangle(
-                dc.Tools.BackgroundBrush,
+            dc.FillRectangleScrn(
+                DrawTools.BRUSH_BACKGROUND,
                 0, 0, (int)dc.ViewWidth, (int)dc.ViewHeight);
         }
 
@@ -21,11 +21,11 @@ namespace Plotter
             draw(context, layer.FigureList);
         }
 
-        public static void draw(DrawContext dc, IReadOnlyList<CadFigure> list, Pen pen=null)
+        public static void draw(DrawContext dc, IReadOnlyList<CadFigure> list, int pen=-1)
         {
-            if (pen == null)
+            if (pen == -1)
             {
-                pen = dc.Tools.DefaultFigurePen;
+                pen = DrawTools.PEN_DEFAULT_FIGURE;
             }
 
             foreach (CadFigure fig in list)
@@ -44,7 +44,7 @@ namespace Plotter
         {
             foreach (CadFigure fig in list)
             {
-                fig.drawSelected(dc, dc.Tools.DefaultFigurePen);
+                fig.drawSelected(dc, DrawTools.PEN_DEFAULT_FIGURE);
             }
         }
 
@@ -73,17 +73,12 @@ namespace Plotter
             CadPoint p0 = vc - nd;
             CadPoint p1 = vc + nd;
 
-            drawRect(dc, dc.Tools.PageFramePen, p0, p1);
+            drawRect(dc, DrawTools.PEN_PAGE_FRAME, p0, p1);
         }
 
         #region "Draw base"
         public static void drawAxis(DrawContext dc)
         {
-            if (dc.Tools.AxesPen == null)
-            {
-                return;
-            }
-
             CadRect vr = dc.getViewRect();
 
             //drawViewRect(dc, 0.5);
@@ -100,7 +95,7 @@ namespace Plotter
             p1.y = 0;
             p1.z = 0;
 
-            drawLine(dc, dc.Tools.AxesPen, p0, p1);
+            drawLine(dc, DrawTools.PEN_AXIS, p0, p1);
 
             // Y軸
             p0.x = 0;
@@ -111,7 +106,7 @@ namespace Plotter
             p1.y = 100;
             p1.z = 0;
 
-            drawLine(dc, dc.Tools.AxesPen, p0, p1);
+            drawLine(dc, DrawTools.PEN_AXIS, p0, p1);
 
             // Z軸
             p0.x = 0;
@@ -122,32 +117,24 @@ namespace Plotter
             p1.y = 0;
             p1.z = 100;
 
-            drawLine(dc, dc.Tools.AxesPen, p0, p1);
+            drawLine(dc, DrawTools.PEN_AXIS, p0, p1);
 
             drawAxisDir(dc);
         }
 
         public static void drawAxisDir(DrawContext dc)
         {
-            if (dc.Tools.AxesPen == null)
-            {
-                return;
-            }
-
             double w = 64;
             double vl = dc.UnitToMilli(w/2);
             double ltvx = 12;
             double ltvy = 12;
 
-            //CadPoint vc = dc.ViewCenter;
             CadPoint vc = default(CadPoint);
 
             CadPoint p0 = default(CadPoint);
             CadPoint p1 = default(CadPoint);
             CadPoint vp0 = default(CadPoint);
             CadPoint vp1 = default(CadPoint);
-            CadPoint d0 = default(CadPoint);
-            CadPoint d1 = default(CadPoint);
             CadPoint c = default(CadPoint);
 
             // X
@@ -171,10 +158,10 @@ namespace Plotter
 
             if (c.norm() > 8)
             {
-                drawLineScrn(dc, dc.Tools.ArrowAxesPen, vp0, vp1);
+                drawLineScrn(dc, DrawTools.PEN_AXIS, vp0, vp1);
             }
 
-            dc.graphics.DrawString("x", dc.Tools.SmallFont, dc.Tools.TextBrush, (int)vp1.x-8, (int)vp1.y);
+            dc.DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, vp1.x-8, vp1.y, "x");
 
 
             // Y
@@ -198,9 +185,9 @@ namespace Plotter
 
             if (c.norm() > 8)
             {
-                drawLineScrn(dc, dc.Tools.ArrowAxesPen, vp0, vp1);
+                drawLineScrn(dc, DrawTools.PEN_AXIS, vp0, vp1);
             }
-            dc.graphics.DrawString("y", dc.Tools.SmallFont, dc.Tools.TextBrush, (int)vp1.x - 8, (int)vp1.y);
+            dc.DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, vp1.x - 8, vp1.y, "y");
 
 
             // Z
@@ -224,18 +211,13 @@ namespace Plotter
 
             if (c.norm() > 8)
             {
-                drawLineScrn(dc, dc.Tools.ArrowAxesPen, vp0, vp1);
+                drawLineScrn(dc, DrawTools.PEN_AXIS, vp0, vp1);
             }
-            dc.graphics.DrawString("z", dc.Tools.SmallFont, dc.Tools.TextBrush, (int)vp1.x - 8, (int)vp1.y);
+            dc.DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, vp1.x - 8, vp1.y, "z");
         }
 
         public static void drawPageFrame(DrawContext dc)
         {
-            if (dc.Tools.PageFramePen == null)
-            {
-                return;
-            }
-
             CadPoint pt = default(CadPoint);
 
             // p0
@@ -260,7 +242,7 @@ namespace Plotter
 
             p1 += dc.ViewOrg;
 
-            Drawer.drawRectScrn(dc, dc.Tools.PageFramePen, p0, p1);
+            Drawer.drawRectScrn(dc, DrawTools.PEN_PAGE_FRAME, p0, p1);
         }
         #endregion
 
@@ -269,7 +251,7 @@ namespace Plotter
         {
             CadPoint pp = dc.CadPointToUnitPoint(pt);
 
-            dc.graphics.DrawEllipse(dc.Tools.PointHighlitePen, (int)pp.x - 6, (int)pp.y - 6, 12, 12);
+            dc.DrawCircleScrn(DrawTools.PEN_POINT_HIGHTLITE, pp, 3);
         }
 
         public static void drawSelectedPoint(DrawContext dc, CadPoint pt)
@@ -278,11 +260,14 @@ namespace Plotter
 
             int size = 3;
 
-            dc.graphics.DrawRectangle(
-                dc.Tools.SelectedPointPen, (int)pp.x - size, (int)pp.y - size, size * 2, size * 2);
+            dc.DrawRectangleScrn(
+                DrawTools.PEN_SLECT_POINT,
+                (int)pp.x - size, (int)pp.y - size,
+                (int)pp.x + size, (int)pp.y + size
+                );
         }
 
-        public static void drawLastPointMarker(DrawContext dc, Pen pen, CadPoint p)
+        public static void drawLastPointMarker(DrawContext dc, int pen, CadPoint p)
         {
             drawCross(dc, pen, p, 5);
         }
@@ -292,128 +277,59 @@ namespace Plotter
 
         public static void drawCursor(DrawContext dc, CadPoint pt)
         {
-            Pen pen = dc.Tools.CursorPen;
+            int pen = DrawTools.PEN_CURSOR;
             CadPoint pp = dc.CadPointToUnitPoint(pt);
 
-            //int size = 16;
-            int size = (int)Math.Max(dc.ViewWidth, dc.ViewHeight);
+            //double size = 16;
+            double size = Math.Max(dc.ViewWidth, dc.ViewHeight);
 
-            dc.graphics.DrawLine(pen, (int)pp.x - size, (int)pp.y, (int)pp.x + size, (int)pp.y);
-            dc.graphics.DrawLine(pen, (int)pp.x, (int)pp.y - size, (int)pp.x, (int)pp.y + size);
+            dc.DrawLineScrn(pen, pp.x - size, pp.y, pp.x + size, pp.y);
+            dc.DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
         }
 
         public static void drawCursorScrn(DrawContext dc, CadPoint pp)
         {
-            Pen pen = dc.Tools.CursorPen;
-            Pen pen2 = dc.Tools.CursorPen2;
+            int pen = DrawTools.PEN_CURSOR;
+            int pen2 = DrawTools.PEN_CURSOR2;
 
-            int size = 16;
-            int size2 = (int)Math.Max(dc.ViewWidth, dc.ViewHeight);
+            double size = 16;
+            double size2 = Math.Max(dc.ViewWidth, dc.ViewHeight);
 
-            dc.graphics.DrawLine(pen2, (int)pp.x - size2, (int)pp.y, (int)pp.x + size2, (int)pp.y);
-            dc.graphics.DrawLine(pen2, (int)pp.x, (int)pp.y - size2, (int)pp.x, (int)pp.y + size2);
+            dc.DrawLineScrn(pen2, pp.x - size2, pp.y, pp.x + size2, pp.y);
+            dc.DrawLineScrn(pen2, pp.x, pp.y - size2, pp.x, pp.y + size2);
 
-            dc.graphics.DrawLine(pen, (int)pp.x - size, (int)pp.y, (int)pp.x + size, (int)pp.y);
-            dc.graphics.DrawLine(pen, (int)pp.x, (int)pp.y - size, (int)pp.x, (int)pp.y + size);
+            dc.DrawLineScrn(pen, pp.x - size, pp.y, pp.x + size, pp.y);
+            dc.DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
         }
         #endregion
 
         #region "draw primitive"
-        public static void drawLine(DrawContext dc, Pen pen, CadPoint a, CadPoint b)
+        public static void drawLine(DrawContext dc, int pen, CadPoint a, CadPoint b)
         {
-            if (dc.graphics == null) return;
-
-            CadPoint pa = dc.CadPointToUnitPoint(a);
-            CadPoint pb = dc.CadPointToUnitPoint(b);
-
-            dc.graphics.DrawLine(pen, (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
+            dc.DrawLine(pen, a, b);
         }
 
-        public static void drawLineScrn(DrawContext dc, Pen pen, CadPoint a, CadPoint b)
+        public static void drawLineScrn(DrawContext dc, int pen, CadPoint a, CadPoint b)
         {
-            if (dc.graphics == null) return;
-            dc.graphics.DrawLine(pen, (int)a.x, (int)a.y, (int)b.x, (int)b.y);
+            dc.DrawLineScrn(pen, a, b);
         }
 
-        public static void drawText(DrawContext dc, Font fnt, Brush brush, CadPoint a, string s)
+        public static void drawText(DrawContext dc, int font, int brush, CadPoint a, string s)
         {
-            if (dc.graphics == null) return;
-            CadPoint pa = dc.CadPointToUnitPoint(a);
-            dc.graphics.DrawString(s, fnt, brush, (int)pa.x, (int)pa.y);
+            dc.DrawText(font, brush, a, s);
         }
 
-
-        /*
-        public static void drawLine(DrawContext dc, Pen pen, double x0, double y0, double x1, double y1)
+        public static void drawRect(DrawContext dc, int pen, CadPoint p0, CadPoint p1)
         {
-            CadPoint p0 = default(CadPoint);
-            CadPoint p1 = default(CadPoint);
-
-            p0.x = x0;
-            p0.y = y0;
-
-            p1.x = x1;
-            p1.y = y1;
-
-            drawLine(dc, pen, p0, p1);
-        }
-        */
-
-        public static void drawRect(DrawContext dc, Pen pen, CadPoint p0, CadPoint p1)
-        {
-            if (dc.graphics == null) return;
-
             CadPoint pp0 = dc.CadPointToUnitPoint(p0);
             CadPoint pp1 = dc.CadPointToUnitPoint(p1);
 
-            drawRect(dc.graphics, pen, (int)pp0.x, (int)pp0.y, (int)pp1.x, (int)pp1.y);
+            dc.DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
         }
 
-        public static void drawRectScrn(DrawContext dc, Pen pen, CadPoint pp0, CadPoint pp1)
+        public static void drawRectScrn(DrawContext dc, int pen, CadPoint pp0, CadPoint pp1)
         {
-            drawRect(dc.graphics, pen, (int)pp0.x, (int)pp0.y, (int)pp1.x, (int)pp1.y);
-        }
-
-        /*
-        public static void drawRect(DrawContext dc, Pen pen, double x0, double y0, double x1, double y1)
-        {
-            CadPoint p0 = default(CadPoint);
-            CadPoint p1 = default(CadPoint);
-
-            p0.x = x0;
-            p0.y = y0;
-            p1.x = x1;
-            p1.y = y1;
-
-            drawRect(dc, pen, p0, p1);
-        }
-        */
-
-        private static void drawRect(Graphics g, Pen pen, int x0, int y0, int x1, int y1)
-        {
-            int lx = x0;
-            int rx = x1;
-
-            int ty = y0;
-            int by = y1;
-
-            if (x0 > x1)
-            {
-                lx = x1;
-                rx = x0;
-            }
-
-            if (y0 > y1)
-            {
-                ty = y1;
-                by = y0;
-            }
-
-
-            int dx = rx - lx;
-            int dy = by - ty;
-
-            g.DrawRectangle(pen, lx, ty, dx, dy);
+            dc.DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
         }
 
 
@@ -483,11 +399,9 @@ namespace Plotter
 
 
         public static void drawBezier(
-            DrawContext dc, Pen pen,
+            DrawContext dc, int pen,
             CadPoint p0, CadPoint p1, CadPoint p2)
         {
-            if (dc.graphics == null) return;
-
             double t = 0;
             double d = 1.0 / 64;
 
@@ -514,11 +428,9 @@ namespace Plotter
         }
 
         public static void drawBezier(
-            DrawContext dc, Pen pen,
+            DrawContext dc, int pen,
             CadPoint p0, CadPoint p1, CadPoint p2, CadPoint p3)
         {
-            if (dc.graphics == null) return;
-
             double t = 0;
             double d = 1.0 / 64;
 
@@ -545,47 +457,30 @@ namespace Plotter
             }
         }
 
-        public static void drawCircle(DrawContext dc, Pen pen, CadPoint cp, CadPoint p1)
+        public static void drawCircle(DrawContext dc, int pen, CadPoint cp, CadPoint p1)
         {
-            if (dc.graphics == null) return;
-
-            double r = CadUtil.segNorm(cp, p1);
-
-            CadPoint cpp =  dc.CadPointToUnitPoint(cp);
-
-            r = dc.MilliToUnit(r);
-
-            dc.graphics.DrawEllipse(
-                pen, (int)(cpp.x - r), (int)(cpp.y - r), (int)(r*2), (int)(r *2));
+            dc.DrawCircle(pen, cp, p1);
         }
 
 
-        public static void drawCircleScrn(DrawContext dc, Pen pen, CadPoint cp, CadPoint p1)
+        public static void drawCircleScrn(DrawContext dc, int pen, CadPoint cp, CadPoint p1)
         {
-            if (dc.graphics == null) return;
-
-            double r = CadUtil.segNorm(cp, p1);
-
-            dc.graphics.DrawEllipse(
-                pen, (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
+            dc.DrawCircleScrn(pen, cp, p1);
         }
 
-        public static void drawCircleScrn(DrawContext dc, Pen pen, CadPoint cp, double r)
+        public static void drawCircleScrn(DrawContext dc, int pen, CadPoint cp, double r)
         {
-            if (dc.graphics == null) return;
-
-            dc.graphics.DrawEllipse(
-                pen, (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
+            CadPoint p1 = cp;
+            p1.x += r;
+            dc.DrawCircleScrn(pen, cp, p1);
         }
 
-        public static void drawCross(DrawContext dc, Pen pen, CadPoint p, int size)
+        public static void drawCross(DrawContext dc, int pen, CadPoint p, int size)
         {
-            if (dc.graphics == null) return;
-
             CadPoint a = dc.CadPointToUnitPoint(p);
 
-            dc.graphics.DrawLine(pen, (int)a.x - size, (int)a.y + 0, (int)a.x + size, (int)a.y + 0);
-            dc.graphics.DrawLine(pen, (int)a.x + 0, (int)a.y + size, (int)a.x + 0, (int)a.y - size);
+            dc.DrawLineScrn(pen, a.x - size, a.y + 0, a.x + size, a.y + 0);
+            dc.DrawLineScrn(pen, a.x + 0, a.y + size, a.x + 0, a.y - size);
         }
         #endregion
     }

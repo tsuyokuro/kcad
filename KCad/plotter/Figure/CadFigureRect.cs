@@ -53,7 +53,7 @@ namespace Plotter
                 }
             }
 
-            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, Pen pen)
+            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
             {
                 if (fig.PointList.Count <= 0)
                 {

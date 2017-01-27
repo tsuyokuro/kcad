@@ -53,17 +53,17 @@ namespace Plotter
                 fig.mPointList.Add(p);
             }
 
-            public override void draw(CadFigure fig, DrawContext dc, Pen pen)
+            public override void draw(CadFigure fig, DrawContext dc, int pen)
             {
                 drawLines(fig, dc, pen);
             }
 
-            public override void drawSelected(CadFigure fig, DrawContext dc, Pen pen)
+            public override void drawSelected(CadFigure fig, DrawContext dc, int pen)
             {
                 drawSelected_Lines(fig, dc, pen);
             }
 
-            public override void drawSeg(CadFigure fig, DrawContext dc, Pen pen, int idxA, int idxB)
+            public override void drawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB)
             {
                 CadPoint a = fig.PointList[idxA];
                 CadPoint b = fig.PointList[idxB];
@@ -71,7 +71,7 @@ namespace Plotter
                 Drawer.drawLine(dc, pen, a, b);
             }
 
-            protected void drawLines(CadFigure fig, DrawContext dc, Pen pen)
+            protected void drawLines(CadFigure fig, DrawContext dc, int pen)
             {
                 IReadOnlyList<CadPoint> pl = fig.PointList;
 
@@ -213,7 +213,7 @@ namespace Plotter
                 return ret;
             }
 
-            private void drawSelected_Lines(CadFigure fig, DrawContext dc, Pen pen)
+            private void drawSelected_Lines(CadFigure fig, DrawContext dc, int pen)
             {
                 int i;
                 int num = fig.PointList.Count;
@@ -236,7 +236,7 @@ namespace Plotter
                             CadPoint np = fig.getPointAt(idx);
                             if (np.Type != CadPoint.Types.HANDLE)
                             {
-                                Drawer.drawLine(dc, dc.Tools.MatchSegPen, p, np);
+                                Drawer.drawLine(dc, DrawTools.PEN_MATCH_SEG, p, np);
                                 Drawer.drawSelectedPoint(dc, np);
                             }
                         }
@@ -248,7 +248,7 @@ namespace Plotter
                             CadPoint np = fig.getPointAt(idx);
                             if (np.Type != CadPoint.Types.HANDLE)
                             {
-                                Drawer.drawLine(dc, dc.Tools.MatchSegPen, p, np);
+                                Drawer.drawLine(dc, DrawTools.PEN_MATCH_SEG, p, np);
                                 Drawer.drawSelectedPoint(dc, np);
                             }
                         }
@@ -262,7 +262,7 @@ namespace Plotter
                             CadPoint np = fig.getPointAt(idx);
                             if (np.Type == CadPoint.Types.HANDLE)
                             {
-                                Drawer.drawLine(dc, dc.Tools.MatchSegPen, p, np);
+                                Drawer.drawLine(dc, DrawTools.PEN_MATCH_SEG, p, np);
                                 Drawer.drawSelectedPoint(dc, np);
                             }
                         }
@@ -274,7 +274,7 @@ namespace Plotter
                             CadPoint np = fig.getPointAt(idx);
                             if (np.Type == CadPoint.Types.HANDLE)
                             {
-                                Drawer.drawLine(dc, dc.Tools.MatchSegPen, p, np);
+                                Drawer.drawLine(dc, DrawTools.PEN_MATCH_SEG, p, np);
                                 Drawer.drawSelectedPoint(dc, np);
                             }
                         }
@@ -282,7 +282,7 @@ namespace Plotter
                 }
             }
 
-            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, Pen pen)
+            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
             {
                 if (fig.PointCount == 0)
                 {
