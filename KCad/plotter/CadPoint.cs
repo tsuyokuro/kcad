@@ -422,15 +422,15 @@ namespace Plotter
             p3.x += d;
             p3.y += d;
 
-            Drawer.drawLine(dc, DrawTools.PEN_RELATIVE_POINT, p0, p1);
-            Drawer.drawLine(dc, DrawTools.PEN_RELATIVE_POINT, p2, p3);
+            dc.Drawing.DrawLine(DrawTools.PEN_RELATIVE_POINT, p0, p1);
+            dc.Drawing.DrawLine(DrawTools.PEN_RELATIVE_POINT, p2, p3);
         }
 
         public void drawSelected(DrawContext dc)
         {
             if (point.Selected)
             {
-                Drawer.drawSelectedPoint(dc, point);
+                dc.Drawing.DrawSelectedPoint(point);
             }
         }
     }

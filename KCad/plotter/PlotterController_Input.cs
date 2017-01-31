@@ -399,7 +399,7 @@ namespace Plotter
 
             if ((mx.Flag & MarkPoint.X_MATCH) != 0)
             {
-                Drawer.drawHighlitePoint(dc, mx.Point);
+                dc.Drawing.DrawHighlitePoint(mx.Point);
 
                 tp = dc.CadPointToUnitPoint(mx.Point);
 
@@ -413,7 +413,7 @@ namespace Plotter
 
             if ((my.Flag & MarkPoint.Y_MATCH) != 0)
             {
-                Drawer.drawHighlitePoint(dc, my.Point);
+                dc.Drawing.DrawHighlitePoint(my.Point);
 
                 tp = dc.CadPointToUnitPoint(my.Point);
 
@@ -446,7 +446,7 @@ namespace Plotter
                 }
             }
 
-            Drawer.drawCursorScrn(dc, mSnapScrnPoint);
+            dc.Drawing.DrawCursorScrn(mSnapScrnPoint);
 
             switch (State)
             {

@@ -4,7 +4,6 @@ using static System.Math;
 
 namespace Plotter
 {
-
     public class PaperPageSize
     {
         public double width;
@@ -132,6 +131,7 @@ namespace Plotter
 
         protected DrawTools Tools = new DrawTools();
 
+        public DrawingX Drawing;
 
         public void calcViewCenter()
         {
@@ -234,54 +234,6 @@ namespace Plotter
             ViewCenter.dump(dout);
 
             dout.println("View Width=" + mViewWidth.ToString() + " Height=" + mViewHeight.ToString());
-        }
-
-        public virtual void FillRectangleScrn(int brush, double x1, double y1, double x2, double y2) {
-
-        }
-
-        public virtual void DrawCircle(int pen, CadPoint cp, CadPoint p1)
-        {
-        }
-
-        public virtual void DrawCircle(int pen, CadPoint cp, double r)
-        {
-        }
-
-        public virtual void DrawCircleScrn(int pen, CadPoint cp, CadPoint p1)
-        {
-        }
-
-        public virtual void DrawCircleScrn(int pen, CadPoint cp, double r)
-        {
-        }
-
-        public virtual void DrawLine(int pen, CadPoint a, CadPoint b)
-        {
-        }
-
-        public virtual void DrawLineScrn(int pen, CadPoint a, CadPoint b)
-        {
-        }
-
-        public virtual void DrawLineScrn(int pen, double x1, double y1, double x2, double y2)
-        {
-        }
-
-        public virtual void DrawText(int font, int brush, CadPoint a, string s)
-        {
-        }
-
-        public virtual void DrawTextScrn(int font, int brush, CadPoint a, string s)
-        {
-        }
-
-        public virtual void DrawTextScrn(int font, int brush, double x, double y, string s)
-        {
-        }
-
-        public virtual void DrawRectangleScrn(int pen, double x1, double y1, double x2, double y2)
-        {
         }
     }
 }

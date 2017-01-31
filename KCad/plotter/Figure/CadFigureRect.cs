@@ -60,7 +60,7 @@ namespace Plotter
                     return;
                 }
 
-                Drawer.drawRect(dc, pen, fig.PointList[0], tp);
+                dc.Drawing.DrawRect(pen, fig.PointList[0], tp);
             }
 
             public override CadFigure.Types endCreate(CadFigure fig)

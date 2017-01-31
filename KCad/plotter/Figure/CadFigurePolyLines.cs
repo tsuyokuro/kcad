@@ -68,7 +68,7 @@ namespace Plotter
                 CadPoint a = fig.PointList[idxA];
                 CadPoint b = fig.PointList[idxB];
 
-                Drawer.drawLine(dc, pen, a, b);
+                dc.Drawing.DrawLine(pen, a, b);
             }
 
             protected void drawLines(CadFigure fig, DrawContext dc, int pen)
@@ -89,10 +89,10 @@ namespace Plotter
                 // If the count of point is 1, draw + mark.  
                 if (pl.Count == 1)
                 {
-                    Drawer.drawCross(dc, pen, a, 2);
+                    dc.Drawing.DrawCross(pen, a, 2);
                     if (a.Selected)
                     {
-                        Drawer.drawHighlitePoint(dc, a);
+                        dc.Drawing.DrawHighlitePoint(a);
                     }
 
                     return;
@@ -105,7 +105,7 @@ namespace Plotter
                         if (pl[i + 1].Type == CadPoint.Types.HANDLE &&
                             pl[i + 2].Type == CadPoint.Types.HANDLE)
                         {
-                            Drawer.drawBezier(dc, pen,
+                            dc.Drawing.DrawBezier(pen,
                                 pl[i], pl[i + 1], pl[i + 2], pl[i + 3]);
 
                             i += 3;
@@ -115,7 +115,7 @@ namespace Plotter
                         else if (pl[i + 1].Type == CadPoint.Types.HANDLE &&
                             pl[i + 2].Type == CadPoint.Types.STD)
                         {
-                            Drawer.drawBezier(dc, pen,
+                            dc.Drawing.DrawBezier(pen,
                                 pl[i], pl[i + 1], pl[i + 2]);
 
                             i += 2;
@@ -129,7 +129,7 @@ namespace Plotter
                         if (pl[i + 1].Type == CadPoint.Types.HANDLE &&
                                                 pl[i + 2].Type == CadPoint.Types.STD)
                         {
-                            Drawer.drawBezier(dc, pen,
+                            dc.Drawing.DrawBezier(pen,
                                 pl[i], pl[i + 1], pl[i + 2]);
 
                             i += 2;
@@ -141,7 +141,7 @@ namespace Plotter
                     if (i + 1 < pl.Count)
                     {
                         b = pl[i + 1];
-                        Drawer.drawLine(dc, pen, a, b);
+                        dc.Drawing.DrawLine(pen, a, b);
 
                         a = b;
                         i++;
@@ -155,7 +155,7 @@ namespace Plotter
                 if (fig.Closed)
                 {
                     b = pl[0];
-                    Drawer.drawLine(dc, pen, a, b);
+                    dc.Drawing.DrawLine(pen, a, b);
                 }
             }
 
@@ -224,7 +224,7 @@ namespace Plotter
 
                     if (!p.Selected) continue;
 
-                    Drawer.drawSelectedPoint(dc, p);
+                    dc.Drawing.DrawSelectedPoint(p);
 
 
                     if (p.Type == CadPoint.Types.HANDLE)
@@ -236,8 +236,8 @@ namespace Plotter
                             CadPoint np = fig.getPointAt(idx);
                             if (np.Type != CadPoint.Types.HANDLE)
                             {
-                                Drawer.drawLine(dc, DrawTools.PEN_MATCH_SEG, p, np);
-                                Drawer.drawSelectedPoint(dc, np);
+                                dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
+                                dc.Drawing.DrawSelectedPoint(np);
                             }
                         }
 
@@ -248,8 +248,8 @@ namespace Plotter
                             CadPoint np = fig.getPointAt(idx);
                             if (np.Type != CadPoint.Types.HANDLE)
                             {
-                                Drawer.drawLine(dc, DrawTools.PEN_MATCH_SEG, p, np);
-                                Drawer.drawSelectedPoint(dc, np);
+                                dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
+                                dc.Drawing.DrawSelectedPoint(np);
                             }
                         }
                     }
@@ -262,8 +262,8 @@ namespace Plotter
                             CadPoint np = fig.getPointAt(idx);
                             if (np.Type == CadPoint.Types.HANDLE)
                             {
-                                Drawer.drawLine(dc, DrawTools.PEN_MATCH_SEG, p, np);
-                                Drawer.drawSelectedPoint(dc, np);
+                                dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
+                                dc.Drawing.DrawSelectedPoint(np);
                             }
                         }
 
@@ -274,8 +274,8 @@ namespace Plotter
                             CadPoint np = fig.getPointAt(idx);
                             if (np.Type == CadPoint.Types.HANDLE)
                             {
-                                Drawer.drawLine(dc, DrawTools.PEN_MATCH_SEG, p, np);
-                                Drawer.drawSelectedPoint(dc, np);
+                                dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
+                                dc.Drawing.DrawSelectedPoint(np);
                             }
                         }
                     }
@@ -291,7 +291,7 @@ namespace Plotter
 
                 CadPoint lastPt = fig.PointList[fig.PointCount - 1];
 
-                Drawer.drawLine(dc, pen, lastPt, tp);
+                dc.Drawing.DrawLine(pen, lastPt, tp);
             }
 
             public override void setPointAt(CadFigure fig, int index, CadPoint pt)

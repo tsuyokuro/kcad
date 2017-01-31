@@ -82,7 +82,7 @@ namespace Plotter
                 CadPoint cp = fig.PointList[0];
 
 
-                Drawer.drawCircle(dc, pen, cp, tp);
+                dc.Drawing.DrawCircle(pen, cp, tp);
             }
 
             private void drawCircle(CadFigure fig, DrawContext dc, int pen)
@@ -94,18 +94,18 @@ namespace Plotter
 
                 if (fig.PointList.Count == 1)
                 {
-                    Drawer.drawCross(dc, pen, fig.PointList[0], 2);
-                    if (fig.PointList[0].Selected) Drawer.drawSelectedPoint(dc, fig.PointList[0]);
+                    dc.Drawing.DrawCross(pen, fig.PointList[0], 2);
+                    if (fig.PointList[0].Selected) dc.Drawing.DrawSelectedPoint(fig.PointList[0]);
                     return;
                 }
 
-                Drawer.drawCircle(dc, pen, fig.PointList[0], fig.PointList[1]);
+                dc.Drawing.DrawCircle(pen, fig.PointList[0], fig.PointList[1]);
             }
 
             private void drawSelected_Circle(CadFigure fig, DrawContext dc, int pen)
             {
-                if (fig.PointList[0].Selected) Drawer.drawSelectedPoint(dc, fig.PointList[0]);
-                if (fig.PointList[1].Selected) Drawer.drawSelectedPoint(dc, fig.PointList[1]);
+                if (fig.PointList[0].Selected) dc.Drawing.DrawSelectedPoint(fig.PointList[0]);
+                if (fig.PointList[1].Selected) dc.Drawing.DrawSelectedPoint(fig.PointList[1]);
             }
 
             public override void startCreate(CadFigure fig)

@@ -278,7 +278,7 @@ namespace Plotter
 
             updateRelPoints();
 
-            Drawer.clear(dc);
+            dc.Drawing.Clear();
             draw(dc);
         }
 
@@ -289,7 +289,7 @@ namespace Plotter
 
             updateRelPoints();
 
-            Drawer.clear(dc);
+            dc.Drawing.Clear();
             draw(dc);
         }
         #endregion
@@ -299,33 +299,33 @@ namespace Plotter
         public void clear(DrawContext dc)
         {
             if (dc == null) return;
-            Drawer.clear(dc);
+            dc.Drawing.Clear();
         }
 
         public void draw(DrawContext dc)
         {
             if (dc == null) return;
 
-            Drawer.drawAxis(dc);
-            Drawer.drawPageFrame(dc);
+            dc.Drawing.DrawAxis();
+            dc.Drawing.DrawPageFrame();
 
             foreach (CadLayer layer in mDB.LayerList)
             {
                 if (layer.Visible)
                 {
-                    Drawer.draw(dc, layer);
+                    dc.Drawing.Draw(layer);
                     drawRelPoints(dc, layer.RelPointList);
                 }
             }
 
-            Drawer.draw(dc, TempFigureList, DrawTools.PEN_TEST_FIGURE);
+            dc.Drawing.Draw(TempFigureList, DrawTools.PEN_TEST_FIGURE);
         }
 
         public void drawSelectedItems(DrawContext dc)
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                Drawer.drawSelected(dc, layer);
+                dc.Drawing.DrawSelected(layer);
             }
         }
 
@@ -335,13 +335,13 @@ namespace Plotter
 
             //Drawer.drawCursorScrn(dc, mSnapScrnPoint);
 
-            Drawer.drawLastPointMarker(
-                dc, DrawTools.PEN_LAST_POINT_MARKER, mFreeDownPoint);
+            dc.Drawing.DrawLastPointMarker(
+                DrawTools.PEN_LAST_POINT_MARKER, mFreeDownPoint);
 
             if (mObjDownPoint != null)
             {
-                Drawer.drawLastPointMarker(
-                    dc, DrawTools.PEN_LAST_POINT_MARKER2, mObjDownPoint.Value);
+                dc.Drawing.DrawLastPointMarker(
+                    DrawTools.PEN_LAST_POINT_MARKER2, mObjDownPoint.Value);
             }
         }
 
@@ -357,7 +357,7 @@ namespace Plotter
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                Drawer.draw(dc, layer);
+                dc.Drawing.Draw(layer);
             }
         }
         #endregion
