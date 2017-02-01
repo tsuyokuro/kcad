@@ -13,10 +13,10 @@ namespace Plotter
         }
     }
 
-    public partial class PlotterView : PictureBox
+    public partial class PlotterView : PictureBox, IPlotterView
     {
         private Bitmap mImage;
-        private PlotterController mController = new PlotterController();
+        private PlotterController mController = null;
 
         private DrawContext mDrawContext = new DrawContextWin();
 
@@ -92,9 +92,6 @@ namespace Plotter
 
                 mRectContextMenu.Items.Add(mMnItemQuitRect);
             }
-
-            mController.RequestContextMenu += ShowContextMenu;
-
         }
 
         protected override void Dispose(bool disposing)
@@ -242,6 +239,21 @@ namespace Plotter
                 mController.endCreateFigureState(g);
                 endDraw();
 
+            }
+        }
+
+        public void SetController(PlotterController controller)
+        {
+            if (mController != null)
+            {
+                mController.RequestContextMenu -= ShowContextMenu;
+            }
+
+            mController = controller;
+
+            if (controller != null)
+            {
+                mController.RequestContextMenu += ShowContextMenu;
             }
         }
     }

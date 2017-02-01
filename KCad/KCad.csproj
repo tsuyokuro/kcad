@@ -115,6 +115,7 @@
     <Compile Include="plotterViewModel\EnumBoolConverter.cs" />
     <Compile Include="plotterViewModel\LayerHolder.cs" />
     <Compile Include="plotterViewModel\PlotterViewModel.cs" />
+    <Compile Include="plotterView\IPlotterView.cs" />
     <Compile Include="plotterView\PlotterView.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -36,7 +36,10 @@ namespace KCad
 
             viewContainer.Child = plotterView1;
 
-            ViewModel = new PlotterViewModel(plotterView1);
+            ViewModel = new PlotterViewModel();
+
+            ViewModel.SetView(plotterView1);
+
 
             LayerListView.DataContext = ViewModel.LayerList;
 
@@ -133,20 +136,24 @@ namespace KCad
             {
                 case "axis_xy":
                     viewContainer.Child = plotterView1;
+                    ViewModel.SetView(plotterView1);
                     ViewModel.ButtonClicked(sender, e);
                     break;
 
                 case "axis_xz":
                     viewContainer.Child = plotterView1;
+                    ViewModel.SetView(plotterView1);
                     ViewModel.ButtonClicked(sender, e);
                     break;
 
                 case "axis_zy":
                     viewContainer.Child = plotterView1;
+                    ViewModel.SetView(plotterView1);
                     ViewModel.ButtonClicked(sender, e);
                     break;
 
                 case "axis_xyz":
+                    ViewModel.SetView(plotterViewGL1);
                     viewContainer.Child = plotterViewGL1;
                     break;
             }

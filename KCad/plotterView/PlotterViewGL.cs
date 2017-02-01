@@ -6,9 +6,27 @@ using System.Windows.Forms;
 
 namespace Plotter
 {
-    class PlotterViewGL : GLControl
+    class PlotterViewGL : GLControl, IPlotterView
     {
         private DrawContext mDrawContext = new DrawContextGL();
+
+        private PlotterController mController = null;
+
+        public DrawContext DrawContext
+        {
+            get
+            {
+                return mDrawContext;
+            }
+        }
+
+        public PaperPageSize PageSize
+        {
+            get
+            {
+                return mDrawContext.PageSize;
+            }
+        }
 
         public static PlotterViewGL Create()
         {
@@ -50,6 +68,21 @@ namespace Plotter
         private void onResize(object sender, EventArgs e)
         {
             mDrawContext.setViewSize(Size.Width, Size.Height);
+        }
+
+        public DrawContext startDraw()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void endDraw()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetController(PlotterController controller)
+        {
+            mController = controller;
         }
     }
 }
