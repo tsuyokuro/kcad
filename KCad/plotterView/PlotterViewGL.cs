@@ -8,12 +8,7 @@ namespace Plotter
 {
     class PlotterViewGL : GLControl
     {
-        Matrix4 Projection;
-        Matrix4 ModelView;
-
-        Vector3 Eye = default(Vector3);
-        Vector3 LookAt = default(Vector3);
-        Vector3 UpVector = default(Vector3);
+        private DrawContext mDrawContext = new DrawContextGL();
 
         public static PlotterViewGL Create()
         {
@@ -54,6 +49,7 @@ namespace Plotter
 
         private void onResize(object sender, EventArgs e)
         {
+            mDrawContext.setViewSize(Size.Width, Size.Height);
         }
     }
 }

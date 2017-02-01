@@ -122,7 +122,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="plotter\Assembler\TriangleSplitter.cs" />
+    <Compile Include="plotter\DrawContext\DrawContextGL.cs" />
     <Compile Include="plotter\DrawContext\DrawContextWin.cs" />
+    <Compile Include="plotter\DrawContext\DrawingGL.cs" />
     <Compile Include="plotter\DrawContext\DrawingWin.cs" />
     <Compile Include="plotter\DrawContext\DrawingX.cs" />
     <Compile Include="plotter\DrawTools.cs" />
