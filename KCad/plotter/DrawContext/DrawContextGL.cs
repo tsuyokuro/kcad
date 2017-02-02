@@ -35,6 +35,8 @@ namespace Plotter
 
         public override void startDraw()
         {
+            Console.WriteLine("DrawContextGL startDraw");
+
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             GL.MatrixMode(MatrixMode.Projection);
@@ -42,7 +44,6 @@ namespace Plotter
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
-
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref ViewMatrix.GLMatrix);
@@ -53,16 +54,19 @@ namespace Plotter
 
         public override void endDraw()
         {
+            Console.WriteLine("DrawContextGL endDraw");
         }
 
         public override void setViewSize(double w, double h)
         {
+            Console.WriteLine("DrawContextGL setViewSize w=" + w.ToString() + " h=" + h.ToString());
+
             mViewWidth = w;
             mViewHeight = h;
 
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 
-            float aspect = (float)(w / h);
+            float aspect = (float)(mViewWidth / mViewHeight);
             float fovy = (float)Math.PI / 2.0f; // Yの傾き
 
             ProjectionMatrix.GLMatrix = Matrix4.CreatePerspectiveFieldOfView(

@@ -57,7 +57,7 @@ namespace Plotter
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private PlotterController mPlotterController = new PlotterController();
+        private PlotterController mController = new PlotterController();
 
         private IPlotterView mPlotterView = null;
 
@@ -82,7 +82,7 @@ namespace Plotter
             set
             {
                 mSelectMode = value;
-                mPlotterController.SelectMode = mSelectMode;
+                mController.SelectMode = mSelectMode;
 
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectMode)));
             }
@@ -113,14 +113,14 @@ namespace Plotter
 
                 if (mFigureType != CadFigure.Types.NONE)
                 {
-                    mPlotterController.startCreateFigure(mFigureType);
+                    mController.startCreateFigure(mFigureType);
                 }
                 else if (prev != CadFigure.Types.NONE)
                 {
-                    mPlotterController.endCreateFigure();
+                    mController.endCreateFigure();
 
                     DrawContext dc = mPlotterView.startDraw();
-                    mPlotterController.draw(dc);
+                    mController.draw(dc);
                     mPlotterView.endDraw();
                 }
 
@@ -149,7 +149,7 @@ namespace Plotter
                 else
                 {
                     value.SelectionChanged += LayerListSelectionChanged;
-                    int idx = getLayerListIndex(mPlotterController.CurrentLayer.ID);
+                    int idx = getLayerListIndex(mController.CurrentLayer.ID);
                     value.SelectedIndex = idx;
                 }
 
@@ -166,7 +166,7 @@ namespace Plotter
         {
             get
             {
-                return mPlotterController;
+                return mController;
             }
         }
 
@@ -175,20 +175,20 @@ namespace Plotter
             initCommandMap();
             initKeyMap();
 
-            SelectMode = mPlotterController.SelectMode;
-            FigureType = mPlotterController.CreatingFigType;
+            SelectMode = mController.SelectMode;
+            FigureType = mController.CreatingFigType;
 
-            mPlotterController.StateChanged = StateChanged;
+            mController.StateChanged = StateChanged;
 
             InteractIn.print = MessageOut;
 
-            mPlotterController.Interact = InteractIn;
+            mController.Interact = InteractIn;
 
-            mPlotterController.LayerListChanged =  LayerListChanged;
+            mController.LayerListChanged =  LayerListChanged;
 
-            mPlotterController.DataChanged = DataChanged;
+            mController.DataChanged = DataChanged;
 
-            mPlotterController.CursorPosChanged = CursorPosChanged;
+            mController.CursorPosChanged = CursorPosChanged;
         }
 
         public void SetView(IPlotterView view)
@@ -204,7 +204,7 @@ namespace Plotter
             }
 
             mPlotterView = view;
-            mPlotterView.SetController(mPlotterController);
+            mPlotterView.SetController(mController);
         }
 
         #region Maps
@@ -322,9 +322,9 @@ namespace Plotter
             {
                 LayerHolder layer = (LayerHolder)args.AddedItems[0];
 
-                if (mPlotterController.CurrentLayer.ID != layer.ID)
+                if (mController.CurrentLayer.ID != layer.ID)
                 {
-                    mPlotterController.setCurrentLayer(layer.ID);
+                    mController.setCurrentLayer(layer.ID);
                 }
             }
             else
@@ -396,11 +396,11 @@ namespace Plotter
             switch (btn.Tag.ToString())
             {
                 case "add_layer":
-                    mPlotterController.addLayer(null);
+                    mController.addLayer(null);
                     break;
 
                 case "remove_layer":
-                    mPlotterController.removeLayer(mPlotterController.CurrentLayer.ID);
+                    mController.removeLayer(mController.CurrentLayer.ID);
                     draw();
                     break;
 
@@ -426,6 +426,7 @@ namespace Plotter
                     break;
 
                 case "axis_xyz":
+                    draw();
                     break;
             }
         }
@@ -435,18 +436,18 @@ namespace Plotter
         #region File
         private void SaveFile(String fname)
         {
-            mPlotterController.SaveToJsonFile(fname);
+            mController.SaveToJsonFile(fname);
         }
 
         private void LoadFile(String fname)
         {
-            mPlotterController.LoadFromJsonFile(fname);
+            mController.LoadFromJsonFile(fname);
 
             DrawContext dc = mPlotterView.startDraw();
 
-            mPlotterController.clear(dc);
+            mController.clear(dc);
 
-            mPlotterController.draw(dc);
+            mController.draw(dc);
 
             mPlotterView.endDraw();
         }
@@ -469,9 +470,9 @@ namespace Plotter
             DrawContext dc = mPlotterView.startDraw();
             if (clearFlag)
             {
-                mPlotterController.clear(dc);
+                mController.clear(dc);
             }
-            mPlotterController.draw(dc);
+            mController.draw(dc);
             mPlotterView.endDraw();
         }
         #endregion
@@ -481,70 +482,70 @@ namespace Plotter
         public void undo()
         {
             DrawContext dc = startDraw();
-            mPlotterController.undo(dc);
+            mController.undo(dc);
             endDraw();
         }
 
         public void redo()
         {
             DrawContext dc = startDraw();
-            mPlotterController.redo(dc);
+            mController.redo(dc);
             endDraw();
         }
 
         public void remove()
         {
             DrawContext dc = startDraw();
-            mPlotterController.remove(dc);
+            mController.remove(dc);
             endDraw();
         }
 
         public void separateFigure()
         {
             DrawContext dc = startDraw();
-            mPlotterController.separateFigures(dc);
+            mController.separateFigures(dc);
             endDraw();
         }
 
         public void bondFigure()
         {
             DrawContext g = startDraw();
-            mPlotterController.bondFigures(g);
+            mController.bondFigures(g);
             endDraw();
         }
 
         public void toBezier()
         {
             DrawContext dc = startDraw();
-            mPlotterController.toBezier(dc);
+            mController.toBezier(dc);
             endDraw();
         }
 
         public void cutSegment()
         {
             DrawContext dc = startDraw();
-            mPlotterController.cutSegment(dc);
+            mController.cutSegment(dc);
             endDraw();
         }
 
         public void addCenterPoint()
         {
             DrawContext dc = startDraw();
-            mPlotterController.addCenterPoint(dc);
+            mController.addCenterPoint(dc);
             endDraw();
         }
 
         public void Copy()
         {
             DrawContext dc = startDraw();
-            mPlotterController.Copy(dc);
+            mController.Copy(dc);
             endDraw();
         }
 
         public void Paste()
         {
             DrawContext dc = startDraw();
-            mPlotterController.Paste(dc);
+            mController.Paste(dc);
             endDraw();
         }
 
@@ -611,7 +612,7 @@ namespace Plotter
 
             dc.ViewOrg = org;
 
-            mPlotterController.print(dc);
+            mController.print(dc);
         }
         #endregion
 
@@ -620,7 +621,7 @@ namespace Plotter
         public void textCommand(string s)
         {
             MessageOut(s);
-            mPlotterController.command(s);
+            mController.command(s);
             draw(true);
         }
 
@@ -633,7 +634,7 @@ namespace Plotter
         public void debugCommand(string s)
         {
             DrawContext dc = mPlotterView.startDraw();
-            mPlotterController.debugCommand(dc, s);
+            mController.debugCommand(dc, s);
             mPlotterView.endDraw();
         }
         #endregion

@@ -153,11 +153,11 @@ namespace KCad
                     break;
 
                 case "axis_xyz":
-                    ViewModel.SetView(plotterViewGL1);
                     viewContainer.Child = plotterViewGL1;
+                    ViewModel.SetView(plotterViewGL1);
+                    ViewModel.ButtonClicked(sender, e);
                     break;
             }
-
         }
 
         #region "Key handling"

@@ -20,10 +20,12 @@ namespace Plotter
 
         private DrawContext mDrawContext = new DrawContextWin();
 
+        /*
         public PlotterController Controller
         {
             get { return mController; }
         }
+        */
 
         public DrawContext DrawContext
         {
@@ -133,8 +135,8 @@ namespace Plotter
                 }
 
                 DrawContext dc = startDraw();
-                Controller.clear(dc);
-                Controller.draw(dc);
+                mController.clear(dc);
+                mController.draw(dc);
                 endDraw();
             }
         }

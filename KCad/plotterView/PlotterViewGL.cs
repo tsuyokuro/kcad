@@ -62,22 +62,35 @@ namespace Plotter
 
         private void onPaint(object sender, PaintEventArgs e)
         {
-            SwapBuffers();
+            //SwapBuffers();
         }
 
         private void onResize(object sender, EventArgs e)
         {
             mDrawContext.setViewSize(Size.Width, Size.Height);
+
+            if (mController != null)
+            {
+                DrawContext dc = startDraw();
+                mController.clear(dc);
+                mController.draw(dc);
+                endDraw();
+            }
         }
 
         public DrawContext startDraw()
         {
-            throw new NotImplementedException();
+            MakeCurrent();
+            mDrawContext.startDraw();
+            return mDrawContext;
         }
 
         public void endDraw()
         {
-            throw new NotImplementedException();
+            Console.Write("PlotterViewGL ensDraw()");
+
+            mDrawContext.endDraw();
+            SwapBuffers();
         }
 
         public void SetController(PlotterController controller)
