@@ -8,9 +8,13 @@ namespace Plotter
 {
     class PlotterViewGL : GLControl, IPlotterView
     {
-        private DrawContext mDrawContext = new DrawContextGL();
+        private DrawContextGL mDrawContext = new DrawContextGL();
 
         private PlotterController mController = null;
+
+        CadPoint PrevMousePos = default(CadPoint);
+
+        bool IsMouseDown = false;
 
         public DrawContext DrawContext
         {
@@ -46,7 +50,20 @@ namespace Plotter
             Resize += onResize;
             Paint += onPaint;
             MouseMove += onMouseMove;
+            MouseDown += onMouseDown;
+            MouseUp += onMouseUp;
             SwapBuffers();
+        }
+
+        private void onMouseUp(object sender, MouseEventArgs e)
+        {
+            IsMouseDown = false;
+        }
+
+        private void onMouseDown(object sender, MouseEventArgs e)
+        {
+            PrevMousePos.set(e.X, e.Y, 0);
+            IsMouseDown = true;
         }
 
         private void onLoad(object sender, EventArgs e)
@@ -58,6 +75,22 @@ namespace Plotter
 
         private void onMouseMove(object sender, MouseEventArgs e)
         {
+            if (IsMouseDown)
+            {
+                CadPoint t = CadPoint.Create(e.X, e.Y, 0);
+                CadPoint d = t - PrevMousePos;
+
+                double ry = (-d.x / 10.0) * (Math.PI / 20);
+                double rx = (d.y / 10.0) * (Math.PI / 20);
+
+                mDrawContext.RotateEyePoint(rx, ry, 0);
+
+                startDraw();
+                mController.draw(mDrawContext);
+                endDraw();
+
+                PrevMousePos = t;
+            }
         }
 
         private void onPaint(object sender, PaintEventArgs e)
@@ -87,8 +120,6 @@ namespace Plotter
 
         public void endDraw()
         {
-            Console.Write("PlotterViewGL ensDraw()");
-
             mDrawContext.endDraw();
             SwapBuffers();
         }

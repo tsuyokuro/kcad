@@ -121,6 +121,13 @@ namespace Plotter
             this.Type = type;
         }
 
+        public static CadPoint Create(double x, double y, double z)
+        {
+            CadPoint v = default(CadPoint);
+            v.set(x, y, z);
+            return v;
+        }
+
         public JObject ToJson()
         {
             var jo = new JObject();

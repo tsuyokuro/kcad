@@ -27,8 +27,37 @@ namespace Plotter
 
         public override void Draw(IReadOnlyList<CadFigure> list, int pen = -1)
         {
-            //Console.WriteLine("DrawingGL Draw (FigureList)");
+            if (pen == -1)
+            {
+                pen = DrawTools.PEN_DEFAULT_FIGURE;
+            }
 
+            foreach (CadFigure fig in list)
+            {
+                fig.draw(DC, pen);
+            }
+        }
+
+        public override void DrawLine(int pen, CadPoint a, CadPoint b)
+        {
+            GLPen glpen = DC.Pen(pen);
+
+            GL.Begin(PrimitiveType.Lines);
+            GL.Color4(glpen.Color);
+
+            a *= 0.1;
+            b *= 0.1;
+
+            GL.Vertex3(a.x, a.y, a.z);
+            GL.Vertex3(b.x, b.y, b.z);
+
+            GL.End();
+        }
+
+
+        /*
+        public override void Draw(IReadOnlyList<CadFigure> list, int pen = -1)
+        {
             float w2 = 1.0f;
             float z = 0.0f;
 
@@ -65,5 +94,6 @@ namespace Plotter
 
             GL.End();
         }
+        */
     }
 }
