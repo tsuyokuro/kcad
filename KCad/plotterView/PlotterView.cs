@@ -18,23 +18,6 @@ namespace Plotter
         private Bitmap mImage;
         private PlotterController mController = null;
 
-        private DrawContext mDrawContext = new DrawContextWin();
-
-        /*
-        public PlotterController Controller
-        {
-            get { return mController; }
-        }
-        */
-
-        public DrawContext DrawContext
-        {
-            get
-            {
-                return mDrawContext;
-            }
-        }
-
         private bool firstSizeChange = true;
 
         ContextMenuEx mPolyLineContextMenu;
@@ -46,11 +29,30 @@ namespace Plotter
 
         ContextMenuEx mCurrentContextMenu = null;
 
+
+        private DrawContext mDrawContext = new DrawContextWin();
+
+        public DrawContext DrawContext
+        {
+            get
+            {
+                return mDrawContext;
+            }
+        }
+
         public PaperPageSize PageSize
         {
             get
             {
                 return mDrawContext.PageSize.clone();
+            }
+        }
+
+        public System.Windows.Forms.Control FromsControl
+        {
+            get
+            {
+                return (System.Windows.Forms.Control)this;
             }
         }
 

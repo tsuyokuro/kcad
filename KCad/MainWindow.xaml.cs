@@ -19,9 +19,6 @@ namespace KCad
 
         private ObservableCollection<string> messageList = new ObservableCollection<string>();
 
-        private PlotterView plotterView1;
-
-        private PlotterViewGL plotterViewGL1;
 
         public MainWindow()
         {
@@ -30,14 +27,9 @@ namespace KCad
             InputThread = new DebugInputThread(debugCommand);
             InputThread.start();
 
-            plotterView1 = new PlotterView();
-            plotterViewGL1 = PlotterViewGL.Create();
-
             ViewModel = new PlotterViewModel(viewContainer);
 
-            ViewModel.SetView(plotterView1);
-            viewContainer.Child = plotterView1;
-
+            viewContainer.Focusable = true;
 
             LayerListView.DataContext = ViewModel.LayerList;
 
@@ -52,6 +44,7 @@ namespace KCad
             FigurePanel.DataContext = ViewModel;
 
             textCommand.KeyDown += textCommand_KeyDown;
+            textCommand.KeyUp += textCommand_KeyUp;
 
             textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
 
@@ -69,6 +62,10 @@ namespace KCad
 
         private void textCommand_KeyDown(object sender, KeyEventArgs e)
         {
+        }
+
+        private void textCommand_KeyUp(object sender, KeyEventArgs e)
+        {
             if (e.Key == Key.Enter)
             {
                 var s = textCommand.Text;
@@ -77,7 +74,7 @@ namespace KCad
                     ViewModel.textCommand(s);
                 }
 
-                plotterView1.Focus();
+                viewContainer.Focus();
             }
         }
 
@@ -130,32 +127,7 @@ namespace KCad
         public void ButtonClicked(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
-            switch (btn.Tag.ToString())
-            {
-                case "axis_xy":
-                    viewContainer.Child = plotterView1;
-                    ViewModel.SetView(plotterView1);
-                    ViewModel.ButtonClicked(sender, e);
-                    break;
-
-                case "axis_xz":
-                    viewContainer.Child = plotterView1;
-                    ViewModel.SetView(plotterView1);
-                    ViewModel.ButtonClicked(sender, e);
-                    break;
-
-                case "axis_zy":
-                    viewContainer.Child = plotterView1;
-                    ViewModel.SetView(plotterView1);
-                    ViewModel.ButtonClicked(sender, e);
-                    break;
-
-                case "axis_xyz":
-                    viewContainer.Child = plotterViewGL1;
-                    ViewModel.SetView(plotterViewGL1);
-                    ViewModel.ButtonClicked(sender, e);
-                    break;
-            }
+            ViewModel.ButtonClicked(sender, e);
         }
 
         #region "Key handling"

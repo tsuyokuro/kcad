@@ -32,6 +32,14 @@ namespace Plotter
             }
         }
 
+        public System.Windows.Forms.Control FromsControl
+        {
+            get
+            {
+                return (System.Windows.Forms.Control)this;
+            }
+        }
+
         public static PlotterViewGL Create()
         {
             GraphicsMode mode = GraphicsMode.Default;

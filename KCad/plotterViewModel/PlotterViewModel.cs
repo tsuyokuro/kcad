@@ -60,8 +60,6 @@ namespace Plotter
 
         private PlotterController mController = new PlotterController();
 
-        private IPlotterView mPlotterView = null;
-
         public PlotterController.Interaction InteractOut =
             new PlotterController.Interaction();
 
@@ -171,8 +169,25 @@ namespace Plotter
             }
         }
 
-        private WindowsFormsHost mViewHost;
 
+
+        private WindowsFormsHost mViewHost = null;
+
+
+        private PlotterView plotterView1 = null;
+
+        private PlotterViewGL plotterViewGL1 = null;
+
+
+        private IPlotterView mPlotterView = null;
+
+        public System.Windows.Forms.Control CurrentView
+        {
+            get
+            {
+                return mPlotterView.FromsControl;
+            }
+        } 
 
         public PlotterViewModel(WindowsFormsHost viewHost)
         {
@@ -195,10 +210,20 @@ namespace Plotter
             mController.DataChanged = DataChanged;
 
             mController.CursorPosChanged = CursorPosChanged;
+
+            plotterView1 = new PlotterView();
+            plotterViewGL1 = PlotterViewGL.Create();
+
+            SetView(plotterView1);
         }
 
         public void SetView(IPlotterView view)
         {
+            if (mPlotterView == view)
+            {
+                return;
+            }
+
             if (view == mPlotterView)
             {
                 return;
@@ -211,6 +236,18 @@ namespace Plotter
 
             mPlotterView = view;
             mPlotterView.SetController(mController);
+
+            mController.CurrentDC = view.DrawContext;
+
+            mViewHost.Child = view.FromsControl;
+        }
+
+        public void ViewFocus()
+        {
+            if (CurrentView != null)
+            {
+                CurrentView.Focus();
+            }
         }
 
         #region Maps
@@ -411,13 +448,18 @@ namespace Plotter
                     break;
 
                 case "axis_xy":
+                    SetView(plotterView1);
+
                     mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXY;
                     mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXYInv;
                     mPlotterView.DrawContext.Perspective = false;
+
                     draw();
                     break;
 
                 case "axis_xz":
+                    SetView(plotterView1);
+
                     mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXZ;
                     mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXZInv;
                     mPlotterView.DrawContext.Perspective = false;
@@ -425,6 +467,8 @@ namespace Plotter
                     break;
 
                 case "axis_zy":
+                    SetView(plotterView1);
+
                     mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewZY;
                     mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewZYInv;
                     mPlotterView.DrawContext.Perspective = false;
@@ -432,6 +476,8 @@ namespace Plotter
                     break;
 
                 case "axis_xyz":
+                    SetView(plotterViewGL1);
+
                     draw();
                     break;
             }
