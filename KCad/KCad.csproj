@@ -154,12 +154,12 @@
     <Compile Include="plotter\Log.cs" />
     <Compile Include="plotter\MyScript.cs" />
     <Compile Include="plotter\Util\PlotterCommon.cs" />
-    <Compile Include="plotter\PlotterController.cs" />
-    <Compile Include="plotter\PlotterController_Debug.cs" />
-    <Compile Include="plotter\PlotterController_EditFigure.cs" />
-    <Compile Include="plotter\PlotterController_Input.cs" />
-    <Compile Include="plotter\PlotterController_Script.cs" />
-    <Compile Include="plotter\PlotterController_ViewControl.cs" />
+    <Compile Include="plotter\PlotterController\PlotterController.cs" />
+    <Compile Include="plotter\PlotterController\PlotterController_Debug.cs" />
+    <Compile Include="plotter\PlotterController\PlotterController_EditFigure.cs" />
+    <Compile Include="plotter\PlotterController\PlotterController_Input.cs" />
+    <Compile Include="plotter\PlotterController\PlotterController_Script.cs" />
+    <Compile Include="plotter\PlotterController\PlotterController_ViewControl.cs" />
     <Compile Include="plotter\searcher\PointSearcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
