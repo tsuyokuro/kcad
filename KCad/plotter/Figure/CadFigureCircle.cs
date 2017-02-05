@@ -108,12 +108,12 @@ namespace Plotter
                 if (fig.PointList[1].Selected) dc.Drawing.DrawSelectedPoint(fig.PointList[1]);
             }
 
-            public override void startCreate(CadFigure fig)
+            public override void startCreate(CadFigure fig, DrawContext dc)
             {
                 // NOP
             }
 
-            public override Types endCreate(CadFigure fig)
+            public override Types endCreate(CadFigure fig, DrawContext dc)
             {
                 return fig.Type;
             }

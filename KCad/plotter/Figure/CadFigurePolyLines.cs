@@ -299,12 +299,12 @@ namespace Plotter
                 fig.mPointList[index] = pt;
             }
 
-            public override void startCreate(CadFigure fig)
+            public override void startCreate(CadFigure fig, DrawContext dc)
             {
                 // NOP
             }
 
-            public override CadFigure.Types endCreate(CadFigure fig)
+            public override CadFigure.Types endCreate(CadFigure fig, DrawContext dc)
             {
                 return fig.Type;
             }

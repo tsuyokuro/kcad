@@ -240,7 +240,7 @@ namespace Plotter
                         CreatingFigure = mDB.newFigure(CreatingFigType);
                         State = States.CREATING;
 
-                        CreatingFigure.startCreate();
+                        CreatingFigure.startCreate(dc);
 
 
                         CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);

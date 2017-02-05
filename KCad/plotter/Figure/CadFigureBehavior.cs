@@ -24,8 +24,8 @@ namespace Plotter
             public abstract void drawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB);
             public abstract void drawSelected(CadFigure fig, DrawContext dc, int pen);
             public abstract void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen);
-            public abstract void startCreate(CadFigure fig);
-            public abstract Types endCreate(CadFigure fig);
+            public abstract void startCreate(CadFigure fig, DrawContext dc);
+            public abstract Types endCreate(CadFigure fig, DrawContext dc);
             public abstract Centroid getCentroid(CadFigure fig);
 
             public virtual void moveSelectedPoint(CadFigure fig, CadPoint delta)
@@ -98,7 +98,7 @@ namespace Plotter
             {
             }
 
-            public override Types endCreate(CadFigure fig)
+            public override Types endCreate(CadFigure fig, DrawContext dc)
             {
                 return fig.Type;
             }
@@ -111,7 +111,7 @@ namespace Plotter
             {
             }
 
-            public override void startCreate(CadFigure fig)
+            public override void startCreate(CadFigure fig, DrawContext dc)
             {
             }
 

@@ -34,7 +34,7 @@ namespace Plotter
                 fig.mPointList.Add(p);
             }
 
-            public override CadFigure.Types endCreate(CadFigure fig)
+            public override CadFigure.Types endCreate(CadFigure fig, DrawContext dc)
             {
                 fig.Type = Types.POLY_LINES;
                 return fig.Type;

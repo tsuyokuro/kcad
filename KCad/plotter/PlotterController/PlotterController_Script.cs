@@ -145,7 +145,7 @@ namespace Plotter
 
                 fig.Closed = true;
 
-                fig.endCreate();
+                fig.endCreate(CurrentDC);
 
                 CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
                 mHistoryManager.foward(ope);
@@ -183,7 +183,7 @@ namespace Plotter
 
                 fig.Closed = true;
 
-                fig.endCreate();
+                fig.endCreate(CurrentDC);
 
                 CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
                 mHistoryManager.foward(ope);

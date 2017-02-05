@@ -18,14 +18,14 @@ namespace Plotter
             draw(dc);
         }
 
-        public void closeFigure(DrawContext g)
+        public void closeFigure(DrawContext dc)
         {
             CreatingFigure.Closed = true;
 
             CadOpe ope = CadOpe.getSetCloseOpe(CurrentLayer.ID, CreatingFigure.ID, true);
             mHistoryManager.foward(ope);
 
-            nextState();
+            nextState(dc);
         }
 
         public void toBezier(DrawContext dc)

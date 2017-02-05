@@ -239,7 +239,7 @@ namespace Plotter
         }
         #endregion
 
-        public void startCreateFigure(CadFigure.Types type)
+        public void startCreateFigure(CadFigure.Types type, DrawContext dc)
         {
             State = States.START_CREATE;
             CreatingFigType = type;
@@ -250,7 +250,7 @@ namespace Plotter
             // So, at the moment, not yet a creation start.
         }
 
-        public void endCreateFigure()
+        public void endCreateFigure(DrawContext dc)
         {
             CreatingFigType = CadFigure.Types.NONE;
 
@@ -258,16 +258,16 @@ namespace Plotter
 
             if (CreatingFigure != null)
             {
-                CreatingFigure.endCreate();
+                CreatingFigure.endCreate(dc);
                 CreatingFigure = null;
             }
 
             NotifyStateChange();
         }
 
-        public void endCreateFigureState(DrawContext g)
+        public void endCreateFigureState(DrawContext dc)
         {
-            nextState();
+            nextState(dc);
         }
 
         public void setCurrentLayer(uint id)
@@ -373,7 +373,7 @@ namespace Plotter
 
         #region Private editing figure methods
 
-        private void nextState()
+        private void nextState(DrawContext dc)
         {
             if (State == States.CREATING)
             {
@@ -381,7 +381,7 @@ namespace Plotter
                 {
                     CadFigure.Types type = CreatingFigure.Type;
                     CreatingFigure = null;
-                    startCreateFigure(type);
+                    startCreateFigure(type, dc);
                 }
                 else
                 {
@@ -401,13 +401,13 @@ namespace Plotter
 
             if (state == CadFigure.States.FULL)
             {
-                CreatingFigure.endCreate();
+                CreatingFigure.endCreate(dc);
 
                 CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
                 mHistoryManager.foward(ope);
                 CurrentLayer.addFigure(CreatingFigure);
 
-                nextState();
+                nextState(dc);
             }
             else if (state == CadFigure.States.ENOUGH)
             {

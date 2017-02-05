@@ -63,7 +63,7 @@ namespace Plotter
                 dc.Drawing.DrawRect(pen, fig.PointList[0], tp);
             }
 
-            public override CadFigure.Types endCreate(CadFigure fig)
+            public override CadFigure.Types endCreate(CadFigure fig, DrawContext dc)
             {
                 fig.Type = Types.POLY_LINES;
                 return fig.Type;

@@ -597,14 +597,14 @@ namespace Plotter
             Behavior.drawTemp(this, dc, tp, pen);
         }
 
-        public void startCreate()
+        public void startCreate(DrawContext dc)
         {
-            Behavior.startCreate(this);
+            Behavior.startCreate(this, dc);
         }
 
-        public Types endCreate()
+        public Types endCreate(DrawContext dc)
         {
-            return Behavior.endCreate(this);
+            return Behavior.endCreate(this, dc);
         }
 
         public CadRect getContainsRect()

@@ -112,13 +112,14 @@ namespace Plotter
 
                 if (mFigureType != CadFigure.Types.NONE)
                 {
-                    mController.startCreateFigure(mFigureType);
+                    DrawContext dc = mPlotterView.startDraw();
+                    mController.startCreateFigure(mFigureType, dc);
+                    mPlotterView.endDraw();
                 }
                 else if (prev != CadFigure.Types.NONE)
                 {
-                    mController.endCreateFigure();
-
                     DrawContext dc = mPlotterView.startDraw();
+                    mController.endCreateFigure(dc);
                     mController.draw(dc);
                     mPlotterView.endDraw();
                 }
