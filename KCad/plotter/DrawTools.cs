@@ -155,7 +155,7 @@ namespace Plotter
             PenTbl[PEN_CURSOR2]             = new PenHolder(Pens.DarkSlateBlue, false);
             PenTbl[PEN_DEFAULT_FIGURE]      = new PenHolder(Pens.White, false);
             PenTbl[PEN_TEMP_FIGURE]         = new PenHolder(Pens.Blue, false);
-            PenTbl[PEN_POINT_HIGHTLITE]     = new PenHolder(Pens.BlueViolet, false);
+            PenTbl[PEN_POINT_HIGHTLITE]     = new PenHolder(Pens.Orange, false);
             PenTbl[PEN_MATCH_FIGURE]        = new PenHolder(Pens.Red, false);
             PenTbl[PEN_MATCH_SEG]           = new PenHolder(Pens.Green, false);
             PenTbl[PEN_LAST_POINT_MARKER]   = new PenHolder(Pens.Aqua, false);

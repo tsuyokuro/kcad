@@ -10,7 +10,7 @@ namespace Plotter
 {
     public partial class PlotterController
     {
-        const int SnapRange = 16;
+        const int SnapRange = 6;
 
         public CadMouse Mouse { get; } = new CadMouse();
 
@@ -137,6 +137,8 @@ namespace Plotter
                         mObjDownPoint = mp.Point;
 
                         mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mp.Point);
+
+                        mMoveOrgScrnPoint.z = 0;
 
                         State = States.START_DRAGING_POINTS;
                         CadFigure fig = mDB.getFigure(mp.FigureID);

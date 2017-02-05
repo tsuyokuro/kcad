@@ -16,6 +16,11 @@ namespace Plotter
         Vector3 LookAt = default(Vector3);
         Vector3 UpVector = default(Vector3);
 
+        float ProjectionNear = 10.0f;
+        float ProjectionFar = 10000.0f;
+
+        public float Scale = 0.2f;
+
         public DrawContextGL()
         {
             Tools.Setup(DrawTools.ToolsType.DARK_GL);
@@ -23,9 +28,9 @@ namespace Plotter
             Drawing = new DrawingGL(this);
 
             Eye = Vector3.Zero;
-            Eye.X = 8f;
-            Eye.Y = 8f;
-            Eye.Z = 8f;
+            Eye.X = 20f;
+            Eye.Y = 20f;
+            Eye.Z = 20f;
 
             LookAt = Vector3.Zero;
             UpVector = Vector3.UnitY;
@@ -79,17 +84,34 @@ namespace Plotter
             ProjectionMatrix.GLMatrix = Matrix4.CreatePerspectiveFieldOfView(
                                             fovy,
                                             aspect,
-                                            2.0f,       // near
-                                            6400.0f     // far
+                                            ProjectionNear,
+                                            ProjectionFar
                                             );
         }
 
-        public void RotateEyePoint(double xr, double yr, double zr)
+        public void RotateEyePoint(Vector2 prev, Vector2 current)
         {
-            Matrix4 mx = Matrix4.CreateRotationX((float)xr);
-            Matrix4 my = Matrix4.CreateRotationY((float)yr);
+            Vector2 d = current - prev;
+
+            double ry = (-d.X / 10.0) * (Math.PI / 20);
+            double rx = (-d.Y / 10.0) * (Math.PI / 20);
+
+            Matrix4 my = Matrix4.CreateRotationY((float)ry);
 
             Eye = Vector3.TransformPosition(Eye, my);
+
+            Vector3 t = Eye - LookAt;
+
+            Vector3 axis = t;
+
+            axis.X = t.Z;
+            axis.Z = -t.X;
+            axis.Y = 0;
+
+
+            Matrix4 mx = Matrix4.CreateFromAxisAngle(axis, (float)rx);
+
+
             Eye = Vector3.TransformPosition(Eye, mx);
 
             ViewMatrix.GLMatrix = Matrix4.LookAt(Eye, LookAt, UpVector);

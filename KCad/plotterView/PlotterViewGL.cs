@@ -77,13 +77,34 @@ namespace Plotter
         {
             if (IsMouseDown)
             {
+                //CadPoint t = CadPoint.Create(e.X, e.Y, 0);
+                //CadPoint d = t - PrevMousePos;
+
+                //double ry = (-d.x / 10.0) * (Math.PI / 20);
+                //double rx = (d.y / 10.0) * (Math.PI / 20);
+
+                //mDrawContext.RotateEyePoint(rx, ry, 0);
+
+                //startDraw();
+                //mController.draw(mDrawContext);
+                //endDraw();
+
+                //PrevMousePos = t;
+
+
                 CadPoint t = CadPoint.Create(e.X, e.Y, 0);
-                CadPoint d = t - PrevMousePos;
 
-                double ry = (-d.x / 10.0) * (Math.PI / 20);
-                double rx = (d.y / 10.0) * (Math.PI / 20);
+                Vector2 prev = default(Vector2);
 
-                mDrawContext.RotateEyePoint(rx, ry, 0);
+                prev.X = (float)PrevMousePos.x;
+                prev.Y = (float)PrevMousePos.y;
+
+                Vector2 current = default(Vector2);
+
+                current.X = (float)t.x;
+                current.Y = (float)t.y;
+
+                mDrawContext.RotateEyePoint(prev, current);
 
                 startDraw();
                 mController.draw(mDrawContext);

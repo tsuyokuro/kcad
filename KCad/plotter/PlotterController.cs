@@ -186,6 +186,11 @@ namespace Plotter
 
         private List<CadFigure> TempFigureList = new List<CadFigure>();
 
+        public DrawContext CurrentDC
+        {
+            get; set;
+        }
+
         public PlotterController()
         {
             CadLayer layer = mDB.newLayer();

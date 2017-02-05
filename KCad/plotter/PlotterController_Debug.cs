@@ -171,8 +171,8 @@ namespace Plotter
 
             double rad = CadMath.deg2rad(10);
 
-            Quaternion q = Quaternion.RotateQuaternion(rad, axis);
-            Quaternion r = q.Conjugate();
+            CadQuaternion q = CadQuaternion.RotateQuaternion(rad, axis);
+            CadQuaternion r = q.Conjugate();
 
             CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
 
@@ -183,7 +183,7 @@ namespace Plotter
             for (;i<fig.PointList.Count;i++)
             {
                 CadPoint p = fig.PointList[i];
-                Quaternion qp = Quaternion.FromPoint(p);
+                CadQuaternion qp = CadQuaternion.FromPoint(p);
 
                 qp = r * qp;
                 qp = qp * q;

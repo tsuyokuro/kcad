@@ -45,8 +45,8 @@ namespace Plotter
             GL.Begin(PrimitiveType.Lines);
             GL.Color4(glpen.Color);
 
-            a *= 0.1;
-            b *= 0.1;
+            a *= DC.Scale;
+            b *= DC.Scale;
 
             GL.Vertex3(a.x, a.y, a.z);
             GL.Vertex3(b.x, b.y, b.z);

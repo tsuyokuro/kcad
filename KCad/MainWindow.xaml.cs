@@ -31,14 +31,12 @@ namespace KCad
             InputThread.start();
 
             plotterView1 = new PlotterView();
-
             plotterViewGL1 = PlotterViewGL.Create();
 
-            viewContainer.Child = plotterView1;
-
-            ViewModel = new PlotterViewModel();
+            ViewModel = new PlotterViewModel(viewContainer);
 
             ViewModel.SetView(plotterView1);
+            viewContainer.Child = plotterView1;
 
 
             LayerListView.DataContext = ViewModel.LayerList;

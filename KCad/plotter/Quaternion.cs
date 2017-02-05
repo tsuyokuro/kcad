@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
-    public struct Quaternion
+    public struct CadQuaternion
     {
         public double t;
         public double x;
         public double y;
         public double z;
 
-        public Quaternion(double t, double x, double y, double z)
+        public CadQuaternion(double t, double x, double y, double z)
         {
             this.t = t;
             this.x = x;
@@ -33,9 +33,9 @@ namespace Plotter
         //-----------------------------------------------------------------------------------------
         // 共役四元数を返す
         //
-        public Quaternion Conjugate()
+        public CadQuaternion Conjugate()
         {
-            Quaternion q = this;
+            CadQuaternion q = this;
 
             q.t = t;
             q.x = -x;
@@ -48,7 +48,7 @@ namespace Plotter
         //-----------------------------------------------------------------------------------------
         // 掛け算
         //
-        public static Quaternion operator *(Quaternion q, Quaternion r)
+        public static CadQuaternion operator *(CadQuaternion q, CadQuaternion r)
         {
             return Product(q, r);
         }
@@ -56,9 +56,9 @@ namespace Plotter
         //-----------------------------------------------------------------------------------------
         // 和を求める
         //
-        public static Quaternion operator +(Quaternion q, Quaternion r)
+        public static CadQuaternion operator +(CadQuaternion q, CadQuaternion r)
         {
-            Quaternion res;
+            CadQuaternion res;
 
             res.t = q.t + r.t;
             res.x = q.x + r.x;
@@ -72,12 +72,12 @@ namespace Plotter
         // 四元数の積を求める
         // q * r
         //
-        public static Quaternion Product(Quaternion q, Quaternion r)
+        public static CadQuaternion Product(CadQuaternion q, CadQuaternion r)
         {
             // A = (a; U)
             // B = (b; V)
             // AB = (ab - U・V; aV + bU + U×V)
-            Quaternion ans;
+            CadQuaternion ans;
             double d1, d2, d3, d4;
 
             d1 = q.t * r.t;
@@ -110,9 +110,9 @@ namespace Plotter
         //-----------------------------------------------------------------------------------------
         // 単位元を作成
         //
-        public static Quaternion Unit()
+        public static CadQuaternion Unit()
         {
-            Quaternion res;
+            CadQuaternion res;
 
             res.t = 1.0;
             res.x = 0;
@@ -125,9 +125,9 @@ namespace Plotter
         //-----------------------------------------------------------------------------------------
         // Vector (vx, vy, vz)を回転軸としてradianだけ回転する四元数を作成
         //
-        public static Quaternion RotateQuaternion(double radian, double vx, double vy, double vz)
+        public static CadQuaternion RotateQuaternion(double radian, double vx, double vy, double vz)
         {
-            Quaternion ans = default(Quaternion);
+            CadQuaternion ans = default(CadQuaternion);
             double norm;
             double c, s;
 
@@ -153,11 +153,11 @@ namespace Plotter
         //-----------------------------------------------------------------------------------------
         // Vector (v.x, v.y, v.z)を回転軸としてradianだけ回転する四元数を作成
         //
-        public static Quaternion RotateQuaternion(double radian, CadPoint v)
+        public static CadQuaternion RotateQuaternion(double radian, CadPoint v)
         {
             v = v.unitVector();
 
-            Quaternion ans = default(Quaternion);
+            CadQuaternion ans = default(CadQuaternion);
             double c, s;
 
             c = Math.Cos(0.5 * radian);
@@ -174,9 +174,9 @@ namespace Plotter
         //-----------------------------------------------------------------------------------------
         // CadPointから四元数を作成
         //
-        public static Quaternion FromPoint(CadPoint point)
+        public static CadQuaternion FromPoint(CadPoint point)
         {
-            Quaternion q;
+            CadQuaternion q;
             q.t = 0.0;
             q.x = point.x;
             q.y = point.y;

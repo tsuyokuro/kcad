@@ -78,11 +78,11 @@ namespace Plotter
         public CadPoint mViewOrg;
 
 
-        // 視点座標系からワールド座標系への変換行列
-        public UMatrix4 ViewMatrixInv;
-
         // ワールド座標系から視点座標系への変換行列
         public UMatrix4 ViewMatrix;
+
+        // 視点座標系からワールド座標系への変換行列
+        public UMatrix4 ViewMatrixInv;
 
 
         // 視点座標系から投影座標系への変換行列
