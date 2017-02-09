@@ -435,7 +435,6 @@ namespace Plotter
         // Button handler
         public void ButtonClicked(object sender, RoutedEventArgs e)
         {
-            // TODO implements function for add layer and remove layer.
             Button btn = (Button)sender;
             switch (btn.Tag.ToString())
             {

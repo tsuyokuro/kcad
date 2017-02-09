@@ -178,6 +178,8 @@ namespace Plotter
 
             private CadPoint getRP(DrawContext dc, CadPoint cp, CadPoint p, bool isA)
             {
+                // TODO 90度回転した位置を求める様に修正1
+
                 CadPoint scp = dc.CadPointToUnitPoint(cp);
                 CadPoint sbasep = dc.CadPointToUnitPoint(p);
 
