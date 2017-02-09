@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
-    public class DrawingX
+    public class DrawingBase
     {
         public virtual void Clear()
         {
@@ -92,14 +92,58 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawCircle(int pen, CadPoint cp, CadPoint p1)
+        public virtual void DrawCircle(int pen, CadPoint cp, CadPoint pa, CadPoint pb)
         {
+            CadPoint va = pa - cp;
+            CadPoint vb = pb - cp;
+
+            if (va.norm() < 0.01)
+            {
+                return;
+            }
+
+
+            CadPoint normal = CadMath.crossProduct3D(va, vb);
+
+            normal = normal.unitVector();
+
+            int div = 64;
+
+            double dt = (double)(2.0 * Math.PI) / (double)div;
+
+            CadQuaternion q = CadQuaternion.RotateQuaternion(dt, normal);
+            CadQuaternion r = q.Conjugate();
+
+            CadPoint p = va;
+            CadPoint tp1 = pa;
+            CadPoint tp2 = pa;
+
+
+            int i = 0;
+            for (; i < div - 1; i++)
+            {
+                CadQuaternion qp = CadQuaternion.FromPoint(p);
+                qp = r * qp;
+                qp = qp * q;
+
+                p.x = qp.x;
+                p.y = qp.y;
+                p.z = qp.z;
+
+                tp2 = p + cp;
+
+                DrawLine(pen, tp1, tp2);
+                tp1 = tp2;
+            }
+
+            DrawLine(pen, tp1, pa);
         }
 
+        /*
         public virtual void DrawCircle(int pen, CadPoint cp, double r)
         {
         }
-
+        */
         public virtual void DrawCircleScrn(int pen, CadPoint cp, CadPoint p1)
         {
         }

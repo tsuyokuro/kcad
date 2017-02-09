@@ -10,7 +10,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Plotter
 {
-    class DrawingGL : DrawingX
+    class DrawingGL : DrawingBase
     {
         private DrawContextGL DC;
 
@@ -53,7 +53,6 @@ namespace Plotter
 
             GL.End();
         }
-
 
         /*
         public override void Draw(IReadOnlyList<CadFigure> list, int pen = -1)

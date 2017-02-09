@@ -1,9 +1,10 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 
 namespace Plotter
 {
-    public class DrawingGDI : DrawingX
+    public class DrawingGDI : DrawingBase
     {
         public DrawContextWin DC;
 
@@ -387,13 +388,8 @@ namespace Plotter
             DC.graphics.DrawRectangle(DC.Pen(pen), lx, ty, dx, dy);
         }
 
-        public override void DrawCircle(int pen, CadPoint cp, CadPoint p1)
-        {
-            double r = CadUtil.segNorm(cp, p1);
-            DrawCircle(pen, cp, r);
-        }
-
-        public override void DrawCircle(int pen, CadPoint cp, double r)
+        /*
+        public void DrawCircle(int pen, CadPoint cp, double r)
         {
             if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
@@ -405,7 +401,7 @@ namespace Plotter
             DC.graphics.DrawEllipse(
                 DC.Pen(pen), (int)(cpp.x - r), (int)(cpp.y - r), (int)(r * 2), (int)(r * 2));
         }
-
+        */
         public override void DrawCircleScrn(int pen, CadPoint cp, CadPoint p1)
         {
             if (DC.graphics == null) return;

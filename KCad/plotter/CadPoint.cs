@@ -233,6 +233,24 @@ namespace Plotter
             return p1;
         }
 
+        public static explicit operator Vector3 (CadPoint p)
+        {
+            Vector3 v3 = new Vector3(p.vector);
+            return v3;
+        }
+
+        public static explicit operator CadPoint (Vector3 v)
+        {
+            CadPoint p = default(CadPoint);
+
+            p.x = v.X;
+            p.y = v.Y;
+            p.z = v.Z;
+            p.w = 1.0;
+
+            return p;
+        }
+
         // ベクトルのノルム(長さ)を求める
         public double norm()
         {

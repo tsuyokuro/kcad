@@ -80,11 +80,10 @@ namespace Plotter
                 }
 
                 CadPoint cp = fig.PointList[0];
-
-
-                dc.Drawing.DrawCircle(pen, cp, tp);
-
                 CadPoint b = getRP(dc, cp, tp, true);
+
+
+                dc.Drawing.DrawCircle(pen, cp, tp, b);
 
                 dc.Drawing.DrawLine(pen, cp, tp);
                 dc.Drawing.DrawLine(pen, cp, b);
@@ -104,7 +103,7 @@ namespace Plotter
                     return;
                 }
 
-                dc.Drawing.DrawCircle(pen, fig.PointList[0], fig.PointList[1]);
+                dc.Drawing.DrawCircle(pen, fig.PointList[0], fig.PointList[1], fig.PointList[2]);
                 //dc.Drawing.DrawLine(pen, fig.PointList[0], fig.PointList[1]);
                 //dc.Drawing.DrawLine(pen, fig.PointList[0], fig.PointList[2]);
             }

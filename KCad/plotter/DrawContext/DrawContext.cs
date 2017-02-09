@@ -131,7 +131,7 @@ namespace Plotter
 
         protected DrawTools Tools = new DrawTools();
 
-        public DrawingX Drawing;
+        public DrawingBase Drawing;
 
         public void calcViewCenter()
         {
