@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Plotter
 {
-    public class DrawingWin : DrawingX
+    public class DrawingGDI : DrawingX
     {
         public DrawContextWin DC;
 
-        public DrawingWin(DrawContextWin dc)
+        public DrawingGDI(DrawContextWin dc)
         {
             DC = dc;
         }

@@ -28,7 +28,7 @@ namespace Plotter
             public abstract Types endCreate(CadFigure fig, DrawContext dc);
             public abstract Centroid getCentroid(CadFigure fig);
 
-            public virtual void moveSelectedPoint(CadFigure fig, CadPoint delta)
+            public virtual void moveSelectedPoint(CadFigure fig, DrawContext dc, CadPoint delta)
             {
                 for (int i = 0; i < fig.StoreList.Count; i++)
                 {

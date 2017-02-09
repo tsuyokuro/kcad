@@ -588,7 +588,7 @@ namespace Plotter
             return opeList;
         }
 
-        private void moveSelectedPoints(CadPoint delta)
+        private void moveSelectedPoints(DrawContext dc, CadPoint delta)
         {
             List<uint> figIDList = getSelectedFigIDList();
 
@@ -599,7 +599,7 @@ namespace Plotter
                 CadFigure fig = mDB.getFigure(id);
                 if (fig != null)
                 {
-                    fig.moveSelectedPoints(delta);
+                    fig.moveSelectedPoints(dc, delta);
                 }
             }
 

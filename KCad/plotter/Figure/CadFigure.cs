@@ -537,7 +537,7 @@ namespace Plotter
             return Behavior.GetType();
         }
 
-        public void moveSelectedPoints(CadPoint delta)
+        public void moveSelectedPoints(DrawContext dc, CadPoint delta)
         {
             if (Locked) return;
             Log.d("moveSelectedPoints" + 
@@ -545,7 +545,7 @@ namespace Plotter
                 " dy=" + delta.y.ToString() +
                 " dz=" + delta.z.ToString()
                 );
-            Behavior.moveSelectedPoint(this, delta);
+            Behavior.moveSelectedPoint(this, dc, delta);
         }
 
         public void moveAllPoints(CadPoint delta)

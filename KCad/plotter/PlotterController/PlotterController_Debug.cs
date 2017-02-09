@@ -244,7 +244,7 @@ namespace Plotter
 
             CadPoint vp = tdc.CadPointToUnitPoint(p);
 
-            vp.dump(DebugOut.Out);
+            vp.dump(DebugOut.Std);
         }
 
         private void dump_figv(DrawContext dc)
@@ -252,7 +252,7 @@ namespace Plotter
             CadFigure fig = getSelFig();
             if (fig == null) return;
 
-            fig.dumpv(DebugOut.Out, dc);
+            fig.dumpv(DebugOut.Std, dc);
         }
 
         private void test(DrawContext dc)
@@ -263,10 +263,10 @@ namespace Plotter
 
             CadPoint p0 = dc.CadPointToUnitPoint(pp);
 
-            dc.ViewOrg.dump(DebugOut.Out);
-            p.dump(DebugOut.Out);
-            pp.dump(DebugOut.Out);
-            p0.dump(DebugOut.Out);
+            dc.ViewOrg.dump(DebugOut.Std);
+            p.dump(DebugOut.Std);
+            pp.dump(DebugOut.Std);
+            p0.dump(DebugOut.Std);
         }
 
         public void debugCommand(DrawContext dc, string s)
@@ -282,7 +282,7 @@ namespace Plotter
                 if (m != null && m.Groups.Count > 1)
                 {
                     string para = m.Groups[1].Value;
-                    DebugOut.Out.println(para);
+                    DebugOut.Std.println(para);
 
                     if (para == "xy")
                     {

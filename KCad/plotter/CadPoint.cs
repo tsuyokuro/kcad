@@ -12,6 +12,7 @@ namespace Plotter
     {
         public enum Types : byte
         {
+            INVALID = 0xff,
             STD = 0,
             BREAK = 1,
             HANDLE = 2,

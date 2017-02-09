@@ -26,7 +26,7 @@ namespace Plotter
     {
         public static DebugOut inst = new DebugOut();
 
-        public static DebugOut Out {
+        public static DebugOut Std {
             get
             {
                 inst.reset();

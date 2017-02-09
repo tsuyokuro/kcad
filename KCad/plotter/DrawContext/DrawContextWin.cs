@@ -30,7 +30,7 @@ namespace Plotter
 
             ProjectionMatrix = UMatrixs.Unit;
 
-            Drawing = new DrawingWin(this);
+            Drawing = new DrawingGDI(this);
         }
 
         public override void startDraw(Bitmap image)

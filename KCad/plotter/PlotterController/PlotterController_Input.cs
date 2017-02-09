@@ -374,6 +374,8 @@ namespace Plotter
             mSnapScrnPoint = pixp - mOffsetScrn;
             mSnapPoint = cp - mOffsetWld;
 
+            //mSnapScrnPoint.dump(DebugOut.Std);
+
             clear(dc);
             draw(dc);
 
@@ -445,6 +447,8 @@ namespace Plotter
 
                     mSnapScrnPoint = seg.CrossViewPoint;
                     mSnapScrnPoint.z = 0;
+
+                    //mSnapScrnPoint.dump(DebugOut.Std);
                 }
             }
 
@@ -459,10 +463,9 @@ namespace Plotter
 
                         CadPoint delta = p1 - p0;
 
-                        //DebugOut o = new DebugOut();
-                        //mSnapCursorPos.dump(o);
+                        //mSnapScrnPoint.dump(DebugOut.Std);
 
-                        moveSelectedPoints(delta);
+                        moveSelectedPoints(dc, delta);
 
                         break;
                     }

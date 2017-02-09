@@ -83,6 +83,11 @@ namespace Plotter
 
 
                 dc.Drawing.DrawCircle(pen, cp, tp);
+
+                CadPoint b = getRP(dc, cp, tp, true);
+
+                dc.Drawing.DrawLine(pen, cp, tp);
+                dc.Drawing.DrawLine(pen, cp, b);
             }
 
             private void drawCircle(CadFigure fig, DrawContext dc, int pen)
@@ -100,12 +105,15 @@ namespace Plotter
                 }
 
                 dc.Drawing.DrawCircle(pen, fig.PointList[0], fig.PointList[1]);
+                //dc.Drawing.DrawLine(pen, fig.PointList[0], fig.PointList[1]);
+                //dc.Drawing.DrawLine(pen, fig.PointList[0], fig.PointList[2]);
             }
 
             private void drawSelected_Circle(CadFigure fig, DrawContext dc, int pen)
             {
                 if (fig.PointList[0].Selected) dc.Drawing.DrawSelectedPoint(fig.PointList[0]);
                 if (fig.PointList[1].Selected) dc.Drawing.DrawSelectedPoint(fig.PointList[1]);
+                if (fig.PointList[2].Selected) dc.Drawing.DrawSelectedPoint(fig.PointList[2]);
             }
 
             public override void startCreate(CadFigure fig, DrawContext dc)
@@ -115,22 +123,39 @@ namespace Plotter
 
             public override Types endCreate(CadFigure fig, DrawContext dc)
             {
+                CadPoint b = getRP(dc, fig.mPointList[0], fig.mPointList[1], true);
+
+                fig.addPoint(b);
+
                 return fig.Type;
             }
 
-            public override void moveSelectedPoint(CadFigure fig, CadPoint delta)
+            public override void moveSelectedPoint(CadFigure fig, DrawContext dc, CadPoint delta)
             {
                 CadPoint cp = fig.StoreList[0];
-                CadPoint rp = fig.StoreList[1];
+                CadPoint a = fig.StoreList[1];
+                CadPoint b = fig.StoreList[2];
 
                 if (cp.Selected)
                 {
                     fig.mPointList[0] = cp + delta;
-                    fig.mPointList[1] = rp + delta;
+                    fig.mPointList[1] = a + delta;
+                    fig.mPointList[2] = b + delta;
                     return;
                 }
 
-                fig.mPointList[1] = rp + delta;
+                //b.dump(DebugOut.Std);
+
+                if (a.Selected)
+                {
+                    fig.mPointList[1] = a + delta;
+                    fig.mPointList[2] = getRP(dc, cp, fig.mPointList[1], true);
+                }
+                else if (b.Selected)
+                {
+                    fig.mPointList[2] = b + delta;
+                    fig.mPointList[1] = getRP(dc, cp, fig.mPointList[2], false);
+                }
             }
 
             public override Centroid getCentroid(CadFigure fig)
@@ -150,6 +175,32 @@ namespace Plotter
                 ret.SplitList.Add(fig);
 
                 return ret;
+            }
+
+            private CadPoint getRP(DrawContext dc, CadPoint cp, CadPoint p, bool isA)
+            {
+                CadPoint scp = dc.CadPointToUnitPoint(cp);
+                CadPoint sbasep = dc.CadPointToUnitPoint(p);
+
+                CadPoint t = sbasep - scp;
+                CadPoint r = t;
+
+                if (isA)
+                {
+                    r.x = -t.y;
+                    r.y = t.x;
+                }
+                else
+                {
+                    r.x = t.y;
+                    r.y = -t.x;
+                }
+
+                r += scp;
+
+                r = dc.UnitPointToCadPoint(r);
+
+                return r;
             }
         }
     }

@@ -234,14 +234,32 @@ namespace Plotter
                 return;
             }
 
+            if (isIgnore(fig.ID, 2))
+            {
+                return;
+            }
+
             CadPoint c = fig.getPointAt(0);
             CadPoint a = fig.getPointAt(1);
+            CadPoint b = fig.getPointAt(2);
 
             CadPoint pc = dc.CadPointToUnitPoint(c);
             CadPoint pa = dc.CadPointToUnitPoint(a);
+            CadPoint pb = dc.CadPointToUnitPoint(b);
 
             double r = CadUtil.segNorm2D(pa, pc);
             double tr = CadUtil.segNorm2D(TargetPoint, pc);
+
+            double pad = CadUtil.segNorm2D(TargetPoint, pa);
+            double pbd = CadUtil.segNorm2D(TargetPoint, pb);
+
+            int idxB = 1;
+
+            if (pbd < pad)
+            {
+                idxB = 2;
+            }
+
 
             double dist = Math.Abs(tr - r);
 
@@ -264,12 +282,13 @@ namespace Plotter
                 seg.LayerID = layer.ID;
                 seg.Figure = fig;
                 seg.PtIndexA = 0;
-                seg.PtIndexB = 1;
+                seg.PtIndexB = idxB;
                 seg.CrossPoint = td;
+                seg.CrossViewPoint = dc.CadPointToUnitPoint(td);
                 seg.Distance = dist;
 
                 seg.pA = c;
-                seg.pB = a;
+                seg.pB = fig.getPointAt(idxB);
 
                 minDist = dist;
             }
