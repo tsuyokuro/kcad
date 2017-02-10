@@ -388,20 +388,6 @@ namespace Plotter
             DC.graphics.DrawRectangle(DC.Pen(pen), lx, ty, dx, dy);
         }
 
-        /*
-        public void DrawCircle(int pen, CadPoint cp, double r)
-        {
-            if (DC.graphics == null) return;
-            if (DC.Pen(pen) == null) return;
-
-            CadPoint cpp = DC.CadPointToUnitPoint(cp);
-
-            r = DC.MilliToUnit(r);
-
-            DC.graphics.DrawEllipse(
-                DC.Pen(pen), (int)(cpp.x - r), (int)(cpp.y - r), (int)(r * 2), (int)(r * 2));
-        }
-        */
         public override void DrawCircleScrn(int pen, CadPoint cp, CadPoint p1)
         {
             if (DC.graphics == null) return;

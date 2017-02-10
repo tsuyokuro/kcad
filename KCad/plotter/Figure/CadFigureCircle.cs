@@ -143,17 +143,68 @@ namespace Plotter
                     return;
                 }
 
-                //b.dump(DebugOut.Std);
+                CadPoint va = a - cp;
+                CadPoint vb = b - cp;
+
+                if (va.norm() < 0.01)
+                {
+                    return;
+                }
+
+                CadPoint normal = CadMath.crossProduct3D(va, vb);
+                normal = normal.unitVector();
 
                 if (a.Selected)
                 {
-                    fig.mPointList[1] = a + delta;
-                    fig.mPointList[2] = getRP(dc, cp, fig.mPointList[1], true);
+                    va += delta;
+
+                    CadPoint uva = va.unitVector();
+                    CadPoint uvb = vb.unitVector();
+
+                    if (!uva.coordEqualsR(uvb))
+                    {
+                        normal = CadMath.crossProduct3D(va, vb);
+                        normal = normal.unitVector();
+
+                    }
+
+                    CadQuaternion q = CadQuaternion.RotateQuaternion(-Math.PI / 2.0, normal);
+                    CadQuaternion r = q.Conjugate();
+
+                    CadQuaternion qp = CadQuaternion.FromPoint(va);
+                    qp = r * qp;
+                    qp = qp * q;
+
+                    vb = qp.ToPoint();
+
+                    fig.mPointList[1] = va + cp;
+                    fig.mPointList[2] = vb + cp;
                 }
                 else if (b.Selected)
                 {
-                    fig.mPointList[2] = b + delta;
-                    fig.mPointList[1] = getRP(dc, cp, fig.mPointList[2], false);
+                    vb += delta;
+
+                    CadPoint uva = va.unitVector();
+                    CadPoint uvb = vb.unitVector();
+
+                    if (!uva.coordEqualsR(uvb))
+                    {
+                        normal = CadMath.crossProduct3D(va, vb);
+                        normal = normal.unitVector();
+
+                    }
+
+                    CadQuaternion q = CadQuaternion.RotateQuaternion(Math.PI / 2.0, normal);
+                    CadQuaternion r = q.Conjugate();
+
+                    CadQuaternion qp = CadQuaternion.FromPoint(vb);
+                    qp = r * qp;
+                    qp = qp * q;
+
+                    va = qp.ToPoint();
+
+                    fig.mPointList[1] = va + cp;
+                    fig.mPointList[2] = vb + cp;
                 }
             }
 
@@ -178,8 +229,6 @@ namespace Plotter
 
             private CadPoint getRP(DrawContext dc, CadPoint cp, CadPoint p, bool isA)
             {
-                // TODO 90度回転した位置を求める様に修正1
-
                 CadPoint scp = dc.CadPointToUnitPoint(cp);
                 CadPoint sbasep = dc.CadPointToUnitPoint(p);
 

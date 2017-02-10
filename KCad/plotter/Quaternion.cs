@@ -45,6 +45,18 @@ namespace Plotter
             return q;
         }
 
+        public CadPoint ToPoint()
+        {
+            CadPoint p = default(CadPoint);
+
+            p.x = x;
+            p.y = y;
+            p.z = z;
+
+            return p;
+        }
+
+
         //-----------------------------------------------------------------------------------------
         // 掛け算
         //

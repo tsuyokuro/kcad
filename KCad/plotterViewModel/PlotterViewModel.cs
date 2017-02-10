@@ -657,6 +657,9 @@ namespace Plotter
             // Default printers's unit is 1/100 inch
             dc.setUnitPerInch(100.0);
 
+            dc.ViewMatrix = mController.CurrentDC.ViewMatrix;
+            dc.ProjectionMatrix = mController.CurrentDC.ProjectionMatrix;
+
             CadPoint org = default(CadPoint);
 
             org.x = dc.PageSize.widthInch / 2.0 * 100;

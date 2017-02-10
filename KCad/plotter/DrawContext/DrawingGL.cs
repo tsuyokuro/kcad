@@ -19,6 +19,12 @@ namespace Plotter
             DC = dc;
         }
 
+        public override void Clear()
+        {
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.ClearColor(DC.Color(DrawTools.COLOR_BACKGROUND));
+        }
+
         public override void Draw(CadLayer layer)
         {
             //Console.WriteLine("DrawingGL Draw (layer)");

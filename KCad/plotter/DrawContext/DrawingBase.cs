@@ -126,9 +126,7 @@ namespace Plotter
                 qp = r * qp;
                 qp = qp * q;
 
-                p.x = qp.x;
-                p.y = qp.y;
-                p.z = qp.z;
+                p = qp.ToPoint();
 
                 tp2 = p + cp;
 

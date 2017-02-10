@@ -174,6 +174,15 @@ namespace Plotter
             return (x == p.x && y == p.y && z == p.z);
         }
 
+        public bool coordEqualsR(CadPoint p, double m = 0.000001)
+        {
+            return (
+                x > p.x - m && x < p.x + m &&
+                y > p.y - m && y < p.y + m &&
+                x > p.z - m && x < p.z + m
+                );
+        }
+
         public bool dataEquals(CadPoint p)
         {
             return coordEquals(p) && (Type == p.Type);
