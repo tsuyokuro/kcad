@@ -139,6 +139,8 @@ namespace Plotter
                         mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mp.Point);
 
                         mMoveOrgScrnPoint.z = 0;
+                        mMoveOrgScrnPoint.w = 1.0;
+
 
                         State = States.START_DRAGING_POINTS;
                         CadFigure fig = mDB.getFigure(mp.FigureID);

@@ -122,10 +122,14 @@ namespace Plotter
             this.Type = type;
         }
 
-        public static CadPoint Create(double x, double y, double z)
+        public static CadPoint Create(double x, double y, double z, Types type = Types.STD)
         {
             CadPoint v = default(CadPoint);
             v.set(x, y, z);
+
+            v.Flag = 0;
+            v.Type = type;
+
             return v;
         }
 
@@ -133,6 +137,10 @@ namespace Plotter
         {
             CadPoint v = default(CadPoint);
             v.set(0, 0, 0);
+
+            v.Flag = 0;
+            v.Type = Types.STD;
+
             return v;
         }
 

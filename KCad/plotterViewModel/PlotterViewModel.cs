@@ -657,6 +657,12 @@ namespace Plotter
             dc.ViewMatrix = mController.CurrentDC.ViewMatrix;
             dc.ProjectionMatrix = mController.CurrentDC.ProjectionMatrix;
 
+            if (mController.CurrentDC is DrawContextGL)
+            {
+                // TODO OpenGLのDCなら、ProjectionMatrixのスケールとアスペクトを変える処理を入れる
+                dc.UnitPerMilli *= 50.0;
+            }
+
             CadPoint org = default(CadPoint);
 
             org.x = dc.PageSize.widthInch / 2.0 * 100;

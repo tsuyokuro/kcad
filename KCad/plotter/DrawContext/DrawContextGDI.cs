@@ -73,13 +73,13 @@ namespace Plotter
         {
             pt = ViewMatrix * pt;
 
+            pt.w = 1.0f;
+
             pt = ProjectionMatrix * pt;
 
-            /*
             pt.x /= pt.w;
             pt.y /= pt.w;
             pt.z /= pt.w;
-            */
 
             CadPoint p = default(CadPoint);
 
@@ -100,12 +100,6 @@ namespace Plotter
             p.x = pt.x / UnitPerMilli;
             p.y = pt.y / UnitPerMilli * YDir;
             p.z = pt.z / UnitPerMilli;
-
-            /*
-            p.x *= p.w;
-            p.y *= p.w;
-            p.z *= p.w;
-            */
 
             p = ProjectionMatrixInv * p;
 
