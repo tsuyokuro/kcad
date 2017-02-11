@@ -124,7 +124,7 @@
     </Compile>
     <Compile Include="plotter\Assembler\TriangleSplitter.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGL.cs" />
-    <Compile Include="plotter\DrawContext\DrawContextWin.cs" />
+    <Compile Include="plotter\DrawContext\DrawContextGDI.cs" />
     <Compile Include="plotter\DrawContext\DrawingGL.cs" />
     <Compile Include="plotter\DrawContext\DrawingGDI.cs" />
     <Compile Include="plotter\DrawContext\DrawingBase.cs" />

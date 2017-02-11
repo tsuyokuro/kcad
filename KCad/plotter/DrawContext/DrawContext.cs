@@ -91,7 +91,7 @@ namespace Plotter
         // 投影座標系から視点座標系への変換行列
         public UMatrix4 ProjectionMatrixInv;
 
-        public bool Perspective = false;
+        //public bool Perspective = false;
 
         public CadPoint ViewOrg
         {

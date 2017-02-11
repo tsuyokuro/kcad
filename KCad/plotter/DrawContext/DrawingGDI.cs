@@ -6,9 +6,9 @@ namespace Plotter
 {
     public class DrawingGDI : DrawingBase
     {
-        public DrawContextWin DC;
+        public DrawContextGDI DC;
 
-        public DrawingGDI(DrawContextWin dc)
+        public DrawingGDI(DrawContextGDI dc)
         {
             DC = dc;
         }

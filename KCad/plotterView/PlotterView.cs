@@ -30,7 +30,7 @@ namespace Plotter
         ContextMenuEx mCurrentContextMenu = null;
 
 
-        private DrawContext mDrawContext = new DrawContextWin();
+        private DrawContext mDrawContext = new DrawContextGDI();
 
         public DrawContext DrawContext
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
-    public class DrawContextWin : DrawContext
+    public class DrawContextGDI : DrawContext
     {
         private int GraphicsRef = 0;
 
@@ -19,7 +19,7 @@ namespace Plotter
             get { return mGraphics; }
         }
 
-        public DrawContextWin()
+        public DrawContextGDI()
         {
             setUnitPerMilli(4); // 1mm = 2.5dot
             mViewOrg.x = 0;
@@ -29,6 +29,7 @@ namespace Plotter
             ViewMatrixInv = UMatrixs.ViewXYInv;
 
             ProjectionMatrix = UMatrixs.Unit;
+            ProjectionMatrixInv = UMatrixs.Unit;
 
             Drawing = new DrawingGDI(this);
         }
@@ -72,20 +73,13 @@ namespace Plotter
         {
             pt = ViewMatrix * pt;
 
+            pt = ProjectionMatrix * pt;
 
-            if (Perspective)
-            {
-                CadPoint vp = pt - ViewCenter;
-
-                double d = 1 + (-vp.z / 400);
-
-                vp.x = vp.x / d;
-                vp.y = vp.y / d;
-                vp.z = 0;
-
-                pt = vp + ViewCenter;
-            }
-
+            /*
+            pt.x /= pt.w;
+            pt.y /= pt.w;
+            pt.z /= pt.w;
+            */
 
             CadPoint p = default(CadPoint);
 
@@ -94,6 +88,7 @@ namespace Plotter
             p.z = pt.z * UnitPerMilli;
 
             p = p + mViewOrg;
+
             return p;
         }
 
@@ -106,20 +101,17 @@ namespace Plotter
             p.y = pt.y / UnitPerMilli * YDir;
             p.z = pt.z / UnitPerMilli;
 
-            if (Perspective)
-            {
-                CadPoint vp = p - ViewCenter;
+            /*
+            p.x *= p.w;
+            p.y *= p.w;
+            p.z *= p.w;
+            */
 
-                double d = 1 + (-vp.z / 400);
-
-                vp.x = vp.x * d;
-                vp.y = vp.y * d;
-                vp.z = 0;
-
-                p = vp + ViewCenter;
-            }
+            p = ProjectionMatrixInv * p;
 
             p = ViewMatrixInv * p;
+
+            p.w = 1.0;
 
             return p;
         }

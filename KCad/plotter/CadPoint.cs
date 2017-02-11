@@ -129,6 +129,13 @@ namespace Plotter
             return v;
         }
 
+        public static CadPoint Create()
+        {
+            CadPoint v = default(CadPoint);
+            v.set(0, 0, 0);
+            return v;
+        }
+
         public JObject ToJson()
         {
             var jo = new JObject();

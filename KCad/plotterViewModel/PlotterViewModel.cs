@@ -452,7 +452,6 @@ namespace Plotter
 
                     mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXY;
                     mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXYInv;
-                    mPlotterView.DrawContext.Perspective = false;
 
                     draw();
                     break;
@@ -462,7 +461,6 @@ namespace Plotter
 
                     mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXZ;
                     mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXZInv;
-                    mPlotterView.DrawContext.Perspective = false;
                     draw();
                     break;
 
@@ -471,7 +469,6 @@ namespace Plotter
 
                     mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewZY;
                     mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewZYInv;
-                    mPlotterView.DrawContext.Perspective = false;
                     draw();
                     break;
 
@@ -648,7 +645,7 @@ namespace Plotter
 
         private void drawPage(System.Drawing.Graphics g)
         {
-            DrawContextWin dc = new DrawContextWin();
+            DrawContextGDI dc = new DrawContextGDI();
 
             dc.graphics = g;
             dc.setupTools(DrawTools.ToolsType.PRINTER);
