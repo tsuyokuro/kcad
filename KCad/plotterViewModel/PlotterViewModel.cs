@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -659,8 +660,10 @@ namespace Plotter
 
             if (mController.CurrentDC is DrawContextGL)
             {
-                // TODO OpenGLのDCなら、ProjectionMatrixのスケールとアスペクトを変える処理を入れる
-                dc.UnitPerMilli *= 50.0;
+                dc.WoldScale = 0.2;
+                dc.UnitPerMilli = 1.0;
+                dc.DeviceScaleX = mController.CurrentDC.ViewWidth / 2.0;
+                dc.DeviceScaleY = -mController.CurrentDC.ViewHeight / 2.0;
             }
 
             CadPoint org = default(CadPoint);

@@ -71,10 +71,11 @@ namespace Plotter
 
         public override CadPoint CadPointToUnitPoint(CadPoint pt)
         {
-            pt = ViewMatrix * pt;
+            pt *= WoldScale;
 
             pt.w = 1.0f;
 
+            pt = ViewMatrix * pt;
             pt = ProjectionMatrix * pt;
 
             pt.x /= pt.w;
@@ -83,8 +84,8 @@ namespace Plotter
 
             CadPoint p = default(CadPoint);
 
-            p.x = pt.x * UnitPerMilli;
-            p.y = pt.y * UnitPerMilli * YDir;
+            p.x = pt.x * (UnitPerMilli * DeviceScaleX);
+            p.y = pt.y * (UnitPerMilli * DeviceScaleY);
             p.z = pt.z * UnitPerMilli;
 
             p = p + mViewOrg;
@@ -97,13 +98,15 @@ namespace Plotter
             pt = pt - mViewOrg;
 
             CadPoint p = default(CadPoint);
-            p.x = pt.x / UnitPerMilli;
-            p.y = pt.y / UnitPerMilli * YDir;
+            p.x = pt.x / (UnitPerMilli * DeviceScaleX);
+            p.y = pt.y / (UnitPerMilli * DeviceScaleY);
             p.z = pt.z / UnitPerMilli;
 
             p = ProjectionMatrixInv * p;
 
             p = ViewMatrixInv * p;
+
+            p /= WoldScale;
 
             p.w = 1.0;
 

@@ -230,8 +230,8 @@ namespace Plotter
             pt.z = 0;
 
             CadPoint p0 = default(CadPoint);
-            p0.x = pt.x * DC.UnitPerMilli;
-            p0.y = pt.y * DC.UnitPerMilli * DC.YDir;
+            p0.x = pt.x * DC.UnitPerMilli * DC.DeviceScaleX;
+            p0.y = pt.y * DC.UnitPerMilli * DC.DeviceScaleY;
 
             p0 += DC.ViewOrg;
 
@@ -241,8 +241,8 @@ namespace Plotter
             pt.z = 0;
 
             CadPoint p1 = default(CadPoint);
-            p1.x = pt.x * DC.UnitPerMilli;
-            p1.y = pt.y * DC.UnitPerMilli * DC.YDir;
+            p1.x = pt.x * DC.UnitPerMilli * DC.DeviceScaleX;
+            p1.y = pt.y * DC.UnitPerMilli * DC.DeviceScaleY;
 
             p1 += DC.ViewOrg;
 

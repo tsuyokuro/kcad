@@ -19,10 +19,10 @@ namespace Plotter
         float ProjectionNear = 10.0f;
         float ProjectionFar = 10000.0f;
 
-        public float Scale = 0.2f;
 
         public DrawContextGL()
         {
+            WoldScale = 0.2f;
             Tools.Setup(DrawTools.ToolsType.DARK_GL);
 
             Drawing = new DrawingGL(this);

@@ -71,7 +71,7 @@ namespace Plotter
         public const double MILLI_PER_INCH = 25.4;
 
         //private double XDir = 1;
-        public double YDir = -1;
+        //public double YDir = -1;
         //private double ZDir = 1;
 
         // Screen 座標系の原点 
@@ -128,6 +128,10 @@ namespace Plotter
         }
 
         public CadPoint ViewCenter = default(CadPoint);
+
+        public double WoldScale = 1.0;
+        public double DeviceScaleX = 1.0;
+        public double DeviceScaleY = -1.0;
 
         protected DrawTools Tools = new DrawTools();
 
