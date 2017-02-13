@@ -101,6 +101,11 @@
                 <MenuItem Tag="to_bezier" Header="To Bezier" Click="MenuItem_Click"/>
                 <MenuItem Tag="cut_segment" Header="Cut Segment" Click="MenuItem_Click"/>
                 <MenuItem Tag="add_center_point" Header="Add crnter point" Click="MenuItem_Click"/>
+                <MenuItem Header="Mirror">
+                    <MenuItem Tag="mirror_x" Header="Mirror X" Click="MenuItem_Click"/>
+                    <MenuItem Tag="mirror_y" Header="Mirror Y" Click="MenuItem_Click"/>
+                    <MenuItem Tag="mirror_z" Header="Mirror Z" Click="MenuItem_Click"/>
+                </MenuItem>
             </MenuItem>
         </Menu>
 

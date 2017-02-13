@@ -257,17 +257,20 @@ namespace Plotter
         {
             commandMap = new Dictionary<string, Action>{
                 { "load", load },
-                { "save",save},
-                { "print",startPrint},
-                { "undo",undo},
-                { "redo",redo},
-                { "copy",Copy},
-                { "paste",Paste},
-                { "separate",separateFigure},
-                { "bond",bondFigure},
-                { "to_bezier",toBezier},
-                { "cut_segment",cutSegment},
-                { "add_center_point", addCenterPoint},
+                { "save",save },
+                { "print",startPrint },
+                { "undo",undo },
+                { "redo",redo },
+                { "copy",Copy },
+                { "paste",Paste },
+                { "separate",separateFigure },
+                { "bond",bondFigure },
+                { "to_bezier",toBezier },
+                { "cut_segment",cutSegment },
+                { "add_center_point", addCenterPoint },
+                { "mirror_x", mirrorX },
+                { "mirror_y", mirrorY },
+                { "mirror_z", mirrorZ },
             };
         }
 
@@ -582,6 +585,27 @@ namespace Plotter
         {
             DrawContext dc = startDraw();
             mController.addCenterPoint(dc);
+            endDraw();
+        }
+
+        public void mirrorX()
+        {
+            DrawContext dc = startDraw();
+            mController.mirrorX(dc);
+            endDraw();
+        }
+
+        public void mirrorY()
+        {
+            DrawContext dc = startDraw();
+            mController.mirrorY(dc);
+            endDraw();
+        }
+
+        public void mirrorZ()
+        {
+            DrawContext dc = startDraw();
+            mController.mirrorZ(dc);
             endDraw();
         }
 

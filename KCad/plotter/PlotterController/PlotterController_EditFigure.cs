@@ -253,5 +253,122 @@ namespace Plotter
 
             draw(dc);
         }
+
+        public void mirrorX(DrawContext dc)
+        {
+            double min = double.MaxValue;
+            double max = double.MinValue;
+
+            foreach (SelectItem item in mSelList.List)
+            {
+                if (item.Point.x < min)
+                {
+                    min = item.Point.x;
+                }
+                if (item.Point.x > max)
+                {
+                    max = item.Point.x;
+                }
+            }
+
+            double cp = (max - min) / 2.0 + min;
+
+            startEdit();
+
+            foreach (SelectItem item in mSelList.List)
+            {
+                CadFigure fig = mDB.getFigure(item.FigureID);
+                CadPoint p = fig.getPointAt(item.PointIndex);
+
+                CadPoint np = p;
+                np.x -= cp;
+                np.x = -np.x + cp;
+
+                fig.setPointAt(item.PointIndex, np);
+            }
+
+            endEdit();
+
+            clear(dc);
+            draw(dc);
+        }
+
+        public void mirrorY(DrawContext dc)
+        {
+            double min = double.MaxValue;
+            double max = double.MinValue;
+
+            foreach (SelectItem item in mSelList.List)
+            {
+                if (item.Point.y < min)
+                {
+                    min = item.Point.y;
+                }
+                if (item.Point.y > max)
+                {
+                    max = item.Point.y;
+                }
+            }
+
+            double cp = (max - min) / 2.0 + min;
+
+            startEdit();
+
+            foreach (SelectItem item in mSelList.List)
+            {
+                CadFigure fig = mDB.getFigure(item.FigureID);
+                CadPoint p = fig.getPointAt(item.PointIndex);
+
+                CadPoint np = p;
+                np.y -= cp;
+                np.y = -np.y + cp;
+
+                fig.setPointAt(item.PointIndex, np);
+            }
+
+            endEdit();
+
+            clear(dc);
+            draw(dc);
+        }
+
+        public void mirrorZ(DrawContext dc)
+        {
+            double min = double.MaxValue;
+            double max = double.MinValue;
+
+            foreach (SelectItem item in mSelList.List)
+            {
+                if (item.Point.z < min)
+                {
+                    min = item.Point.z;
+                }
+                if (item.Point.z > max)
+                {
+                    max = item.Point.z;
+                }
+            }
+
+            double cp = (max - min) / 2.0 + min;
+
+            startEdit();
+
+            foreach (SelectItem item in mSelList.List)
+            {
+                CadFigure fig = mDB.getFigure(item.FigureID);
+                CadPoint p = fig.getPointAt(item.PointIndex);
+
+                CadPoint np = p;
+                np.z -= cp;
+                np.z = -np.z + cp;
+
+                fig.setPointAt(item.PointIndex, np);
+            }
+
+            endEdit();
+
+            clear(dc);
+            draw(dc);
+        }
     }
 }
