@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static MyScript.Evaluator;
 
 namespace MyScript
 {
@@ -290,15 +289,8 @@ namespace MyScript
         private Dictionary<String, Func> FunctionMap = new Dictionary<String, Func>();
         private Dictionary<String, Value> VariableMap = new Dictionary<String, Value>();
 
+
         private Exception mLastException = null;
-
-        public delegate void DelegatePreFuncCall(Evaluator evaluator, string funcName, ValueStack stack);
-
-        public DelegatePreFuncCall PreFuncCall
-        {
-            set;
-            get;
-        } = null;
 
         public struct Value
         {
@@ -307,7 +299,6 @@ namespace MyScript
                 INT,
                 DOUBLE,
                 STRING,
-                OBJECT,
             }
 
             public Types Type;
@@ -354,12 +345,6 @@ namespace MyScript
                 }
             }
 
-            public void setVal(Object v)
-            {
-                val = v;
-                Type = Types.OBJECT;
-            }
-
             public double getDouble()
             {
                 if (val is String)
@@ -381,11 +366,6 @@ namespace MyScript
             public String getString()
             {
                 return val.ToString();
-            }
-
-            public Object getObj()
-            {
-                return val;
             }
         }
 
@@ -413,12 +393,6 @@ namespace MyScript
             }
 
             public void push(Int64 v)
-            {
-                sp++;
-                Stack[sp].setVal(v);
-            }
-
-            public void push(Object v)
             {
                 sp++;
                 Stack[sp].setVal(v);
@@ -745,15 +719,10 @@ namespace MyScript
 
             evalExprList(exprList);
 
-            int argCount = VStack.sp - sp;
+            int argCount = VStack.sp -sp;
 
             if (FunctionMap.ContainsKey(funcName))
             {
-                if (PreFuncCall != null)
-                {
-                    PreFuncCall(this, funcName, VStack);
-                    argCount = VStack.sp - sp;
-                }
                 return FunctionMap[funcName](argCount, VStack);
             }
 

@@ -11,9 +11,17 @@ namespace Plotter
     {
         private Executor mScrExecutor;
 
+        // スクリプトエンジンが関数を呼び出す直前にこのメソッドが呼び出されます
+        private void PreFuncCall(Evaluator evaluator, string funcName, Evaluator.ValueStack stack)
+        {
+            // 第一引数にDrawContextを設定します
+            stack.push(CurrentDC);
+        }
+
         private void initScrExecutor()
         {
             mScrExecutor = new Executor();
+            mScrExecutor.evaluator.PreFuncCall = PreFuncCall;
             mScrExecutor.addFunction("rect", addRect);
             mScrExecutor.addFunction("distance", distance);
             mScrExecutor.addFunction("group", group);
@@ -23,9 +31,13 @@ namespace Plotter
 
         private int group(int argCount, Evaluator.ValueStack stack)
         {
+            Evaluator.Value v0 = stack.pop();
+            DrawContext dc = (DrawContext)(v0.getObj());
+            argCount--;
+
             List<uint> idlist = getSelectedFigIDList();
 
-            if (idlist.Count < 2)
+            if (idlist.Count < 2+1)
             {
                 Interact.print("Please select two or more objects.");
                 return 0;
@@ -55,6 +67,10 @@ namespace Plotter
 
         private int ungroup(int argCount, Evaluator.ValueStack stack)
         {
+            Evaluator.Value v0 = stack.pop();
+            DrawContext dc = (DrawContext)(v0.getObj());
+            argCount--;
+
             List<uint> idlist = getSelectedFigIDList();
 
             var idSet = new HashSet<uint>();
@@ -93,11 +109,9 @@ namespace Plotter
 
         private int distance(int argCount, Evaluator.ValueStack stack)
         {
-            int i;
-            for (i = 0; i < argCount; i++)
-            {
-                Evaluator.Value v = stack.pop();
-            }
+            Evaluator.Value v0 = stack.pop();
+            DrawContext dc = (DrawContext)(v0.getObj());
+            argCount--;
 
             if (mSelList.List.Count == 2)
             {
@@ -118,6 +132,10 @@ namespace Plotter
 
         private int addRect(int argCount, Evaluator.ValueStack stack)
         {
+            Evaluator.Value v0 = stack.pop();
+            DrawContext dc = (DrawContext)(v0.getObj());
+            argCount--;
+
             if (argCount == 2)
             {
                 Evaluator.Value v2 = stack.pop();
@@ -201,6 +219,10 @@ namespace Plotter
 
         private int addLayer(int argCount, Evaluator.ValueStack stack)
         {
+            Evaluator.Value v0 = stack.pop();
+            DrawContext dc = (DrawContext)(v0.getObj());
+            argCount--;
+
             String name = null;
 
             if (argCount > 0)
