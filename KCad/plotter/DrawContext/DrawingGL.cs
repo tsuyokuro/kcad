@@ -60,8 +60,7 @@ namespace Plotter
             GL.End();
         }
 
-        /*
-        public override void Draw(IReadOnlyList<CadFigure> list, int pen = -1)
+        public void DrawTest(IReadOnlyList<CadFigure> list, int pen = -1)
         {
             float w2 = 1.0f;
             float z = 0.0f;
@@ -99,6 +98,5 @@ namespace Plotter
 
             GL.End();
         }
-        */
     }
 }

@@ -70,20 +70,7 @@ namespace Plotter
             }
         }
 
-        public double w
-        {
-            set
-            {
-                vector.W = (float)value;
-            }
-
-            get
-            {
-                return vector.W;
-            }
-        }
-
-        public Vector4 vector;
+        public Vector3 vector;
 
         public bool Selected
         {
@@ -116,7 +103,6 @@ namespace Plotter
             vector.X = (float)x;
             vector.Y = (float)y;
             vector.Z = (float)z;
-            vector.W = 1f;
 
             this.Flag = 0;
             this.Type = type;
@@ -164,7 +150,6 @@ namespace Plotter
             x = (double)jo["x"];
             y = (double)jo["y"];
             z = (double)jo["z"];
-            w = 1f;
         }
 
         public void set(double x, double y, double z)
@@ -172,7 +157,6 @@ namespace Plotter
             this.x = x;
             this.y = y;
             this.z = z;
-            w = 1f;
         }
 
         public void set(ref CadPoint p)
@@ -181,7 +165,6 @@ namespace Plotter
             x = p.x;
             y = p.y;
             z = p.z;
-            w = p.w;
         }
 
         public bool coordEquals(CadPoint p)
@@ -265,14 +248,30 @@ namespace Plotter
 
         public static explicit operator CadPoint (Vector3 v)
         {
-            CadPoint p = default(CadPoint);
+            return Create(
+                v.X,
+                v.Y,
+                v.Z
+                );
+        }
 
-            p.x = v.X;
-            p.y = v.Y;
-            p.z = v.Z;
-            p.w = 1.0;
+        public static explicit operator CadPoint(Vector4 v)
+        {
+            return Create(
+                v.X,
+                v.Y,
+                v.Z
+                );
+        }
 
-            return p;
+        public static explicit operator Vector4 (CadPoint p)
+        {
+            return new Vector4(
+                p.vector.X,
+                p.vector.Y,
+                p.vector.Z,
+                1.0f
+                );
         }
 
         // ベクトルのノルム(長さ)を求める

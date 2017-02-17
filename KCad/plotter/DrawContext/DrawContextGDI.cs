@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -73,20 +74,23 @@ namespace Plotter
         {
             pt *= WoldScale;
 
-            pt.w = 1.0f;
+            // 透視変換用にWが必要なので、Vector4に変換
+            Vector4 ptv = (Vector4)pt;
 
-            pt = ViewMatrix * pt;
-            pt = ProjectionMatrix * pt;
+            ptv.W = 1.0f;
 
-            pt.x /= pt.w;
-            pt.y /= pt.w;
-            pt.z /= pt.w;
+            ptv = ptv * ViewMatrix;
+            ptv = ptv * ProjectionMatrix;
+
+            ptv.X /= ptv.W;
+            ptv.Y /= ptv.W;
+            ptv.Z /= ptv.W;
 
             CadPoint p = default(CadPoint);
 
-            p.x = pt.x * (UnitPerMilli * DeviceScaleX);
-            p.y = pt.y * (UnitPerMilli * DeviceScaleY);
-            p.z = pt.z * UnitPerMilli;
+            p.x = ptv.X * (UnitPerMilli * DeviceScaleX);
+            p.y = ptv.Y * (UnitPerMilli * DeviceScaleY);
+            p.z = ptv.Z * UnitPerMilli;
 
             p = p + mViewOrg;
 
@@ -102,13 +106,11 @@ namespace Plotter
             p.y = pt.y / (UnitPerMilli * DeviceScaleY);
             p.z = pt.z / UnitPerMilli;
 
-            p = ProjectionMatrixInv * p;
+            p = p * ProjectionMatrixInv;
 
-            p = ViewMatrixInv * p;
+            p = p * ViewMatrixInv;
 
             p /= WoldScale;
-
-            p.w = 1.0;
 
             return p;
         }
@@ -120,7 +122,6 @@ namespace Plotter
             p.x = x;
             p.y = y;
             p.z = z;
-            p.w = 1.0;
 
             return UnitPointToCadPoint(p);
         }
