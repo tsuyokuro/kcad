@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
+    public enum ArrowTypes
+    {
+        CROSS,  // X
+        PLUS,   // +
+    }
+
     public class DrawingBase
     {
         public virtual void Clear()
@@ -137,11 +143,6 @@ namespace Plotter
             DrawLine(pen, tp1, pa);
         }
 
-        /*
-        public virtual void DrawCircle(int pen, CadPoint cp, double r)
-        {
-        }
-        */
         public virtual void DrawCircleScrn(int pen, CadPoint cp, CadPoint p1)
         {
         }
@@ -167,6 +168,40 @@ namespace Plotter
         {
         }
 
+        public virtual void DrawArrow(int pen, CadPoint pt0, CadPoint pt1, ArrowTypes type, double len, double width)
+        {
+            DrawLine(pen, pt0, pt1);
+
+            CadPoint d = pt1 - pt0;
+
+            double w2 = width / 2.0;
+
+            CadPoint ap0;
+            CadPoint ap1;
+            CadPoint ap2;
+            CadPoint ap3;
+            CadPoint ap4;
+
+            if (type == ArrowTypes.CROSS)
+            {
+                ap0 = CadPoint.Create(0, 0, 0);
+                ap1 = CadPoint.Create(-len, w2, w2);
+                ap2 = CadPoint.Create(-len, w2, -w2);
+                ap3 = CadPoint.Create(-len, -w2, -w2);
+                ap4 = CadPoint.Create(-len, -w2, w2);
+            }
+            else if (type == ArrowTypes.PLUS)
+            {
+                ap0 = CadPoint.Create(0, 0, 0);
+                ap1 = CadPoint.Create(-len, w2, 0);
+                ap2 = CadPoint.Create(-len, 0, -w2);
+                ap3 = CadPoint.Create(-len, -w2, 0);
+                ap4 = CadPoint.Create(-len, 0, w2);
+            }
+
+            
+
+        }
 
         public virtual void DrawBezier(
             int pen,

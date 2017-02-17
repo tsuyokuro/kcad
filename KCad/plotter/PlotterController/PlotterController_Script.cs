@@ -1,9 +1,6 @@
 ﻿using MyScript;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Plotter
 {
@@ -14,7 +11,7 @@ namespace Plotter
         // スクリプトエンジンが関数を呼び出す直前にこのメソッドが呼び出されます
         private void PreFuncCall(Evaluator evaluator, string funcName, Evaluator.ValueStack stack)
         {
-            // 第一引数にDrawContextを設定します
+            // 第一引数(最初にPOPした値)にDrawContextを設定します
             stack.push(CurrentDC);
         }
 
@@ -163,7 +160,7 @@ namespace Plotter
 
                 fig.Closed = true;
 
-                fig.endCreate(CurrentDC);
+                fig.endCreate(dc);
 
                 CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
                 mHistoryManager.foward(ope);
@@ -201,7 +198,7 @@ namespace Plotter
 
                 fig.Closed = true;
 
-                fig.endCreate(CurrentDC);
+                fig.endCreate(dc);
 
                 CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
                 mHistoryManager.foward(ope);
