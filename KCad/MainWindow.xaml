@@ -73,6 +73,7 @@
 
             <pl:SelectModeConverter x:Key="SelModeConv"/>
             <pl:FigureTypeConverter x:Key="FigTypeConv"/>
+            <pl:ViewModeConverter x:Key="ViewModeConv"/>
 
         </ResourceDictionary>
 
@@ -147,7 +148,9 @@
                     </StackPanel>
 
                     <StackPanel x:Name="FigurePanel">
+                        
                         <Label />
+                        
                         <RadioButton
                         Style="{StaticResource ToggleRadio}"
                         Tag="LINE"
@@ -314,11 +317,61 @@
                 VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="240" Foreground="White">
             </TextBlock>
 
-            <Button Name="btnAxisXY" Tag="axis_xy" Content=" XY " Style="{StaticResource ButtonStyle}"></Button>
-            <Button Name="btnAxisXZ" Tag="axis_xz" Content=" XZ " Style="{StaticResource ButtonStyle}"></Button>
-            <Button Name="btnAxisZY" Tag="axis_zy" Content=" ZY " Style="{StaticResource ButtonStyle}"></Button>
-            <Button Name="btnAxisXYZ" Tag="axis_xyz" Content=" XYZ " Style="{StaticResource ButtonStyle}"></Button>
+            <StackPanel x:Name="ViewModePanel"
+                Background="{StaticResource BGColor}"
+                Orientation="Horizontal"
+                VerticalAlignment="Stretch" >
 
+                <RadioButton
+                    Style="{StaticResource ToggleRadio}"
+                    Tag="axis_xy"
+                    Content=" XY " 
+                    IsChecked="{
+                        Binding ViewMode,
+                        ConverterParameter=XY,
+                        Converter={StaticResource ViewModeConv}
+                    }"
+                />
+
+                <Label Width="4"/>
+                
+                <RadioButton
+                    Style="{StaticResource ToggleRadio}"
+                    Tag="axis_xz"
+                    Content=" XZ " 
+                    IsChecked="{
+                        Binding ViewMode,
+                        ConverterParameter=XZ,
+                        Converter={StaticResource ViewModeConv}
+                    }"
+                />
+
+                <Label Width="4"/>
+
+                <RadioButton
+                    Style="{StaticResource ToggleRadio}"
+                    Tag="axis_zy"
+                    Content=" ZY " 
+                    IsChecked="{
+                        Binding ViewMode,
+                        ConverterParameter=ZY,
+                        Converter={StaticResource ViewModeConv}
+                    }"
+                />
+
+                <Label Width="4"/>
+
+                <RadioButton
+                    Style="{StaticResource ToggleRadio}"
+                    Tag="axis_xyz"
+                    Content=" XYZ " 
+                    IsChecked="{
+                        Binding ViewMode,
+                        ConverterParameter=FREE,
+                        Converter={StaticResource ViewModeConv}
+                    }"
+                />
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

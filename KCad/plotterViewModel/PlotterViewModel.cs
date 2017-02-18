@@ -14,6 +14,17 @@ namespace Plotter
     public class SelectModeConverter : EnumBoolConverter<PlotterController.SelectModes> { }
     public class FigureTypeConverter : EnumBoolConverter<CadFigure.Types> { }
 
+    public enum ViewModes
+    {
+        NONE,
+        XY,
+        XZ,
+        ZY,
+        FREE,
+    }
+
+    public class ViewModeConverter : EnumBoolConverter<ViewModes> { }
+
     public class FreqChangedInfo : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -100,32 +111,12 @@ namespace Plotter
         {
             set
             {
-                var prev = mFigureType;
+                bool changed = UpdateFigureType(value);
 
-                if (mFigureType == value)
+                if (changed)
                 {
-                    mFigureType = CadFigure.Types.NONE;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FigureType)));
                 }
-                else
-                {
-                    mFigureType = value;
-                }
-
-                if (mFigureType != CadFigure.Types.NONE)
-                {
-                    DrawContext dc = mPlotterView.startDraw();
-                    mController.startCreateFigure(mFigureType, dc);
-                    mPlotterView.endDraw();
-                }
-                else if (prev != CadFigure.Types.NONE)
-                {
-                    DrawContext dc = mPlotterView.startDraw();
-                    mController.endCreateFigure(dc);
-                    mController.draw(dc);
-                    mPlotterView.endDraw();
-                }
-
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FigureType)));
             }
 
             get
@@ -133,6 +124,25 @@ namespace Plotter
                 return mFigureType;
             }
         }
+
+
+        private ViewModes mViewMode = ViewModes.NONE;
+
+        public ViewModes ViewMode
+        {
+            set
+            {
+                bool changed = UpdateViewMode(value);
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewMode)));
+            }
+
+            get
+            {
+                return mViewMode;
+            }
+        }
+
 
         ListBox mLayerListView;
 
@@ -217,6 +227,8 @@ namespace Plotter
             plotterViewGL1 = PlotterViewGL.Create();
 
             SetView(plotterView1);
+
+            ViewMode = ViewModes.XY;
         }
 
         public void SetView(IPlotterView view)
@@ -451,12 +463,12 @@ namespace Plotter
                     draw();
                     break;
 
+                /*
                 case "axis_xy":
                     SetView(plotterView1);
 
                     mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXY;
                     mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXYInv;
-
                     draw();
                     break;
 
@@ -481,6 +493,7 @@ namespace Plotter
 
                     draw();
                     break;
+                */
             }
         }
 
@@ -731,5 +744,81 @@ namespace Plotter
             InteractOut.print(s);
         }
         #endregion
+
+        private bool UpdateFigureType(CadFigure.Types newType)
+        {
+            var prev = mFigureType;
+
+            if (mFigureType == newType)
+            {
+                // 現在のタイプを再度選択したら解除する
+                mFigureType = CadFigure.Types.NONE;
+            }
+            else
+            {
+                mFigureType = newType;
+            }
+
+            if (mFigureType != CadFigure.Types.NONE)
+            {
+                DrawContext dc = mPlotterView.startDraw();
+                mController.startCreateFigure(mFigureType, dc);
+                mPlotterView.endDraw();
+            }
+            else if (prev != CadFigure.Types.NONE)
+            {
+                DrawContext dc = mPlotterView.startDraw();
+                mController.endCreateFigure(dc);
+                mController.draw(dc);
+                mPlotterView.endDraw();
+            }
+
+            return true;
+        }
+
+        private bool UpdateViewMode(ViewModes newMode)
+        {
+            if (mViewMode == newMode)
+            {
+                return false;
+            }
+
+            mViewMode = newMode;
+
+            switch (mViewMode)
+            {
+                case ViewModes.XY:
+                    SetView(plotterView1);
+
+                    mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXY;
+                    mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXYInv;
+                    draw();
+                    break;
+
+                case ViewModes.XZ:
+                    SetView(plotterView1);
+
+                    mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXZ;
+                    mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXZInv;
+                    draw();
+                    break;
+
+                case ViewModes.ZY:
+                    SetView(plotterView1);
+
+                    mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewZY;
+                    mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewZYInv;
+                    draw();
+                    break;
+
+                case ViewModes.FREE:
+                    SetView(plotterViewGL1);
+
+                    draw();
+                    break;
+            }
+
+            return true;
+        }
     }
 }
