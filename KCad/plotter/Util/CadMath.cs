@@ -57,6 +57,15 @@ namespace Plotter
         }
         #endregion
 
+        public static CadPoint Normal(CadPoint va, CadPoint vb)
+        {
+            CadPoint normal = CadMath.crossProduct3D(va, vb);
+
+            normal = normal.unitVector();
+
+            return normal;
+        }
+
 
         public static double rad2deg(double rad)
         {

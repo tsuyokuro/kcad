@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,6 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
-    public enum ArrowTypes
-    {
-        CROSS,  // X
-        PLUS,   // +
-    }
-
     public class DrawingBase
     {
         public virtual void Clear()
@@ -108,10 +103,7 @@ namespace Plotter
                 return;
             }
 
-
-            CadPoint normal = CadMath.crossProduct3D(va, vb);
-
-            normal = normal.unitVector();
+            CadPoint normal = CadMath.Normal(va, vb);
 
             int div = 64;
 
@@ -168,39 +160,68 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawArrow(int pen, CadPoint pt0, CadPoint pt1, ArrowTypes type, double len, double width)
+        public virtual void DrawArrow(int pen, CadPoint pt0, CadPoint pt1, ArrowTypes type, ArrowPos pos, double len, double width)
         {
             DrawLine(pen, pt0, pt1);
 
             CadPoint d = pt1 - pt0;
 
-            double w2 = width / 2.0;
+            double dl = d.norm();
 
-            CadPoint ap0;
-            CadPoint ap1;
-            CadPoint ap2;
-            CadPoint ap3;
-            CadPoint ap4;
-
-            if (type == ArrowTypes.CROSS)
+            if (dl < 0.00001)
             {
-                ap0 = CadPoint.Create(0, 0, 0);
-                ap1 = CadPoint.Create(-len, w2, w2);
-                ap2 = CadPoint.Create(-len, w2, -w2);
-                ap3 = CadPoint.Create(-len, -w2, -w2);
-                ap4 = CadPoint.Create(-len, -w2, w2);
-            }
-            else if (type == ArrowTypes.PLUS)
-            {
-                ap0 = CadPoint.Create(0, 0, 0);
-                ap1 = CadPoint.Create(-len, w2, 0);
-                ap2 = CadPoint.Create(-len, 0, -w2);
-                ap3 = CadPoint.Create(-len, -w2, 0);
-                ap4 = CadPoint.Create(-len, 0, w2);
+                return;
             }
 
-            
 
+            CadPoint tmp = CadPoint.Create(dl, 0, 0);
+
+            double angle = Vector3.CalculateAngle(tmp.vector, d.vector);
+
+            CadPoint normal = CadMath.crossProduct3D(tmp, d);  // 回転軸
+
+            if (normal.norm() < 0.0001)
+            {
+                normal = CadPoint.Create(0, 0, 1);
+            }
+            else
+            {
+                normal = normal.unitVector();
+                normal = CadMath.Normal(tmp, d);
+            }
+ 
+            CadQuaternion q = CadQuaternion.RotateQuaternion(-angle, normal);
+            CadQuaternion r = q.Conjugate();
+
+            ArrowHead a;
+
+            if (pos == ArrowPos.END || pos == ArrowPos.START_END)
+            {
+                a = ArrowHead.Create(type, ArrowPos.END, len, width);
+
+                a.Rotate(q, r);
+
+                a += pt1;
+
+                DrawLine(pen, a.p0, a.p1);
+                DrawLine(pen, a.p0, a.p2);
+                DrawLine(pen, a.p0, a.p3);
+                DrawLine(pen, a.p0, a.p4);
+            }
+
+            if (pos == ArrowPos.START || pos == ArrowPos.START_END)
+            {
+                a = ArrowHead.Create(type, ArrowPos.START, len, width);
+
+                a.Rotate(q, r);
+
+                a += pt0;
+
+                DrawLine(pen, a.p0, a.p1);
+                DrawLine(pen, a.p0, a.p2);
+                DrawLine(pen, a.p0, a.p3);
+                DrawLine(pen, a.p0, a.p4);
+            }
         }
 
         public virtual void DrawBezier(

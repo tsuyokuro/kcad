@@ -196,5 +196,10 @@ namespace Plotter
 
             return q;
         }
+
+        public static CadPoint ToPoint(CadQuaternion q)
+        {
+            return CadPoint.Create(q.x, q.y, q.z);
+        }
     }
 }

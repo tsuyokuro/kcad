@@ -291,7 +291,10 @@ namespace Plotter
 
                 CadPoint lastPt = fig.PointList[fig.PointCount - 1];
 
-                dc.Drawing.DrawLine(pen, lastPt, tp);
+                //dc.Drawing.DrawLine(pen, lastPt, tp);
+
+                dc.Drawing.DrawArrow(pen, lastPt, tp, ArrowTypes.CROSS, ArrowPos.START_END, 6, 3);
+
             }
 
             public override void setPointAt(CadFigure fig, int index, CadPoint pt)
