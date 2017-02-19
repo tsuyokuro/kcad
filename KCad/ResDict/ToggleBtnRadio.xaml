@@ -8,14 +8,26 @@
     </ResourceDictionary.MergedDictionaries>
 
 
-    <DataTemplate x:Key="ToggleRadioCheckedBG">
-        <Grid Background="{StaticResource ToggleButtonChecked}" >
+    <DataTemplate x:Key="ToggleRadioCheckedStyle">
+        <Grid Background="{StaticResource ToggleButtonCheckedBGColor}" >
             <TextBlock HorizontalAlignment="Center" 
                        VerticalAlignment="Center" 
                        TextAlignment="Center"
+                       Foreground="{StaticResource ToggleButtonCheckedFGColor}"
                        Text="{Binding}"/>
         </Grid>
     </DataTemplate>
+
+    <DataTemplate x:Key="ToggleButtonMouseOverStyle">
+        <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}" >
+            <TextBlock HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
+                       TextAlignment="Center"
+                       Foreground="{StaticResource ToggleButtonMouseOverFGColor}"
+                       Text="{Binding}"/>
+        </Grid>
+    </DataTemplate>
+
 
     <Style x:Key="ToggleRadio" TargetType="{x:Type RadioButton}"
              BasedOn="{StaticResource {x:Type ToggleButton} }">
@@ -29,12 +41,12 @@
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                <Setter Property="ContentTemplate" Value="{StaticResource ToggleRadioCheckedBG}"/>
+                <Setter Property="ContentTemplate" Value="{StaticResource ToggleButtonMouseOverStyle}"/>
             </Trigger>
             <Trigger Property="IsChecked" Value="True">
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                <Setter Property="ContentTemplate" Value="{StaticResource ToggleRadioCheckedBG}"/>
+                <Setter Property="ContentTemplate" Value="{StaticResource ToggleRadioCheckedStyle}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

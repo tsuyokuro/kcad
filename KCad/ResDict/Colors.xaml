@@ -7,6 +7,9 @@
     <SolidColorBrush x:Key="BGColor" Color="#FF252526" />
     <!--<SolidColorBrush x:Key="ListBoxSelColor" Color="#FF228b22" />-->
     <SolidColorBrush x:Key="ListBoxSelColor" Color="#FF5050A0" />
-    <SolidColorBrush x:Key="ToggleButtonChecked" Color="#FF5050A0" />
+    <SolidColorBrush x:Key="ToggleButtonCheckedBGColor" Color="#FF5050A0" />
+    <SolidColorBrush x:Key="ToggleButtonMouseOverBGColor" Color="#FF303060" />
+    <SolidColorBrush x:Key="ToggleButtonCheckedFGColor" Color="White" />
+    <SolidColorBrush x:Key="ToggleButtonMouseOverFGColor" Color="White" />
 
 </ResourceDictionary>

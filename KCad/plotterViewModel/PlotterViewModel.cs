@@ -462,38 +462,6 @@ namespace Plotter
                     mController.removeLayer(mController.CurrentLayer.ID);
                     draw();
                     break;
-
-                /*
-                case "axis_xy":
-                    SetView(plotterView1);
-
-                    mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXY;
-                    mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXYInv;
-                    draw();
-                    break;
-
-                case "axis_xz":
-                    SetView(plotterView1);
-
-                    mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXZ;
-                    mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXZInv;
-                    draw();
-                    break;
-
-                case "axis_zy":
-                    SetView(plotterView1);
-
-                    mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewZY;
-                    mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewZYInv;
-                    draw();
-                    break;
-
-                case "axis_xyz":
-                    SetView(plotterViewGL1);
-
-                    draw();
-                    break;
-                */
             }
         }
 

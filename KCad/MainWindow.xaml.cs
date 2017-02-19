@@ -54,11 +54,6 @@ namespace KCad
             AddLayerButton.Click += ViewModel.ButtonClicked;
             RemoveLayerButton.Click += ViewModel.ButtonClicked;
 
-            //btnAxisXY.Click += ButtonClicked;
-            //btnAxisXZ.Click += ButtonClicked;
-            //btnAxisZY.Click += ButtonClicked;
-            //btnAxisXYZ.Click += ButtonClicked;
-
             ViewModePanel.DataContext = ViewModel;
         }
 
