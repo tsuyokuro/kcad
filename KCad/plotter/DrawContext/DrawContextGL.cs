@@ -48,7 +48,12 @@ namespace Plotter
             return Tools.glcolor(id);
         }
 
-        public override void startDraw()
+        public override void SetupTools(DrawTools.ToolsType type)
+        {
+            Tools.Setup(DrawTools.ToolsType.DARK_GL);
+        }
+
+        public override void StartDraw()
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -65,7 +70,7 @@ namespace Plotter
             GL.LoadMatrix(ref ProjectionMatrix.GLMatrix);
         }
 
-        public override void endDraw()
+        public override void EndDraw()
         {
         }
 

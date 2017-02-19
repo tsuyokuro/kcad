@@ -143,13 +143,13 @@ namespace Plotter
         public DrawContext startDraw()
         {
             MakeCurrent();
-            mDrawContext.startDraw();
+            mDrawContext.StartDraw();
             return mDrawContext;
         }
 
         public void endDraw()
         {
-            mDrawContext.endDraw();
+            mDrawContext.EndDraw();
             SwapBuffers();
         }
 

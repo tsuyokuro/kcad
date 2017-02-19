@@ -60,6 +60,11 @@ namespace Plotter
 
     public class DrawContext
     {
+        CadObjectDB DB
+        {
+            set; get;
+        }
+
         // 用紙サイズ
         public PaperPageSize PageSize = new PaperPageSize();
 
@@ -70,12 +75,9 @@ namespace Plotter
         // 1inchは何ミリ?
         public const double MILLI_PER_INCH = 25.4;
 
-        //private double XDir = 1;
-        //public double YDir = -1;
-        //private double ZDir = 1;
-
         // Screen 座標系の原点 
         public CadPoint mViewOrg;
+
 
 
         // ワールド座標系から視点座標系への変換行列
@@ -91,7 +93,7 @@ namespace Plotter
         // 投影座標系から視点座標系への変換行列
         public UMatrix4 ProjectionMatrixInv;
 
-        //public bool Perspective = false;
+
 
         public CadPoint ViewOrg
         {
@@ -152,7 +154,7 @@ namespace Plotter
             ViewCenter = t;
         }
 
-        public void setupTools(DrawTools.ToolsType type)
+        public virtual void SetupTools(DrawTools.ToolsType type)
         {
             Tools.Setup(type);
         }
@@ -163,27 +165,27 @@ namespace Plotter
             mViewHeight = h;
         }
 
-        public virtual void startDraw()
+        public virtual void StartDraw()
         {
         }
 
-        public virtual void startDraw(Bitmap image)
+        public virtual void StartDraw(Bitmap image)
         {
         }
 
-        public virtual void endDraw()
+        public virtual void EndDraw()
         {
         }
 
 
         // set dots per milli.
-        public virtual void setUnitPerMilli(double upm)
+        public virtual void SetUnitPerMilli(double upm)
         {
             UnitPerMilli = upm;
         }
 
         // Calc inch units per milli.
-        public virtual void setUnitPerInch(double unit)
+        public virtual void SetUnitPerInch(double unit)
         {
             UnitPerMilli = unit / MILLI_PER_INCH;
         }
@@ -198,12 +200,7 @@ namespace Plotter
             return default(CadPoint);
         }
 
-        public virtual CadPoint UnitPointToCadPoint(double x, double y, double z = 0)
-        {
-            return default(CadPoint);
-        }
-
-        public virtual CadRect getViewRect()
+        public virtual CadRect GetViewRect()
         {
             CadRect rect = default(CadRect);
 

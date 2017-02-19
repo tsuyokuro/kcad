@@ -60,7 +60,7 @@ namespace Plotter
         {
             base.SizeChanged += onSizeChanged;
 
-            mDrawContext.setupTools(DrawTools.ToolsType.DARK);
+            mDrawContext.SetupTools(DrawTools.ToolsType.DARK);
 
             base.MouseMove += mouseMove;
             base.MouseDown += mouseDown;
@@ -145,13 +145,13 @@ namespace Plotter
 
         public DrawContext startDraw()
         {
-            mDrawContext.startDraw(mImage);
+            mDrawContext.StartDraw(mImage);
             return mDrawContext;
         }
 
         public void endDraw()
         {
-            mDrawContext.endDraw();
+            mDrawContext.EndDraw();
             Image = mImage;
         }
 

@@ -60,33 +60,9 @@ namespace Plotter
             }
         }
 
-        public override void DrawViewRect(double s)
-        {
-            CadRect vr = DC.getViewRect();
-
-            CadPoint vc = CadPoint.GetNew(DC.ViewWidth, DC.ViewHeight, 0);
-            vc = vc / 2;
-            vc = DC.UnitPointToCadPoint(vc);
-
-            CadPoint d = vr.p1 - vr.p0;
-
-            s = s / 2.0;
-
-            CadPoint nd = d * s;
-
-            CadPoint p0 = vc - nd;
-            CadPoint p1 = vc + nd;
-
-            DrawRect(DrawTools.PEN_PAGE_FRAME, p0, p1);
-        }
-
         #region "Draw base"
         public override void DrawAxis()
         {
-            CadRect vr = DC.getViewRect();
-
-            //drawViewRect(dc, 0.5);
-
             CadPoint p0 = default(CadPoint);
             CadPoint p1 = default(CadPoint);
 
@@ -343,6 +319,18 @@ namespace Plotter
             DC.graphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
         }
 
+        public override void DrawText(int font, int brush, CadPoint a, string s)
+        {
+            if (DC.graphics == null) return;
+            if (DC.Brush(brush) == null) return;
+            if (DC.Font(font) == null) return;
+
+            CadPoint pa = DC.CadPointToUnitPoint(a);
+            DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), (int)pa.x, (int)pa.y);
+        }
+
+
+
         public override void DrawLineScrn(int pen, CadPoint a, CadPoint b)
         {
             if (DC.graphics == null) return;
@@ -406,16 +394,6 @@ namespace Plotter
                 DC.Pen(pen), (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
         }
 
-        public override void DrawText(int font, int brush, CadPoint a, string s)
-        {
-            if (DC.graphics == null) return;
-            if (DC.Brush(brush) == null) return;
-            if (DC.Font(font) == null) return;
-
-            CadPoint pa = DC.CadPointToUnitPoint(a);
-            DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), (int)pa.x, (int)pa.y);
-        }
-
         public override void DrawTextScrn(int font, int brush, CadPoint a, string s)
         {
             if (DC.graphics == null) return;
@@ -435,7 +413,7 @@ namespace Plotter
         }
 
 
-        public override void FillRectangleScrn(int brush, double x0, double y0, double x1, double y1)
+        private void FillRectangleScrn(int brush, double x0, double y0, double x1, double y1)
         {
             if (DC.graphics == null) return;
             if (DC.Brush(brush) == null) return;

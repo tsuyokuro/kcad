@@ -22,7 +22,7 @@ namespace Plotter
 
         public DrawContextGDI()
         {
-            setUnitPerMilli(4); // 1mm = 2.5dot
+            SetUnitPerMilli(4); // 1mm = 2.5dot
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
@@ -35,7 +35,7 @@ namespace Plotter
             Drawing = new DrawingGDI(this);
         }
 
-        public override void startDraw(Bitmap image)
+        public override void StartDraw(Bitmap image)
         {
             if (image == null)
             {
@@ -49,7 +49,7 @@ namespace Plotter
             GraphicsRef++;
         }
 
-        public override void endDraw()
+        public override void EndDraw()
         {
             GraphicsRef--;
             if (GraphicsRef <= 0)
@@ -113,17 +113,6 @@ namespace Plotter
             p /= WoldScale;
 
             return p;
-        }
-
-        public override CadPoint UnitPointToCadPoint(double x, double y, double z = 0)
-        {
-            CadPoint p = default(CadPoint);
-
-            p.x = x;
-            p.y = y;
-            p.z = z;
-
-            return UnitPointToCadPoint(p);
         }
 
         public Pen Pen(int id)

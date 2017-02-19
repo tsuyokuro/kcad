@@ -33,10 +33,6 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawViewRect(double s)
-        {
-        }
-
         public virtual void DrawAxis()
         {
         }
@@ -152,11 +148,6 @@ namespace Plotter
         }
 
         public virtual void DrawTextScrn(int font, int brush, double x, double y, string s)
-        {
-        }
-
-
-        public virtual void FillRectangleScrn(int brush, double x0, double y0, double x1, double y1)
         {
         }
 

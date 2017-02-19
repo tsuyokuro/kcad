@@ -654,11 +654,11 @@ namespace Plotter
             DrawContextGDI dc = new DrawContextGDI();
 
             dc.graphics = g;
-            dc.setupTools(DrawTools.ToolsType.PRINTER);
+            dc.SetupTools(DrawTools.ToolsType.PRINTER);
             dc.PageSize = mPlotterView.PageSize;
 
             // Default printers's unit is 1/100 inch
-            dc.setUnitPerInch(100.0);
+            dc.SetUnitPerInch(100.0);
 
             dc.ViewMatrix = mController.CurrentDC.ViewMatrix;
             dc.ProjectionMatrix = mController.CurrentDC.ProjectionMatrix;

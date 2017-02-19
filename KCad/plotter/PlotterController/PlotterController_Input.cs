@@ -110,7 +110,7 @@ namespace Plotter
         private void LDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
             CadPoint pixp = CadPoint.GetNew(x, y, 0);
-            CadPoint cp = dc.UnitPointToCadPoint(x,y,0);
+            CadPoint cp = dc.UnitPointToCadPoint(pixp);
 
             mOffsetScrn = pixp - mSnapScrnPoint;
             mOffsetWld = cp - mSnapPoint;
