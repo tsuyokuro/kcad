@@ -7,7 +7,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="ButtonMouseOverBG">
-        <Grid Background="{StaticResource ToggleButtonChecked}" >
+        <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}" >
             <TextBlock HorizontalAlignment="Center" 
                        VerticalAlignment="Center" 
                        TextAlignment="Center"
