@@ -10,21 +10,19 @@
 
     <DataTemplate x:Key="ToggleRadioCheckedStyle">
         <Grid Background="{StaticResource ToggleButtonCheckedBGColor}" >
-            <TextBlock HorizontalAlignment="Center" 
-                       VerticalAlignment="Center" 
-                       TextAlignment="Center"
-                       Foreground="{StaticResource ToggleButtonCheckedFGColor}"
-                       Text="{Binding}"/>
+            <ContentPresenter
+                TextBlock.TextAlignment="Center"
+                Content="{Binding}"
+                />
         </Grid>
     </DataTemplate>
 
     <DataTemplate x:Key="ToggleButtonMouseOverStyle">
         <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}" >
-            <TextBlock HorizontalAlignment="Center" 
-                       VerticalAlignment="Center" 
-                       TextAlignment="Center"
-                       Foreground="{StaticResource ToggleButtonMouseOverFGColor}"
-                       Text="{Binding}"/>
+            <ContentPresenter
+                TextBlock.TextAlignment="Center"
+                Content="{Binding}"
+                />
         </Grid>
     </DataTemplate>
 
@@ -50,6 +48,41 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+
+    <!-- Custom Toggle button -->    
+    
+    <DataTemplate x:Key="CustomToggleCheckedStyle">
+        <Grid Background="{StaticResource ToggleButtonCheckedBGColor}" >
+            <ContentPresenter Content="{Binding}"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="CustomToggleMouseOverStyle">
+        <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}" >
+            <ContentPresenter Content="{Binding}"/>
+        </Grid>
+    </DataTemplate>
+
+
+    <Style x:Key="CustomToggle" TargetType="{x:Type RadioButton}"
+             BasedOn="{StaticResource {x:Type ToggleButton} }">
+
+        <Setter Property="Background" Value="{StaticResource BaseColor}" />
+        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+
+        <Setter Property="FontSize" Value="12" />
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="ContentTemplate" Value="{StaticResource CustomToggleMouseOverStyle}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="ContentTemplate" Value="{StaticResource CustomToggleCheckedStyle}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
 
 </ResourceDictionary>
     

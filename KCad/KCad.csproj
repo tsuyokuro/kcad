@@ -190,12 +190,20 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\xy.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="ResDict\Images\invisible.png" />
     <Resource Include="ResDict\Images\locked.png" />
     <Resource Include="ResDict\Images\unlocked.png" />
     <Resource Include="ResDict\Images\visible.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\zy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\xz.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

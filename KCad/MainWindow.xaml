@@ -323,54 +323,93 @@
                 VerticalAlignment="Stretch" >
 
                 <RadioButton
-                    Style="{StaticResource ToggleRadio}"
+                    Style="{StaticResource CustomToggle}"
                     Tag="axis_xy"
-                    Content=" XY " 
                     IsChecked="{
                         Binding ViewMode,
                         ConverterParameter=XY,
                         Converter={StaticResource ViewModeConv}
                     }"
-                />
+                >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image
+                            Grid.Column="0"
+                            Source="./Resources/xy.png"/>
+                    </Grid>
+
+                </RadioButton>
 
                 <Label Width="4"/>
-                
+
                 <RadioButton
-                    Style="{StaticResource ToggleRadio}"
+                    Style="{StaticResource CustomToggle}"
                     Tag="axis_xz"
-                    Content=" XZ " 
                     IsChecked="{
                         Binding ViewMode,
                         ConverterParameter=XZ,
                         Converter={StaticResource ViewModeConv}
                     }"
-                />
+                >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image
+                            Grid.Column="0"
+                            Source="./Resources/xz.png"/>
+                    </Grid>
+                </RadioButton>
 
                 <Label Width="4"/>
 
                 <RadioButton
-                    Style="{StaticResource ToggleRadio}"
+                    Style="{StaticResource CustomToggle}"
                     Tag="axis_zy"
-                    Content=" ZY " 
                     IsChecked="{
                         Binding ViewMode,
                         ConverterParameter=ZY,
                         Converter={StaticResource ViewModeConv}
                     }"
-                />
+                >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image
+                            Grid.Column="0"
+                            Source="./Resources/zy.png"/>
+                    </Grid>
+
+                </RadioButton>
 
                 <Label Width="4"/>
 
                 <RadioButton
-                    Style="{StaticResource ToggleRadio}"
+                    Style="{StaticResource CustomToggle}"
                     Tag="axis_xyz"
-                    Content=" XYZ " 
                     IsChecked="{
                         Binding ViewMode,
                         ConverterParameter=FREE,
                         Converter={StaticResource ViewModeConv}
                     }"
-                />
+                >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            Grid.Column="0"
+                            Text=" Free "/>
+                    </Grid>
+
+                </RadioButton>
             </StackPanel>
         </StackPanel>
     </Grid>
