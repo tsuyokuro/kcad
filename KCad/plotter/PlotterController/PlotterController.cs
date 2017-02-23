@@ -68,7 +68,7 @@ namespace Plotter
             public Print print = (a) => { };
         }
 
-        public Interaction Interact { set; get; } = new Interaction();
+        public Interaction InteractOut { set; get; } = new Interaction();
 
         private CadObjectDB mDB = new CadObjectDB();
 
@@ -839,7 +839,7 @@ namespace Plotter
 
             NotifyLayerInfo();
 
-            Interact.print("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
+            InteractOut.print("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
         }
 
         public void removeLayer(uint id)
@@ -876,7 +876,7 @@ namespace Plotter
             }
 
             NotifyLayerInfo();
-            Interact.print("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
+            InteractOut.print("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
         }
     }
 }

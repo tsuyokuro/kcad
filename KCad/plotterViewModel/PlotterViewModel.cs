@@ -72,11 +72,16 @@ namespace Plotter
 
         private PlotterController mController = new PlotterController();
 
-        public PlotterController.Interaction InteractOut =
-            new PlotterController.Interaction();
+        PlotterController.Interaction mInteractOut = new PlotterController.Interaction();
 
-        public PlotterController.Interaction InteractIn =
-            new PlotterController.Interaction();
+        public PlotterController.Interaction InteractOut
+        {
+            set
+            {
+                mInteractOut = value;
+                mController.InteractOut = mInteractOut;
+            }
+        }
 
         private Dictionary<string, Action> commandMap;
 
@@ -213,9 +218,9 @@ namespace Plotter
 
             mController.StateChanged = StateChanged;
 
-            InteractIn.print = MessageOut;
+            //InteractIn.print = MessageOut;
 
-            mController.Interact = InteractIn;
+            //mController.InteractOut = InteractIn;
 
             mController.LayerListChanged =  LayerListChanged;
 
@@ -709,7 +714,7 @@ namespace Plotter
         #region Others
         private void MessageOut(String s)
         {
-            InteractOut.print(s);
+            mInteractOut.print(s);
         }
         #endregion
 

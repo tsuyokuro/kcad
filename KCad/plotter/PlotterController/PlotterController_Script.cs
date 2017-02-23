@@ -36,7 +36,7 @@ namespace Plotter
 
             if (idlist.Count < 2+1)
             {
-                Interact.print("Please select two or more objects.");
+                InteractOut.print("Please select two or more objects.");
                 return 0;
             }
 
@@ -57,7 +57,7 @@ namespace Plotter
             var ope = new CadOpeAddChildlen(parent, parent.ChildList);
             mHistoryManager.foward(ope);
 
-            Interact.print("Grouped");
+            InteractOut.print("Grouped");
 
             return 0;
         }
@@ -99,7 +99,7 @@ namespace Plotter
 
             mHistoryManager.foward(opeList);
 
-            Interact.print("Ungrouped");
+            InteractOut.print("Ungrouped");
 
             return 0;
         }
@@ -117,11 +117,11 @@ namespace Plotter
 
                 CadPoint d = a - b;
 
-                Interact.print("" + d.norm() + "(mm)");
+                InteractOut.print("" + d.norm() + "(mm)");
             }
             else
             {
-                Interact.print("cmd dist error. After select 2 points");
+                InteractOut.print("cmd dist error. After select 2 points");
             }
 
             return 0;

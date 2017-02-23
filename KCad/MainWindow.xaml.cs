@@ -19,6 +19,7 @@ namespace KCad
 
         private ObservableCollection<string> messageList = new ObservableCollection<string>();
 
+        private PlotterController.Interaction mInteractionIn = new PlotterController.Interaction();
 
         public MainWindow()
         {
@@ -49,7 +50,9 @@ namespace KCad
             textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
 
 
-            ViewModel.InteractOut.print = MessageOut;
+            mInteractionIn.print = MessageOut;
+
+            ViewModel.InteractOut = mInteractionIn;
 
             AddLayerButton.Click += ViewModel.ButtonClicked;
             RemoveLayerButton.Click += ViewModel.ButtonClicked;
