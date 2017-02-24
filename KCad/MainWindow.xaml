@@ -16,6 +16,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ResDict/ToggleBtnRadio.xaml"/>
                 <ResourceDictionary Source="ResDict/Colors.xaml"/>
+                <ResourceDictionary Source="ResDict/Images.xaml"/>
                 <ResourceDictionary Source="ResDict/ButtonStyle.xaml"/>
                 <ResourceDictionary Source="ResDict/ImageCheckBoxs.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -338,7 +339,7 @@
 
                         <Image
                             Grid.Column="0"
-                            Source="./Resources/xy.png"/>
+                            Source="{StaticResource xy_icon}"/>
                     </Grid>
 
                 </RadioButton>
@@ -361,7 +362,7 @@
 
                         <Image
                             Grid.Column="0"
-                            Source="./Resources/xz.png"/>
+                            Source="{StaticResource xz_icon}"/>
                     </Grid>
                 </RadioButton>
 
@@ -383,7 +384,7 @@
 
                         <Image
                             Grid.Column="0"
-                            Source="./Resources/zy.png"/>
+                            Source="{StaticResource zy_icon}"/>
                     </Grid>
 
                 </RadioButton>
