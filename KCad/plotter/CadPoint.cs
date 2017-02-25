@@ -152,6 +152,11 @@ namespace Plotter
             z = (double)jo["z"];
         }
 
+        public bool IsZero()
+        {
+            return x == 0 && y == 0 && z == 0;
+        }
+
         public void set(double x, double y, double z)
         {
             this.x = x;

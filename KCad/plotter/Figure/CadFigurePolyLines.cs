@@ -55,7 +55,14 @@ namespace Plotter
 
             public override void draw(CadFigure fig, DrawContext dc, int pen)
             {
-                drawLines(fig, dc, pen);
+                if (fig.Closed)
+                {
+                    dc.Drawing.DrawFace(pen, getPoints(fig, 32));
+                }
+                else
+                {
+                    drawLines(fig, dc, pen);
+                }
             }
 
             public override void drawSelected(CadFigure fig, DrawContext dc, int pen)

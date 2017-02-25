@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Plotter
 {
@@ -66,6 +67,24 @@ namespace Plotter
             return normal;
         }
 
+        public static CadPoint Normal(IReadOnlyList<CadPoint> pointList)
+        {
+            CadPoint v0 = pointList[0];
+
+            CadPoint va = pointList[1] - pointList[0];
+            CadPoint vb = pointList[2] - pointList[0];
+
+            CadPoint normal = CadMath.crossProduct3D(va, vb);
+
+            if (normal.IsZero())
+            {
+                return normal;
+            }
+
+            normal = normal.unitVector();
+
+            return normal;
+        }
 
         public static double rad2deg(double rad)
         {

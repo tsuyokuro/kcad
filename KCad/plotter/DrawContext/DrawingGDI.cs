@@ -319,6 +319,29 @@ namespace Plotter
             DC.graphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
         }
 
+        public override void DrawFace(int pen, IReadOnlyList<CadPoint> pointList)
+        {
+            int cnt = pointList.Count;
+            if (cnt == 0)
+            {
+                return;
+            }
+
+            CadPoint p0 = pointList[0];
+            CadPoint p1;
+
+            int i;
+            for (i = 1; i < cnt; i++)
+            {
+                p1 = pointList[i];
+                DrawLine(pen, p0, p1);
+                p0 = p1;
+            }
+
+            p1 = pointList[0];
+            DrawLine(pen, p0, p1);
+        }
+
         public override void DrawText(int font, int brush, CadPoint a, string s)
         {
             if (DC.graphics == null) return;

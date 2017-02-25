@@ -77,6 +77,10 @@ namespace Plotter
         {
         }
 
+        public virtual void DrawFace(int pen, IReadOnlyList<CadPoint> pointList)
+        {
+        }
+
         public virtual void DrawLineScrn(int pen, CadPoint a, CadPoint b)
         {
         }

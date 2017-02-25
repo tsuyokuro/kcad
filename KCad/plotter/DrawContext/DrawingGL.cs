@@ -27,7 +27,6 @@ namespace Plotter
 
         public override void Draw(CadLayer layer)
         {
-            //Console.WriteLine("DrawingGL Draw (layer)");
             Draw(layer.FigureList);
         }
 
@@ -56,6 +55,58 @@ namespace Plotter
 
             GL.Vertex3(a.x, a.y, a.z);
             GL.Vertex3(b.x, b.y, b.z);
+
+            GL.End();
+        }
+
+        public override void DrawFace(int pen, IReadOnlyList<CadPoint> pointList)
+        {
+            CadPoint p;
+            GLPen glpen;
+
+            CadPoint normal = CadMath.Normal(pointList);
+            bool normalValid = !normal.IsZero();
+
+            GL.Begin(PrimitiveType.Polygon);
+            GL.Color4(0.3f,0.3f,0.4f,1.0f);
+
+            if (normalValid)
+            {
+                //normal *= -1;
+                GL.Normal3(normal.vector);
+            }
+
+            foreach (CadPoint pt in pointList)
+            {
+                p = pt * DC.WoldScale;
+
+                GL.Vertex3(p.vector);
+            }
+
+            GL.End();
+
+
+            glpen = DC.Pen(pen);
+
+            GL.Color4(glpen.Color);
+            GL.LineWidth(1.0f);
+
+            Vector3 t = DC.GazeVector * -1.0f;
+
+            CadPoint shift = (CadPoint)t;
+
+            GL.Begin(PrimitiveType.LineStrip);
+ 
+            foreach (CadPoint pt in pointList)
+            {
+                p = (pt + shift) * DC.WoldScale;
+                GL.Vertex3(p.vector);
+            }
+
+            CadPoint pt0 = pointList[0];
+            p = (pt0 + shift) * DC.WoldScale;
+
+            GL.Vertex3(p.vector);
 
             GL.End();
         }

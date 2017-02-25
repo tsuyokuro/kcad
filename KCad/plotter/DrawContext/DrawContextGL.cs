@@ -12,13 +12,25 @@ namespace Plotter
 {
     class DrawContextGL : DrawContext
     {
-        Vector3 Eye = default(Vector3);
-        Vector3 LookAt = default(Vector3);
-        Vector3 UpVector = default(Vector3);
+        public Vector3 Eye = default(Vector3);
+        public Vector3 LookAt = default(Vector3);
+        public Vector3 UpVector = default(Vector3);
+
+        public Vector3 GazeVector = default(Vector3); 
 
         float ProjectionNear = 10.0f;
         float ProjectionFar = 10000.0f;
 
+
+        Vector4 lightPosition;
+        Color4 lightAmbient;
+        Color4 lightDiffuse;
+        Color4 lightSpecular;
+
+        Color4 materialAmbient;
+        Color4 materialDiffuse;
+        Color4 materialSpecular;
+        float materialShininess;
 
         public DrawContextGL()
         {
@@ -36,6 +48,19 @@ namespace Plotter
             UpVector = Vector3.UnitY;
 
             ViewMatrix.GLMatrix = Matrix4.LookAt(Eye, LookAt, UpVector);
+
+            RecalcGazeVector();
+
+
+            lightPosition = new Vector4(200.0f, 150f, 500.0f, 0.0f);
+            lightAmbient = new Color4(0.2f, 0.2f, 0.2f, 1.0f);
+            lightDiffuse = new Color4(0.7f, 0.7f, 0.7f, 1.0f);
+            lightSpecular = new Color4(1.0f, 1.0f, 1.0f, 1.0f);
+
+            materialAmbient = new Color4(0.24725f, 0.1995f, 0.0225f, 1.0f);
+            materialDiffuse = new Color4(0.75164f, 0.60648f, 0.22648f, 1.0f);
+            materialSpecular = new Color4(0.628281f, 0.555802f, 0.366065f, 1.0f);
+            materialShininess = 51.4f;
         }
 
         public GLPen Pen(int id)
@@ -56,6 +81,34 @@ namespace Plotter
         public override void StartDraw()
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            GL.Enable(EnableCap.DepthTest);
+
+            // 裏面を描かない
+            /*
+            GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Back);
+            GL.FrontFace(FrontFaceDirection.Ccw);
+            */
+
+            //ライティングON Light0を有効化
+            /*
+            GL.Enable(EnableCap.Lighting);
+            GL.Enable(EnableCap.Light0);
+            */
+
+            //法線の正規化
+            GL.Enable(EnableCap.Normalize);
+
+            GL.Light(LightName.Light0, LightParameter.Position, lightPosition);
+            GL.Light(LightName.Light0, LightParameter.Ambient, lightAmbient);
+            GL.Light(LightName.Light0, LightParameter.Diffuse, lightDiffuse);
+            GL.Light(LightName.Light0, LightParameter.Specular, lightSpecular);
+
+            //GL.Material(MaterialFace.Front, MaterialParameter.Ambient, materialAmbient);
+            //GL.Material(MaterialFace.Front, MaterialParameter.Diffuse, materialDiffuse);
+            //GL.Material(MaterialFace.Front, MaterialParameter.Specular, materialSpecular);
+            //GL.Material(MaterialFace.Front, MaterialParameter.Shininess, materialShininess);
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
@@ -120,6 +173,14 @@ namespace Plotter
             Eye = Vector3.TransformPosition(Eye, mx);
 
             ViewMatrix.GLMatrix = Matrix4.LookAt(Eye, LookAt, UpVector);
+
+            RecalcGazeVector();
+        }
+
+        private void RecalcGazeVector()
+        {
+            GazeVector = LookAt - Eye;
+            GazeVector.Normalize();
         }
     }
 }
