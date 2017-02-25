@@ -288,23 +288,23 @@ namespace Plotter
             );
 
         // 1, 0, 0,
-        // 0, Cos(PI/2), -Sin(PI/2),
-        // 0, Sin(PI/2), Cos(PI/2)
-        public static readonly UMatrix4 ViewXZ = new UMatrix4
-            (
-                1, 0, 0,
-                0, 0, -1,
-                0, 1, 0
-            );
-
-        // 1, 0, 0,
         // 0, Cos(-PI/2), -Sin(-PI/2),
         // 0, Sin(-PI/2), Cos(-PI/2)
-        public static readonly UMatrix4 ViewXZInv = new UMatrix4
+        public static readonly UMatrix4 ViewXZ = new UMatrix4
             (
                 1, 0, 0,
                 0, 0, 1,
                 0, -1, 0
+            );
+
+        // 1, 0, 0,
+        // 0, Cos(PI/2), -Sin(PI/2),
+        // 0, Sin(PI/2), Cos(PI/2)
+        public static readonly UMatrix4 ViewXZInv = new UMatrix4
+            (
+                1, 0, 0,
+                0, 0, -1,
+                0, 1, 0
             );
 
 

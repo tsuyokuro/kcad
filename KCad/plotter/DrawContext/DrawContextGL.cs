@@ -32,6 +32,8 @@ namespace Plotter
         Color4 materialSpecular;
         float materialShininess;
 
+        public bool LightingEnable = false;
+
         public DrawContextGL()
         {
             WoldScale = 0.2f;
@@ -84,31 +86,7 @@ namespace Plotter
 
             GL.Enable(EnableCap.DepthTest);
 
-            // 裏面を描かない
-            /*
-            GL.Enable(EnableCap.CullFace);
-            GL.CullFace(CullFaceMode.Back);
-            GL.FrontFace(FrontFaceDirection.Ccw);
-            */
-
-            //ライティングON Light0を有効化
-            /*
-            GL.Enable(EnableCap.Lighting);
-            GL.Enable(EnableCap.Light0);
-            */
-
-            //法線の正規化
-            GL.Enable(EnableCap.Normalize);
-
-            GL.Light(LightName.Light0, LightParameter.Position, lightPosition);
-            GL.Light(LightName.Light0, LightParameter.Ambient, lightAmbient);
-            GL.Light(LightName.Light0, LightParameter.Diffuse, lightDiffuse);
-            GL.Light(LightName.Light0, LightParameter.Specular, lightSpecular);
-
-            //GL.Material(MaterialFace.Front, MaterialParameter.Ambient, materialAmbient);
-            //GL.Material(MaterialFace.Front, MaterialParameter.Diffuse, materialDiffuse);
-            //GL.Material(MaterialFace.Front, MaterialParameter.Specular, materialSpecular);
-            //GL.Material(MaterialFace.Front, MaterialParameter.Shininess, materialShininess);
+            SetupLight();
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
@@ -125,6 +103,36 @@ namespace Plotter
 
         public override void EndDraw()
         {
+        }
+
+        private void SetupLight()
+        {
+            if (!LightingEnable)
+            {
+                return;
+            }
+
+            // 裏面を描かない
+            GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Back);
+            GL.FrontFace(FrontFaceDirection.Ccw);
+
+            //ライティングON Light0を有効化
+            GL.Enable(EnableCap.Lighting);
+            GL.Enable(EnableCap.Light0);
+
+            //法線の正規化
+            GL.Enable(EnableCap.Normalize);
+
+            GL.Light(LightName.Light0, LightParameter.Position, lightPosition);
+            GL.Light(LightName.Light0, LightParameter.Ambient, lightAmbient);
+            GL.Light(LightName.Light0, LightParameter.Diffuse, lightDiffuse);
+            GL.Light(LightName.Light0, LightParameter.Specular, lightSpecular);
+
+            GL.Material(MaterialFace.Front, MaterialParameter.Ambient, materialAmbient);
+            GL.Material(MaterialFace.Front, MaterialParameter.Diffuse, materialDiffuse);
+            GL.Material(MaterialFace.Front, MaterialParameter.Specular, materialSpecular);
+            GL.Material(MaterialFace.Front, MaterialParameter.Shininess, materialShininess);
         }
 
         public override void setViewSize(double w, double h)

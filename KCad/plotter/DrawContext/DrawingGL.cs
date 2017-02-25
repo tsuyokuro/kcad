@@ -67,12 +67,13 @@ namespace Plotter
             CadPoint normal = CadMath.Normal(pointList);
             bool normalValid = !normal.IsZero();
 
+
             GL.Begin(PrimitiveType.Polygon);
             GL.Color4(0.3f,0.3f,0.4f,1.0f);
 
             if (normalValid)
             {
-                //normal *= -1;
+                normal *= -1;
                 GL.Normal3(normal.vector);
             }
 
@@ -85,6 +86,28 @@ namespace Plotter
 
             GL.End();
 
+            if (DC.LightingEnable)
+            {
+                GL.Begin(PrimitiveType.Polygon);
+                GL.Color4(0.3f, 0.3f, 0.4f, 1.0f);
+
+                if (normalValid)
+                {
+                    GL.Normal3(normal.vector);
+                }
+
+                int i = pointList.Count - 1;
+
+                for (; i >= 0; i--)
+                {
+                    CadPoint pt = pointList[i];
+                    p = pt * DC.WoldScale;
+
+                    GL.Vertex3(p.vector);
+                }
+
+                GL.End();
+            }
 
             glpen = DC.Pen(pen);
 
