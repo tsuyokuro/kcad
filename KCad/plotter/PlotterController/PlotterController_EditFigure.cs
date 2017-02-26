@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Plotter
 {
@@ -254,37 +255,69 @@ namespace Plotter
             draw(dc);
         }
 
-        public void mirrorX(DrawContext dc)
+        private CadPoint GetSelectionCenter()
         {
-            double min = double.MaxValue;
-            double max = double.MinValue;
+            CadPoint min = CadPoint.Create(float.MaxValue);
+            CadPoint max = CadPoint.Create(float.MinValue);
 
-            foreach (SelectItem item in mSelList.List)
+            int selPointCnt = 0;
+
+            foreach (CadLayer layer in mDB.LayerList)
             {
-                if (item.Point.x < min)
+                foreach (CadFigure fig in layer.FigureList)
                 {
-                    min = item.Point.x;
-                }
-                if (item.Point.x > max)
-                {
-                    max = item.Point.x;
+                    foreach (CadPoint p in fig.PointList)
+                    {
+                        if (p.Selected)
+                        {
+                            selPointCnt++;
+
+                            min.x = Math.Min(p.x, min.x);
+                            min.y = Math.Min(p.y, min.y);
+                            min.z = Math.Min(p.z, min.z);
+
+                            max.x = Math.Max(p.x, max.x);
+                            max.y = Math.Max(p.y, max.y);
+                            max.z = Math.Max(p.z, max.z);
+                        }
+                    }
                 }
             }
 
-            double cp = (max - min) / 2.0 + min;
+            CadPoint cp = (max - min) / 2f + min;
+
+            DebugOut.Std.println("GetSelectionCenter() sel pt cnt=" + selPointCnt.ToString());
+
+            return cp;
+        }
+
+
+        public void mirrorX(DrawContext dc)
+        {
+            CadPoint cp = GetSelectionCenter();
 
             startEdit();
 
-            foreach (SelectItem item in mSelList.List)
+            foreach (CadLayer layer in mDB.LayerList)
             {
-                CadFigure fig = mDB.getFigure(item.FigureID);
-                CadPoint p = fig.getPointAt(item.PointIndex);
+                foreach (CadFigure fig in layer.FigureList)
+                {
+                    int num = fig.PointList.Count;
 
-                CadPoint np = p;
-                np.x -= cp;
-                np.x = -np.x + cp;
+                    for (int i=0; i<num; i++)
+                    {
+                        CadPoint p = fig.PointList[i];
 
-                fig.setPointAt(item.PointIndex, np);
+                        if (p.Selected)
+                        {
+                            CadPoint np = p;
+                            np.x -= cp.x;
+                            np.x = -np.x + cp.x;
+
+                            fig.setPointAt(i, np);
+                        }
+                    }
+                }
             }
 
             endEdit();
@@ -295,35 +328,30 @@ namespace Plotter
 
         public void mirrorY(DrawContext dc)
         {
-            double min = double.MaxValue;
-            double max = double.MinValue;
-
-            foreach (SelectItem item in mSelList.List)
-            {
-                if (item.Point.y < min)
-                {
-                    min = item.Point.y;
-                }
-                if (item.Point.y > max)
-                {
-                    max = item.Point.y;
-                }
-            }
-
-            double cp = (max - min) / 2.0 + min;
+            CadPoint cp = GetSelectionCenter();
 
             startEdit();
 
-            foreach (SelectItem item in mSelList.List)
+            foreach (CadLayer layer in mDB.LayerList)
             {
-                CadFigure fig = mDB.getFigure(item.FigureID);
-                CadPoint p = fig.getPointAt(item.PointIndex);
+                foreach (CadFigure fig in layer.FigureList)
+                {
+                    int num = fig.PointList.Count;
 
-                CadPoint np = p;
-                np.y -= cp;
-                np.y = -np.y + cp;
+                    for (int i = 0; i < num; i++)
+                    {
+                        CadPoint p = fig.PointList[i];
 
-                fig.setPointAt(item.PointIndex, np);
+                        if (p.Selected)
+                        {
+                            CadPoint np = p;
+                            np.y -= cp.y;
+                            np.y = -np.y + cp.y;
+
+                            fig.setPointAt(i, np);
+                        }
+                    }
+                }
             }
 
             endEdit();
@@ -334,35 +362,30 @@ namespace Plotter
 
         public void mirrorZ(DrawContext dc)
         {
-            double min = double.MaxValue;
-            double max = double.MinValue;
-
-            foreach (SelectItem item in mSelList.List)
-            {
-                if (item.Point.z < min)
-                {
-                    min = item.Point.z;
-                }
-                if (item.Point.z > max)
-                {
-                    max = item.Point.z;
-                }
-            }
-
-            double cp = (max - min) / 2.0 + min;
+            CadPoint cp = GetSelectionCenter();
 
             startEdit();
 
-            foreach (SelectItem item in mSelList.List)
+            foreach (CadLayer layer in mDB.LayerList)
             {
-                CadFigure fig = mDB.getFigure(item.FigureID);
-                CadPoint p = fig.getPointAt(item.PointIndex);
+                foreach (CadFigure fig in layer.FigureList)
+                {
+                    int num = fig.PointList.Count;
 
-                CadPoint np = p;
-                np.z -= cp;
-                np.z = -np.z + cp;
+                    for (int i = 0; i < num; i++)
+                    {
+                        CadPoint p = fig.PointList[i];
 
-                fig.setPointAt(item.PointIndex, np);
+                        if (p.Selected)
+                        {
+                            CadPoint np = p;
+                            np.z -= cp.z;
+                            np.z = -np.z + cp.z;
+
+                            fig.setPointAt(i, np);
+                        }
+                    }
+                }
             }
 
             endEdit();
