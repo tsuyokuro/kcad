@@ -75,7 +75,7 @@ namespace Plotter
             pt *= WoldScale;
 
             // 透視変換用にWが必要なので、Vector4に変換
-            Vector4 ptv = (Vector4)pt;
+            Vector4d ptv = (Vector4d)pt;
 
             ptv.W = 1.0f;
 

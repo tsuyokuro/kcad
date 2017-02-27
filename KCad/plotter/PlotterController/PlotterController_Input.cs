@@ -400,7 +400,7 @@ namespace Plotter
             MarkPoint mx = mPointSearcher.getXMatch();
             MarkPoint my = mPointSearcher.getYMatch();
 
-            double dist = Double.MaxValue;
+            double dist = CadConst.MaxValue;
 
             if ((mx.Flag & MarkPoint.X_MATCH) != 0)
             {

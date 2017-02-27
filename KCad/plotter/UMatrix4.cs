@@ -8,7 +8,7 @@ namespace Plotter
 
     public struct UMatrix4
     {
-        public Matrix4 GLMatrix;
+        public Matrix4d GLMatrix;
 
         public double M11
         {
@@ -116,7 +116,7 @@ namespace Plotter
             double a41, double a42, double a43, double a44
             )
         {
-            GLMatrix = default(Matrix4);
+            GLMatrix = default(Matrix4d);
 
             M11 = a11; M12 = a12; M13 = a13; M14 = a14;
             M21 = a21; M22 = a22; M23 = a23; M24 = a24;
@@ -130,7 +130,7 @@ namespace Plotter
             double a31, double a32, double a33
             )
         {
-            GLMatrix = default(Matrix4);
+            GLMatrix = default(Matrix4d);
 
             M11 = a11; M12 = a12; M13 = a13; M14 = 0;
             M21 = a21; M22 = a22; M23 = a23; M24 = 0;
@@ -146,7 +146,7 @@ namespace Plotter
             double a41, double a42, double a43, double a44
             )
         {
-            GLMatrix = default(Matrix4);
+            GLMatrix = default(Matrix4d);
 
             M11 = a11; M12 = a12; M13 = a13; M14 = a14;
             M21 = a21; M22 = a22; M23 = a23; M24 = a24;
@@ -187,7 +187,7 @@ namespace Plotter
             return product(p, m);
         }
 
-        public static Vector4 operator *(Vector4 v, UMatrix4 m)
+        public static Vector4d operator *(Vector4d v, UMatrix4 m)
         {
             return product(v, m);
         }
@@ -202,7 +202,7 @@ namespace Plotter
         {
             CadPoint rp = default(CadPoint);
 
-            Vector4 v = Vector4.Transform((Vector4)p, m.GLMatrix);
+            Vector4d v = Vector4d.Transform((Vector4d)p, m.GLMatrix);
 
             rp = (CadPoint)v;
 
@@ -213,9 +213,9 @@ namespace Plotter
             return rp;
         }
 
-        public static Vector4 product(Vector4 p, UMatrix4 m)
+        public static Vector4d product(Vector4d p, UMatrix4 m)
         {
-            Vector4 v = Vector4.Transform(p, m.GLMatrix);
+            Vector4d v = Vector4d.Transform(p, m.GLMatrix);
             return v;
         }
 
@@ -223,7 +223,7 @@ namespace Plotter
         {
             UMatrix4 r = default(UMatrix4);
 
-            r.GLMatrix = Matrix4.Mult(m1.GLMatrix, m2.GLMatrix);
+            r.GLMatrix = Matrix4d.Mult(m1.GLMatrix, m2.GLMatrix);
 
             /*
             r.M11 = m1.M11 * m2.M11 + m1.M12 * m2.M21 + m1.M13 * m2.M31 + m1.M14 * m2.M41;

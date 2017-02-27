@@ -161,7 +161,7 @@ namespace Plotter
                 return;
             }
 
-            minDist = Double.MaxValue;
+            minDist = CadConst.MaxValue;
 
             IEnumerable<CadFigure> list = layer.FigureList;
             foreach (CadFigure fig in list.Reverse())

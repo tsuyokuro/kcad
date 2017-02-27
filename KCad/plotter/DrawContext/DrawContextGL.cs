@@ -12,11 +12,11 @@ namespace Plotter
 {
     class DrawContextGL : DrawContext
     {
-        public Vector3 Eye = default(Vector3);
-        public Vector3 LookAt = default(Vector3);
-        public Vector3 UpVector = default(Vector3);
+        public Vector3d Eye = default(Vector3d);
+        public Vector3d LookAt = default(Vector3d);
+        public Vector3d UpVector = default(Vector3d);
 
-        public Vector3 GazeVector = default(Vector3); 
+        public Vector3d GazeVector = default(Vector3d); 
 
         float ProjectionNear = 10.0f;
         float ProjectionFar = 10000.0f;
@@ -41,15 +41,15 @@ namespace Plotter
 
             Drawing = new DrawingGL(this);
 
-            Eye = Vector3.Zero;
+            Eye = Vector3d.Zero;
             Eye.X = 20f;
             Eye.Y = 20f;
             Eye.Z = 20f;
 
-            LookAt = Vector3.Zero;
-            UpVector = Vector3.UnitY;
+            LookAt = Vector3d.Zero;
+            UpVector = Vector3d.UnitY;
 
-            ViewMatrix.GLMatrix = Matrix4.LookAt(Eye, LookAt, UpVector);
+            ViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
 
             RecalcGazeVector();
 
@@ -147,7 +147,7 @@ namespace Plotter
             float aspect = (float)(mViewWidth / mViewHeight);
             float fovy = (float)Math.PI / 2.0f; // Yの傾き
 
-            ProjectionMatrix.GLMatrix = Matrix4.CreatePerspectiveFieldOfView(
+            ProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
                                             fovy,
                                             aspect,
                                             ProjectionNear,
@@ -162,25 +162,25 @@ namespace Plotter
             double ry = (-d.X / 10.0) * (Math.PI / 20);
             double rx = (-d.Y / 10.0) * (Math.PI / 20);
 
-            Matrix4 my = Matrix4.CreateRotationY((float)ry);
+            Matrix4d my = Matrix4d.CreateRotationY(ry);
 
-            Eye = Vector3.TransformPosition(Eye, my);
+            Eye = Vector3d.TransformPosition(Eye, my);
 
-            Vector3 t = Eye - LookAt;
+            Vector3d t = Eye - LookAt;
 
-            Vector3 axis = t;
+            Vector3d axis = t;
 
             axis.X = t.Z;
             axis.Z = -t.X;
             axis.Y = 0;
 
 
-            Matrix4 mx = Matrix4.CreateFromAxisAngle(axis, (float)rx);
+            Matrix4d mx = Matrix4d.CreateFromAxisAngle(axis, rx);
 
 
-            Eye = Vector3.TransformPosition(Eye, mx);
+            Eye = Vector3d.TransformPosition(Eye, mx);
 
-            ViewMatrix.GLMatrix = Matrix4.LookAt(Eye, LookAt, UpVector);
+            ViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
 
             RecalcGazeVector();
         }

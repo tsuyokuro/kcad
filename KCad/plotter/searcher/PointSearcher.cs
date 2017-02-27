@@ -56,9 +56,9 @@ namespace Plotter
         {
             this = default(MarkPoint);
 
-            DistX = Double.MaxValue;
-            DistY = Double.MaxValue;
-            DistZ = Double.MaxValue;
+            DistX = CadConst.MaxValue;
+            DistY = CadConst.MaxValue;
+            DistZ = CadConst.MaxValue;
         }
 
         public void dump(DebugOut dout)

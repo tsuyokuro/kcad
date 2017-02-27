@@ -257,8 +257,8 @@ namespace Plotter
 
         private CadPoint GetSelectionCenter()
         {
-            CadPoint min = CadPoint.Create(float.MaxValue);
-            CadPoint max = CadPoint.Create(float.MinValue);
+            CadPoint min = CadPoint.Create(CadConst.MaxValue);
+            CadPoint max = CadPoint.Create(CadConst.MinValue);
 
             int selPointCnt = 0;
 

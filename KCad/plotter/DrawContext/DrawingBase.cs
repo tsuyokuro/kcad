@@ -171,7 +171,7 @@ namespace Plotter
 
             CadPoint tmp = CadPoint.Create(dl, 0, 0);
 
-            double angle = Vector3.CalculateAngle(tmp.vector, d.vector);
+            double angle = Vector3d.CalculateAngle(tmp.vector, d.vector);
 
             CadPoint normal = CadMath.crossProduct3D(tmp, d);  // 回転軸
 

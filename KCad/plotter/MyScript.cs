@@ -378,6 +378,28 @@ namespace MyScript
                 return (double)val;
             }
 
+            public double getFloat()
+            {
+                if (val is String)
+                {
+                    return 0;
+                }
+                else if (val is int)
+                {
+                    return (float)(int)val;
+                }
+                else if (val is Int64)
+                {
+                    return (float)(Int64)val;
+                }
+                else if (val is Double)
+                {
+                    return (float)(Double)val;
+                }
+
+                return (float)val;
+            }
+
             public String getString()
             {
                 return val.ToString();

@@ -448,13 +448,13 @@ namespace Plotter
         {
             CadRect rect = default(CadRect);
 
-            double minx = Double.MaxValue;
-            double miny = Double.MaxValue;
-            double minz = Double.MaxValue;
+            double minx = CadConst.MaxValue;
+            double miny = CadConst.MaxValue;
+            double minz = CadConst.MaxValue;
 
-            double maxx = Double.MinValue;
-            double maxy = Double.MinValue;
-            double maxz = Double.MinValue;
+            double maxx = CadConst.MinValue;
+            double maxy = CadConst.MinValue;
+            double maxz = CadConst.MinValue;
 
             foreach (CadPoint p in list)
             {
@@ -486,13 +486,13 @@ namespace Plotter
             CadRect rect = default(CadRect);
             CadRect fr;
 
-            double minx = Double.MaxValue;
-            double miny = Double.MaxValue;
-            double minz = Double.MaxValue;
+            double minx = CadConst.MaxValue;
+            double miny = CadConst.MaxValue;
+            double minz = CadConst.MaxValue;
 
-            double maxx = Double.MinValue;
-            double maxy = Double.MinValue;
-            double maxz = Double.MinValue;
+            double maxx = CadConst.MinValue;
+            double maxy = CadConst.MinValue;
+            double maxz = CadConst.MinValue;
 
             foreach (CadFigure fig in list)
             {

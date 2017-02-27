@@ -158,6 +158,7 @@
     <Compile Include="plotter\HistoryManager.cs" />
     <Compile Include="plotter\Log.cs" />
     <Compile Include="plotter\MyScript.cs" />
+    <Compile Include="plotter\Util\CadConst.cs" />
     <Compile Include="plotter\Util\PlotterCommon.cs" />
     <Compile Include="plotter\PlotterController\PlotterController.cs" />
     <Compile Include="plotter\PlotterController\PlotterController_Debug.cs" />

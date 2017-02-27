@@ -35,7 +35,7 @@ namespace Plotter
         {
             set
             {
-                vector.X = (float)value;
+                vector.X = value;
             }
 
             get
@@ -48,7 +48,7 @@ namespace Plotter
         {
             set
             {
-                vector.Y = (float)value;
+                vector.Y = value;
             }
 
             get
@@ -61,7 +61,7 @@ namespace Plotter
         {
             set
             {
-                vector.Z = (float)value;
+                vector.Z = value;
             }
 
             get
@@ -70,7 +70,7 @@ namespace Plotter
             }
         }
 
-        public Vector3 vector;
+        public Vector3d vector;
 
         public bool Selected
         {
@@ -100,15 +100,15 @@ namespace Plotter
 
         public CadPoint(double x, double y, double z, Types type = Types.STD)
         {
-            vector.X = (float)x;
-            vector.Y = (float)y;
-            vector.Z = (float)z;
+            vector.X = x;
+            vector.Y = y;
+            vector.Z = z;
 
             this.Flag = 0;
             this.Type = type;
         }
 
-        public static CadPoint Create(float v)
+        public static CadPoint Create(double v)
         {
             return Create(v, v, v);
         }
@@ -250,13 +250,13 @@ namespace Plotter
             return p1;
         }
 
-        public static explicit operator Vector3 (CadPoint p)
+        public static explicit operator Vector3d (CadPoint p)
         {
-            Vector3 v3 = new Vector3(p.vector);
+            Vector3d v3 = new Vector3d(p.vector);
             return v3;
         }
 
-        public static explicit operator CadPoint (Vector3 v)
+        public static explicit operator CadPoint (Vector3d v)
         {
             return Create(
                 v.X,
@@ -265,7 +265,7 @@ namespace Plotter
                 );
         }
 
-        public static explicit operator CadPoint(Vector4 v)
+        public static explicit operator CadPoint(Vector4d v)
         {
             return Create(
                 v.X,
@@ -274,9 +274,9 @@ namespace Plotter
                 );
         }
 
-        public static explicit operator Vector4 (CadPoint p)
+        public static explicit operator Vector4d (CadPoint p)
         {
-            return new Vector4(
+            return new Vector4d(
                 p.vector.X,
                 p.vector.Y,
                 p.vector.Z,
