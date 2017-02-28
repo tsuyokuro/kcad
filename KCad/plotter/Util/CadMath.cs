@@ -58,6 +58,13 @@ namespace Plotter
         }
         #endregion
 
+        /**
+         *       vb
+         *      / 
+         *     /
+         * v0 /_________va
+         * 
+         */ 
         public static CadPoint Normal(CadPoint va, CadPoint vb)
         {
             CadPoint normal = CadMath.crossProduct3D(va, vb);
@@ -67,12 +74,19 @@ namespace Plotter
             return normal;
         }
 
+        /**
+         *           list[1]
+         *          / 
+         *         /
+         * list[0]/_________list[2]
+         * 
+         */
         public static CadPoint Normal(IReadOnlyList<CadPoint> pointList)
         {
             CadPoint v0 = pointList[0];
 
-            CadPoint va = pointList[1] - pointList[0];
-            CadPoint vb = pointList[2] - pointList[0];
+            CadPoint va = pointList[2] - pointList[0];
+            CadPoint vb = pointList[1] - pointList[0];
 
             CadPoint normal = CadMath.crossProduct3D(va, vb);
 

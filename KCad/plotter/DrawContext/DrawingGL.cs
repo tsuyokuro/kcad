@@ -68,12 +68,15 @@ namespace Plotter
             bool normalValid = !normal.IsZero();
 
 
+            GL.Enable(EnableCap.Lighting);
+            GL.Enable(EnableCap.Light0);
+
+            #region 表面
             GL.Begin(PrimitiveType.Polygon);
-            GL.Color4(0.3f,0.3f,0.4f,1.0f);
+            GL.Color4(0.6f,0.6f,0.6f,1.0f);
 
             if (normalValid)
             {
-                normal *= -1;
                 GL.Normal3(normal.vector);
             }
 
@@ -85,11 +88,14 @@ namespace Plotter
             }
 
             GL.End();
+            #endregion
 
+            #region 裏面
             if (DC.LightingEnable)
             {
+                // 裏面
                 GL.Begin(PrimitiveType.Polygon);
-                GL.Color4(0.3f, 0.3f, 0.4f, 1.0f);
+                GL.Color4(0.6f, 0.6f, 0.6f, 1.0f);
 
                 if (normalValid)
                 {
@@ -108,6 +114,12 @@ namespace Plotter
 
                 GL.End();
             }
+            #endregion
+
+            #region 輪郭
+            // 輪郭は、光源設定を無効化
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
 
             glpen = DC.Pen(pen);
 
@@ -132,45 +144,7 @@ namespace Plotter
             GL.Vertex3(p.vector);
 
             GL.End();
-        }
-
-        public void DrawTest(IReadOnlyList<CadFigure> list, int pen = -1)
-        {
-            float w2 = 1.0f;
-            float z = 0.0f;
-
-            GL.Begin(PrimitiveType.Lines);
-
-            GL.Color4(Color4.White);
-            GL.Vertex3(-w2, w2, z);
-            GL.Vertex3(-w2, -w2, z);
-
-            GL.Color4(Color4.Red);
-            GL.Vertex3(-w2, -w2, z);
-            GL.Vertex3(w2, -w2, z);
-
-            GL.Color4(Color4.Lime);
-            GL.Vertex3(w2, -w2, z);
-            GL.Vertex3(w2, w2, z);
-
-            GL.Color4(Color4.Blue);
-            GL.Vertex3(w2, w2, z);
-            GL.Vertex3(-w2, w2, z);
-
-
-            GL.Color4(Color4.White);
-            GL.Vertex3(-w2, -w2, 0);
-            GL.Vertex3(-w2, -w2, -w2 * 2);
-
-            GL.Color4(Color4.White);
-            GL.Vertex3(-w2, -w2, -w2 * 2);
-            GL.Vertex3(w2, -w2, -w2 * 2);
-
-            GL.Color4(Color4.White);
-            GL.Vertex3(w2, -w2, -w2 * 2);
-            GL.Vertex3(w2, -w2, 0);
-
-            GL.End();
+            #endregion
         }
     }
 }

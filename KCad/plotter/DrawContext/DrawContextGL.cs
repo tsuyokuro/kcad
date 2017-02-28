@@ -32,7 +32,7 @@ namespace Plotter
         Color4 materialSpecular;
         float materialShininess;
 
-        public bool LightingEnable = false;
+        public bool LightingEnable = true;
 
         public DrawContextGL()
         {
@@ -118,8 +118,8 @@ namespace Plotter
             GL.FrontFace(FrontFaceDirection.Ccw);
 
             //ライティングON Light0を有効化
-            GL.Enable(EnableCap.Lighting);
-            GL.Enable(EnableCap.Light0);
+            //GL.Enable(EnableCap.Lighting);
+            //GL.Enable(EnableCap.Light0);
 
             //法線の正規化
             GL.Enable(EnableCap.Normalize);
@@ -129,10 +129,12 @@ namespace Plotter
             GL.Light(LightName.Light0, LightParameter.Diffuse, lightDiffuse);
             GL.Light(LightName.Light0, LightParameter.Specular, lightSpecular);
 
+            /*
             GL.Material(MaterialFace.Front, MaterialParameter.Ambient, materialAmbient);
             GL.Material(MaterialFace.Front, MaterialParameter.Diffuse, materialDiffuse);
             GL.Material(MaterialFace.Front, MaterialParameter.Specular, materialSpecular);
             GL.Material(MaterialFace.Front, MaterialParameter.Shininess, materialShininess);
+            */
         }
 
         public override void setViewSize(double w, double h)
