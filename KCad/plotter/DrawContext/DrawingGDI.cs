@@ -136,7 +136,7 @@ namespace Plotter
             vp0 += (w / 2) + ltvx;
             vp1 += (w / 2) + ltvy;
 
-            if (c.norm() > 8)
+            if (c.Norm() > 8)
             {
                 DrawLineScrn(DrawTools.PEN_AXIS, vp0, vp1);
             }
@@ -163,7 +163,7 @@ namespace Plotter
             vp0 += (w / 2) + ltvx;
             vp1 += (w / 2) + ltvy;
 
-            if (c.norm() > 8)
+            if (c.Norm() > 8)
             {
                 DrawLineScrn(DrawTools.PEN_AXIS, vp0, vp1);
             }
@@ -189,7 +189,7 @@ namespace Plotter
             vp0 += (w / 2) + ltvx;
             vp1 += (w / 2) + ltvy;
 
-            if (c.norm() > 8)
+            if (c.Norm() > 8)
             {
                 DrawLineScrn(DrawTools.PEN_AXIS, vp0, vp1);
             }

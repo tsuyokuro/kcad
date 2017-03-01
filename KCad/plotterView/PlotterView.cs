@@ -137,8 +137,8 @@ namespace Plotter
                 }
 
                 DrawContext dc = startDraw();
-                mController.clear(dc);
-                mController.draw(dc);
+                mController.Clear(dc);
+                mController.Draw(dc);
                 endDraw();
             }
         }

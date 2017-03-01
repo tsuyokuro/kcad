@@ -167,7 +167,7 @@ namespace Plotter
         //
         public static CadQuaternion RotateQuaternion(double radian, CadPoint v)
         {
-            v = v.unitVector();
+            v = v.UnitVector();
 
             CadQuaternion ans = default(CadQuaternion);
             double c, s;

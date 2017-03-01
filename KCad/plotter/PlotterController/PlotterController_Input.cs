@@ -90,7 +90,7 @@ namespace Plotter
             {
                 if (!isSelected(newSel))
                 {
-                    clearSelection();
+                    ClearSelection();
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace Plotter
             {
                 if (!isSelectedSeg(newSel))
                 {
-                    clearSelection();
+                    ClearSelection();
                 }
             }
         }
@@ -109,7 +109,7 @@ namespace Plotter
 
         private void LDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
-            CadPoint pixp = CadPoint.GetNew(x, y, 0);
+            CadPoint pixp = CadPoint.Create(x, y, 0);
             CadPoint cp = dc.UnitPointToCadPoint(pixp);
 
             mOffsetScrn = pixp - mSnapScrnPoint;
@@ -118,7 +118,7 @@ namespace Plotter
             switch (State)
             {
                 case States.SELECT:
-                    draw(dc);
+                    Draw(dc);
 
                     //double d = dc.pixelDeltaToCadDelta(SnapRange);
 
@@ -216,7 +216,7 @@ namespace Plotter
                         {
                             if (!pointer.isDownCombiKey(CadMouse.CombiKeys.CTRL))
                             {
-                                clearSelection();
+                                ClearSelection();
                             }
                         }
                     }
@@ -230,7 +230,7 @@ namespace Plotter
                         mFreeDownPoint = mObjDownPoint.Value;
                     }
 
-                    drawSelectedItems(dc);
+                    DrawSelectedItems(dc);
 
                     return;
 
@@ -246,8 +246,8 @@ namespace Plotter
 
                         CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
-                        setPointInCreating(dc, p);
-                        draw(dc);
+                        SetPointInCreating(dc, p);
+                        Draw(dc);
                     }
                     break;
 
@@ -257,8 +257,8 @@ namespace Plotter
 
                         CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
-                        setPointInCreating(dc, p);
-                        draw(dc);
+                        SetPointInCreating(dc, p);
+                        Draw(dc);
                     }
                     break;
 
@@ -277,7 +277,7 @@ namespace Plotter
         {
             if (pointer.DownPoint.x == x && pointer.DownPoint.y == y)
             {
-                adjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
+                AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
             }
         }
 
@@ -290,7 +290,7 @@ namespace Plotter
 
             CadPoint op = StoreViewOrg + d;
 
-            setOrigin(dc, (int)op.x, (int)op.y);
+            SetOrigin(dc, (int)op.x, (int)op.y);
         }
 
         private void Wheel(CadMouse pointer, DrawContext dc, int x, int y, int delta)
@@ -308,14 +308,14 @@ namespace Plotter
                     f = 0.8;
                 }
 
-                dpiUpDown(dc, f);
+                DpiUpDown(dc, f);
             }
         }
 
         private void RDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
-            draw(dc);
-            drawSubItems(dc);
+            Draw(dc);
+            DrawSubItems(dc);
 
             if (RequestContextMenu != null)
             {
@@ -342,7 +342,7 @@ namespace Plotter
 
                     if (State == States.DRAGING_POINTS)
                     {
-                        endEdit();
+                        EndEdit();
                     }
 
                     State = States.SELECT;
@@ -365,10 +365,10 @@ namespace Plotter
             if (State == States.START_DRAGING_POINTS)
             {
                 State = States.DRAGING_POINTS;
-                startEdit();
+                StartEdit();
             }
 
-            CadPoint pixp = CadPoint.GetNew(x, y, 0);
+            CadPoint pixp = CadPoint.Create(x, y, 0);
             CadPoint cp = dc.UnitPointToCadPoint(pixp);
             CadPoint tp = default(CadPoint);
 
@@ -377,8 +377,8 @@ namespace Plotter
 
             //mSnapScrnPoint.dump(DebugOut.Std);
 
-            clear(dc);
-            draw(dc);
+            Clear(dc);
+            Draw(dc);
 
             mPointSearcher.clean();
             mPointSearcher.setRangePixel(dc, SnapRange);
@@ -466,7 +466,7 @@ namespace Plotter
 
                         //mSnapScrnPoint.dump(DebugOut.Std);
 
-                        moveSelectedPoints(dc, delta);
+                        MoveSelectedPoints(dc, delta);
 
                         break;
                     }
@@ -482,7 +482,7 @@ namespace Plotter
                     }
             }
 
-            drawSubItems(dc);
+            DrawSubItems(dc);
 
             CursorPosChanged(this, mSnapPoint);
         }

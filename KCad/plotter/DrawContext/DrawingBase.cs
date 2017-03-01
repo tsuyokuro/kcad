@@ -98,7 +98,7 @@ namespace Plotter
             CadPoint va = pa - cp;
             CadPoint vb = pb - cp;
 
-            if (va.norm() < 0.01)
+            if (va.Norm() < 0.01)
             {
                 return;
             }
@@ -161,7 +161,7 @@ namespace Plotter
 
             CadPoint d = pt1 - pt0;
 
-            double dl = d.norm();
+            double dl = d.Norm();
 
             if (dl < 0.00001)
             {
@@ -175,13 +175,13 @@ namespace Plotter
 
             CadPoint normal = CadMath.crossProduct3D(tmp, d);  // 回転軸
 
-            if (normal.norm() < 0.0001)
+            if (normal.Norm() < 0.0001)
             {
                 normal = CadPoint.Create(0, 0, 1);
             }
             else
             {
-                normal = normal.unitVector();
+                normal = normal.UnitVector();
                 normal = CadMath.Normal(tmp, d);
             }
  

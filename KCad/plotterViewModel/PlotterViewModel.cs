@@ -460,11 +460,11 @@ namespace Plotter
             switch (btn.Tag.ToString())
             {
                 case "add_layer":
-                    mController.addLayer(null);
+                    mController.AddLayer(null);
                     break;
 
                 case "remove_layer":
-                    mController.removeLayer(mController.CurrentLayer.ID);
+                    mController.RemoveLayer(mController.CurrentLayer.ID);
                     draw();
                     break;
             }
@@ -484,9 +484,9 @@ namespace Plotter
 
             DrawContext dc = mPlotterView.startDraw();
 
-            mController.clear(dc);
+            mController.Clear(dc);
 
-            mController.draw(dc);
+            mController.Draw(dc);
 
             mPlotterView.endDraw();
         }
@@ -509,9 +509,9 @@ namespace Plotter
             DrawContext dc = mPlotterView.startDraw();
             if (clearFlag)
             {
-                mController.clear(dc);
+                mController.Clear(dc);
             }
-            mController.draw(dc);
+            mController.Draw(dc);
             mPlotterView.endDraw();
         }
         #endregion
@@ -683,7 +683,7 @@ namespace Plotter
 
             dc.ViewOrg = org;
 
-            mController.print(dc);
+            mController.Print(dc);
         }
         #endregion
 
@@ -742,7 +742,7 @@ namespace Plotter
             {
                 DrawContext dc = mPlotterView.startDraw();
                 mController.endCreateFigure(dc);
-                mController.draw(dc);
+                mController.Draw(dc);
                 mPlotterView.endDraw();
             }
 

@@ -146,25 +146,25 @@ namespace Plotter
                 CadPoint va = a - cp;
                 CadPoint vb = b - cp;
 
-                if (va.norm() < 0.01)
+                if (va.Norm() < 0.01)
                 {
                     return;
                 }
 
                 CadPoint normal = CadMath.crossProduct3D(va, vb);
-                normal = normal.unitVector();
+                normal = normal.UnitVector();
 
                 if (a.Selected)
                 {
                     va += delta;
 
-                    CadPoint uva = va.unitVector();
-                    CadPoint uvb = vb.unitVector();
+                    CadPoint uva = va.UnitVector();
+                    CadPoint uvb = vb.UnitVector();
 
                     if (!uva.coordEqualsR(uvb))
                     {
                         normal = CadMath.crossProduct3D(va, vb);
-                        normal = normal.unitVector();
+                        normal = normal.UnitVector();
 
                     }
 
@@ -184,13 +184,13 @@ namespace Plotter
                 {
                     vb += delta;
 
-                    CadPoint uva = va.unitVector();
-                    CadPoint uvb = vb.unitVector();
+                    CadPoint uva = va.UnitVector();
+                    CadPoint uvb = vb.UnitVector();
 
                     if (!uva.coordEqualsR(uvb))
                     {
                         normal = CadMath.crossProduct3D(va, vb);
-                        normal = normal.unitVector();
+                        normal = normal.UnitVector();
 
                     }
 
@@ -217,7 +217,7 @@ namespace Plotter
 
                 CadPoint d = rp - cp;
 
-                double r = d.norm();
+                double r = d.Norm();
 
                 ret.Point = cp;
                 ret.Area = r * r * Math.PI;

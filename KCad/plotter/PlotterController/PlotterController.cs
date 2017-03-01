@@ -266,7 +266,7 @@ namespace Plotter
 
         public void endCreateFigureState(DrawContext dc)
         {
-            nextState(dc);
+            NextState(dc);
         }
 
         public void setCurrentLayer(uint id)
@@ -277,36 +277,36 @@ namespace Plotter
         #region "undo redo"
         public void undo(DrawContext dc)
         {
-            clearSelection();
+            ClearSelection();
             mHistoryManager.undo();
 
-            updateRelPoints();
+            UpdateRelPoints();
 
             dc.Drawing.Clear();
-            draw(dc);
+            Draw(dc);
         }
 
         public void redo(DrawContext dc)
         {
-            clearSelection();
+            ClearSelection();
             mHistoryManager.redo();
 
-            updateRelPoints();
+            UpdateRelPoints();
 
             dc.Drawing.Clear();
-            draw(dc);
+            Draw(dc);
         }
         #endregion
 
 
         #region "Draw methods"
-        public void clear(DrawContext dc)
+        public void Clear(DrawContext dc)
         {
             if (dc == null) return;
             dc.Drawing.Clear();
         }
 
-        public void draw(DrawContext dc)
+        public void Draw(DrawContext dc)
         {
             if (dc == null) return;
 
@@ -318,14 +318,14 @@ namespace Plotter
                 if (layer.Visible)
                 {
                     dc.Drawing.Draw(layer);
-                    drawRelPoints(dc, layer.RelPointList);
+                    DrawRelPoints(dc, layer.RelPointList);
                 }
             }
 
             dc.Drawing.Draw(TempFigureList, DrawTools.PEN_TEST_FIGURE);
         }
 
-        public void drawSelectedItems(DrawContext dc)
+        public void DrawSelectedItems(DrawContext dc)
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
@@ -333,9 +333,9 @@ namespace Plotter
             }
         }
 
-        public void drawSubItems(DrawContext dc)
+        public void DrawSubItems(DrawContext dc)
         {
-            drawSelectedItems(dc);
+            DrawSelectedItems(dc);
 
             //Drawer.drawCursorScrn(dc, mSnapScrnPoint);
 
@@ -349,7 +349,7 @@ namespace Plotter
             }
         }
 
-        public void drawRelPoints(DrawContext dc, List<CadRelativePoint> list)
+        public void DrawRelPoints(DrawContext dc, List<CadRelativePoint> list)
         {
             foreach (CadRelativePoint rp in list)
             {
@@ -357,7 +357,7 @@ namespace Plotter
             }
         }
 
-        public void print(DrawContext dc)
+        public void Print(DrawContext dc)
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
@@ -372,7 +372,7 @@ namespace Plotter
 
         #region Private editing figure methods
 
-        private void nextState(DrawContext dc)
+        private void NextState(DrawContext dc)
         {
             if (State == States.CREATING)
             {
@@ -392,7 +392,7 @@ namespace Plotter
             }
         }
 
-        private void setPointInCreating(DrawContext dc, CadPoint p)
+        private void SetPointInCreating(DrawContext dc, CadPoint p)
         {
             CreatingFigure.addPointInCreating(dc, p);
 
@@ -406,7 +406,7 @@ namespace Plotter
                 mHistoryManager.foward(ope);
                 CurrentLayer.addFigure(CreatingFigure);
 
-                nextState(dc);
+                NextState(dc);
             }
             else if (state == CadFigure.States.ENOUGH)
             {
@@ -427,7 +427,7 @@ namespace Plotter
             }
         }
 
-        private void clearSelection()
+        private void ClearSelection()
         {
             mSelList.clear();
             mSelectedSegs.Clear();
@@ -453,7 +453,7 @@ namespace Plotter
             return idSet;
         }
 
-        private List<uint> getSelectedFigIDList()
+        private List<uint> GetSelectedFigIDList()
         {
             List<uint> idList = new List<uint>();
 
@@ -474,9 +474,9 @@ namespace Plotter
             return idList;
         }
 
-        private void startEdit()
+        private void StartEdit()
         {
-            EditIdList = getSelectedFigIDList();
+            EditIdList = GetSelectedFigIDList();
 
             foreach (uint id in EditIdList)
             {
@@ -488,7 +488,7 @@ namespace Plotter
             }
         }
 
-        private void endEdit()
+        private void EndEdit()
         {
             DiffDataList ddl = new DiffDataList();
 
@@ -512,27 +512,27 @@ namespace Plotter
             {
                 CadOpeList root = CadOpe.getListOpe();
 
-                CadOpeList ropeList = removeInvalidRelPoints();
+                CadOpeList ropeList = RemoveInvalidRelPoints();
                 root.OpeList.Add(ropeList);
 
                 CadOpe ope = CadOpe.getDiffOpe(ddl);
                 root.OpeList.Add(ope);
 
-                CadOpeList fopeList = removeInvalidFigure();
+                CadOpeList fopeList = RemoveInvalidFigure();
                 root.OpeList.Add(fopeList);
 
                 mHistoryManager.foward(root);
             }
             else
             {
-                CadOpeList ropeList = removeInvalidRelPoints();
+                CadOpeList ropeList = RemoveInvalidRelPoints();
                 mHistoryManager.foward(ropeList);
             }
 
-            updateSelectItemPoints();
+            UpdateSelectItemPoints();
         }
 
-        private void updateSelectItemPoints()
+        private void UpdateSelectItemPoints()
         {
             HashSet<SelectItem> removeSels = new HashSet<SelectItem>();
 
@@ -560,7 +560,7 @@ namespace Plotter
             mSelectedSegs.List.RemoveAll(a => removeSegs.Contains(a));
         }
 
-        private CadOpeList removeInvalidFigure()
+        private CadOpeList RemoveInvalidFigure()
         {
             CadOpeList opeList = new CadOpeList();
 
@@ -587,9 +587,9 @@ namespace Plotter
             return opeList;
         }
 
-        private void moveSelectedPoints(DrawContext dc, CadPoint delta)
+        private void MoveSelectedPoints(DrawContext dc, CadPoint delta)
         {
-            List<uint> figIDList = getSelectedFigIDList();
+            List<uint> figIDList = GetSelectedFigIDList();
 
             //delta.z = 0;
 
@@ -602,12 +602,12 @@ namespace Plotter
                 }
             }
 
-            updateRelPoints();
+            UpdateRelPoints();
         }
 
-        private void removeSelectedPoints()
+        private void RemoveSelectedPoints()
         {
-            List<uint> figIDList = getSelectedFigIDList();
+            List<uint> figIDList = GetSelectedFigIDList();
             foreach (uint id in figIDList)
             {
                 CadFigure fig = mDB.getFigure(id);
@@ -615,15 +615,15 @@ namespace Plotter
             }
         }
 
-        private void updateRelPoints()
+        private void UpdateRelPoints()
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                updateRelPoints(layer.RelPointList);
+                UpdateRelPoints(layer.RelPointList);
             }
         }
 
-        private void updateRelPoints(List<CadRelativePoint> list)
+        private void UpdateRelPoints(List<CadRelativePoint> list)
         {
             foreach (CadRelativePoint rp in list)
             {
@@ -639,16 +639,16 @@ namespace Plotter
             }
         }
 
-        private void markRemoveSelectedRelPoints()
+        private void MarkRemoveSelectedRelPoints()
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                markRemoveSelectedRelPoints(layer);
+                MarkRemoveSelectedRelPoints(layer);
             }
         }
 
 
-        private void markRemoveSelectedRelPoints(CadLayer layer)
+        private void MarkRemoveSelectedRelPoints(CadLayer layer)
         {
             List<CadRelativePoint> list = layer.RelPointList;
             int i = list.Count - 1;
@@ -666,20 +666,20 @@ namespace Plotter
             }
         }
 
-        private CadOpeList removeInvalidRelPoints()
+        private CadOpeList RemoveInvalidRelPoints()
         {
             CadOpeList opeList = new CadOpeList();
 
             foreach (CadLayer layer in mDB.LayerList)
             {
-                CadOpeList subList = removeInvalidRelPointsWithLayer(layer);
+                CadOpeList subList = RemoveInvalidRelPointsWithLayer(layer);
                 opeList.OpeList.Add(subList);
             }
 
             return opeList;
         }
 
-        private CadOpeList removeInvalidRelPointsWithLayer(CadLayer layer)
+        private CadOpeList RemoveInvalidRelPointsWithLayer(CadLayer layer)
         {
             List<CadRelativePoint> list = layer.RelPointList;
 
@@ -727,18 +727,18 @@ namespace Plotter
         #region "Copy and paste"
         public void Copy(DrawContext dc)
         {
-            copyFigures();
+            CopyFigures();
         }
 
         public void Paste(DrawContext dc)
         {
-            pasteFigure();
-            draw(dc);
+            PasteFigure();
+            Draw(dc);
         }
 
-        public void copyFigures()
+        public void CopyFigures()
         {
-            List<uint> figIdList = getSelectedFigIDList();
+            List<uint> figIdList = GetSelectedFigIDList();
 
             var figList = new List<CadFigure>();
 
@@ -754,7 +754,7 @@ namespace Plotter
             Clipboard.SetData("List.CadFiguer", figList);
         }
 
-        public void pasteFigure()
+        public void PasteFigure()
         {
             if (Clipboard.ContainsData("List.CadFiguer"))
             {
@@ -826,7 +826,7 @@ namespace Plotter
         #endregion
 
 
-        public void addLayer(string name)
+        public void AddLayer(string name)
         {
             CadLayer layer = mDB.newLayer();
 
@@ -841,7 +841,7 @@ namespace Plotter
             InteractOut.print("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
         }
 
-        public void removeLayer(uint id)
+        public void RemoveLayer(uint id)
         {
             if (mDB.LayerList.Count == 1)
             {

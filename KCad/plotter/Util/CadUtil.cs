@@ -27,7 +27,7 @@ namespace Plotter
 
             CadPoint cp = CadMath.crossProduct3D(v1, v2);
 
-            double area = cp.norm() / 2.0;
+            double area = cp.Norm() / 2.0;
 
             return area;
         }
@@ -212,7 +212,7 @@ namespace Plotter
                 CadPoint fp = points[i];
 
                 t = fp - p0;
-                double d = t.norm();
+                double d = t.Norm();
 
                 if (d > maxd)
                 {
@@ -271,7 +271,7 @@ namespace Plotter
 
             if (t < 0)
             {
-                return ap.norm();
+                return ap.Norm();
             }
 
             CadPoint ba = a - b;
@@ -281,16 +281,16 @@ namespace Plotter
 
             if (t < 0)
             {
-                return bp.norm();
+                return bp.Norm();
             }
 
             CadPoint cp = CadMath.crossProduct3D(ab, ap);
 
             // 外積結果の長さが a->p a->b を辺とする平行四辺形の面積になる
-            double s = cp.norm();
+            double s = cp.Norm();
 
             // 面積を底辺で割って高さを求める
-            return s / ab.norm();
+            return s / ab.Norm();
         }
 
         // 点pから線分abに向かう垂線との交点を求める
@@ -306,7 +306,7 @@ namespace Plotter
 
             // A-B 単位ベクトル
             //CadPoint unit_ab = CadMath.unitVector(ab);
-            CadPoint unit_ab = ab.unitVector();
+            CadPoint unit_ab = ab.UnitVector();
 
             // B-A 単位ベクトル　(A-B単位ベクトルを反転) B側の中外判定に使用
             CadPoint unit_ba = unit_ab * -1.0;
@@ -382,7 +382,7 @@ namespace Plotter
             CadPoint ap = p - a;
 
             // A-B 単位ベクトル
-            CadPoint unit_ab = ab.unitVector();
+            CadPoint unit_ab = ab.UnitVector();
 
             // Aから交点までの距離 
             double dist_ax = CadMath.innerProduct3D(unit_ab, ap);
@@ -424,7 +424,7 @@ namespace Plotter
         public static double segNorm(CadPoint a, CadPoint b)
         {
             CadPoint v = b - a;
-            return v.norm();
+            return v.Norm();
         }
 
         public static double segNorm2D(CadPoint a, CadPoint b)

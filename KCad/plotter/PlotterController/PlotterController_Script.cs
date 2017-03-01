@@ -32,7 +32,7 @@ namespace Plotter
             DrawContext dc = (DrawContext)(v0.getObj());
             argCount--;
 
-            List<uint> idlist = getSelectedFigIDList();
+            List<uint> idlist = GetSelectedFigIDList();
 
             if (idlist.Count < 2+1)
             {
@@ -68,7 +68,7 @@ namespace Plotter
             DrawContext dc = (DrawContext)(v0.getObj());
             argCount--;
 
-            List<uint> idlist = getSelectedFigIDList();
+            List<uint> idlist = GetSelectedFigIDList();
 
             var idSet = new HashSet<uint>();
 
@@ -117,7 +117,7 @@ namespace Plotter
 
                 CadPoint d = a - b;
 
-                InteractOut.print("" + d.norm() + "(mm)");
+                InteractOut.print("" + d.Norm() + "(mm)");
             }
             else
             {
@@ -228,7 +228,7 @@ namespace Plotter
                 name = namev.getString();
             }
 
-            addLayer(name);
+            AddLayer(name);
 
             return 0;
         }

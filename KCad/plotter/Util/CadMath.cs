@@ -69,7 +69,7 @@ namespace Plotter
         {
             CadPoint normal = CadMath.crossProduct3D(va, vb);
 
-            normal = normal.unitVector();
+            normal = normal.UnitVector();
 
             return normal;
         }
@@ -95,7 +95,7 @@ namespace Plotter
                 return normal;
             }
 
-            normal = normal.unitVector();
+            normal = normal.UnitVector();
 
             return normal;
         }

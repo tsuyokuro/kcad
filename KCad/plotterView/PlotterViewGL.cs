@@ -115,7 +115,7 @@ namespace Plotter
                 mDrawContext.RotateEyePoint(prev, current);
 
                 startDraw();
-                mController.draw(mDrawContext);
+                mController.Draw(mDrawContext);
                 endDraw();
 
                 PrevMousePos = t;
@@ -134,8 +134,8 @@ namespace Plotter
             if (mController != null)
             {
                 DrawContext dc = startDraw();
-                mController.clear(dc);
-                mController.draw(dc);
+                mController.Clear(dc);
+                mController.Draw(dc);
                 endDraw();
             }
         }

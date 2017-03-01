@@ -75,9 +75,9 @@ namespace Plotter.Tests
             p.y = 10;
             p.z = 10;
 
-            p = p.unitVector();
+            p = p.UnitVector();
 
-            double n = p.norm();
+            double n = p.Norm();
 
             Assert.IsTrue(n > -1 && n <= 1 );
         }

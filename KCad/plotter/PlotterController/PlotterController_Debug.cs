@@ -75,8 +75,8 @@ namespace Plotter
 
             tl.ForEach(a => TempFigureList.Add(a));
 
-            clear(dc);
-            draw(dc);
+            Clear(dc);
+            Draw(dc);
         }
 
         private void test_crossPoint(DrawContext dc)
@@ -109,8 +109,8 @@ namespace Plotter
                 TempFigureList.Add(figx);
             }
 
-            clear(dc);
-            draw(dc);
+            Clear(dc);
+            Draw(dc);
         }
 
         private void test_areaCollector()
@@ -151,8 +151,8 @@ namespace Plotter
 
             TempFigureList.Add(centfig);
 
-            clear(dc);
-            draw(dc);
+            Clear(dc);
+            Draw(dc);
         }
 
         private void test_quaternion(DrawContext dc)
@@ -167,7 +167,7 @@ namespace Plotter
             axis.x = -1.0;
             axis.z = -1.0;
 
-            axis = axis.unitVector();
+            axis = axis.UnitVector();
 
             double rad = CadMath.deg2rad(10);
 
@@ -200,8 +200,8 @@ namespace Plotter
 
             //TempFigureList.Add(tfig);
 
-            clear(dc);
-            draw(dc);
+            Clear(dc);
+            Draw(dc);
         }
 
         private void test_matrix()
@@ -240,7 +240,7 @@ namespace Plotter
             tdc.ViewMatrix = UMatrixs.ViewXY;
             tdc.ViewMatrixInv = UMatrixs.ViewXYInv;
 
-            CadPoint p = CadPoint.GetNew(0, 0, -100);
+            CadPoint p = CadPoint.Create(0, 0, -100);
 
             CadPoint vp = tdc.CadPointToUnitPoint(p);
 
@@ -257,7 +257,7 @@ namespace Plotter
 
         private void test(DrawContext dc)
         {
-            CadPoint p = CadPoint.GetNew(12, 34, 0);
+            CadPoint p = CadPoint.Create(12, 34, 0);
 
             CadPoint pp = dc.UnitPointToCadPoint(p);
 
@@ -305,8 +305,8 @@ namespace Plotter
                         //dc.MatrixToView = DrawContext.MatrixXY_XQ_R * DrawContext.MatrixXY_YQ_R;
                     }
 
-                    clear(dc);
-                    draw(dc);
+                    Clear(dc);
+                    Draw(dc);
                 }
             }
 
@@ -483,16 +483,16 @@ namespace Plotter
 
                 mDB = db;
 
-                clear(dc);
-                draw(dc);
+                Clear(dc);
+                Draw(dc);
             }
             else if (s == "copy")
             {
-                copyFigures();
+                CopyFigures();
             }
             else if (s == "paste")
             {
-                pasteFigure();
+                PasteFigure();
             }
         }
         public void dump(DebugOut dst)

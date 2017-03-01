@@ -194,7 +194,7 @@ namespace Plotter
 
             CadPoint d = ret.CrossPoint - TargetPoint;
 
-            double dist = d.norm();
+            double dist = d.Norm();
 
 
             if (dist > mRange)

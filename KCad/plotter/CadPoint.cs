@@ -252,8 +252,7 @@ namespace Plotter
 
         public static explicit operator Vector3d (CadPoint p)
         {
-            Vector3d v3 = new Vector3d(p.vector);
-            return v3;
+            return new Vector3d(p.vector);
         }
 
         public static explicit operator CadPoint (Vector3d v)
@@ -285,17 +284,17 @@ namespace Plotter
         }
 
         // ベクトルのノルム(長さ)を求める
-        public double norm()
+        public double Norm()
         {
             return System.Math.Sqrt((x * x) + (y * y) + (z * z));
         }
 
         // 単位ベクトルを求める
-        public CadPoint unitVector()
+        public CadPoint UnitVector()
         {
             CadPoint ret = default(CadPoint);
 
-            double norm = this.norm();
+            double norm = this.Norm();
 
             double f = 1.0 / norm;
 
@@ -304,13 +303,6 @@ namespace Plotter
             ret.z = z * f;
 
             return ret;
-        }
-
-        public static CadPoint GetNew(double x, double y, double z)
-        {
-            CadPoint p = default(CadPoint);
-            p.set(x, y, z);
-            return p;
         }
 
         public void dump(DebugOut dout)

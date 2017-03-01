@@ -7,16 +7,16 @@ namespace Plotter
     {
         public void remove(DrawContext dc)
         {
-            startEdit();
+            StartEdit();
 
-            removeSelectedPoints();
+            RemoveSelectedPoints();
 
-            markRemoveSelectedRelPoints();
+            MarkRemoveSelectedRelPoints();
 
-            endEdit();
+            EndEdit();
 
-            clear(dc);
-            draw(dc);
+            Clear(dc);
+            Draw(dc);
         }
 
         public void closeFigure(DrawContext dc)
@@ -26,14 +26,14 @@ namespace Plotter
             CadOpe ope = CadOpe.getSetCloseOpe(CurrentLayer.ID, CreatingFigure.ID, true);
             mHistoryManager.foward(ope);
 
-            nextState(dc);
+            NextState(dc);
         }
 
         public void toBezier(DrawContext dc)
         {
             toBezier(dc, mSelectedSegs.LastSel);
-            clearSelection();
-            draw(dc);
+            ClearSelection();
+            Draw(dc);
         }
 
         public void toBezier(DrawContext dc, MarkSeg seg)
@@ -55,16 +55,16 @@ namespace Plotter
                 mHistoryManager.foward(ope);
             }
 
-            clearSelection();
+            ClearSelection();
 
-            draw(dc);
+            Draw(dc);
         }
 
         public void separateFigures(DrawContext dc)
         {
             separateFigures(mSelList.List);
-            clearSelection();
-            draw(dc);
+            ClearSelection();
+            Draw(dc);
         }
 
         public void separateFigures(List<SelectItem> selList)
@@ -107,8 +107,8 @@ namespace Plotter
         public void bondFigures(DrawContext dc)
         {
             bondFigures(mSelList.List);
-            clearSelection();
-            draw(dc);
+            ClearSelection();
+            Draw(dc);
         }
 
         public void bondFigures(List<SelectItem> selList)
@@ -152,9 +152,9 @@ namespace Plotter
         {
             MarkSeg ms = mSelectedSegs.LastSel;
             cutSegment(ms);
-            clearSelection();
+            ClearSelection();
 
-            draw(dc);
+            Draw(dc);
         }
 
         public void cutSegment(MarkSeg ms)
@@ -225,7 +225,7 @@ namespace Plotter
                     layer.RelPointList.Add(rp);
                 }
 
-                draw(dc);
+                Draw(dc);
                 return;
             }
 
@@ -252,7 +252,7 @@ namespace Plotter
                 }
             }
 
-            draw(dc);
+            Draw(dc);
         }
 
         private CadPoint GetSelectionCenter()
@@ -296,7 +296,7 @@ namespace Plotter
         {
             CadPoint cp = GetSelectionCenter();
 
-            startEdit();
+            StartEdit();
 
             foreach (CadLayer layer in mDB.LayerList)
             {
@@ -320,17 +320,17 @@ namespace Plotter
                 }
             }
 
-            endEdit();
+            EndEdit();
 
-            clear(dc);
-            draw(dc);
+            Clear(dc);
+            Draw(dc);
         }
 
         public void mirrorY(DrawContext dc)
         {
             CadPoint cp = GetSelectionCenter();
 
-            startEdit();
+            StartEdit();
 
             foreach (CadLayer layer in mDB.LayerList)
             {
@@ -354,17 +354,17 @@ namespace Plotter
                 }
             }
 
-            endEdit();
+            EndEdit();
 
-            clear(dc);
-            draw(dc);
+            Clear(dc);
+            Draw(dc);
         }
 
         public void mirrorZ(DrawContext dc)
         {
             CadPoint cp = GetSelectionCenter();
 
-            startEdit();
+            StartEdit();
 
             foreach (CadLayer layer in mDB.LayerList)
             {
@@ -388,10 +388,10 @@ namespace Plotter
                 }
             }
 
-            endEdit();
+            EndEdit();
 
-            clear(dc);
-            draw(dc);
+            Clear(dc);
+            Draw(dc);
         }
     }
 }
