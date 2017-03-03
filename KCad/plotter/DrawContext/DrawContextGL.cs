@@ -42,9 +42,9 @@ namespace Plotter
             Drawing = new DrawingGL(this);
 
             Eye = Vector3d.Zero;
-            Eye.X = 20f;
-            Eye.Y = 20f;
-            Eye.Z = 20f;
+            Eye.X = 0f;
+            Eye.Y = 0f;
+            Eye.Z = 40f;
 
             LookAt = Vector3d.Zero;
             UpVector = Vector3d.UnitY;
@@ -167,6 +167,7 @@ namespace Plotter
             Matrix4d my = Matrix4d.CreateRotationY(ry);
 
             Eye = Vector3d.TransformPosition(Eye, my);
+            UpVector = Vector3d.TransformPosition(UpVector, my);
 
             Vector3d t = Eye - LookAt;
 
@@ -181,6 +182,7 @@ namespace Plotter
 
 
             Eye = Vector3d.TransformPosition(Eye, mx);
+            UpVector = Vector3d.TransformPosition(UpVector, mx);
 
             ViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
 
