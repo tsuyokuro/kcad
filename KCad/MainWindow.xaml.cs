@@ -2,10 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Windows;
-using System.Windows.Automation.Peers;
-using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -44,11 +41,9 @@ namespace KCad
             SlsectModePanel.DataContext = ViewModel;
             FigurePanel.DataContext = ViewModel;
 
-            textCommand.KeyDown += textCommand_KeyDown;
-            textCommand.KeyUp += textCommand_KeyUp;
+            InitTextCommand();
 
             textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
-
 
             mInteractionIn.print = MessageOut;
 
@@ -58,24 +53,6 @@ namespace KCad
             RemoveLayerButton.Click += ViewModel.ButtonClicked;
 
             ViewModePanel.DataContext = ViewModel;
-        }
-
-        private void textCommand_KeyDown(object sender, KeyEventArgs e)
-        {
-        }
-
-        private void textCommand_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                var s = textCommand.Text;
-                if (s.Length > 0)
-                {
-                    ViewModel.textCommand(s);
-                }
-
-                viewContainer.Focus();
-            }
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -129,6 +106,45 @@ namespace KCad
             Button btn = (Button)sender;
             ViewModel.ButtonClicked(sender, e);
         }
+
+        #region TextCommand
+        private void InitTextCommand()
+        {
+            textCommand.ItemsSource = new List<string>()
+            {
+                "rect(",
+                "distance",
+            };
+
+            textCommand.ItemFilter = ScriptFilter;
+
+            textCommand.KeyDown += textCommand_KeyDown;
+            textCommand.KeyUp += textCommand_KeyUp;
+        }
+
+        public AutoCompleteFilterPredicate<object> ScriptFilter
+        {
+            get { return (str, obj) => (obj as string).Contains(str); }
+        }
+
+        private void textCommand_KeyDown(object sender, KeyEventArgs e)
+        {
+        }
+
+        private void textCommand_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var s = textCommand.Text;
+                if (s.Length > 0)
+                {
+                    ViewModel.textCommand(s);
+                }
+
+                viewContainer.Focus();
+            }
+        }
+        #endregion
 
         #region "Key handling"
         private void onKeyDown(object sender, KeyEventArgs e)

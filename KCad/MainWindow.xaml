@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
         xmlns:local="clr-namespace:KCad"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:pl="clr-namespace:Plotter"
@@ -75,6 +76,13 @@
             <pl:SelectModeConverter x:Key="SelModeConv"/>
             <pl:FigureTypeConverter x:Key="FigTypeConv"/>
             <pl:ViewModeConverter x:Key="ViewModeConv"/>
+
+
+            <DataTemplate x:Key="AutoCompleteBoxItemTemplate">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="{Binding Data}" Foreground="{StaticResource TextColor}"/>
+                </StackPanel>
+            </DataTemplate>
 
         </ResourceDictionary>
 
@@ -299,11 +307,17 @@
                              ItemContainerStyle="{StaticResource MsgListBoxItem}"
                              />
 
-                    <TextBox Grid.Row="1"
+                    <toolkit:AutoCompleteBox Grid.Row="1"
                              x:Name="textCommand"
                              Foreground="{StaticResource TextColor}"
                              Background="{StaticResource BGColor}"
                              />
+                    <!--<TextBox Grid.Row="1"
+                             x:Name="textCommand"
+                             Foreground="{StaticResource TextColor}"
+                             Background="{StaticResource BGColor}"
+                             />-->
+
                 </Grid>
             </Grid>
         </Grid>
