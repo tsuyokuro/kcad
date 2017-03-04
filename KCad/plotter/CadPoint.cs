@@ -98,6 +98,8 @@ namespace Plotter
             }
         }
 
+        public static CadPoint Zero = default(CadPoint);
+
         public CadPoint(double x, double y, double z, Types type = Types.STD)
         {
             vector.X = x;

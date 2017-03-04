@@ -35,6 +35,9 @@ namespace Plotter
 
         public bool LightingEnable = true;
 
+        public Matrix4d Rotate;
+
+
         public DrawContextGL()
         {
             WoldScale = 0.2f;
@@ -53,6 +56,8 @@ namespace Plotter
             ViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
 
             RecalcGazeVector();
+
+            Rotate = Matrix4d.Identity;
 
 
             lightPosition = new Vector4(200.0f, 150f, 500.0f, 0.0f);
@@ -190,7 +195,6 @@ namespace Plotter
         //    RecalcGazeVector();
         //}
 
-
         public void RotateEyePoint(Vector2 prev, Vector2 current)
         {
             Vector2 d = current - prev;
@@ -198,18 +202,12 @@ namespace Plotter
             double ry = (d.X / 10.0) * (Math.PI / 20);
             double rx = (d.Y / 10.0) * (Math.PI / 20);
 
-            Quaternion qr = Quaternion.FromAxisAngle(Vector3.UnitY, (float)ry);
-
             CadQuaternion q;
             CadQuaternion r;
             CadQuaternion qp;
 
-            Matrix4d tm;
-
-
             q = CadQuaternion.RotateQuaternion(ry, Vector3d.UnitY);
 
-            /*
             r = q.Conjugate();
 
             qp = CadQuaternion.FromVector(Eye);
@@ -221,52 +219,36 @@ namespace Plotter
             qp = r * qp;
             qp = qp * q;
             UpVector = qp.ToVector3d();
-            */
-
-            tm = q.ToMatrix4d();
-
-            Eye = Vector3d.TransformPosition(Eye, tm);
-            UpVector = Vector3d.TransformPosition(UpVector, tm);
-
-            Vector3d t = Eye - LookAt;
-
-            Vector3d axis = t;
-
-            axis.X = t.Z;
-            axis.Z = -t.X;
-            axis.Y = 0;
 
 
-            q = CadQuaternion.RotateQuaternion(rx, axis);
+            Vector3d gv = LookAt - Eye;
 
-            /*
-            r = q.Conjugate();
+            CadPoint a = CadPoint.Create(gv);
+            CadPoint b = CadPoint.Create(UpVector);
 
-            qp = CadQuaternion.FromVector(Eye);
-            qp = r * qp;
-            qp = qp * q;
+            CadPoint axis = CadMath.Normal(a, b);
 
-            Eye = qp.ToVector3d();
+            if (!axis.IsZero())
+            {
 
-            qp = CadQuaternion.FromVector(UpVector);
-            qp = r * qp;
-            qp = qp * q;
-            UpVector = qp.ToVector3d();
-            */
+                q = CadQuaternion.RotateQuaternion(rx, axis.vector);
 
-            tm = q.ToMatrix4d();
+                r = q.Conjugate();
 
-            Eye = Vector3d.TransformPosition(Eye, tm);
-            UpVector = Vector3d.TransformPosition(UpVector, tm);
+                qp = CadQuaternion.FromVector(Eye);
+                qp = r * qp;
+                qp = qp * q;
 
+                Eye = qp.ToVector3d();
+
+                qp = CadQuaternion.FromVector(UpVector);
+                qp = r * qp;
+                qp = qp * q;
+                UpVector = qp.ToVector3d();
+            }
 
             ViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
-
             RecalcGazeVector();
-
-            // debug
-            //CadPoint p = CadPoint.Create(UpVector);
-            //p.dump(DebugOut.Std);
         }
 
         private void RecalcGazeVector()

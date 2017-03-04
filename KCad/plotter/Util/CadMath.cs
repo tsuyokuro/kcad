@@ -69,6 +69,11 @@ namespace Plotter
         {
             CadPoint normal = CadMath.crossProduct3D(va, vb);
 
+            if (normal.IsZero())
+            {
+                return normal;
+            }
+
             normal = normal.UnitVector();
 
             return normal;
