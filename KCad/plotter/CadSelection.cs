@@ -97,12 +97,12 @@ namespace Plotter
 
             if (fig != null)
             {
-                find(fig.ID, pointIndex);
+                f = find(fig.ID, pointIndex);
             }
 
             if (f != null)
             {
-                f.Point = point;
+                //f.Point = point;
                 return;
             }
 
@@ -126,7 +126,14 @@ namespace Plotter
 
         public void add(MarkPoint mp)
         {
-            mList.Add(new SelectItem(mp));
+            SelectItem f = null;
+
+            f = find(mp.FigureID, mp.PointIndex);
+
+            if (f == null)
+            {
+                mList.Add(new SelectItem(mp));
+            }
         }
 
         public void add(MarkSeg ms)
