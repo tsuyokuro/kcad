@@ -206,7 +206,7 @@ namespace Plotter
             CadQuaternion r;
             CadQuaternion qp;
 
-            q = CadQuaternion.RotateQuaternion(ry, Vector3d.UnitY);
+            q = CadQuaternion.RotateQuaternion(Vector3d.UnitY, ry);
 
             r = q.Conjugate();
 
@@ -231,7 +231,7 @@ namespace Plotter
             if (!axis.IsZero())
             {
 
-                q = CadQuaternion.RotateQuaternion(rx, axis.vector);
+                q = CadQuaternion.RotateQuaternion(axis.vector, rx);
 
                 r = q.Conjugate();
 

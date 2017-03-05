@@ -168,7 +168,7 @@ namespace Plotter
 
                     }
 
-                    CadQuaternion q = CadQuaternion.RotateQuaternion(-Math.PI / 2.0, normal);
+                    CadQuaternion q = CadQuaternion.RotateQuaternion(normal, -Math.PI / 2.0);
                     CadQuaternion r = q.Conjugate();
 
                     CadQuaternion qp = CadQuaternion.FromPoint(va);
@@ -194,7 +194,7 @@ namespace Plotter
 
                     }
 
-                    CadQuaternion q = CadQuaternion.RotateQuaternion(Math.PI / 2.0, normal);
+                    CadQuaternion q = CadQuaternion.RotateQuaternion(normal, Math.PI / 2.0);
                     CadQuaternion r = q.Conjugate();
 
                     CadQuaternion qp = CadQuaternion.FromPoint(vb);

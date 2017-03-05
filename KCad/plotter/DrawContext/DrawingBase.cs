@@ -109,7 +109,7 @@ namespace Plotter
 
             double dt = (double)(2.0 * Math.PI) / (double)div;
 
-            CadQuaternion q = CadQuaternion.RotateQuaternion(dt, normal);
+            CadQuaternion q = CadQuaternion.RotateQuaternion(normal, dt);
             CadQuaternion r = q.Conjugate();
 
             CadPoint p = va;
@@ -185,7 +185,7 @@ namespace Plotter
                 normal = CadMath.Normal(tmp, d);
             }
  
-            CadQuaternion q = CadQuaternion.RotateQuaternion(-angle, normal);
+            CadQuaternion q = CadQuaternion.RotateQuaternion(normal, -angle);
             CadQuaternion r = q.Conjugate();
 
             ArrowHead a;

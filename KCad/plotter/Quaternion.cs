@@ -184,7 +184,7 @@ namespace Plotter
          * Vector (vx, vy, vz)を回転軸としてradianだけ回転する四元数を作成
          * 
          */
-        public static CadQuaternion RotateQuaternion(double radian, double vx, double vy, double vz)
+        public static CadQuaternion RotateQuaternion(double vx, double vy, double vz, double radian)
         {
             CadQuaternion ans = default(CadQuaternion);
             double norm;
@@ -213,9 +213,9 @@ namespace Plotter
          * Vector (v.x, v.y, v.z)を回転軸としてradianだけ回転する四元数を作成
          * 
          */
-        public static CadQuaternion RotateQuaternion(double radian, CadPoint v)
+        public static CadQuaternion RotateQuaternion(CadPoint axis, double radian)
         {
-            v = v.UnitVector();
+            axis = axis.UnitVector();
 
             CadQuaternion ans = default(CadQuaternion);
             double c, s;
@@ -224,9 +224,9 @@ namespace Plotter
             s = Math.Sin(0.5 * radian);
 
             ans.t = c;
-            ans.x = s * v.x;
-            ans.y = s * v.y;
-            ans.z = s * v.z;
+            ans.x = s * axis.x;
+            ans.y = s * axis.y;
+            ans.z = s * axis.z;
 
             return ans;
         }
@@ -235,9 +235,9 @@ namespace Plotter
          * Vector (v.x, v.y, v.z)を回転軸としてradianだけ回転する四元数を作成
          * 
          */
-        public static CadQuaternion RotateQuaternion(double radian, Vector3d v)
+        public static CadQuaternion RotateQuaternion(Vector3d axis, double radian)
         {
-            v = Vector3d.Normalize(v);
+            axis = Vector3d.Normalize(axis);
 
             CadQuaternion ans = default(CadQuaternion);
             double c, s;
@@ -246,9 +246,9 @@ namespace Plotter
             s = Math.Sin(0.5 * radian);
 
             ans.t = c;
-            ans.x = s * v.X;
-            ans.y = s * v.Y;
-            ans.z = s * v.Z;
+            ans.x = s * axis.X;
+            ans.y = s * axis.Y;
+            ans.z = s * axis.Z;
 
             return ans;
         }

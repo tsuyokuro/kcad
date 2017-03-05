@@ -171,7 +171,7 @@ namespace Plotter
 
             double rad = CadMath.deg2rad(10);
 
-            CadQuaternion q = CadQuaternion.RotateQuaternion(rad, axis);
+            CadQuaternion q = CadQuaternion.RotateQuaternion(axis, rad);
             CadQuaternion r = q.Conjugate();
 
             CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
