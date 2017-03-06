@@ -20,6 +20,23 @@ namespace Plotter
             get { return mGraphics; }
         }
 
+        public override Vector3d GazeVector
+        {
+            get
+            {
+                CadPoint p0 = CadPoint.Create(0, 0, 0);
+                CadPoint p1 = CadPoint.Create(0, 0, 1);
+
+                CadPoint cp0 = UnitPointToCadPoint(p0);
+                CadPoint cp1 = UnitPointToCadPoint(p1);
+
+                Vector3d ret = cp0.vector - cp1.vector;
+                ret.Normalize();
+                return ret;
+            }
+        }
+
+
         public DrawContextGDI()
         {
             SetUnitPerMilli(4); // 1mm = 2.5dot

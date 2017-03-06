@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 
 namespace Plotter
@@ -223,6 +224,29 @@ namespace Plotter
 
             return ret;
         }
+
+        public static Vector3d RepresentNormal(CadPoint p0, IReadOnlyList<CadPoint> points)
+        {
+            if (points.Count < 3)
+            {
+                return Vector3d.Zero;
+            }
+
+            int idx = findMaxDistantPointIndex(p0, points);
+
+            int idxA = idx - 1;
+            int idxB = idx + 1;
+
+            if (idxA < 0)
+            {
+                idxA = points.Count - 1;
+            }
+
+            CadPoint normal = CadMath.Normal(points[idx], points[idxA], points[idxB]);
+
+            return normal.vector;
+        }
+
 
         // 線分apと点pの距離
         // 垂線がab内に無い場合は、点a,bで近い方への距離を返す

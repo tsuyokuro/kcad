@@ -58,13 +58,31 @@ namespace Plotter
         }
         #endregion
 
+
+        public static CadPoint Normal(CadPoint v0, CadPoint v1, CadPoint v2)
+        {
+            CadPoint va = v1 - v0;
+            CadPoint vb = v2 - v0;
+
+            CadPoint normal = CadMath.crossProduct3D(va, vb);
+
+            if (normal.IsZero())
+            {
+                return normal;
+            }
+
+            normal = normal.UnitVector();
+
+            return normal;
+        }
+
         /**
          *       vb
          *      / 
          *     /
          * v0 /_________va
          * 
-         */ 
+         */
         public static CadPoint Normal(CadPoint va, CadPoint vb)
         {
             CadPoint normal = CadMath.crossProduct3D(va, vb);
@@ -80,18 +98,23 @@ namespace Plotter
         }
 
         /**
-         *           list[1]
+         *           list[2]
          *          / 
          *         /
-         * list[0]/_________list[2]
+         * list[0]/_________list[1]
          * 
          */
         public static CadPoint Normal(IReadOnlyList<CadPoint> pointList)
         {
+            if (pointList.Count < 3)
+            {
+                return CadPoint.Zero;
+            }
+
             CadPoint v0 = pointList[0];
 
-            CadPoint va = pointList[2] - pointList[0];
-            CadPoint vb = pointList[1] - pointList[0];
+            CadPoint va = pointList[1] - pointList[0];
+            CadPoint vb = pointList[2] - pointList[0];
 
             CadPoint normal = CadMath.crossProduct3D(va, vb);
 

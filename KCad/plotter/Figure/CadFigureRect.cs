@@ -36,14 +36,16 @@ namespace Plotter
                 }
                 else
                 {
+                    // 左回りになるように設定
+
                     CadPoint pp0 = dc.CadPointToUnitPoint(fig.PointList[0]);
                     CadPoint pp2 = dc.CadPointToUnitPoint(p);
 
                     CadPoint pp1 = pp0;
-                    pp1.x = pp2.x;
+                    pp1.y = pp2.y;
 
                     CadPoint pp3 = pp0;
-                    pp3.y = pp2.y;
+                    pp3.x = pp2.x;
 
                     fig.mPointList.Add(dc.UnitPointToCadPoint(pp1));
                     fig.mPointList.Add(dc.UnitPointToCadPoint(pp2));

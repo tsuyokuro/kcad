@@ -16,9 +16,6 @@ namespace Plotter
         public Vector3d LookAt = default(Vector3d);
         public Vector3d UpVector = default(Vector3d);
 
-        // 視線ベクトル
-        public Vector3d GazeVector = default(Vector3d); 
-
         float ProjectionNear = 10.0f;
         float ProjectionFar = 10000.0f;
 
@@ -37,6 +34,15 @@ namespace Plotter
 
         public Matrix4d Rotate;
 
+        public override Vector3d GazeVector
+        {
+            get
+            {
+                Vector3d ret = LookAt - Eye;
+                ret.Normalize();
+                return ret;
+            }
+        }
 
         public DrawContextGL()
         {
@@ -54,8 +60,6 @@ namespace Plotter
             UpVector = Vector3d.UnitY;
 
             ViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
-
-            RecalcGazeVector();
 
             Rotate = Matrix4d.Identity;
 
@@ -248,13 +252,6 @@ namespace Plotter
             }
 
             ViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
-            RecalcGazeVector();
-        }
-
-        private void RecalcGazeVector()
-        {
-            GazeVector = LookAt - Eye;
-            GazeVector.Normalize();
         }
     }
 }

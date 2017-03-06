@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using OpenTK;
+using System.Drawing;
 
 using static System.Math;
 
@@ -79,19 +80,24 @@ namespace Plotter
         public CadPoint mViewOrg;
 
 
+        // 視線ベクトル
+        public virtual Vector3d GazeVector
+        {
+            get;
+        }
 
         // ワールド座標系から視点座標系への変換行列
-        public UMatrix4 ViewMatrix;
+        public UMatrix4 ViewMatrix = new UMatrix4();
 
         // 視点座標系からワールド座標系への変換行列
-        public UMatrix4 ViewMatrixInv;
+        public UMatrix4 ViewMatrixInv = new UMatrix4();
 
 
         // 視点座標系から投影座標系への変換行列
-        public UMatrix4 ProjectionMatrix;
+        public UMatrix4 ProjectionMatrix = new UMatrix4();
 
         // 投影座標系から視点座標系への変換行列
-        public UMatrix4 ProjectionMatrixInv;
+        public UMatrix4 ProjectionMatrixInv = new UMatrix4();
 
 
 

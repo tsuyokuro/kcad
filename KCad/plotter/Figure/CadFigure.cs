@@ -55,7 +55,7 @@ namespace Plotter
 
         public bool Closed { get; set; }
 
-        public IReadOnlyList<CadPoint> PointList
+        public List<CadPoint> PointList
         {
             get
             {
