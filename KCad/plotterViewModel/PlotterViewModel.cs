@@ -665,8 +665,10 @@ namespace Plotter
             // Default printers's unit is 1/100 inch
             dc.SetUnitPerInch(100.0);
 
-            dc.ViewMatrix = mController.CurrentDC.ViewMatrix;
-            dc.ProjectionMatrix = mController.CurrentDC.ProjectionMatrix;
+            dc.SetMatrix(
+                mController.CurrentDC.ViewMatrix,
+                mController.CurrentDC.ProjectionMatrix
+                );
 
             if (mController.CurrentDC is DrawContextGL)
             {
@@ -762,25 +764,19 @@ namespace Plotter
             {
                 case ViewModes.XY:
                     SetView(plotterView1);
-
-                    mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXY;
-                    mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXYInv;
+                    mPlotterView.DrawContext.SetViewMatrix(UMatrixs.ViewXY);
                     draw();
                     break;
 
                 case ViewModes.XZ:
                     SetView(plotterView1);
-
-                    mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewXZ;
-                    mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewXZInv;
+                    mPlotterView.DrawContext.SetViewMatrix(UMatrixs.ViewXZ);
                     draw();
                     break;
 
                 case ViewModes.ZY:
                     SetView(plotterView1);
-
-                    mPlotterView.DrawContext.ViewMatrix = UMatrixs.ViewZY;
-                    mPlotterView.DrawContext.ViewMatrixInv = UMatrixs.ViewZYInv;
+                    mPlotterView.DrawContext.SetViewMatrix(UMatrixs.ViewZY);
                     draw();
                     break;
 

@@ -34,7 +34,8 @@ namespace Plotter
 
         public Matrix4d Rotate;
 
-        public override Vector3d GazeVector
+        /*
+        public override Vector3d ViewDir
         {
             get
             {
@@ -43,6 +44,7 @@ namespace Plotter
                 return ret;
             }
         }
+        */
 
         public DrawContextGL()
         {
@@ -59,7 +61,7 @@ namespace Plotter
             LookAt = Vector3d.Zero;
             UpVector = Vector3d.UnitY;
 
-            ViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
+            mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
 
             Rotate = Matrix4d.Identity;
 
@@ -105,10 +107,10 @@ namespace Plotter
             GL.LoadIdentity();
 
             GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref ViewMatrix.GLMatrix);
+            GL.LoadMatrix(ref mViewMatrix.GLMatrix);
 
             GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref ProjectionMatrix.GLMatrix);
+            GL.LoadMatrix(ref mProjectionMatrix.GLMatrix);
         }
 
         public override void EndDraw()
@@ -159,45 +161,13 @@ namespace Plotter
             float aspect = (float)(mViewWidth / mViewHeight);
             float fovy = (float)Math.PI / 2.0f; // Yの傾き
 
-            ProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
+            mProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
                                             fovy,
                                             aspect,
                                             ProjectionNear,
                                             ProjectionFar
                                             );
         }
-
-        //public void RotateEyePoint(Vector2 prev, Vector2 current)
-        //{
-        //    Vector2 d = current - prev;
-
-        //    double ry = (-d.X / 10.0) * (Math.PI / 20);
-        //    double rx = (-d.Y / 10.0) * (Math.PI / 20);
-
-        //    Matrix4d my = Matrix4d.CreateRotationY(ry);
-
-        //    Eye = Vector3d.TransformPosition(Eye, my);
-        //    UpVector = Vector3d.TransformPosition(UpVector, my);
-
-        //    Vector3d t = Eye - LookAt;
-
-        //    Vector3d axis = t;
-
-        //    axis.X = t.Z;
-        //    axis.Z = -t.X;
-        //    axis.Y = 0;
-
-
-        //    Matrix4d mx = Matrix4d.CreateFromAxisAngle(axis, rx);
-
-
-        //    Eye = Vector3d.TransformPosition(Eye, mx);
-        //    UpVector = Vector3d.TransformPosition(UpVector, mx);
-
-        //    ViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
-
-        //    RecalcGazeVector();
-        //}
 
         public void RotateEyePoint(Vector2 prev, Vector2 current)
         {
@@ -224,10 +194,9 @@ namespace Plotter
             qp = qp * q;
             UpVector = qp.ToVector3d();
 
+            Vector3d ev = LookAt - Eye;
 
-            Vector3d gv = LookAt - Eye;
-
-            CadPoint a = CadPoint.Create(gv);
+            CadPoint a = CadPoint.Create(ev);
             CadPoint b = CadPoint.Create(UpVector);
 
             CadPoint axis = CadMath.Normal(a, b);
@@ -251,7 +220,28 @@ namespace Plotter
                 UpVector = qp.ToVector3d();
             }
 
-            ViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
+            mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
+
+            RecalcViewDir();
+        }
+
+        public override void SetMatrix(UMatrix4 viewMatrix, UMatrix4 projMatrix)
+        {
+            //base.SetMatrix(viewMatrix, projMatrix);
+            //TODO Eye, LookAtを逆算
+        }
+
+        public override void SetViewMatrix(UMatrix4 viewMatrix)
+        {
+            //base.SetMatrix(viewMatrix);
+            //TODO Eye, LookAtを逆算
+        }
+
+        public override void RecalcViewDir()
+        {
+            Vector3d ret = LookAt - Eye;
+            ret.Normalize();
+            mViewDir = ret;
         }
     }
 }

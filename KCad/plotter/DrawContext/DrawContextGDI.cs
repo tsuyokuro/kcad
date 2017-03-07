@@ -20,34 +20,17 @@ namespace Plotter
             get { return mGraphics; }
         }
 
-        public override Vector3d GazeVector
-        {
-            get
-            {
-                CadPoint p0 = CadPoint.Create(0, 0, 0);
-                CadPoint p1 = CadPoint.Create(0, 0, 1);
-
-                CadPoint cp0 = UnitPointToCadPoint(p0);
-                CadPoint cp1 = UnitPointToCadPoint(p1);
-
-                Vector3d ret = cp0.vector - cp1.vector;
-                ret.Normalize();
-                return ret;
-            }
-        }
-
-
         public DrawContextGDI()
         {
             SetUnitPerMilli(4); // 1mm = 2.5dot
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
-            ViewMatrix = UMatrixs.ViewXY;
-            ViewMatrixInv = UMatrixs.ViewXYInv;
+            mViewMatrix = UMatrixs.ViewXY;
+            mViewMatrixInv = UMatrixs.ViewXYInv;
 
-            ProjectionMatrix = UMatrixs.Unit;
-            ProjectionMatrixInv = UMatrixs.Unit;
+            mProjectionMatrix = UMatrixs.Unit;
+            mProjectionMatrixInv = UMatrixs.Unit;
 
             Drawing = new DrawingGDI(this);
         }
@@ -96,8 +79,8 @@ namespace Plotter
 
             ptv.W = 1.0f;
 
-            ptv = ptv * ViewMatrix;
-            ptv = ptv * ProjectionMatrix;
+            ptv = ptv * mViewMatrix;
+            ptv = ptv * mProjectionMatrix;
 
             ptv.X /= ptv.W;
             ptv.Y /= ptv.W;
@@ -123,9 +106,9 @@ namespace Plotter
             p.y = pt.y / (UnitPerMilli * DeviceScaleY);
             p.z = pt.z / UnitPerMilli;
 
-            p = p * ProjectionMatrixInv;
+            p = p * mProjectionMatrixInv;
 
-            p = p * ViewMatrixInv;
+            p = p * mViewMatrixInv;
 
             p /= WoldScale;
 

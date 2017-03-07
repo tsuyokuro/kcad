@@ -79,26 +79,50 @@ namespace Plotter
         // Screen 座標系の原点 
         public CadPoint mViewOrg;
 
+        // 投影スクリーンの向き
+        protected Vector3d mViewDir = default(Vector3d);
 
-        // 視線ベクトル
-        public virtual Vector3d GazeVector
+        public virtual Vector3d ViewDir
         {
-            get;
+            get
+            {
+                return mViewDir;
+            }
         }
 
         // ワールド座標系から視点座標系への変換行列
-        public UMatrix4 ViewMatrix = new UMatrix4();
+        protected UMatrix4 mViewMatrix = new UMatrix4();
+
+        public UMatrix4 ViewMatrix
+        {
+            get { return mViewMatrix; }
+        }
 
         // 視点座標系からワールド座標系への変換行列
-        public UMatrix4 ViewMatrixInv = new UMatrix4();
+        protected UMatrix4 mViewMatrixInv = new UMatrix4();
+
+        public UMatrix4 ViewMatrixInv
+        {
+            get { return mViewMatrixInv; }
+        }
 
 
         // 視点座標系から投影座標系への変換行列
-        public UMatrix4 ProjectionMatrix = new UMatrix4();
+        protected UMatrix4 mProjectionMatrix = new UMatrix4();
+
+        public UMatrix4 ProjectionMatrix
+        {
+            get { return mProjectionMatrix; }
+        }
+
 
         // 投影座標系から視点座標系への変換行列
-        public UMatrix4 ProjectionMatrixInv = new UMatrix4();
+        protected UMatrix4 mProjectionMatrixInv = new UMatrix4();
 
+        public UMatrix4 ProjectionMatrixInv
+        {
+            get { return mProjectionMatrixInv; }
+        }
 
 
         public CadPoint ViewOrg
@@ -232,6 +256,39 @@ namespace Plotter
             return d * UnitPerMilli;
         }
 
+        public virtual void SetMatrix(UMatrix4 viewMatrix, UMatrix4 projMatrix)
+        {
+            mViewMatrix = viewMatrix;
+            mViewMatrixInv = UMatrix4.Invert(viewMatrix);
+
+            mProjectionMatrix = projMatrix;
+            mProjectionMatrixInv = UMatrix4.Invert(projMatrix);
+            RecalcViewDir();
+        }
+
+        public virtual void SetViewMatrix(UMatrix4 viewMatrix)
+        {
+            mViewMatrix = viewMatrix;
+            mViewMatrixInv = UMatrix4.Invert(viewMatrix);
+            RecalcViewDir();
+        }
+
+        public virtual void RecalcViewDir()
+        {
+            CadPoint p0 = CadPoint.Create(0, 0, 0);
+            CadPoint p1 = CadPoint.Create(0, 0, 1);
+
+            CadPoint cp0 = UnitPointToCadPoint(p0);
+            CadPoint cp1 = UnitPointToCadPoint(p1);
+
+            Vector3d ret = cp0.vector - cp1.vector;
+            ret.Normalize();
+            mViewDir = ret;
+
+            //CadPoint t = CadPoint.Create(mGazeVector);
+            //t.dump(DebugOut.Std);
+        }
+
         public virtual void dump(DebugOut dout)
         {
             dout.println("ViewOrg");
@@ -241,6 +298,11 @@ namespace Plotter
             ViewCenter.dump(dout);
 
             dout.println("View Width=" + mViewWidth.ToString() + " Height=" + mViewHeight.ToString());
+
+            CadPoint t = CadPoint.Create(mViewDir);
+
+            dout.println("GazeVector");
+            t.dump(dout);
         }
     }
 }

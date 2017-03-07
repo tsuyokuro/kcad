@@ -12,100 +12,100 @@ namespace Plotter
 
         public double M11
         {
-            set { GLMatrix.M11 = (float)value; }
+            set { GLMatrix.M11 = value; }
             get { return GLMatrix.M11; }
         }
 
         public double M12
         {
-            set { GLMatrix.M12 = (float)value; }
+            set { GLMatrix.M12 = value; }
             get { return GLMatrix.M12; }
         }
 
         public double M13
         {
-            set { GLMatrix.M13 = (float)value; }
+            set { GLMatrix.M13 = value; }
             get { return GLMatrix.M13; }
         }
 
         public double M14
         {
-            set { GLMatrix.M14 = (float)value; }
+            set { GLMatrix.M14 = value; }
             get { return GLMatrix.M14; }
         }
 
 
         public double M21
         {
-            set { GLMatrix.M21 = (float)value; }
+            set { GLMatrix.M21 = value; }
             get { return GLMatrix.M21; }
         }
 
         public double M22
         {
-            set { GLMatrix.M22 = (float)value; }
+            set { GLMatrix.M22 = value; }
             get { return GLMatrix.M22; }
         }
 
         public double M23
         {
-            set { GLMatrix.M23 = (float)value; }
+            set { GLMatrix.M23 = value; }
             get { return GLMatrix.M23; }
         }
 
         public double M24
         {
-            set { GLMatrix.M24 = (float)value; }
+            set { GLMatrix.M24 = value; }
             get { return GLMatrix.M24; }
         }
 
 
         public double M31
         {
-            set { GLMatrix.M31 = (float)value; }
+            set { GLMatrix.M31 = value; }
             get { return GLMatrix.M31; }
         }
 
         public double M32
         {
-            set { GLMatrix.M32 = (float)value; }
+            set { GLMatrix.M32 = value; }
             get { return GLMatrix.M32; }
         }
 
         public double M33
         {
-            set { GLMatrix.M33 = (float)value; }
+            set { GLMatrix.M33 = value; }
             get { return GLMatrix.M33; }
         }
 
         public double M34
         {
-            set { GLMatrix.M34 = (float)value; }
+            set { GLMatrix.M34 = value; }
             get { return GLMatrix.M34; }
         }
 
 
         public double M41
         {
-            set { GLMatrix.M41 = (float)value; }
+            set { GLMatrix.M41 = value; }
             get { return GLMatrix.M41; }
         }
 
         public double M42
         {
-            set { GLMatrix.M42 = (float)value; }
+            set { GLMatrix.M42 = value; }
             get { return GLMatrix.M42; }
         }
 
         public double M43
         {
-            set { GLMatrix.M43 = (float)value; }
+            set { GLMatrix.M43 = value; }
             get { return GLMatrix.M43; }
         }
 
         public double M44
         {
-            set { GLMatrix.M44 = (float)value; }
+            set { GLMatrix.M44 = value; }
             get { return GLMatrix.M44; }
         }
 
@@ -247,6 +247,15 @@ namespace Plotter
             r.M44 = m1.M41 * m2.M14 + m1.M42 * m2.M24 + m1.M43 * m2.M34 + m1.M44 * m2.M44;
             */
             return r;
+        }
+
+        public static UMatrix4 Invert(UMatrix4 m)
+        {
+            Matrix4d inv = Matrix4d.Invert(m.GLMatrix);
+            UMatrix4 ret = default(UMatrix4);
+            ret.GLMatrix = inv;
+
+            return ret;
         }
 
         public void dump(DebugOut o)

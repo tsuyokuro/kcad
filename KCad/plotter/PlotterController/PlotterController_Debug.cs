@@ -237,8 +237,7 @@ namespace Plotter
         {
             DrawContext tdc = new DrawContext();
 
-            tdc.ViewMatrix = UMatrixs.ViewXY;
-            tdc.ViewMatrixInv = UMatrixs.ViewXYInv;
+            tdc.SetViewMatrix(UMatrixs.ViewXY);
 
             CadPoint p = CadPoint.Create(0, 0, -100);
 
@@ -275,41 +274,6 @@ namespace Plotter
             {
                 test(dc);
             }
-            else if (s.StartsWith("cv "))
-            {
-                var m = Regex.Match(s, @"cv[ ]+(.+)");
-
-                if (m != null && m.Groups.Count > 1)
-                {
-                    string para = m.Groups[1].Value;
-                    DebugOut.Std.println(para);
-
-                    if (para == "xy")
-                    {
-                        dc.ViewMatrixInv = UMatrixs.ViewXY;
-                        dc.ViewMatrix = UMatrixs.ViewXYInv;
-                    }
-                    else if (para == "xz")
-                    {
-                        dc.ViewMatrixInv = UMatrixs.ViewXZ;
-                        dc.ViewMatrix = UMatrixs.ViewXZInv;
-                    }
-                    else if (para == "zy")
-                    {
-                        dc.ViewMatrixInv = UMatrixs.ViewZY;
-                        dc.ViewMatrix = UMatrixs.ViewZYInv;
-                    }
-                    else if (para == "q")
-                    {
-                        //dc.MatrixToWorld = DrawContext.MatrixXY_YQ_F * DrawContext.MatrixXY_XQ_F;
-                        //dc.MatrixToView = DrawContext.MatrixXY_XQ_R * DrawContext.MatrixXY_YQ_R;
-                    }
-
-                    Clear(dc);
-                    Draw(dc);
-                }
-            }
-
             else if (s == "clean temp")
             {
                 TempFigureList.Clear();
