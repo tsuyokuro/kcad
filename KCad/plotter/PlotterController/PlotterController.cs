@@ -238,6 +238,8 @@ namespace Plotter
         }
         #endregion
 
+        #region Start and End creating figure
+
         public void startCreateFigure(CadFigure.Types type, DrawContext dc)
         {
             State = States.START_CREATE;
@@ -266,8 +268,29 @@ namespace Plotter
 
         public void endCreateFigureState(DrawContext dc)
         {
+            if (CreatingFigure != null)
+            {
+                CreatingFigure.endCreate(dc);
+                CreatingFigure = null;
+            }
+
             NextState(dc);
         }
+
+        public void closeFigure(DrawContext dc)
+        {
+            Log.d("PlotterController closeFigure");
+
+            CreatingFigure.Closed = true;
+
+            CreatingFigure.endCreate(dc);
+
+            CadOpe ope = CadOpe.getSetCloseOpe(CurrentLayer.ID, CreatingFigure.ID, true);
+            mHistoryManager.foward(ope);
+
+            NextState(dc);
+        }
+        #endregion
 
         public void setCurrentLayer(uint id)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -316,6 +317,20 @@ namespace Plotter
 
             public override CadFigure.Types endCreate(CadFigure fig, DrawContext dc)
             {
+                if (fig.PointList.Count > 2)
+                {
+                    Vector3d normal = CadUtil.RepresentNormal(fig.PointList);
+
+                    double t = Vector3d.Dot(normal, dc.ViewDir);
+
+                    DebugOut.Std.println("PolyLine endCreate t=" + t.ToString());
+
+
+                    if (t < 0)
+                    {
+                        fig.mPointList.Reverse();
+                    }
+                }
                 return fig.Type;
             }
 

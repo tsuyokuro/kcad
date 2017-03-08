@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using OpenTK;
 using OpenTK.Graphics;
@@ -16,8 +12,8 @@ namespace Plotter
         public Vector3d LookAt = default(Vector3d);
         public Vector3d UpVector = default(Vector3d);
 
-        float ProjectionNear = 10.0f;
-        float ProjectionFar = 10000.0f;
+        double ProjectionNear = 10.0f;
+        double ProjectionFar = 10000.0f;
 
 
         Vector4 lightPosition;
@@ -28,23 +24,11 @@ namespace Plotter
         Color4 materialAmbient;
         Color4 materialDiffuse;
         Color4 materialSpecular;
-        float materialShininess;
+        double materialShininess;
 
         public bool LightingEnable = true;
 
         public Matrix4d Rotate;
-
-        /*
-        public override Vector3d ViewDir
-        {
-            get
-            {
-                Vector3d ret = LookAt - Eye;
-                ret.Normalize();
-                return ret;
-            }
-        }
-        */
 
         public DrawContextGL()
         {
@@ -54,9 +38,9 @@ namespace Plotter
             Drawing = new DrawingGL(this);
 
             Eye = Vector3d.Zero;
-            Eye.X = 0f;
-            Eye.Y = 0f;
-            Eye.Z = 40f;
+            Eye.X = 0.0;
+            Eye.Y = 0.0;
+            Eye.Z = 40.0;
 
             LookAt = Vector3d.Zero;
             UpVector = Vector3d.UnitY;
@@ -158,8 +142,8 @@ namespace Plotter
 
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 
-            float aspect = (float)(mViewWidth / mViewHeight);
-            float fovy = (float)Math.PI / 2.0f; // Yの傾き
+            double aspect = mViewWidth / mViewHeight;
+            double fovy = Math.PI / 2.0f; // Yの傾き
 
             mProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
                                             fovy,

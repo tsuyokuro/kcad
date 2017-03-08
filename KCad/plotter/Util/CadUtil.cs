@@ -225,14 +225,14 @@ namespace Plotter
             return ret;
         }
 
-        public static Vector3d RepresentNormal(CadPoint p0, IReadOnlyList<CadPoint> points)
+        public static Vector3d RepresentNormal(IReadOnlyList<CadPoint> points)
         {
             if (points.Count < 3)
             {
                 return Vector3d.Zero;
             }
 
-            int idx = findMaxDistantPointIndex(p0, points);
+            int idx = findMaxDistantPointIndex(points[0], points);
 
             int idxA = idx - 1;
             int idxB = idx + 1;

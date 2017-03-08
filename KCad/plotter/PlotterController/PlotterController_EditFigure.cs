@@ -19,16 +19,6 @@ namespace Plotter
             Draw(dc);
         }
 
-        public void closeFigure(DrawContext dc)
-        {
-            CreatingFigure.Closed = true;
-
-            CadOpe ope = CadOpe.getSetCloseOpe(CurrentLayer.ID, CreatingFigure.ID, true);
-            mHistoryManager.foward(ope);
-
-            NextState(dc);
-        }
-
         public void toBezier(DrawContext dc)
         {
             toBezier(dc, mSelectedSegs.LastSel);
