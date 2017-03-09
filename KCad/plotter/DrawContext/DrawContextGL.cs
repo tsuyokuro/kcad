@@ -8,14 +8,6 @@ namespace Plotter
 {
     class DrawContextGL : DrawContext
     {
-        public Vector3d Eye = default(Vector3d);
-        public Vector3d LookAt = default(Vector3d);
-        public Vector3d UpVector = default(Vector3d);
-
-        double ProjectionNear = 10.0f;
-        double ProjectionFar = 10000.0f;
-
-
         Vector4 lightPosition;
         Color4 lightAmbient;
         Color4 lightDiffuse;
@@ -206,26 +198,7 @@ namespace Plotter
 
             mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
 
-            RecalcViewDir();
-        }
-
-        public override void SetMatrix(UMatrix4 viewMatrix, UMatrix4 projMatrix)
-        {
-            //base.SetMatrix(viewMatrix, projMatrix);
-            //TODO Eye, LookAtを逆算
-        }
-
-        public override void SetViewMatrix(UMatrix4 viewMatrix)
-        {
-            //base.SetMatrix(viewMatrix);
-            //TODO Eye, LookAtを逆算
-        }
-
-        public override void RecalcViewDir()
-        {
-            Vector3d ret = LookAt - Eye;
-            ret.Normalize();
-            mViewDir = ret;
+            RecalcViewDirFromCameraDirection();
         }
     }
 }

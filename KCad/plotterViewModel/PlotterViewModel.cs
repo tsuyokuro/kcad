@@ -218,10 +218,6 @@ namespace Plotter
 
             mController.StateChanged = StateChanged;
 
-            //InteractIn.print = MessageOut;
-
-            //mController.InteractOut = InteractIn;
-
             mController.LayerListChanged =  LayerListChanged;
 
             mController.DataChanged = DataChanged;
@@ -238,11 +234,6 @@ namespace Plotter
 
         public void SetView(IPlotterView view)
         {
-            if (mPlotterView == view)
-            {
-                return;
-            }
-
             if (view == mPlotterView)
             {
                 return;
@@ -764,19 +755,19 @@ namespace Plotter
             {
                 case ViewModes.XY:
                     SetView(plotterView1);
-                    mPlotterView.DrawContext.SetViewMatrix(UMatrixs.ViewXY);
+                    mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitZ, Vector3d.UnitY);
                     draw();
                     break;
 
                 case ViewModes.XZ:
                     SetView(plotterView1);
-                    mPlotterView.DrawContext.SetViewMatrix(UMatrixs.ViewXZ);
+                    mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitY, -Vector3d.UnitZ);
                     draw();
                     break;
 
                 case ViewModes.ZY:
                     SetView(plotterView1);
-                    mPlotterView.DrawContext.SetViewMatrix(UMatrixs.ViewZY);
+                    mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitX, Vector3d.UnitY);
                     draw();
                     break;
 

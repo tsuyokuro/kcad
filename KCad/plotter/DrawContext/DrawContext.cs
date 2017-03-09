@@ -5,60 +5,6 @@ using static System.Math;
 
 namespace Plotter
 {
-    public class PaperPageSize
-    {
-        public double width;
-        public double height;
-
-        public double widthInch
-        {
-            set
-            {
-                width = value * 25.4;
-            }
-
-            get
-            {
-                return width / 25.4;
-            }
-        }
-
-        public double heightInch
-        {
-            set
-            {
-                height = value * 25.4;
-            }
-
-            get
-            {
-                return height / 25.4;
-            }
-        }
-
-        public PaperPageSize()
-        {
-            A4Land();
-        }
-
-        public void A4()
-        {
-            width = 210.0;
-            height = 297.0;
-        }
-
-        public void A4Land()
-        {
-            width = 297.0;
-            height = 210.0;
-        }
-
-        public PaperPageSize clone()
-        {
-            return (PaperPageSize)MemberwiseClone();
-        }
-    }
-
     public class DrawContext
     {
         CadObjectDB DB
@@ -78,6 +24,15 @@ namespace Plotter
 
         // Screen 座標系の原点 
         public CadPoint mViewOrg;
+
+
+        protected Vector3d Eye = Vector3d.UnitZ;
+        protected Vector3d LookAt = Vector3d.Zero;
+        protected Vector3d UpVector = Vector3d.UnitY;
+
+        protected double ProjectionNear = 10.0f;
+        protected double ProjectionFar = 10000.0f;
+
 
         // 投影スクリーンの向き
         protected Vector3d mViewDir = default(Vector3d);
@@ -125,12 +80,13 @@ namespace Plotter
         }
 
 
+        // 座標系の原点がView座標上で何処にあるかを示す
         public CadPoint ViewOrg
         {
             set
             {
                 mViewOrg = value;
-                calcViewCenter();
+                mViewOrg.dump(DebugOut.Std);
             }
 
             get
@@ -139,8 +95,8 @@ namespace Plotter
             }
         }
 
-        public double mViewWidth = 100;
-        public double mViewHeight = 100;
+        public double mViewWidth = 1;
+        public double mViewHeight = 1;
 
         // Screenのサイズ
         public double ViewWidth
@@ -159,8 +115,6 @@ namespace Plotter
             }
         }
 
-        public CadPoint ViewCenter = default(CadPoint);
-
         public double WoldScale = 1.0;
         public double DeviceScaleX = 1.0;
         public double DeviceScaleY = -1.0;
@@ -169,20 +123,6 @@ namespace Plotter
 
         public DrawingBase Drawing;
 
-        public void calcViewCenter()
-        {
-            CadPoint t = default(CadPoint);
-
-            t.x = (mViewWidth / 2);
-            t.y = (mViewHeight / 2);
-            t.z = 0;
-
-            t -= ViewOrg;
-
-            t /= UnitPerMilli;
-
-            ViewCenter = t;
-        }
 
         public virtual void SetupTools(DrawTools.ToolsType type)
         {
@@ -230,22 +170,6 @@ namespace Plotter
             return default(CadPoint);
         }
 
-        public virtual CadRect GetViewRect()
-        {
-            CadRect rect = default(CadRect);
-
-            CadPoint p0 = default(CadPoint);
-            CadPoint p1 = default(CadPoint);
-
-            p0.set(0, 0, 0);
-            p1.set(ViewWidth, ViewHeight, 0);
-
-            rect.p0 = UnitPointToCadPoint(p0);
-            rect.p1 = UnitPointToCadPoint(p1);
-
-            return rect;
-        }
-
         public virtual double UnitToMilli(double d)
         {
             return d / UnitPerMilli;
@@ -263,17 +187,17 @@ namespace Plotter
 
             mProjectionMatrix = projMatrix;
             mProjectionMatrixInv = UMatrix4.Invert(projMatrix);
-            RecalcViewDir();
+            RecalcCamera();
         }
 
         public virtual void SetViewMatrix(UMatrix4 viewMatrix)
         {
             mViewMatrix = viewMatrix;
             mViewMatrixInv = UMatrix4.Invert(viewMatrix);
-            RecalcViewDir();
+            RecalcCamera();
         }
 
-        public virtual void RecalcViewDir()
+        public virtual void RecalcCamera()
         {
             CadPoint p0 = CadPoint.Create(0, 0, 0);
             CadPoint p1 = CadPoint.Create(0, 0, 1);
@@ -283,19 +207,36 @@ namespace Plotter
 
             Vector3d ret = cp0.vector - cp1.vector;
             ret.Normalize();
-            mViewDir = ret;
 
-            //CadPoint t = CadPoint.Create(mGazeVector);
-            //t.dump(DebugOut.Std);
+            mViewDir = ret;
+            LookAt = mViewDir;
+            Eye = Vector3d.Zero;
+        }
+
+        public virtual void RecalcViewDirFromCameraDirection()
+        {
+            Vector3d ret = LookAt - Eye;
+            ret.Normalize();
+            mViewDir = ret;
+        }
+
+        public virtual void SetCamera(Vector3d eye, Vector3d lookAt, Vector3d upVector)
+        {
+            Eye = eye;
+            LookAt = lookAt;
+            UpVector = upVector;
+
+            mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
+
+            mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
+
+            RecalcViewDirFromCameraDirection();
         }
 
         public virtual void dump(DebugOut dout)
         {
             dout.println("ViewOrg");
             ViewOrg.dump(dout);
-
-            dout.println("ViewCenter");
-            ViewCenter.dump(dout);
 
             dout.println("View Width=" + mViewWidth.ToString() + " Height=" + mViewHeight.ToString());
 
