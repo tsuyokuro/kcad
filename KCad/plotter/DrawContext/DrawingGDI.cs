@@ -201,8 +201,8 @@ namespace Plotter
             CadPoint pt = default(CadPoint);
 
             // p0
-            pt.x = -DC.PageSize.width / 2;
-            pt.y = DC.PageSize.height / 2;
+            pt.x = -DC.PageSize.Width / 2;
+            pt.y = DC.PageSize.Height / 2;
             pt.z = 0;
 
             CadPoint p0 = default(CadPoint);
@@ -212,8 +212,8 @@ namespace Plotter
             p0 += DC.ViewOrg;
 
             // p1
-            pt.x = DC.PageSize.width / 2;
-            pt.y = -DC.PageSize.height / 2;
+            pt.x = DC.PageSize.Width / 2;
+            pt.y = -DC.PageSize.Height / 2;
             pt.z = 0;
 
             CadPoint p1 = default(CadPoint);

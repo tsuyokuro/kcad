@@ -86,7 +86,6 @@ namespace Plotter
             set
             {
                 mViewOrg = value;
-                mViewOrg.dump(DebugOut.Std);
             }
 
             get

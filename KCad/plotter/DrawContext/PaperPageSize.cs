@@ -8,19 +8,19 @@ namespace Plotter
 {
     public class PaperPageSize
     {
-        public double width;
-        public double height;
+        public double Width;
+        public double Height;
 
         public double widthInch
         {
             set
             {
-                width = value * 25.4;
+                Width = value * 25.4;
             }
 
             get
             {
-                return width / 25.4;
+                return Width / 25.4;
             }
         }
 
@@ -28,12 +28,12 @@ namespace Plotter
         {
             set
             {
-                height = value * 25.4;
+                Height = value * 25.4;
             }
 
             get
             {
-                return height / 25.4;
+                return Height / 25.4;
             }
         }
 
@@ -44,19 +44,24 @@ namespace Plotter
 
         public void A4()
         {
-            width = 210.0;
-            height = 297.0;
+            Width = 210.0;
+            Height = 297.0;
         }
 
         public void A4Land()
         {
-            width = 297.0;
-            height = 210.0;
+            Width = 297.0;
+            Height = 210.0;
         }
 
         public PaperPageSize clone()
         {
             return (PaperPageSize)MemberwiseClone();
+        }
+
+        public bool IsLandscape()
+        {
+            return (Width > Height);
         }
     }
 }

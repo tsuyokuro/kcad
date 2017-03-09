@@ -626,8 +626,10 @@ namespace Plotter
             System.Drawing.Printing.PrintDocument pd =
                 new System.Drawing.Printing.PrintDocument();
 
+
+            pd.DefaultPageSettings.Landscape = mPlotterView.DrawContext.PageSize.IsLandscape();
+
             pd.PrintPage += printPage;
-                //new System.Drawing.Printing.PrintPageEventHandler(printPage);
 
             System.Windows.Forms.PrintDialog pdlg = new System.Windows.Forms.PrintDialog();
 

@@ -20,7 +20,6 @@ namespace Plotter
 
         public bool LightingEnable = true;
 
-        public Matrix4d Rotate;
 
         public DrawContextGL()
         {
@@ -38,8 +37,6 @@ namespace Plotter
             UpVector = Vector3d.UnitY;
 
             mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
-
-            Rotate = Matrix4d.Identity;
 
 
             lightPosition = new Vector4(200.0f, 150f, 500.0f, 0.0f);
