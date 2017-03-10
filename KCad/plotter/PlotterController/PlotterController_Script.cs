@@ -12,7 +12,7 @@ namespace Plotter
         private void PreFuncCall(Evaluator evaluator, string funcName, Evaluator.ValueStack stack)
         {
             // 第一引数(最初にPOPした値)にDrawContextを設定します
-            stack.push(CurrentDC);
+            stack.push(this);
         }
 
         private void initScrExecutor()
@@ -24,12 +24,13 @@ namespace Plotter
             mScrExecutor.addFunction("group", group);
             mScrExecutor.addFunction("ungroup", ungroup);
             mScrExecutor.addFunction("addLayer", addLayer);
+            mScrExecutor.addFunction("revOrder", reverseOrder);
         }
 
         private int group(int argCount, Evaluator.ValueStack stack)
         {
             Evaluator.Value v0 = stack.pop();
-            DrawContext dc = (DrawContext)(v0.getObj());
+            PlotterController controller = (PlotterController)(v0.getObj());
             argCount--;
 
             List<uint> idlist = GetSelectedFigIDList();
@@ -40,11 +41,11 @@ namespace Plotter
                 return 0;
             }
 
-            CadFigure parent = mDB.newFigure(CadFigure.Types.GROUP);
+            CadFigure parent = DB.newFigure(CadFigure.Types.GROUP);
 
             foreach (uint id in idlist)
             {
-                CadFigure fig = mDB.getFigure(id);
+                CadFigure fig = DB.getFigure(id);
 
                 if (fig == null)
                 {
@@ -65,7 +66,7 @@ namespace Plotter
         private int ungroup(int argCount, Evaluator.ValueStack stack)
         {
             Evaluator.Value v0 = stack.pop();
-            DrawContext dc = (DrawContext)(v0.getObj());
+            PlotterController controller = (PlotterController)(v0.getObj());
             argCount--;
 
             List<uint> idlist = GetSelectedFigIDList();
@@ -107,7 +108,7 @@ namespace Plotter
         private int distance(int argCount, Evaluator.ValueStack stack)
         {
             Evaluator.Value v0 = stack.pop();
-            DrawContext dc = (DrawContext)(v0.getObj());
+            PlotterController controller = (PlotterController)(v0.getObj());
             argCount--;
 
             if (mSelList.List.Count == 2)
@@ -130,7 +131,7 @@ namespace Plotter
         private int addRect(int argCount, Evaluator.ValueStack stack)
         {
             Evaluator.Value v0 = stack.pop();
-            DrawContext dc = (DrawContext)(v0.getObj());
+            PlotterController controller = (PlotterController)(v0.getObj());
             argCount--;
 
             if (argCount == 2)
@@ -160,7 +161,7 @@ namespace Plotter
 
                 fig.Closed = true;
 
-                fig.endCreate(dc);
+                fig.endCreate(controller.CurrentDC);
 
                 CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
                 mHistoryManager.foward(ope);
@@ -198,7 +199,7 @@ namespace Plotter
 
                 fig.Closed = true;
 
-                fig.endCreate(dc);
+                fig.endCreate(controller.CurrentDC);
 
                 CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
                 mHistoryManager.foward(ope);
@@ -217,7 +218,7 @@ namespace Plotter
         private int addLayer(int argCount, Evaluator.ValueStack stack)
         {
             Evaluator.Value v0 = stack.pop();
-            DrawContext dc = (DrawContext)(v0.getObj());
+            PlotterController controller = (PlotterController)(v0.getObj());
             argCount--;
 
             String name = null;
@@ -232,6 +233,30 @@ namespace Plotter
 
             return 0;
         }
+
+        private int reverseOrder(int argCount, Evaluator.ValueStack stack)
+        {
+            Evaluator.Value v0 = stack.pop();
+            PlotterController controller = (PlotterController)(v0.getObj());
+            argCount--;
+
+            List<uint> idlist = GetSelectedFigIDList();
+
+            foreach (uint id in idlist)
+            {
+                CadFigure fig = DB.getFigure(id);
+
+                if (fig == null)
+                {
+                    continue;
+                }
+
+                fig.PointList.Reverse();
+            }
+
+            return 0;
+        }
+
 
         public void command(string s)
         {

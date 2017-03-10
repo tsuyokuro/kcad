@@ -77,6 +77,13 @@ namespace Plotter
             get;
         } = States.SELECT;
 
+        public CadObjectDB DB
+        {
+            get
+            {
+                return mDB;
+            }
+        }
 
 
         public SelectModes SelectMode

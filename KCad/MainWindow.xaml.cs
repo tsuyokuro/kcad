@@ -114,6 +114,10 @@ namespace KCad
             {
                 "rect(",
                 "distance",
+                "revOrder",
+                "group",
+                "ungroup",
+                "addLayer",
             };
 
             textCommand.ItemFilter = ScriptFilter;
