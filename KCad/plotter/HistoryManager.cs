@@ -5,7 +5,7 @@ namespace Plotter
 {
     using Plotter;
 
-    class HistoryManager
+    public class HistoryManager
     {
         private CadObjectDB mDB;
 

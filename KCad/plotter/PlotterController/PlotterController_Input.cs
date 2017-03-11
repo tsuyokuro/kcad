@@ -27,7 +27,7 @@ namespace Plotter
 
         private CadPoint mMoveOrgScrnPoint;
 
-        private CadPoint mFreeDownPoint = default(CadPoint);
+        public CadPoint FreeDownPoint = default(CadPoint);
 
         private CadPoint? mObjDownPoint = null;
 
@@ -223,11 +223,11 @@ namespace Plotter
 
                     if (mObjDownPoint == null)
                     {
-                        mFreeDownPoint = cp;
+                        FreeDownPoint = cp;
                     }
                     else
                     {
-                        mFreeDownPoint = mObjDownPoint.Value;
+                        FreeDownPoint = mObjDownPoint.Value;
                     }
 
                     DrawSelectedItems(dc);
@@ -236,7 +236,7 @@ namespace Plotter
 
                 case States.START_CREATE:
                     {
-                        mFreeDownPoint = mSnapPoint;
+                        FreeDownPoint = mSnapPoint;
 
                         CreatingFigure = mDB.newFigure(CreatingFigType);
                         State = States.CREATING;
@@ -253,7 +253,7 @@ namespace Plotter
 
                 case States.CREATING:
                     {
-                        mFreeDownPoint = mSnapPoint;
+                        FreeDownPoint = mSnapPoint;
 
                         CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);
 

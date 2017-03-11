@@ -126,10 +126,34 @@ namespace Plotter
 
         private HistoryManager mHistoryManager = null;
 
+        public HistoryManager HistoryManager
+        {
+            get
+            {
+                return mHistoryManager;
+            }
+        }
+
 
         private SelectList mSelList = new SelectList();
 
+        public SelectList SelList
+        {
+            get
+            {
+                return mSelList;
+            }
+        }
+
         private SelectSegmentList mSelectedSegs = new SelectSegmentList();
+
+        public SelectSegmentList SelSegList
+        {
+            get
+            {
+                return mSelectedSegs;
+            }
+        }
 
         private List<uint> EditIdList = new List<uint>();
 
@@ -197,6 +221,8 @@ namespace Plotter
             get; set;
         }
 
+        public ScriptEnvironment ScriptEnv;
+
         public PlotterController()
         {
             CadLayer layer = mDB.newLayer();
@@ -205,7 +231,7 @@ namespace Plotter
 
             mHistoryManager = new HistoryManager(mDB);
 
-            initScrExecutor();
+            ScriptEnv = new ScriptEnvironment(this);
 
             initHid();
         }
@@ -370,7 +396,7 @@ namespace Plotter
             //Drawer.drawCursorScrn(dc, mSnapScrnPoint);
 
             dc.Drawing.DrawLastPointMarker(
-                DrawTools.PEN_LAST_POINT_MARKER, mFreeDownPoint);
+                DrawTools.PEN_LAST_POINT_MARKER, FreeDownPoint);
 
             if (mObjDownPoint != null)
             {
@@ -483,7 +509,7 @@ namespace Plotter
             return idSet;
         }
 
-        private List<uint> GetSelectedFigIDList()
+        public List<uint> GetSelectedFigIDList()
         {
             List<uint> idList = new List<uint>();
 
@@ -790,7 +816,7 @@ namespace Plotter
             {
                 CadPoint pp = default(CadPoint);
 
-                pp = mFreeDownPoint;
+                pp = FreeDownPoint;
 
                 Log.d("paste");
                 List<CadFigure> list = (List<CadFigure>)Clipboard.GetData("List.CadFiguer");

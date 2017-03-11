@@ -687,7 +687,7 @@ namespace Plotter
         public void textCommand(string s)
         {
             MessageOut(s);
-            mController.command(s);
+            mController.ScriptEnv.command(s);
             draw(true);
         }
 
