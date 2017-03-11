@@ -51,6 +51,7 @@ namespace KCad
 
             AddLayerButton.Click += ViewModel.ButtonClicked;
             RemoveLayerButton.Click += ViewModel.ButtonClicked;
+            RunTextCommandButton.Click += RunTextCommandButtonClicked;
 
             ViewModePanel.DataContext = ViewModel;
         }
@@ -110,25 +111,19 @@ namespace KCad
         #region TextCommand
         private void InitTextCommand()
         {
-            textCommand.ItemsSource = new List<string>()
-            {
-                "rect(",
-                "distance",
-                "revOrder",
-                "group",
-                "ungroup",
-                "addLayer",
-            };
-
-            textCommand.ItemFilter = ScriptFilter;
+            ViewModel.SetupTextCommandView(textCommand);
 
             textCommand.KeyDown += textCommand_KeyDown;
             textCommand.KeyUp += textCommand_KeyUp;
         }
 
-        public AutoCompleteFilterPredicate<object> ScriptFilter
+        public void RunTextCommandButtonClicked(object sender, RoutedEventArgs e)
         {
-            get { return (str, obj) => (obj as string).Contains(str); }
+            var s = textCommand.Text;
+            if (s.Length > 0)
+            {
+                ViewModel.textCommand(s);
+            }
         }
 
         private void textCommand_KeyDown(object sender, KeyEventArgs e)

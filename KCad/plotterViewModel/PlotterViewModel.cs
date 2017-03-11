@@ -782,5 +782,25 @@ namespace Plotter
 
             return true;
         }
+
+        public void SetupTextCommandView(AutoCompleteBox textBox)
+        {
+            textBox.ItemsSource = new List<string>()
+            {
+                "rect(",
+                "distance",
+                "revOrder",
+                "group",
+                "ungroup",
+                "addLayer",
+            };
+
+            textBox.ItemFilter = ScriptFilter;
+        }
+
+        public AutoCompleteFilterPredicate<object> ScriptFilter
+        {
+            get { return (str, obj) => (obj as string).Contains(str); }
+        }
     }
 }

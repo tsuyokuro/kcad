@@ -307,17 +307,28 @@
                              ItemContainerStyle="{StaticResource MsgListBoxItem}"
                              />
 
-                    <toolkit:AutoCompleteBox Grid.Row="1"
-                             x:Name="textCommand"
-                             Foreground="{StaticResource TextColor}"
-                             Background="{StaticResource BGColor}"
-                             />
-                    <!--<TextBox Grid.Row="1"
-                             x:Name="textCommand"
-                             Foreground="{StaticResource TextColor}"
-                             Background="{StaticResource BGColor}"
-                             />-->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="100*"/>
+                        </Grid.ColumnDefinitions>
 
+                        <Border BorderBrush="Silver" BorderThickness="1">
+                            <Button Grid.Column="0"
+                                x:Name="RunTextCommandButton"
+                                Tag="run_text_command"
+                                Content=" Run > "
+                                Style="{StaticResource ButtonStyle}"
+                                />
+                        </Border>
+
+
+                        <toolkit:AutoCompleteBox Grid.Column="1"
+                                x:Name="textCommand"
+                                Foreground="{StaticResource TextColor}"
+                                Background="{StaticResource BGColor}"
+                                />
+                    </Grid>    
                 </Grid>
             </Grid>
         </Grid>
