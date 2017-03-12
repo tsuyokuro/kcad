@@ -122,10 +122,8 @@ namespace Plotter
             */
         }
 
-        public override void setViewSize(double w, double h)
+        public override void SetViewSize(double w, double h)
         {
-            Console.WriteLine("DrawContextGL setViewSize w=" + w.ToString() + " h=" + h.ToString());
-
             mViewWidth = w;
             mViewHeight = h;
 

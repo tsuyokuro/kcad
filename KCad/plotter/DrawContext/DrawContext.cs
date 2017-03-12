@@ -128,7 +128,7 @@ namespace Plotter
             Tools.Setup(type);
         }
 
-        public virtual void setViewSize(double w, double h)
+        public virtual void SetViewSize(double w, double h)
         {
             mViewWidth = w;
             mViewHeight = h;

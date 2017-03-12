@@ -146,5 +146,52 @@ namespace Plotter
             GL.End();
             #endregion
         }
+
+        public override void DrawAxis()
+        {
+            CadPoint p0 = default(CadPoint);
+            CadPoint p1 = default(CadPoint);
+
+            double len = 120.0;
+            double arrowLen = 12.0;
+            double arrowW2 = 6.0;
+
+
+            // X軸
+            p0.x = -len;
+            p0.y = 0;
+            p0.z = 0;
+
+            p1.x = len;
+            p1.y = 0;
+            p1.z = 0;
+
+            //DrawLine(DrawTools.PEN_AXIS, p0, p1);
+            DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+
+            // Y軸
+            p0.x = 0;
+            p0.y = -len;
+            p0.z = 0;
+
+            p1.x = 0;
+            p1.y = len;
+            p1.z = 0;
+
+            //DrawLine(DrawTools.PEN_AXIS, p0, p1);
+            DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+
+            // Z軸
+            p0.x = 0;
+            p0.y = 0;
+            p0.z = -len;
+
+            p1.x = 0;
+            p1.y = 0;
+            p1.z = len;
+
+            //DrawLine(DrawTools.PEN_AXIS, p0, p1);
+            DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+        }
     }
 }

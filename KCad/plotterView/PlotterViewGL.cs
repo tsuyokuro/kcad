@@ -129,7 +129,7 @@ namespace Plotter
 
         private void onResize(object sender, EventArgs e)
         {
-            mDrawContext.setViewSize(Size.Width, Size.Height);
+            mDrawContext.SetViewSize(Size.Width, Size.Height);
 
             if (mController != null)
             {

@@ -11,6 +11,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="732" Width="1177.667"
         >
+    <!--<WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"
+                          ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}" />
+    </WindowChrome.WindowChrome>-->
 
     <Window.Resources>
         <ResourceDictionary>
@@ -84,6 +88,19 @@
                 </StackPanel>
             </DataTemplate>
 
+
+            <!--<Style TargetType="Menu">
+                <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+                <Setter Property="Background" Value="{StaticResource BGColor}"/>
+                <Setter Property="BorderThickness" Value="1" />
+            </Style>
+
+            <Style TargetType="MenuItem">
+                <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+                <Setter Property="Background" Value="{StaticResource BGColor}"/>
+                <Setter Property="BorderThickness" Value="0" />
+            </Style>-->
+
         </ResourceDictionary>
 
     </Window.Resources>
@@ -95,13 +112,13 @@
             <RowDefinition Height="1000*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0" >
+        <Menu Grid.Row="0">
             <MenuItem Header="File">
                 <MenuItem Tag="load" Header="Load" Click="MenuItem_Click" />
                 <MenuItem Tag="save" Header="Save" Click="MenuItem_Click"/>
                 <MenuItem Tag="print" Header="Print" Click="MenuItem_Click"/>
             </MenuItem>
-            <MenuItem Header="Edit">
+            <MenuItem Header="Edit" Click="MenuItem_Click">
                 <MenuItem Tag="undo" Header="Undo" Click="MenuItem_Click"/>
                 <MenuItem Tag="redo" Header="Redo" Click="MenuItem_Click"/>
                 <MenuItem Tag="copy" Header="Copy" Click="MenuItem_Click"/>
