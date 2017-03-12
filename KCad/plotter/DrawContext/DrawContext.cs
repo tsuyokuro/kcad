@@ -94,8 +94,8 @@ namespace Plotter
             }
         }
 
-        public double mViewWidth = 1;
-        public double mViewHeight = 1;
+        public double mViewWidth = 32;
+        public double mViewHeight = 32;
 
         // Screenのサイズ
         public double ViewWidth

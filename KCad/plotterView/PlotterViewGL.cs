@@ -60,7 +60,7 @@ namespace Plotter
             MouseMove += onMouseMove;
             MouseDown += onMouseDown;
             MouseUp += onMouseUp;
-            SwapBuffers();
+            //SwapBuffers();
         }
 
         private void onMouseUp(object sender, MouseEventArgs e)
