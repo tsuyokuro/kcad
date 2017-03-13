@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using System.Drawing;
 
 namespace Plotter
 {
@@ -47,7 +48,7 @@ namespace Plotter
         {
             GLPen glpen = DC.Pen(pen);
 
-            GL.Begin(PrimitiveType.Lines);
+            GL.Begin(BeginMode.Lines);
             GL.Color4(glpen.Color);
 
             a *= DC.WoldScale;
@@ -72,7 +73,7 @@ namespace Plotter
             GL.Enable(EnableCap.Light0);
 
             #region 表面
-            GL.Begin(PrimitiveType.Polygon);
+            GL.Begin(BeginMode.Polygon);
             GL.Color4(0.6f,0.6f,0.6f,1.0f);
 
             if (normalValid)
@@ -94,7 +95,7 @@ namespace Plotter
             if (DC.LightingEnable)
             {
                 // 裏面
-                GL.Begin(PrimitiveType.Polygon);
+                GL.Begin(BeginMode.Polygon);
                 GL.Color4(0.6f, 0.6f, 0.6f, 1.0f);
 
                 if (normalValid)
@@ -130,7 +131,7 @@ namespace Plotter
 
             CadPoint shift = (CadPoint)t;
 
-            GL.Begin(PrimitiveType.LineStrip);
+            GL.Begin(BeginMode.LineStrip);
  
             foreach (CadPoint pt in pointList)
             {
