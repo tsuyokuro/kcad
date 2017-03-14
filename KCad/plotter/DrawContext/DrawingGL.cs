@@ -1,19 +1,26 @@
-﻿using System;
+﻿//#define OPEN_TK_NEXT
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
+
 
 namespace Plotter
 {
     class DrawingGL : DrawingBase
     {
         private DrawContextGL DC;
+
+#if OPEN_TK_NEXT
+        private const PrimitiveType LINES = PrimitiveType.Lines;
+        private const PrimitiveType POLYGON = PrimitiveType.Polygon;
+        private const PrimitiveType LINE_STRIP = PrimitiveType.LineStrip;
+#else
+        private const BeginMode LINES = BeginMode.Lines;
+        private const BeginMode POLYGON = BeginMode.Polygon;
+        private const BeginMode LINE_STRIP = BeginMode.LineStrip;
+#endif
 
         public DrawingGL(DrawContextGL dc)
         {
@@ -48,7 +55,7 @@ namespace Plotter
         {
             GLPen glpen = DC.Pen(pen);
 
-            GL.Begin(BeginMode.Lines);
+            GL.Begin(LINES);
             GL.Color4(glpen.Color);
 
             a *= DC.WoldScale;
@@ -72,8 +79,8 @@ namespace Plotter
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
 
-            #region 表面
-            GL.Begin(BeginMode.Polygon);
+#region 表面
+            GL.Begin(POLYGON);
             GL.Color4(0.6f,0.6f,0.6f,1.0f);
 
             if (normalValid)
@@ -89,13 +96,13 @@ namespace Plotter
             }
 
             GL.End();
-            #endregion
+#endregion
 
-            #region 裏面
+#region 裏面
             if (DC.LightingEnable)
             {
                 // 裏面
-                GL.Begin(BeginMode.Polygon);
+                GL.Begin(POLYGON);
                 GL.Color4(0.6f, 0.6f, 0.6f, 1.0f);
 
                 if (normalValid)
@@ -115,9 +122,9 @@ namespace Plotter
 
                 GL.End();
             }
-            #endregion
+#endregion
 
-            #region 輪郭
+#region 輪郭
             // 輪郭は、光源設定を無効化
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Light0);
@@ -131,7 +138,7 @@ namespace Plotter
 
             CadPoint shift = (CadPoint)t;
 
-            GL.Begin(BeginMode.LineStrip);
+            GL.Begin(LINE_STRIP);
  
             foreach (CadPoint pt in pointList)
             {
@@ -145,7 +152,7 @@ namespace Plotter
             GL.Vertex3(p.vector);
 
             GL.End();
-            #endregion
+#endregion
         }
 
         public override void DrawAxis()
