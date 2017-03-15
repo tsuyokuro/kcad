@@ -276,9 +276,11 @@ namespace Plotter
                 { "to_bezier",toBezier },
                 { "cut_segment",cutSegment },
                 { "add_center_point", addCenterPoint },
-                { "mirror_x", mirrorX },
-                { "mirror_y", mirrorY },
-                { "mirror_z", mirrorZ },
+                { "to_loop", ToLoop },
+                { "to_unloop", ToUnloop },
+                { "flip_x", FlipX },
+                { "flip_y", FlipY },
+                { "flip_z", FlipZ },
             };
         }
 
@@ -565,24 +567,38 @@ namespace Plotter
             endDraw();
         }
 
-        public void mirrorX()
+        public void ToLoop()
         {
             DrawContext dc = startDraw();
-            mController.mirrorX(dc);
+            mController.SetLoop(dc, true);
             endDraw();
         }
 
-        public void mirrorY()
+        public void ToUnloop()
         {
             DrawContext dc = startDraw();
-            mController.mirrorY(dc);
+            mController.SetLoop(dc, false);
             endDraw();
         }
 
-        public void mirrorZ()
+        public void FlipX()
         {
             DrawContext dc = startDraw();
-            mController.mirrorZ(dc);
+            mController.FlipX(dc);
+            endDraw();
+        }
+
+        public void FlipY()
+        {
+            DrawContext dc = startDraw();
+            mController.FlipY(dc);
+            endDraw();
+        }
+
+        public void FlipZ()
+        {
+            DrawContext dc = startDraw();
+            mController.FlipZ(dc);
             endDraw();
         }
 

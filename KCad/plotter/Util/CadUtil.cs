@@ -242,6 +242,11 @@ namespace Plotter
                 idxA = points.Count - 1;
             }
 
+            if (idxB >= points.Count)
+            {
+                idxB = idxB - points.Count;
+            }
+
             CadPoint normal = CadMath.Normal(points[idx], points[idxA], points[idxB]);
 
             return normal.vector;

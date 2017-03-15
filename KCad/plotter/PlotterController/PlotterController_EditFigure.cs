@@ -281,8 +281,38 @@ namespace Plotter
             return cp;
         }
 
+        public void SetLoop(DrawContext dc, bool isLoop)
+        {
+            List<uint> list = GetSelectedFigIDList();
 
-        public void mirrorX(DrawContext dc)
+            CadOpeList opeRoot = CadOpe.getListOpe();
+            CadOpe ope;
+
+            foreach (uint id in list)
+            {
+                CadFigure fig = DB.getFigure(id);
+
+                if (fig.Type != CadFigure.Types.POLY_LINES)
+                {
+                    continue;
+                }
+
+                if (fig.Closed != isLoop)
+                {
+                    fig.Closed = isLoop;
+
+                    ope = CadOpe.getSetCloseOpe(CurrentLayer.ID, id, isLoop);
+                    opeRoot.OpeList.Add(ope);
+                }
+            }
+
+            mHistoryManager.foward(opeRoot);
+
+            Clear(dc);
+            Draw(dc);
+        }
+
+        public void FlipX(DrawContext dc)
         {
             CadPoint cp = GetSelectionCenter();
 
@@ -316,7 +346,7 @@ namespace Plotter
             Draw(dc);
         }
 
-        public void mirrorY(DrawContext dc)
+        public void FlipY(DrawContext dc)
         {
             CadPoint cp = GetSelectionCenter();
 
@@ -350,7 +380,7 @@ namespace Plotter
             Draw(dc);
         }
 
-        public void mirrorZ(DrawContext dc)
+        public void FlipZ(DrawContext dc)
         {
             CadPoint cp = GetSelectionCenter();
 

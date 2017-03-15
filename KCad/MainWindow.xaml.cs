@@ -59,8 +59,12 @@ namespace KCad
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             MenuItem menuitem = (MenuItem)sender;
-            var tag = menuitem.Tag.ToString();
-            ViewModel.menuCommand(tag);
+
+            if (menuitem.Tag != null)
+            {
+                var tag = menuitem.Tag.ToString();
+                ViewModel.menuCommand(tag);
+            }
         }
 
         private void debugCommand(String s)
