@@ -8,15 +8,15 @@ namespace Plotter
 {
     class DrawContextGL : DrawContext
     {
-        Vector4 lightPosition;
-        Color4 lightAmbient;
-        Color4 lightDiffuse;
-        Color4 lightSpecular;
+        Vector4 LightPosition;
+        Color4 LightAmbient;    // 環境光
+        Color4 LightDiffuse;    // 拡散光
+        Color4 LightSpecular;   // 鏡面反射光
 
-        Color4 materialAmbient;
-        Color4 materialDiffuse;
-        Color4 materialSpecular;
-        double materialShininess;
+        Color4 MaterialAmbient;
+        Color4 MaterialDiffuse;
+        Color4 MaterialSpecular;
+        Color4 MaterialShininess;
 
         public bool LightingEnable = true;
 
@@ -36,18 +36,22 @@ namespace Plotter
             LookAt = Vector3d.Zero;
             UpVector = Vector3d.UnitY;
 
+            ProjectionNear = 20.0;
+            ProjectionFar = 10000.0;
+
+
             mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
+            mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
 
+            LightPosition = new Vector4(200.0f, 150f, 500.0f, 0.0f);
+            LightAmbient = new Color4(0.2f, 0.2f, 0.2f, 1.0f);
+            LightDiffuse = new Color4(0.7f, 0.7f, 0.7f, 1.0f);
+            LightSpecular = new Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
-            lightPosition = new Vector4(200.0f, 150f, 500.0f, 0.0f);
-            lightAmbient = new Color4(0.2f, 0.2f, 0.2f, 1.0f);
-            lightDiffuse = new Color4(0.7f, 0.7f, 0.7f, 1.0f);
-            lightSpecular = new Color4(1.0f, 1.0f, 1.0f, 1.0f);
-
-            materialAmbient = new Color4(0.24725f, 0.1995f, 0.0225f, 1.0f);
-            materialDiffuse = new Color4(0.75164f, 0.60648f, 0.22648f, 1.0f);
-            materialSpecular = new Color4(0.628281f, 0.555802f, 0.366065f, 1.0f);
-            materialShininess = 51.4f;
+            MaterialAmbient = new Color4(0.24725f, 0.1995f, 0.0225f, 1.0f);
+            MaterialDiffuse = new Color4(0.75164f, 0.60648f, 0.22648f, 1.0f);
+            MaterialSpecular = new Color4(0.628281f, 0.555802f, 0.366065f, 1.0f);
+            MaterialShininess = new Color4(51.4f, 51.4f, 51.4f, 1.0f);
         }
 
         public GLPen Pen(int id)
@@ -67,7 +71,7 @@ namespace Plotter
 
         public override void StartDraw()
         {
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             GL.Enable(EnableCap.DepthTest);
 
@@ -90,6 +94,71 @@ namespace Plotter
         {
         }
 
+        public override CadPoint CadPointToUnitPoint(CadPoint pt)
+        {
+            pt *= WoldScale;
+
+            // 透視変換用にWが必要なので、Vector4に変換
+            Vector4d ptv = (Vector4d)pt;
+
+            ptv.W = 1.0f;
+
+            ptv = ptv * mViewMatrix;
+            ptv = ptv * mProjectionMatrix;
+
+            ptv.X /= ptv.W;
+            ptv.Y /= ptv.W;
+            ptv.Z /= ptv.W;
+
+            ptv.X = ptv.X * (ViewWidth / 2.0);
+            ptv.Y = -ptv.Y * (ViewHeight / 2.0);
+            ptv.Z = 0;
+
+            CadPoint p = CadPoint.Create(ptv);
+
+            p = p + mViewOrg;
+
+            return p;
+        }
+
+        public override CadPoint UnitPointToCadPoint(CadPoint pt)
+        {
+            Vector4d t;
+
+            t.X = LookAt.X;
+            t.Y = LookAt.Y;
+            t.Z = LookAt.Z;
+            t.W = 1.0f;
+
+            t = t * mViewMatrix;
+            t = t * mProjectionMatrix;
+
+
+            pt = pt - mViewOrg;
+            pt.x = pt.x / (ViewWidth / 2.0);
+            pt.y = -pt.y / (ViewHeight / 2.0);
+
+            Vector4d vw = (Vector4d)pt;
+
+            vw.W = t.W;
+            vw.Z = t.Z;
+
+            vw.X *= vw.W;
+            vw.Y *= vw.W;
+
+            vw = vw * mProjectionMatrixInv;
+            vw = vw * mViewMatrixInv;
+
+            vw /= WoldScale;
+
+            CadPoint p = CadPoint.Create(vw);
+
+            //DebugOut.Std.println("Wold");
+            //p.dump(DebugOut.Std);
+
+            return p;
+        }
+
         private void SetupLight()
         {
             if (!LightingEnable)
@@ -98,27 +167,23 @@ namespace Plotter
             }
 
             // 裏面を描かない
-            GL.Enable(EnableCap.CullFace);
-            GL.CullFace(CullFaceMode.Back);
-            GL.FrontFace(FrontFaceDirection.Ccw);
-
-            //ライティングON Light0を有効化
-            //GL.Enable(EnableCap.Lighting);
-            //GL.Enable(EnableCap.Light0);
+            //GL.Enable(EnableCap.CullFace);
+            //GL.CullFace(CullFaceMode.Back);
+            //GL.FrontFace(FrontFaceDirection.Ccw);
 
             //法線の正規化
             GL.Enable(EnableCap.Normalize);
 
-            GL.Light(LightName.Light0, LightParameter.Position, lightPosition);
-            GL.Light(LightName.Light0, LightParameter.Ambient, lightAmbient);
-            GL.Light(LightName.Light0, LightParameter.Diffuse, lightDiffuse);
-            GL.Light(LightName.Light0, LightParameter.Specular, lightSpecular);
+            GL.Light(LightName.Light0, LightParameter.Position, LightPosition);
+            GL.Light(LightName.Light0, LightParameter.Ambient, LightAmbient);
+            GL.Light(LightName.Light0, LightParameter.Diffuse, LightDiffuse);
+            GL.Light(LightName.Light0, LightParameter.Specular, LightSpecular);
 
             /*
-            GL.Material(MaterialFace.Front, MaterialParameter.Ambient, materialAmbient);
-            GL.Material(MaterialFace.Front, MaterialParameter.Diffuse, materialDiffuse);
-            GL.Material(MaterialFace.Front, MaterialParameter.Specular, materialSpecular);
-            GL.Material(MaterialFace.Front, MaterialParameter.Shininess, materialShininess);
+            GL.Material(MaterialFace.Front, MaterialParameter.Ambient, MaterialAmbient);
+            GL.Material(MaterialFace.Front, MaterialParameter.Diffuse, MaterialDiffuse);
+            GL.Material(MaterialFace.Front, MaterialParameter.Specular, MaterialSpecular);
+            GL.Material(MaterialFace.Front, MaterialParameter.Shininess, MaterialShininess);
             */
         }
 
@@ -126,6 +191,9 @@ namespace Plotter
         {
             mViewWidth = w;
             mViewHeight = h;
+
+            mViewOrg.x = w / 2.0;
+            mViewOrg.y = h / 2.0;
 
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 
@@ -138,6 +206,7 @@ namespace Plotter
                                             ProjectionNear,
                                             ProjectionFar
                                             );
+            mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
         }
 
         public void RotateEyePoint(Vector2 prev, Vector2 current)
@@ -192,6 +261,7 @@ namespace Plotter
             }
 
             mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
+            mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
 
             RecalcViewDirFromCameraDirection();
         }

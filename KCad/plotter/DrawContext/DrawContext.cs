@@ -30,8 +30,8 @@ namespace Plotter
         protected Vector3d LookAt = Vector3d.Zero;
         protected Vector3d UpVector = Vector3d.UnitY;
 
-        protected double ProjectionNear = 10.0f;
-        protected double ProjectionFar = 10000.0f;
+        protected double ProjectionNear = 10.0;
+        protected double ProjectionFar = 10000.0;
 
 
         // 投影スクリーンの向き

@@ -29,8 +29,8 @@ namespace Plotter
 
         public override void Clear()
         {
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(DC.Color(DrawTools.COLOR_BACKGROUND));
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
         public override void Draw(CadLayer layer)
@@ -79,7 +79,7 @@ namespace Plotter
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
 
-#region 表面
+            #region 表面
             GL.Begin(POLYGON);
             GL.Color4(0.6f,0.6f,0.6f,1.0f);
 
@@ -96,9 +96,10 @@ namespace Plotter
             }
 
             GL.End();
-#endregion
+            #endregion
 
-#region 裏面
+            /*
+            #region 裏面
             if (DC.LightingEnable)
             {
                 // 裏面
@@ -122,9 +123,10 @@ namespace Plotter
 
                 GL.End();
             }
-#endregion
+            #endregion
+            */
 
-#region 輪郭
+            #region 輪郭
             // 輪郭は、光源設定を無効化
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Light0);
@@ -152,7 +154,7 @@ namespace Plotter
             GL.Vertex3(p.vector);
 
             GL.End();
-#endregion
+            #endregion
         }
 
         public override void DrawAxis()

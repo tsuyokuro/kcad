@@ -268,12 +268,34 @@ namespace Plotter
             p0.dump(DebugOut.Std);
         }
 
+        private void testGLInvert()
+        {
+            CadPoint p0 = CadPoint.Create(10, 10, 0);
+
+            p0 += CurrentDC.ViewOrg;
+
+            CadPoint pc = CurrentDC.UnitPointToCadPoint(p0);
+
+            CadPoint ps = CurrentDC.CadPointToUnitPoint(pc);
+
+            ps -= CurrentDC.ViewOrg;
+
+            //DebugOut.Std.println("View");
+            //ps.dump(DebugOut.Std);
+        }
+
         public void debugCommand(DrawContext dc, string s)
         {
             if (s == "test")
             {
                 test(dc);
             }
+
+            else if (s == "test gi")
+            {
+                testGLInvert();
+            }
+
             else if (s == "clean temp")
             {
                 TempFigureList.Clear();

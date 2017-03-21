@@ -148,6 +148,17 @@ namespace Plotter
             return p;
         }
 
+        public static CadPoint Create(Vector4d v)
+        {
+            CadPoint p = default(CadPoint);
+            p.set(v.X, v.Y, v.Z);
+
+            p.Flag = 0;
+            p.Type = Types.STD;
+
+            return p;
+        }
+
         public JObject ToJson()
         {
             var jo = new JObject();

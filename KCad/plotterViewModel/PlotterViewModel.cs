@@ -790,6 +790,7 @@ namespace Plotter
                     break;
 
                 case ViewModes.FREE:
+                    plotterViewGL1.DrawContext.SetUnitPerMilli(plotterView1.DrawContext.UnitPerMilli);
                     SetView(plotterViewGL1);
 
                     draw();

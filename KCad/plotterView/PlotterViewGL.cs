@@ -14,7 +14,10 @@ namespace Plotter
 
         CadPoint PrevMousePos = default(CadPoint);
 
-        bool IsMouseDown = false;
+        MouseButtons DownButton = MouseButtons.None;
+
+
+
 
         public DrawContext DrawContext
         {
@@ -65,13 +68,28 @@ namespace Plotter
 
         private void onMouseUp(object sender, MouseEventArgs e)
         {
-            IsMouseDown = false;
+            DownButton = MouseButtons.None;
+
+            startDraw();
+
+            mController.Mouse.up(mDrawContext, e.Button, e.X, e.Y);
+
+            endDraw();
         }
 
         private void onMouseDown(object sender, MouseEventArgs e)
         {
             PrevMousePos.set(e.X, e.Y, 0);
-            IsMouseDown = true;
+            DownButton = e.Button;
+
+            if (DownButton != MouseButtons.Middle)
+            {
+                startDraw();
+
+                mController.Mouse.down(mDrawContext, e.Button, e.X, e.Y);
+
+                endDraw();
+            }
         }
 
         private void onLoad(object sender, EventArgs e)
@@ -83,23 +101,8 @@ namespace Plotter
 
         private void onMouseMove(object sender, MouseEventArgs e)
         {
-            if (IsMouseDown)
+            if (DownButton == MouseButtons.Middle)
             {
-                //CadPoint t = CadPoint.Create(e.X, e.Y, 0);
-                //CadPoint d = t - PrevMousePos;
-
-                //double ry = (-d.x / 10.0) * (Math.PI / 20);
-                //double rx = (d.y / 10.0) * (Math.PI / 20);
-
-                //mDrawContext.RotateEyePoint(rx, ry, 0);
-
-                //startDraw();
-                //mController.draw(mDrawContext);
-                //endDraw();
-
-                //PrevMousePos = t;
-
-
                 CadPoint t = CadPoint.Create(e.X, e.Y, 0);
 
                 Vector2 prev = default(Vector2);
@@ -115,6 +118,7 @@ namespace Plotter
                 mDrawContext.RotateEyePoint(prev, current);
 
                 startDraw();
+                mController.Clear(mDrawContext);
                 mController.Draw(mDrawContext);
                 endDraw();
 
