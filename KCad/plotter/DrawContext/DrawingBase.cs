@@ -25,14 +25,6 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawSelected(IReadOnlyList<CadFigure> list)
-        {
-        }
-
-        public virtual void DrawSelected(List<CadRelativePoint> list)
-        {
-        }
-
         public virtual void DrawAxis()
         {
         }
@@ -41,7 +33,7 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawHighlitePoint(CadPoint pt)
+        public virtual void DrawHighlightPoint(CadPoint pt)
         {
         }
 
@@ -57,15 +49,7 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawCursorScrn(CadPoint pp)
-        {
-        }
-
         public virtual void DrawRect(int pen, CadPoint p0, CadPoint p1)
-        {
-        }
-
-        public virtual void DrawRectScrn(int pen, CadPoint pp0, CadPoint pp1)
         {
         }
 
@@ -78,18 +62,6 @@ namespace Plotter
         }
 
         public virtual void DrawFace(int pen, IReadOnlyList<CadPoint> pointList)
-        {
-        }
-
-        public virtual void DrawLineScrn(int pen, CadPoint a, CadPoint b)
-        {
-        }
-
-        public virtual void DrawLineScrn(int pen, double x1, double y1, double x2, double y2)
-        {
-        }
-
-        public virtual void DrawRectangleScrn(int pen, double x0, double y0, double x1, double y1)
         {
         }
 
@@ -135,23 +107,7 @@ namespace Plotter
             DrawLine(pen, tp1, pa);
         }
 
-        public virtual void DrawCircleScrn(int pen, CadPoint cp, CadPoint p1)
-        {
-        }
-
-        public virtual void DrawCircleScrn(int pen, CadPoint cp, double r)
-        {
-        }
-
         public virtual void DrawText(int font, int brush, CadPoint a, string s)
-        {
-        }
-
-        public virtual void DrawTextScrn(int font, int brush, CadPoint a, string s)
-        {
-        }
-
-        public virtual void DrawTextScrn(int font, int brush, double x, double y, string s)
         {
         }
 
@@ -276,6 +232,11 @@ namespace Plotter
 
                 t += d;
             }
+        }
+
+
+        public virtual void DrawCursorScrn(CadPoint pp)
+        {
         }
     }
 }

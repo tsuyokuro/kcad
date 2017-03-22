@@ -404,7 +404,7 @@ namespace Plotter
 
             if ((mx.Flag & MarkPoint.X_MATCH) != 0)
             {
-                dc.Drawing.DrawHighlitePoint(mx.Point);
+                dc.Drawing.DrawHighlightPoint(mx.Point);
 
                 tp = dc.CadPointToUnitPoint(mx.Point);
 
@@ -418,7 +418,7 @@ namespace Plotter
 
             if ((my.Flag & MarkPoint.Y_MATCH) != 0)
             {
-                dc.Drawing.DrawHighlitePoint(my.Point);
+                dc.Drawing.DrawHighlightPoint(my.Point);
 
                 tp = dc.CadPointToUnitPoint(my.Point);
 

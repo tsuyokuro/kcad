@@ -100,7 +100,7 @@ namespace Plotter
                     dc.Drawing.DrawCross(pen, a, 2);
                     if (a.Selected)
                     {
-                        dc.Drawing.DrawHighlitePoint(a);
+                        dc.Drawing.DrawHighlightPoint(a);
                     }
 
                     return;

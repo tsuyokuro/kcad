@@ -40,24 +40,8 @@ namespace Plotter
 
         public override void DrawSelected(CadLayer layer)
         {
-            DrawSelected(layer.FigureList);
-            DrawSelected(layer.RelPointList);
-        }
-
-        public override void DrawSelected(IReadOnlyList<CadFigure> list)
-        {
-            foreach (CadFigure fig in list)
-            {
-                fig.drawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
-            }
-        }
-
-        public override void DrawSelected(List<CadRelativePoint> list)
-        {
-            foreach (CadRelativePoint relp in list)
-            {
-                relp.drawSelected(DC);
-            }
+            DrawSelectedFigurePoint(layer.FigureList);
+            DrawSelectedRelPoint(layer.RelPointList);
         }
 
         #region "Draw base"
@@ -101,6 +85,289 @@ namespace Plotter
 
             drawAxisDir();
         }
+
+        public override void DrawPageFrame()
+        {
+            CadPoint pt = default(CadPoint);
+
+            // p0
+            pt.x = -DC.PageSize.Width / 2;
+            pt.y = DC.PageSize.Height / 2;
+            pt.z = 0;
+
+            CadPoint p0 = default(CadPoint);
+            p0.x = pt.x * DC.UnitPerMilli * DC.DeviceScaleX;
+            p0.y = pt.y * DC.UnitPerMilli * DC.DeviceScaleY;
+
+            p0 += DC.ViewOrg;
+
+            // p1
+            pt.x = DC.PageSize.Width / 2;
+            pt.y = -DC.PageSize.Height / 2;
+            pt.z = 0;
+
+            CadPoint p1 = default(CadPoint);
+            p1.x = pt.x * DC.UnitPerMilli * DC.DeviceScaleX;
+            p1.y = pt.y * DC.UnitPerMilli * DC.DeviceScaleY;
+
+            p1 += DC.ViewOrg;
+
+            DrawRectScrn(DrawTools.PEN_PAGE_FRAME, p0, p1);
+        }
+        #endregion
+
+        #region "Draw marker"
+        public override void DrawHighlightPoint(CadPoint pt)
+        {
+            CadPoint pp = DC.CadPointToUnitPoint(pt);
+
+            DrawCircleScrn(DrawTools.PEN_POINT_HIGHTLITE, pp, 3);
+        }
+
+        public override void DrawSelectedPoint(CadPoint pt)
+        {
+            CadPoint pp = DC.CadPointToUnitPoint(pt);
+
+            int size = 3;
+
+            DrawRectangleScrn(
+                DrawTools.PEN_SLECT_POINT,
+                (int)pp.x - size, (int)pp.y - size,
+                (int)pp.x + size, (int)pp.y + size
+                );
+        }
+
+        public override void DrawLastPointMarker(int pen, CadPoint p)
+        {
+            DrawCross(pen, p, 5);
+        }
+        #endregion
+
+        #region "Draw cursor"
+
+        public override void DrawCursor(CadPoint pt)
+        {
+            int pen = DrawTools.PEN_CURSOR;
+            CadPoint pp = DC.CadPointToUnitPoint(pt);
+
+            //double size = 16;
+            double size = Math.Max(DC.ViewWidth, DC.ViewHeight);
+
+            DrawLineScrn(pen, pp.x - size, pp.y, pp.x + size, pp.y);
+            DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
+        }
+        #endregion
+
+        #region "draw primitive"
+        public override void DrawRect(int pen, CadPoint p0, CadPoint p1)
+        {
+            CadPoint pp0 = DC.CadPointToUnitPoint(p0);
+            CadPoint pp1 = DC.CadPointToUnitPoint(p1);
+
+            DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
+        }
+
+        public override void DrawCross(int pen, CadPoint p, int size)
+        {
+            CadPoint a = DC.CadPointToUnitPoint(p);
+
+            DrawLineScrn(pen, a.x - size, a.y + 0, a.x + size, a.y + 0);
+            DrawLineScrn(pen, a.x + 0, a.y + size, a.x + 0, a.y - size);
+        }
+        #endregion
+
+        public override void DrawLine(int pen, CadPoint a, CadPoint b)
+        {
+            if (DC.graphics == null) return;
+            if (DC.Pen(pen) == null) return;
+
+            CadPoint pa = DC.CadPointToUnitPoint(a);
+            CadPoint pb = DC.CadPointToUnitPoint(b);
+
+            DC.graphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
+        }
+
+        public override void DrawFace(int pen, IReadOnlyList<CadPoint> pointList)
+        {
+            int cnt = pointList.Count;
+            if (cnt == 0)
+            {
+                return;
+            }
+
+            CadPoint p0 = pointList[0];
+            CadPoint p1;
+
+            int i;
+            for (i = 1; i < cnt; i++)
+            {
+                p1 = pointList[i];
+                DrawLine(pen, p0, p1);
+                p0 = p1;
+            }
+
+            p1 = pointList[0];
+            DrawLine(pen, p0, p1);
+        }
+
+        public override void DrawText(int font, int brush, CadPoint a, string s)
+        {
+            if (DC.graphics == null) return;
+            if (DC.Brush(brush) == null) return;
+            if (DC.Font(font) == null) return;
+
+            CadPoint pa = DC.CadPointToUnitPoint(a);
+            DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), (int)pa.x, (int)pa.y);
+        }
+
+        public override void DrawCursorScrn(CadPoint pp)
+        {
+            int pen = DrawTools.PEN_CURSOR;
+            int pen2 = DrawTools.PEN_CURSOR2;
+
+            double size = 16;
+            double size2 = Math.Max(DC.ViewWidth, DC.ViewHeight);
+
+            DrawLineScrn(pen2, pp.x - size2, pp.y, pp.x + size2, pp.y);
+            DrawLineScrn(pen2, pp.x, pp.y - size2, pp.x, pp.y + size2);
+
+            DrawLineScrn(pen, pp.x - size, pp.y, pp.x + size, pp.y);
+            DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
+        }
+
+
+        private void DrawSelectedFigurePoint(IReadOnlyList<CadFigure> list)
+        {
+            foreach (CadFigure fig in list)
+            {
+                fig.drawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
+            }
+        }
+
+        private void DrawSelectedRelPoint(List<CadRelativePoint> list)
+        {
+            foreach (CadRelativePoint relp in list)
+            {
+                relp.drawSelected(DC);
+            }
+        }
+
+        private void DrawRectScrn(int pen, CadPoint pp0, CadPoint pp1)
+        {
+            DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
+        }
+
+        private void DrawLineScrn(int pen, CadPoint a, CadPoint b)
+        {
+            if (DC.graphics == null) return;
+            if (DC.Pen(pen) == null) return;
+
+            DC.graphics.DrawLine(DC.Pen(pen), (int)a.x, (int)a.y, (int)b.x, (int)b.y);
+        }
+
+        private void DrawLineScrn(int pen, double x1, double y1, double x2, double y2)
+        {
+            if (DC.graphics == null) return;
+            if (DC.Pen(pen) == null) return;
+
+            DC.graphics.DrawLine(DC.Pen(pen), (int)x1, (int)y1, (int)x2, (int)y2);
+        }
+
+        private void DrawRectangleScrn(int pen, double x0, double y0, double x1, double y1)
+        {
+            if (DC.graphics == null) return;
+            if (DC.Pen(pen) == null) return;
+
+            int lx = (int)x0;
+            int rx = (int)x1;
+
+            int ty = (int)y0;
+            int by = (int)y1;
+
+            if (x0 > x1)
+            {
+                lx = (int)x1;
+                rx = (int)x0;
+            }
+
+            if (y0 > y1)
+            {
+                ty = (int)y1;
+                by = (int)y0;
+            }
+
+            int dx = rx - lx;
+            int dy = by - ty;
+
+            DC.graphics.DrawRectangle(DC.Pen(pen), lx, ty, dx, dy);
+        }
+
+        private void DrawCircleScrn(int pen, CadPoint cp, CadPoint p1)
+        {
+            if (DC.graphics == null) return;
+            if (DC.Pen(pen) == null) return;
+
+            double r = CadUtil.segNorm(cp, p1);
+            DrawCircleScrn(pen, cp, r);
+        }
+
+        private void DrawCircleScrn(int pen, CadPoint cp, double r)
+        {
+            if (DC.graphics == null) return;
+            if (DC.Pen(pen) == null) return;
+
+            DC.graphics.DrawEllipse(
+                DC.Pen(pen), (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
+        }
+
+        private void DrawTextScrn(int font, int brush, CadPoint a, string s)
+        {
+            if (DC.graphics == null) return;
+            if (DC.Brush(brush) == null) return;
+            if (DC.Font(font) == null) return;
+
+            DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), (int)a.x, (int)a.y);
+        }
+
+        private void DrawTextScrn(int font, int brush, double x, double y, string s)
+        {
+            if (DC.graphics == null) return;
+            if (DC.Brush(brush) == null) return;
+            if (DC.Font(font) == null) return;
+
+            DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), (int)x, (int)y);
+        }
+
+
+        private void FillRectangleScrn(int brush, double x0, double y0, double x1, double y1)
+        {
+            if (DC.graphics == null) return;
+            if (DC.Brush(brush) == null) return;
+
+            int lx = (int)x0;
+            int rx = (int)x1;
+
+            int ty = (int)y0;
+            int by = (int)y1;
+
+            if (x0 > x1)
+            {
+                lx = (int)x1;
+                rx = (int)x0;
+            }
+
+            if (y0 > y1)
+            {
+                ty = (int)y1;
+                by = (int)y0;
+            }
+
+            int dx = rx - lx;
+            int dy = by - ty;
+
+            DC.graphics.FillRectangle(DC.Brush(brush), lx, ty, dx, dy);
+        }
+
 
         private void drawAxisDir()
         {
@@ -194,275 +461,6 @@ namespace Plotter
                 DrawLineScrn(DrawTools.PEN_AXIS, vp0, vp1);
             }
             DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, vp1.x - 8, vp1.y, "z");
-        }
-
-        public override void DrawPageFrame()
-        {
-            CadPoint pt = default(CadPoint);
-
-            // p0
-            pt.x = -DC.PageSize.Width / 2;
-            pt.y = DC.PageSize.Height / 2;
-            pt.z = 0;
-
-            CadPoint p0 = default(CadPoint);
-            p0.x = pt.x * DC.UnitPerMilli * DC.DeviceScaleX;
-            p0.y = pt.y * DC.UnitPerMilli * DC.DeviceScaleY;
-
-            p0 += DC.ViewOrg;
-
-            // p1
-            pt.x = DC.PageSize.Width / 2;
-            pt.y = -DC.PageSize.Height / 2;
-            pt.z = 0;
-
-            CadPoint p1 = default(CadPoint);
-            p1.x = pt.x * DC.UnitPerMilli * DC.DeviceScaleX;
-            p1.y = pt.y * DC.UnitPerMilli * DC.DeviceScaleY;
-
-            p1 += DC.ViewOrg;
-
-            DrawRectScrn(DrawTools.PEN_PAGE_FRAME, p0, p1);
-        }
-        #endregion
-
-        #region "Draw marker"
-        public override void DrawHighlitePoint(CadPoint pt)
-        {
-            CadPoint pp = DC.CadPointToUnitPoint(pt);
-
-            DrawCircleScrn(DrawTools.PEN_POINT_HIGHTLITE, pp, 3);
-        }
-
-        public override void DrawSelectedPoint(CadPoint pt)
-        {
-            CadPoint pp = DC.CadPointToUnitPoint(pt);
-
-            int size = 3;
-
-            DrawRectangleScrn(
-                DrawTools.PEN_SLECT_POINT,
-                (int)pp.x - size, (int)pp.y - size,
-                (int)pp.x + size, (int)pp.y + size
-                );
-        }
-
-        public override void DrawLastPointMarker(int pen, CadPoint p)
-        {
-            DrawCross(pen, p, 5);
-        }
-        #endregion
-
-        #region "Draw cursor"
-
-        public override void DrawCursor(CadPoint pt)
-        {
-            int pen = DrawTools.PEN_CURSOR;
-            CadPoint pp = DC.CadPointToUnitPoint(pt);
-
-            //double size = 16;
-            double size = Math.Max(DC.ViewWidth, DC.ViewHeight);
-
-            DrawLineScrn(pen, pp.x - size, pp.y, pp.x + size, pp.y);
-            DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
-        }
-
-        public override void DrawCursorScrn(CadPoint pp)
-        {
-            int pen = DrawTools.PEN_CURSOR;
-            int pen2 = DrawTools.PEN_CURSOR2;
-
-            double size = 16;
-            double size2 = Math.Max(DC.ViewWidth, DC.ViewHeight);
-
-            DrawLineScrn(pen2, pp.x - size2, pp.y, pp.x + size2, pp.y);
-            DrawLineScrn(pen2, pp.x, pp.y - size2, pp.x, pp.y + size2);
-
-            DrawLineScrn(pen, pp.x - size, pp.y, pp.x + size, pp.y);
-            DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
-        }
-        #endregion
-
-        #region "draw primitive"
-        public override void DrawRect(int pen, CadPoint p0, CadPoint p1)
-        {
-            CadPoint pp0 = DC.CadPointToUnitPoint(p0);
-            CadPoint pp1 = DC.CadPointToUnitPoint(p1);
-
-            DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
-        }
-
-        public override void DrawRectScrn(int pen, CadPoint pp0, CadPoint pp1)
-        {
-            DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
-        }
-
-        public override void DrawCross(int pen, CadPoint p, int size)
-        {
-            CadPoint a = DC.CadPointToUnitPoint(p);
-
-            DrawLineScrn(pen, a.x - size, a.y + 0, a.x + size, a.y + 0);
-            DrawLineScrn(pen, a.x + 0, a.y + size, a.x + 0, a.y - size);
-        }
-        #endregion
-
-
-
-        public override void DrawLine(int pen, CadPoint a, CadPoint b)
-        {
-            if (DC.graphics == null) return;
-            if (DC.Pen(pen) == null) return;
-
-            CadPoint pa = DC.CadPointToUnitPoint(a);
-            CadPoint pb = DC.CadPointToUnitPoint(b);
-
-            DC.graphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
-        }
-
-        public override void DrawFace(int pen, IReadOnlyList<CadPoint> pointList)
-        {
-            int cnt = pointList.Count;
-            if (cnt == 0)
-            {
-                return;
-            }
-
-            CadPoint p0 = pointList[0];
-            CadPoint p1;
-
-            int i;
-            for (i = 1; i < cnt; i++)
-            {
-                p1 = pointList[i];
-                DrawLine(pen, p0, p1);
-                p0 = p1;
-            }
-
-            p1 = pointList[0];
-            DrawLine(pen, p0, p1);
-        }
-
-        public override void DrawText(int font, int brush, CadPoint a, string s)
-        {
-            if (DC.graphics == null) return;
-            if (DC.Brush(brush) == null) return;
-            if (DC.Font(font) == null) return;
-
-            CadPoint pa = DC.CadPointToUnitPoint(a);
-            DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), (int)pa.x, (int)pa.y);
-        }
-
-
-
-        public override void DrawLineScrn(int pen, CadPoint a, CadPoint b)
-        {
-            if (DC.graphics == null) return;
-            if (DC.Pen(pen) == null) return;
-
-            DC.graphics.DrawLine(DC.Pen(pen), (int)a.x, (int)a.y, (int)b.x, (int)b.y);
-        }
-
-        public override void DrawLineScrn(int pen, double x1, double y1, double x2, double y2)
-        {
-            if (DC.graphics == null) return;
-            if (DC.Pen(pen) == null) return;
-
-            DC.graphics.DrawLine(DC.Pen(pen), (int)x1, (int)y1, (int)x2, (int)y2);
-        }
-
-        public override void DrawRectangleScrn(int pen, double x0, double y0, double x1, double y1)
-        {
-            if (DC.graphics == null) return;
-            if (DC.Pen(pen) == null) return;
-
-            int lx = (int)x0;
-            int rx = (int)x1;
-
-            int ty = (int)y0;
-            int by = (int)y1;
-
-            if (x0 > x1)
-            {
-                lx = (int)x1;
-                rx = (int)x0;
-            }
-
-            if (y0 > y1)
-            {
-                ty = (int)y1;
-                by = (int)y0;
-            }
-
-            int dx = rx - lx;
-            int dy = by - ty;
-
-            DC.graphics.DrawRectangle(DC.Pen(pen), lx, ty, dx, dy);
-        }
-
-        public override void DrawCircleScrn(int pen, CadPoint cp, CadPoint p1)
-        {
-            if (DC.graphics == null) return;
-            if (DC.Pen(pen) == null) return;
-
-            double r = CadUtil.segNorm(cp, p1);
-            DrawCircleScrn(pen, cp, r);
-        }
-
-        public  override void DrawCircleScrn(int pen, CadPoint cp, double r)
-        {
-            if (DC.graphics == null) return;
-            if (DC.Pen(pen) == null) return;
-
-            DC.graphics.DrawEllipse(
-                DC.Pen(pen), (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
-        }
-
-        public override void DrawTextScrn(int font, int brush, CadPoint a, string s)
-        {
-            if (DC.graphics == null) return;
-            if (DC.Brush(brush) == null) return;
-            if (DC.Font(font) == null) return;
-
-            DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), (int)a.x, (int)a.y);
-        }
-
-        public override void DrawTextScrn(int font, int brush, double x, double y, string s)
-        {
-            if (DC.graphics == null) return;
-            if (DC.Brush(brush) == null) return;
-            if (DC.Font(font) == null) return;
-
-            DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), (int)x, (int)y);
-        }
-
-
-        private void FillRectangleScrn(int brush, double x0, double y0, double x1, double y1)
-        {
-            if (DC.graphics == null) return;
-            if (DC.Brush(brush) == null) return;
-
-            int lx = (int)x0;
-            int rx = (int)x1;
-
-            int ty = (int)y0;
-            int by = (int)y1;
-
-            if (x0 > x1)
-            {
-                lx = (int)x1;
-                rx = (int)x0;
-            }
-
-            if (y0 > y1)
-            {
-                ty = (int)y1;
-                by = (int)y0;
-            }
-
-            int dx = rx - lx;
-            int dy = by - ty;
-
-            DC.graphics.FillRectangle(DC.Brush(brush), lx, ty, dx, dy);
         }
     }
 }
