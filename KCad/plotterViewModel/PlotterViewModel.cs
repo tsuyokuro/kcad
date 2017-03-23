@@ -137,7 +137,7 @@ namespace Plotter
         {
             set
             {
-                bool changed = UpdateViewMode(value);
+                bool changed = ChangeViewMode(value);
 
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewMode)));
             }
@@ -165,7 +165,7 @@ namespace Plotter
                 else
                 {
                     value.SelectionChanged += LayerListSelectionChanged;
-                    int idx = getLayerListIndex(mController.CurrentLayer.ID);
+                    int idx = GetLayerListIndex(mController.CurrentLayer.ID);
                     value.SelectedIndex = idx;
                 }
 
@@ -208,8 +208,8 @@ namespace Plotter
 
         public PlotterViewModel(WindowsFormsHost viewHost)
         {
-            initCommandMap();
-            initKeyMap();
+            InitCommandMap();
+            InitKeyMap();
 
             mViewHost = viewHost;
 
@@ -261,7 +261,7 @@ namespace Plotter
         }
 
         #region Maps
-        private void initCommandMap()
+        private void InitCommandMap()
         {
             commandMap = new Dictionary<string, Action>{
                 { "load", load },
@@ -284,7 +284,7 @@ namespace Plotter
             };
         }
 
-        private void initKeyMap()
+        private void InitKeyMap()
         {
             keyMap = new Dictionary<string, Action>
             {
@@ -307,7 +307,7 @@ namespace Plotter
         {
             if (redraw)
             {
-                draw(true);
+                DrawAll();
             }
         }
 
@@ -338,12 +338,12 @@ namespace Plotter
 
             if (mLayerListView != null)
             {
-                int idx = getLayerListIndex(layerListInfo.CurrentID);
+                int idx = GetLayerListIndex(layerListInfo.CurrentID);
                 mLayerListView.SelectedIndex = idx;
             }
         }
 
-        private int getLayerListIndex(uint id)
+        private int GetLayerListIndex(uint id)
         {
             int idx = 0;
             foreach (LayerHolder layer in LayerList)
@@ -371,7 +371,7 @@ namespace Plotter
         public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             LayerHolder lh = (LayerHolder)sender;
-            draw(clearFlag:true);
+            Draw(clearFlag:true);
         }
 
         public void LayerListSelectionChanged(object sender, SelectionChangedEventArgs args)
@@ -458,7 +458,7 @@ namespace Plotter
 
                 case "remove_layer":
                     mController.RemoveLayer(mController.CurrentLayer.ID);
-                    draw();
+                    Draw();
                     break;
             }
         }
@@ -475,37 +475,45 @@ namespace Plotter
         {
             mController.LoadFromJsonFile(fname);
 
-            DrawContext dc = mPlotterView.startDraw();
+            DrawContext dc = mPlotterView.StartDraw();
 
             mController.Clear(dc);
 
             mController.Draw(dc);
 
-            mPlotterView.endDraw();
+            mPlotterView.EndDraw();
         }
         #endregion
 
 
         #region helper
-        private DrawContext startDraw()
+        private DrawContext StartDraw()
         {
-            return mPlotterView.startDraw();
+            return mPlotterView.StartDraw();
         }
 
-        private void endDraw()
+        private void EndDraw()
         {
-            mPlotterView.endDraw();
+            mPlotterView.EndDraw();
         }
 
-        private void draw(bool clearFlag=true)
+        private void Draw(bool clearFlag=true)
         {
-            DrawContext dc = mPlotterView.startDraw();
+            DrawContext dc = mPlotterView.StartDraw();
             if (clearFlag)
             {
                 mController.Clear(dc);
             }
             mController.Draw(dc);
-            mPlotterView.endDraw();
+            mPlotterView.EndDraw();
+        }
+
+        private void DrawAll()
+        {
+            DrawContext dc = mPlotterView.StartDraw();
+            mController.Clear(dc);
+            mController.DrawAll(dc);
+            mPlotterView.EndDraw();
         }
         #endregion
 
@@ -513,107 +521,107 @@ namespace Plotter
         #region Actions
         public void undo()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.undo(dc);
-            endDraw();
+            EndDraw();
         }
 
         public void redo()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.redo(dc);
-            endDraw();
+            EndDraw();
         }
 
         public void remove()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.remove(dc);
-            endDraw();
+            EndDraw();
         }
 
         public void separateFigure()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.separateFigures(dc);
-            endDraw();
+            EndDraw();
         }
 
         public void bondFigure()
         {
-            DrawContext g = startDraw();
+            DrawContext g = StartDraw();
             mController.bondFigures(g);
-            endDraw();
+            EndDraw();
         }
 
         public void toBezier()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.toBezier(dc);
-            endDraw();
+            EndDraw();
         }
 
         public void cutSegment()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.cutSegment(dc);
-            endDraw();
+            EndDraw();
         }
 
         public void addCenterPoint()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.addCenterPoint(dc);
-            endDraw();
+            EndDraw();
         }
 
         public void ToLoop()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.SetLoop(dc, true);
-            endDraw();
+            EndDraw();
         }
 
         public void ToUnloop()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.SetLoop(dc, false);
-            endDraw();
+            EndDraw();
         }
 
         public void FlipX()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.FlipX(dc);
-            endDraw();
+            EndDraw();
         }
 
         public void FlipY()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.FlipY(dc);
-            endDraw();
+            EndDraw();
         }
 
         public void FlipZ()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.FlipZ(dc);
-            endDraw();
+            EndDraw();
         }
 
         public void Copy()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.Copy(dc);
-            endDraw();
+            EndDraw();
         }
 
         public void Paste()
         {
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
             mController.Paste(dc);
-            endDraw();
+            EndDraw();
         }
 
         public void load()
@@ -704,7 +712,7 @@ namespace Plotter
         {
             MessageOut(s);
             mController.ScriptEnv.command(s);
-            draw(true);
+            Draw(true);
         }
 
         public void menuCommand(string tag)
@@ -715,9 +723,9 @@ namespace Plotter
 
         public void debugCommand(string s)
         {
-            DrawContext dc = mPlotterView.startDraw();
+            DrawContext dc = mPlotterView.StartDraw();
             mController.debugCommand(dc, s);
-            mPlotterView.endDraw();
+            mPlotterView.EndDraw();
         }
         #endregion
 
@@ -745,22 +753,22 @@ namespace Plotter
 
             if (mFigureType != CadFigure.Types.NONE)
             {
-                DrawContext dc = mPlotterView.startDraw();
+                DrawContext dc = mPlotterView.StartDraw();
                 mController.startCreateFigure(mFigureType, dc);
-                mPlotterView.endDraw();
+                mPlotterView.EndDraw();
             }
             else if (prev != CadFigure.Types.NONE)
             {
-                DrawContext dc = mPlotterView.startDraw();
+                DrawContext dc = mPlotterView.StartDraw();
                 mController.endCreateFigure(dc);
                 mController.Draw(dc);
-                mPlotterView.endDraw();
+                mPlotterView.EndDraw();
             }
 
             return true;
         }
 
-        private bool UpdateViewMode(ViewModes newMode)
+        private bool ChangeViewMode(ViewModes newMode)
         {
             if (mViewMode == newMode)
             {
@@ -774,26 +782,26 @@ namespace Plotter
                 case ViewModes.XY:
                     SetView(plotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitZ, Vector3d.UnitY);
-                    draw();
+                    DrawAll();
                     break;
 
                 case ViewModes.XZ:
                     SetView(plotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitY, -Vector3d.UnitZ);
-                    draw();
+                    DrawAll();
                     break;
 
                 case ViewModes.ZY:
                     SetView(plotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitX, Vector3d.UnitY);
-                    draw();
+                    DrawAll();
                     break;
 
                 case ViewModes.FREE:
                     plotterViewGL1.DrawContext.SetUnitPerMilli(plotterView1.DrawContext.UnitPerMilli);
                     SetView(plotterViewGL1);
 
-                    draw();
+                    DrawAll();
                     break;
             }
 

@@ -118,7 +118,7 @@ namespace Plotter
             switch (State)
             {
                 case States.SELECT:
-                    Draw(dc);
+                    //Draw(dc);
 
                     //double d = dc.pixelDeltaToCadDelta(SnapRange);
 
@@ -230,7 +230,9 @@ namespace Plotter
                         FreeDownPoint = mObjDownPoint.Value;
                     }
 
-                    DrawSelectedItems(dc);
+                    //DrawSelectedItems(dc);
+                    Clear(dc);
+                    DrawAll(dc);
 
                     return;
 

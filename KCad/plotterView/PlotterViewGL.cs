@@ -57,49 +57,49 @@ namespace Plotter
 
         private PlotterViewGL(GraphicsMode mode) : base(mode)
         {
-            Load += onLoad;
-            Resize += onResize;
-            Paint += onPaint;
-            MouseMove += onMouseMove;
-            MouseDown += onMouseDown;
-            MouseUp += onMouseUp;
+            Load += OnLoad;
+            Resize += OnResize;
+            Paint += OnPaint;
+            MouseMove += OnMouseMove;
+            MouseDown += OnMouseDown;
+            MouseUp += OnMouseUp;
             //SwapBuffers();
         }
 
-        private void onMouseUp(object sender, MouseEventArgs e)
+        private void OnMouseUp(object sender, MouseEventArgs e)
         {
             DownButton = MouseButtons.None;
 
-            startDraw();
+            StartDraw();
 
             mController.Mouse.up(mDrawContext, e.Button, e.X, e.Y);
 
-            endDraw();
+            EndDraw();
         }
 
-        private void onMouseDown(object sender, MouseEventArgs e)
+        private void OnMouseDown(object sender, MouseEventArgs e)
         {
             PrevMousePos.set(e.X, e.Y, 0);
             DownButton = e.Button;
 
             if (DownButton != MouseButtons.Middle)
             {
-                startDraw();
+                StartDraw();
 
                 mController.Mouse.down(mDrawContext, e.Button, e.X, e.Y);
 
-                endDraw();
+                EndDraw();
             }
         }
 
-        private void onLoad(object sender, EventArgs e)
+        private void OnLoad(object sender, EventArgs e)
         {
             GL.ClearColor(Color4.Black);
             GL.Enable(EnableCap.DepthTest);
             SwapBuffers();
         }
 
-        private void onMouseMove(object sender, MouseEventArgs e)
+        private void OnMouseMove(object sender, MouseEventArgs e)
         {
             if (DownButton == MouseButtons.Middle)
             {
@@ -117,41 +117,41 @@ namespace Plotter
 
                 mDrawContext.RotateEyePoint(prev, current);
 
-                startDraw();
+                StartDraw();
                 mController.Clear(mDrawContext);
-                mController.Draw(mDrawContext);
-                endDraw();
+                mController.DrawAll(mDrawContext);
+                EndDraw();
 
                 PrevMousePos = t;
             }
         }
 
-        private void onPaint(object sender, PaintEventArgs e)
+        private void OnPaint(object sender, PaintEventArgs e)
         {
             //SwapBuffers();
         }
 
-        private void onResize(object sender, EventArgs e)
+        private void OnResize(object sender, EventArgs e)
         {
             mDrawContext.SetViewSize(Size.Width, Size.Height);
 
             if (mController != null)
             {
-                DrawContext dc = startDraw();
+                DrawContext dc = StartDraw();
                 mController.Clear(dc);
                 mController.Draw(dc);
-                endDraw();
+                EndDraw();
             }
         }
 
-        public DrawContext startDraw()
+        public DrawContext StartDraw()
         {
             MakeCurrent();
             mDrawContext.StartDraw();
             return mDrawContext;
         }
 
-        public void endDraw()
+        public void EndDraw()
         {
             mDrawContext.EndDraw();
             SwapBuffers();

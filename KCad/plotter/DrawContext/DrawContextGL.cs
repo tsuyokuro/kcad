@@ -36,17 +36,17 @@ namespace Plotter
             LookAt = Vector3d.Zero;
             UpVector = Vector3d.UnitY;
 
-            ProjectionNear = 20.0;
+            ProjectionNear = 10.0;
             ProjectionFar = 10000.0;
 
 
             mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
             mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
 
-            LightPosition = new Vector4(200.0f, 150f, 500.0f, 0.0f);
-            LightAmbient = new Color4(0.2f, 0.2f, 0.2f, 1.0f);
-            LightDiffuse = new Color4(0.7f, 0.7f, 0.7f, 1.0f);
-            LightSpecular = new Color4(1.0f, 1.0f, 1.0f, 1.0f);
+            LightPosition = new Vector4(150f, 150f, 150f, 1.0f);
+            LightAmbient = new Color4(0.8f, 0.8f, 0.8f, 1.0f);
+            LightDiffuse = new Color4(0.2f, 0.2f, 0.2f, 1.0f);
+            LightSpecular = new Color4(0.0f, 0.0f, 0.0f, 0.0f);
 
             MaterialAmbient = new Color4(0.24725f, 0.1995f, 0.0225f, 1.0f);
             MaterialDiffuse = new Color4(0.75164f, 0.60648f, 0.22648f, 1.0f);

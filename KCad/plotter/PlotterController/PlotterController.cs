@@ -362,6 +362,12 @@ namespace Plotter
             dc.Drawing.Clear();
         }
 
+        public void DrawAll(DrawContext dc)
+        {
+            Draw(dc);
+            DrawSelectedItems(dc);
+        }
+
         public void Draw(DrawContext dc)
         {
             if (dc == null) return;

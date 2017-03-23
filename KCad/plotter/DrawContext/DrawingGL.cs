@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 
 using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 
@@ -81,7 +82,7 @@ namespace Plotter
 
             #region 表面
             GL.Begin(POLYGON);
-            GL.Color4(0.6f,0.6f,0.6f,1.0f);
+            GL.Color4(0.6f, 0.6f, 0.6f, 1.0f);
 
             if (normalValid)
             {
@@ -141,7 +142,7 @@ namespace Plotter
             CadPoint shift = (CadPoint)t;
 
             GL.Begin(LINE_STRIP);
- 
+
             foreach (CadPoint pt in pointList)
             {
                 p = (pt + shift) * DC.WoldScale;
@@ -202,6 +203,87 @@ namespace Plotter
 
             //DrawLine(DrawTools.PEN_AXIS, p0, p1);
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+        }
+
+        public override void DrawSelected(CadLayer layer)
+        {
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
+
+            GL.PushMatrix();
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+
+            Matrix4d view = Matrix4d.CreateOrthographicOffCenter(
+                                        0, DC.ViewWidth,
+                                        DC.ViewHeight, 0,
+                                        0, 1000);
+            GL.MultMatrix(ref view);
+
+            DrawSelectedFigurePoint(layer.FigureList);
+            DrawSelectedRelPoint(layer.RelPointList);
+            GL.PopMatrix();
+        }
+
+        public override void DrawSelectedPoint(CadPoint pt)
+        {
+            CadPoint p0 = DC.CadPointToUnitPoint(pt) - 2;
+            CadPoint p1 = p0 + 4;
+
+            DrawRect2D(p0.vector, p1.vector, DrawTools.PEN_SLECT_POINT);
+        }
+
+        private void DrawSelectedFigurePoint(IReadOnlyList<CadFigure> list)
+        {
+            foreach (CadFigure fig in list)
+            {
+                fig.drawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
+            }
+        }
+
+        private void DrawSelectedRelPoint(List<CadRelativePoint> list)
+        {
+            foreach (CadRelativePoint relp in list)
+            {
+                relp.drawSelected(DC);
+            }
+        }
+
+        private void DrawRect2D(Vector3d p0, Vector3d p1, int pen)
+        {
+            Vector3d v0 = Vector3d.Zero;
+            Vector3d v1 = Vector3d.Zero;
+            Vector3d v2 = Vector3d.Zero;
+            Vector3d v3 = Vector3d.Zero;
+
+            v0.X = System.Math.Max(p0.X, p1.X);
+            v0.Y = System.Math.Min(p0.Y, p1.Y);
+
+            v1.X = v0.X;
+            v1.Y = System.Math.Max(p0.Y, p1.Y);
+
+            v2.X = System.Math.Min(p0.X, p1.X);
+            v2.Y = v1.Y;
+
+            v3.X = v2.X;
+            v3.Y = v0.Y;
+
+            GLPen glpen = DC.Pen(pen);
+
+            GL.Begin(LINE_STRIP);
+
+            GL.Color4(glpen.Color);
+            GL.Vertex3(v0);
+            GL.Vertex3(v1);
+            GL.Vertex3(v2);
+            GL.Vertex3(v3);
+            GL.Vertex3(v0);
+
+            GL.End();
         }
     }
 }

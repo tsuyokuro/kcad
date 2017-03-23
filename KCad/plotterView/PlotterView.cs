@@ -136,20 +136,20 @@ namespace Plotter
                     firstSizeChange = false;
                 }
 
-                DrawContext dc = startDraw();
+                DrawContext dc = StartDraw();
                 mController.Clear(dc);
                 mController.Draw(dc);
-                endDraw();
+                EndDraw();
             }
         }
 
-        public DrawContext startDraw()
+        public DrawContext StartDraw()
         {
             mDrawContext.StartDraw(mImage);
             return mDrawContext;
         }
 
-        public void endDraw()
+        public void EndDraw()
         {
             mDrawContext.EndDraw();
             Image = mImage;
@@ -157,11 +157,11 @@ namespace Plotter
 
         private void mouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            DrawContext g = startDraw();
+            DrawContext g = StartDraw();
 
             mController.Mouse.pointerMoved(g, e.X, e.Y);
 
-            endDraw();
+            EndDraw();
         }
 
         private void mouseDown(Object sender, MouseEventArgs e)
@@ -175,29 +175,29 @@ namespace Plotter
                 }
             }
 
-            DrawContext dc = startDraw();
+            DrawContext dc = StartDraw();
 
             mController.Mouse.down(dc, e.Button, e.X, e.Y);
 
-            endDraw();
+            EndDraw();
         }
 
         private void mouseUp(Object sender, MouseEventArgs e)
         {
-            DrawContext g = startDraw();
+            DrawContext g = StartDraw();
 
             mController.Mouse.up(g, e.Button, e.X, e.Y);
 
-            endDraw();
+            EndDraw();
         }
 
         private void mouseWheel(object sender, MouseEventArgs e)
         {
-            DrawContext g = startDraw();
+            DrawContext g = StartDraw();
 
             mController.Mouse.wheel(g, e.X, e.Y, e.Delta);
 
-            endDraw();
+            EndDraw();
         }
 
         public void ShowContextMenu(PlotterController sender, PlotterController.StateInfo state, int x, int y)
@@ -233,15 +233,15 @@ namespace Plotter
         {
             if (sender == mMnItemClosePolyLines)
             {
-                DrawContext g = startDraw();
+                DrawContext g = StartDraw();
                 mController.closeFigure(g);
-                endDraw();
+                EndDraw();
             }
             else if (sender == mMnItemEndPolyLines || sender == mMnItemQuitRect)
             {
-                DrawContext g = startDraw();
+                DrawContext g = StartDraw();
                 mController.endCreateFigureState(g);
-                endDraw();
+                EndDraw();
 
             }
         }
