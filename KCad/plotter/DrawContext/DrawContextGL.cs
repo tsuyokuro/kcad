@@ -52,6 +52,8 @@ namespace Plotter
             MaterialDiffuse = new Color4(0.75164f, 0.60648f, 0.22648f, 1.0f);
             MaterialSpecular = new Color4(0.628281f, 0.555802f, 0.366065f, 1.0f);
             MaterialShininess = new Color4(51.4f, 51.4f, 51.4f, 1.0f);
+
+            RecalcViewDirFromCameraDirection();
         }
 
         public GLPen Pen(int id)

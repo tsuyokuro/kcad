@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.Integration;
 using System.Windows.Input;
-
+using System.Drawing;
 
 namespace Plotter
 {
@@ -264,9 +264,9 @@ namespace Plotter
         private void InitCommandMap()
         {
             commandMap = new Dictionary<string, Action>{
-                { "load", load },
-                { "save",save },
-                { "print",startPrint },
+                { "load", Load },
+                { "Save",Save },
+                { "print",StartPrint },
                 { "undo",undo },
                 { "redo",redo },
                 { "copy",Copy },
@@ -295,7 +295,7 @@ namespace Plotter
                 { "ctrl+v", Paste },
                 { "shift+insert", Paste },
                 { "delete", remove },
-                { "ctrl+s", save },
+                { "ctrl+s", Save },
             };
         }
         #endregion
@@ -624,7 +624,7 @@ namespace Plotter
             EndDraw();
         }
 
-        public void load()
+        public void Load()
         {
             System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -633,7 +633,7 @@ namespace Plotter
             }
         }
 
-        public void save()
+        public void Save()
         {
             System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -645,7 +645,7 @@ namespace Plotter
 
 
         #region "print"
-        public void startPrint()
+        public void StartPrint()
         {
             System.Drawing.Printing.PrintDocument pd =
                 new System.Drawing.Printing.PrintDocument();
@@ -653,7 +653,7 @@ namespace Plotter
 
             pd.DefaultPageSettings.Landscape = mPlotterView.DrawContext.PageSize.IsLandscape();
 
-            pd.PrintPage += printPage;
+            pd.PrintPage += PrintPage;
 
             System.Windows.Forms.PrintDialog pdlg = new System.Windows.Forms.PrintDialog();
 
@@ -665,13 +665,13 @@ namespace Plotter
             }
         }
 
-        private void printPage(object sender,
+        private void PrintPage(object sender,
             System.Drawing.Printing.PrintPageEventArgs e)
         {
-            drawPage(e.Graphics);
+            DrawPage(e.Graphics);
         }
 
-        private void drawPage(System.Drawing.Graphics g)
+        private void DrawPage(System.Drawing.Graphics g)
         {
             DrawContextGDI dc = new DrawContextGDI();
 
@@ -708,20 +708,20 @@ namespace Plotter
 
 
         #region Command handling
-        public void textCommand(string s)
+        public void TextCommand(string s)
         {
             MessageOut(s);
             mController.ScriptEnv.command(s);
             Draw(true);
         }
 
-        public void menuCommand(string tag)
+        public void MenuCommand(string tag)
         {
             Action action = commandMap[tag];
             action?.Invoke();
         }
 
-        public void debugCommand(string s)
+        public void DebugCommand(string s)
         {
             DrawContext dc = mPlotterView.StartDraw();
             mController.debugCommand(dc, s);
@@ -798,10 +798,12 @@ namespace Plotter
                     break;
 
                 case ViewModes.FREE:
-                    plotterViewGL1.DrawContext.SetUnitPerMilli(plotterView1.DrawContext.UnitPerMilli);
-                    SetView(plotterViewGL1);
-
-                    DrawAll();
+                    {
+                        plotterViewGL1.Size = plotterView1.Size;
+                        plotterViewGL1.DrawContext.SetUnitPerMilli(plotterView1.DrawContext.UnitPerMilli);
+                        SetView(plotterViewGL1);
+                        DrawAll();
+                    }
                     break;
             }
 

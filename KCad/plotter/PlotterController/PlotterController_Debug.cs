@@ -401,7 +401,7 @@ namespace Plotter
                 dout.println("}");
             }
 
-            else if (s == "save")
+            else if (s == "Save")
             {
                 IFormatter formatter = new BinaryFormatter();
                 Stream stream = new FileStream("f:\\work\\test.kcd", FileMode.Create, FileAccess.Write, FileShare.None);

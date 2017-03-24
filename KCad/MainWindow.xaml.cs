@@ -63,13 +63,13 @@ namespace KCad
             if (menuitem.Tag != null)
             {
                 var tag = menuitem.Tag.ToString();
-                ViewModel.menuCommand(tag);
+                ViewModel.MenuCommand(tag);
             }
         }
 
         private void debugCommand(String s)
         {
-            ViewModel.debugCommand(s);
+            ViewModel.DebugCommand(s);
         }
 
 
@@ -126,7 +126,7 @@ namespace KCad
             var s = textCommand.Text;
             if (s.Length > 0)
             {
-                ViewModel.textCommand(s);
+                ViewModel.TextCommand(s);
             }
         }
 
@@ -141,7 +141,7 @@ namespace KCad
                 var s = textCommand.Text;
                 if (s.Length > 0)
                 {
-                    ViewModel.textCommand(s);
+                    ViewModel.TextCommand(s);
                 }
 
                 viewContainer.Focus();
