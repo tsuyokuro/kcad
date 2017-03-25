@@ -366,6 +366,7 @@ namespace Plotter
         {
             Draw(dc);
             DrawSelectedItems(dc);
+            DrawSubItems(dc);
         }
 
         public void Draw(DrawContext dc)
@@ -397,8 +398,7 @@ namespace Plotter
 
         public void DrawSubItems(DrawContext dc)
         {
-            DrawSelectedItems(dc);
-
+            //DrawSelectedItems(dc);
             //Drawer.drawCursorScrn(dc, mSnapScrnPoint);
 
             dc.Drawing.DrawLastPointMarker(

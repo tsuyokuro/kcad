@@ -316,8 +316,7 @@ namespace Plotter
 
         private void RDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
-            Draw(dc);
-            DrawSubItems(dc);
+            DrawAll(dc);
 
             if (RequestContextMenu != null)
             {
@@ -380,7 +379,6 @@ namespace Plotter
             //mSnapScrnPoint.dump(DebugOut.Std);
 
             Clear(dc);
-            Draw(dc);
 
             mPointSearcher.clean();
             mPointSearcher.setRangePixel(dc, SnapRange);
@@ -484,8 +482,7 @@ namespace Plotter
                     }
             }
 
-            DrawSubItems(dc);
-
+            DrawAll(dc);
             CursorPosChanged(this, mSnapPoint);
         }
 

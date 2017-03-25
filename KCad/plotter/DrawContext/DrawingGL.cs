@@ -167,7 +167,6 @@ namespace Plotter
             double arrowLen = 12.0;
             double arrowW2 = 6.0;
 
-
             // X軸
             p0.x = -len;
             p0.y = 0;
@@ -177,7 +176,6 @@ namespace Plotter
             p1.y = 0;
             p1.z = 0;
 
-            //DrawLine(DrawTools.PEN_AXIS, p0, p1);
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
             // Y軸
@@ -189,7 +187,6 @@ namespace Plotter
             p1.y = len;
             p1.z = 0;
 
-            //DrawLine(DrawTools.PEN_AXIS, p0, p1);
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
             // Z軸
@@ -201,16 +198,28 @@ namespace Plotter
             p1.y = 0;
             p1.z = len;
 
-            //DrawLine(DrawTools.PEN_AXIS, p0, p1);
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
         }
 
-        public override void DrawSelected(CadLayer layer)
+        private void PushMatrixes()
         {
-            GL.Disable(EnableCap.Lighting);
-            GL.Disable(EnableCap.Light0);
-
+            GL.MatrixMode(MatrixMode.Projection);
             GL.PushMatrix();
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.PushMatrix();
+        }
+
+        private void PopMatrixes()
+        {
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.PopMatrix();
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.PopMatrix();
+        }
+
+        private void Start2D()
+        {
+            PushMatrixes();
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
@@ -223,10 +232,24 @@ namespace Plotter
                                         DC.ViewHeight, 0,
                                         0, 1000);
             GL.MultMatrix(ref view);
+        }
+
+        private void End2D()
+        {
+            PopMatrixes();
+        }
+
+        public override void DrawSelected(CadLayer layer)
+        {
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
+
+            Start2D();
 
             DrawSelectedFigurePoint(layer.FigureList);
             DrawSelectedRelPoint(layer.RelPointList);
-            GL.PopMatrix();
+
+            End2D();
         }
 
         public override void DrawSelectedPoint(CadPoint pt)
@@ -284,6 +307,33 @@ namespace Plotter
             GL.Vertex3(v0);
 
             GL.End();
+        }
+
+        public override void DrawLastPointMarker(int pen, CadPoint p)
+        {
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
+
+            double hs =5.0;
+
+            CadPoint px0 = p;
+            px0.x -= hs;
+            CadPoint px1 = p;
+            px1.x += hs;
+
+            CadPoint py0 = p;
+            py0.y -= hs;
+            CadPoint py1 = p;
+            py1.y += hs;
+
+            CadPoint pz0 = p;
+            pz0.z -= hs;
+            CadPoint pz1 = p;
+            pz1.z += hs;
+
+            DrawLine(pen, px0, px1);
+            DrawLine(pen, py0, py1);
+            DrawLine(pen, pz0, pz1);
         }
     }
 }
