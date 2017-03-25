@@ -24,6 +24,7 @@
                 <ResourceDictionary Source="ResDict/Images.xaml"/>
                 <ResourceDictionary Source="ResDict/ButtonStyle.xaml"/>
                 <ResourceDictionary Source="ResDict/ImageCheckBoxs.xaml"/>
+                <ResourceDictionary Source="ResDict/MenuStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
@@ -88,32 +89,11 @@
                 </StackPanel>
             </DataTemplate>
 
-
-            <!--<Style TargetType="Menu">
+            <!--<Style x:Key="DarkMenu" TargetType="Menu">
                 <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
                 <Setter Property="Background" Value="{StaticResource BGColor}"/>
-                <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="OverridesDefaultStyle" Value="True"/>
-                <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Menu}">
-                        <Border 
-                            Background="{StaticResource BGColor}"
-                            BorderBrush="Transparent"
-                            BorderThickness="1">
-                            <StackPanel ClipToBounds="True" Orientation="Horizontal" IsItemsHost="True"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-                </Setter>
             </Style>-->
-
-            <!--<Style TargetType="MenuItem">
-                <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
-                <Setter Property="Background" Value="{StaticResource BGColor}"/>
-                <Setter Property="BorderThickness" Value="0" />
-            </Style>-->
-
+            
         </ResourceDictionary>
 
     </Window.Resources>
@@ -125,13 +105,13 @@
             <RowDefinition Height="1000*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0">
-            <MenuItem Header="File">
+        <Menu Grid.Row="0" >
+            <MenuItem Header="File" >
                 <MenuItem Tag="load" Header="Load" Click="MenuItem_Click" />
                 <MenuItem Tag="save" Header="Save" Click="MenuItem_Click"/>
                 <MenuItem Tag="print" Header="Print" Click="MenuItem_Click"/>
             </MenuItem>
-            <MenuItem Header="Edit" Click="MenuItem_Click">
+            <MenuItem Header="Edit" >
                 <MenuItem Tag="undo" Header="Undo" Click="MenuItem_Click"/>
                 <MenuItem Tag="redo" Header="Redo" Click="MenuItem_Click"/>
                 <MenuItem Tag="copy" Header="Copy" Click="MenuItem_Click"/>
@@ -143,7 +123,7 @@
                 <MenuItem Tag="add_center_point" Header="Add crnter point" Click="MenuItem_Click"/>
                 <MenuItem Tag="to_loop" Header="To Loop lines" Click="MenuItem_Click"/>
                 <MenuItem Tag="to_unloop" Header="To Unloop lines" Click="MenuItem_Click"/>
-                <MenuItem Header="Mirror">
+                <MenuItem Header="Mirror" >
                     <MenuItem Tag="flip_x" Header="Flip X" Click="MenuItem_Click"/>
                     <MenuItem Tag="flip_y" Header="Flip Y" Click="MenuItem_Click"/>
                     <MenuItem Tag="flip_z" Header="Flip Z" Click="MenuItem_Click"/>
