@@ -6,9 +6,16 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
+    public enum TargetCoord : uint
+    {
+        X = 1,
+        Y = 2,
+        Z = 4,
+    }
+
     public static class CadConst
     {
-        public const double MaxValue = float.MaxValue;
-        public const double MinValue = float.MinValue;
+        public const double MaxValue = double.MaxValue;
+        public const double MinValue = double.MinValue;
     }
 }

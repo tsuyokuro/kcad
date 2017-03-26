@@ -123,7 +123,7 @@
                 <MenuItem Tag="add_center_point" Header="Add crnter point" Click="MenuItem_Click"/>
                 <MenuItem Tag="to_loop" Header="To Loop lines" Click="MenuItem_Click"/>
                 <MenuItem Tag="to_unloop" Header="To Unloop lines" Click="MenuItem_Click"/>
-                <MenuItem Header="Mirror" >
+                <MenuItem Header="Flip" >
                     <MenuItem Tag="flip_x" Header="Flip X" Click="MenuItem_Click"/>
                     <MenuItem Tag="flip_y" Header="Flip Y" Click="MenuItem_Click"/>
                     <MenuItem Tag="flip_z" Header="Flip Z" Click="MenuItem_Click"/>

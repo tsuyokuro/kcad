@@ -225,7 +225,8 @@ namespace Plotter
             return ret;
         }
 
-        public static Vector3d RepresentNormal(IReadOnlyList<CadPoint> points)
+        // 法線の代表値を求める
+        public static Vector3d RepresentativeNormal(IReadOnlyList<CadPoint> points)
         {
             if (points.Count < 3)
             {

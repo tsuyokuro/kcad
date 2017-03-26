@@ -312,7 +312,7 @@ namespace Plotter
             Draw(dc);
         }
 
-        public void FlipX(DrawContext dc)
+        public void Flip(DrawContext dc, TargetCoord coord)
         {
             CadPoint cp = GetSelectionCenter();
 
@@ -323,19 +323,42 @@ namespace Plotter
                 foreach (CadFigure fig in layer.FigureList)
                 {
                     int num = fig.PointList.Count;
+                    int selnum = 0;
 
-                    for (int i=0; i<num; i++)
+                    for (int i = 0; i < num; i++)
                     {
                         CadPoint p = fig.PointList[i];
 
                         if (p.Selected)
                         {
+                            selnum++;
+
                             CadPoint np = p;
-                            np.x -= cp.x;
-                            np.x = -np.x + cp.x;
+                            if ((coord & TargetCoord.X) != 0)
+                            {
+                                np.x -= cp.x;
+                                np.x = -np.x + cp.x;
+                            }
+
+                            if ((coord & TargetCoord.Y) != 0)
+                            {
+                                np.y -= cp.y;
+                                np.y = -np.y + cp.y;
+                            }
+
+                            if ((coord & TargetCoord.Z) != 0)
+                            {
+                                np.z -= cp.z;
+                                np.z = -np.z + cp.z;
+                            }
 
                             fig.setPointAt(i, np);
                         }
+                    }
+
+                    if (selnum == num)
+                    {
+                        fig.PointList.Reverse();
                     }
                 }
             }
@@ -343,75 +366,22 @@ namespace Plotter
             EndEdit();
 
             Clear(dc);
-            Draw(dc);
+            DrawAll(dc);
+        }
+
+        public void FlipX(DrawContext dc)
+        {
+            Flip(dc, TargetCoord.X);
         }
 
         public void FlipY(DrawContext dc)
         {
-            CadPoint cp = GetSelectionCenter();
-
-            StartEdit();
-
-            foreach (CadLayer layer in mDB.LayerList)
-            {
-                foreach (CadFigure fig in layer.FigureList)
-                {
-                    int num = fig.PointList.Count;
-
-                    for (int i = 0; i < num; i++)
-                    {
-                        CadPoint p = fig.PointList[i];
-
-                        if (p.Selected)
-                        {
-                            CadPoint np = p;
-                            np.y -= cp.y;
-                            np.y = -np.y + cp.y;
-
-                            fig.setPointAt(i, np);
-                        }
-                    }
-                }
-            }
-
-            EndEdit();
-
-            Clear(dc);
-            Draw(dc);
+            Flip(dc, TargetCoord.Y);
         }
 
         public void FlipZ(DrawContext dc)
         {
-            CadPoint cp = GetSelectionCenter();
-
-            StartEdit();
-
-            foreach (CadLayer layer in mDB.LayerList)
-            {
-                foreach (CadFigure fig in layer.FigureList)
-                {
-                    int num = fig.PointList.Count;
-
-                    for (int i = 0; i < num; i++)
-                    {
-                        CadPoint p = fig.PointList[i];
-
-                        if (p.Selected)
-                        {
-                            CadPoint np = p;
-                            np.z -= cp.z;
-                            np.z = -np.z + cp.z;
-
-                            fig.setPointAt(i, np);
-                        }
-                    }
-                }
-            }
-
-            EndEdit();
-
-            Clear(dc);
-            Draw(dc);
+            Flip(dc, TargetCoord.Z);
         }
     }
 }
