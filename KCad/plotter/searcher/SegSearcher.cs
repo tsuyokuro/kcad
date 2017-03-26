@@ -1,84 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Plotter
 {
-    public struct MarkSeg
-    {
-        public uint LayerID;
-        public uint FigureID
-        {
-            get
-            {
-                if (Figure == null)
-                {
-                    return 0;
-                }
-
-                return Figure.ID;
-            }
-        }
-
-        public CadFigure Figure;
-
-        public int PtIndexA;
-        public int PtIndexB;
-
-        public CadPoint pA;
-        public CadPoint pB;
-
-        public CadPoint CrossPoint;
-
-        public CadPoint CrossViewPoint;
-
-        public double Distance;
-
-        public void clean()
-        {
-            Figure = null;
-        }
-
-        public bool Valid { get { return FigureID != 0; } }
-
-        public void dump(DebugOut dout)
-        {
-            dout.println("MarkSeg {");
-            dout.Indent++;
-            dout.println("FigureID:" + FigureID.ToString());
-            dout.println("PtIndexA:" + PtIndexA.ToString());
-            dout.println("PtIndexB:" + PtIndexB.ToString());
-            dout.Indent--;
-            dout.println("}");
-        }
-
-        public bool update()
-        {
-            if (Figure == null)
-            {
-                return true;
-            }
-
-            if (PtIndexA >= Figure.PointList.Count)
-            {
-                return false;
-            }
-
-            if (PtIndexB >= Figure.PointList.Count)
-            {
-                return false;
-            }
-
-
-            pA = Figure.PointList[PtIndexA];
-            pB = Figure.PointList[PtIndexB];
-
-            return true;
-        }
-    }
-
     public class SegSearcher
     {
         private MarkSeg seg;
@@ -91,46 +16,46 @@ namespace Plotter
 
         private List<SelectItem> IgnoreList = null;
 
-        public void setRangePixel(DrawContext dc, int pixel)
+        public void SetRangePixel(DrawContext dc, int pixel)
         {
             //double d = dc.pixelsToMilli(pixel);
             mRange = pixel;
         }
 
-        public void clean()
+        public void Clean()
         {
             seg = default(MarkSeg);
         }
 
-        public void setTargetPoint(CadPoint p)
+        public void SetTargetPoint(CadPoint p)
         {
             TargetPoint = p;
         }
 
-        public void setIgnoreList(List<SelectItem> list)
+        public void SetIgnoreList(List<SelectItem> list)
         {
             IgnoreList = list;
         }
 
-        public void setIgnoreSeg(List<MarkSeg> segList)
+        public void SetIgnoreSeg(List<MarkSeg> segList)
         {
             IgnoreSegList = segList;
         }
 
-        public MarkSeg getMatch()
+        public MarkSeg GetMatch()
         {
             return seg;
         }
 
-        public void searchAllLayer(DrawContext dc, CadPoint p, CadObjectDB db)
+        public void SearchAllLayer(DrawContext dc, CadPoint p, CadObjectDB db)
         {
             TargetPoint = p;
-            searchAllLayer(dc, db);
+            SearchAllLayer(dc, db);
         }
 
-        public void searchAllLayer(DrawContext dc, CadObjectDB db)
+        public void SearchAllLayer(DrawContext dc, CadObjectDB db)
         {
-            search(dc, db, db.CurrentLayer);
+            Search(dc, db, db.CurrentLayer);
 
             foreach (CadLayer layer in db.LayerList)
             {
@@ -139,17 +64,17 @@ namespace Plotter
                     continue;
                 }
 
-                search(dc, db, layer);
+                Search(dc, db, layer);
             }
         }
 
-        public void search(DrawContext dc, CadPoint p, CadObjectDB db, CadLayer layer)
+        public void Search(DrawContext dc, CadPoint p, CadObjectDB db, CadLayer layer)
         {
             TargetPoint = p;
-            search(dc, db, layer);
+            Search(dc, db, layer);
         }
 
-        public void search(DrawContext dc, CadObjectDB db, CadLayer layer)
+        public void Search(DrawContext dc, CadObjectDB db, CadLayer layer)
         {
             if (layer == null)
             {
@@ -166,18 +91,18 @@ namespace Plotter
             IEnumerable<CadFigure> list = layer.FigureList;
             foreach (CadFigure fig in list.Reverse())
             {
-                checkFig(dc, layer, fig);
+                CheckFig(dc, layer, fig);
             }
         }
 
-        private void checkSeg(DrawContext dc, uint layerID, CadFigure fig, int idxA, int idxB, CadPoint a, CadPoint b)
+        private void CheckSeg(DrawContext dc, uint layerID, CadFigure fig, int idxA, int idxB, CadPoint a, CadPoint b)
         {
-            if (fig != null && isIgnore(fig.ID, idxA))
+            if (fig != null && IsIgnore(fig.ID, idxA))
             {
                 return;
             }
 
-            if (fig != null && isIgnore(fig.ID, idxB))
+            if (fig != null && IsIgnore(fig.ID, idxB))
             {
                 return;
             }
@@ -222,19 +147,19 @@ namespace Plotter
             }
         }
 
-        private void checkCircle(DrawContext dc, CadLayer layer, CadFigure fig)
+        private void CheckCircle(DrawContext dc, CadLayer layer, CadFigure fig)
         {
-            if (isIgnore(fig.ID, 0))
+            if (IsIgnore(fig.ID, 0))
             {
                 return;
             }
 
-            if (isIgnore(fig.ID, 1))
+            if (IsIgnore(fig.ID, 1))
             {
                 return;
             }
 
-            if (isIgnore(fig.ID, 2))
+            if (IsIgnore(fig.ID, 2))
             {
                 return;
             }
@@ -294,7 +219,7 @@ namespace Plotter
             }
         }
 
-        private void checkSegs(DrawContext dc, CadLayer layer, CadFigure fig)
+        private void CheckSegs(DrawContext dc, CadLayer layer, CadFigure fig)
         {
             IReadOnlyList<CadPoint> pl = fig.PointList;
 
@@ -332,13 +257,13 @@ namespace Plotter
                     continue;
                 }
 
-                if (isIgnoreSeg(fig.ID, idx))
+                if (IsIgnoreSeg(fig.ID, idx))
                 {
                     idx++;
                     continue;
                 }
 
-                checkSeg(dc, layer.ID, fig, ia, ib, a, b);
+                CheckSeg(dc, layer.ID, fig, ia, ib, a, b);
 
                 a = b;
 
@@ -350,28 +275,28 @@ namespace Plotter
             if (fig.Closed)
             {
                 b = pl[0];
-                checkSeg(dc, layer.ID, fig, pl.Count - 1, 0, a, b);
+                CheckSeg(dc, layer.ID, fig, pl.Count - 1, 0, a, b);
             }
         }
 
-        private void checkFig(DrawContext dc, CadLayer layer, CadFigure fig)
+        private void CheckFig(DrawContext dc, CadLayer layer, CadFigure fig)
         {
             switch (fig.Type)
             {
                 case CadFigure.Types.LINE:
                 case CadFigure.Types.POLY_LINES:
                 case CadFigure.Types.RECT:
-                    checkSegs(dc, layer, fig);
+                    CheckSegs(dc, layer, fig);
                     break;
                 case CadFigure.Types.CIRCLE:
-                    checkCircle(dc, layer, fig);
+                    CheckCircle(dc, layer, fig);
                     break;
                 default:
                     break;
             }
         }
 
-        private bool isIgnore(uint figId, int index)
+        private bool IsIgnore(uint figId, int index)
         {
             if (IgnoreList == null)
             {
@@ -389,7 +314,7 @@ namespace Plotter
             return false;
         }
 
-        private bool isIgnoreSeg(uint figId, int index)
+        private bool IsIgnoreSeg(uint figId, int index)
         {
             if (IgnoreSegList == null)
             {

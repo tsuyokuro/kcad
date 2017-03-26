@@ -3,72 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 
 namespace Plotter
 {
-    public struct MarkPoint
-    {
-        public enum Types : byte
-        {
-            POINT = 0,
-            RELATIVE_POINT = 1,
-            IDEPEND_POINT = 2,
-        }
-
-        public Types Type { get; set; }
-
-        public static UInt32 X_MATCH = 1;
-        public static UInt32 Y_MATCH = 2;
-        public static UInt32 Z_MATCH = 4;
-
-        public uint LayerID;
-        public uint FigureID
-        {
-            get
-            {
-                if (Figure == null)
-                {
-                    return 0;
-                }
-
-                return Figure.ID;
-            }
-        }
-
-        public CadFigure Figure;
-        public int PointIndex;
-
-        public CadPoint Point;
-
-        public CadPoint ViewPoint;
-
-        public uint Flag;
-
-        public double DistX;
-        public double DistY;
-        public double DistZ;
-
-        public void init()
-        {
-            this = default(MarkPoint);
-
-            DistX = CadConst.MaxValue;
-            DistY = CadConst.MaxValue;
-            DistZ = CadConst.MaxValue;
-        }
-
-        public void dump(DebugOut dout)
-        {
-            dout.println("MarkPoint {");
-            dout.println("FigureID:" + FigureID.ToString());
-            dout.println("PointIndex:" + PointIndex.ToString());
-            dout.println("}");
-        }
-    }
 
 
     public class PointSearcher
@@ -89,58 +27,58 @@ namespace Plotter
 
         public PointSearcher()
         {
-            clean();
+            Clean();
         }
 
-        public void setRangePixel(DrawContext dc, int pixel)
+        public void SetRangePixel(DrawContext dc, int pixel)
         {
             //double d = dc.pixelsToMilli(pixel);
             mRange = pixel;
         }
 
-        public void clean()
+        public void Clean()
         {
-            xmatch.init();
-            ymatch.init();
-            xymatch.init();
+            xmatch.reset();
+            ymatch.reset();
+            xymatch.reset();
         }
 
-        public void setTargetPoint(CadPoint p)
+        public void SetTargetPoint(CadPoint p)
         {
             TargetPoint = p;
         }
 
-        public void setIgnoreList(List<SelectItem> list)
+        public void SetIgnoreList(List<SelectItem> list)
         {
             IgnoreList = list;
         }
 
-        public MarkPoint getXMatch()
+        public MarkPoint GetXMatch()
         {
             return xmatch;
         }
 
-        public MarkPoint getYMatch()
+        public MarkPoint GetYMatch()
         {
             return ymatch;
         }
 
-        public MarkPoint getXYMatch()
+        public MarkPoint GetXYMatch()
         {
             return xymatch;
         }
 
-        public void searchAllLayer(DrawContext dc, CadPoint p, CadObjectDB db)
+        public void SearchAllLayer(DrawContext dc, CadPoint p, CadObjectDB db)
         {
             TargetPoint = p;
-            searchAllLayer(dc, db);
+            SearchAllLayer(dc, db);
         }
 
-        public void searchAllLayer(DrawContext dc, CadObjectDB db)
+        public void SearchAllLayer(DrawContext dc, CadObjectDB db)
         {
             if (db.CurrentLayer.Visible)
             {
-                search(dc, db, db.CurrentLayer);
+                Search(dc, db, db.CurrentLayer);
             }
 
             foreach (CadLayer layer in db.LayerList)
@@ -155,17 +93,17 @@ namespace Plotter
                     continue;
                 }
 
-                search(dc, db, layer);
+                Search(dc, db, layer);
             }
         }
 
-        public void search(DrawContext dc, CadPoint p, CadObjectDB db, CadLayer layer)
+        public void Search(DrawContext dc, CadPoint p, CadObjectDB db, CadLayer layer)
         {
             TargetPoint = p;
-            search(dc, db, layer);
+            Search(dc, db, layer);
         }
 
-        public void search(DrawContext dc, CadObjectDB db, CadLayer layer)
+        public void Search(DrawContext dc, CadObjectDB db, CadLayer layer)
         {
             if (layer == null)
             {
@@ -179,16 +117,16 @@ namespace Plotter
 
             foreach (CadFigure fig in rev)
             {
-                checkFig(dc, layer, fig);
+                CheckFigure(dc, layer, fig);
             }
         }
 
-        public void check(DrawContext dc, CadPoint pt)
+        public void Check(DrawContext dc, CadPoint pt)
         {
-            checkFigPoint(dc, pt, 0, null, 0, MarkPoint.Types.IDEPEND_POINT);
+            CheckFigPoint(dc, pt, 0, null, 0, MarkPoint.Types.IDEPEND_POINT);
         }
 
-        private void checkFig(DrawContext dc, CadLayer layer, CadFigure fig)
+        private void CheckFigure(DrawContext dc, CadLayer layer, CadFigure fig)
         {
             IReadOnlyList<CadPoint> pointList = fig.PointList;
 
@@ -202,33 +140,33 @@ namespace Plotter
             foreach (CadPoint pt in pointList)
             {
                 idx++;
-                checkFigPoint(dc, pt, layer.ID, fig, idx, MarkPoint.Types.POINT);
+                CheckFigPoint(dc, pt, layer.ID, fig, idx, MarkPoint.Types.POINT);
             }
         }
 
-        public void checkRelativePoints(DrawContext dc, CadObjectDB db)
+        public void CheckRelativePoints(DrawContext dc, CadObjectDB db)
         {
             foreach (CadLayer layer in db.LayerList)
             {
-                checkRelativePoints(dc, layer);
+                CheckRelativePoints(dc, layer);
             }
         }
 
-        public void checkRelativePoints(DrawContext dc, CadLayer layer)
+        public void CheckRelativePoints(DrawContext dc, CadLayer layer)
         {
             List<CadRelativePoint> list = layer.RelPointList;
 
             int idx = 0;
             foreach (CadRelativePoint rp in list)
             {
-                checkFigPoint(dc, rp.point, layer.ID, null, idx, MarkPoint.Types.RELATIVE_POINT);
+                CheckFigPoint(dc, rp.point, layer.ID, null, idx, MarkPoint.Types.RELATIVE_POINT);
                 idx++;
             }
         }
 
-        private void checkFigPoint(DrawContext dc, CadPoint pt, uint layerID, CadFigure fig, int ptIdx, MarkPoint.Types type)
+        private void CheckFigPoint(DrawContext dc, CadPoint pt, uint layerID, CadFigure fig, int ptIdx, MarkPoint.Types type)
         {
-            if (fig != null && isIgnore(fig.ID, ptIdx))
+            if (fig != null && IsIgnore(fig.ID, ptIdx))
             {
                 return;
             }
@@ -288,7 +226,7 @@ namespace Plotter
             }
         }
 
-        private bool isIgnore(uint figId, int index)
+        private bool IsIgnore(uint figId, int index)
         {
             if (IgnoreList == null)
             {

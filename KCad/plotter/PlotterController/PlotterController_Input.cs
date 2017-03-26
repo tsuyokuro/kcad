@@ -124,13 +124,13 @@ namespace Plotter
 
                     mObjDownPoint = null;
 
-                    mPointSearcher.clean();
-                    mPointSearcher.setRangePixel(dc, SnapRange);
-                    mPointSearcher.searchAllLayer(dc, pixp, mDB);
+                    mPointSearcher.Clean();
+                    mPointSearcher.SetRangePixel(dc, SnapRange);
+                    mPointSearcher.SearchAllLayer(dc, pixp, mDB);
 
-                    mPointSearcher.checkRelativePoints(dc, mDB);
+                    mPointSearcher.CheckRelativePoints(dc, mDB);
 
-                    MarkPoint mp = mPointSearcher.getXYMatch();
+                    MarkPoint mp = mPointSearcher.GetXYMatch();
 
                     if (mp.FigureID != 0 && mp.Type == MarkPoint.Types.POINT)
                     {
@@ -162,8 +162,8 @@ namespace Plotter
                             }
 
                             // Set ignore liset for snap cursor
-                            mPointSearcher.setIgnoreList(mSelList.List);
-                            mSegSearcher.setIgnoreList(mSelList.List);
+                            mPointSearcher.SetIgnoreList(mSelList.List);
+                            mSegSearcher.SetIgnoreList(mSelList.List);
                         }
                     }
                     else if (mp.Type == MarkPoint.Types.RELATIVE_POINT)
@@ -174,10 +174,10 @@ namespace Plotter
                     }
                     else
                     {
-                        mSegSearcher.clean();
-                        mSegSearcher.setRangePixel(dc, SnapRange);
-                        mSegSearcher.searchAllLayer(dc, pixp, mDB);
-                        MarkSeg mseg = mSegSearcher.getMatch();
+                        mSegSearcher.Clean();
+                        mSegSearcher.SetRangePixel(dc, SnapRange);
+                        mSegSearcher.SearchAllLayer(dc, pixp, mDB);
+                        MarkSeg mseg = mSegSearcher.GetMatch();
 
                         CadLayer layer = mDB.getLayer(mseg.LayerID);
 
@@ -208,9 +208,9 @@ namespace Plotter
                             State = States.START_DRAGING_POINTS;
 
                             // Set ignore liset for snap cursor
-                            mPointSearcher.setIgnoreList(mSelList.List);
-                            mSegSearcher.setIgnoreList(mSelList.List);
-                            mSegSearcher.setIgnoreSeg(mSelectedSegs.List);
+                            mPointSearcher.SetIgnoreList(mSelList.List);
+                            mSegSearcher.SetIgnoreList(mSelList.List);
+                            mSegSearcher.SetIgnoreSeg(mSelectedSegs.List);
                         }
                         else
                         {
@@ -336,10 +336,10 @@ namespace Plotter
 
                 case States.START_DRAGING_POINTS:
                 case States.DRAGING_POINTS:
-                    mPointSearcher.setIgnoreList(null);
+                    mPointSearcher.SetIgnoreList(null);
 
-                    mSegSearcher.setIgnoreList(null);
-                    mSegSearcher.setIgnoreSeg(null);
+                    mSegSearcher.SetIgnoreList(null);
+                    mSegSearcher.SetIgnoreSeg(null);
 
                     if (State == States.DRAGING_POINTS)
                     {
@@ -380,25 +380,25 @@ namespace Plotter
 
             Clear(dc);
 
-            mPointSearcher.clean();
-            mPointSearcher.setRangePixel(dc, SnapRange);
-            mPointSearcher.setTargetPoint(pixp);
+            mPointSearcher.Clean();
+            mPointSearcher.SetRangePixel(dc, SnapRange);
+            mPointSearcher.SetTargetPoint(pixp);
 
             if (CreatingFigure != null)
             {
                 if (CreatingFigure.PointCount == 1)
                 {
-                    mPointSearcher.check(dc, CreatingFigure.getPointAt(0));
+                    mPointSearcher.Check(dc, CreatingFigure.getPointAt(0));
                 }
             }
 
-            mPointSearcher.checkRelativePoints(dc, mDB);
+            mPointSearcher.CheckRelativePoints(dc, mDB);
 
             // Search point
-            mPointSearcher.searchAllLayer(dc, mDB);
+            mPointSearcher.SearchAllLayer(dc, mDB);
 
-            MarkPoint mx = mPointSearcher.getXMatch();
-            MarkPoint my = mPointSearcher.getYMatch();
+            MarkPoint mx = mPointSearcher.GetXMatch();
+            MarkPoint my = mPointSearcher.GetYMatch();
 
             double dist = CadConst.MaxValue;
 
@@ -431,11 +431,11 @@ namespace Plotter
             }
 
             // Search segment
-            mSegSearcher.clean();
-            mSegSearcher.setRangePixel(dc, SnapRange);
-            mSegSearcher.searchAllLayer(dc, pixp, mDB);
+            mSegSearcher.Clean();
+            mSegSearcher.SetRangePixel(dc, SnapRange);
+            mSegSearcher.SearchAllLayer(dc, pixp, mDB);
 
-            MarkSeg seg = mSegSearcher.getMatch();
+            MarkSeg seg = mSegSearcher.GetMatch();
 
             if (seg.FigureID != 0)
             {

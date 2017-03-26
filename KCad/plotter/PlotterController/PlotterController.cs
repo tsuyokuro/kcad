@@ -613,7 +613,7 @@ namespace Plotter
 
             foreach (MarkSeg item in mSelectedSegs.List)
             {
-                if (!item.update())
+                if (!item.Update())
                 {
                     removeSegs.Add(item);
                 }
