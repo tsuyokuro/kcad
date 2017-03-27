@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Forms;
 
 namespace Plotter
 {
@@ -38,21 +40,18 @@ namespace Plotter
 
         private void initHid()
         {
-            Mouse.setButtonDownProc(CadMouse.Buttons.L_BUTTON, LDown);
-            Mouse.setButtonUpProc(CadMouse.Buttons.L_BUTTON, LUp);
+            Mouse.LDown = LDown;
+            Mouse.LUp = LUp;
 
-            Mouse.setButtonDownProc(CadMouse.Buttons.R_BUTTON, RDown);
-            Mouse.setButtonUpProc(CadMouse.Buttons.R_BUTTON, RUp);
+            Mouse.RDown = RDown;
+            Mouse.RUp = RUp;
 
-            Mouse.setButtonDownProc(CadMouse.Buttons.M_BUTTON, MDown);
-            Mouse.setButtonUpProc(CadMouse.Buttons.M_BUTTON, MUp);
+            Mouse.MDown = MDown;
+            Mouse.MUp= MUp;
 
-            Mouse.setDragProc(CadMouse.Buttons.L_BUTTON, LDrag);
-            Mouse.setDragProc(CadMouse.Buttons.M_BUTTON, MDrag);
+            Mouse.MovePointer = MovePointer;
 
-            Mouse.setMoveProc(PointerMove);
-
-            Mouse.setWheelProc(Wheel);
+            Mouse.Wheel = Wheel;
         }
 
         #region "Clear selection control"
@@ -86,7 +85,7 @@ namespace Plotter
 
         private void clearSelListConditional(CadMouse pointer, MarkPoint newSel)
         {
-            if (!pointer.isDownCombiKey(CadMouse.CombiKeys.CTRL))
+            if (!CadKeyboard.IsCtrlKeyDown())
             {
                 if (!isSelected(newSel))
                 {
@@ -97,7 +96,7 @@ namespace Plotter
 
         private void clearSelListConditional(CadMouse pointer, MarkSeg newSel)
         {
-            if (!pointer.isDownCombiKey(CadMouse.CombiKeys.CTRL))
+            if (!CadKeyboard.IsCtrlKeyDown())
             {
                 if (!isSelectedSeg(newSel))
                 {
@@ -214,7 +213,7 @@ namespace Plotter
                         }
                         else
                         {
-                            if (!pointer.isDownCombiKey(CadMouse.CombiKeys.CTRL))
+                            if (!CadKeyboard.IsCtrlKeyDown())
                             {
                                 ClearSelection();
                             }
@@ -277,7 +276,7 @@ namespace Plotter
 
         private void MUp(CadMouse pointer, DrawContext dc, int x, int y)
         {
-            if (pointer.DownPoint.x == x && pointer.DownPoint.y == y)
+            if (pointer.MDownPoint.x == x && pointer.MDownPoint.y == y)
             {
                 AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
             }
@@ -288,7 +287,7 @@ namespace Plotter
             CadPoint cp = default(CadPoint);
             cp.set(x, y, 0);
 
-            CadPoint d = cp - pointer.DownPoint;
+            CadPoint d = cp - pointer.MDownPoint;
 
             CadPoint op = StoreViewOrg + d;
 
@@ -297,7 +296,7 @@ namespace Plotter
 
         private void Wheel(CadMouse pointer, DrawContext dc, int x, int y, int delta)
         {
-            if (pointer.isDownCombiKey(CadMouse.CombiKeys.CTRL))
+            if (CadKeyboard.IsCtrlKeyDown())
             {
                 double f = 1.0;
 
@@ -359,9 +358,15 @@ namespace Plotter
         {
         }
 
-        private void PointerMove(CadMouse pointer, DrawContext dc, int x, int y)
+        private void MovePointer(CadMouse pointer, DrawContext dc, int x, int y)
         {
             //Log.d("Move");
+
+            if ((Control.MouseButtons & MouseButtons.Middle) != 0)
+            {
+                MDrag(pointer, dc, x, y);
+                return;
+            }
 
             if (State == States.START_DRAGING_POINTS)
             {
@@ -489,7 +494,7 @@ namespace Plotter
         private void LDrag(CadMouse pointer, DrawContext dc, int x, int y)
         {
             //Log.d("LDrag");
-            PointerMove(pointer, dc, x, y);
+            MovePointer(pointer, dc, x, y);
         }
     }
 }

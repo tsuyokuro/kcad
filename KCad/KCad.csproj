@@ -139,6 +139,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="plotter\Assembler\TriangleSplitter.cs" />
+    <Compile Include="plotter\HID\CadKeyboard.cs" />
     <Compile Include="plotter\DrawContext\ArrowHead.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGL.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGDI.cs" />
@@ -162,7 +163,7 @@
     <Compile Include="plotter\searcher\SegSearcher.cs" />
     <Compile Include="plotter\UMatrix4.cs" />
     <Compile Include="plotter\Util\CadMath.cs" />
-    <Compile Include="plotter\CadMouse.cs" />
+    <Compile Include="plotter\HID\CadMouse.cs" />
     <Compile Include="plotter\CadObjectDB.cs" />
     <Compile Include="plotter\CadOpe.cs" />
     <Compile Include="plotter\CadPoint.cs" />

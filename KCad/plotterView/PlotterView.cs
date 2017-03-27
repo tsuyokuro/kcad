@@ -159,7 +159,7 @@ namespace Plotter
         {
             DrawContext g = StartDraw();
 
-            mController.Mouse.pointerMoved(g, e.X, e.Y);
+            mController.Mouse.MouseMove(g, e.X, e.Y);
 
             EndDraw();
         }
@@ -177,7 +177,7 @@ namespace Plotter
 
             DrawContext dc = StartDraw();
 
-            mController.Mouse.down(dc, e.Button, e.X, e.Y);
+            mController.Mouse.MouseDown(dc, e.Button, e.X, e.Y);
 
             EndDraw();
         }
@@ -186,7 +186,7 @@ namespace Plotter
         {
             DrawContext g = StartDraw();
 
-            mController.Mouse.up(g, e.Button, e.X, e.Y);
+            mController.Mouse.MouseUp(g, e.Button, e.X, e.Y);
 
             EndDraw();
         }
@@ -195,7 +195,7 @@ namespace Plotter
         {
             DrawContext g = StartDraw();
 
-            mController.Mouse.wheel(g, e.X, e.Y, e.Delta);
+            mController.Mouse.MouseWheel(g, e.X, e.Y, e.Delta);
 
             EndDraw();
         }

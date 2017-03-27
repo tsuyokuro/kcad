@@ -72,7 +72,7 @@ namespace Plotter
 
             StartDraw();
 
-            mController.Mouse.up(mDrawContext, e.Button, e.X, e.Y);
+            mController.Mouse.MouseUp(mDrawContext, e.Button, e.X, e.Y);
 
             EndDraw();
         }
@@ -86,7 +86,7 @@ namespace Plotter
             {
                 StartDraw();
 
-                mController.Mouse.down(mDrawContext, e.Button, e.X, e.Y);
+                mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
 
                 EndDraw();
             }
