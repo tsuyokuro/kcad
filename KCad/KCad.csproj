@@ -158,6 +158,7 @@
     <Compile Include="plotter\Figure\CadFigureRect.cs" />
     <Compile Include="plotter\CadLayer.cs" />
     <Compile Include="plotter\Quaternion.cs" />
+    <Compile Include="plotter\searcher\Gridding.cs" />
     <Compile Include="plotter\searcher\MarkPoint.cs" />
     <Compile Include="plotter\searcher\MarkSeg.cs" />
     <Compile Include="plotter\searcher\SegSearcher.cs" />
@@ -201,7 +202,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

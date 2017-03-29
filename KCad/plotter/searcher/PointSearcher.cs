@@ -32,7 +32,6 @@ namespace Plotter
 
         public void SetRangePixel(DrawContext dc, int pixel)
         {
-            //double d = dc.pixelsToMilli(pixel);
             mRange = pixel;
         }
 

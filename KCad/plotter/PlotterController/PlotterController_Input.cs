@@ -38,6 +38,8 @@ namespace Plotter
 
         private CadPoint mOffsetWld = default(CadPoint);
 
+        private Gridding mGridding = new Gridding();
+
         private void initHid()
         {
             Mouse.LDown = LDown;
@@ -222,7 +224,24 @@ namespace Plotter
 
                     if (mObjDownPoint == null)
                     {
-                        FreeDownPoint = cp;
+                        CadPoint p = pixp;
+
+                        #region Gridding
+                        mGridding.Clear();
+                        mGridding.Check(dc, pixp);
+
+                        if (mGridding.XMatchU.Valid)
+                        {
+                            p.x = mGridding.XMatchU.x;
+                        }
+
+                        if (mGridding.YMatchU.Valid)
+                        {
+                            p.y = mGridding.YMatchU.y;
+                        }
+                        #endregion
+
+                        FreeDownPoint = dc.UnitPointToCadPoint(p);
                     }
                     else
                     {
@@ -378,6 +397,11 @@ namespace Plotter
             CadPoint cp = dc.UnitPointToCadPoint(pixp);
             CadPoint tp = default(CadPoint);
 
+            bool xmatch = false;
+            bool ymatch = false;
+            bool segmatch = false;
+
+
             mSnapScrnPoint = pixp - mOffsetScrn;
             mSnapPoint = cp - mOffsetWld;
 
@@ -419,6 +443,8 @@ namespace Plotter
                 mSnapPoint = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                 dist = Math.Min(mx.DistX, dist);
+
+                xmatch = true;
             }
 
             if ((my.Flag & MarkPoint.Y_MATCH) != 0)
@@ -433,6 +459,8 @@ namespace Plotter
                 mSnapPoint = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                 dist = Math.Min(my.DistY, dist);
+
+                ymatch = true;
             }
 
             // Search segment
@@ -454,11 +482,33 @@ namespace Plotter
                     mSnapScrnPoint = seg.CrossViewPoint;
                     mSnapScrnPoint.z = 0;
 
+                    segmatch = true;
+
                     //mSnapScrnPoint.dump(DebugOut.Std);
                 }
             }
 
-            dc.Drawing.DrawCursorScrn(mSnapScrnPoint);
+            #region Gridding
+            if (!segmatch)
+            {
+                mGridding.Clear();
+                mGridding.Check(dc, pixp);
+
+                if (!xmatch && mGridding.XMatchU.Valid)
+                {
+                    mSnapScrnPoint.x = mGridding.XMatchU.x;
+                }
+
+                if (!ymatch && mGridding.YMatchU.Valid)
+                {
+                    mSnapScrnPoint.y = mGridding.YMatchU.y;
+                }
+
+                mSnapPoint = dc.UnitPointToCadPoint(mSnapScrnPoint);
+            }
+            #endregion
+
+            //dc.Drawing.DrawCursorScrn(mSnapScrnPoint);
 
             switch (State)
             {

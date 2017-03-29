@@ -367,6 +367,7 @@ namespace Plotter
             Draw(dc);
             DrawSelectedItems(dc);
             DrawSubItems(dc);
+            DrawCursor(dc);
         }
 
         public void Draw(DrawContext dc)
@@ -417,6 +418,11 @@ namespace Plotter
             {
                 rp.draw(dc);
             }
+        }
+
+        public void DrawCursor(DrawContext dc)
+        {
+            dc.Drawing.DrawCursorScrn(mSnapScrnPoint);
         }
 
         public void Print(DrawContext dc)

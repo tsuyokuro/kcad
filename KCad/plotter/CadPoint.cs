@@ -98,6 +98,26 @@ namespace Plotter
             }
         }
 
+        public bool Valid
+        {
+            set
+            {
+                if (value)
+                {
+                    Type = Types.STD;
+                }
+                else
+                {
+                    Type = Types.INVALID;
+                }
+            }
+
+            get
+            {
+                return Type != Types.INVALID;
+            }
+        }
+
         public static CadPoint Zero = default(CadPoint);
 
         public CadPoint(double x, double y, double z, Types type = Types.STD)
