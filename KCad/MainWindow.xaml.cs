@@ -54,6 +54,8 @@ namespace KCad
             RunTextCommandButton.Click += RunTextCommandButtonClicked;
 
             ViewModePanel.DataContext = ViewModel;
+
+            SnapMenu.DataContext = ViewModel;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)

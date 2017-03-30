@@ -148,6 +148,33 @@ namespace Plotter
             }
         }
 
+        public bool SnapToGrid
+        {
+            set
+            {
+                mController.SnapToGrid = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
+            }
+
+            get
+            {
+                return mController.SnapToGrid;
+            }
+        }
+
+        public bool SnapToFigure
+        {
+            set
+            {
+                mController.SnapToFigure = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToFigure)));
+            }
+
+            get
+            {
+                return mController.SnapToFigure;
+            }
+        }
 
         ListBox mLayerListView;
 
@@ -265,7 +292,7 @@ namespace Plotter
         {
             commandMap = new Dictionary<string, Action>{
                 { "load", Load },
-                { "Save",Save },
+                { "save",Save },
                 { "print",StartPrint },
                 { "undo",undo },
                 { "redo",redo },

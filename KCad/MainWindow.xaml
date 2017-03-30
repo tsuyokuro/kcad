@@ -129,6 +129,10 @@
                     <MenuItem Tag="flip_z" Header="Flip Z" Click="MenuItem_Click"/>
                 </MenuItem>
             </MenuItem>
+            <MenuItem x:Name="SnapMenu" Header="Snap">
+                <MenuItem Header="Snap to grid" IsCheckable="True" IsChecked="{Binding SnapToGrid}"/>
+                <MenuItem Header="Snap to figure" IsCheckable="True" IsChecked="{Binding SnapToFigure}"/>
+            </MenuItem>
         </Menu>
 
 
