@@ -366,7 +366,7 @@ namespace Plotter
         {
             Draw(dc);
             DrawSelectedItems(dc);
-            DrawSubItems(dc);
+            DrawLastPoint(dc);
             DrawCursor(dc);
         }
 
@@ -375,6 +375,7 @@ namespace Plotter
             if (dc == null) return;
 
             dc.Drawing.DrawAxis();
+            DrawGrid(dc);
             dc.Drawing.DrawPageFrame();
 
             foreach (CadLayer layer in mDB.LayerList)
@@ -389,6 +390,14 @@ namespace Plotter
             dc.Drawing.Draw(TempFigureList, DrawTools.PEN_TEST_FIGURE);
         }
 
+        public void DrawGrid(DrawContext dc)
+        {
+            if (mGridding.Enable)
+            {
+                dc.Drawing.DrawGrid(mGridding);
+            }
+        }
+
         public void DrawSelectedItems(DrawContext dc)
         {
             foreach (CadLayer layer in mDB.LayerList)
@@ -397,11 +406,8 @@ namespace Plotter
             }
         }
 
-        public void DrawSubItems(DrawContext dc)
+        public void DrawLastPoint(DrawContext dc)
         {
-            //DrawSelectedItems(dc);
-            //Drawer.drawCursorScrn(dc, mSnapScrnPoint);
-
             dc.Drawing.DrawLastPointMarker(
                 DrawTools.PEN_LAST_POINT_MARKER, FreeDownPoint);
 

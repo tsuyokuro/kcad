@@ -33,6 +33,10 @@ namespace Plotter
         {
         }
 
+        public virtual void DrawGrid(Gridding grid)
+        {
+        }
+
         public virtual void DrawHighlightPoint(CadPoint pt)
         {
         }
@@ -58,6 +62,10 @@ namespace Plotter
         }
 
         public virtual void DrawLine(int pen, CadPoint a, CadPoint b)
+        {
+        }
+
+        public virtual void DrawDot(int pen, CadPoint p)
         {
         }
 

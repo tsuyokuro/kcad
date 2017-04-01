@@ -3,9 +3,9 @@
 
 namespace Plotter
 {
-    class Gridding
+    public class Gridding
     {
-        CadPoint GridSizeW;
+        public CadPoint GridSizeW;
 
         double Range = 8;
 
@@ -32,11 +32,9 @@ namespace Plotter
         }
 
 
-        private CadPoint CalcGridSizeU(DrawContext dc)
+        public CadPoint CalcGridSizeU(DrawContext dc)
         {
             CadPoint gridSize = dc.CadPointToUnitPoint(GridSizeW) - dc.CadPointToUnitPoint(CadPoint.Zero);
-
-            //Range = gridSize.x / 4;
 
             return gridSize;
         } 

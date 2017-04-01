@@ -86,6 +86,95 @@ namespace Plotter
             drawAxisDir();
         }
 
+        public override void DrawGrid(Gridding grid)
+        {
+            CadPoint lt = CadPoint.Zero;
+            CadPoint rb = CadPoint.Create(DC.ViewWidth, DC.ViewHeight, 0);
+
+            CadPoint ltw = DC.UnitPointToCadPoint(lt);
+            CadPoint rbw = DC.UnitPointToCadPoint(rb);
+
+            double minx = Math.Min(ltw.x, rbw.x);
+            double maxx = Math.Max(ltw.x, rbw.x);
+
+            double miny = Math.Min(ltw.y, rbw.y);
+            double maxy = Math.Max(ltw.y, rbw.y);
+
+            double minz = Math.Min(ltw.z, rbw.z);
+            double maxz = Math.Max(ltw.z, rbw.z);
+
+
+            int pen = DrawTools.PEN_GRID;
+
+            CadPoint p = default(CadPoint);
+
+
+            double x, y, z;
+            double sx, sy, sz;
+
+            sx = Math.Round(minx / grid.GridSizeW.x) * grid.GridSizeW.x;
+            sy = Math.Round(miny / grid.GridSizeW.y) * grid.GridSizeW.y;
+            sz = Math.Round(minz / grid.GridSizeW.z) * grid.GridSizeW.z;
+
+            x = sx;
+            while (x < maxx)
+            {
+                p.x = x;
+                p.z = 0;
+
+                y = sy;
+
+                while (y < maxy)
+                {
+                    p.y = y;
+                    DrawDot(pen, p);
+                    y += grid.GridSizeW.y;
+                }
+
+                x += grid.GridSizeW.x;
+            }
+
+            z = sz;
+            y = sy;
+
+            while (z < maxz)
+            {
+                p.z = z;
+                p.x = 0;
+
+                y = sy;
+
+                while (y < maxy)
+                {
+                    p.y = y;
+                    DrawDot(pen, p);
+                    y += grid.GridSizeW.y;
+                }
+
+                z += grid.GridSizeW.z;
+            }
+
+            z = sz;
+            x = sx;
+
+            while (x < maxx)
+            {
+                p.x = x;
+                p.y = 0;
+
+                z = sz;
+
+                while (z < maxz)
+                {
+                    p.z = z;
+                    DrawDot(pen, p);
+                    z += grid.GridSizeW.z;
+                }
+
+                x += grid.GridSizeW.x;
+            }
+        }
+
         public override void DrawPageFrame()
         {
             CadPoint pt = default(CadPoint);
@@ -185,6 +274,21 @@ namespace Plotter
             CadPoint pb = DC.CadPointToUnitPoint(b);
 
             DC.graphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
+        }
+
+        public override void DrawDot(int pen, CadPoint p)
+        {
+            if (DC.graphics == null)
+            {
+                return;
+            }
+ 
+            CadPoint p0 = DC.CadPointToUnitPoint(p);
+            CadPoint p1 = p0;
+            p0.x = (int)p0.x;
+            p1.x = p0.x + 0.1;
+
+            DC.graphics.DrawLine(DC.Pen(pen), (float)p0.x, (float)p0.y, (float)p1.x, (float)p1.y);
         }
 
         public override void DrawFace(int pen, IReadOnlyList<CadPoint> pointList)
