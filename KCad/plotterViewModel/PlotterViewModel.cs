@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using System.Drawing;
+using KCad;
 
 namespace Plotter
 {
@@ -213,7 +214,7 @@ namespace Plotter
             }
         }
 
-
+        private Window mMainWindow;
 
         private WindowsFormsHost mViewHost = null;
 
@@ -233,8 +234,10 @@ namespace Plotter
             }
         } 
 
-        public PlotterViewModel(WindowsFormsHost viewHost)
+        public PlotterViewModel(Window mainWindow, WindowsFormsHost viewHost)
         {
+            mMainWindow = mainWindow;
+
             InitCommandMap();
             InitKeyMap();
 
@@ -308,6 +311,7 @@ namespace Plotter
                 { "flip_x", FlipX },
                 { "flip_y", FlipY },
                 { "flip_z", FlipZ },
+                { "grid_settings", GridSettings },
             };
         }
 
@@ -668,6 +672,25 @@ namespace Plotter
                 SaveFile(sfd.FileName);
             }
         }
+
+        public void GridSettings()
+        {
+            GridSettingsDialog dlg = new GridSettingsDialog();
+
+            dlg.GridSize = mController.Grid.GridSize;
+
+            bool? result = dlg.ShowDialog();
+
+            if (result.Value)
+            {
+                mController.Grid.GridSize = dlg.GridSize;
+
+                DrawContext dc = StartDraw();
+                mController.DrawAll(dc);
+                EndDraw();
+            }
+        }
+
         #endregion
 
 

@@ -109,12 +109,17 @@ namespace Plotter
             CadPoint p = default(CadPoint);
 
 
+            double n = grid.Decimate(DC, grid, 8);
+
             double x, y, z;
             double sx, sy, sz;
+            double szx = grid.GridSize.x * n;
+            double szy = grid.GridSize.y * n;
+            double szz = grid.GridSize.z * n;
 
-            sx = Math.Round(minx / grid.GridSizeW.x) * grid.GridSizeW.x;
-            sy = Math.Round(miny / grid.GridSizeW.y) * grid.GridSizeW.y;
-            sz = Math.Round(minz / grid.GridSizeW.z) * grid.GridSizeW.z;
+            sx = Math.Round(minx / szx) * szx;
+            sy = Math.Round(miny / szy) * szy;
+            sz = Math.Round(minz / szz) * szz;
 
             x = sx;
             while (x < maxx)
@@ -128,10 +133,10 @@ namespace Plotter
                 {
                     p.y = y;
                     DrawDot(pen, p);
-                    y += grid.GridSizeW.y;
+                    y += szy;
                 }
 
-                x += grid.GridSizeW.x;
+                x += szx;
             }
 
             z = sz;
@@ -148,10 +153,10 @@ namespace Plotter
                 {
                     p.y = y;
                     DrawDot(pen, p);
-                    y += grid.GridSizeW.y;
+                    y += szy;
                 }
 
-                z += grid.GridSizeW.z;
+                z += szz;
             }
 
             z = sz;
@@ -168,10 +173,10 @@ namespace Plotter
                 {
                     p.z = z;
                     DrawDot(pen, p);
-                    z += grid.GridSizeW.z;
+                    z += szz;
                 }
 
-                x += grid.GridSizeW.x;
+                x += szx;
             }
         }
 

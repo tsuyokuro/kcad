@@ -53,6 +53,14 @@ namespace Plotter
             }
         }
 
+        public Gridding Grid
+        {
+            get
+            {
+                return mGridding;
+            }
+        }
+
         private bool mSnapToFigure = true;
 
         public bool SnapToFigure

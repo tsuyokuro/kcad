@@ -25,7 +25,7 @@ namespace KCad
             InputThread = new DebugInputThread(debugCommand);
             InputThread.start();
 
-            ViewModel = new PlotterViewModel(viewContainer);
+            ViewModel = new PlotterViewModel(this, viewContainer);
 
             viewContainer.Focusable = true;
 
