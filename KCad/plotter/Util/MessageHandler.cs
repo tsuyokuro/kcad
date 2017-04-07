@@ -24,6 +24,14 @@ namespace Plotter
                 ExpireTime = 0;
             }
 
+            public Message(int what)
+            {
+                What = what;
+            }
+
+            public Message() { }
+
+
             public new String ToString()
             {
                 return "Message What=" + What.ToString();
@@ -77,7 +85,10 @@ namespace Plotter
 
         public void SendMessage(Message msg)
         {
-            Messages.Push(msg);
+            lock (LockObj)
+            {
+                Messages.Push(msg);
+            }
         }
 
         private long GetCurrentMilliSec()
@@ -88,7 +99,7 @@ namespace Plotter
 
         public void SendMessage(Message msg, int delay)
         {
-            //Console.WriteLine("SendMessage " + GetCurrentMilliSec().ToString());
+            //Console.WriteLine("SendMessage cnt=" + FreeMessages.Count.ToString());
 
             lock (LockObj)
             {
@@ -144,39 +155,72 @@ namespace Plotter
 
                 long minDt = long.MaxValue;
 
-                foreach (Message msg in DelayedMessages)
+                if (DelayedMessages.Count > 0)
                 {
-                    if (msg.ExpireTime == 0)
+                    foreach (Message msg in DelayedMessages)
                     {
-                        continue;
-                    }
-
-                    long t = msg.ExpireTime - now;
-
-                    if (t < 0)
-                    {
-                        msg.ExpireTime = 0;
-                        Messages.Push(msg);
-                    }
-                    else
-                    {
-                        if (t < minDt)
+                        if (msg.ExpireTime == 0)
                         {
-                            minDt = t;
+                            continue;
+                        }
+
+                        long t = msg.ExpireTime - now;
+
+                        if (t <= 0)
+                        {
+                            msg.ExpireTime = 0;
+                            Messages.Push(msg);
+                        }
+                        else
+                        {
+                            if (t < minDt)
+                            {
+                                minDt = t;
+                            }
                         }
                     }
                 }
-
                 DelayedMessages.RemoveAll(m => m.ExpireTime == 0);
 
                 if (minDt != long.MaxValue)
                 {
                     //CheckTimer.Change(minDt, Timeout.Infinite);
 
+                    CheckTimer.Stop();
                     CheckTimer.Interval = minDt;
                     CheckTimer.Start();
                 }
             }
+        }
+
+        public void RemoveAll(Predicate<Message> match)
+        {
+            lock (LockObj)
+            {
+                Messages.RemoveAll(match, Removed);
+
+                for (int i = DelayedMessages.Count - 1; i >= 0; i--)
+                {
+                    Message item = DelayedMessages[i];
+
+                    if (match(item))
+                    {
+                        DelayedMessages.RemoveAt(i);
+                        Removed(item);
+                    }
+                }
+            }
+        }
+
+        public void RemoveAll(int what)
+        {
+            RemoveAll(m => m.What == what);
+
+        }
+
+        private void Removed(Message msg)
+        {
+            FreeMessages.Push(msg);
         }
     }
 }

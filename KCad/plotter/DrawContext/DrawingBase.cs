@@ -71,6 +71,11 @@ namespace Plotter
 
         public virtual void DrawFace(int pen, IReadOnlyList<CadPoint> pointList)
         {
+            DrawFace(pen, pointList, default(CadPoint));
+        }
+
+        public virtual void DrawFace(int pen, IReadOnlyList<CadPoint> pointList, CadPoint normal)
+        {
         }
 
         public virtual void DrawCircle(int pen, CadPoint cp, CadPoint pa, CadPoint pb)

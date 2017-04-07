@@ -68,12 +68,16 @@ namespace Plotter
             GL.End();
         }
 
-        public override void DrawFace(int pen, IReadOnlyList<CadPoint> pointList)
+        public override void DrawFace(int pen, IReadOnlyList<CadPoint> pointList, CadPoint normal)
         {
             CadPoint p;
             GLPen glpen;
 
-            CadPoint normal = CadMath.Normal(pointList);
+            if (normal.IsZero())
+            {
+                normal = CadMath.Normal(pointList);
+            }
+
             bool normalValid = !normal.IsZero();
 
 

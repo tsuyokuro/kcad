@@ -6,10 +6,24 @@ namespace Plotter
 {
     class FlexBlockingQueue<T>
     {
+        public delegate void Removed(T item);
+
         private readonly List<T> Queue = new List<T>();
         private readonly int Max;
 
         private bool Closing = false;
+
+        public int Count
+        {
+            get
+            {
+                lock (Queue)
+                {
+                    return Queue.Count;
+                }
+            }
+        }
+
 
         public FlexBlockingQueue(int maxSize)
         {
@@ -70,13 +84,25 @@ namespace Plotter
             }
         }
 
-        public int RemoveAll(Predicate<T> match)
+        public int RemoveAll(Predicate<T> match, Removed removed = null)
         {
-            int rc;
+            int rc = 0;
 
             lock (Queue)
             {
-                rc = Queue.RemoveAll(match);
+                for (int i = Queue.Count - 1; i >= 0; i--)
+                {
+                    T item = Queue[i];
+                    if (match(item))
+                    {
+                        Queue.RemoveAt(i);
+
+                        if (removed != null)
+                        {
+                            removed(item);
+                        }
+                    }
+                }
 
                 if (Queue.Count == Max - 1)
                 {
@@ -86,6 +112,5 @@ namespace Plotter
 
             return rc;
         }
-
     }
 }

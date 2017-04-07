@@ -194,6 +194,13 @@ namespace Plotter
 
         public void FromJson(JObject jo)
         {
+            if (jo == null)
+            {
+                this = default(CadPoint);
+                return;
+            }
+
+
             Type = (Types)(byte)jo["type"];
             Flag = (uint)jo["flags"];
             x = (double)jo["x"];

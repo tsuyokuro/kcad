@@ -55,6 +55,8 @@ namespace Plotter
 
         public bool Closed { get; set; }
 
+        public CadPoint Normal;
+
         public List<CadPoint> PointList
         {
             get
@@ -391,6 +393,7 @@ namespace Plotter
             jo.Add("type", (byte)Type);
             jo.Add("closed", Closed);
             jo.Add("locked", Locked);
+            jo.Add("normal", Normal.ToJson());
 
             jo.Add("point_list", JsonUtil.ListToJsonList(PointList));
             return jo;
@@ -402,6 +405,8 @@ namespace Plotter
             Type = (Types)(byte)jo["type"];
             Closed = (bool)jo["closed"];
             Locked = (bool)jo["locked"];
+
+            Normal.FromJson((JObject)jo["normal"]);
 
             mPointList = JsonUtil.JsonListToObjectList<CadPoint>((JArray)jo["point_list"]);
         }

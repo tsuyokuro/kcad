@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Plotter
@@ -30,6 +32,8 @@ namespace Plotter
         ContextMenuEx mCurrentContextMenu = null;
 
 
+        MyMessageHandler mMessageHandler;
+
         private DrawContext mDrawContext = new DrawContextGDI();
 
         public DrawContext DrawContext
@@ -48,17 +52,21 @@ namespace Plotter
             }
         }
 
-        public System.Windows.Forms.Control FromsControl
+        public Control FromsControl
         {
             get
             {
-                return (System.Windows.Forms.Control)this;
+                return (Control)this;
             }
         }
 
         public PlotterView()
         {
             base.SizeChanged += onSizeChanged;
+
+            mMessageHandler = new MyMessageHandler(this, 100);
+
+            mMessageHandler.start();
 
             mDrawContext.SetupTools(DrawTools.ToolsType.DARK);
 
@@ -157,11 +165,21 @@ namespace Plotter
 
         private void mouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
+            /*
             DrawContext g = StartDraw();
-
             mController.Mouse.MouseMove(g, e.X, e.Y);
-
             EndDraw();
+            */
+
+            mMessageHandler.RemoveAll(MyMessageHandler.MOUSE_MOVE);
+
+            MessageHandler.Message msg = mMessageHandler.ObtainMessage();
+
+            msg.What = MyMessageHandler.MOUSE_MOVE;
+            msg.Arg1 = e.X;
+            msg.Arg2 = e.Y;
+
+            mMessageHandler.SendMessage(msg, 2);
         }
 
         private void mouseDown(Object sender, MouseEventArgs e)
@@ -258,6 +276,42 @@ namespace Plotter
             if (controller != null)
             {
                 mController.RequestContextMenu += ShowContextMenu;
+            }
+        }
+
+
+        class MyMessageHandler : MessageHandler
+        {
+            public const int MOUSE_MOVE = 1;
+
+            private PlotterView mPlotterView; 
+
+            public MyMessageHandler(PlotterView view, int maxMessage) : base(maxMessage)
+            {
+                mPlotterView = view;
+            }
+
+            public override void HandleMessage(Message msg)
+            {
+                if (msg.What == MOUSE_MOVE)
+                {
+                    int x = msg.Arg1;
+                    int y = msg.Arg2;
+
+                    handleMouseMove(x, y);
+                }
+            }
+
+            public void handleMouseMove(int x, int y)
+            {
+                mPlotterView.Invoke(new Action(() =>
+                {
+                    DrawContext g = mPlotterView.StartDraw();
+
+                    mPlotterView.mController.Mouse.MouseMove(g, x, y);
+
+                    mPlotterView.EndDraw();
+                }));
             }
         }
     }

@@ -58,7 +58,7 @@ namespace Plotter
             {
                 if (fig.Closed)
                 {
-                    dc.Drawing.DrawFace(pen, getPoints(fig, 32));
+                    dc.Drawing.DrawFace(pen, getPoints(fig, 32), fig.Normal);
                 }
                 else
                 {
@@ -325,11 +325,9 @@ namespace Plotter
 
                     DebugOut.Std.println("PolyLine endCreate t=" + t.ToString());
 
+                    fig.Normal = CadPoint.Create(dc.ViewDir);
 
-                    if (t < 0)
-                    {
-                        fig.mPointList.Reverse();
-                    }
+                    fig.Normal *= -1;
                 }
                 return fig.Type;
             }
