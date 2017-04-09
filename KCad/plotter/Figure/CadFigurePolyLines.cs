@@ -319,14 +319,10 @@ namespace Plotter
             {
                 if (fig.PointList.Count > 2)
                 {
-                    Vector3d normal = CadUtil.RepresentativeNormal(fig.PointList);
-
-                    double t = Vector3d.Dot(normal, dc.ViewDir);
-
-                    DebugOut.Std.println("PolyLine endCreate t=" + t.ToString());
+                    //Vector3d normal = CadUtil.RepresentativeNormal(fig.PointList);
+                    //double t = Vector3d.Dot(normal, dc.ViewDir);
 
                     fig.Normal = CadPoint.Create(dc.ViewDir);
-
                     fig.Normal *= -1;
                 }
                 return fig.Type;

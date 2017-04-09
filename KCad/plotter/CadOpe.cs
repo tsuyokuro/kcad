@@ -139,6 +139,11 @@ namespace Plotter
             return GetType().FullName;
         }
 
+        public void Add(CadOpe ope)
+        {
+            OpeList.Add(ope);
+        }
+
         public override void undo(CadObjectDB db)
         {
             foreach (CadOpe ope in OpeList.Reverse<CadOpe>())

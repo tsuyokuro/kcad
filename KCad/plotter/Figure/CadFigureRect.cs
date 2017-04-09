@@ -67,6 +67,9 @@ namespace Plotter
 
             public override CadFigure.Types endCreate(CadFigure fig, DrawContext dc)
             {
+                fig.Normal = CadPoint.Create(dc.ViewDir);
+                fig.Normal *= -1;
+
                 fig.Type = Types.POLY_LINES;
                 return fig.Type;
             }

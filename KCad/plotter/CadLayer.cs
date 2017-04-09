@@ -4,6 +4,7 @@ namespace Plotter
 {
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Linq;
 
     [Serializable]
     public class CadLayer
@@ -69,6 +70,7 @@ namespace Plotter
         private List<CadFigure> mFigureList = new List<CadFigure>();
 
         private List<CadRelativePoint> mRelPointList = new List<CadRelativePoint>();
+
         private List<CadRelativePoint> mStoreRelPointList = null;
 
 
@@ -163,6 +165,36 @@ namespace Plotter
             {
                 rp.Selected = false;
             }
+        }
+
+        public CadOpeList clear()
+        {
+            CadOpeList opeList = CadOpe.getListOpe();
+
+            CadOpe ope;
+
+            IEnumerable<CadRelativePoint> rpList = mRelPointList;
+            var revRp = rpList.Reverse();
+
+            foreach (CadRelativePoint rp in revRp)
+            {
+                ope = CadOpe.getRemoveRelPointOpe(this, rp);
+                opeList.OpeList.Add(ope);
+            }
+
+            IEnumerable<CadFigure> figList = mFigureList;
+            var revFig = figList.Reverse();
+
+            foreach (CadFigure fig in revFig)
+            {
+                ope = CadOpe.getRemoveFigureOpe(this, fig.ID);
+                opeList.OpeList.Add(ope);
+            }
+
+            mFigureList.Clear();
+            mRelPointList.Clear();
+
+            return opeList;
         }
 
         public JObject ToJson()

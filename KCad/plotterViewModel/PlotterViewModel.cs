@@ -308,6 +308,7 @@ namespace Plotter
                 { "add_center_point", addCenterPoint },
                 { "to_loop", ToLoop },
                 { "to_unloop", ToUnloop },
+                { "clear_layer", ClearLayer },
                 { "flip_x", FlipX },
                 { "flip_y", FlipY },
                 { "flip_z", FlipZ },
@@ -638,6 +639,13 @@ namespace Plotter
         {
             DrawContext dc = StartDraw();
             mController.FlipZ(dc);
+            EndDraw();
+        }
+
+        public void ClearLayer()
+        {
+            DrawContext dc = StartDraw();
+            mController.ClearLayer(dc, 0);
             EndDraw();
         }
 

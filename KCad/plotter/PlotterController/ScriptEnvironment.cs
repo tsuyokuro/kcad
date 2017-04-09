@@ -10,6 +10,13 @@ namespace Plotter
 
         private Executor mScrExecutor;
 
+        private enum Coord
+        {
+            XY,
+            XZ,
+            ZY,
+        }
+
 
         public ScriptEnvironment(PlotterController controller)
         {
@@ -29,6 +36,8 @@ namespace Plotter
             mScrExecutor = new Executor();
             mScrExecutor.evaluator.PreFuncCall = PreFuncCall;
             mScrExecutor.addFunction("rect", addRect);
+            mScrExecutor.addFunction("rectSide", addRectSide);
+            mScrExecutor.addFunction("rectTop", addRectTop);
             mScrExecutor.addFunction("distance", distance);
             mScrExecutor.addFunction("group", group);
             mScrExecutor.addFunction("ungroup", ungroup);
@@ -127,40 +136,44 @@ namespace Plotter
 
         private int addRect(int argCount, Evaluator.ValueStack stack)
         {
+            createRect(argCount, stack, Coord.XY);
+            stack.push(0);
+            return 1;
+        }
+
+        private int addRectSide(int argCount, Evaluator.ValueStack stack)
+        {
+            createRect(argCount, stack, Coord.ZY);
+            stack.push(0);
+            return 1;
+        }
+
+        private int addRectTop(int argCount, Evaluator.ValueStack stack)
+        {
+            createRect(argCount,stack, Coord.XZ);
+            stack.push(0);
+            return 1;
+        }
+
+        private void createRect(int argCount, Evaluator.ValueStack stack, Coord coord)
+        {
+            if (!(argCount == 2 || argCount == 4))
+            {
+                return;
+            }
+
+            CadPoint p0 = default(CadPoint);
+            double w = 0;
+            double h = 0;
+
             if (argCount == 2)
             {
                 Evaluator.Value v2 = stack.pop();
                 Evaluator.Value v1 = stack.pop();
+                w = v1.getDouble();
+                h = v2.getDouble();
 
-                double w = v1.getDouble();
-                double h = v2.getDouble();
-
-                CadFigure fig = Controller.DB.newFigure(CadFigure.Types.POLY_LINES);
-
-                CadPoint p0 = Controller.FreeDownPoint;
-                CadPoint p1 = p0;
-
-                fig.addPoint(p0);
-
-                p1.x = p0.x + w;
-                fig.addPoint(p1);
-
-                p1.y = p0.y + h;
-                fig.addPoint(p1);
-
-                p1 = p0;
-                p1.y = p0.y + h;
-                fig.addPoint(p1);
-
-                fig.Closed = true;
-
-                fig.endCreate(Controller.CurrentDC);
-
-                CadOpe ope = CadOpe.getAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-                Controller.HistoryManager.foward(ope);
-                Controller.CurrentLayer.addFigure(fig);
-
-                stack.push(0);
+                p0 = Controller.FreeDownPoint;
             }
             else if (argCount == 4)
             {
@@ -168,44 +181,77 @@ namespace Plotter
                 Evaluator.Value vw = stack.pop();
                 Evaluator.Value y = stack.pop();
                 Evaluator.Value x = stack.pop();
+                p0 = CadPoint.Create(x.getDouble(), y.getDouble(), 0);
 
-                CadFigure fig = Controller.DB.newFigure(CadFigure.Types.RECT);
+                w = vw.getDouble();
+                h = vh.getDouble();
+            }
 
-                CadPoint p0 = default(CadPoint);
 
-                double w = vw.getDouble();
-                double h = vh.getDouble();
+            CadFigure fig = Controller.DB.newFigure(CadFigure.Types.RECT);
 
-                CadPoint p1 = p0;
+            CadPoint p1 = p0;
 
-                fig.addPoint(p0);
+            fig.addPoint(p0);
+            if (coord == Coord.XY)
+            {
+                p1.x = p0.x + w;
+                p1.y = p0.y;
+                p1.z = p0.z;
+                fig.addPoint(p1);
 
                 p1.x = p0.x + w;
-                fig.addPoint(p1);
-
                 p1.y = p0.y + h;
+                p1.z = p0.z;
                 fig.addPoint(p1);
 
-                p1 = p0;
+                p1.x = p0.x;
                 p1.y = p0.y + h;
+                p1.z = p0.z;
                 fig.addPoint(p1);
-
-                fig.Closed = true;
-
-                fig.endCreate(Controller.CurrentDC);
-
-                CadOpe ope = CadOpe.getAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-                Controller.HistoryManager.foward(ope);
-                Controller.CurrentLayer.addFigure(fig);
-
-                stack.push(0);
             }
-            else
+            else if (coord == Coord.XZ)
             {
-                stack.push(1);
+                p1.x = p0.x + w;
+                p1.y = p0.y;
+                p1.z = p0.z;
+                fig.addPoint(p1);
+
+                p1.x = p0.x + w;
+                p1.y = p0.y;
+                p1.z = p0.z - h;
+                fig.addPoint(p1);
+
+                p1.x = p0.x;
+                p1.y = p0.y;
+                p1.z = p0.z - h;
+                fig.addPoint(p1);
+            }
+            else if (coord == Coord.ZY)
+            {
+                p1.x = p0.x;
+                p1.y = p0.y;
+                p1.z = p0.z - w;
+                fig.addPoint(p1);
+
+                p1.x = p0.x;
+                p1.y = p0.y + h;
+                p1.z = p0.z - w;
+                fig.addPoint(p1);
+
+                p1.x = p0.x;
+                p1.y = p0.y + h;
+                p1.z = p0.z;
+                fig.addPoint(p1);
             }
 
-            return 1;
+            fig.Closed = true;
+
+            fig.endCreate(Controller.CurrentDC);
+
+            CadOpe ope = CadOpe.getAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+            Controller.CurrentLayer.addFigure(fig);
         }
 
         private int addLayer(int argCount, Evaluator.ValueStack stack)

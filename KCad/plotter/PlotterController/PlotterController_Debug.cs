@@ -284,11 +284,21 @@ namespace Plotter
             //ps.dump(DebugOut.Std);
         }
 
+        private void test_ClearLayer(DrawContext dc)
+        {
+            ClearLayer(dc, CurrentLayer.ID);
+        }
+
         public void debugCommand(DrawContext dc, string s)
         {
             if (s == "test")
             {
                 test(dc);
+            }
+
+            else if (s == "clear layer")
+            {
+                test_ClearLayer(dc);
             }
 
             else if (s == "test gi")

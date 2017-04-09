@@ -43,16 +43,23 @@ namespace Plotter
             mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
             mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
 
-            LightPosition = new Vector4(150f, 150f, 150f, 1.0f);
-            LightAmbient = new Color4(0.8f, 0.8f, 0.8f, 1.0f);
-            LightDiffuse = new Color4(0.2f, 0.2f, 0.2f, 1.0f);
-            LightSpecular = new Color4(0.0f, 0.0f, 0.0f, 0.0f);
+            /*
+            LightPosition = new Vector4(150f, 150f, 150f, 0.0f);
+            LightAmbient = new Color4(0.2f, 0.2f, 0.2f, 1.0f);
+            LightDiffuse = new Color4(1.0f, 1.0f, 1.0f, 1.0f);
+            LightSpecular = new Color4(0.2f, 0.2f, 0.2f, 1.0f);
+            */
 
-            MaterialAmbient = new Color4(0.24725f, 0.1995f, 0.0225f, 1.0f);
-            MaterialDiffuse = new Color4(0.75164f, 0.60648f, 0.22648f, 1.0f);
-            MaterialSpecular = new Color4(0.628281f, 0.555802f, 0.366065f, 1.0f);
-            MaterialShininess = new Color4(51.4f, 51.4f, 51.4f, 1.0f);
+            LightPosition = new Vector4(150.0f, 150f, 500.0f, 0.0f);
+            LightAmbient = new Color4(0.2f, 0.2f, 0.2f, 1.0f);
+            LightDiffuse = new Color4(0.7f, 0.7f, 0.7f, 1.0f);
+            LightSpecular = new Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
+            MaterialAmbient = new Color4(0.2f, 0.2f, 0.2f, 1.0f);
+            MaterialDiffuse = new Color4(0.7f, 0.7f, 0.7f, 1.0f);
+            MaterialSpecular = new Color4(0.0f, 0.0f, 0.0f, 1.0f);
+            MaterialShininess = new Color4(0.1f, 0.1f, 0.1f, 1.0f);
+            
             RecalcViewDirFromCameraDirection();
         }
 
@@ -77,8 +84,6 @@ namespace Plotter
 
             GL.Enable(EnableCap.DepthTest);
 
-            SetupLight();
-
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
 
@@ -90,6 +95,8 @@ namespace Plotter
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref mProjectionMatrix.GLMatrix);
+
+            SetupLight();
         }
 
         public override void EndDraw()
@@ -174,7 +181,7 @@ namespace Plotter
             //GL.FrontFace(FrontFaceDirection.Ccw);
 
             //法線の正規化
-            GL.Enable(EnableCap.Normalize);
+            //GL.Enable(EnableCap.Normalize);
 
             GL.Light(LightName.Light0, LightParameter.Position, LightPosition);
             GL.Light(LightName.Light0, LightParameter.Ambient, LightAmbient);

@@ -39,13 +39,8 @@ namespace Plotter
             Draw(layer.FigureList);
         }
 
-        public override void Draw(IReadOnlyList<CadFigure> list, int pen = -1)
+        public override void Draw(IReadOnlyList<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
-            if (pen == -1)
-            {
-                pen = DrawTools.PEN_DEFAULT_FIGURE;
-            }
-
             foreach (CadFigure fig in list)
             {
                 fig.draw(DC, pen);
@@ -84,9 +79,9 @@ namespace Plotter
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
 
-            #region 表面
+
             GL.Begin(POLYGON);
-            GL.Color4(0.6f, 0.6f, 0.6f, 1.0f);
+            GL.Color4(0.8f, 0.8f, 0.8f, 1.0f);
 
             if (normalValid)
             {
@@ -101,35 +96,7 @@ namespace Plotter
             }
 
             GL.End();
-            #endregion
 
-            /*
-            #region 裏面
-            if (DC.LightingEnable)
-            {
-                // 裏面
-                GL.Begin(POLYGON);
-                GL.Color4(0.6f, 0.6f, 0.6f, 1.0f);
-
-                if (normalValid)
-                {
-                    GL.Normal3(normal.vector);
-                }
-
-                int i = pointList.Count - 1;
-
-                for (; i >= 0; i--)
-                {
-                    CadPoint pt = pointList[i];
-                    p = pt * DC.WoldScale;
-
-                    GL.Vertex3(p.vector);
-                }
-
-                GL.End();
-            }
-            #endregion
-            */
 
             #region 輪郭
             // 輪郭は、光源設定を無効化

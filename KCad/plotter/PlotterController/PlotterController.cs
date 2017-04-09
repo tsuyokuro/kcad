@@ -899,6 +899,24 @@ namespace Plotter
         }
         #endregion
 
+        public void ClearLayer(DrawContext dc, uint layerID)
+        {
+            if (layerID == 0)
+            {
+                layerID = CurrentLayer.ID;
+            }
+            
+            CadLayer layer = mDB.getLayer(layerID);
+
+            if (layer == null) return;
+
+            CadOpeList opeList = layer.clear();
+
+            mHistoryManager.foward(opeList);
+
+            dc.Drawing.Clear();
+            Draw(dc);
+        }
 
         public void AddLayer(string name)
         {

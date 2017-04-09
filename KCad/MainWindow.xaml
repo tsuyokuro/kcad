@@ -128,6 +128,7 @@
                     <MenuItem Tag="flip_y" Header="Flip Y" Click="MenuItem_Click"/>
                     <MenuItem Tag="flip_z" Header="Flip Z" Click="MenuItem_Click"/>
                 </MenuItem>
+                <MenuItem Tag="clear_layer" Header="Clear layer" Click="MenuItem_Click"/>
             </MenuItem>
             <MenuItem x:Name="SnapMenu" Header="Snap">
                 <MenuItem Header="Snap to grid" IsCheckable="True" IsChecked="{Binding SnapToGrid}"/>
@@ -377,11 +378,17 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
                         <Image
                             Grid.Column="0"
-                            Source="{StaticResource xy_icon}"/>
+                            Source="{StaticResource xy_icon}" HorizontalAlignment="Left" Width="16"/>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Text=" Front "/>
+
                     </Grid>
 
                 </RadioButton>
@@ -400,11 +407,17 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
                         <Image
                             Grid.Column="0"
                             Source="{StaticResource xz_icon}"/>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Text=" Top "/>
+
                     </Grid>
                 </RadioButton>
 
@@ -422,11 +435,17 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
                         <Image
                             Grid.Column="0"
                             Source="{StaticResource zy_icon}"/>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Text=" Right "/>
+
                     </Grid>
 
                 </RadioButton>
@@ -449,7 +468,7 @@
 
                         <TextBlock
                             Grid.Column="0"
-                            Text=" Free "/>
+                            Text=" 3D "/>
                     </Grid>
 
                 </RadioButton>
