@@ -18,9 +18,12 @@ namespace Plotter
     public enum ViewModes
     {
         NONE,
-        XY,
-        XZ,
-        ZY,
+        FRONT,
+        BACK,
+        TOP,
+        BOTTOM,
+        RIGHT,
+        LEFT,
         FREE,
     }
 
@@ -259,7 +262,7 @@ namespace Plotter
 
             SetView(plotterView1);
 
-            ViewMode = ViewModes.XY;
+            ViewMode = ViewModes.FRONT;
         }
 
         public void SetView(IPlotterView view)
@@ -837,21 +840,39 @@ namespace Plotter
 
             switch (mViewMode)
             {
-                case ViewModes.XY:
+                case ViewModes.FRONT:
                     SetView(plotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitZ, Vector3d.UnitY);
                     DrawAll();
                     break;
 
-                case ViewModes.XZ:
+                case ViewModes.BACK:
+                    SetView(plotterView1);
+                    mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitZ, Vector3d.UnitY);
+                    DrawAll();
+                    break;
+
+                case ViewModes.TOP:
                     SetView(plotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitY, -Vector3d.UnitZ);
                     DrawAll();
                     break;
 
-                case ViewModes.ZY:
+                case ViewModes.BOTTOM:
+                    SetView(plotterView1);
+                    mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitY, Vector3d.UnitZ);
+                    DrawAll();
+                    break;
+
+                case ViewModes.RIGHT:
                     SetView(plotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitX, Vector3d.UnitY);
+                    DrawAll();
+                    break;
+
+                case ViewModes.LEFT:
+                    SetView(plotterView1);
+                    mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitX, Vector3d.UnitY);
                     DrawAll();
                     break;
 
