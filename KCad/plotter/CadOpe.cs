@@ -12,19 +12,9 @@ namespace Plotter
     */
     public abstract class CadOpe
     {
-        //protected uint LayerID;
-
         protected CadOpe()
         {
-            //LayerID = 0;
         }
-
-        /*
-        protected CadOpe(uint layerID)
-        {
-            LayerID = layerID;
-        }
-        */
 
         public static CadOpeList getListOpe()
         {
@@ -78,6 +68,12 @@ namespace Plotter
         public static CadOpe getRemoveRelPointOpe(CadLayer layer, CadRelativePoint rp)
         {
             CadOpe ope = new CadOpeRemoveRelPoint(layer.ID, rp);
+            return ope;
+        }
+
+        public static CadOpe getChangeNormalOpe(uint figID, CadPoint oldNormal, CadPoint newNormal)
+        {
+            CadOpe ope = new CadOpeChangeNormal(figID, oldNormal, newNormal);
             return ope;
         }
 
@@ -476,6 +472,32 @@ namespace Plotter
                 CadFigure fig = db.getFigure(childID);
                 fig.Parent = null;
             }
+        }
+    }
+
+    public class CadOpeChangeNormal : CadOpe
+    {
+        private uint FigureID;
+        private CadPoint NewNormal;
+        private CadPoint OldNormal;
+
+        public CadOpeChangeNormal(uint figID, CadPoint oldNormal, CadPoint newNormal)
+        {
+            FigureID = figID;
+            OldNormal = oldNormal;
+            NewNormal = newNormal;
+        }
+
+        public override void undo(CadObjectDB db)
+        {
+            CadFigure fig = db.getFigure(FigureID);
+            fig.Normal = OldNormal;
+        }
+
+        public override void redo(CadObjectDB db)
+        {
+            CadFigure fig = db.getFigure(FigureID);
+            fig.Normal = NewNormal;
         }
     }
 }

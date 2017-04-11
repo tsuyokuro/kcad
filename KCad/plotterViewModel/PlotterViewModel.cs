@@ -9,6 +9,7 @@ using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using System.Drawing;
 using KCad;
+using System.Drawing.Printing;
 
 namespace Plotter
 {
@@ -315,6 +316,7 @@ namespace Plotter
                 { "flip_x", FlipX },
                 { "flip_y", FlipY },
                 { "flip_z", FlipZ },
+                { "flip_normal", FlipNormal },
                 { "grid_settings", GridSettings },
             };
         }
@@ -645,6 +647,13 @@ namespace Plotter
             EndDraw();
         }
 
+        public void FlipNormal()
+        {
+            DrawContext dc = StartDraw();
+            mController.FlipNormal(dc);
+            EndDraw();
+        }
+
         public void ClearLayer()
         {
             DrawContext dc = StartDraw();
@@ -708,9 +717,10 @@ namespace Plotter
         #region "print"
         public void StartPrint()
         {
-            System.Drawing.Printing.PrintDocument pd =
-                new System.Drawing.Printing.PrintDocument();
+            PrintDocument pd =
+                new PrintDocument();
 
+            PageSettings storePageSettings = pd.DefaultPageSettings;
 
             pd.DefaultPageSettings.Landscape = mPlotterView.DrawContext.PageSize.IsLandscape();
 
@@ -724,6 +734,8 @@ namespace Plotter
             {
                 pd.Print();
             }
+
+            pd.DefaultPageSettings = storePageSettings;
         }
 
         private void PrintPage(object sender,
@@ -791,12 +803,10 @@ namespace Plotter
         #endregion
 
 
-        #region Others
         private void MessageOut(String s)
         {
             mInteractOut.print(s);
         }
-        #endregion
 
         private bool UpdateFigureType(CadFigure.Types newType)
         {

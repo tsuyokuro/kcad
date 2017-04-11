@@ -127,6 +127,7 @@
                     <MenuItem Tag="flip_x" Header="Flip X" Click="MenuItem_Click"/>
                     <MenuItem Tag="flip_y" Header="Flip Y" Click="MenuItem_Click"/>
                     <MenuItem Tag="flip_z" Header="Flip Z" Click="MenuItem_Click"/>
+                    <MenuItem Tag="flip_normal" Header="Flip Normal" Click="MenuItem_Click"/>
                 </MenuItem>
                 <MenuItem Tag="clear_layer" Header="Clear layer" Click="MenuItem_Click"/>
             </MenuItem>

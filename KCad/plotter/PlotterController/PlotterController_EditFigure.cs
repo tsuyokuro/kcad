@@ -383,5 +383,29 @@ namespace Plotter
         {
             Flip(dc, TargetCoord.Z);
         }
+
+        public void FlipNormal(DrawContext dc)
+        {
+            List<uint> ids = GetSelectedFigIDList();
+
+            CadOpeList opeList = CadOpe.getListOpe();
+
+            foreach (uint id in ids)
+            {
+                CadFigure fig = mDB.getFigure(id);
+                CadPoint old = fig.Normal;
+
+                fig.Normal *= -1;
+
+                CadOpe ope = CadOpe.getChangeNormalOpe(id, old, fig.Normal);
+                opeList.Add(ope);
+            }
+
+
+            HistoryManager.foward(opeList);
+
+            Clear(dc);
+            DrawAll(dc);
+        }
     }
 }
