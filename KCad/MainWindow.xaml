@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
         xmlns:local="clr-namespace:KCad"
+        xmlns:properties="clr-namespace:KCad.Properties"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:pl="clr-namespace:Plotter"
         
@@ -106,12 +107,12 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" >
-            <MenuItem Header="File" >
+            <MenuItem Header="{x:Static properties:Resources.menu_edit}" >
                 <MenuItem Tag="load" Header="Load" Click="MenuItem_Click" />
                 <MenuItem Tag="save" Header="Save" Click="MenuItem_Click"/>
                 <MenuItem Tag="print" Header="Print" Click="MenuItem_Click"/>
             </MenuItem>
-            <MenuItem Header="Edit" >
+            <MenuItem Header="{x:Static properties:Resources.menu_edit}" >
                 <MenuItem Tag="undo" Header="Undo" Click="MenuItem_Click"/>
                 <MenuItem Tag="redo" Header="Redo" Click="MenuItem_Click"/>
                 <MenuItem Tag="copy" Header="Copy" Click="MenuItem_Click"/>
@@ -131,7 +132,7 @@
                 </MenuItem>
                 <MenuItem Tag="clear_layer" Header="Clear layer" Click="MenuItem_Click"/>
             </MenuItem>
-            <MenuItem x:Name="SnapMenu" Header="Snap">
+            <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
                 <MenuItem Header="Snap to grid" IsCheckable="True" IsChecked="{Binding SnapToGrid}"/>
                 <MenuItem Header="Snap to figure" IsCheckable="True" IsChecked="{Binding SnapToFigure}"/>
                 <MenuItem Tag="grid_settings" Header="Grid Settings" Click="MenuItem_Click"/>
