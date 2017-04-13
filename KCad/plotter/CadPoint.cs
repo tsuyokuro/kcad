@@ -548,8 +548,8 @@ namespace Plotter
                 idx2 = t;
             }
 
-            CadPoint a = fig.getPointAt(idx1);
-            CadPoint b = fig.getPointAt(idx2);
+            CadPoint a = fig.GetPointAt(idx1);
+            CadPoint b = fig.GetPointAt(idx2);
 
             CadPoint hp1 = b - a;
             hp1 = hp1 / 3;
@@ -562,8 +562,8 @@ namespace Plotter
             hp1.Type = CadPoint.Types.HANDLE;
             hp2.Type = CadPoint.Types.HANDLE;
 
-            fig.insertPointAt(idx1 + 1, hp1);
-            fig.insertPointAt(idx1 + 2, hp2);
+            fig.InsertPointAt(idx1 + 1, hp1);
+            fig.InsertPointAt(idx1 + 2, hp2);
 
             return 2;
         }

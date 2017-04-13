@@ -12,7 +12,7 @@ namespace Plotter
         {
             // Do not have data member.
 
-            public override States getState(CadFigure fig)
+            public override States GetState(CadFigure fig)
             {
                 if (fig.PointList.Count < 2)
                 {
@@ -34,7 +34,7 @@ namespace Plotter
             {
             }
 
-            public override void removeSelected(CadFigure fig)
+            public override void RemoveSelected(CadFigure fig)
             {
                 fig.mPointList.RemoveAll(a => a.Selected);
 
@@ -44,21 +44,21 @@ namespace Plotter
                 }
             }
 
-            public override void addPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
             {
                 fig.mPointList.Add(p);
             }
 
-            public override void addPoint(CadFigure fig, CadPoint p)
+            public override void AddPoint(CadFigure fig, CadPoint p)
             {
                 fig.mPointList.Add(p);
             }
 
-            public override void draw(CadFigure fig, DrawContext dc, int pen)
+            public override void Draw(CadFigure fig, DrawContext dc, int pen)
             {
                 if (fig.Closed)
                 {
-                    dc.Drawing.DrawFace(pen, getPoints(fig, 32), fig.Normal);
+                    dc.Drawing.DrawFace(pen, GetPoints(fig, 32), fig.Normal);
                 }
                 else
                 {
@@ -66,12 +66,12 @@ namespace Plotter
                 }
             }
 
-            public override void drawSelected(CadFigure fig, DrawContext dc, int pen)
+            public override void DrawSelected(CadFigure fig, DrawContext dc, int pen)
             {
                 drawSelected_Lines(fig, dc, pen);
             }
 
-            public override void drawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB)
+            public override void DrawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB)
             {
                 CadPoint a = fig.PointList[idxA];
                 CadPoint b = fig.PointList[idxB];
@@ -167,7 +167,7 @@ namespace Plotter
                 }
             }
 
-            public override IReadOnlyList<CadPoint> getPoints(CadFigure fig, int curveSplitNum)
+            public override IReadOnlyList<CadPoint> GetPoints(CadFigure fig, int curveSplitNum)
             {
                 List<CadPoint> ret = new List<CadPoint>();
 
@@ -241,7 +241,7 @@ namespace Plotter
 
                         if (idx < fig.PointCount)
                         {
-                            CadPoint np = fig.getPointAt(idx);
+                            CadPoint np = fig.GetPointAt(idx);
                             if (np.Type != CadPoint.Types.HANDLE)
                             {
                                 dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
@@ -253,7 +253,7 @@ namespace Plotter
 
                         if (idx >= 0)
                         {
-                            CadPoint np = fig.getPointAt(idx);
+                            CadPoint np = fig.GetPointAt(idx);
                             if (np.Type != CadPoint.Types.HANDLE)
                             {
                                 dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
@@ -267,7 +267,7 @@ namespace Plotter
 
                         if (idx < fig.PointCount)
                         {
-                            CadPoint np = fig.getPointAt(idx);
+                            CadPoint np = fig.GetPointAt(idx);
                             if (np.Type == CadPoint.Types.HANDLE)
                             {
                                 dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
@@ -279,7 +279,7 @@ namespace Plotter
 
                         if (idx >= 0)
                         {
-                            CadPoint np = fig.getPointAt(idx);
+                            CadPoint np = fig.GetPointAt(idx);
                             if (np.Type == CadPoint.Types.HANDLE)
                             {
                                 dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
@@ -290,7 +290,7 @@ namespace Plotter
                 }
             }
 
-            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
+            public override void DrawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
             {
                 if (fig.PointCount == 0)
                 {
@@ -305,17 +305,17 @@ namespace Plotter
 
             }
 
-            public override void setPointAt(CadFigure fig, int index, CadPoint pt)
+            public override void SetPointAt(CadFigure fig, int index, CadPoint pt)
             {
                 fig.mPointList[index] = pt;
             }
 
-            public override void startCreate(CadFigure fig, DrawContext dc)
+            public override void StartCreate(CadFigure fig, DrawContext dc)
             {
                 // NOP
             }
 
-            public override CadFigure.Types endCreate(CadFigure fig, DrawContext dc)
+            public override CadFigure.Types EndCreate(CadFigure fig, DrawContext dc)
             {
                 if (fig.PointList.Count > 2)
                 {
@@ -328,7 +328,7 @@ namespace Plotter
                 return fig.Type;
             }
 
-            public override Centroid getCentroid(CadFigure fig)
+            public override Centroid GetCentroid(CadFigure fig)
             {
                 if (fig.PointList.Count == 0)
                 {

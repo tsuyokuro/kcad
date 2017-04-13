@@ -292,7 +292,7 @@ namespace Plotter
 
             if (CreatingFigure != null)
             {
-                CreatingFigure.endCreate(dc);
+                CreatingFigure.EndCreate(dc);
                 CreatingFigure = null;
             }
 
@@ -303,7 +303,7 @@ namespace Plotter
         {
             if (CreatingFigure != null)
             {
-                CreatingFigure.endCreate(dc);
+                CreatingFigure.EndCreate(dc);
                 CreatingFigure = null;
             }
 
@@ -316,9 +316,9 @@ namespace Plotter
 
             CreatingFigure.Closed = true;
 
-            CreatingFigure.endCreate(dc);
+            CreatingFigure.EndCreate(dc);
 
-            CadOpe ope = CadOpe.getSetCloseOpe(CurrentLayer.ID, CreatingFigure.ID, true);
+            CadOpe ope = CadOpe.CreateSetCloseOpe(CurrentLayer.ID, CreatingFigure.ID, true);
             mHistoryManager.foward(ope);
 
             NextState(dc);
@@ -468,15 +468,15 @@ namespace Plotter
 
         private void SetPointInCreating(DrawContext dc, CadPoint p)
         {
-            CreatingFigure.addPointInCreating(dc, p);
+            CreatingFigure.AddPointInCreating(dc, p);
 
             CadFigure.States state = CreatingFigure.State;
 
             if (state == CadFigure.States.FULL)
             {
-                CreatingFigure.endCreate(dc);
+                CreatingFigure.EndCreate(dc);
 
-                CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
+                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
                 mHistoryManager.foward(ope);
                 CurrentLayer.addFigure(CreatingFigure);
 
@@ -484,13 +484,13 @@ namespace Plotter
             }
             else if (state == CadFigure.States.ENOUGH)
             {
-                CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
+                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
                 mHistoryManager.foward(ope);
                 CurrentLayer.addFigure(CreatingFigure);
             }
             else if (state == CadFigure.States.CONTINUE)
             {
-                CadOpe ope = CadOpe.getAddPointOpe(
+                CadOpe ope = CadOpe.CreateAddPointOpe(
                     CurrentLayer.ID,
                     CreatingFigure.ID,
                     CreatingFigure.PointCount - 1,
@@ -557,7 +557,7 @@ namespace Plotter
                 CadFigure fig = mDB.getFigure(id);
                 if (fig != null)
                 {
-                    fig.startEdit();
+                    fig.StartEdit();
                 }
             }
         }
@@ -573,7 +573,7 @@ namespace Plotter
                 CadFigure fig = mDB.getFigure(id);
                 if (fig != null)
                 {
-                    DiffData dd = fig.endEdit();
+                    DiffData dd = fig.EndEdit();
 
                     if (dd != null)
                     {
@@ -584,12 +584,12 @@ namespace Plotter
 
             if (ddl.DiffDatas.Count > 0)
             {
-                CadOpeList root = CadOpe.getListOpe();
+                CadOpeList root = CadOpe.CreateListOpe();
 
                 CadOpeList ropeList = RemoveInvalidRelPoints();
                 root.OpeList.Add(ropeList);
 
-                CadOpe ope = CadOpe.getDiffOpe(ddl);
+                CadOpe ope = CadOpe.CreateDiffOpe(ddl);
                 root.OpeList.Add(ope);
 
                 CadOpeList fopeList = RemoveInvalidFigure();
@@ -650,7 +650,7 @@ namespace Plotter
 
                     if (fig.PointCount == 0)
                     {
-                        CadOpe ope = CadOpe.getRemoveFigureOpe(layer, fig.ID);
+                        CadOpe ope = CadOpe.CreateRemoveFigureOpe(layer, fig.ID);
                         opeList.OpeList.Add(ope);
 
                         layer.removeFigureByIndex(i);
@@ -672,7 +672,7 @@ namespace Plotter
                 CadFigure fig = mDB.getFigure(id);
                 if (fig != null)
                 {
-                    fig.moveSelectedPoints(dc, delta);
+                    fig.MoveSelectedPoints(dc, delta);
                 }
             }
 
@@ -685,7 +685,7 @@ namespace Plotter
             foreach (uint id in figIDList)
             {
                 CadFigure fig = mDB.getFigure(id);
-                fig.removeSelected();
+                fig.RemoveSelected();
             }
         }
 
@@ -769,7 +769,7 @@ namespace Plotter
 
                 if (rp.RemoveMark)
                 {
-                    ope = CadOpe.getRemoveRelPointOpe(layer, rp);
+                    ope = CadOpe.CreateRemoveRelPointOpe(layer, rp);
                     opeList.OpeList.Add(ope);
 
                     list.RemoveAt(i);
@@ -788,7 +788,7 @@ namespace Plotter
                     continue;
                 }
 
-                ope = CadOpe.getRemoveRelPointOpe(layer, rp);
+                ope = CadOpe.CreateRemoveRelPointOpe(layer, rp);
                 opeList.OpeList.Add(ope);
 
                 list.RemoveAt(i);
@@ -845,15 +845,15 @@ namespace Plotter
 
                 d.z = 0;
 
-                CadOpeList opeRoot = CadOpe.getListOpe();
+                CadOpeList opeRoot = CadOpe.CreateListOpe();
 
                 foreach (CadFigure fig in list)
                 {
-                    fig.moveAllPoints(d);
+                    fig.MoveAllPoints(d);
                     mDB.addFigure(fig);
                     CurrentLayer.addFigure(fig);
 
-                    CadOpe ope = CadOpe.getAddFigureOpe(CurrentLayer.ID, fig.ID);
+                    CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, fig.ID);
                     opeRoot.OpeList.Add(ope);
 
                     fig.Select();

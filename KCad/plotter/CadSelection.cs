@@ -120,7 +120,7 @@ namespace Plotter
         {
             for (int idx = 0; idx < fig.PointCount; idx++)
             {
-                add(layerID, fig, idx, fig.getPointAt(idx));
+                add(layerID, fig, idx, fig.GetPointAt(idx));
             }
         }
 
@@ -149,7 +149,7 @@ namespace Plotter
 
             for (int i = si; i <= ei; i++)
             {
-                CadPoint p = fig.getPointAt(i);
+                CadPoint p = fig.GetPointAt(i);
                 add(layerID, fig, i, p);
             }
         }

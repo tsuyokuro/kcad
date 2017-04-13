@@ -402,7 +402,7 @@ namespace Plotter
             foreach (uint id in ids)
             {
                 CadFigure fig = mFigureIdMap[id];
-                fig.dump(dout);
+                fig.Dump(dout);
             }
             dout.Indent--;
             dout.println("}");

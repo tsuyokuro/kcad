@@ -43,19 +43,19 @@ namespace Plotter
                 {
                     case DiffItem.Types.ADD:
                         {
-                            fig.removePointAt(dd.index);
+                            fig.RemovePointAt(dd.index);
                         }
                         break;
 
                     case DiffItem.Types.REMOVE:
                         {
-                            fig.insertPointAt(dd.index, dd.P0);
+                            fig.InsertPointAt(dd.index, dd.P0);
                         }
                         break;
 
                     case DiffItem.Types.MODIFY:
                         {
-                            fig.setPointAt(dd.index, dd.P0);
+                            fig.SetPointAt(dd.index, dd.P0);
                         }
 
                         break;
@@ -83,20 +83,20 @@ namespace Plotter
                 {
                     case DiffItem.Types.ADD:
                         {
-                            fig.insertPointAt(dd.index, dd.P0);
+                            fig.InsertPointAt(dd.index, dd.P0);
                         }
                         break;
 
                     case DiffItem.Types.REMOVE:
                         {
-                            fig.removePointAt(dd.index);
+                            fig.RemovePointAt(dd.index);
                         }
 
                         break;
 
                     case DiffItem.Types.MODIFY:
                         {
-                            fig.setPointAt(dd.index, dd.P1);
+                            fig.SetPointAt(dd.index, dd.P1);
                         }
 
                         break;

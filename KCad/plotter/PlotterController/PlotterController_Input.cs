@@ -191,7 +191,7 @@ namespace Plotter
                             if (SelectMode == SelectModes.POINT)
                             {
                                 mSelList.add(mp);
-                                fig.selectPointAt(mp.PointIndex, true);
+                                fig.SelectPointAt(mp.PointIndex, true);
                             }
                             else if (SelectMode == SelectModes.OBJECT)
                             {
@@ -230,8 +230,8 @@ namespace Plotter
                             if (SelectMode == SelectModes.POINT)
                             {
                                 mSelList.add(mseg.LayerID, mDB.getFigure(mseg.FigureID), mseg.PtIndexA, mseg.PtIndexB);
-                                fig.selectPointAt(mseg.PtIndexA, true);
-                                fig.selectPointAt(mseg.PtIndexB, true);
+                                fig.SelectPointAt(mseg.PtIndexA, true);
+                                fig.SelectPointAt(mseg.PtIndexB, true);
                             }
                             else if (SelectMode == SelectModes.OBJECT)
                             {
@@ -298,7 +298,7 @@ namespace Plotter
                         CreatingFigure = mDB.newFigure(CreatingFigType);
                         State = States.CREATING;
 
-                        CreatingFigure.startCreate(dc);
+                        CreatingFigure.StartCreate(dc);
 
 
                         CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);
@@ -456,7 +456,7 @@ namespace Plotter
                 {
                     if (CreatingFigure.PointCount == 1)
                     {
-                        mPointSearcher.Check(dc, CreatingFigure.getPointAt(0));
+                        mPointSearcher.Check(dc, CreatingFigure.GetPointAt(0));
                     }
                 }
 
@@ -514,7 +514,7 @@ namespace Plotter
                     if (seg.Distance < dist)
                     {
                         CadFigure fig = mDB.getFigure(seg.FigureID);
-                        fig.drawSeg(dc, DrawTools.PEN_MATCH_SEG, seg.PtIndexA, seg.PtIndexB);
+                        fig.DrawSeg(dc, DrawTools.PEN_MATCH_SEG, seg.PtIndexA, seg.PtIndexB);
 
                         mSnapPoint = seg.CrossPoint;
 
@@ -571,7 +571,7 @@ namespace Plotter
                         if (CreatingFigure != null)
                         {
                             CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);
-                            CreatingFigure.drawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
+                            CreatingFigure.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
                         }
                         break;
                     }

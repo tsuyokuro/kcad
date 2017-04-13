@@ -16,76 +16,71 @@ namespace Plotter
         {
         }
 
-        public static CadOpeList getListOpe()
+        public static CadOpeList CreateListOpe()
         {
             CadOpeList ope = new CadOpeList();
             return ope;
         }
 
-        public static CadOpeList getListOpe(List<CadOpe> list)
+        public static CadOpeList CreateListOpe(List<CadOpe> list)
         {
             CadOpeList ope = new CadOpeList(list);
             return ope;
         }
 
-        public static CadOpe getAddPointOpe(uint layerID, uint figureID, int pointIndex, ref CadPoint pt)
+        public static CadOpe CreateAddPointOpe(uint layerID, uint figureID, int pointIndex, ref CadPoint pt)
         {
             CadPoint t = pt;
             CadOpe ope = new CadOpeAddPoint(layerID, figureID, pointIndex, ref t);
             return ope;
         }
 
-        public static CadOpe getInsertPointsOpe(uint layerID, uint figureID, int startIndex, int insertNum)
+        public static CadOpe CreateInsertPointsOpe(uint layerID, uint figureID, int startIndex, int insertNum)
         {
             CadOpe ope = new CadOpeInsertPoints(layerID, figureID, startIndex, insertNum);
             return ope;
         }
 
-        public static CadOpe getSetCloseOpe(uint layerID, uint figureID, bool on)
+        public static CadOpe CreateSetCloseOpe(uint layerID, uint figureID, bool on)
         {
             CadOpe ope = new CadOpeSetClose(layerID, figureID, on);
             return ope;
         }
 
-        public static CadOpe getAddFigureOpe(uint layerID, uint figureID)
+        public static CadOpe CreateAddFigureOpe(uint layerID, uint figureID)
         {
             CadOpe ope = new CadOpeAddFigure(layerID, figureID);
             return ope;
         }
 
-        public static CadOpe getRemoveFigureOpe(CadLayer layer, uint figureID)
+        public static CadOpe CreateRemoveFigureOpe(CadLayer layer, uint figureID)
         {
             CadOpe ope = new CadOpeRemoveFigure(layer, figureID);
             return ope;
         }
 
-        public static CadOpe getDiffOpe(DiffDataList diffList)
+        public static CadOpe CreateDiffOpe(DiffDataList diffList)
         {
             CadOpe ope = new CadOpeDiff(diffList);
             return ope;
         }
 
-        public static CadOpe getRemoveRelPointOpe(CadLayer layer, CadRelativePoint rp)
+        public static CadOpe CreateRemoveRelPointOpe(CadLayer layer, CadRelativePoint rp)
         {
             CadOpe ope = new CadOpeRemoveRelPoint(layer.ID, rp);
             return ope;
         }
 
-        public static CadOpe getChangeNormalOpe(uint figID, CadPoint oldNormal, CadPoint newNormal)
+        public static CadOpe CreateChangeNormalOpe(uint figID, CadPoint oldNormal, CadPoint newNormal)
         {
             CadOpe ope = new CadOpeChangeNormal(figID, oldNormal, newNormal);
             return ope;
         }
 
-        public virtual string toString()
-        {
-            return GetType().FullName;
-        }
+        public abstract void Undo(CadObjectDB db);
+        public abstract void Redo(CadObjectDB db);
 
-        public abstract void undo(CadObjectDB db);
-        public abstract void redo(CadObjectDB db);
-
-        public virtual void releaseResource(CadObjectDB db)
+        public virtual void ReleaseResource(CadObjectDB db)
         {
         }
     }
@@ -99,17 +94,12 @@ namespace Plotter
             Diffs = diffs;
         }
 
-        public override string toString()
-        {
-            return GetType().FullName;
-        }
-
-        public override void undo(CadObjectDB db)
+        public override void Undo(CadObjectDB db)
         {
             Diffs.undo(db);
         }
 
-        public override void redo(CadObjectDB db)
+        public override void Redo(CadObjectDB db)
         {
             Diffs.redo(db);
         }
@@ -130,29 +120,24 @@ namespace Plotter
             OpeList = new List<CadOpe>(list);
         }
 
-        public override string toString()
-        {
-            return GetType().FullName;
-        }
-
         public void Add(CadOpe ope)
         {
             OpeList.Add(ope);
         }
 
-        public override void undo(CadObjectDB db)
+        public override void Undo(CadObjectDB db)
         {
             foreach (CadOpe ope in OpeList.Reverse<CadOpe>())
             {
-                ope.undo(db);
+                ope.Undo(db);
             }
         }
 
-        public override void redo(CadObjectDB db)
+        public override void Redo(CadObjectDB db)
         {
             foreach (CadOpe ope in OpeList)
             {
-                ope.redo(db);
+                ope.Redo(db);
             }
         }
     }
@@ -189,21 +174,16 @@ namespace Plotter
             Point = pt;
         }
 
-        public override string toString()
-        {
-            return GetType().FullName;
-        }
-
-        public override void undo(CadObjectDB db)
+        public override void Undo(CadObjectDB db)
         {
             CadFigure fig = db.getFigure(FigureID);
-            fig.removePointAt(PointIndex);
+            fig.RemovePointAt(PointIndex);
         }
 
-        public override void redo(CadObjectDB db)
+        public override void Redo(CadObjectDB db)
         {
             CadFigure fig = db.getFigure(FigureID);
-            fig.addPoint(Point);
+            fig.AddPoint(Point);
         }
     }
 
@@ -224,12 +204,7 @@ namespace Plotter
             InsertNum = insertNum;
         }
 
-        public override string toString()
-        {
-            return GetType().FullName;
-        }
-
-        public override void undo(CadObjectDB db)
+        public override void Undo(CadObjectDB db)
         {
             CadLayer layer = db.getLayer(LayerID);
             CadFigure fig = db.getFigure(FigureID);
@@ -251,17 +226,17 @@ namespace Plotter
 
             for (; i < InsertNum; i++)
             {
-                mPointList.Add(fig.getPointAt(idx + i));
+                mPointList.Add(fig.GetPointAt(idx + i));
             }
 
-            fig.removePointsRange(idx, InsertNum);
+            fig.RemovePointsRange(idx, InsertNum);
         }
 
-        public override void redo(CadObjectDB db)
+        public override void Redo(CadObjectDB db)
         {
             CadLayer layer = db.getLayer(LayerID);
             CadFigure fig = db.getFigure(FigureID);
-            fig.insertPointsRange(PointIndex, mPointList);
+            fig.InsertPointsRange(PointIndex, mPointList);
         }
     }
     #endregion
@@ -293,18 +268,13 @@ namespace Plotter
             Close = on;
         }
 
-        public override string toString()
-        {
-            return GetType().FullName;
-        }
-
-        public override void undo(CadObjectDB db)
+        public override void Undo(CadObjectDB db)
         {
             CadFigure fig = db.getFigure(FigureID);
             fig.Closed = !Close;
         }
 
-        public override void redo(CadObjectDB db)
+        public override void Redo(CadObjectDB db)
         {
             CadFigure fig = db.getFigure(FigureID);
             fig.Closed = Close;
@@ -318,25 +288,20 @@ namespace Plotter
         {
         }
 
-        public override string toString()
-        {
-            return GetType().FullName;
-        }
-
-        public override void undo(CadObjectDB db)
+        public override void Undo(CadObjectDB db)
         {
             CadLayer layer = db.getLayer(LayerID);
             layer.removeFigureByID(db, FigureID);
         }
 
-        public override void redo(CadObjectDB db)
+        public override void Redo(CadObjectDB db)
         {
             CadLayer layer = db.getLayer(LayerID);
             CadFigure fig = db.getFigure(FigureID);
             layer.addFigure(fig);
         }
 
-        public override void releaseResource(CadObjectDB db)
+        public override void ReleaseResource(CadObjectDB db)
         {
             db.relaseFigure(FigureID);
         }
@@ -353,19 +318,14 @@ namespace Plotter
             mFigureIndex = figIndex;
         }
 
-        public override string toString()
-        {
-            return GetType().FullName;
-        }
-
-        public override void undo(CadObjectDB db)
+        public override void Undo(CadObjectDB db)
         {
             CadLayer layer = db.getLayer(LayerID);
             CadFigure fig = db.getFigure(FigureID);
             layer.insertFigure(mFigureIndex, fig);
         }
 
-        public override void redo(CadObjectDB db)
+        public override void Redo(CadObjectDB db)
         {
             CadLayer layer = db.getLayer(LayerID);
             layer.removeFigureByID(db, FigureID);
@@ -384,13 +344,13 @@ namespace Plotter
             RelPoint = relPoint;
         }
 
-        public override void undo(CadObjectDB db)
+        public override void Undo(CadObjectDB db)
         {
             CadLayer layer = db.getLayer(LayerID);
             layer.RelPointList.Add(RelPoint);
         }
 
-        public override void redo(CadObjectDB db)
+        public override void Redo(CadObjectDB db)
         {
             CadLayer layer = db.getLayer(LayerID);
             layer.RelPointList.RemoveAll( rp => rp.ID == RelPoint.ID);
@@ -412,7 +372,7 @@ namespace Plotter
             });
         }
 
-        public override void undo(CadObjectDB db)
+        public override void Undo(CadObjectDB db)
         {
             CadFigure parent = db.getFigure(ParentID);
 
@@ -424,14 +384,14 @@ namespace Plotter
             }
         }
 
-        public override void redo(CadObjectDB db)
+        public override void Redo(CadObjectDB db)
         {
             CadFigure parent = db.getFigure(ParentID);
 
             foreach (uint childID in ChildIDList)
             {
                 CadFigure fig = db.getFigure(childID);
-                parent.addChild(fig);
+                parent.AddChild(fig);
             }
         }
     }
@@ -451,18 +411,18 @@ namespace Plotter
             });
         }
 
-        public override void undo(CadObjectDB db)
+        public override void Undo(CadObjectDB db)
         {
             CadFigure parent = db.getFigure(ParentID);
 
             foreach (uint childID in ChildIDList)
             {
                 CadFigure fig = db.getFigure(childID);
-                parent.addChild(fig);
+                parent.AddChild(fig);
             }
         }
 
-        public override void redo(CadObjectDB db)
+        public override void Redo(CadObjectDB db)
         {
             CadFigure parent = db.getFigure(ParentID);
 
@@ -488,13 +448,13 @@ namespace Plotter
             NewNormal = newNormal;
         }
 
-        public override void undo(CadObjectDB db)
+        public override void Undo(CadObjectDB db)
         {
             CadFigure fig = db.getFigure(FigureID);
             fig.Normal = OldNormal;
         }
 
-        public override void redo(CadObjectDB db)
+        public override void Redo(CadObjectDB db)
         {
             CadFigure fig = db.getFigure(FigureID);
             fig.Normal = NewNormal;

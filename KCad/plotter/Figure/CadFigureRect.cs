@@ -10,7 +10,7 @@ namespace Plotter
         {
             // Do not have data member.
 
-            public override States getState(CadFigure fig)
+            public override States GetState(CadFigure fig)
             {
                 if (fig.PointList.Count < 1)
                 {
@@ -28,7 +28,7 @@ namespace Plotter
             {
             }
 
-            public override void addPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
             {
                 if (fig.mPointList.Count == 0)
                 {
@@ -55,7 +55,7 @@ namespace Plotter
                 }
             }
 
-            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
+            public override void DrawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
             {
                 if (fig.PointList.Count <= 0)
                 {
@@ -65,7 +65,7 @@ namespace Plotter
                 dc.Drawing.DrawRect(pen, fig.PointList[0], tp);
             }
 
-            public override CadFigure.Types endCreate(CadFigure fig, DrawContext dc)
+            public override CadFigure.Types EndCreate(CadFigure fig, DrawContext dc)
             {
                 fig.Normal = CadPoint.Create(dc.ViewDir);
                 fig.Normal *= -1;

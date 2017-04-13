@@ -49,7 +49,7 @@ namespace Plotter
             set
             {
                 mType = value;
-                setBehavior(mType);
+                SetBehavior(mType);
             }
         }
 
@@ -141,7 +141,7 @@ namespace Plotter
             Type = type;
         }
 
-        private void setBehavior(Types type)
+        private void SetBehavior(Types type)
         {
             if (type > Types.NONE && type < Types.MAX)
             {
@@ -149,62 +149,62 @@ namespace Plotter
             }
         }
 
-        public void clearPoints()
+        public void ClearPoints()
         {
             mPointList.Clear();
         }
 
-        public void copyPoints(CadFigure fig)
+        public void CopyPoints(CadFigure fig)
         {
             if (Locked) return;
             copyPointList(mPointList, fig.mPointList);
         }
 
-        public void addPoints(IReadOnlyList<CadPoint> points, int sp, int num)
+        public void AddPoints(IReadOnlyList<CadPoint> points, int sp, int num)
         {
             for (int i = 0; i < num; i++)
             {
                 CadPoint p = points[i + sp];
-                addPoint(p);
+                AddPoint(p);
             }
         }
 
-        public void addPoints(IReadOnlyList<CadPoint> points, int sp)
+        public void AddPoints(IReadOnlyList<CadPoint> points, int sp)
         {
-            addPoints(points, sp, points.Count - sp);
+            AddPoints(points, sp, points.Count - sp);
         }
 
-        public void addPoints(IReadOnlyList<CadPoint> points)
+        public void AddPoints(IReadOnlyList<CadPoint> points)
         {
             foreach (CadPoint p in points)
             {
-                addPoint(p);
+                AddPoint(p);
             }
         }
 
-        public void addPointsReverse(IReadOnlyList<CadPoint> points)
+        public void AddPointsReverse(IReadOnlyList<CadPoint> points)
         {
             int cnt = points.Count;
             int i = cnt - 1;
 
             for (; i >= 0; i--)
             {
-                addPoint(points[i]);
+                AddPoint(points[i]);
             }
         }
 
-        public void addPointsReverse(IReadOnlyList<CadPoint> points, int sp)
+        public void AddPointsReverse(IReadOnlyList<CadPoint> points, int sp)
         {
             int cnt = points.Count;
             int i = cnt - 1 - sp;
 
             for (; i >= 0; i--)
             {
-                addPoint(points[i]);
+                AddPoint(points[i]);
             }
         }
 
-        public void insertPointAt(int index, CadPoint pt)
+        public void InsertPointAt(int index, CadPoint pt)
         {
             if (index >= mPointList.Count)
             {
@@ -215,7 +215,7 @@ namespace Plotter
             mPointList.Insert(index, pt);
         }
 
-        public void removePointAt(int index)
+        public void RemovePointAt(int index)
         {
             if (mPointList == null)
             {
@@ -225,34 +225,34 @@ namespace Plotter
             mPointList.RemoveAt(index);
         }
 
-        public void removePointsRange(int index, int count)
+        public void RemovePointsRange(int index, int count)
         {
             mPointList.RemoveRange(index, count);
         }
 
-        public void insertPointsRange(int index, IEnumerable<CadPoint> collection)
+        public void InsertPointsRange(int index, IEnumerable<CadPoint> collection)
         {
             mPointList.InsertRange(index, collection);
         }
 
-        public CadPoint getPointAt(int index)
+        public CadPoint GetPointAt(int index)
         {
             return mPointList[index];
         }
 
-        public void selectPointAt(int index, bool sel)
+        public void SelectPointAt(int index, bool sel)
         {
             CadPoint p = mPointList[index];
             p.Selected = sel;
             mPointList[index] = p;
         }
 
-        public void clearSelectFlags()
+        public void ClearSelectFlags()
         {
             int i;
             for (i = 0; i < mPointList.Count; i++)
             {
-                selectPointAt(i, false);
+                SelectPointAt(i, false);
             }
         }
 
@@ -262,11 +262,11 @@ namespace Plotter
             int i;
             for (i = 0; i < mPointList.Count; i++)
             {
-                selectPointAt(i, true);
+                SelectPointAt(i, true);
             }
         }
 
-        public void startEdit()
+        public void StartEdit()
         {
             if (Locked) return;
 
@@ -279,7 +279,7 @@ namespace Plotter
             mPointList.ForEach(a => mStoreList.Add(a));
         }
 
-        public DiffData endEdit()
+        public DiffData EndEdit()
         {
             if (Locked) return null;
 
@@ -288,12 +288,12 @@ namespace Plotter
             return diff;
         }
 
-        public List<CadPoint> getPointListCopy()
+        public List<CadPoint> GetPointListCopy()
         {
             return new List<CadPoint>(mPointList);
         }
 
-        public int findPoint(CadPoint t)
+        public int FindPoint(CadPoint t)
         {
             int i = 0;
             foreach (CadPoint p in mPointList)
@@ -309,14 +309,14 @@ namespace Plotter
             return -1;
         }
 
-        public void reversePointList()
+        public void ReversePointList()
         {
             if (Locked) return;
 
             mPointList.Reverse();
         }
 
-        public void addChild(CadFigure fig)
+        public void AddChild(CadFigure fig)
         {
             if (Locked) return;
 
@@ -324,7 +324,7 @@ namespace Plotter
             fig.setParent(this);
         }
 
-        public void releaseAllChildlen()
+        public void ReleaseAllChildlen()
         {
             if (Locked) return;
 
@@ -449,7 +449,7 @@ namespace Plotter
         #endregion
 
         #region "Dump" 
-        public void sdump(DebugOut dout)
+        public void SimpleDump(DebugOut dout)
         {
             dout.println(
                 this.GetType().Name +
@@ -457,7 +457,7 @@ namespace Plotter
                 "ID=" + ID.ToString());
         }
 
-        public void dump(DebugOut dout)
+        public void Dump(DebugOut dout)
         {
             dout.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
             dout.Indent++;
@@ -491,7 +491,7 @@ namespace Plotter
             dout.println("}");
         }
 
-        public void dumpv(DebugOut dout, DrawContext dc)
+        public void DumpV(DebugOut dout, DrawContext dc)
         {
             dout.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
             dout.Indent++;
@@ -532,17 +532,17 @@ namespace Plotter
         {
             get
             {
-                States st = Behavior.getState(this);
+                States st = Behavior.GetState(this);
                 return st;
             }
         }
 
-        public System.Type getBehaviorType()
+        public System.Type GetBehaviorType()
         {
             return Behavior.GetType();
         }
 
-        public void moveSelectedPoints(DrawContext dc, CadPoint delta)
+        public void MoveSelectedPoints(DrawContext dc, CadPoint delta)
         {
             if (Locked) return;
             Log.d("moveSelectedPoints" + 
@@ -550,81 +550,81 @@ namespace Plotter
                 " dy=" + delta.y.ToString() +
                 " dz=" + delta.z.ToString()
                 );
-            Behavior.moveSelectedPoint(this, dc, delta);
+            Behavior.MoveSelectedPoint(this, dc, delta);
         }
 
-        public void moveAllPoints(CadPoint delta)
+        public void MoveAllPoints(CadPoint delta)
         {
             if (Locked) return;
 
-            Behavior.moveAllPoints(this, delta);
+            Behavior.MoveAllPoints(this, delta);
         }
 
-        public void addPoint(CadPoint p)
+        public void AddPoint(CadPoint p)
         {
-            Behavior.addPoint(this, p);
+            Behavior.AddPoint(this, p);
         }
 
-        public void addPointInCreating(DrawContext dc, CadPoint p)
+        public void AddPointInCreating(DrawContext dc, CadPoint p)
         {
-            Behavior.addPointInCreating(this, dc, p);
+            Behavior.AddPointInCreating(this, dc, p);
         }
 
-        public void removeSelected()
+        public void RemoveSelected()
         {
             if (Locked) return;
 
-            Behavior.removeSelected(this);
+            Behavior.RemoveSelected(this);
         }
 
-        public void setPointAt(int index, CadPoint pt)
+        public void SetPointAt(int index, CadPoint pt)
         {
-            Behavior.setPointAt(this, index, pt);
+            Behavior.SetPointAt(this, index, pt);
         }
 
-        public void draw(DrawContext dc, int pen)
+        public void Draw(DrawContext dc, int pen)
         {
-            Behavior.draw(this, dc, pen);
+            Behavior.Draw(this, dc, pen);
         }
 
-        public void drawSeg(DrawContext dc, int pen, int idxA, int idxB)
+        public void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
         {
-            Behavior.drawSeg(this, dc, pen, idxA, idxB);
+            Behavior.DrawSeg(this, dc, pen, idxA, idxB);
         }
 
-        public void drawSelected(DrawContext dc, int pen)
+        public void DrawSelected(DrawContext dc, int pen)
         {
-            Behavior.drawSelected(this, dc, pen);
+            Behavior.DrawSelected(this, dc, pen);
         }
 
-        public void drawTemp(DrawContext dc, CadPoint tp, int pen)
+        public void DrawTemp(DrawContext dc, CadPoint tp, int pen)
         {
-            Behavior.drawTemp(this, dc, tp, pen);
+            Behavior.DrawTemp(this, dc, tp, pen);
         }
 
-        public void startCreate(DrawContext dc)
+        public void StartCreate(DrawContext dc)
         {
-            Behavior.startCreate(this, dc);
+            Behavior.StartCreate(this, dc);
         }
 
-        public Types endCreate(DrawContext dc)
+        public Types EndCreate(DrawContext dc)
         {
-            return Behavior.endCreate(this, dc);
+            return Behavior.EndCreate(this, dc);
         }
 
-        public CadRect getContainsRect()
+        public CadRect GetContainsRect()
         {
-            return Behavior.getContainsRect(this);
+            return Behavior.GetContainsRect(this);
         }
 
-        public IReadOnlyList<CadPoint> getPoints(int curveSplitNum)
+        public IReadOnlyList<CadPoint> GetPoints(int curveSplitNum)
         {
-            return Behavior.getPoints(this, curveSplitNum);
+            return Behavior.GetPoints(this, curveSplitNum);
         }
 
-        public Centroid getCentroid()
+        public Centroid GetCentroid()
         {
-            return Behavior.getCentroid(this);
+            return Behavior.GetCentroid(this);
         }
         #endregion
 

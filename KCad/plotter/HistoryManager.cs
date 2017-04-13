@@ -44,7 +44,7 @@ namespace Plotter
         {
             foreach (CadOpe ope in stack)
             {
-                ope.releaseResource(mDB);
+                ope.ReleaseResource(mDB);
             }
         }
 
@@ -71,7 +71,7 @@ namespace Plotter
                     return;
                 }
 
-                ope.undo(mDB);
+                ope.Undo(mDB);
 
                 mRedoStack.Push(ope);
             }
@@ -94,7 +94,7 @@ namespace Plotter
                     return;
                 }
 
-                ope.redo(mDB);
+                ope.Redo(mDB);
                 mUndoStack.Push(ope);
             }
             catch (InvalidOperationException e)

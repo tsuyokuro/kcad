@@ -526,7 +526,7 @@ namespace Plotter
 
             foreach (CadFigure fig in list)
             {
-                fr = fig.getContainsRect();
+                fr = fig.GetContainsRect();
 
                 minx = Math.Min(minx, fr.p0.x);
                 miny = Math.Min(miny, fr.p0.y);

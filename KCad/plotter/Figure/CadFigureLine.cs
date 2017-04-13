@@ -11,7 +11,7 @@ namespace Plotter
         {
             // Do not have data member.
 
-            public override States getState(CadFigure fig)
+            public override States GetState(CadFigure fig)
             {
                 if (fig.PointList.Count < 1)
                 {
@@ -29,12 +29,12 @@ namespace Plotter
             {
             }
 
-            public override void addPoint(CadFigure fig, CadPoint p)
+            public override void AddPoint(CadFigure fig, CadPoint p)
             {
                 fig.mPointList.Add(p);
             }
 
-            public override CadFigure.Types endCreate(CadFigure fig, DrawContext dc)
+            public override CadFigure.Types EndCreate(CadFigure fig, DrawContext dc)
             {
                 fig.Type = Types.POLY_LINES;
                 return fig.Type;

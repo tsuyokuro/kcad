@@ -111,10 +111,10 @@ namespace Plotter
                     if (num >= 1)
                     {
                         nfig = DB.newFigure(CadFigure.Types.POLY_LINES);
-                        nfig.addPoints(fig.PointList, sp, num);
+                        nfig.AddPoints(fig.PointList, sp, num);
 
-                        CadPoint t = fig.getPointAt(0);
-                        nfig.addPoint(t);
+                        CadPoint t = fig.GetPointAt(0);
+                        nfig.AddPoint(t);
                     }
                 }
                 else
@@ -122,7 +122,7 @@ namespace Plotter
                     if (num >= 2)
                     {
                         nfig = DB.newFigure(CadFigure.Types.POLY_LINES);
-                        nfig.addPoints(fig.PointList, sp, num);
+                        nfig.AddPoints(fig.PointList, sp, num);
                     }
                 }
 
@@ -165,7 +165,7 @@ namespace Plotter
                 if (sp + num <= pcnt)
                 {
                     CadFigure nfig = DB.newFigure(CadFigure.Types.POLY_LINES);
-                    nfig.addPoints(fig.PointList, sp, num);
+                    nfig.AddPoints(fig.PointList, sp, num);
 
                     ProcResult.AddList.Add(new ResultItem(si.LayerID, nfig));
                 }
@@ -219,15 +219,15 @@ namespace Plotter
             CadFigure fa = DB.newFigure(CadFigure.Types.POLY_LINES);
             CadFigure fb = DB.newFigure(CadFigure.Types.POLY_LINES);
 
-            fa.addPoints(org.PointList, 0, a + 1);
-            fa.addPoint(ci.CrossPoint);
+            fa.AddPoints(org.PointList, 0, a + 1);
+            fa.AddPoint(ci.CrossPoint);
 
-            fb.addPoint(ci.CrossPoint);
-            fb.addPoints(org.PointList, b);
+            fb.AddPoint(ci.CrossPoint);
+            fb.AddPoints(org.PointList, b);
 
             if (org.Closed)
             {
-                fb.addPoint(fa.getPointAt(0));
+                fb.AddPoint(fa.GetPointAt(0));
             }
 
             ProcResult.AddList.Add(new ResultItem(seg.LayerID, fa));

@@ -63,11 +63,11 @@ namespace Plotter
 
             CadFigure fig = si.Figure;
 
-            IReadOnlyList<CadPoint> list = fig.getPoints(64);
+            IReadOnlyList<CadPoint> list = fig.GetPoints(64);
 
             CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
 
-            tfig.addPoints(list);
+            tfig.AddPoints(list);
 
             TempFigureList.Add(tfig);
 
@@ -92,8 +92,8 @@ namespace Plotter
 
             CadFigure fig = mDB.getFigure(seg.FigureID);
 
-            CadPoint a = fig.getPointAt(seg.PtIndexA);
-            CadPoint b = fig.getPointAt(seg.PtIndexB);
+            CadPoint a = fig.GetPointAt(seg.PtIndexA);
+            CadPoint b = fig.GetPointAt(seg.PtIndexB);
 
             CadPoint pt = FreeDownPoint;
 
@@ -103,8 +103,8 @@ namespace Plotter
             {
                 CadFigure figx = new CadFigure(CadFigure.Types.POLY_LINES);
 
-                figx.addPoint(pt);
-                figx.addPoint(ret.CrossPoint);
+                figx.AddPoint(pt);
+                figx.AddPoint(ret.CrossPoint);
 
                 TempFigureList.Add(figx);
             }
@@ -138,7 +138,7 @@ namespace Plotter
 
             CadFigure fig = si.Figure;
 
-            Centroid cent = fig.getCentroid();
+            Centroid cent = fig.GetCentroid();
 
             if (cent.SplitList != null)
             {
@@ -147,7 +147,7 @@ namespace Plotter
 
             CadFigure centfig = new CadFigure(CadFigure.Types.POLY_LINES);
 
-            centfig.addPoint(cent.Point);
+            centfig.AddPoint(cent.Point);
 
             TempFigureList.Add(centfig);
 
@@ -192,11 +192,11 @@ namespace Plotter
                 tp.y = qp.y;
                 tp.z = qp.z;
 
-                tfig.addPoint(tp);
+                tfig.AddPoint(tp);
             }
 
-            fig.clearPoints();
-            fig.addPoints(tfig.PointList);
+            fig.ClearPoints();
+            fig.AddPoints(tfig.PointList);
 
             //TempFigureList.Add(tfig);
 
@@ -251,7 +251,7 @@ namespace Plotter
             CadFigure fig = getSelFig();
             if (fig == null) return;
 
-            fig.dumpv(DebugOut.Std, dc);
+            fig.DumpV(DebugOut.Std, dc);
         }
 
         private void test(DrawContext dc)
@@ -405,7 +405,7 @@ namespace Plotter
                 dout.Indent++;
                 foreach (CadFigure fig in TempFigureList)
                 {
-                    fig.dump(dout);
+                    fig.Dump(dout);
                 }
                 dout.Indent--;
                 dout.println("}");

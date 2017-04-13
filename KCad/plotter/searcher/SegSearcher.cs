@@ -164,9 +164,9 @@ namespace Plotter
                 return;
             }
 
-            CadPoint c = fig.getPointAt(0);
-            CadPoint a = fig.getPointAt(1);
-            CadPoint b = fig.getPointAt(2);
+            CadPoint c = fig.GetPointAt(0);
+            CadPoint a = fig.GetPointAt(1);
+            CadPoint b = fig.GetPointAt(2);
 
             CadPoint pc = dc.CadPointToUnitPoint(c);
             CadPoint pa = dc.CadPointToUnitPoint(a);
@@ -213,7 +213,7 @@ namespace Plotter
                 seg.Distance = dist;
 
                 seg.pA = c;
-                seg.pB = fig.getPointAt(idxB);
+                seg.pB = fig.GetPointAt(idxB);
 
                 minDist = dist;
             }

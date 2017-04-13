@@ -15,20 +15,20 @@ namespace Plotter
             {
             }
 
-            public abstract States getState(CadFigure fig);
-            public abstract void addPointInCreating(CadFigure fig, DrawContext dc, CadPoint p);
-            public abstract void addPoint(CadFigure fig, CadPoint p);
-            public abstract void setPointAt(CadFigure fig, int index, CadPoint pt);
-            public abstract void removeSelected(CadFigure fig);
-            public abstract void draw(CadFigure fig, DrawContext dc, int pen);
-            public abstract void drawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB);
-            public abstract void drawSelected(CadFigure fig, DrawContext dc, int pen);
-            public abstract void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen);
-            public abstract void startCreate(CadFigure fig, DrawContext dc);
-            public abstract Types endCreate(CadFigure fig, DrawContext dc);
-            public abstract Centroid getCentroid(CadFigure fig);
+            public abstract States GetState(CadFigure fig);
+            public abstract void AddPointInCreating(CadFigure fig, DrawContext dc, CadPoint p);
+            public abstract void AddPoint(CadFigure fig, CadPoint p);
+            public abstract void SetPointAt(CadFigure fig, int index, CadPoint pt);
+            public abstract void RemoveSelected(CadFigure fig);
+            public abstract void Draw(CadFigure fig, DrawContext dc, int pen);
+            public abstract void DrawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB);
+            public abstract void DrawSelected(CadFigure fig, DrawContext dc, int pen);
+            public abstract void DrawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen);
+            public abstract void StartCreate(CadFigure fig, DrawContext dc);
+            public abstract Types EndCreate(CadFigure fig, DrawContext dc);
+            public abstract Centroid GetCentroid(CadFigure fig);
 
-            public virtual void moveSelectedPoint(CadFigure fig, DrawContext dc, CadPoint delta)
+            public virtual void MoveSelectedPoint(CadFigure fig, DrawContext dc, CadPoint delta)
             {
                 for (int i = 0; i < fig.StoreList.Count; i++)
                 {
@@ -46,17 +46,17 @@ namespace Plotter
                 }
             }
 
-            public virtual void moveAllPoints(CadFigure fig, CadPoint delta)
+            public virtual void MoveAllPoints(CadFigure fig, CadPoint delta)
             {
                 CadUtil.movePoints(fig.mPointList, delta);
             }
 
-            public virtual CadRect getContainsRect(CadFigure fig)
+            public virtual CadRect GetContainsRect(CadFigure fig)
             {
                 return CadUtil.getContainsRect(fig.PointList);
             }
 
-            public virtual IReadOnlyList<CadPoint> getPoints(CadFigure fig, int curveSplitNum)
+            public virtual IReadOnlyList<CadPoint> GetPoints(CadFigure fig, int curveSplitNum)
             {
                 return fig.PointList;
             }
@@ -69,53 +69,53 @@ namespace Plotter
             {
             }
 
-            public override States getState(CadFigure fig)
+            public override States GetState(CadFigure fig)
             {
                 return States.NONE;
             }
 
-            public override void addPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
             {
             }
 
-            public override void addPoint(CadFigure fig, CadPoint p)
+            public override void AddPoint(CadFigure fig, CadPoint p)
             {
             }
 
-            public override void draw(CadFigure fig, DrawContext dc, int pen)
+            public override void Draw(CadFigure fig, DrawContext dc, int pen)
             {
             }
 
-            public override void drawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB)
+            public override void DrawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB)
             {
             }
 
-            public override void drawSelected(CadFigure fig, DrawContext dc, int pen)
+            public override void DrawSelected(CadFigure fig, DrawContext dc, int pen)
             {
             }
 
-            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
+            public override void DrawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
             {
             }
 
-            public override Types endCreate(CadFigure fig, DrawContext dc)
+            public override Types EndCreate(CadFigure fig, DrawContext dc)
             {
                 return fig.Type;
             }
 
-            public override void removeSelected(CadFigure fig)
+            public override void RemoveSelected(CadFigure fig)
             {
             }
 
-            public override void setPointAt(CadFigure fig, int index, CadPoint pt)
+            public override void SetPointAt(CadFigure fig, int index, CadPoint pt)
             {
             }
 
-            public override void startCreate(CadFigure fig, DrawContext dc)
+            public override void StartCreate(CadFigure fig, DrawContext dc)
             {
             }
 
-            public override Centroid getCentroid(CadFigure fig)
+            public override Centroid GetCentroid(CadFigure fig)
             {
                 return default(Centroid);
             }

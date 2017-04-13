@@ -17,7 +17,7 @@ namespace Plotter
 
             CadFigure triangle;
 
-            IReadOnlyList<CadPoint> orgList = fig.getPoints(64);
+            IReadOnlyList<CadPoint> orgList = fig.GetPoints(64);
 
             List<CadPoint> pointList = new List<CadPoint>(orgList);
 
@@ -84,7 +84,7 @@ namespace Plotter
             {
                 triangle = new CadFigure(CadFigure.Types.POLY_LINES);
 
-                triangle.addPoints(pointList,0,3);
+                triangle.AddPoints(pointList,0,3);
                 triangle.Closed = true;
 
                 triangles.Add(triangle);
@@ -110,9 +110,9 @@ namespace Plotter
             CadPoint tp1 = pointList[i1];
             CadPoint tp2 = pointList[i2];
 
-            triangle.addPoint(tp0);
-            triangle.addPoint(tp1);
-            triangle.addPoint(tp2);
+            triangle.AddPoint(tp0);
+            triangle.AddPoint(tp1);
+            triangle.AddPoint(tp2);
 
             triangle.Closed = true;
 

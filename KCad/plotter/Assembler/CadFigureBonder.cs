@@ -114,7 +114,7 @@ namespace Plotter
 
                     if (ep.coordEquals(sp))
                     {
-                        ri.Figure.removePointAt(ri.Figure.PointList.Count - 1);
+                        ri.Figure.RemovePointAt(ri.Figure.PointList.Count - 1);
                         ri.Figure.Closed = true;
                     }
                 }
@@ -220,8 +220,8 @@ namespace Plotter
         private void updateItemList(BondInfo bi)
         {
             int pcnt = bi.BondedFigure.PointCount;
-            CadPoint head = bi.BondedFigure.getPointAt(0);
-            CadPoint tail = bi.BondedFigure.getPointAt(pcnt - 1);
+            CadPoint head = bi.BondedFigure.GetPointAt(0);
+            CadPoint tail = bi.BondedFigure.GetPointAt(pcnt - 1);
 
             Item item = null;
 
@@ -282,8 +282,8 @@ namespace Plotter
                 return null;
             }
 
-            CadPoint p0 = fig0.getPointAt(idx0);
-            CadPoint p1 = fig1.getPointAt(0);
+            CadPoint p0 = fig0.GetPointAt(idx0);
+            CadPoint p1 = fig1.GetPointAt(0);
 
 
             int idx1 = -1;
@@ -294,7 +294,7 @@ namespace Plotter
             }
             else
             {
-                p1 = fig1.getPointAt(fig1.PointCount - 1);
+                p1 = fig1.GetPointAt(fig1.PointCount - 1);
 
                 if (p1.coordEquals(p0))
                 {
@@ -323,15 +323,15 @@ namespace Plotter
                 ret.figB = fig1;
                 ret.indexB = idx1;
 
-                rfig.copyPoints(fig0);
+                rfig.CopyPoints(fig0);
 
                 if (idx1 == 0)
                 {
-                    rfig.addPoints(fig1.PointList, 1);
+                    rfig.AddPoints(fig1.PointList, 1);
                 }
                 else
                 {
-                    rfig.addPointsReverse(fig1.PointList, 1);
+                    rfig.AddPointsReverse(fig1.PointList, 1);
                 }
             }
             else if (idx1 == fig1.PointCount - 1)
@@ -344,15 +344,15 @@ namespace Plotter
                 ret.figB = fig0;
                 ret.indexB = idx0;
 
-                rfig.copyPoints(fig1);
+                rfig.CopyPoints(fig1);
 
                 if (idx0 == 0)
                 {
-                    rfig.addPoints(fig0.PointList, 1);
+                    rfig.AddPoints(fig0.PointList, 1);
                 }
                 else
                 {
-                    rfig.addPointsReverse(fig0.PointList, 1);
+                    rfig.AddPointsReverse(fig0.PointList, 1);
                 }
             }
             else
@@ -365,8 +365,8 @@ namespace Plotter
                 ret.figB = fig1;
                 ret.indexB = idx1;
 
-                rfig.addPointsReverse(fig0.PointList);
-                rfig.addPoints(fig1.PointList, 1);
+                rfig.AddPointsReverse(fig0.PointList);
+                rfig.AddPoints(fig1.PointList, 1);
             }
 
             ret.BondedFigure = rfig;

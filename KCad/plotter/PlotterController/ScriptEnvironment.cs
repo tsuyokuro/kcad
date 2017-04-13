@@ -66,7 +66,7 @@ namespace Plotter
                     continue;
                 }
 
-                parent.addChild(fig);
+                parent.AddChild(fig);
             }
 
             var ope = new CadOpeAddChildlen(parent, parent.ChildList);
@@ -105,7 +105,7 @@ namespace Plotter
 
                 opeList.OpeList.Add(ope);
 
-                fig.releaseAllChildlen();
+                fig.ReleaseAllChildlen();
             }
 
             Controller.HistoryManager.foward(opeList);
@@ -192,64 +192,64 @@ namespace Plotter
 
             CadPoint p1 = p0;
 
-            fig.addPoint(p0);
+            fig.AddPoint(p0);
             if (coord == Coord.XY)
             {
                 p1.x = p0.x + w;
                 p1.y = p0.y;
                 p1.z = p0.z;
-                fig.addPoint(p1);
+                fig.AddPoint(p1);
 
                 p1.x = p0.x + w;
                 p1.y = p0.y + h;
                 p1.z = p0.z;
-                fig.addPoint(p1);
+                fig.AddPoint(p1);
 
                 p1.x = p0.x;
                 p1.y = p0.y + h;
                 p1.z = p0.z;
-                fig.addPoint(p1);
+                fig.AddPoint(p1);
             }
             else if (coord == Coord.XZ)
             {
                 p1.x = p0.x + w;
                 p1.y = p0.y;
                 p1.z = p0.z;
-                fig.addPoint(p1);
+                fig.AddPoint(p1);
 
                 p1.x = p0.x + w;
                 p1.y = p0.y;
                 p1.z = p0.z - h;
-                fig.addPoint(p1);
+                fig.AddPoint(p1);
 
                 p1.x = p0.x;
                 p1.y = p0.y;
                 p1.z = p0.z - h;
-                fig.addPoint(p1);
+                fig.AddPoint(p1);
             }
             else if (coord == Coord.ZY)
             {
                 p1.x = p0.x;
                 p1.y = p0.y;
                 p1.z = p0.z - w;
-                fig.addPoint(p1);
+                fig.AddPoint(p1);
 
                 p1.x = p0.x;
                 p1.y = p0.y + h;
                 p1.z = p0.z - w;
-                fig.addPoint(p1);
+                fig.AddPoint(p1);
 
                 p1.x = p0.x;
                 p1.y = p0.y + h;
                 p1.z = p0.z;
-                fig.addPoint(p1);
+                fig.AddPoint(p1);
             }
 
             fig.Closed = true;
 
-            fig.endCreate(Controller.CurrentDC);
+            fig.EndCreate(Controller.CurrentDC);
 
-            CadOpe ope = CadOpe.getAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.addFigure(fig);
         }

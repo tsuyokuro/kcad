@@ -155,7 +155,7 @@ namespace Plotter
         {
             foreach (CadFigure fig in FigureList)
             {
-                fig.clearSelectFlags();
+                fig.ClearSelectFlags();
             }
 
 
@@ -169,7 +169,7 @@ namespace Plotter
 
         public CadOpeList clear()
         {
-            CadOpeList opeList = CadOpe.getListOpe();
+            CadOpeList opeList = CadOpe.CreateListOpe();
 
             CadOpe ope;
 
@@ -178,7 +178,7 @@ namespace Plotter
 
             foreach (CadRelativePoint rp in revRp)
             {
-                ope = CadOpe.getRemoveRelPointOpe(this, rp);
+                ope = CadOpe.CreateRemoveRelPointOpe(this, rp);
                 opeList.OpeList.Add(ope);
             }
 
@@ -187,7 +187,7 @@ namespace Plotter
 
             foreach (CadFigure fig in revFig)
             {
-                ope = CadOpe.getRemoveFigureOpe(this, fig.ID);
+                ope = CadOpe.CreateRemoveFigureOpe(this, fig.ID);
                 opeList.OpeList.Add(ope);
             }
 
@@ -267,7 +267,7 @@ namespace Plotter
 
             foreach (CadFigure fig in FigureList)
             {
-                fig.dump(dout);
+                fig.Dump(dout);
             }
 
             dout.Indent--;

@@ -11,7 +11,7 @@ namespace Plotter
         {
             // Do not have data member.
 
-            public override States getState(CadFigure fig)
+            public override States GetState(CadFigure fig)
             {
                 if (fig.PointList.Count < 1)
                 {
@@ -29,25 +29,25 @@ namespace Plotter
             {
             }
 
-            public override void addPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
             {
                 p.Type = CadPoint.Types.BREAK;
                 fig.mPointList.Add(p);
             }
 
-            public override void addPoint(CadFigure fig, CadPoint p)
+            public override void AddPoint(CadFigure fig, CadPoint p)
             {
                 p.Type = CadPoint.Types.BREAK;
                 fig.mPointList.Add(p);
             }
 
-            public override void setPointAt(CadFigure fig, int index, CadPoint pt)
+            public override void SetPointAt(CadFigure fig, int index, CadPoint pt)
             {
                 pt.Type = CadPoint.Types.BREAK;
                 fig.mPointList[index] = pt;
             }
 
-            public override void removeSelected(CadFigure fig)
+            public override void RemoveSelected(CadFigure fig)
             {
                 fig.mPointList.RemoveAll(a => a.Selected);
 
@@ -57,22 +57,22 @@ namespace Plotter
                 }
             }
 
-            public override void draw(CadFigure fig, DrawContext dc, int pen)
+            public override void Draw(CadFigure fig, DrawContext dc, int pen)
             {
                 drawCircle(fig, dc, pen);
             }
 
-            public override void drawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB)
+            public override void DrawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB)
             {
                 drawCircle(fig, dc, pen);
             }
 
-            public override void drawSelected(CadFigure fig, DrawContext dc, int pen)
+            public override void DrawSelected(CadFigure fig, DrawContext dc, int pen)
             {
                 drawSelected_Circle(fig, dc, pen);
             }
 
-            public override void drawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
+            public override void DrawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
             {
                 if (fig.PointList.Count <= 0)
                 {
@@ -115,21 +115,21 @@ namespace Plotter
                 if (fig.PointList[2].Selected) dc.Drawing.DrawSelectedPoint(fig.PointList[2]);
             }
 
-            public override void startCreate(CadFigure fig, DrawContext dc)
+            public override void StartCreate(CadFigure fig, DrawContext dc)
             {
                 // NOP
             }
 
-            public override Types endCreate(CadFigure fig, DrawContext dc)
+            public override Types EndCreate(CadFigure fig, DrawContext dc)
             {
                 CadPoint b = getRP(dc, fig.mPointList[0], fig.mPointList[1], true);
 
-                fig.addPoint(b);
+                fig.AddPoint(b);
 
                 return fig.Type;
             }
 
-            public override void moveSelectedPoint(CadFigure fig, DrawContext dc, CadPoint delta)
+            public override void MoveSelectedPoint(CadFigure fig, DrawContext dc, CadPoint delta)
             {
                 CadPoint cp = fig.StoreList[0];
                 CadPoint a = fig.StoreList[1];
@@ -208,7 +208,7 @@ namespace Plotter
                 }
             }
 
-            public override Centroid getCentroid(CadFigure fig)
+            public override Centroid GetCentroid(CadFigure fig)
             {
                 Centroid ret = default(Centroid);
 

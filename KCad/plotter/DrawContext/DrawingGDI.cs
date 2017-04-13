@@ -34,7 +34,7 @@ namespace Plotter
 
             foreach (CadFigure fig in list)
             {
-                fig.draw(DC, pen);
+                fig.Draw(DC, pen);
             }
         }
 
@@ -349,7 +349,7 @@ namespace Plotter
         {
             foreach (CadFigure fig in list)
             {
-                fig.drawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
+                fig.DrawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
             }
         }
 
