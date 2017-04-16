@@ -554,14 +554,14 @@ namespace Plotter
 
             RulerInfo ri = mRulerSet.Capture(dc, cp, 8);
 
-            if (ri.IsValid)
+            if (!xmatch && !ymatch)
             {
-                mSnapPoint = ri.CrossPoint;
-                mSnapScrnPoint = dc.CadPointToUnitPoint(mSnapPoint);
-                mSnapScrnPoint.z = 0;
+                if (ri.IsValid)
+                {
+                    mSnapPoint = ri.CrossPoint;
+                    mSnapScrnPoint = dc.CadPointToUnitPoint(mSnapPoint);
+                }
             }
-
-
             //dc.Drawing.DrawCursorScrn(mSnapScrnPoint);
 
             switch (State)

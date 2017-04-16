@@ -5,7 +5,7 @@ using static System.Math;
 
 namespace Plotter
 {
-    public class DrawContext
+    public abstract class DrawContext
     {
         CadObjectDB DB
         {
@@ -159,15 +159,13 @@ namespace Plotter
             UnitPerMilli = unit / MILLI_PER_INCH;
         }
 
-        public virtual CadPoint CadPointToUnitPoint(CadPoint pt)
-        {
-            return default(CadPoint);
-        }
+        public abstract CadPoint CadPointToUnitPoint(CadPoint pt);
 
-        public virtual CadPoint UnitPointToCadPoint(CadPoint pt)
-        {
-            return default(CadPoint);
-        }
+        public abstract CadPoint UnitPointToCadPoint(CadPoint pt);
+
+        public abstract CadPoint CadVectorToUnitVector(CadPoint pt);
+
+        public abstract CadPoint UnitVectorToCadVector(CadPoint pt);
 
         public virtual double UnitToMilli(double d)
         {

@@ -235,7 +235,7 @@ namespace Plotter
 
         private void test_dc(DrawContext dc)
         {
-            DrawContext tdc = new DrawContext();
+            DrawContext tdc = new DrawContextGDI();
 
             tdc.SetViewMatrix(UMatrixs.ViewXY);
 

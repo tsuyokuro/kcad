@@ -72,8 +72,19 @@ namespace Plotter
 
         public override CadPoint CadPointToUnitPoint(CadPoint pt)
         {
-            pt *= WoldScale;
+            CadPoint p = CadVectorToUnitVector(pt);
+            p = p + mViewOrg;
+            return p;
+        }
 
+        public override CadPoint UnitPointToCadPoint(CadPoint pt)
+        {
+            pt = pt - mViewOrg;
+            return UnitVectorToCadVector(pt);
+        }
+
+        public override CadPoint CadVectorToUnitVector(CadPoint pt)
+        {
             // 透視変換用にWが必要なので、Vector4に変換
             Vector4d ptv = (Vector4d)pt;
 
@@ -92,15 +103,11 @@ namespace Plotter
             p.y = ptv.Y * (UnitPerMilli * DeviceScaleY);
             p.z = ptv.Z * UnitPerMilli;
 
-            p = p + mViewOrg;
-
             return p;
         }
 
-        public override CadPoint UnitPointToCadPoint(CadPoint pt)
+        public override CadPoint UnitVectorToCadVector(CadPoint pt)
         {
-            pt = pt - mViewOrg;
-
             CadPoint p = default(CadPoint);
             p.x = pt.x / (UnitPerMilli * DeviceScaleX);
             p.y = pt.y / (UnitPerMilli * DeviceScaleY);

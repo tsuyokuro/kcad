@@ -105,6 +105,19 @@ namespace Plotter
 
         public override CadPoint CadPointToUnitPoint(CadPoint pt)
         {
+            CadPoint p = CadVectorToUnitVector(pt);
+            p = p + mViewOrg;
+            return p;
+        }
+
+        public override CadPoint UnitPointToCadPoint(CadPoint pt)
+        {
+            pt = pt - mViewOrg;
+            return UnitVectorToCadVector(pt);
+        }
+
+        public override CadPoint CadVectorToUnitVector(CadPoint pt)
+        {
             pt *= WoldScale;
 
             // 透視変換用にWが必要なので、Vector4に変換
@@ -125,12 +138,10 @@ namespace Plotter
 
             CadPoint p = CadPoint.Create(ptv);
 
-            p = p + mViewOrg;
-
             return p;
         }
 
-        public override CadPoint UnitPointToCadPoint(CadPoint pt)
+        public override CadPoint UnitVectorToCadVector(CadPoint pt)
         {
             Vector4d t;
 
@@ -143,7 +154,6 @@ namespace Plotter
             t = t * mProjectionMatrix;
 
 
-            pt = pt - mViewOrg;
             pt.x = pt.x / (ViewWidth / 2.0);
             pt.y = -pt.y / (ViewHeight / 2.0);
 
@@ -162,11 +172,9 @@ namespace Plotter
 
             CadPoint p = CadPoint.Create(vw);
 
-            //DebugOut.Std.println("Wold");
-            //p.dump(DebugOut.Std);
-
             return p;
         }
+
 
         private void SetupLight()
         {
