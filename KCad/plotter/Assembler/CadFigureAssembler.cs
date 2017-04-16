@@ -205,7 +205,7 @@ namespace Plotter
 
             var ci = CadUtil.getPerpCrossSeg(seg.pA, seg.pB, p);
 
-            if (!ci.isCross)
+            if (!ci.IsCross)
             {
                 return ProcResult;
             }

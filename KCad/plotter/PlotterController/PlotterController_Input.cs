@@ -20,6 +20,8 @@ namespace Plotter
 
         private SegSearcher mSegSearcher = new SegSearcher();
 
+        private CadRulerSet mRulerSet = new CadRulerSet();
+
 
         private CadPoint StoreViewOrg = default(CadPoint);
 
@@ -202,6 +204,8 @@ namespace Plotter
                             // Set ignore liset for snap cursor
                             mPointSearcher.SetIgnoreList(mSelList.List);
                             mSegSearcher.SetIgnoreList(mSelList.List);
+
+                            mRulerSet.Set(fig.PointList, mp.PointIndex, cp);
                         }
                     }
                     else if (mp.Type == MarkPoint.Types.RELATIVE_POINT)
@@ -547,6 +551,16 @@ namespace Plotter
                 mSnapPoint = dc.UnitPointToCadPoint(mSnapScrnPoint);
             }
             #endregion
+
+            RulerInfo ri = mRulerSet.Capture(dc, cp, 8);
+
+            if (ri.IsValid)
+            {
+                mSnapPoint = ri.CrossPoint;
+                mSnapScrnPoint = dc.CadPointToUnitPoint(mSnapPoint);
+                mSnapScrnPoint.z = 0;
+            }
+
 
             //dc.Drawing.DrawCursorScrn(mSnapScrnPoint);
 

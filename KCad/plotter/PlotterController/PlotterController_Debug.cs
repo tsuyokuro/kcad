@@ -99,7 +99,7 @@ namespace Plotter
 
             CrossInfo ret = CadUtil.getPerpCrossSeg2D(a, b, pt);
 
-            if (ret.isCross)
+            if (ret.IsCross)
             {
                 CadFigure figx = new CadFigure(CadFigure.Types.POLY_LINES);
 

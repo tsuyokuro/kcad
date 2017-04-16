@@ -112,7 +112,7 @@ namespace Plotter
 
             CrossInfo ret = CadUtil.getPerpCrossSeg2D(pa, pb, TargetPoint);
 
-            if (!ret.isCross)
+            if (!ret.IsCross)
             {
                 return;
             }
