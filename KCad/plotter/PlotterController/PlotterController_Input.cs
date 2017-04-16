@@ -78,6 +78,10 @@ namespace Plotter
             }
         }
 
+        public bool SnapToLine
+        {
+            get; set;
+        } = true;
 
         private void initHid()
         {
@@ -552,16 +556,20 @@ namespace Plotter
             }
             #endregion
 
-            RulerInfo ri = mRulerSet.Capture(dc, cp, 8);
-
-            if (!xmatch && !ymatch)
+            if (SnapToLine)
             {
-                if (ri.IsValid)
+                RulerInfo ri = mRulerSet.Capture(dc, cp, 8);
+
+                if (!xmatch && !ymatch)
                 {
-                    mSnapPoint = ri.CrossPoint;
-                    mSnapScrnPoint = dc.CadPointToUnitPoint(mSnapPoint);
+                    if (ri.IsValid)
+                    {
+                        mSnapPoint = ri.CrossPoint;
+                        mSnapScrnPoint = dc.CadPointToUnitPoint(mSnapPoint);
+                    }
                 }
             }
+
             //dc.Drawing.DrawCursorScrn(mSnapScrnPoint);
 
             switch (State)

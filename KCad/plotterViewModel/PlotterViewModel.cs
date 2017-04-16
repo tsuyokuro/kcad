@@ -181,6 +181,20 @@ namespace Plotter
             }
         }
 
+        public bool SnapToLine
+        {
+            set
+            {
+                mController.SnapToLine = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
+            }
+
+            get
+            {
+                return mController.SnapToLine;
+            }
+        }
+
         ListBox mLayerListView;
 
         public ListBox LayerListView
