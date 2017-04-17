@@ -10,7 +10,7 @@ namespace Plotter
     using BrushHolder = ToolHolder<Brush>;
     using ColorHolder = ToolHolder<Color>;
     using FontHolder = ToolHolder<Font>;
-    using ArrowCapHolder = ToolHolder<AdjustableArrowCap>;
+    //using ArrowCapHolder = ToolHolder<AdjustableArrowCap>;
 
     public class GLPen
     {
@@ -26,35 +26,35 @@ namespace Plotter
 
     public class ToolHolder<T>
     {
-        public bool needDispose;
-        public T toolObj;
+        public bool NeedDispose;
+        public T ToolObj;
 
         public ToolHolder(T obj, bool dispose)
         {
-            toolObj = obj;
-            needDispose = dispose;
+            ToolObj = obj;
+            NeedDispose = dispose;
         }
 
         public ToolHolder()
         {
-            toolObj = default(T);
-            needDispose = false;
+            ToolObj = default(T);
+            NeedDispose = false;
         }
 
         public void Dispose()
         {
-            if (needDispose)
+            if (NeedDispose)
             {
-                if (toolObj != null)
+                if (ToolObj != null)
                 {
-                    ((IDisposable)toolObj).Dispose();
+                    ((IDisposable)ToolObj).Dispose();
                 }
             }
         }
 
         public static implicit operator T(ToolHolder<T> holder)
         {
-            return holder.toolObj;
+            return holder.ToolObj;
         }
     }
 
@@ -88,11 +88,11 @@ namespace Plotter
         public const int COLOR_BACKGROUND = 1;
         public const int COLOR_TBL_SIZE = 2;
 
-        public const int ARROW_CAP_DEFAULT = 0;
-        public const int ARROW_CAP_L = 1;
-        public const int ARROW_CAP_M = 2;
-        public const int ARROW_CAP_S = 3;
-        public const int ARROW_CAP_TBL_SIZE = 4;
+        //public const int ARROW_CAP_DEFAULT = 0;
+        //public const int ARROW_CAP_L = 1;
+        //public const int ARROW_CAP_M = 2;
+        //public const int ARROW_CAP_S = 3;
+        //public const int ARROW_CAP_TBL_SIZE = 4;
 
         public const int FONT_DEFAULT = 0;
         public const int FONT_SMALL = 1;
@@ -109,7 +109,6 @@ namespace Plotter
         PenHolder[] PenTbl = null;
         BrushHolder[] BrushTbl = null;
         ColorHolder[] ColorTbl = null;
-        ArrowCapHolder[] ArrowCapTbl = null;
         FontHolder[] FontTbl = null;
 
         GLPen[] GLPenTbl = null;
@@ -120,7 +119,6 @@ namespace Plotter
             PenTbl = new PenHolder[PEN_TBL_SIZE];
             BrushTbl = new BrushHolder[BRUSH_TBL_SIZE];
             ColorTbl = new ColorHolder[COLOR_TBL_SIZE];
-            ArrowCapTbl = new ArrowCapHolder[ARROW_CAP_TBL_SIZE];
             FontTbl = new FontHolder[FONT_TBL_SIZE];
         }
 
@@ -283,19 +281,6 @@ namespace Plotter
 
                 FontTbl = null;
             }
-
-            if (ArrowCapTbl != null)
-            {
-                foreach (ToolHolder<AdjustableArrowCap> arrowCapHolder in ArrowCapTbl)
-                {
-                    if (arrowCapHolder != null)
-                    {
-                        arrowCapHolder.Dispose();
-                    }
-                }
-
-                ArrowCapTbl = null;
-            }
         }
 
         ~DrawTools()
@@ -305,29 +290,23 @@ namespace Plotter
 
         public Pen pen(int id)
         {
-            return PenTbl[id].toolObj;
+            return PenTbl[id].ToolObj;
         }
 
         public Brush brush(int id)
         {
-            return BrushTbl[id].toolObj;
+            return BrushTbl[id].ToolObj;
         }
 
         public Color color(int id)
         {
-            return ColorTbl[id].toolObj;
+            return ColorTbl[id].ToolObj;
         }
 
         public Font font(int id)
         {
-            return FontTbl[id].toolObj;
+            return FontTbl[id].ToolObj;
         }
-
-        public AdjustableArrowCap arrowCap(int id)
-        {
-            return ArrowCapTbl[id].toolObj;
-        }
-
 
         public GLPen glpen(int id)
         {

@@ -27,7 +27,7 @@ namespace Plotter
 
         private CadPoint mSnapPoint;
 
-        private CadPoint mSnapScrnPoint;
+        private CadPoint mSnapScreenPoint;
 
         private CadPoint mMoveOrgScrnPoint;
 
@@ -36,9 +36,9 @@ namespace Plotter
         private CadPoint? mObjDownPoint = null;
 
 
-        private CadPoint mOffsetScrn = default(CadPoint);
+        private CadPoint mOffsetScreen = default(CadPoint);
 
-        private CadPoint mOffsetWld = default(CadPoint);
+        private CadPoint mOffsetWorld = default(CadPoint);
 
         private Gridding mGridding = new Gridding();
 
@@ -156,16 +156,12 @@ namespace Plotter
             CadPoint pixp = CadPoint.Create(x, y, 0);
             CadPoint cp = dc.UnitPointToCadPoint(pixp);
 
-            mOffsetScrn = pixp - mSnapScrnPoint;
-            mOffsetWld = cp - mSnapPoint;
+            mOffsetScreen = pixp - mSnapScreenPoint;
+            mOffsetWorld = cp - mSnapPoint;
 
             switch (State)
             {
                 case States.SELECT:
-                    //Draw(dc);
-
-                    //double d = dc.pixelDeltaToCadDelta(SnapRange);
-
                     mObjDownPoint = null;
 
                     mPointSearcher.Clean();
@@ -309,7 +305,7 @@ namespace Plotter
                         CreatingFigure.StartCreate(dc);
 
 
-                        CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);
+                        CadPoint p = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
                         SetPointInCreating(dc, p);
                         Draw(dc);
@@ -320,7 +316,7 @@ namespace Plotter
                     {
                         FreeDownPoint = mSnapPoint;
 
-                        CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);
+                        CadPoint p = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
                         SetPointInCreating(dc, p);
                         Draw(dc);
@@ -414,8 +410,8 @@ namespace Plotter
                     break;
             }
 
-            mOffsetScrn = default(CadPoint);
-            mOffsetWld = default(CadPoint);
+            mOffsetScreen = default(CadPoint);
+            mOffsetWorld = default(CadPoint);
         }
 
         private void RUp(CadMouse pointer, DrawContext dc, int x, int y)
@@ -447,8 +443,8 @@ namespace Plotter
             bool segmatch = false;
 
 
-            mSnapScrnPoint = pixp - mOffsetScrn;
-            mSnapPoint = cp - mOffsetWld;
+            mSnapScreenPoint = pixp - mOffsetScreen;
+            mSnapPoint = cp - mOffsetWorld;
 
             //mSnapScrnPoint.dump(DebugOut.Std);
 
@@ -484,10 +480,10 @@ namespace Plotter
 
                     tp = dc.CadPointToUnitPoint(mx.Point);
 
-                    mSnapScrnPoint.x = tp.x;
-                    mSnapScrnPoint.z = 0;
+                    mSnapScreenPoint.x = tp.x;
+                    mSnapScreenPoint.z = 0;
 
-                    mSnapPoint = dc.UnitPointToCadPoint(mSnapScrnPoint);
+                    mSnapPoint = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
                     dist = Math.Min(mx.DistX, dist);
 
@@ -500,10 +496,10 @@ namespace Plotter
 
                     tp = dc.CadPointToUnitPoint(my.Point);
 
-                    mSnapScrnPoint.y = tp.y;
-                    mSnapScrnPoint.z = 0;
+                    mSnapScreenPoint.y = tp.y;
+                    mSnapScreenPoint.z = 0;
 
-                    mSnapPoint = dc.UnitPointToCadPoint(mSnapScrnPoint);
+                    mSnapPoint = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
                     dist = Math.Min(my.DistY, dist);
 
@@ -526,8 +522,8 @@ namespace Plotter
 
                         mSnapPoint = seg.CrossPoint;
 
-                        mSnapScrnPoint = seg.CrossViewPoint;
-                        mSnapScrnPoint.z = 0;
+                        mSnapScreenPoint = seg.CrossViewPoint;
+                        mSnapScreenPoint.z = 0;
 
                         segmatch = true;
 
@@ -544,15 +540,15 @@ namespace Plotter
 
                 if (!xmatch && mGridding.XMatchU.Valid)
                 {
-                    mSnapScrnPoint.x = mGridding.XMatchU.x;
+                    mSnapScreenPoint.x = mGridding.XMatchU.x;
                 }
 
                 if (!ymatch && mGridding.YMatchU.Valid)
                 {
-                    mSnapScrnPoint.y = mGridding.YMatchU.y;
+                    mSnapScreenPoint.y = mGridding.YMatchU.y;
                 }
 
-                mSnapPoint = dc.UnitPointToCadPoint(mSnapScrnPoint);
+                mSnapPoint = dc.UnitPointToCadPoint(mSnapScreenPoint);
             }
             #endregion
 
@@ -565,7 +561,7 @@ namespace Plotter
                     if (ri.IsValid)
                     {
                         mSnapPoint = ri.CrossPoint;
-                        mSnapScrnPoint = dc.CadPointToUnitPoint(mSnapPoint);
+                        mSnapScreenPoint = dc.CadPointToUnitPoint(mSnapPoint);
                     }
                 }
             }
@@ -577,7 +573,7 @@ namespace Plotter
                 case States.DRAGING_POINTS:
                     {
                         CadPoint p0 = dc.UnitPointToCadPoint(mMoveOrgScrnPoint);
-                        CadPoint p1 = dc.UnitPointToCadPoint(mSnapScrnPoint);
+                        CadPoint p1 = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
                         CadPoint delta = p1 - p0;
 
@@ -592,7 +588,7 @@ namespace Plotter
                     {
                         if (CreatingFigure != null)
                         {
-                            CadPoint p = dc.UnitPointToCadPoint(mSnapScrnPoint);
+                            CadPoint p = dc.UnitPointToCadPoint(mSnapScreenPoint);
                             CreatingFigure.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
                         }
                         break;

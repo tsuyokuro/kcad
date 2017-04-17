@@ -280,12 +280,12 @@ namespace Plotter
             GL.End();
         }
 
-        public override void DrawLastPointMarker(int pen, CadPoint p)
+        public override void DrawDownPointCursor(int pen, CadPoint p)
         {
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Light0);
 
-            double hs =5.0;
+            double hs =10.0;
 
             CadPoint px0 = p;
             px0.x -= hs;

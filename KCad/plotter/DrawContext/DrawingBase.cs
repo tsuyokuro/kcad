@@ -45,7 +45,7 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawLastPointMarker(int pen, CadPoint p)
+        public virtual void DrawDownPointCursor(int pen, CadPoint p)
         {
         }
 

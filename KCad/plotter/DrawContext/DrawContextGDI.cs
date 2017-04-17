@@ -1,10 +1,5 @@
 ﻿using OpenTK;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Plotter
 {
@@ -54,12 +49,12 @@ namespace Plotter
             GraphicsRef--;
             if (GraphicsRef <= 0)
             {
-                disposeGraphics();
+                DisposeGraphics();
                 GraphicsRef = 0;
             }
         }
 
-        private void disposeGraphics()
+        private void DisposeGraphics()
         {
             if (mGraphics == null)
             {

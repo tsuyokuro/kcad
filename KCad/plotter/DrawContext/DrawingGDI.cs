@@ -82,8 +82,6 @@ namespace Plotter
             p1.z = 100;
 
             DrawLine(DrawTools.PEN_AXIS, p0, p1);
-
-            drawAxisDir();
         }
 
         public override void DrawGrid(Gridding grid)
@@ -231,9 +229,9 @@ namespace Plotter
                 );
         }
 
-        public override void DrawLastPointMarker(int pen, CadPoint p)
+        public override void DrawDownPointCursor(int pen, CadPoint p)
         {
-            DrawCross(pen, p, 5);
+            DrawCross(pen, p, 10);
         }
         #endregion
 
@@ -475,101 +473,6 @@ namespace Plotter
             int dy = by - ty;
 
             DC.graphics.FillRectangle(DC.Brush(brush), lx, ty, dx, dy);
-        }
-
-
-        private void drawAxisDir()
-        {
-            double w = 64;
-            double vl = DC.UnitToMilli(w / 2);
-            double ltvx = 12;
-            double ltvy = 12;
-
-            CadPoint vc = default(CadPoint);
-
-            CadPoint p0 = default(CadPoint);
-            CadPoint p1 = default(CadPoint);
-            CadPoint vp0 = default(CadPoint);
-            CadPoint vp1 = default(CadPoint);
-            CadPoint c = default(CadPoint);
-
-            // X
-            p0 = vc;
-            p0.x = -vl;
-
-            p1 = vc;
-            p1.x = vl;
-
-            vp0 = DC.CadPointToUnitPoint(p0);
-            vp1 = DC.CadPointToUnitPoint(p1);
-
-            c = vp1 - vp0;
-            c /= 2.0;
-
-            vp0 = c * -1;
-            vp1 = c;
-
-            vp0 += (w / 2) + ltvx;
-            vp1 += (w / 2) + ltvy;
-
-            if (c.Norm() > 8)
-            {
-                DrawLineScrn(DrawTools.PEN_AXIS, vp0, vp1);
-            }
-
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, vp1.x - 8, vp1.y, "x");
-
-
-            // Y
-            p0 = vc;
-            p0.y = -vl;
-
-            p1 = vc;
-            p1.y = vl;
-
-            vp0 = DC.CadPointToUnitPoint(p0);
-            vp1 = DC.CadPointToUnitPoint(p1);
-
-            c = vp1 - vp0;
-            c /= 2.0;
-
-            vp0 = c * -1;
-            vp1 = c;
-
-            vp0 += (w / 2) + ltvx;
-            vp1 += (w / 2) + ltvy;
-
-            if (c.Norm() > 8)
-            {
-                DrawLineScrn(DrawTools.PEN_AXIS, vp0, vp1);
-            }
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, vp1.x - 8, vp1.y, "y");
-
-
-            // Z
-            p0 = vc;
-            p0.z = -vl;
-
-            p1 = vc;
-            p1.z = vl;
-
-            vp0 = DC.CadPointToUnitPoint(p0);
-            vp1 = DC.CadPointToUnitPoint(p1);
-
-            c = vp1 - vp0;
-            c /= 2.0;
-
-            vp0 = c * -1;
-            vp1 = c;
-
-            vp0 += (w / 2) + ltvx;
-            vp1 += (w / 2) + ltvy;
-
-            if (c.Norm() > 8)
-            {
-                DrawLineScrn(DrawTools.PEN_AXIS, vp0, vp1);
-            }
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, vp1.x - 8, vp1.y, "z");
         }
     }
 }

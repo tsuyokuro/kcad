@@ -408,12 +408,12 @@ namespace Plotter
 
         public void DrawLastPoint(DrawContext dc)
         {
-            dc.Drawing.DrawLastPointMarker(
+            dc.Drawing.DrawDownPointCursor(
                 DrawTools.PEN_LAST_POINT_MARKER, FreeDownPoint);
 
             if (mObjDownPoint != null)
             {
-                dc.Drawing.DrawLastPointMarker(
+                dc.Drawing.DrawDownPointCursor(
                     DrawTools.PEN_LAST_POINT_MARKER2, mObjDownPoint.Value);
             }
         }
@@ -428,7 +428,7 @@ namespace Plotter
 
         public void DrawCursor(DrawContext dc)
         {
-            dc.Drawing.DrawCursorScrn(mSnapScrnPoint);
+            dc.Drawing.DrawCursorScrn(mSnapScreenPoint);
         }
 
         public void Print(DrawContext dc)
