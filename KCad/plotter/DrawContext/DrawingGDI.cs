@@ -330,18 +330,22 @@ namespace Plotter
         public override void DrawCursorScrn(CadPoint pp)
         {
             int pen = DrawTools.PEN_CURSOR;
-            int pen2 = DrawTools.PEN_CURSOR2;
 
             double size = 16;
-            double size2 = Math.Max(DC.ViewWidth, DC.ViewHeight);
-
-            DrawLineScrn(pen2, pp.x - size2, pp.y, pp.x + size2, pp.y);
-            DrawLineScrn(pen2, pp.x, pp.y - size2, pp.x, pp.y + size2);
 
             DrawLineScrn(pen, pp.x - size, pp.y, pp.x + size, pp.y);
             DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
         }
 
+        public override void DrawCrossCursorScrn(CadPoint pp)
+        {
+            int pen = DrawTools.PEN_CURSOR2;
+
+            double size = Math.Max(DC.ViewWidth, DC.ViewHeight);
+
+            DrawLineScrn(pen, pp.x - size, pp.y, pp.x + size, pp.y);
+            DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
+        }
 
         private void DrawSelectedFigurePoint(IReadOnlyList<CadFigure> list)
         {

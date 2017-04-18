@@ -88,9 +88,9 @@ namespace Plotter
             }
         }
 
-        private Dictionary<string, Action> commandMap;
+        private Dictionary<string, Action> CommandMap;
 
-        private Dictionary<string, Action> keyMap;
+        private Dictionary<string, Action> KeyMap;
 
         private PlotterController.SelectModes mSelectMode = PlotterController.SelectModes.POINT;
 
@@ -311,7 +311,7 @@ namespace Plotter
         #region Maps
         private void InitCommandMap()
         {
-            commandMap = new Dictionary<string, Action>{
+            CommandMap = new Dictionary<string, Action>{
                 { "load", Load },
                 { "save",Save },
                 { "print",StartPrint },
@@ -332,12 +332,14 @@ namespace Plotter
                 { "flip_z", FlipZ },
                 { "flip_normal", FlipNormal },
                 { "grid_settings", GridSettings },
+                { "add_layer", AddLayer },
+                { "remove_layer", RemoveLayer },
             };
         }
 
         private void InitKeyMap()
         {
-            keyMap = new Dictionary<string, Action>
+            KeyMap = new Dictionary<string, Action>
             {
                 { "ctrl+z", undo },
                 { "ctrl+y", redo },
@@ -349,226 +351,35 @@ namespace Plotter
                 { "ctrl+s", Save },
             };
         }
-        #endregion
 
-        // Handle events from PlotterController
-        #region Event From PlotterController
-
-        public void DataChanged(PlotterController sender, bool redraw)
+        public void ExecCommand(string cmd)
         {
-            if (redraw)
-            {
-                DrawAll();
-            }
-        }
-
-        public void StateChanged(PlotterController sender, PlotterController.StateInfo si)
-        {
-            if (FigureType != si.CreatingFigureType)
-            {
-                FigureType = si.CreatingFigureType;
-            }
-        }
-
-        public void LayerListChanged(PlotterController sender, PlotterController.LayerListInfo layerListInfo)
-        {
-            foreach (LayerHolder lh in LayerList)
-            {
-                lh.PropertyChanged -= LayerListItemPropertyChanged;
-            }
-
-            LayerList.Clear();
-
-            foreach (CadLayer layer in layerListInfo.LayerList)
-            {
-                LayerHolder layerHolder = new LayerHolder(layer);
-                layerHolder.PropertyChanged += LayerListItemPropertyChanged;
-
-                LayerList.Add(layerHolder);
-            }
-
-            if (mLayerListView != null)
-            {
-                int idx = GetLayerListIndex(layerListInfo.CurrentID);
-                mLayerListView.SelectedIndex = idx;
-            }
-        }
-
-        private int GetLayerListIndex(uint id)
-        {
-            int idx = 0;
-            foreach (LayerHolder layer in LayerList)
-            {
-                if (layer.ID == id)
-                {
-                    return idx;
-                }
-                idx++;
-            }
-
-            return -1;
-        }
-
-        private void CursorPosChanged(PlotterController sender, CadPoint pt)
-        {
-            FreqChangedInfo.CursorPos = pt;
-        }
-
-        #endregion
-
-
-        // Layer list handling
-        #region LayerList
-        public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            LayerHolder lh = (LayerHolder)sender;
-            Draw(clearFlag:true);
-        }
-
-        public void LayerListSelectionChanged(object sender, SelectionChangedEventArgs args)
-        {
-            if (args.AddedItems.Count > 0)
-            {
-                LayerHolder layer = (LayerHolder)args.AddedItems[0];
-
-                if (mController.CurrentLayer.ID != layer.ID)
-                {
-                    mController.setCurrentLayer(layer.ID);
-                }
-            }
-            else
-            {
-            }
-        }
-        #endregion
-
-
-        // Keyboard handling
-        #region Keyboard handling
-        public void perviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-
-        }
-
-        private string ModifyerKeysStr()
-        {
-            ModifierKeys modifierKeys = Keyboard.Modifiers;
-
-            string s = "";
-
-            if ((modifierKeys & ModifierKeys.Control) != ModifierKeys.None)
-            {
-                s += "ctrl+";
-            }
-
-            if ((modifierKeys & ModifierKeys.Shift) != ModifierKeys.None)
-            {
-                s += "shift+";
-            }
-
-            if ((modifierKeys & ModifierKeys.Alt) != ModifierKeys.None)
-            {
-                s += "alt+";
-            }
-
-            return s;
-        }
-
-
-        public void onKeyDown(object sender, KeyEventArgs e)
-        {
-        }
-
-        public void onKeyUp(object sender, KeyEventArgs e)
-        {
-            string ks = ModifyerKeysStr();
-
-            ks += e.Key.ToString().ToLower();
-
-            if (!keyMap.ContainsKey(ks))
+            if (!CommandMap.ContainsKey(cmd))
             {
                 return;
             }
 
-            Action action = keyMap[ks];
+            Action action = CommandMap[cmd];
 
             action?.Invoke();
         }
-        #endregion
 
-
-        // Button handler
-        public void ButtonClicked(object sender, RoutedEventArgs e)
+        public void ExecShortcutKey(string keyCmd)
         {
-            Button btn = (Button)sender;
-            switch (btn.Tag.ToString())
+            if (!KeyMap.ContainsKey(keyCmd))
             {
-                case "add_layer":
-                    mController.AddLayer(null);
-                    break;
-
-                case "remove_layer":
-                    mController.RemoveLayer(mController.CurrentLayer.ID);
-                    Draw();
-                    break;
+                return;
             }
+
+            Action action = KeyMap[keyCmd];
+
+            action?.Invoke();
         }
 
-
-        // Save / Load
-        #region File
-        private void SaveFile(String fname)
-        {
-            mController.SaveToJsonFile(fname);
-        }
-
-        private void LoadFile(String fname)
-        {
-            mController.LoadFromJsonFile(fname);
-
-            DrawContext dc = mPlotterView.StartDraw();
-
-            mController.Clear(dc);
-
-            mController.Draw(dc);
-
-            mPlotterView.EndDraw();
-        }
         #endregion
 
 
-        #region helper
-        private DrawContext StartDraw()
-        {
-            return mPlotterView.StartDraw();
-        }
-
-        private void EndDraw()
-        {
-            mPlotterView.EndDraw();
-        }
-
-        private void Draw(bool clearFlag=true)
-        {
-            DrawContext dc = mPlotterView.StartDraw();
-            if (clearFlag)
-            {
-                mController.Clear(dc);
-            }
-            mController.Draw(dc);
-            mPlotterView.EndDraw();
-        }
-
-        private void DrawAll()
-        {
-            DrawContext dc = mPlotterView.StartDraw();
-            mController.Clear(dc);
-            mController.DrawAll(dc);
-            mPlotterView.EndDraw();
-        }
-        #endregion
-
-
+        // Actions
         #region Actions
         public void undo()
         {
@@ -725,8 +536,232 @@ namespace Plotter
             }
         }
 
+        public void AddLayer()
+        {
+            mController.AddLayer(null);
+        }
+
+        public void RemoveLayer()
+        {
+            mController.RemoveLayer(mController.CurrentLayer.ID);
+            Draw();
+        }
+
         #endregion
 
+
+
+        // Handle events from PlotterController
+        #region Event From PlotterController
+
+        public void DataChanged(PlotterController sender, bool redraw)
+        {
+            if (redraw)
+            {
+                DrawAll();
+            }
+        }
+
+        public void StateChanged(PlotterController sender, PlotterController.StateInfo si)
+        {
+            if (FigureType != si.CreatingFigureType)
+            {
+                FigureType = si.CreatingFigureType;
+            }
+        }
+
+        public void LayerListChanged(PlotterController sender, PlotterController.LayerListInfo layerListInfo)
+        {
+            foreach (LayerHolder lh in LayerList)
+            {
+                lh.PropertyChanged -= LayerListItemPropertyChanged;
+            }
+
+            LayerList.Clear();
+
+            foreach (CadLayer layer in layerListInfo.LayerList)
+            {
+                LayerHolder layerHolder = new LayerHolder(layer);
+                layerHolder.PropertyChanged += LayerListItemPropertyChanged;
+
+                LayerList.Add(layerHolder);
+            }
+
+            if (mLayerListView != null)
+            {
+                int idx = GetLayerListIndex(layerListInfo.CurrentID);
+                mLayerListView.SelectedIndex = idx;
+            }
+        }
+
+        private int GetLayerListIndex(uint id)
+        {
+            int idx = 0;
+            foreach (LayerHolder layer in LayerList)
+            {
+                if (layer.ID == id)
+                {
+                    return idx;
+                }
+                idx++;
+            }
+
+            return -1;
+        }
+
+        private void CursorPosChanged(PlotterController sender, CadPoint pt)
+        {
+            FreqChangedInfo.CursorPos = pt;
+        }
+
+        #endregion
+
+
+        // Layer list handling
+        #region LayerList
+        public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            LayerHolder lh = (LayerHolder)sender;
+            Draw(clearFlag:true);
+        }
+
+        public void LayerListSelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (args.AddedItems.Count > 0)
+            {
+                LayerHolder layer = (LayerHolder)args.AddedItems[0];
+
+                if (mController.CurrentLayer.ID != layer.ID)
+                {
+                    mController.setCurrentLayer(layer.ID);
+                }
+            }
+            else
+            {
+            }
+        }
+        #endregion
+
+
+        // Keyboard handling
+        #region Keyboard handling
+        public void perviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+
+        }
+
+        private string ModifyerKeysStr()
+        {
+            ModifierKeys modifierKeys = Keyboard.Modifiers;
+
+            string s = "";
+
+            if ((modifierKeys & ModifierKeys.Control) != ModifierKeys.None)
+            {
+                s += "ctrl+";
+            }
+
+            if ((modifierKeys & ModifierKeys.Shift) != ModifierKeys.None)
+            {
+                s += "shift+";
+            }
+
+            if ((modifierKeys & ModifierKeys.Alt) != ModifierKeys.None)
+            {
+                s += "alt+";
+            }
+
+            return s;
+        }
+
+
+        public void onKeyDown(object sender, KeyEventArgs e)
+        {
+        }
+
+        public void onKeyUp(object sender, KeyEventArgs e)
+        {
+            string ks = ModifyerKeysStr();
+
+            ks += e.Key.ToString().ToLower();
+
+            ExecShortcutKey(ks);
+        }
+        #endregion
+
+
+        // Menu handler
+        public void MenuItemClicked(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuitem = (MenuItem)sender;
+
+            string cmd = menuitem.Tag.ToString();
+
+            ExecCommand(cmd);
+        }
+
+        // Button handler
+        public void ButtonClicked(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+
+            string cmd = btn.Tag.ToString();
+
+            ExecCommand(cmd);
+        }
+
+        // Save / Load
+        #region File
+        private void SaveFile(String fname)
+        {
+            mController.SaveToJsonFile(fname);
+        }
+
+        private void LoadFile(String fname)
+        {
+            mController.LoadFromJsonFile(fname);
+
+            DrawContext dc = mPlotterView.StartDraw();
+
+            mController.Clear(dc);
+
+            mController.Draw(dc);
+
+            mPlotterView.EndDraw();
+        }
+        #endregion
+
+
+        #region helper
+        private DrawContext StartDraw()
+        {
+            return mPlotterView.StartDraw();
+        }
+
+        private void EndDraw()
+        {
+            mPlotterView.EndDraw();
+        }
+
+        private void Draw(bool clearFlag=true)
+        {
+            DrawContext dc = mPlotterView.StartDraw();
+            if (clearFlag)
+            {
+                mController.Clear(dc);
+            }
+            mController.Draw(dc);
+            mPlotterView.EndDraw();
+        }
+
+        private void DrawAll()
+        {
+            DrawContext dc = mPlotterView.StartDraw();
+            mController.Clear(dc);
+            mController.DrawAll(dc);
+            mPlotterView.EndDraw();
+        }
+        #endregion
 
         #region "print"
         public void StartPrint()
@@ -802,11 +837,10 @@ namespace Plotter
             Draw(true);
         }
 
-        public void MenuCommand(string tag)
-        {
-            Action action = commandMap[tag];
-            action?.Invoke();
-        }
+        //public void MenuCommand(string tag)
+        //{
+        //    ExecCommand(tag);
+        //}
 
         public void DebugCommand(string s)
         {

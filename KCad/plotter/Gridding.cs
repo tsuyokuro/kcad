@@ -28,7 +28,7 @@ namespace Plotter
         public CadPoint XMatchW = default(CadPoint);
         public CadPoint YMatchW = default(CadPoint);
 
-        public bool Enable = true;
+        public bool Enable = false;
 
         public Gridding()
         {

@@ -251,5 +251,9 @@ namespace Plotter
         public virtual void DrawCursorScrn(CadPoint pp)
         {
         }
+
+        public virtual void DrawCrossCursorScrn(CadPoint pp)
+        {
+        }
     }
 }

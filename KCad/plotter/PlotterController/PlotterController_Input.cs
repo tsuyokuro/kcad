@@ -566,8 +566,6 @@ namespace Plotter
                 }
             }
 
-            //dc.Drawing.DrawCursorScrn(mSnapScrnPoint);
-
             switch (State)
             {
                 case States.DRAGING_POINTS:
@@ -577,15 +575,16 @@ namespace Plotter
 
                         CadPoint delta = p1 - p0;
 
-                        //mSnapScrnPoint.dump(DebugOut.Std);
-
                         MoveSelectedPoints(dc, delta);
 
+                        DrawAll(dc);
                         break;
                     }
 
                 case States.CREATING:
                     {
+                        DrawAll(dc);
+
                         if (CreatingFigure != null)
                         {
                             CadPoint p = dc.UnitPointToCadPoint(mSnapScreenPoint);
@@ -593,9 +592,11 @@ namespace Plotter
                         }
                         break;
                     }
+                default:
+                    DrawAll(dc);
+                    break;
             }
 
-            DrawAll(dc);
             CursorPosChanged(this, mSnapPoint);
         }
 

@@ -364,6 +364,7 @@ namespace Plotter
 
         public void DrawAll(DrawContext dc)
         {
+            DrawCrossCursor(dc);
             Draw(dc);
             DrawSelectedItems(dc);
             DrawLastPoint(dc);
@@ -429,6 +430,11 @@ namespace Plotter
         public void DrawCursor(DrawContext dc)
         {
             dc.Drawing.DrawCursorScrn(mSnapScreenPoint);
+        }
+
+        public void DrawCrossCursor(DrawContext dc)
+        {
+            dc.Drawing.DrawCrossCursorScrn(mSnapScreenPoint);
         }
 
         public void Print(DrawContext dc)

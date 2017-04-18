@@ -60,13 +60,7 @@ namespace KCad
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            MenuItem menuitem = (MenuItem)sender;
-
-            if (menuitem.Tag != null)
-            {
-                var tag = menuitem.Tag.ToString();
-                ViewModel.MenuCommand(tag);
-            }
+            ViewModel.MenuItemClicked(sender, e);
         }
 
         private void debugCommand(String s)
@@ -108,11 +102,11 @@ namespace KCad
             listMessage.ScrollIntoView(obj);
         }
 
-        public void ButtonClicked(object sender, RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            ViewModel.ButtonClicked(sender, e);
-        }
+        //public void ButtonClicked(object sender, RoutedEventArgs e)
+        //{
+        //    Button btn = (Button)sender;
+        //    ViewModel.ButtonClicked(sender, e);
+        //}
 
         #region TextCommand
         private void InitTextCommand()
