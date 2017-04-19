@@ -259,7 +259,7 @@ namespace Plotter
             DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
         }
 
-        public override void DrawCross(int pen, CadPoint p, int size)
+        public override void DrawCross(int pen, CadPoint p, double size)
         {
             CadPoint a = DC.CadPointToUnitPoint(p);
 

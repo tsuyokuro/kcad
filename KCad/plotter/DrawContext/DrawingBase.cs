@@ -57,7 +57,7 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawCross(int pen, CadPoint p, int size)
+        public virtual void DrawCross(int pen, CadPoint p, double size)
         {
         }
 

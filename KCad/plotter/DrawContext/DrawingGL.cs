@@ -282,10 +282,15 @@ namespace Plotter
 
         public override void DrawDownPointCursor(int pen, CadPoint p)
         {
+            DrawCross(pen, p, 10.0);
+        }
+
+        public override void DrawCross(int pen, CadPoint p, double size)
+        {
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Light0);
 
-            double hs =10.0;
+            double hs = size;
 
             CadPoint px0 = p;
             px0.x -= hs;

@@ -20,6 +20,7 @@ namespace Plotter
             RECT,
             POLY_LINES,
             CIRCLE,
+            POINT,
             GROUP,
             MAX,
         }
@@ -124,6 +125,7 @@ namespace Plotter
             BehaviorTbl[(int)Types.RECT] = new CadFigureRect();
             BehaviorTbl[(int)Types.POLY_LINES] = new CadFigurePolyLines();
             BehaviorTbl[(int)Types.CIRCLE] = new CadFigureCircle();
+            BehaviorTbl[(int)Types.POINT] = new CadFigurePoint();
             BehaviorTbl[(int)Types.GROUP] = new CadNopBehavior();
         }
 

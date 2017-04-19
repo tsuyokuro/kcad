@@ -146,6 +146,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="plotter\Assembler\TriangleSplitter.cs" />
+    <Compile Include="plotter\Figure\CadFigurePoint.cs" />
     <Compile Include="plotter\HID\CadKeyboard.cs" />
     <Compile Include="plotter\DrawContext\ArrowHead.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGL.cs" />

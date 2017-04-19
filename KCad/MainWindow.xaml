@@ -225,6 +225,17 @@
                         }"
                         />
 
+
+                        <RadioButton
+                        Style="{StaticResource ToggleRadio}"
+                        Tag="POINT"
+                        Content="Point" 
+                        IsChecked="{
+                            Binding FigureType,
+                            ConverterParameter=POINT,
+                            Converter={StaticResource FigTypeConv}
+                        }"
+                        />
                     </StackPanel>
 
                     <Label Height="20"/>
