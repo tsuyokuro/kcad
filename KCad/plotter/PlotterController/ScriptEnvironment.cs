@@ -38,6 +38,7 @@ namespace Plotter
             mScrExecutor.addFunction("rect", addRect);
             mScrExecutor.addFunction("rectSide", addRectSide);
             mScrExecutor.addFunction("rectTop", addRectTop);
+            mScrExecutor.addFunction("point", addPoint);
             mScrExecutor.addFunction("distance", distance);
             mScrExecutor.addFunction("group", group);
             mScrExecutor.addFunction("ungroup", ungroup);
@@ -132,6 +133,46 @@ namespace Plotter
             }
 
             return 0;
+        }
+
+        private int addPoint(int argCount, Evaluator.ValueStack stack)
+        {
+            if (!(argCount == 0 || argCount == 2 || argCount == 3))
+            {
+                return 0;
+            }
+
+
+            CadPoint p = default(CadPoint);
+
+            if (argCount == 0)
+            {
+                p = Controller.FreeDownPoint;
+            }
+            else if (argCount == 2)
+            {
+                Evaluator.Value y = stack.pop();
+                Evaluator.Value x = stack.pop();
+                p.set(x.getDouble(), y.getDouble(), 0);
+            }
+            else if (argCount == 3)
+            {
+                Evaluator.Value z = stack.pop();
+                Evaluator.Value y = stack.pop();
+                Evaluator.Value x = stack.pop();
+                p.set(x.getDouble(), y.getDouble(), z.getDouble());
+            }
+
+            CadFigure fig = Controller.DB.newFigure(CadFigure.Types.POINT);
+            fig.AddPoint(p);
+
+            fig.EndCreate(Controller.CurrentDC);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+            Controller.CurrentLayer.addFigure(fig);
+
+            return 1;
         }
 
         private int addRect(int argCount, Evaluator.ValueStack stack)
