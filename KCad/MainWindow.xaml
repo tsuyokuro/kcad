@@ -149,7 +149,7 @@
             </Grid.ColumnDefinitions>
 
             <!--Left panel-->
-            <Border BorderBrush="YellowGreen" BorderThickness="1">
+            <Border BorderBrush="{StaticResource BoarderColor}" BorderThickness="2">
                 <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
 
                     <StackPanel x:Name="SlsectModePanel">
@@ -238,7 +238,7 @@
                         />
                     </StackPanel>
 
-                    <Label Height="20"/>
+                    <Label Height="5"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -275,6 +275,7 @@
                             ItemsSource="{Binding}"
                             SelectionMode="Single"
                             ItemContainerStyle="{StaticResource SimpleListBoxItem}"
+                            BorderBrush="{StaticResource BoarderColor}"
                             Background="{StaticResource BaseColor}"
                             >
 
@@ -309,9 +310,9 @@
             <!--Plotter view and Command view-->
             <Grid Grid.Column="1" Background="{DynamicResource BGColor}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="247*"/>
+                    <RowDefinition Height="100*"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="67*"/>
+                    <RowDefinition Height="10*"/>
                 </Grid.RowDefinitions>
 
                 <WindowsFormsHost x:Name="viewContainer" Grid.Row="0">
@@ -400,8 +401,6 @@
 
                 </RadioButton>
 
-                <Label Width="2"/>
-
                 <RadioButton
                     Style="{StaticResource CustomToggle}"
                     IsChecked="{
@@ -421,8 +420,6 @@
                     </Grid>
 
                 </RadioButton>
-
-                <Label Width="4"/>
 
                 <RadioButton
                     Style="{StaticResource CustomToggle}"
@@ -444,8 +441,6 @@
                     </Grid>
                 </RadioButton>
 
-                <Label Width="2"/>
-
                 <RadioButton
                     Style="{StaticResource CustomToggle}"
                     IsChecked="{
@@ -465,8 +460,6 @@
 
                     </Grid>
                 </RadioButton>
-
-                <Label Width="4"/>
 
                 <RadioButton
                     Style="{StaticResource CustomToggle}"
@@ -489,8 +482,6 @@
 
                 </RadioButton>
 
-                <Label Width="2"/>
-
                 <RadioButton
                     Style="{StaticResource CustomToggle}"
                     IsChecked="{
@@ -511,8 +502,6 @@
                     </Grid>
 
                 </RadioButton>
-
-                <Label Width="4"/>
 
                 <RadioButton
                     Style="{StaticResource CustomToggle}"
