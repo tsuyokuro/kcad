@@ -36,7 +36,7 @@ namespace Plotter.Tests
             pl.Add(p2);
             pl.Add(p3);
 
-            double area = CadUtil.getTriangleArea(pl);
+            double area = CadUtil.TriangleArea(pl);
 
             Assert.IsTrue(area == 50.0);
 

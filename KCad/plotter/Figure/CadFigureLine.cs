@@ -39,6 +39,22 @@ namespace Plotter
                 fig.Type = Types.POLY_LINES;
                 return fig.Type;
             }
+
+            public override Centroid GetCentroid(CadFigure fig)
+            {
+                Centroid ret = default(Centroid);
+
+                CadPoint t = fig.PointList[1] - fig.PointList[0];
+
+                ret.Point = (t / 2) + fig.PointList[0];
+
+                ret.Area = 0;
+
+                ret.SplitList = new List<CadFigure>();
+                ret.SplitList.Add(fig);
+
+                return ret;
+            }
         }
     }
 }

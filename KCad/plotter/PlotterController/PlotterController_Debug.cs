@@ -45,7 +45,7 @@ namespace Plotter
 
             DebugOut dout = new DebugOut();
 
-            bool ret = CadUtil.isPointInTriangle3D(pt, fig.PointList);
+            bool ret = CadUtil.IsPointInTriangle(pt, fig.PointList);
 
             dout.println("ret=" + ret);
         }
@@ -169,7 +169,7 @@ namespace Plotter
 
             axis = axis.UnitVector();
 
-            double rad = CadMath.deg2rad(10);
+            double rad = CadMath.Deg2Rad(10);
 
             CadQuaternion q = CadQuaternion.RotateQuaternion(axis, rad);
             CadQuaternion r = q.Conjugate();
@@ -226,7 +226,7 @@ namespace Plotter
                 { 31, 32, 33 }
             });
 
-            MatrixMN m3 = m1.product(m2);
+            MatrixMN m3 = m1.Product(m2);
 
             m1.dump(o);
             m2.dump(o);

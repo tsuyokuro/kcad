@@ -149,7 +149,7 @@
             </Grid.ColumnDefinitions>
 
             <!--Left panel-->
-            <Border BorderBrush="YellowGreen" BorderThickness="2">
+            <Border BorderBrush="YellowGreen" BorderThickness="1">
                 <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
 
                     <StackPanel x:Name="SlsectModePanel">

@@ -22,12 +22,12 @@ namespace Plotter
     public class CadUtil
     {
         // 三角形の面積 3D対応
-        public static double getTriangleArea(IReadOnlyList<CadPoint> triangle)
+        public static double TriangleArea(IReadOnlyList<CadPoint> triangle)
         {
             CadPoint v1 = triangle[0] - triangle[1];
             CadPoint v2 = triangle[2] - triangle[1];
 
-            CadPoint cp = CadMath.crossProduct3D(v1, v2);
+            CadPoint cp = CadMath.CrossProduct(v1, v2);
 
             double area = cp.Norm() / 2.0;
 
@@ -35,7 +35,7 @@ namespace Plotter
         }
 
         // 三角形の重心を求める
-        public static CadPoint getTriangleCentroid(IReadOnlyList<CadPoint> triangle)
+        public static CadPoint TriangleCentroid(IReadOnlyList<CadPoint> triangle)
         {
             CadPoint gp = default(CadPoint);
 
@@ -47,7 +47,7 @@ namespace Plotter
         }
 
         // 三角形群の重心を求める
-        public static Centroid getTriangleListCentroid(List<CadFigure> triangles)
+        public static Centroid TriangleListCentroid(List<CadFigure> triangles)
         {
             Centroid c0 = default(Centroid);
             Centroid c1 = default(Centroid);
@@ -55,15 +55,15 @@ namespace Plotter
 
             int i = 1;
 
-            c0.Area= getTriangleArea(triangles[0].PointList);
-            c0.Point = getTriangleCentroid(triangles[0].PointList);
+            c0.Area= TriangleArea(triangles[0].PointList);
+            c0.Point = TriangleCentroid(triangles[0].PointList);
 
             for (; i < triangles.Count; i++)
             {
-                c1.Area = getTriangleArea(triangles[i].PointList);
-                c1.Point = getTriangleCentroid(triangles[i].PointList);
+                c1.Area = TriangleArea(triangles[i].PointList);
+                c1.Point = TriangleCentroid(triangles[i].PointList);
 
-                ct = getCentroid(c0, c1);
+                ct = MergeCentroid(c0, c1);
 
                 c0 = ct;
             }
@@ -75,7 +75,7 @@ namespace Plotter
 
 
         // 二つの重心情報から重心を求める
-        public static Centroid getCentroid(Centroid c0, Centroid c1)
+        public static Centroid MergeCentroid(Centroid c0, Centroid c1)
         {
             CadPoint gpt = default(CadPoint);
 
@@ -155,16 +155,16 @@ namespace Plotter
             }
         }
 
-        public static bool isPointInTriangle2D(CadPoint p, IReadOnlyList<CadPoint> triangle)
+        public static bool IsPointInTriangle2D(CadPoint p, IReadOnlyList<CadPoint> triangle)
         {
             if (triangle.Count < 3)
             {
                 return false;
             }
 
-            double c1 = CadMath.crossProduct2D(p, triangle[0], triangle[1]);
-            double c2 = CadMath.crossProduct2D(p, triangle[1], triangle[2]);
-            double c3 = CadMath.crossProduct2D(p, triangle[2], triangle[0]);
+            double c1 = CadMath.CrossProduct2D(p, triangle[0], triangle[1]);
+            double c2 = CadMath.CrossProduct2D(p, triangle[1], triangle[2]);
+            double c3 = CadMath.CrossProduct2D(p, triangle[2], triangle[0]);
 
 
             // When all corossProduct result's sign are same, Point is in triangle
@@ -176,19 +176,19 @@ namespace Plotter
             return false;
         }
 
-        public static bool isPointInTriangle3D(CadPoint p, IReadOnlyList<CadPoint> triangle)
+        public static bool IsPointInTriangle(CadPoint p, IReadOnlyList<CadPoint> triangle)
         {
             if (triangle.Count < 3)
             {
                 return false;
             }
 
-            CadPoint c1 = CadMath.crossProduct3D(p, triangle[0], triangle[1]);
-            CadPoint c2 = CadMath.crossProduct3D(p, triangle[1], triangle[2]);
-            CadPoint c3 = CadMath.crossProduct3D(p, triangle[2], triangle[0]);
+            CadPoint c1 = CadMath.CrossProduct(p, triangle[0], triangle[1]);
+            CadPoint c2 = CadMath.CrossProduct(p, triangle[1], triangle[2]);
+            CadPoint c3 = CadMath.CrossProduct(p, triangle[2], triangle[0]);
 
-            double ip12 = CadMath.innerProduct3D(c1, c2);
-            double ip13 = CadMath.innerProduct3D(c1, c3);
+            double ip12 = CadMath.InnerProduct(c1, c2);
+            double ip13 = CadMath.InnerProduct(c1, c3);
 
 
             // When all corossProduct result's sign are same, Point is in triangle
@@ -200,7 +200,8 @@ namespace Plotter
             return false;
         }
 
-        public static int findMaxDistantPointIndex(CadPoint p0, IReadOnlyList<CadPoint> points)
+        // 指定された座標から最も遠いPointのIndexを求める
+        public static int FindMaxDistantPointIndex(CadPoint p0, IReadOnlyList<CadPoint> points)
         {
             int ret = -1;
             int i;
@@ -234,7 +235,7 @@ namespace Plotter
                 return Vector3d.Zero;
             }
 
-            int idx = findMaxDistantPointIndex(points[0], points);
+            int idx = FindMaxDistantPointIndex(points[0], points);
 
             int idxA = idx - 1;
             int idxB = idx + 1;
@@ -265,7 +266,7 @@ namespace Plotter
             CadPoint ab = b - a;
             CadPoint ap = p - a;
 
-            t = CadMath.innrProduct2D(ab, ap);
+            t = CadMath.InnrProduct2D(ab, ap);
 
             if (t < 0)
             {
@@ -275,14 +276,14 @@ namespace Plotter
             CadPoint ba = a - b;
             CadPoint bp = p - b;
 
-            t = CadMath.innrProduct2D(ba, bp);
+            t = CadMath.InnrProduct2D(ba, bp);
 
             if (t < 0)
             {
                 return vectNorm2D(bp);
             }
 
-            double d = Math.Abs(CadMath.crossProduct2D(ab, ap));
+            double d = Math.Abs(CadMath.CrossProduct2D(ab, ap));
             double abl = vectNorm2D(ab);
 
             return d / abl;
@@ -298,7 +299,7 @@ namespace Plotter
             CadPoint ab = b - a;
             CadPoint ap = p - a;
 
-            t = CadMath.innerProduct3D(ab, ap);
+            t = CadMath.InnerProduct(ab, ap);
 
             if (t < 0)
             {
@@ -308,14 +309,14 @@ namespace Plotter
             CadPoint ba = a - b;
             CadPoint bp = p - b;
 
-            t = CadMath.innerProduct3D(ba, bp);
+            t = CadMath.InnerProduct(ba, bp);
 
             if (t < 0)
             {
                 return bp.Norm();
             }
 
-            CadPoint cp = CadMath.crossProduct3D(ab, ap);
+            CadPoint cp = CadMath.CrossProduct(ab, ap);
 
             // 外積結果の長さが a->p a->b を辺とする平行四辺形の面積になる
             double s = cp.Norm();
@@ -345,10 +346,10 @@ namespace Plotter
             // Aから交点までの距離 
             // A->交点->B or A->B->交点なら +
             // 交点<-A->B なら -
-            double dist_ax = CadMath.innerProduct3D(unit_ab, ap);
+            double dist_ax = CadMath.InnerProduct(unit_ab, ap);
 
             // Bから交点までの距離 B側の中外判定に使用
-            double dist_bx = CadMath.innerProduct3D(unit_ba, bp);
+            double dist_bx = CadMath.InnerProduct(unit_ba, bp);
 
             //Console.WriteLine("getNormCross dist_ax={0} dist_bx={1}" , dist_ax.ToString(), dist_bx.ToString());
 
@@ -374,7 +375,7 @@ namespace Plotter
             CadPoint ab = b - a;
             CadPoint ap = p - a;
 
-            t1 = CadMath.innrProduct2D(ab, ap);
+            t1 = CadMath.InnrProduct2D(ab, ap);
 
             if (t1 < 0)
             {
@@ -386,7 +387,7 @@ namespace Plotter
             CadPoint ba = a - b;
             CadPoint bp = p - b;
 
-            t2 = CadMath.innrProduct2D(ba, bp);
+            t2 = CadMath.InnrProduct2D(ba, bp);
 
             if (t2 < 0)
             {
@@ -416,7 +417,7 @@ namespace Plotter
             CadPoint unit_ab = ab.UnitVector();
 
             // Aから交点までの距離 
-            double dist_ax = CadMath.innerProduct3D(unit_ab, ap);
+            double dist_ax = CadMath.InnerProduct(unit_ab, ap);
 
             ret.CrossPoint.x = a.x + (unit_ab.x * dist_ax);
             ret.CrossPoint.y = a.y + (unit_ab.y * dist_ax);
@@ -435,7 +436,7 @@ namespace Plotter
             CadPoint ab = b - a;
             CadPoint ap = p - a;
 
-            t1 = CadMath.innrProduct2D(ab, ap);
+            t1 = CadMath.InnrProduct2D(ab, ap);
 
             double norm = vectNorm2D(ab);
             double norm2 = norm * norm;

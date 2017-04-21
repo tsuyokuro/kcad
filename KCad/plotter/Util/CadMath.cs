@@ -7,41 +7,41 @@ namespace Plotter
     {
         // 内積
         #region inner product
-        public static double innrProduct2D(CadPoint v1, CadPoint v2)
+        public static double InnrProduct2D(CadPoint v1, CadPoint v2)
         {
             return (v1.x * v2.x) + (v1.y * v2.y);
         }
 
-        public static double innrProduct2D(CadPoint v0, CadPoint v1, CadPoint v2)
+        public static double InnrProduct2D(CadPoint v0, CadPoint v1, CadPoint v2)
         {
-            return innrProduct2D(v1 - v0, v2 - v0);
+            return InnrProduct2D(v1 - v0, v2 - v0);
         }
 
-        public static double innerProduct3D(CadPoint v1, CadPoint v2)
+        public static double InnerProduct(CadPoint v1, CadPoint v2)
         {
             return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
         }
 
-        public static double innerProduct3D(CadPoint v0, CadPoint v1, CadPoint v2)
+        public static double InnerProduct(CadPoint v0, CadPoint v1, CadPoint v2)
         {
-            return innerProduct3D(v1 - v0, v2 - v0);
+            return InnerProduct(v1 - v0, v2 - v0);
         }
         #endregion
 
 
         // 外積
         #region Cross product
-        public static double crossProduct2D(CadPoint v1, CadPoint v2)
+        public static double CrossProduct2D(CadPoint v1, CadPoint v2)
         {
             return (v1.x * v2.y) - (v1.y * v2.x);
         }
 
-        public static double crossProduct2D(CadPoint v0, CadPoint v1, CadPoint v2)
+        public static double CrossProduct2D(CadPoint v0, CadPoint v1, CadPoint v2)
         {
-            return crossProduct2D(v1 - v0, v2 - v0);
+            return CrossProduct2D(v1 - v0, v2 - v0);
         }
 
-        public static CadPoint crossProduct3D(CadPoint v1, CadPoint v2)
+        public static CadPoint CrossProduct(CadPoint v1, CadPoint v2)
         {
             CadPoint res = default(CadPoint);
 
@@ -52,19 +52,22 @@ namespace Plotter
             return res;
         }
 
-        public static CadPoint crossProduct3D(CadPoint v0, CadPoint v1, CadPoint v2)
+        public static CadPoint CrossProduct(CadPoint v0, CadPoint v1, CadPoint v2)
         {
-            return crossProduct3D(v1 - v0, v2 - v0);
+            return CrossProduct(v1 - v0, v2 - v0);
         }
         #endregion
 
-
+        /**
+         * 法線を求める
+         * 
+         */ 
         public static CadPoint Normal(CadPoint v0, CadPoint v1, CadPoint v2)
         {
             CadPoint va = v1 - v0;
             CadPoint vb = v2 - v0;
 
-            CadPoint normal = CadMath.crossProduct3D(va, vb);
+            CadPoint normal = CadMath.CrossProduct(va, vb);
 
             if (normal.IsZero())
             {
@@ -77,6 +80,8 @@ namespace Plotter
         }
 
         /**
+         * 法線を求める
+         * 
          *       vb
          *      / 
          *     /
@@ -85,7 +90,7 @@ namespace Plotter
          */
         public static CadPoint Normal(CadPoint va, CadPoint vb)
         {
-            CadPoint normal = CadMath.crossProduct3D(va, vb);
+            CadPoint normal = CadMath.CrossProduct(va, vb);
 
             if (normal.IsZero())
             {
@@ -98,6 +103,8 @@ namespace Plotter
         }
 
         /**
+         * 法線を求める
+         * 
          *           list[2]
          *          / 
          *         /
@@ -116,7 +123,7 @@ namespace Plotter
             CadPoint va = pointList[1] - pointList[0];
             CadPoint vb = pointList[2] - pointList[0];
 
-            CadPoint normal = CadMath.crossProduct3D(va, vb);
+            CadPoint normal = CadMath.CrossProduct(va, vb);
 
             if (normal.IsZero())
             {
@@ -128,12 +135,20 @@ namespace Plotter
             return normal;
         }
 
-        public static double rad2deg(double rad)
+        /**
+         * ラジアンを角度に変換
+         * 
+         */
+        public static double Rad2Deg(double rad)
         {
             return 180.0 * rad / Math.PI;
         }
 
-        public static double deg2rad(double deg)
+        /**
+         * 角度をラジアンに変換
+         * 
+         */
+        public static double Deg2Rad(double deg)
         {
             return Math.PI * deg / 180.0;
         }
@@ -191,7 +206,10 @@ namespace Plotter
     }
 
 
-    // 汎用行列
+    /**
+     *  汎用行列
+     *  
+     */  
     public class MatrixMN
     {
         public int RN = 0;
@@ -209,7 +227,7 @@ namespace Plotter
 
         public MatrixMN(double[,] a)
         {
-            attach(a);
+            Attach(a);
         }
 
         public MatrixMN(int rownum, int colnum)
@@ -219,7 +237,7 @@ namespace Plotter
             CN = v.GetLength(1);
         }
 
-        public void set(MatrixMN m)
+        public void Set(MatrixMN m)
         {
             v = new double[m.RN, m.CN];
             RN = m.RN;
@@ -236,7 +254,7 @@ namespace Plotter
             }
         }
 
-        public void set(double[,] a)
+        public void Set(double[,] a)
         {
             v = a;
             RN = a.GetLength(0);
@@ -253,24 +271,24 @@ namespace Plotter
             }
         }
 
-        public void attach(double[,] a)
+        public void Attach(double[,] a)
         {
             v = a;
             RN = v.GetLength(0);
             CN = v.GetLength(1);
         }
 
-        public MatrixMN product(MatrixMN right)
+        public MatrixMN Product(MatrixMN right)
         {
-            return product(this, right);
+            return Product(this, right);
         }
 
         public static MatrixMN operator *(MatrixMN m1, MatrixMN m2)
         {
-            return product(m1, m2);
+            return Product(m1, m2);
         }
 
-        public static MatrixMN product(MatrixMN m1, MatrixMN m2)
+        public static MatrixMN Product(MatrixMN m1, MatrixMN m2)
         {
             if (m1.CN != m2.RN)
             {

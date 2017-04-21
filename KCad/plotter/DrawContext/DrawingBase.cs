@@ -142,7 +142,7 @@ namespace Plotter
 
             double angle = Vector3d.CalculateAngle(tmp.vector, d.vector);
 
-            CadPoint normal = CadMath.crossProduct3D(tmp, d);  // 回転軸
+            CadPoint normal = CadMath.CrossProduct(tmp, d);  // 回転軸
 
             if (normal.Norm() < 0.0001)
             {

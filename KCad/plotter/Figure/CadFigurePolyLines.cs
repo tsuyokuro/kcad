@@ -354,7 +354,7 @@ namespace Plotter
 
                 List<CadFigure> triangles = TriangleSplitter.split(fig);
 
-                ret = CadUtil.getTriangleListCentroid(triangles);
+                ret = CadUtil.TriangleListCentroid(triangles);
 
                 return ret;
             }

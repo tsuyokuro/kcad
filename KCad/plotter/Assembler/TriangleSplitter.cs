@@ -21,7 +21,7 @@ namespace Plotter
 
             List<CadPoint> pointList = new List<CadPoint>(orgList);
 
-            i1 = CadUtil.findMaxDistantPointIndex(p0, pointList);
+            i1 = CadUtil.FindMaxDistantPointIndex(p0, pointList);
 
             if (i1 == -1)
             {
@@ -34,14 +34,14 @@ namespace Plotter
             CadPoint tp1 = triangle.PointList[1];
             CadPoint tp2 = triangle.PointList[2];
 
-            double dir = CadMath.crossProduct2D(tp1, tp0, tp2);
+            double dir = CadMath.CrossProduct2D(tp1, tp0, tp2);
             double currentDir = 0;
 
             while (pointList.Count > 3)
             {
                 if (state == 0)
                 {
-                    i1 = CadUtil.findMaxDistantPointIndex(p0, pointList);
+                    i1 = CadUtil.FindMaxDistantPointIndex(p0, pointList);
                     if (i1 == -1)
                     {
                         return triangles;
@@ -54,7 +54,7 @@ namespace Plotter
                 tp1 = triangle.PointList[1];
                 tp2 = triangle.PointList[2];
 
-                currentDir = CadMath.crossProduct2D(tp1, tp0, tp2);
+                currentDir = CadMath.CrossProduct2D(tp1, tp0, tp2);
 
                 bool hasIn = listContainsPointInTriangle(pointList, triangle);
                 if (!hasIn && (Math.Sign(dir) == Math.Sign(currentDir)))
@@ -134,7 +134,7 @@ namespace Plotter
                     continue;
                 }
 
-                bool ret = CadUtil.isPointInTriangle3D(cp, triangle.PointList);
+                bool ret = CadUtil.IsPointInTriangle(cp, triangle.PointList);
                 if (ret)
                 {
                     return true;

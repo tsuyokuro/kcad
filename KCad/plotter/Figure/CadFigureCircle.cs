@@ -151,7 +151,7 @@ namespace Plotter
                     return;
                 }
 
-                CadPoint normal = CadMath.crossProduct3D(va, vb);
+                CadPoint normal = CadMath.CrossProduct(va, vb);
                 normal = normal.UnitVector();
 
                 if (a.Selected)
@@ -163,7 +163,7 @@ namespace Plotter
 
                     if (!uva.coordEqualsR(uvb))
                     {
-                        normal = CadMath.crossProduct3D(va, vb);
+                        normal = CadMath.CrossProduct(va, vb);
                         normal = normal.UnitVector();
 
                     }
@@ -189,7 +189,7 @@ namespace Plotter
 
                     if (!uva.coordEqualsR(uvb))
                     {
-                        normal = CadMath.crossProduct3D(va, vb);
+                        normal = CadMath.CrossProduct(va, vb);
                         normal = normal.UnitVector();
 
                     }
