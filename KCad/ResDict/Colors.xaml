@@ -3,6 +3,7 @@
                     xmlns:local="clr-namespace:KCad.plotter">
 
     <SolidColorBrush x:Key="BaseColor" Color="#FF252526" />
+    <SolidColorBrush x:Key="ButtonColor" Color="#FF3F3F46" />
     <SolidColorBrush x:Key="BoarderColor" Color="#FF3F3F46" />
     <SolidColorBrush x:Key="TextColor" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="BGColor" Color="#FF252526" />

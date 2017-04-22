@@ -167,7 +167,7 @@ namespace Plotter
             PenTbl[PEN_GRID]                = new PenHolder(new Pen(Color.FromArgb(192, 128, 92), 0), true);
 
             ColorTbl[COLOR_DEFAULT]         = new ColorHolder(Color.FromArgb(255, 255, 255), false);
-            ColorTbl[COLOR_BACKGROUND]      = new ColorHolder(Color.FromArgb(20, 20, 30), false);
+            ColorTbl[COLOR_BACKGROUND]      = new ColorHolder(Color.FromArgb(0x1e, 0x1e, 0x1e), false);
 
             BrushTbl[BRUSH_DEFAULT]         = new BrushHolder(new SolidBrush(ColorTbl[COLOR_DEFAULT]), true);
             BrushTbl[BRUSH_BACKGROUND]      = new BrushHolder(new SolidBrush(ColorTbl[COLOR_BACKGROUND]), true);
@@ -235,7 +235,7 @@ namespace Plotter
             GLPenTbl[PEN_GRID] = new GLPen(Color.FromArgb(192, 128, 92), width);
 
             GLColorTbl[COLOR_DEFAULT] = Color.FromArgb(255, 255, 255);
-            GLColorTbl[COLOR_BACKGROUND] = Color.FromArgb(20, 20, 30);
+            GLColorTbl[COLOR_BACKGROUND] = Color.FromArgb(0x1e, 0x1e, 0x1e);
         }
 
 

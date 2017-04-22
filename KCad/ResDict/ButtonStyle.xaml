@@ -29,4 +29,47 @@
         </Style.Triggers>
     </Style>
 
+    
+    
+    <!-- Button -->
+
+    <DataTemplate x:Key="MyButtonCheckedStyle">
+        <Grid Background="{StaticResource ToggleButtonCheckedBGColor}">
+            <ContentPresenter 
+                TextBlock.TextAlignment="Center"
+                TextBlock.Foreground="{StaticResource TextColor}"
+                Content="{Binding}"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MyButtonMouseOverStyle">
+        <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}">
+            <ContentPresenter
+                TextBlock.TextAlignment="Center"
+                TextBlock.Foreground="{StaticResource TextColor}"
+                Content="{Binding}"/>
+        </Grid>
+    </DataTemplate>
+
+    <ControlTemplate x:Key="MyButtonTemplate"  TargetType="{x:Type Button}">
+        <Border x:Name="MyBorder"
+                Background="{StaticResource ButtonColor}"
+                BorderBrush="{StaticResource BaseColor}"
+                BorderThickness="1">
+            <ContentPresenter
+                TextBlock.TextAlignment="Center"
+                TextBlock.Foreground="{StaticResource TextColor}"/>
+
+        </Border>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="ContentTemplate" Value="{StaticResource MyButtonMouseOverStyle}" />
+                <Setter Property="Background" Value="{StaticResource ToggleButtonMouseOverBGColor}"  TargetName="MyBorder"/>
+            </Trigger>
+
+        </ControlTemplate.Triggers>
+
+    </ControlTemplate>
+
 </ResourceDictionary>

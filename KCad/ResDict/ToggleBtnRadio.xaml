@@ -9,7 +9,7 @@
 
 
     <DataTemplate x:Key="ToggleRadioCheckedStyle">
-        <Grid Background="{StaticResource ToggleButtonCheckedBGColor}" >
+        <Grid Background="{StaticResource ToggleButtonCheckedBGColor}">
             <ContentPresenter
                 TextBlock.TextAlignment="Center"
                 Content="{Binding}"
@@ -18,7 +18,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ToggleButtonMouseOverStyle">
-        <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}" >
+        <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}">
             <ContentPresenter
                 TextBlock.TextAlignment="Center"
                 Content="{Binding}"
@@ -27,10 +27,13 @@
     </DataTemplate>
 
 
-    <Style x:Key="ToggleRadio" TargetType="{x:Type RadioButton}"
-             BasedOn="{StaticResource {x:Type ToggleButton} }">
+    <Style x:Key="ToggleRadio"
+           TargetType="{x:Type RadioButton}"
+           BasedOn="{StaticResource {x:Type ToggleButton} }">
 
-        <Setter Property="Background" Value="{StaticResource BaseColor}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BaseColor}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="{StaticResource ButtonColor}" />
         <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
 
         <Setter Property="FontSize" Value="12" />
@@ -68,7 +71,9 @@
     <Style x:Key="CustomToggle" TargetType="{x:Type RadioButton}"
              BasedOn="{StaticResource {x:Type ToggleButton} }">
 
-        <Setter Property="Background" Value="{StaticResource BaseColor}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BaseColor}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="{StaticResource ButtonColor}" />
         <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
 
         <Setter Property="FontSize" Value="12" />
@@ -83,6 +88,50 @@
         </Style.Triggers>
     </Style>
 
+
+    <!-- Toggle button template -->
+
+    <DataTemplate x:Key="MyToggleButtonCheckedStyle">
+        <Grid Background="{StaticResource ToggleButtonCheckedBGColor}">
+            <ContentPresenter 
+                TextBlock.TextAlignment="Center"
+                TextBlock.Foreground="{StaticResource TextColor}"
+                Content="{Binding}"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MyToggleButtonMouseOverStyle">
+        <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}">
+            <ContentPresenter
+                TextBlock.TextAlignment="Center"
+                TextBlock.Foreground="{StaticResource TextColor}"
+                Content="{Binding}"/>
+        </Grid>
+    </DataTemplate>
+
+    <ControlTemplate x:Key="MyTggleButtonTemplate"  TargetType="{x:Type ToggleButton}">
+        <Border x:Name="MyBorder"
+                Background="{StaticResource ButtonColor}"
+                BorderBrush="{StaticResource BaseColor}"
+                BorderThickness="1">
+            <ContentPresenter
+                TextBlock.TextAlignment="Center"
+                TextBlock.Foreground="{StaticResource TextColor}"/>
+            
+        </Border>
+        
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="ContentTemplate" Value="{StaticResource MyToggleButtonMouseOverStyle}" />
+                <Setter Property="Background" Value="{StaticResource ToggleButtonMouseOverBGColor}"  TargetName="MyBorder"/>
+            </Trigger>
+
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="ContentTemplate" Value="{StaticResource MyToggleButtonCheckedStyle}" />
+                <Setter Property="Background" Value="{StaticResource ToggleButtonCheckedBGColor}"  TargetName="MyBorder"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 
 </ResourceDictionary>
     
