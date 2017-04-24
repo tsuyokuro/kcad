@@ -75,7 +75,7 @@ namespace Plotter
 
 
         // 二つの重心情報から重心を求める
-        public static Centroid MergeCentroid(Centroid c0, Centroid c1)
+        public static Centroid MergeCentroid(Centroid c0, Centroid c1, bool mergeSplitList = false)
         {
             CadPoint gpt = default(CadPoint);
 
@@ -89,6 +89,21 @@ namespace Plotter
 
             ret.Area = c0.Area + c1.Area;
             ret.Point = gpt;
+
+            if (mergeSplitList)
+            {
+                ret.SplitList = new List<CadFigure>();
+
+                if (c0.SplitList != null)
+                {
+                    ret.SplitList.AddRange(c0.SplitList);
+                }
+
+                if (c1.SplitList != null)
+                {
+                    ret.SplitList.AddRange(c1.SplitList);
+                }
+            }
 
             return ret;
         }

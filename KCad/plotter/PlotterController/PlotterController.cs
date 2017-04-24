@@ -975,5 +975,50 @@ namespace Plotter
             NotifyLayerInfo();
             InteractOut.print("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
         }
+
+        public void GetCentroid(DrawContext dc)
+        {
+            List<uint> idList = GetSelectedFigIDList();
+
+            Centroid cent = default(Centroid);
+
+            cent.IsInvalid = true;
+
+            foreach (uint id in idList)
+            {
+                CadFigure fig = mDB.getFigure(id);
+
+                Centroid t = fig.GetCentroid();
+
+                if (cent.IsInvalid)
+                {
+                    cent = t;
+                    continue;
+                }
+
+                if (t.IsInvalid)
+                {
+                    continue;
+                }
+
+                cent = CadUtil.MergeCentroid(cent, t, false);
+            }
+
+            if (cent.IsInvalid)
+            {
+                return;
+            }
+
+            CadFigure pointFig = mDB.newFigure(CadFigure.Types.POINT);
+            pointFig.AddPoint(cent.Point);
+
+            pointFig.EndCreate(dc);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, pointFig.ID);
+            HistoryManager.foward(ope);
+            CurrentLayer.addFigure(pointFig);
+
+            InteractOut.print("Area=" + cent.Area.ToString());
+        }
     }
 }

@@ -334,6 +334,7 @@ namespace Plotter
                 { "grid_settings", GridSettings },
                 { "add_layer", AddLayer },
                 { "remove_layer", RemoveLayer },
+                { "centroid", GetCentroid },
             };
         }
 
@@ -545,6 +546,13 @@ namespace Plotter
         {
             mController.RemoveLayer(mController.CurrentLayer.ID);
             Draw();
+        }
+
+        public void GetCentroid()
+        {
+            DrawContext dc = StartDraw();
+            mController.GetCentroid(dc);
+            EndDraw();
         }
 
         #endregion
