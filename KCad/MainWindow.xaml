@@ -132,6 +132,7 @@
                 </MenuItem>
                 <MenuItem Tag="clear_layer" Header="Clear layer" Click="MenuItem_Click"/>
                 <MenuItem Tag="centroid" Header="Centroid" Click="MenuItem_Click"/>
+                <MenuItem Tag="select_all" Header="Select all" Click="MenuItem_Click"/>
             </MenuItem>
             <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
                 <MenuItem Header="Snap to grid" IsCheckable="True" IsChecked="{Binding SnapToGrid}"/>

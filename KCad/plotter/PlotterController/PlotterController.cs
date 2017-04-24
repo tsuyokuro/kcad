@@ -1018,7 +1018,18 @@ namespace Plotter
             HistoryManager.foward(ope);
             CurrentLayer.addFigure(pointFig);
 
-            InteractOut.print("Area=" + cent.Area.ToString());
+            InteractOut.print("Area=" + (cent.Area/100).ToString() + "(㎠)");
+        }
+
+        public void SelectAllInCurrentLayer(DrawContext dc)
+        {
+            foreach (CadFigure fig in CurrentLayer.FigureList)
+            {
+                fig.Select();
+            }
+
+            dc.Drawing.Clear();
+            DrawAll(dc);
         }
     }
 }

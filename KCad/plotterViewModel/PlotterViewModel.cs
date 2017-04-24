@@ -335,6 +335,7 @@ namespace Plotter
                 { "add_layer", AddLayer },
                 { "remove_layer", RemoveLayer },
                 { "centroid", GetCentroid },
+                { "select_all", SelectAll },
             };
         }
 
@@ -350,6 +351,7 @@ namespace Plotter
                 { "shift+insert", Paste },
                 { "delete", remove },
                 { "ctrl+s", Save },
+                { "ctrl+a", SelectAll },
             };
         }
 
@@ -555,6 +557,12 @@ namespace Plotter
             EndDraw();
         }
 
+        public void SelectAll()
+        {
+            DrawContext dc = StartDraw();
+            mController.SelectAllInCurrentLayer(dc);
+            EndDraw();
+        }
         #endregion
 
 
