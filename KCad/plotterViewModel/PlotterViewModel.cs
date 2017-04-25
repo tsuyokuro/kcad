@@ -315,15 +315,15 @@ namespace Plotter
                 { "load", Load },
                 { "save",Save },
                 { "print",StartPrint },
-                { "undo",undo },
-                { "redo",redo },
+                { "undo",Undo },
+                { "redo",Redo },
                 { "copy",Copy },
                 { "paste",Paste },
-                { "separate",separateFigure },
-                { "bond",bondFigure },
-                { "to_bezier",toBezier },
-                { "cut_segment",cutSegment },
-                { "add_center_point", addCenterPoint },
+                { "separate",SeparateFigure },
+                { "bond",BondFigure },
+                { "to_bezier",ToBezier },
+                { "cut_segment",CutSegment },
+                { "add_center_point", AddCenterPoint },
                 { "to_loop", ToLoop },
                 { "to_unloop", ToUnloop },
                 { "clear_layer", ClearLayer },
@@ -334,7 +334,7 @@ namespace Plotter
                 { "grid_settings", GridSettings },
                 { "add_layer", AddLayer },
                 { "remove_layer", RemoveLayer },
-                { "centroid", GetCentroid },
+                { "centroid", AddCentroid },
                 { "select_all", SelectAll },
             };
         }
@@ -343,13 +343,13 @@ namespace Plotter
         {
             KeyMap = new Dictionary<string, Action>
             {
-                { "ctrl+z", undo },
-                { "ctrl+y", redo },
+                { "ctrl+z", Undo },
+                { "ctrl+y", Redo },
                 { "ctrl+c", Copy },
                 { "ctrl+insert", Copy },
                 { "ctrl+v", Paste },
                 { "shift+insert", Paste },
-                { "delete", remove },
+                { "delete", Remove },
                 { "ctrl+s", Save },
                 { "ctrl+a", SelectAll },
             };
@@ -384,56 +384,56 @@ namespace Plotter
 
         // Actions
         #region Actions
-        public void undo()
+        public void Undo()
         {
             DrawContext dc = StartDraw();
             mController.undo(dc);
             EndDraw();
         }
 
-        public void redo()
+        public void Redo()
         {
             DrawContext dc = StartDraw();
             mController.redo(dc);
             EndDraw();
         }
 
-        public void remove()
+        public void Remove()
         {
             DrawContext dc = StartDraw();
             mController.remove(dc);
             EndDraw();
         }
 
-        public void separateFigure()
+        public void SeparateFigure()
         {
             DrawContext dc = StartDraw();
             mController.separateFigures(dc);
             EndDraw();
         }
 
-        public void bondFigure()
+        public void BondFigure()
         {
             DrawContext g = StartDraw();
             mController.bondFigures(g);
             EndDraw();
         }
 
-        public void toBezier()
+        public void ToBezier()
         {
             DrawContext dc = StartDraw();
             mController.toBezier(dc);
             EndDraw();
         }
 
-        public void cutSegment()
+        public void CutSegment()
         {
             DrawContext dc = StartDraw();
             mController.cutSegment(dc);
             EndDraw();
         }
 
-        public void addCenterPoint()
+        public void AddCenterPoint()
         {
             DrawContext dc = StartDraw();
             mController.addCenterPoint(dc);
@@ -550,10 +550,10 @@ namespace Plotter
             Draw();
         }
 
-        public void GetCentroid()
+        public void AddCentroid()
         {
             DrawContext dc = StartDraw();
-            mController.GetCentroid(dc);
+            mController.AddCentroid(dc);
             EndDraw();
         }
 
@@ -848,7 +848,6 @@ namespace Plotter
         #region Command handling
         public void TextCommand(string s)
         {
-            MessageOut(s);
             mController.ScriptEnv.command(s);
             Draw(true);
         }
@@ -867,7 +866,7 @@ namespace Plotter
         #endregion
 
 
-        private void MessageOut(String s)
+        public void MessageOut(String s)
         {
             mInteractOut.print(s);
         }

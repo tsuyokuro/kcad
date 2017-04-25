@@ -976,7 +976,7 @@ namespace Plotter
             InteractOut.print("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
         }
 
-        public void GetCentroid(DrawContext dc)
+        public void AddCentroid(DrawContext dc)
         {
             List<uint> idList = GetSelectedFigIDList();
 

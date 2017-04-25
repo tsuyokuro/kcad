@@ -33,6 +33,10 @@ namespace Plotter
 
         private void initScrExecutor()
         {
+            // 引数の数とstackを受け取る
+            // int func(int argCount, Evaluator.ValueStack stack)
+            // 戻り値は、stackにpushした値の数
+
             mScrExecutor = new Executor();
             mScrExecutor.evaluator.PreFuncCall = PreFuncCall;
             mScrExecutor.addFunction("rect", addRect);
@@ -44,6 +48,7 @@ namespace Plotter
             mScrExecutor.addFunction("ungroup", ungroup);
             mScrExecutor.addFunction("addLayer", addLayer);
             mScrExecutor.addFunction("revOrder", reverseOrder);
+            mScrExecutor.addFunction("tapltest", tapltest);
         }
 
         private int group(int argCount, Evaluator.ValueStack stack)
@@ -172,28 +177,25 @@ namespace Plotter
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.addFigure(fig);
 
-            return 1;
+            return 0;
         }
 
         private int addRect(int argCount, Evaluator.ValueStack stack)
         {
             createRect(argCount, stack, Coord.XY);
-            stack.push(0);
-            return 1;
+            return 0;
         }
 
         private int addRectSide(int argCount, Evaluator.ValueStack stack)
         {
             createRect(argCount, stack, Coord.ZY);
-            stack.push(0);
-            return 1;
+            return 0;
         }
 
         private int addRectTop(int argCount, Evaluator.ValueStack stack)
         {
             createRect(argCount,stack, Coord.XZ);
-            stack.push(0);
-            return 1;
+            return 0;
         }
 
         private void createRect(int argCount, Evaluator.ValueStack stack, Coord coord)
@@ -337,17 +339,42 @@ namespace Plotter
             return 0;
         }
 
+        private int tapltest(int argCount, Evaluator.ValueStack stack)
+        {
+            if (argCount != 2)
+            {
+                return 0;
+            }
+            Evaluator.Value v1 = stack.pop();
+            Evaluator.Value v0 = stack.pop();
+
+            stack.push(v0);
+            stack.push(v1);
+
+            return 2;
+        }
 
         public void command(string s)
         {
             s = s.Trim();
+            Controller.InteractOut.print("> " + s);
 
             if (!s.EndsWith(";"))
             {
                 s += ";";
             }
 
-            mScrExecutor.eval(s);
+            Executor.Error error = mScrExecutor.eval(s);
+
+            if (error == Executor.Error.NO_ERROR)
+            {
+                List<Evaluator.Value> vlist = mScrExecutor.getOutput();
+
+                foreach (Evaluator.Value value in vlist)
+                {
+                    Controller.InteractOut.print(value.getString());
+                }
+            }
         }
     }
 }
