@@ -286,6 +286,21 @@ namespace Plotter
                 res.Add(item.Figure);
             }
 
+            foreach (CadFigure fig in res)
+            {
+                if (fig.Type != CadFigure.Types.POLY_LINES)
+                {
+                    continue;
+                }
+
+                if (fig.PointCount < 3)
+                {
+                    continue;
+                }
+
+                fig.Normal = CadMath.Normal(fig.PointList);
+            }
+
             return res;
         }
     }

@@ -301,6 +301,11 @@ namespace Plotter
                 {
                     fig.Closed = isLoop;
 
+                    if (isLoop)
+                    {
+                        fig.Normal = CadMath.Normal(fig.PointList);
+                    }
+
                     ope = CadOpe.CreateSetCloseOpe(CurrentLayer.ID, id, isLoop);
                     opeRoot.OpeList.Add(ope);
                 }
