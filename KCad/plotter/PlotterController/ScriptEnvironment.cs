@@ -39,16 +39,16 @@ namespace Plotter
 
             mScrExecutor = new Executor();
             mScrExecutor.evaluator.PreFuncCall = PreFuncCall;
-            mScrExecutor.addFunction("rect", addRect);
-            mScrExecutor.addFunction("rectSide", addRectSide);
-            mScrExecutor.addFunction("rectTop", addRectTop);
-            mScrExecutor.addFunction("point", addPoint);
-            mScrExecutor.addFunction("distance", distance);
-            mScrExecutor.addFunction("group", group);
-            mScrExecutor.addFunction("ungroup", ungroup);
-            mScrExecutor.addFunction("addLayer", addLayer);
-            mScrExecutor.addFunction("revOrder", reverseOrder);
-            mScrExecutor.addFunction("tapltest", tapltest);
+            mScrExecutor.AddFunction("rect", addRect);
+            mScrExecutor.AddFunction("rectSide", addRectSide);
+            mScrExecutor.AddFunction("rectTop", addRectTop);
+            mScrExecutor.AddFunction("point", addPoint);
+            mScrExecutor.AddFunction("distance", distance);
+            mScrExecutor.AddFunction("group", group);
+            mScrExecutor.AddFunction("ungroup", ungroup);
+            mScrExecutor.AddFunction("addLayer", addLayer);
+            mScrExecutor.AddFunction("revOrder", reverseOrder);
+            mScrExecutor.AddFunction("tapltest", tapltest);
         }
 
         private int group(int argCount, Evaluator.ValueStack stack)
@@ -156,16 +156,16 @@ namespace Plotter
             }
             else if (argCount == 2)
             {
-                Evaluator.Value y = stack.pop();
-                Evaluator.Value x = stack.pop();
-                p.set(x.getDouble(), y.getDouble(), 0);
+                Evaluator.Value y = stack.Pop();
+                Evaluator.Value x = stack.Pop();
+                p.set(x.GetDouble(), y.GetDouble(), 0);
             }
             else if (argCount == 3)
             {
-                Evaluator.Value z = stack.pop();
-                Evaluator.Value y = stack.pop();
-                Evaluator.Value x = stack.pop();
-                p.set(x.getDouble(), y.getDouble(), z.getDouble());
+                Evaluator.Value z = stack.Pop();
+                Evaluator.Value y = stack.Pop();
+                Evaluator.Value x = stack.Pop();
+                p.set(x.GetDouble(), y.GetDouble(), z.GetDouble());
             }
 
             CadFigure fig = Controller.DB.newFigure(CadFigure.Types.POINT);
@@ -211,23 +211,23 @@ namespace Plotter
 
             if (argCount == 2)
             {
-                Evaluator.Value v2 = stack.pop();
-                Evaluator.Value v1 = stack.pop();
-                w = v1.getDouble();
-                h = v2.getDouble();
+                Evaluator.Value v2 = stack.Pop();
+                Evaluator.Value v1 = stack.Pop();
+                w = v1.GetDouble();
+                h = v2.GetDouble();
 
                 p0 = Controller.FreeDownPoint;
             }
             else if (argCount == 4)
             {
-                Evaluator.Value vh = stack.pop();
-                Evaluator.Value vw = stack.pop();
-                Evaluator.Value y = stack.pop();
-                Evaluator.Value x = stack.pop();
-                p0 = CadPoint.Create(x.getDouble(), y.getDouble(), 0);
+                Evaluator.Value vh = stack.Pop();
+                Evaluator.Value vw = stack.Pop();
+                Evaluator.Value y = stack.Pop();
+                Evaluator.Value x = stack.Pop();
+                p0 = CadPoint.Create(x.GetDouble(), y.GetDouble(), 0);
 
-                w = vw.getDouble();
-                h = vh.getDouble();
+                w = vw.GetDouble();
+                h = vh.GetDouble();
             }
 
 
@@ -299,16 +299,16 @@ namespace Plotter
 
         private int addLayer(int argCount, Evaluator.ValueStack stack)
         {
-            Evaluator.Value v0 = stack.pop();
-            PlotterController controller = (PlotterController)(v0.getObj());
+            Evaluator.Value v0 = stack.Pop();
+            PlotterController controller = (PlotterController)(v0.GetObj());
             argCount--;
 
             String name = null;
 
             if (argCount > 0)
             {
-                Evaluator.Value namev = stack.pop();
-                name = namev.getString();
+                Evaluator.Value namev = stack.Pop();
+                name = namev.GetString();
             }
 
             Controller.AddLayer(name);
@@ -318,8 +318,8 @@ namespace Plotter
 
         private int reverseOrder(int argCount, Evaluator.ValueStack stack)
         {
-            Evaluator.Value v0 = stack.pop();
-            PlotterController controller = (PlotterController)(v0.getObj());
+            Evaluator.Value v0 = stack.Pop();
+            PlotterController controller = (PlotterController)(v0.GetObj());
             argCount--;
 
             List<uint> idlist = Controller.GetSelectedFigIDList();
@@ -345,11 +345,11 @@ namespace Plotter
             {
                 return 0;
             }
-            Evaluator.Value v1 = stack.pop();
-            Evaluator.Value v0 = stack.pop();
+            Evaluator.Value v1 = stack.Pop();
+            Evaluator.Value v0 = stack.Pop();
 
-            stack.push(v0);
-            stack.push(v1);
+            stack.Push(v0);
+            stack.Push(v1);
 
             return 2;
         }
@@ -364,15 +364,15 @@ namespace Plotter
                 s += ";";
             }
 
-            Executor.Error error = mScrExecutor.eval(s);
+            Executor.Error error = mScrExecutor.Eval(s);
 
             if (error == Executor.Error.NO_ERROR)
             {
-                List<Evaluator.Value> vlist = mScrExecutor.getOutput();
+                List<Evaluator.Value> vlist = mScrExecutor.GetOutput();
 
                 foreach (Evaluator.Value value in vlist)
                 {
-                    Controller.InteractOut.print(value.getString());
+                    Controller.InteractOut.print(value.GetString());
                 }
             }
         }

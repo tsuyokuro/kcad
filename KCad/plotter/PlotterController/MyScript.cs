@@ -219,40 +219,40 @@ namespace MyScript
                 LanguageFlags.CreateAst;
 
 
-            Number.AstConfig.NodeCreator = astNodeCreator;
-            StrLiteral.AstConfig.NodeCreator = astNodeCreator;
-            Ident.AstConfig.NodeCreator = astNodeCreator;
-            Expr.AstConfig.NodeCreator = astNodeCreator;
-            UnExpr.AstConfig.NodeCreator = astNodeCreator;
-            Term.AstConfig.NodeCreator = astNodeCreator;
-            BinExpr.AstConfig.NodeCreator = astNodeCreator;
-            ParExpr.AstConfig.NodeCreator = astNodeCreator;
-            UnOp.AstConfig.NodeCreator = astNodeCreator;
-            BinOp.AstConfig.NodeCreator = astNodeCreator;
-            ExprList.AstConfig.NodeCreator = astNodeCreator;
-            FuncCall.AstConfig.NodeCreator = astNodeCreator;
-            SetStmt.AstConfig.NodeCreator = astNodeCreator;
-            SetOp.AstConfig.NodeCreator = astNodeCreator;
-            Statement.AstConfig.NodeCreator = astNodeCreator;
-            ProgramLine.AstConfig.NodeCreator = astNodeCreator;
-            Program.AstConfig.NodeCreator = astNodeCreator;
-            IdentList.AstConfig.NodeCreator = astNodeCreator;
-            IdentListSetStmt.AstConfig.NodeCreator = astNodeCreator;
+            Number.AstConfig.NodeCreator = AstNodeCreator;
+            StrLiteral.AstConfig.NodeCreator = AstNodeCreator;
+            Ident.AstConfig.NodeCreator = AstNodeCreator;
+            Expr.AstConfig.NodeCreator = AstNodeCreator;
+            UnExpr.AstConfig.NodeCreator = AstNodeCreator;
+            Term.AstConfig.NodeCreator = AstNodeCreator;
+            BinExpr.AstConfig.NodeCreator = AstNodeCreator;
+            ParExpr.AstConfig.NodeCreator = AstNodeCreator;
+            UnOp.AstConfig.NodeCreator = AstNodeCreator;
+            BinOp.AstConfig.NodeCreator = AstNodeCreator;
+            ExprList.AstConfig.NodeCreator = AstNodeCreator;
+            FuncCall.AstConfig.NodeCreator = AstNodeCreator;
+            SetStmt.AstConfig.NodeCreator = AstNodeCreator;
+            SetOp.AstConfig.NodeCreator = AstNodeCreator;
+            Statement.AstConfig.NodeCreator = AstNodeCreator;
+            ProgramLine.AstConfig.NodeCreator = AstNodeCreator;
+            Program.AstConfig.NodeCreator = AstNodeCreator;
+            IdentList.AstConfig.NodeCreator = AstNodeCreator;
+            IdentListSetStmt.AstConfig.NodeCreator = AstNodeCreator;
 
-            Add.AstConfig.NodeCreator = astNodeCreator;
-            Sub.AstConfig.NodeCreator = astNodeCreator;
-            Mul.AstConfig.NodeCreator = astNodeCreator;
-            Div.AstConfig.NodeCreator = astNodeCreator;
-            Not.AstConfig.NodeCreator = astNodeCreator;
-            Set.AstConfig.NodeCreator = astNodeCreator;
+            Add.AstConfig.NodeCreator = AstNodeCreator;
+            Sub.AstConfig.NodeCreator = AstNodeCreator;
+            Mul.AstConfig.NodeCreator = AstNodeCreator;
+            Div.AstConfig.NodeCreator = AstNodeCreator;
+            Not.AstConfig.NodeCreator = AstNodeCreator;
+            Set.AstConfig.NodeCreator = AstNodeCreator;
 
-            Comma.AstConfig.NodeCreator = astNodeCreator;
-            Semc.AstConfig.NodeCreator = astNodeCreator;
-            ParL.AstConfig.NodeCreator = astNodeCreator;
-            ParR.AstConfig.NodeCreator = astNodeCreator;
+            Comma.AstConfig.NodeCreator = AstNodeCreator;
+            Semc.AstConfig.NodeCreator = AstNodeCreator;
+            ParL.AstConfig.NodeCreator = AstNodeCreator;
+            ParR.AstConfig.NodeCreator = AstNodeCreator;
         }
 
-        public void astNodeCreator(AstContext context, ParseTreeNode parseNode)
+        public void AstNodeCreator(AstContext context, ParseTreeNode parseNode)
         {
             NodeInfo ni = new NodeInfo();
 
@@ -314,31 +314,31 @@ namespace MyScript
 
             private Object val;
 
-            public void setVal(Int64 v)
+            public void SetVal(Int64 v)
             {
                 Type = Types.INT;
                 val = v;
             }
 
-            public void setVal(double v)
+            public void SetVal(double v)
             {
                 Type = Types.DOUBLE;
                 val = v;
             }
 
-            public void setVal(String v)
+            public void SetVal(String v)
             {
                 Type = Types.STRING;
                 val = v;
             }
 
-            public void setVal(Value s)
+            public void SetVal(Value s)
             {
                 val = s.val;
                 Type = s.Type;
             }
 
-            public void setVal(ParseTreeNode n)
+            public void SetVal(ParseTreeNode n)
             {
                 val = n.Token.Value;
 
@@ -354,13 +354,13 @@ namespace MyScript
                 }
             }
 
-            public void setVal(Object v)
+            public void SetVal(Object v)
             {
                 val = v;
                 Type = Types.OBJECT;
             }
 
-            public double getDouble()
+            public double GetDouble()
             {
                 if (val is String)
                 {
@@ -378,7 +378,7 @@ namespace MyScript
                 return (double)val;
             }
 
-            public double getFloat()
+            public double GetFloat()
             {
                 if (val is String)
                 {
@@ -400,12 +400,12 @@ namespace MyScript
                 return (float)val;
             }
 
-            public String getString()
+            public String GetString()
             {
                 return val.ToString();
             }
 
-            public Object getObj()
+            public Object GetObj()
             {
                 return val;
             }
@@ -416,52 +416,52 @@ namespace MyScript
             private Value[] Stack = new Value[10];
             public int sp = 0;
 
-            public void push(ParseTreeNode n)
+            public void Push(ParseTreeNode n)
             {
                 sp++;
-                Stack[sp].setVal(n);
+                Stack[sp].SetVal(n);
             }
 
-            public void push(Value s)
+            public void Push(Value s)
             {
                 sp++;
-                Stack[sp].setVal(s);
+                Stack[sp].SetVal(s);
             }
 
-            public void push(double v)
+            public void Push(double v)
             {
                 sp++;
-                Stack[sp].setVal(v);
+                Stack[sp].SetVal(v);
             }
 
-            public void push(Int64 v)
+            public void Push(Int64 v)
             {
                 sp++;
-                Stack[sp].setVal(v);
+                Stack[sp].SetVal(v);
             }
 
-            public void push(Object v)
+            public void Push(Object v)
             {
                 sp++;
-                Stack[sp].setVal(v);
+                Stack[sp].SetVal(v);
             }
 
-            public Value getRelative(int i)
+            public Value GetRelative(int i)
             {
                 return Stack[sp + i];
             }
 
-            public Value get()
+            public Value Get()
             {
                 return Stack[sp];
             }
 
-            public int getCount()
+            public int GetCount()
             {
                 return sp;
             }
 
-            public Value pop()
+            public Value Pop()
             {
                 Value val = Stack[sp];
                 sp--;
@@ -495,19 +495,19 @@ namespace MyScript
             return (node.Term.Name == name);
         }
 
-        public void addFunction(String name, Func func)
+        public void AddFunction(String name, Func func)
         {
             FunctionMap.Add(name, func);
         }
 
-        public void setVariable(String name, double v)
+        public void SetVariable(String name, double v)
         {
             Value val = default(Value);
-            val.setVal(v);
-            setVariable(name, val);
+            val.SetVal(v);
+            SetVariable(name, val);
         }
 
-        public void setVariable(String name, Value v)
+        public void SetVariable(String name, Value v)
         {
             if (!VariableMap.ContainsKey(name))
             {
@@ -517,22 +517,22 @@ namespace MyScript
             VariableMap[name] = v;
         }
 
-        public List<Value> getOutput()
+        public List<Value> GetOutput()
         {
             var ret = new List<Value>();
 
-            int cnt = VStack.getCount();
+            int cnt = VStack.GetCount();
 
             for (int i = cnt - 1; i >= 0; i--)
             {
-                Value val = VStack.getRelative(-i);
+                Value val = VStack.GetRelative(-i);
                 ret.Add(val);
             }
 
             return ret;
         }
 
-        public bool evaluate(ParseTree pt)
+        public bool Evaluate(ParseTree pt)
         {
             ParseTreeNode node = pt.Root;
 
@@ -551,7 +551,7 @@ namespace MyScript
                         VStack.sp = 0;
 
                         // evaluate statement + ;
-                        evalProgramLine(c);
+                        EvalProgramLine(c);
                     }
                 }
             }
@@ -564,46 +564,46 @@ namespace MyScript
             return true;
         }
 
-        public Exception getLastException()
+        public Exception GetLastException()
         {
             return mLastException;
         }
 
-        public void evalProgramLine(ParseTreeNode line)
+        public void EvalProgramLine(ParseTreeNode line)
         {
             foreach (ParseTreeNode c in line.ChildNodes)
             {
                 if (NodeIs(c, MyGrammar.NType.STATEMENT))
                 {
-                    evalStatement(c);
+                    EvalStatement(c);
                 }
             }
         }
 
-        public void evalStatement(ParseTreeNode s)
+        public void EvalStatement(ParseTreeNode s)
         {
             foreach (ParseTreeNode c in s.ChildNodes)
             {
                 if (NodeIs(c, MyGrammar.NType.EXPR))
                 {
-                    evalExpr(c);
+                    EvalExpr(c);
                 }
                 else if (NodeIs(c, MyGrammar.NType.EXPR_LIST))
                 {
-                    evalExprList(c);
+                    EvalExprList(c);
                 }
                 else if (NodeIs(c, MyGrammar.NType.SET_STMT))
                 {
-                    evalSetStmt(c);
+                    EvalSetStmt(c);
                 }
                 else if (NodeIs(c, MyGrammar.NType.IDENT_LIST_SET))
                 {
-                    evalIdentListSet(c);
+                    EvalIdentListSet(c);
                 }
             }
         }
 
-        public void evalSetStmt(ParseTreeNode sets)
+        public void EvalSetStmt(ParseTreeNode sets)
         {
             ParseTreeNode vn = sets.ChildNodes[0];
             String name = vn.Token.Text;
@@ -614,16 +614,16 @@ namespace MyScript
 
             int sp = VStack.sp;
 
-            evalExpr(expr);
+            EvalExpr(expr);
 
-            Value val = VStack.get();
+            Value val = VStack.Get();
 
             //VStack.sp = sp;
 
-            setVariable(name, val);
+            SetVariable(name, val);
         }
 
-        public void evalIdentListSet(ParseTreeNode sets)
+        public void EvalIdentListSet(ParseTreeNode sets)
         {
             ParseTreeNode left = sets.ChildNodes[1];
 
@@ -633,12 +633,12 @@ namespace MyScript
 
             if (NodeIs(right, MyGrammar.NType.FUNC_CALL))
             {
-                cnt = evalFuncCall(right);
+                cnt = EvalFuncCall(right);
             }
             else if (NodeIs(right, MyGrammar.NType.EXPR_LIST))
             {
                 cnt = right.ChildNodes.Count;
-                evalExprList(right);
+                EvalExprList(right);
             }
             else if (!NodeIs(right, MyGrammar.NType.EXPR_LIST))
             {
@@ -647,7 +647,7 @@ namespace MyScript
                 if (NodeIs(right, MyGrammar.NType.EXPR_LIST))
                 {
                     cnt = right.ChildNodes.Count;
-                    evalExprList(right);
+                    EvalExprList(right);
                 }
             }
 
@@ -664,74 +664,74 @@ namespace MyScript
             {
                 String name = left.ChildNodes[li].Token.Text;
 
-                Value v = VStack.pop();
-                setVariable(name, v);
+                Value v = VStack.Pop();
+                SetVariable(name, v);
             }
 
             VStack.sp = sp;
         }
 
-        public void evalExprList(ParseTreeNode el)
+        public void EvalExprList(ParseTreeNode el)
         {
             foreach (ParseTreeNode c in el.ChildNodes)
             {
                 if (NodeIs(c, MyGrammar.NType.EXPR))
                 {
-                    evalExpr(c);
+                    EvalExpr(c);
                 }
             }
         }
 
-        public void evalExpr(ParseTreeNode expr)
+        public void EvalExpr(ParseTreeNode expr)
         {
             foreach (ParseTreeNode c in expr.ChildNodes)
             {
                 if (NodeIs(c, MyGrammar.NType.TERM))
                 {
-                    evalTerm(c);
+                    EvalTerm(c);
                 }
                 else if (NodeIs(c, MyGrammar.NType.BIN_EXPR))
                 {
-                    evalBinExpr(c);
+                    EvalBinExpr(c);
                 }
                 else if (NodeIs(c, MyGrammar.NType.UNEXPR))
                 {
-                    evalUnEpr(c);
+                    EvalUnEpr(c);
                 }
             }
         }
 
-        public void evalTerm(ParseTreeNode term)
+        public void EvalTerm(ParseTreeNode term)
         {
             foreach (ParseTreeNode c in term.ChildNodes)
             {
                 if (NodeIs(c, MyGrammar.NType.NUMBER))
                 {
-                    VStack.push(c);
+                    VStack.Push(c);
                 }
                 else if (NodeIs(c, MyGrammar.NType.STRING_LITERAL))
                 {
-                    VStack.push(c);
+                    VStack.Push(c);
                 }
                 else if (NodeIs(c, MyGrammar.NType.PAR_EXPR))
                 {
-                    evalParExpr(c);
+                    EvalParExpr(c);
                 }
                 else if (NodeIs(c, MyGrammar.NType.FUNC_CALL))
                 {
-                    if (evalFuncCall(c) != 1)
+                    if (EvalFuncCall(c) != 1)
                     {
                         throw new Exception(string.Format("Function can not be term."));
                     }
                 }
                 else if (NodeIs(c, MyGrammar.NType.IDENT))
                 {
-                    evalTermIdent(c);
+                    EvalTermIdent(c);
                 }
             }
         }
 
-        public void evalTermIdent(ParseTreeNode idn)
+        public void EvalTermIdent(ParseTreeNode idn)
         {
             String name = idn.Token.Text;
 
@@ -740,7 +740,7 @@ namespace MyScript
             if (VariableMap.ContainsKey(name))
             {
                 val = VariableMap[name];
-                VStack.push(val);
+                VStack.Push(val);
             }
             else
             {
@@ -750,12 +750,12 @@ namespace MyScript
                 }
                 else
                 {
-                    VStack.push(0);
+                    VStack.Push(0);
                 }
             }
         }
 
-        public int evalFuncCall(ParseTreeNode f)
+        public int EvalFuncCall(ParseTreeNode f)
         {
             ParseTreeNode ident = f.ChildNodes[0].ChildNodes[0].ChildNodes[0];
 
@@ -765,7 +765,7 @@ namespace MyScript
 
             int sp = VStack.sp;
 
-            evalExprList(exprList);
+            EvalExprList(exprList);
 
             int argCount = VStack.sp - sp;
 
@@ -782,28 +782,28 @@ namespace MyScript
             return 0;
         }
 
-        public void evalParExpr(ParseTreeNode pe)
+        public void EvalParExpr(ParseTreeNode pe)
         {
             // ChildNode[0] is "("
             ParseTreeNode expr = pe.ChildNodes[1];
-            evalExpr(expr);
+            EvalExpr(expr);
         }
 
-        public void evalBinExpr(ParseTreeNode be)
+        public void EvalBinExpr(ParseTreeNode be)
         {
             int sp = VStack.sp;
 
             ParseTreeNode e1 = be.ChildNodes[0];
             ParseTreeNode e2 = be.ChildNodes[2];
 
-            evalExpr(e1);
+            EvalExpr(e1);
 
-            Value v1 = VStack.get();
+            Value v1 = VStack.Get();
             VStack.sp = sp;
 
-            evalExpr(e2);
+            EvalExpr(e2);
 
-            Value v2 = VStack.get();
+            Value v2 = VStack.Get();
             VStack.sp = sp;
 
             ParseTreeNode op = be.ChildNodes[1];
@@ -812,80 +812,80 @@ namespace MyScript
 
             if (NodeIs(op, MyGrammar.NType.ADD))
             {
-                double v = v1.getDouble() + v2.getDouble();
-                VStack.push(v);
+                double v = v1.GetDouble() + v2.GetDouble();
+                VStack.Push(v);
             }
             else if (NodeIs(op, MyGrammar.NType.SUB))
             {
-                double v = v1.getDouble() - v2.getDouble();
-                VStack.push(v);
+                double v = v1.GetDouble() - v2.GetDouble();
+                VStack.Push(v);
             }
             else if (NodeIs(op, MyGrammar.NType.MUL))
             {
-                double v = v1.getDouble() * v2.getDouble();
-                VStack.push(v);
+                double v = v1.GetDouble() * v2.GetDouble();
+                VStack.Push(v);
             }
             else if (NodeIs(op, MyGrammar.NType.DIV))
             {
-                double v = v1.getDouble() / v2.getDouble();
-                VStack.push(v);
+                double v = v1.GetDouble() / v2.GetDouble();
+                VStack.Push(v);
             }
         }
 
-        public void evalUnEpr(ParseTreeNode ue)
+        public void EvalUnEpr(ParseTreeNode ue)
         {
             int sp = VStack.sp;
 
             ParseTreeNode uop = ue.ChildNodes[0].ChildNodes[0];
             ParseTreeNode term = ue.ChildNodes[1];
-            evalTerm(term);
+            EvalTerm(term);
 
-            Value v1 = VStack.get();
+            Value v1 = VStack.Get();
             VStack.sp = sp;
 
             if (NodeIs(uop, MyGrammar.NType.ADD))
             {
-                double v = v1.getDouble();
-                VStack.push(v);
+                double v = v1.GetDouble();
+                VStack.Push(v);
             }
             else if (NodeIs(uop, MyGrammar.NType.SUB))
             {
-                double v = -v1.getDouble();
-                VStack.push(v);
+                double v = -v1.GetDouble();
+                VStack.Push(v);
             }
         }
 
 
         public class BuiltinFuncs
         {
-            public static void attachTo(Evaluator evaluator)
+            public static void AttachTo(Evaluator evaluator)
             {
-                evaluator.addFunction("test", Test);
-                evaluator.addFunction("test3", Test3);
+                evaluator.AddFunction("test", Test);
+                evaluator.AddFunction("test3", Test3);
             }
 
             public static int Test(int argCount, ValueStack stack)
             {
-                double v2 = stack.pop().getDouble();
-                double v1 = stack.pop().getDouble();
+                double v2 = stack.Pop().GetDouble();
+                double v1 = stack.Pop().GetDouble();
 
                 double v = v1 - v2;
 
-                stack.push(v);
+                stack.Push(v);
 
                 return 1;
             }
 
             public static int Test3(int argCount, ValueStack stack)
             {
-                double v3 = stack.pop().getDouble();
-                double v2 = stack.pop().getDouble();
-                double v1 = stack.pop().getDouble();
+                double v3 = stack.Pop().GetDouble();
+                double v2 = stack.Pop().GetDouble();
+                double v1 = stack.Pop().GetDouble();
 
 
-                stack.push(v1);
-                stack.push(v2);
-                stack.push(v3);
+                stack.Push(v1);
+                stack.Push(v2);
+                stack.Push(v3);
 
                 return 3;
             }
@@ -893,43 +893,43 @@ namespace MyScript
 
         public class BuiltinMath
         {
-            public static void attachTo(Evaluator evaluator)
+            public static void AttachTo(Evaluator evaluator)
             {
-                evaluator.setVariable("PI", Math.PI);
+                evaluator.SetVariable("PI", Math.PI);
 
-                evaluator.addFunction("rad", angToRad);
-                evaluator.addFunction("sin", Sin);
-                evaluator.addFunction("cos", Cos);
-                evaluator.addFunction("tan", Tan);
+                evaluator.AddFunction("rad", AngToRad);
+                evaluator.AddFunction("sin", Sin);
+                evaluator.AddFunction("cos", Cos);
+                evaluator.AddFunction("tan", Tan);
             }
 
             public static int Sin(int argCount, ValueStack stack)
             {
-                double v = stack.pop().getDouble();
-                stack.push(Math.Sin(v));
+                double v = stack.Pop().GetDouble();
+                stack.Push(Math.Sin(v));
                 return 1;
             }
 
             public static int Cos(int argCount, ValueStack stack)
             {
-                double v = stack.pop().getDouble();
-                stack.push(Math.Cos(v));
+                double v = stack.Pop().GetDouble();
+                stack.Push(Math.Cos(v));
                 return 1;
             }
 
             public static int Tan(int argCount, ValueStack stack)
             {
-                double v = stack.pop().getDouble();
-                stack.push(Math.Tan(v));
+                double v = stack.Pop().GetDouble();
+                stack.Push(Math.Tan(v));
                 return 1;
             }
 
-            public static int angToRad(int argCount, ValueStack stack)
+            public static int AngToRad(int argCount, ValueStack stack)
             {
-                double v = stack.pop().getDouble();
+                double v = stack.Pop().GetDouble();
                 double r = v * Math.PI / (double)180.0;
 
-                stack.push(r);
+                stack.Push(r);
                 return 1;
             }
         }
@@ -960,11 +960,11 @@ namespace MyScript
             mParser = new Parser(mGrammar);
             mEval = new Evaluator();
 
-            Evaluator.BuiltinFuncs.attachTo(mEval);
-            Evaluator.BuiltinMath.attachTo(mEval);
+            Evaluator.BuiltinFuncs.AttachTo(mEval);
+            Evaluator.BuiltinMath.AttachTo(mEval);
         }
 
-        public Error eval(String src)
+        public Error Eval(String src)
         {
             mParseTree = mParser.Parse(src);
 
@@ -976,7 +976,7 @@ namespace MyScript
                 return Error.SYNTAX_ERROR;
             }
 
-            if (!mEval.evaluate(mParseTree))
+            if (!mEval.Evaluate(mParseTree))
             {
                 return Error.RUNTIME_ERROR;
             }
@@ -984,14 +984,14 @@ namespace MyScript
             return Error.NO_ERROR;
         }
 
-        public void addFunction(String name, Evaluator.Func func)
+        public void AddFunction(String name, Evaluator.Func func)
         {
-            mEval.addFunction(name, func);
+            mEval.AddFunction(name, func);
         }
 
-        public List<Evaluator.Value> getOutput()
+        public List<Evaluator.Value> GetOutput()
         {
-            return mEval.getOutput();
+            return mEval.GetOutput();
         }
     }
 }
