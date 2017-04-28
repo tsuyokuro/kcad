@@ -109,13 +109,11 @@ namespace Plotter
                 return;
             }
 
-            // In order to give priority to the new Obj, to scan in reverse order
-            IEnumerable<CadFigure> list = layer.FigureList;
+            int n = layer.FigureList.Count-1;
 
-            var rev = list.Reverse();
-
-            foreach (CadFigure fig in rev)
+            for (int i = n; i >= 0; i--)
             {
+                CadFigure fig = layer.FigureList[i];
                 CheckFigure(dc, layer, fig);
             }
         }
