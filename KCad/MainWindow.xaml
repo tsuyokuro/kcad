@@ -151,7 +151,7 @@
             </Grid.ColumnDefinitions>
 
             <!--Left panel-->
-            <Border BorderBrush="{StaticResource BoarderColor}" BorderThickness="2">
+            <Border BorderBrush="{StaticResource BoarderColor}" BorderThickness="1">
                 <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
 
                     <StackPanel x:Name="SlsectModePanel">
@@ -340,7 +340,7 @@
                              Foreground="{StaticResource TextColor}"
                              Background="{StaticResource BGColor}"
                              ItemContainerStyle="{StaticResource MsgListBoxItem}"
-                             />
+                             BorderThickness="0"/>
 
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>

@@ -82,6 +82,8 @@ namespace Plotter
             p1.z = 100;
 
             DrawLine(DrawTools.PEN_AXIS, p0, p1);
+
+            DrawAxis2();
         }
 
         public override void DrawGrid(Gridding grid)
@@ -477,6 +479,66 @@ namespace Plotter
             int dy = by - ty;
 
             DC.graphics.FillRectangle(DC.Brush(brush), lx, ty, dx, dy);
+        }
+
+        private void DrawAxis2()
+        {
+            double size = 20;
+
+
+            CadPoint uv = CadPoint.Create(size, 0, 0);
+
+            CadPoint cv = DC.UnitVectorToCadVector(uv);
+
+            double len = cv.Norm();
+
+
+            CadPoint up = CadPoint.Create(size+5, size+5, 0);
+
+            CadPoint cp = DC.UnitPointToCadPoint(up);
+
+
+            CadPoint p0 = default(CadPoint);
+            CadPoint p1 = default(CadPoint);
+
+
+
+            // X軸
+            p0.x = -len + cp.x;
+            p0.y = 0 + cp.y;
+            p0.z = 0 + cp.z;
+
+            p1.x = len + cp.x;
+            p1.y = 0 + cp.y;
+            p1.z = 0 + cp.z;
+
+            DrawLine(DrawTools.PEN_AXIS, p0, p1);
+
+            DrawText(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, p1, "x");
+
+            // Y軸
+            p0.x = 0 + cp.x;
+            p0.y = -len + cp.y;
+            p0.z = 0 + cp.z;
+
+            p1.x = 0 + cp.x;
+            p1.y = len + cp.y;
+            p1.z = 0 + cp.z;
+
+            DrawLine(DrawTools.PEN_AXIS, p0, p1);
+            DrawText(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, p1, "y");
+
+            // Z軸
+            p0.x = 0 + cp.x;
+            p0.y = 0 + cp.y;
+            p0.z = -len + cp.z;
+
+            p1.x = 0 + cp.x;
+            p1.y = 0 + cp.y;
+            p1.z = len + cp.z;
+
+            DrawLine(DrawTools.PEN_AXIS, p0, p1);
+            DrawText(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, p1, "z");
         }
     }
 }
