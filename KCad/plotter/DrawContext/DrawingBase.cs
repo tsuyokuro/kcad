@@ -37,11 +37,11 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawHighlightPoint(CadPoint pt)
+        public virtual void DrawHighlightPoint(CadPoint pt, int pen=DrawTools.PEN_POINT_HIGHTLITE)
         {
         }
 
-        public virtual void DrawSelectedPoint(CadPoint pt)
+        public virtual void DrawSelectedPoint(CadPoint pt, int pen = DrawTools.PEN_SLECT_POINT)
         {
         }
 

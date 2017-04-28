@@ -211,21 +211,21 @@ namespace Plotter
         #endregion
 
         #region "Draw marker"
-        public override void DrawHighlightPoint(CadPoint pt)
+        public override void DrawHighlightPoint(CadPoint pt, int pen = DrawTools.PEN_POINT_HIGHTLITE)
         {
             CadPoint pp = DC.CadPointToUnitPoint(pt);
 
-            DrawCircleScrn(DrawTools.PEN_POINT_HIGHTLITE, pp, 3);
+            DrawCircleScrn(pen, pp, 3);
         }
 
-        public override void DrawSelectedPoint(CadPoint pt)
+        public override void DrawSelectedPoint(CadPoint pt, int pen = DrawTools.PEN_SLECT_POINT)
         {
             CadPoint pp = DC.CadPointToUnitPoint(pt);
 
             int size = 3;
 
             DrawRectangleScrn(
-                DrawTools.PEN_SLECT_POINT,
+                pen,
                 (int)pp.x - size, (int)pp.y - size,
                 (int)pp.x + size, (int)pp.y + size
                 );

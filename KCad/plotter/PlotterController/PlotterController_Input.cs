@@ -289,7 +289,6 @@ namespace Plotter
                         FreeDownPoint = mObjDownPoint.Value;
                     }
 
-                    //DrawSelectedItems(dc);
                     Clear(dc);
                     DrawAll(dc);
 
@@ -469,6 +468,7 @@ namespace Plotter
                 // Search point
                 mPointSearcher.SearchAllLayer(dc, mDB);
 
+                MarkPoint mxy = mPointSearcher.GetXYMatch();
                 MarkPoint mx = mPointSearcher.GetXMatch();
                 MarkPoint my = mPointSearcher.GetYMatch();
 
@@ -504,6 +504,11 @@ namespace Plotter
                     dist = Math.Min(my.DistY, dist);
 
                     ymatch = true;
+                }
+
+                if (mxy.FigureID != 0 && mxy.Type == MarkPoint.Types.POINT)
+                {
+                    dc.Drawing.DrawHighlightPoint(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2);
                 }
 
                 // Search segment

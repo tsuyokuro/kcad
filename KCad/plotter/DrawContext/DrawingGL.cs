@@ -223,12 +223,12 @@ namespace Plotter
             End2D();
         }
 
-        public override void DrawSelectedPoint(CadPoint pt)
+        public override void DrawSelectedPoint(CadPoint pt, int pen = DrawTools.PEN_SLECT_POINT)
         {
             CadPoint p0 = DC.CadPointToUnitPoint(pt) - 2;
             CadPoint p1 = p0 + 4;
 
-            DrawRect2D(p0.vector, p1.vector, DrawTools.PEN_SLECT_POINT);
+            DrawRect2D(p0.vector, p1.vector, pen);
         }
 
         private void DrawSelectedFigurePoint(IReadOnlyList<CadFigure> list)

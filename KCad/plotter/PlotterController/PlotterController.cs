@@ -120,9 +120,12 @@ namespace Plotter
             }
         }
 
-        private CadFigure CreatingFigure { set; get; } = null;
+        private CadFigure CreatingFigure
+        {
+            set;
+            get;
 
-
+        } = null;
 
         private HistoryManager mHistoryManager = null;
 
@@ -133,7 +136,6 @@ namespace Plotter
                 return mHistoryManager;
             }
         }
-
 
         private SelectList mSelList = new SelectList();
 
@@ -368,7 +370,7 @@ namespace Plotter
             Draw(dc);
             DrawSelectedItems(dc);
             DrawLastPoint(dc);
-            DrawCursor(dc);
+            //DrawCursor(dc);
         }
 
         public void Draw(DrawContext dc)
