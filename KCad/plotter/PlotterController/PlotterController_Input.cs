@@ -42,6 +42,9 @@ namespace Plotter
 
         private Gridding mGridding = new Gridding();
 
+        private CadFigure CurrentFigure = null;
+
+
         public bool SnapToGrid
         {
             set
@@ -150,6 +153,21 @@ namespace Plotter
             }
         }
         #endregion
+        
+        private void SetCurrentFigure(CadFigure fig)
+        {
+            if (CurrentFigure != null)
+            {
+                CurrentFigure.Current = false;
+            }
+
+            if (fig != null)
+            {
+                fig.Current = true;
+            }
+
+            CurrentFigure = fig;
+        }
 
         private void LDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
@@ -201,11 +219,13 @@ namespace Plotter
                                 fig.SelectWithGroup();
                             }
 
-                            // Set ignore liset for snap cursor
+                            // Set ignore list for snap cursor
                             mPointSearcher.SetIgnoreList(mSelList.List);
                             mSegSearcher.SetIgnoreList(mSelList.List);
 
                             mRulerSet.Set(fig.PointList, mp.PointIndex, cp);
+
+                            SetCurrentFigure(fig);
                         }
                     }
                     else if (mp.Type == MarkPoint.Types.RELATIVE_POINT)
@@ -253,12 +273,15 @@ namespace Plotter
                             mPointSearcher.SetIgnoreList(mSelList.List);
                             mSegSearcher.SetIgnoreList(mSelList.List);
                             mSegSearcher.SetIgnoreSeg(mSelectedSegs.List);
+
+                            SetCurrentFigure(fig);
                         }
                         else
                         {
                             if (!CadKeyboard.IsCtrlKeyDown())
                             {
                                 ClearSelection();
+                                SetCurrentFigure(null);
                             }
                         }
                     }

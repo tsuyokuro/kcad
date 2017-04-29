@@ -20,21 +20,23 @@ namespace Plotter
                 0, 0, (int)DC.ViewWidth, (int)DC.ViewHeight);
         }
 
-        public override void Draw(CadLayer layer)
+        public override void Draw(CadLayer layer, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
-            Draw(layer.FigureList);
+            Draw(layer.FigureList, pen);
         }
 
-        public override void Draw(IReadOnlyList<CadFigure> list, int pen = -1)
+        public override void Draw(IReadOnlyList<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
-            if (pen == -1)
-            {
-                pen = DrawTools.PEN_DEFAULT_FIGURE;
-            }
-
             foreach (CadFigure fig in list)
             {
-                fig.Draw(DC, pen);
+                if (fig.Current)
+                {
+                    fig.Draw(DC, DrawTools.PEN_FIGURE_HIGHLIGHT);
+                }
+                else
+                {
+                    fig.Draw(DC, pen);
+                }
             }
         }
 

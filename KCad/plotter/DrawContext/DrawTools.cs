@@ -78,7 +78,8 @@ namespace Plotter
         public const int PEN_TEST_FIGURE = 15;
         public const int PEN_GRID = 16;
         public const int PEN_POINT_HIGHTLITE2 = 17;
-        public const int PEN_TBL_SIZE = 18;
+        public const int PEN_FIGURE_HIGHLIGHT = 18;
+        public const int PEN_TBL_SIZE = 19;
 
         public const int BRUSH_DEFAULT = 0;
         public const int BRUSH_BACKGROUND = 1;
@@ -167,6 +168,7 @@ namespace Plotter
             PenTbl[PEN_TEST_FIGURE]         = new PenHolder(Pens.Yellow, false);
             PenTbl[PEN_GRID]                = new PenHolder(new Pen(Color.FromArgb(192, 128, 92), 0), true);
             PenTbl[PEN_POINT_HIGHTLITE2]    = new PenHolder(Pens.SpringGreen, false);
+            PenTbl[PEN_FIGURE_HIGHLIGHT]    = new PenHolder(Pens.HotPink, false);
 
             ColorTbl[COLOR_DEFAULT]         = new ColorHolder(Color.FromArgb(255, 255, 255), false);
             ColorTbl[COLOR_BACKGROUND]      = new ColorHolder(Color.FromArgb(0x1e, 0x1e, 0x1e), false);
@@ -201,6 +203,7 @@ namespace Plotter
             PenTbl[PEN_TEST_FIGURE]         = new PenHolder(null, false);
             PenTbl[PEN_GRID]                = new PenHolder(null, false);
             PenTbl[PEN_POINT_HIGHTLITE2]    = new PenHolder(null, false);
+            PenTbl[PEN_FIGURE_HIGHLIGHT]    = new PenHolder(null, false);
 
             ColorTbl[COLOR_DEFAULT]         = new ColorHolder(Color.Black, false);
             ColorTbl[COLOR_BACKGROUND]      = new ColorHolder(Color.Black, false);
@@ -222,21 +225,22 @@ namespace Plotter
             GLPenTbl[PEN_DEFAULT]           = new GLPen(Pens.White.Color, width);
             GLPenTbl[PEN_SLECT_POINT]       = new GLPen(Pens.LightGreen.Color, width);
             GLPenTbl[PEN_CURSOR]            = new GLPen(Pens.LightBlue.Color, width);
-            GLPenTbl[PEN_CURSOR2]           = new  GLPen(Pens.DarkSlateBlue.Color, width);
-            GLPenTbl[PEN_DEFAULT_FIGURE]    = new  GLPen(Pens.White.Color, width);
-            GLPenTbl[PEN_TEMP_FIGURE]       = new  GLPen(Pens.Blue.Color, width);
-            GLPenTbl[PEN_POINT_HIGHTLITE]   = new  GLPen(Pens.BlueViolet.Color, width);
-            GLPenTbl[PEN_MATCH_FIGURE]      = new  GLPen(Pens.Red.Color, width);
-            GLPenTbl[PEN_MATCH_SEG]         = new  GLPen(Pens.Green.Color, width);
-            GLPenTbl[PEN_LAST_POINT_MARKER] = new  GLPen(Pens.Aqua.Color, width);
+            GLPenTbl[PEN_CURSOR2]           = new GLPen(Pens.DarkSlateBlue.Color, width);
+            GLPenTbl[PEN_DEFAULT_FIGURE]    = new GLPen(Pens.White.Color, width);
+            GLPenTbl[PEN_TEMP_FIGURE]       = new GLPen(Pens.Blue.Color, width);
+            GLPenTbl[PEN_POINT_HIGHTLITE]   = new GLPen(Pens.BlueViolet.Color, width);
+            GLPenTbl[PEN_MATCH_FIGURE]      = new GLPen(Pens.Red.Color, width);
+            GLPenTbl[PEN_MATCH_SEG]         = new GLPen(Pens.Green.Color, width);
+            GLPenTbl[PEN_LAST_POINT_MARKER] = new GLPen(Pens.Aqua.Color, width);
             GLPenTbl[PEN_LAST_POINT_MARKER2] = new  GLPen(Pens.YellowGreen.Color, width);
-            GLPenTbl[PEN_AXIS]              = new  GLPen(Color.FromArgb(60, 60, 92), width);
-            GLPenTbl[PEN_ARROW_AXIS]        = new  GLPen(Color.FromArgb(82, 82, 112), width);
-            GLPenTbl[PEN_PAGE_FRAME]        = new  GLPen(Color.FromArgb(92, 92, 92), width);
-            GLPenTbl[PEN_RELATIVE_POINT]    = new  GLPen(Pens.CornflowerBlue.Color, width);
+            GLPenTbl[PEN_AXIS]              = new GLPen(Color.FromArgb(60, 60, 92), width);
+            GLPenTbl[PEN_ARROW_AXIS]        = new GLPen(Color.FromArgb(82, 82, 112), width);
+            GLPenTbl[PEN_PAGE_FRAME]        = new GLPen(Color.FromArgb(92, 92, 92), width);
+            GLPenTbl[PEN_RELATIVE_POINT]    = new GLPen(Pens.CornflowerBlue.Color, width);
             GLPenTbl[PEN_TEST_FIGURE]       = new GLPen(Pens.Yellow.Color, width);
             GLPenTbl[PEN_GRID]              = new GLPen(Color.FromArgb(192, 128, 92), width);
             GLPenTbl[PEN_POINT_HIGHTLITE2]  = new GLPen(Pens.Yellow.Color, width);
+            GLPenTbl[PEN_FIGURE_HIGHLIGHT]  = new GLPen(Pens.HotPink.Color, width);
 
             GLColorTbl[COLOR_DEFAULT]       = Color.FromArgb(255, 255, 255);
             GLColorTbl[COLOR_BACKGROUND]    = Color.FromArgb(0x1e, 0x1e, 0x1e);
