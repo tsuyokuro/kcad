@@ -15,6 +15,9 @@ namespace Plotter
         private MarkPoint ymatch = default(MarkPoint);
         private MarkPoint xymatch = default(MarkPoint);
 
+        private List<MarkPoint> XYMatchList = new List<MarkPoint>();
+
+
         private List<SelectItem> IgnoreList = null;
 
         private CadPoint TargetPoint;
@@ -27,7 +30,7 @@ namespace Plotter
 
         public PointSearcher()
         {
-            Clean();
+            CleanMatches();
         }
 
         public void SetRangePixel(DrawContext dc, int pixel)
@@ -35,11 +38,13 @@ namespace Plotter
             mRange = pixel;
         }
 
-        public void Clean()
+        public void CleanMatches()
         {
             xmatch.reset();
             ymatch.reset();
             xymatch.reset();
+
+            XYMatchList.Clear();
         }
 
         public void SetTargetPoint(CadPoint p)
@@ -62,8 +67,14 @@ namespace Plotter
             return ymatch;
         }
 
-        public MarkPoint GetXYMatch()
+        public MarkPoint GetXYMatch(int n = 0)
         {
+            if (XYMatchList.Count > 0)
+            {
+                n %= XYMatchList.Count;
+                return XYMatchList[n];
+            }
+
             return xymatch;
         }
 
@@ -207,18 +218,24 @@ namespace Plotter
 
             if (dx <= mRange && dy <= mRange)
             {
-                if (dx < xymatch.DistX || dy < xymatch.DistY)
+                if (dx <= xymatch.DistX || dy <= xymatch.DistY)
                 {
-                    xymatch.Type = type;
-                    xymatch.LayerID = layerID;
-                    xymatch.Figure = fig;
-                    xymatch.PointIndex = ptIdx;
-                    xymatch.Point = pt;
-                    xymatch.ViewPoint = ppt;
-                    xymatch.Flag |= MarkPoint.X_MATCH;
-                    xymatch.Flag |= MarkPoint.Y_MATCH;
-                    xymatch.DistX = dx;
-                    xymatch.DistY = dy;
+                    MarkPoint t = default(MarkPoint);
+
+                    t.Type = type;
+                    t.LayerID = layerID;
+                    t.Figure = fig;
+                    t.PointIndex = ptIdx;
+                    t.Point = pt;
+                    t.ViewPoint = ppt;
+                    t.Flag |= MarkPoint.X_MATCH;
+                    t.Flag |= MarkPoint.Y_MATCH;
+                    t.DistX = dx;
+                    t.DistY = dy;
+
+                    xymatch = t;
+
+                    XYMatchList.Add(xymatch);
                 }
             }
         }

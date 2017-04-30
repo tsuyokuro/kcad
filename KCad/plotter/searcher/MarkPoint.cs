@@ -48,6 +48,9 @@ namespace Plotter
         {
             this = default(MarkPoint);
 
+            Figure = null;
+            Flag = 0;
+
             DistX = CadConst.MaxValue;
             DistY = CadConst.MaxValue;
             DistZ = CadConst.MaxValue;

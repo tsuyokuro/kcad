@@ -44,6 +44,7 @@ namespace Plotter
 
         private CadFigure CurrentFigure = null;
 
+        private int MatchIndex = 0;
 
         public bool SnapToGrid
         {
@@ -182,13 +183,26 @@ namespace Plotter
                 case States.SELECT:
                     mObjDownPoint = null;
 
-                    mPointSearcher.Clean();
+                    mPointSearcher.CleanMatches();
                     mPointSearcher.SetRangePixel(dc, SnapRange);
                     mPointSearcher.SearchAllLayer(dc, pixp, mDB);
 
                     mPointSearcher.CheckRelativePoints(dc, mDB);
 
-                    MarkPoint mp = mPointSearcher.GetXYMatch();
+                    MarkPoint mp = default(MarkPoint);
+
+                    mp = mPointSearcher.GetXYMatch(MatchIndex);
+
+                    if (CadKeyboard.IsShiftKeyDown())
+                    {
+                        MatchIndex++;
+                        mp = mPointSearcher.GetXYMatch(MatchIndex);
+                    }
+
+                    if (mp.FigureID == 0)
+                    {
+                        MatchIndex = 0;
+                    }
 
                     if (mp.FigureID != 0 && mp.Type == MarkPoint.Types.POINT)
                     {
@@ -474,7 +488,7 @@ namespace Plotter
 
             if (SnapToFigure)
             {
-                mPointSearcher.Clean();
+                mPointSearcher.CleanMatches();
                 mPointSearcher.SetRangePixel(dc, SnapRange);
                 mPointSearcher.SetTargetPoint(pixp);
 

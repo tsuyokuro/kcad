@@ -17,5 +17,11 @@ namespace Plotter
             bool ret = IsKeyPressed(Keys.ControlKey);
             return ret;
         }
+
+        public static bool IsShiftKeyDown()
+        {
+            bool ret = IsKeyPressed(Keys.ShiftKey);
+            return ret;
+        }
     }
 }
