@@ -12,7 +12,17 @@ namespace Plotter
 {
     public partial class PlotterController
     {
-        const int SnapRange = 6;
+        public int PointSnapRange
+        {
+            set;
+            get;
+        } = 6;
+
+        public int LineSnapRange
+        {
+            set;
+            get;
+        } = 8;
 
         public CadMouse Mouse { get; } = new CadMouse();
 
@@ -184,7 +194,7 @@ namespace Plotter
                     mObjDownPoint = null;
 
                     mPointSearcher.CleanMatches();
-                    mPointSearcher.SetRangePixel(dc, SnapRange);
+                    mPointSearcher.SetRangePixel(dc, PointSnapRange);
                     mPointSearcher.SearchAllLayer(dc, pixp, mDB);
 
                     mPointSearcher.CheckRelativePoints(dc, mDB);
@@ -251,7 +261,7 @@ namespace Plotter
                     else
                     {
                         mSegSearcher.Clean();
-                        mSegSearcher.SetRangePixel(dc, SnapRange);
+                        mSegSearcher.SetRangePixel(dc, LineSnapRange);
                         mSegSearcher.SearchAllLayer(dc, pixp, mDB);
                         MarkSeg mseg = mSegSearcher.GetMatch();
 
@@ -489,7 +499,7 @@ namespace Plotter
             if (SnapToFigure)
             {
                 mPointSearcher.CleanMatches();
-                mPointSearcher.SetRangePixel(dc, SnapRange);
+                mPointSearcher.SetRangePixel(dc, PointSnapRange);
                 mPointSearcher.SetTargetPoint(pixp);
 
                 if (CreatingFigure != null)
@@ -550,7 +560,7 @@ namespace Plotter
 
                 // Search segment
                 mSegSearcher.Clean();
-                mSegSearcher.SetRangePixel(dc, SnapRange);
+                mSegSearcher.SetRangePixel(dc, PointSnapRange);
                 mSegSearcher.SearchAllLayer(dc, pixp, mDB);
 
                 MarkSeg seg = mSegSearcher.GetMatch();

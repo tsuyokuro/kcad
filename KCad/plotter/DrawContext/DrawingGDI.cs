@@ -514,7 +514,7 @@ namespace Plotter
             p1.y = 0 + cp.y;
             p1.z = 0 + cp.z;
 
-            DrawLine(DrawTools.PEN_AXIS, p0, p1);
+            DrawLine(DrawTools.PEN_AXIS2, p0, p1);
 
             DrawText(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, p1, "x");
 
@@ -527,7 +527,7 @@ namespace Plotter
             p1.y = len + cp.y;
             p1.z = 0 + cp.z;
 
-            DrawLine(DrawTools.PEN_AXIS, p0, p1);
+            DrawLine(DrawTools.PEN_AXIS2, p0, p1);
             DrawText(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, p1, "y");
 
             // Z軸
@@ -539,7 +539,7 @@ namespace Plotter
             p1.y = 0 + cp.y;
             p1.z = len + cp.z;
 
-            DrawLine(DrawTools.PEN_AXIS, p0, p1);
+            DrawLine(DrawTools.PEN_AXIS2, p0, p1);
             DrawText(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, p1, "z");
         }
     }
