@@ -12,13 +12,13 @@ namespace Plotter
 {
     public partial class PlotterController
     {
-        public int PointSnapRange
+        public double PointSnapRange
         {
             set;
             get;
         } = 6;
 
-        public int LineSnapRange
+        public double LineSnapRange
         {
             set;
             get;

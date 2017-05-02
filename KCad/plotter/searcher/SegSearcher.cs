@@ -16,7 +16,7 @@ namespace Plotter
 
         private List<SelectItem> IgnoreList = null;
 
-        public void SetRangePixel(DrawContext dc, int pixel)
+        public void SetRangePixel(DrawContext dc, double pixel)
         {
             //double d = dc.pixelsToMilli(pixel);
             mRange = pixel;

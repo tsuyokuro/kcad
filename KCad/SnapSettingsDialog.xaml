@@ -1,0 +1,46 @@
+﻿<Window x:Class="KCad.SnapSettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KCad"
+        mc:Ignorable="d"
+        Title="Snap settings" Height="160" Width="300"
+        WindowStartupLocation="CenterOwner">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8" />
+            <RowDefinition Height="100*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="8" />
+        </Grid.RowDefinitions>
+        <Button x:Name="ok_button" Content="OK" HorizontalAlignment="Left" Margin="127,0,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="cancel_button" Content="Cancel" HorizontalAlignment="Left" Margin="207,0,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75"/>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical">
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="150*" />
+                    <ColumnDefinition Width="100*" />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="1" Content="Point snap range (pixel)" />
+                <TextBox x:Name="point_snap" Grid.Column="2" Text="" />
+            </Grid>
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="150*" />
+                    <ColumnDefinition Width="100*" />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="1" Content="Line snap range (pixel)" />
+                <TextBox x:Name="line_snap" Grid.Column="2" Text="" />
+            </Grid>
+
+        </StackPanel>
+
+    </Grid>
+</Window>

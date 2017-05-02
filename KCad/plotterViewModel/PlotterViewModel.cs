@@ -336,6 +336,7 @@ namespace Plotter
                 { "remove_layer", RemoveLayer },
                 { "centroid", AddCentroid },
                 { "select_all", SelectAll },
+                { "snap_settings", SnapSettings },
             };
         }
 
@@ -527,11 +528,35 @@ namespace Plotter
 
             dlg.GridSize = mController.Grid.GridSize;
 
+            dlg.Owner = mMainWindow;
+
             bool? result = dlg.ShowDialog();
 
             if (result.Value)
             {
                 mController.Grid.GridSize = dlg.GridSize;
+
+                DrawContext dc = StartDraw();
+                mController.DrawAll(dc);
+                EndDraw();
+            }
+        }
+
+        public void SnapSettings()
+        {
+            SnapSettingsDialog dlg = new SnapSettingsDialog();
+
+            dlg.Owner = mMainWindow;
+
+            dlg.PointSnapRange = mController.PointSnapRange;
+            dlg.LineSnapRange = mController.LineSnapRange;
+
+            bool? result = dlg.ShowDialog();
+
+            if (result.Value)
+            {
+                mController.PointSnapRange = dlg.PointSnapRange;
+                mController.LineSnapRange = dlg.LineSnapRange;
 
                 DrawContext dc = StartDraw();
                 mController.DrawAll(dc);

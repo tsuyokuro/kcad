@@ -33,7 +33,7 @@ namespace Plotter
             CleanMatches();
         }
 
-        public void SetRangePixel(DrawContext dc, int pixel)
+        public void SetRangePixel(DrawContext dc, double pixel)
         {
             mRange = pixel;
         }

@@ -139,6 +139,7 @@
                 <MenuItem Header="Snap to figure" IsCheckable="True" IsChecked="{Binding SnapToFigure}"/>
                 <MenuItem Header="Snap to Line" IsCheckable="True" IsChecked="{Binding SnapToLine}"/>
                 <MenuItem Tag="grid_settings" Header="Grid Settings" Click="MenuItem_Click"/>
+                <MenuItem Tag="snap_settings" Header="Snap Settings" Click="MenuItem_Click"/>
             </MenuItem>
         </Menu>
 
