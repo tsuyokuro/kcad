@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:KCad"
         mc:Ignorable="d"
         Title="GridSettingsDialog" Height="185.455" Width="310.909"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10*" />

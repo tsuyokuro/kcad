@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:KCad"
         mc:Ignorable="d"
         Title="Snap settings" Height="160" Width="300"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
     
     <Grid>
         <Grid.RowDefinitions>

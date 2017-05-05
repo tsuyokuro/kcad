@@ -411,6 +411,18 @@ namespace Plotter
                 dout.println("}");
             }
 
+            else if (s == "dump snap")
+            {
+                DebugOut dout = new DebugOut();
+                dout.println("Snap range {");
+                dout.Indent++;
+                dout.println("Point:" + PointSnapRange.ToString());
+                dout.println("Segment:" + LineSnapRange.ToString());
+                dout.println("Line:" + LineSnapRange.ToString());
+                dout.Indent--;
+                dout.println("}");
+            }
+
             else if (s == "Save")
             {
                 IFormatter formatter = new BinaryFormatter();

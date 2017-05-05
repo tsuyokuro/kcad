@@ -77,18 +77,33 @@ namespace Plotter
             }
         }
 
-        private bool mSnapToFigure = true;
+        private bool mSnapToPoint = true;
 
-        public bool SnapToFigure
+        public bool SnapToPoint
         {
             set
             {
-                mSnapToFigure = value;
+                mSnapToPoint = value;
             }
 
             get
             {
-                return mSnapToFigure;
+                return mSnapToPoint;
+            }
+        }
+
+        private bool mSnapToSegment = true;
+
+        public bool SnapToSegment
+        {
+            set
+            {
+                mSnapToSegment = value;
+            }
+
+            get
+            {
+                return mSnapToSegment;
             }
         }
 
@@ -488,6 +503,7 @@ namespace Plotter
             bool ymatch = false;
             bool segmatch = false;
 
+            double dist = CadConst.MaxValue;
 
             mSnapScreenPoint = pixp - mOffsetScreen;
             mSnapPoint = cp - mOffsetWorld;
@@ -496,7 +512,7 @@ namespace Plotter
 
             Clear(dc);
 
-            if (SnapToFigure)
+            if (SnapToPoint)
             {
                 mPointSearcher.CleanMatches();
                 mPointSearcher.SetRangePixel(dc, PointSnapRange);
@@ -518,8 +534,6 @@ namespace Plotter
                 MarkPoint mxy = mPointSearcher.GetXYMatch();
                 MarkPoint mx = mPointSearcher.GetXMatch();
                 MarkPoint my = mPointSearcher.GetYMatch();
-
-                double dist = CadConst.MaxValue;
 
                 if ((mx.Flag & MarkPoint.X_MATCH) != 0)
                 {
@@ -557,10 +571,13 @@ namespace Plotter
                 {
                     dc.Drawing.DrawHighlightPoint(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2);
                 }
+            }
 
+            if (mSnapToSegment)
+            {
                 // Search segment
                 mSegSearcher.Clean();
-                mSegSearcher.SetRangePixel(dc, PointSnapRange);
+                mSegSearcher.SetRangePixel(dc, LineSnapRange);
                 mSegSearcher.SearchAllLayer(dc, pixp, mDB);
 
                 MarkSeg seg = mSegSearcher.GetMatch();
@@ -606,7 +623,7 @@ namespace Plotter
 
             if (SnapToLine)
             {
-                RulerInfo ri = mRulerSet.Capture(dc, cp, 8);
+                RulerInfo ri = mRulerSet.Capture(dc, cp, LineSnapRange);
 
                 if (!xmatch && !ymatch)
                 {

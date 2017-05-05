@@ -167,17 +167,31 @@ namespace Plotter
             }
         }
 
-        public bool SnapToFigure
+        public bool SnapToPoint
         {
             set
             {
-                mController.SnapToFigure = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToFigure)));
+                mController.SnapToPoint = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
             }
 
             get
             {
-                return mController.SnapToFigure;
+                return mController.SnapToPoint;
+            }
+        }
+
+        public bool SnapToSegment
+        {
+            set
+            {
+                mController.SnapToSegment = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
+            }
+
+            get
+            {
+                return mController.SnapToSegment;
             }
         }
 
@@ -975,12 +989,10 @@ namespace Plotter
                     break;
 
                 case ViewModes.FREE:
-                    {
-                        plotterViewGL1.Size = plotterView1.Size;
-                        plotterViewGL1.DrawContext.SetUnitPerMilli(plotterView1.DrawContext.UnitPerMilli);
-                        SetView(plotterViewGL1);
-                        DrawAll();
-                    }
+                    plotterViewGL1.Size = plotterView1.Size;
+                    plotterViewGL1.DrawContext.SetUnitPerMilli(plotterView1.DrawContext.UnitPerMilli);
+                    SetView(plotterViewGL1);
+                    DrawAll();
                     break;
             }
 
@@ -1005,6 +1017,42 @@ namespace Plotter
         public AutoCompleteFilterPredicate<object> ScriptFilter
         {
             get { return (str, obj) => (obj as string).Contains(str); }
+        }
+
+        public void LoadSettings()
+        {
+            PlotterSettings settings = new PlotterSettings();
+
+            settings.Load();
+
+            SnapToPoint = settings.SnapToPoint;
+            SnapToSegment = settings.SnapToSegment;
+            SnapToLine = settings.SnapToLine;
+            SnapToGrid = settings.SnapToGrid;
+
+            mController.Grid.GridSize = settings.GridSize;
+
+            mController.PointSnapRange = settings.PointSnapRange;
+
+            mController.LineSnapRange = settings.LineSnapRange;
+        }
+
+        public void SaveSettings()
+        {
+            PlotterSettings settings = new PlotterSettings();
+
+            settings.SnapToPoint = SnapToPoint;
+            settings.SnapToSegment = SnapToSegment;
+            settings.SnapToLine = SnapToLine;
+            settings.SnapToGrid = SnapToGrid;
+
+            settings.GridSize = mController.Grid.GridSize;
+
+            settings.PointSnapRange = mController.PointSnapRange;
+
+            settings.LineSnapRange = mController.LineSnapRange;
+
+            settings.Save();
         }
     }
 }

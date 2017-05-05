@@ -136,7 +136,8 @@
             </MenuItem>
             <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
                 <MenuItem Header="Snap to grid" IsCheckable="True" IsChecked="{Binding SnapToGrid}"/>
-                <MenuItem Header="Snap to figure" IsCheckable="True" IsChecked="{Binding SnapToFigure}"/>
+                <MenuItem Header="Snap to point" IsCheckable="True" IsChecked="{Binding SnapToPoint}"/>
+                <MenuItem Header="Snap to segment" IsCheckable="True" IsChecked="{Binding SnapToSegment}"/>
                 <MenuItem Header="Snap to Line" IsCheckable="True" IsChecked="{Binding SnapToLine}"/>
                 <MenuItem Tag="grid_settings" Header="Grid Settings" Click="MenuItem_Click"/>
                 <MenuItem Tag="snap_settings" Header="Snap Settings" Click="MenuItem_Click"/>
