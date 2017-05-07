@@ -81,11 +81,9 @@ namespace KCad
             ViewModel.DebugCommand(s);
         }
 
-
-        // In the case of the String class Eqauls() returns true
-        // even for different instances when the contents are the same.
-        // Therefore, ListBox.ScrollIntoView() does not work properly.
-        // So, we wrap string for suppressing this behavior.
+        #region Message出力
+        // string classは、インスタンスが違っても内容が同じだと
+        // Eqauls()がtrueを返してしまうため、このクラスでwrapする
         public class MessageLine
         {
             private string Line;
@@ -114,12 +112,7 @@ namespace KCad
 
             listMessage.ScrollIntoView(obj);
         }
-
-        //public void ButtonClicked(object sender, RoutedEventArgs e)
-        //{
-        //    Button btn = (Button)sender;
-        //    ViewModel.ButtonClicked(sender, e);
-        //}
+        #endregion
 
         #region TextCommand
         private void InitTextCommand()

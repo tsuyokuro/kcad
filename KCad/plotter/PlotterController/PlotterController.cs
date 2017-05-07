@@ -669,6 +669,13 @@ namespace Plotter
             return opeList;
         }
 
+        public void MoveSelectedPoints(CadPoint delta)
+        {
+            StartEdit();
+            MoveSelectedPoints(null, delta);
+            EndEdit();
+        }
+
         private void MoveSelectedPoints(DrawContext dc, CadPoint delta)
         {
             List<uint> figIDList = GetSelectedFigIDList();

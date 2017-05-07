@@ -327,24 +327,38 @@ namespace Plotter
 
                     if (mObjDownPoint == null)
                     {
-                        CadPoint p = pixp;
+                        FreeDownPoint = mSnapPoint;
 
                         #region Gridding
-                        mGridding.Clear();
-                        mGridding.Check(dc, pixp);
 
-                        if (mGridding.XMatchU.Valid)
+                        if (mGridding.Enable)
                         {
-                            p.x = mGridding.XMatchU.x;
+                            CadPoint p = pixp;
+
+                            bool match = false;
+
+                            mGridding.Clear();
+                            mGridding.Check(dc, pixp);
+
+                            if (mGridding.XMatchU.Valid)
+                            {
+                                p.x = mGridding.XMatchU.x;
+                                match = true;
+                            }
+
+                            if (mGridding.YMatchU.Valid)
+                            {
+                                p.y = mGridding.YMatchU.y;
+                                match = true;
+                            }
+
+                            if (match)
+                            {
+                                FreeDownPoint = dc.UnitPointToCadPoint(p);
+                            }
                         }
 
-                        if (mGridding.YMatchU.Valid)
-                        {
-                            p.y = mGridding.YMatchU.y;
-                        }
                         #endregion
-
-                        FreeDownPoint = dc.UnitPointToCadPoint(p);
                     }
                     else
                     {

@@ -49,6 +49,7 @@ namespace Plotter
             mScrExecutor.AddFunction("addLayer", addLayer);
             mScrExecutor.AddFunction("revOrder", reverseOrder);
             mScrExecutor.AddFunction("tapltest", tapltest);
+            mScrExecutor.AddFunction("move", move);
         }
 
         private int group(int argCount, Evaluator.ValueStack stack)
@@ -352,6 +353,30 @@ namespace Plotter
             stack.Push(v1);
 
             return 2;
+        }
+
+        private int move(int argCount, Evaluator.ValueStack stack)
+        {
+            if (argCount != 3)
+            {
+                Controller.InteractOut.print("Invalid argument.");
+                Controller.InteractOut.print("move(x, y, z)");
+
+                return 0;
+            }
+            Evaluator.Value v2 = stack.Pop();
+            Evaluator.Value v1 = stack.Pop();
+            Evaluator.Value v0 = stack.Pop();
+
+            double x = v0.GetDouble();
+            double y = v1.GetDouble();
+            double z = v2.GetDouble();
+
+            CadPoint delta = CadPoint.Create(x, y, z);
+
+            Controller.MoveSelectedPoints(delta);
+
+            return 0;
         }
 
         public void command(string s)
