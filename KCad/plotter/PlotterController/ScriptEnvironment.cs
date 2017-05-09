@@ -50,6 +50,7 @@ namespace Plotter
             mScrExecutor.AddFunction("revOrder", reverseOrder);
             mScrExecutor.AddFunction("tapltest", tapltest);
             mScrExecutor.AddFunction("move", move);
+            mScrExecutor.AddFunction("len", SegLen);
         }
 
         private int group(int argCount, Evaluator.ValueStack stack)
@@ -375,6 +376,63 @@ namespace Plotter
             CadPoint delta = CadPoint.Create(x, y, z);
 
             Controller.MoveSelectedPoints(delta);
+
+            return 0;
+        }
+
+        private int SegLen(int argCount, Evaluator.ValueStack stack)
+        {
+            if (argCount != 1)
+            {
+                Controller.InteractOut.print("Invalid argument.");
+                Controller.InteractOut.print("len( LineLength )");
+
+                return 0;
+            }
+
+            Evaluator.Value v0 = stack.Pop();
+
+            double len = v0.GetDouble();
+
+            MarkSeg seg = Controller.SelSegList.LastSel;
+
+            if (seg.FigureID == 0)
+            {
+                return 0;
+            }
+
+            CadFigure fig = Controller.DB.getFigure(seg.FigureID);
+
+            CadPoint pa = fig.GetPointAt(seg.PtIndexA);
+            CadPoint pb = fig.GetPointAt(seg.PtIndexB);
+
+            CadPoint v;
+
+            v = pa - Controller.FreeDownPoint;
+            double da = v.Norm();
+
+            v = pb - Controller.FreeDownPoint;
+            double db = v.Norm();
+
+
+            if (da < db)
+            {
+                CadPoint np = CadUtil.LinePoint(pb, pa, len);
+                Controller.StartEdit();
+
+                fig.SetPointAt(seg.PtIndexA, np);
+
+                Controller.EndEdit();
+            }
+            else
+            {
+                CadPoint np = CadUtil.LinePoint(pa, pb, len);
+                Controller.StartEdit();
+
+                fig.SetPointAt(seg.PtIndexB, np);
+
+                Controller.EndEdit();
+            }
 
             return 0;
         }

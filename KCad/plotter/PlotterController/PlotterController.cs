@@ -556,7 +556,7 @@ namespace Plotter
             return idList;
         }
 
-        private void StartEdit()
+        public void StartEdit()
         {
             EditIdList = GetSelectedFigIDList();
 
@@ -570,7 +570,7 @@ namespace Plotter
             }
         }
 
-        private void EndEdit()
+        public void EndEdit()
         {
             DiffDataList ddl = new DiffDataList();
 

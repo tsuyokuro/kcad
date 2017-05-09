@@ -170,6 +170,7 @@ namespace Plotter
             }
         }
 
+        // 点が三角形内にあるか 2D版
         public static bool IsPointInTriangle2D(CadPoint p, IReadOnlyList<CadPoint> triangle)
         {
             if (triangle.Count < 3)
@@ -191,6 +192,7 @@ namespace Plotter
             return false;
         }
 
+        // 点が三角形内にあるか
         public static bool IsPointInTriangle(CadPoint p, IReadOnlyList<CadPoint> triangle)
         {
             if (triangle.Count < 3)
@@ -461,6 +463,30 @@ namespace Plotter
             ret.CrossPoint.y = ab.y * t1 / norm2 + a.y;
 
             return ret;
+        }
+
+        // a b の中点を求める
+        public static CadPoint CenterPoint(CadPoint a, CadPoint b)
+        {
+            CadPoint c = b - a;
+            c /= 2;
+            c += a;
+
+            return c;
+        }
+
+        // a b を通る直線上で a からの距離がlenの座標を求める
+        public static CadPoint LinePoint(CadPoint a, CadPoint b, double len)
+        {
+            CadPoint v = b - a;
+
+            v = v.UnitVector();
+
+            v *= len;
+
+            v += a;
+
+            return v;
         }
 
         public static double vectNorm2D(CadPoint v)
