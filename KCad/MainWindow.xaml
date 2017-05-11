@@ -325,7 +325,7 @@
                 <GridSplitter Grid.Row="1"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
-                    Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" 
+                    Background="{StaticResource BoarderColor}" 
                     ShowsPreview="False"
                     Height="3"
                     />
@@ -350,7 +350,7 @@
                             <ColumnDefinition Width="100*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Border BorderBrush="Silver" BorderThickness="1">
+                        <Border BorderBrush="{StaticResource BoarderColor}" BorderThickness="0,1,0,1">
                             <Button Grid.Column="0"
                                 x:Name="RunTextCommandButton"
                                 Tag="run_text_command"
@@ -362,6 +362,8 @@
 
                         <toolkit:AutoCompleteBox Grid.Column="1"
                                 x:Name="textCommand"
+                                BorderThickness="0,1,1,1"
+                                BorderBrush="{StaticResource BoarderColor}"
                                 Foreground="{StaticResource TextColor}"
                                 Background="{StaticResource BGColor}"
                                 />
