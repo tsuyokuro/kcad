@@ -124,6 +124,15 @@ namespace Plotter
 
                 PrevMousePos = t;
             }
+            // TODO とりあえずDragできない様にしときます
+            else if (DownButton == MouseButtons.None)
+            {
+                DrawContext dc = StartDraw();
+
+                mController.Mouse.MouseMove(dc, e.X, e.Y);
+
+                EndDraw();
+            }
         }
 
         private void OnPaint(object sender, PaintEventArgs e)

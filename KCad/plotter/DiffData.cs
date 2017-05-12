@@ -73,7 +73,6 @@ namespace Plotter
                 return;
             }
 
-            // TODO: Use revers iterator
             List<DiffItem> rlist = new List<DiffItem>(Items);
             rlist.Reverse();
 
