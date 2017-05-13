@@ -77,14 +77,11 @@ namespace Plotter
 
         private PlotterController mController = new PlotterController();
 
-        PlotterController.Interaction mInteractOut = new PlotterController.Interaction();
-
         public PlotterController.Interaction InteractOut
         {
             set
             {
-                mInteractOut = value;
-                mController.InteractOut = mInteractOut;
+                mController.InteractOut = value;
             }
         }
 
@@ -891,11 +888,6 @@ namespace Plotter
             Draw(true);
         }
 
-        //public void MenuCommand(string tag)
-        //{
-        //    ExecCommand(tag);
-        //}
-
         public void DebugCommand(string s)
         {
             DrawContext dc = mPlotterView.StartDraw();
@@ -903,12 +895,6 @@ namespace Plotter
             mPlotterView.EndDraw();
         }
         #endregion
-
-
-        public void MessageOut(String s)
-        {
-            mInteractOut.print(s);
-        }
 
         private bool UpdateFigureType(CadFigure.Types newType)
         {
