@@ -412,5 +412,41 @@ namespace Plotter
             Clear(dc);
             DrawAll(dc);
         }
+
+        public bool insPointToLastSelectedSeg()
+        {
+            MarkSeg seg = SelSegList.LastSel;
+
+            CadFigure fig = DB.getFigure(seg.FigureID);
+
+            if (fig == null)
+            {
+                return false;
+            }
+
+            if (fig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return false;
+            }
+
+            int ins = 0;
+
+            if (seg.PtIndexA < seg.PtIndexB)
+            {
+                ins = seg.PtIndexB;
+            }
+            else
+            {
+                ins = seg.PtIndexA;
+            }
+
+            StartEdit();
+
+            fig.InsertPointAt(ins, seg.CrossPoint);
+
+            EndEdit();
+
+            return true;
+        }
     }
 }

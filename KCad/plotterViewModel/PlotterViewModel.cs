@@ -997,6 +997,7 @@ namespace Plotter
                 "addLayer",
                 "move()",
                 "length()",
+                "insPoint()",
             };
 
             textBox.ItemFilter = ScriptFilter;

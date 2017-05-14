@@ -51,6 +51,7 @@ namespace Plotter
             mScrExecutor.AddFunction("tapltest", tapltest);
             mScrExecutor.AddFunction("move", move);
             mScrExecutor.AddFunction("length", SegLen);
+            mScrExecutor.AddFunction("insPoint", insPoint);
         }
 
         private int group(int argCount, Evaluator.ValueStack stack)
@@ -434,6 +435,12 @@ namespace Plotter
                 Controller.EndEdit();
             }
 
+            return 0;
+        }
+
+        private int insPoint(int argCount, Evaluator.ValueStack stack)
+        {
+            Controller.insPointToLastSelectedSeg();
             return 0;
         }
 
