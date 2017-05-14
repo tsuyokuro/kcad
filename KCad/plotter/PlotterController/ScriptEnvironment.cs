@@ -50,7 +50,7 @@ namespace Plotter
             mScrExecutor.AddFunction("revOrder", reverseOrder);
             mScrExecutor.AddFunction("tapltest", tapltest);
             mScrExecutor.AddFunction("move", move);
-            mScrExecutor.AddFunction("len", SegLen);
+            mScrExecutor.AddFunction("length", SegLen);
         }
 
         private int group(int argCount, Evaluator.ValueStack stack)

@@ -989,12 +989,14 @@ namespace Plotter
         {
             textBox.ItemsSource = new List<string>()
             {
-                "rect(",
+                "rect()",
                 "distance",
                 "revOrder",
                 "group",
                 "ungroup",
                 "addLayer",
+                "move()",
+                "length()",
             };
 
             textBox.ItemFilter = ScriptFilter;
