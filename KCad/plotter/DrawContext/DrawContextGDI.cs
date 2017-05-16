@@ -27,7 +27,7 @@ namespace Plotter
             mProjectionMatrix = UMatrixs.Unit;
             mProjectionMatrixInv = UMatrixs.Unit;
 
-            Drawing = new DrawingGDI(this);
+            mDrawing = new DrawingGDI(this);
         }
 
         public override void StartDraw(Bitmap image)

@@ -431,6 +431,16 @@ namespace Plotter
 
             int ins = 0;
 
+            bool handle = false;
+
+            handle |= fig.GetPointAt(seg.PtIndexA).Type == CadPoint.Types.HANDLE;
+            handle |= fig.GetPointAt(seg.PtIndexB).Type == CadPoint.Types.HANDLE;
+
+            if (handle)
+            {
+                return false;
+            }
+
             if (seg.PtIndexA < seg.PtIndexB)
             {
                 ins = seg.PtIndexB;
@@ -442,7 +452,7 @@ namespace Plotter
 
             StartEdit();
 
-            fig.InsertPointAt(ins, seg.CrossPoint);
+            fig.InsertPointAt(ins, FreeDownPoint);
 
             EndEdit();
 
