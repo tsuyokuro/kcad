@@ -16,7 +16,7 @@ namespace KCad
 
         private ObservableCollection<string> messageList = new ObservableCollection<string>();
 
-        private PlotterController.Interaction mInteractionIn = new PlotterController.Interaction();
+        private PlotterController.Interaction mInteractionOut = new PlotterController.Interaction();
 
         public MainWindow()
         {
@@ -45,9 +45,9 @@ namespace KCad
 
             textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
 
-            mInteractionIn.print = MessageOut;
+            mInteractionOut.print = MessageOut;
 
-            ViewModel.InteractOut = mInteractionIn;
+            ViewModel.InteractOut = mInteractionOut;
 
             AddLayerButton.Click += ViewModel.ButtonClicked;
             RemoveLayerButton.Click += ViewModel.ButtonClicked;
@@ -82,19 +82,11 @@ namespace KCad
         }
 
         #region Message出力
-        // string classは、インスタンスが違っても内容が同じだと
-        // Eqauls()がtrueを返してしまうため、このクラスでwrapする
-        public class MessageLine
+        public class MessageLine : ListBoxItem
         {
-            private string Line;
             public MessageLine(string s)
             {
-                Line = s;
-            }
-
-            override public String ToString()
-            {
-                return Line;
+                AddText(s);
             }
         }
 

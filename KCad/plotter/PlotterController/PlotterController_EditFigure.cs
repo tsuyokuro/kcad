@@ -458,5 +458,90 @@ namespace Plotter
 
             return true;
         }
+
+        public void AddCentroid(DrawContext dc)
+        {
+            List<uint> idList = GetSelectedFigIDList();
+
+            Centroid cent = default(Centroid);
+
+            cent.IsInvalid = true;
+
+            foreach (uint id in idList)
+            {
+                CadFigure fig = mDB.getFigure(id);
+
+                Centroid t = fig.GetCentroid();
+
+                if (cent.IsInvalid)
+                {
+                    cent = t;
+                    continue;
+                }
+
+                if (t.IsInvalid)
+                {
+                    continue;
+                }
+
+                cent = CadUtil.MergeCentroid(cent, t, false);
+            }
+
+            if (cent.IsInvalid)
+            {
+                return;
+            }
+
+            CadFigure pointFig = mDB.newFigure(CadFigure.Types.POINT);
+            pointFig.AddPoint(cent.Point);
+
+            pointFig.EndCreate(dc);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, pointFig.ID);
+            HistoryManager.foward(ope);
+            CurrentLayer.addFigure(pointFig);
+
+            String s = string.Format("({0:0.000},{1:0.000},{2:0.000})",
+                               cent.Point.x, cent.Point.y, cent.Point.z);
+
+            InteractOut.print("Centroid:" + s);
+            InteractOut.print("Area:" + (cent.Area / 100).ToString() + "(㎠)");
+        }
+
+        public double Area()
+        {
+            List<uint> idList = GetSelectedFigIDList();
+
+            Centroid cent = default(Centroid);
+
+            cent.IsInvalid = true;
+
+            foreach (uint id in idList)
+            {
+                CadFigure fig = mDB.getFigure(id);
+
+                Centroid t = fig.GetCentroid();
+
+                if (cent.IsInvalid)
+                {
+                    cent = t;
+                    continue;
+                }
+
+                if (t.IsInvalid)
+                {
+                    continue;
+                }
+
+                cent = CadUtil.MergeCentroid(cent, t, false);
+            }
+
+            if (cent.IsInvalid)
+            {
+                return 0;
+            }
+
+            return cent.Area;
+        }
     }
 }

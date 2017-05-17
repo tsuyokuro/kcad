@@ -52,6 +52,7 @@ namespace Plotter
             mScrExecutor.AddFunction("move", move);
             mScrExecutor.AddFunction("length", SegLen);
             mScrExecutor.AddFunction("insPoint", insPoint);
+            mScrExecutor.AddFunction("area", Area);
         }
 
         private int group(int argCount, Evaluator.ValueStack stack)
@@ -445,6 +446,14 @@ namespace Plotter
                 Controller.InteractOut.print("Can not inser point.");
             }
 
+            return 0;
+        }
+
+        private int Area(int argCount, Evaluator.ValueStack stack)
+        {
+            double area = Controller.Area();
+
+            Controller.InteractOut.print("Area:" + (area / 100).ToString() + "(㎠)");
             return 0;
         }
 
