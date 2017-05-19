@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace KCad
 {
@@ -86,7 +88,17 @@ namespace KCad
         {
             public MessageLine(string s)
             {
-                AddText(s);
+                Content = s;
+                // 行ごとに色を変えるならこれ
+                //Content = new Run(s) { Foreground = Brushes.Cyan };
+
+                // 複数個所に色をつけるなら以下で行ける
+                /*
+                TextBlock tb = new TextBlock();
+                tb.Inlines.Add(new Run(s) { Foreground = Brushes.Cyan });
+                tb.Inlines.Add(new Run(" test") { Foreground = Brushes.Green});
+                Content = tb;
+                */
             }
         }
 

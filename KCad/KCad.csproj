@@ -105,6 +105,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="plotter\PlotterSettings.cs" />
+    <Compile Include="plotter\Util\CadRuler.cs" />
     <Compile Include="SnapSettingsDialog.xaml.cs">
       <DependentUpon>SnapSettingsDialog.xaml</DependentUpon>
     </Compile>
