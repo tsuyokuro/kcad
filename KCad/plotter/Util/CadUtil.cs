@@ -272,6 +272,77 @@ namespace Plotter
             return normal.vector;
         }
 
+        // 図形は凸である
+        public static bool IsConvex(List<CadPoint> points)
+        {
+            int p = 0;
+            int cnt = points.Count;
+
+            if (cnt<3)
+            {
+                return false;
+            }
+
+            int i = 0;
+            CadPoint n = default(CadPoint);
+            CadPoint cn = default(CadPoint);
+            double scala = 0;
+
+            for (;i < cnt - 2;)
+            {
+                n = CadMath.Normal(points[i], points[i + 1], points[i + 2]);
+
+                i++;
+
+                if (!n.IsZero())
+                {
+                    break;
+                }
+            }
+
+            if (n.IsZero())
+            {
+                return false;
+            }
+
+            for (;i<cnt-2;)
+            {
+                cn = CadMath.Normal(points[i], points[i + 1], points[i + 2]);
+
+                i++;
+
+
+                scala = CadMath.InnerProduct(cn, n);
+
+                if (Math.Abs(scala) < CadMath.VRange)
+                {
+                    continue;
+                }
+
+                if (scala < CadMath.R1Min)
+                {
+                    return false;
+                }
+            }
+
+
+            cn = CadMath.Normal(points[i], points[i + 1], points[0]);
+
+            scala = CadMath.InnerProduct(cn, n);
+
+            if (Math.Abs(scala) < 0.000001)
+            {
+                return true;
+            }
+
+            if (scala < 0.999999)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
 
         // 線分apと点pの距離
         // 垂線がab内に無い場合は、点a,bで近い方への距離を返す
