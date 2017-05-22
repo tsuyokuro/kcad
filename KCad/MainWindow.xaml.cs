@@ -160,7 +160,7 @@ namespace KCad
         {
             if (!textCommand.IsFocused)
             {
-                ViewModel.onKeyDown(sender, e);
+                ViewModel.OnKeyDown(sender, e);
             }
         }
 
@@ -168,7 +168,7 @@ namespace KCad
         {
             if (!textCommand.IsFocused)
             {
-                ViewModel.onKeyUp(sender, e);
+                ViewModel.OnKeyUp(sender, e);
             }
         }
         #endregion

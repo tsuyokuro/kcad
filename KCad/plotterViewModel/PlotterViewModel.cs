@@ -364,6 +364,7 @@ namespace Plotter
                 { "delete", Remove },
                 { "ctrl+s", Save },
                 { "ctrl+a", SelectAll },
+                { "escape", Cancel },
             };
         }
 
@@ -599,6 +600,14 @@ namespace Plotter
             mController.SelectAllInCurrentLayer(dc);
             EndDraw();
         }
+
+        public void Cancel()
+        {
+            DrawContext dc = StartDraw();
+            mController.Cancel(dc);
+            EndDraw();
+        }
+
         #endregion
 
 
@@ -727,11 +736,11 @@ namespace Plotter
         }
 
 
-        public void onKeyDown(object sender, KeyEventArgs e)
+        public void OnKeyDown(object sender, KeyEventArgs e)
         {
         }
 
-        public void onKeyUp(object sender, KeyEventArgs e)
+        public void OnKeyUp(object sender, KeyEventArgs e)
         {
             string ks = ModifyerKeysStr();
 
@@ -920,6 +929,7 @@ namespace Plotter
             {
                 DrawContext dc = mPlotterView.StartDraw();
                 mController.endCreateFigure(dc);
+                mController.Clear(dc);
                 mController.Draw(dc);
                 mPlotterView.EndDraw();
             }

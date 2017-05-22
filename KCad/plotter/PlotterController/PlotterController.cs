@@ -614,6 +614,21 @@ namespace Plotter
             UpdateSelectItemPoints();
         }
 
+        public void CancelEdit()
+        {
+            EditIdList = GetSelectedFigIDList();
+
+            foreach (uint id in EditIdList)
+            {
+                CadFigure fig = mDB.getFigure(id);
+                if (fig != null)
+                {
+                    fig.CancelEdit();
+                }
+            }
+        }
+
+
         private void UpdateSelectItemPoints()
         {
             HashSet<SelectItem> removeSels = new HashSet<SelectItem>();
@@ -994,6 +1009,27 @@ namespace Plotter
 
             dc.Drawing.Clear();
             DrawAll(dc);
+        }
+
+        public void Cancel(DrawContext dc)
+        {
+            if (State == States.START_CREATE || State == States.CREATING)
+            {
+                startCreateFigure(CadFigure.Types.NONE, dc);
+                Clear(dc);
+                DrawAll(dc);
+                NotifyStateChange();
+            }
+            else if (State == States.DRAGING_POINTS)
+            {
+                CancelEdit();
+
+                State = States.SELECT;
+                ClearSelection();
+
+                Clear(dc);
+                DrawAll(dc);
+            }
         }
     }
 }
