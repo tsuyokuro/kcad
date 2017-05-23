@@ -576,9 +576,18 @@ namespace Plotter
             }
         }
 
+        public void RedrawAll()
+        {
+            DrawContext dc = StartDraw();
+            mController.Clear(dc);
+            mController.DrawAll(dc);
+            EndDraw();
+        }
+
         public void AddLayer()
         {
             mController.AddLayer(null);
+            RedrawAll();
         }
 
         public void RemoveLayer()
@@ -695,6 +704,8 @@ namespace Plotter
                 if (mController.CurrentLayer.ID != layer.ID)
                 {
                     mController.setCurrentLayer(layer.ID);
+
+                    RedrawAll();
                 }
             }
             else

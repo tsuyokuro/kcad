@@ -385,7 +385,15 @@ namespace Plotter
             {
                 if (layer.Visible)
                 {
-                    dc.Drawing.Draw(layer);
+                    int pen = DrawTools.PEN_DEFAULT_FIGURE;
+
+                    if (layer.ID != CurrentLayer.ID)
+                    {
+                        pen = DrawTools.PEN_PALE_FIGURE;
+                    }
+
+                    dc.Drawing.Draw(layer, pen);
+
                     DrawRelPoints(dc, layer.RelPointList);
                 }
             }
