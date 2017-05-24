@@ -316,7 +316,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100*"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="10*"/>
+                    <RowDefinition Height="20*"/>
                 </Grid.RowDefinitions>
 
                 <WindowsFormsHost x:Name="viewContainer" Grid.Row="0">

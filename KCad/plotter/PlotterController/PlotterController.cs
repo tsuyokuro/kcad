@@ -420,7 +420,7 @@ namespace Plotter
         public void DrawLastPoint(DrawContext dc)
         {
             dc.Drawing.DrawDownPointCursor(
-                DrawTools.PEN_LAST_POINT_MARKER, FreeDownPoint);
+                DrawTools.PEN_LAST_POINT_MARKER, LastDownPoint);
 
             if (mObjDownPoint != null)
             {
@@ -872,7 +872,7 @@ namespace Plotter
             {
                 CadPoint pp = default(CadPoint);
 
-                pp = FreeDownPoint;
+                pp = LastDownPoint;
 
                 Log.d("paste");
                 List<CadFigure> list = (List<CadFigure>)Clipboard.GetData("List.CadFiguer");

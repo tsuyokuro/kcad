@@ -41,7 +41,7 @@ namespace Plotter
 
         private CadPoint mMoveOrgScrnPoint;
 
-        public CadPoint FreeDownPoint = default(CadPoint);
+        public CadPoint LastDownPoint = default(CadPoint);
 
         private CadPoint? mObjDownPoint = null;
 
@@ -327,7 +327,7 @@ namespace Plotter
 
                     if (mObjDownPoint == null)
                     {
-                        FreeDownPoint = mSnapPoint;
+                        LastDownPoint = mSnapPoint;
 
                         #region Gridding
 
@@ -354,7 +354,7 @@ namespace Plotter
 
                             if (match)
                             {
-                                FreeDownPoint = dc.UnitPointToCadPoint(p);
+                                LastDownPoint = dc.UnitPointToCadPoint(p);
                             }
                         }
 
@@ -362,7 +362,7 @@ namespace Plotter
                     }
                     else
                     {
-                        FreeDownPoint = mObjDownPoint.Value;
+                        LastDownPoint = mObjDownPoint.Value;
                     }
 
                     Clear(dc);
@@ -372,7 +372,7 @@ namespace Plotter
 
                 case States.START_CREATE:
                     {
-                        FreeDownPoint = mSnapPoint;
+                        LastDownPoint = mSnapPoint;
 
                         CreatingFigure = mDB.newFigure(CreatingFigType);
                         State = States.CREATING;
@@ -389,7 +389,7 @@ namespace Plotter
 
                 case States.CREATING:
                     {
-                        FreeDownPoint = mSnapPoint;
+                        LastDownPoint = mSnapPoint;
 
                         CadPoint p = dc.UnitPointToCadPoint(mSnapScreenPoint);
 

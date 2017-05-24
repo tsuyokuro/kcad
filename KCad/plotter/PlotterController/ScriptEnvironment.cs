@@ -10,6 +10,16 @@ namespace Plotter
 
         private Executor mScrExecutor;
 
+        private List<string> mAutoCompleteList;
+
+        public List<string> AutoCompleteList
+        {
+            get
+            {
+                return mAutoCompleteList;
+            }
+        }
+
         private enum Coord
         {
             XY,
@@ -21,9 +31,10 @@ namespace Plotter
         public ScriptEnvironment(PlotterController controller)
         {
             Controller = controller;
+
+            InitAutoCompleteList();
             initScrExecutor();
         }
-
 
         // スクリプトエンジンが関数を呼び出す直前にこのメソッドが呼び出されます
         // stackに値をpushすると引数の追加が出来ます
@@ -53,6 +64,73 @@ namespace Plotter
             mScrExecutor.AddFunction("length", SegLen);
             mScrExecutor.AddFunction("insPoint", insPoint);
             mScrExecutor.AddFunction("area", Area);
+            mScrExecutor.AddFunction("cursor1", ShowLastDownPoint);
+            mScrExecutor.AddFunction("scale", Scale);
+        }
+
+        private void InitAutoCompleteList()
+        {
+            mAutoCompleteList = new List<string>()
+            {
+                "rect()",
+                "distance",
+                "revOrder",
+                "group",
+                "ungroup",
+                "addLayer",
+                "move()",
+                "length()",
+                "insPoint()",
+                "cursor1()",
+                "scale(0.5)",
+            };
+        }
+
+        private int Scale(int argCount, Evaluator.ValueStack stack)
+        {
+            CadPoint org = Controller.LastDownPoint;
+
+            Evaluator.Value v = stack.Pop();
+
+            double scale = v.GetDouble();
+
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
+            foreach (uint id in idlist)
+            {
+                CadFigure fig = Controller.DB.getFigure(id);
+
+                if (fig == null)
+                {
+                    continue;
+                }
+
+                int n = fig.PointList.Count;
+
+                for (int i=0;i<n;i++)
+                {
+                    if (fig.PointList[i].Selected)
+                    {
+                        CadPoint p = fig.PointList[i];
+                        p -= org;
+                        p *= scale;
+                        p += org;
+
+                        fig.SetPointAt(i, p);
+                    }
+                }
+            }
+
+            return 0;
+        }
+
+        private int ShowLastDownPoint(int argCount, Evaluator.ValueStack stack)
+        {
+            stack.Push(Controller.LastDownPoint.x);
+            stack.Push(Controller.LastDownPoint.y);
+            stack.Push(Controller.LastDownPoint.z);
+
+            return 3;
         }
 
         private int group(int argCount, Evaluator.ValueStack stack)
@@ -156,7 +234,7 @@ namespace Plotter
 
             if (argCount == 0)
             {
-                p = Controller.FreeDownPoint;
+                p = Controller.LastDownPoint;
             }
             else if (argCount == 2)
             {
@@ -220,7 +298,7 @@ namespace Plotter
                 w = v1.GetDouble();
                 h = v2.GetDouble();
 
-                p0 = Controller.FreeDownPoint;
+                p0 = Controller.LastDownPoint;
             }
             else if (argCount == 4)
             {
@@ -410,10 +488,10 @@ namespace Plotter
 
             CadPoint v;
 
-            v = pa - Controller.FreeDownPoint;
+            v = pa - Controller.LastDownPoint;
             double da = v.Norm();
 
-            v = pb - Controller.FreeDownPoint;
+            v = pb - Controller.LastDownPoint;
             double db = v.Norm();
 
 

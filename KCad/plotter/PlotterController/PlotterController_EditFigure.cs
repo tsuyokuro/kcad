@@ -452,7 +452,7 @@ namespace Plotter
 
             StartEdit();
 
-            fig.InsertPointAt(ins, FreeDownPoint);
+            fig.InsertPointAt(ins, LastDownPoint);
 
             EndEdit();
 

@@ -905,7 +905,7 @@ namespace Plotter
         public void TextCommand(string s)
         {
             mController.ScriptEnv.command(s);
-            Draw(true);
+            DrawAll();
         }
 
         public void DebugCommand(string s)
@@ -1008,19 +1008,7 @@ namespace Plotter
 
         public void SetupTextCommandView(AutoCompleteBox textBox)
         {
-            textBox.ItemsSource = new List<string>()
-            {
-                "rect()",
-                "distance",
-                "revOrder",
-                "group",
-                "ungroup",
-                "addLayer",
-                "move()",
-                "length()",
-                "insPoint()",
-            };
-
+            textBox.ItemsSource = Controller.ScriptEnv.AutoCompleteList;
             textBox.ItemFilter = ScriptFilter;
         }
 
