@@ -72,13 +72,13 @@ namespace Plotter
         {
             mAutoCompleteList = new List<string>()
             {
-                "rect()",
+                "rect(10,10)",
                 "distance",
                 "revOrder",
                 "group",
                 "ungroup",
                 "addLayer",
-                "move()",
+                "move(0,0,0)",
                 "length()",
                 "insPoint()",
                 "cursor1()",
