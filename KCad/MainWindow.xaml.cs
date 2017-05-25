@@ -59,6 +59,8 @@ namespace KCad
 
             SnapMenu.DataContext = ViewModel;
 
+            listMessage.SelectionChanged += ListMessage_SelectionChanged;
+
             Loaded += MainWindow_Loaded;
             Closed += MainWindow_Closed;
         }
@@ -82,6 +84,22 @@ namespace KCad
         {
             ViewModel.DebugCommand(s);
         }
+
+
+        private void ListMessage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            List<string> lines = new List<string>();
+
+
+            for (int i = 0; i < listMessage.SelectedItems.Count; i++)
+            {
+                MessageLine line = (MessageLine)listMessage.SelectedItems[i];
+                lines.Add(line.Content.ToString());
+            }
+
+            ViewModel.MessageSelected(lines);
+        }
+
 
         #region Message出力
         public class MessageLine : ListBoxItem

@@ -1,6 +1,7 @@
 ﻿using MyScript;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Plotter
 {
@@ -66,6 +67,7 @@ namespace Plotter
             mScrExecutor.AddFunction("area", Area);
             mScrExecutor.AddFunction("cursor1", ShowLastDownPoint);
             mScrExecutor.AddFunction("scale", Scale);
+            mScrExecutor.AddFunction("find", Find);
         }
 
         private void InitAutoCompleteList()
@@ -83,7 +85,62 @@ namespace Plotter
                 "insPoint()",
                 "cursor1()",
                 "scale(0.5)",
+                "find(4)",
             };
+        }
+
+        private int Find(int argCount, Evaluator.ValueStack stack)
+        {
+            CadPoint org = Controller.LastDownPoint;
+            Evaluator.Value v = stack.Pop();
+
+            double range = v.GetDouble();
+
+            DrawContext dc = Controller.CurrentDC;
+
+            CadPoint pixp = dc.CadPointToUnitPoint(org);
+
+
+            PointSearcher searcher = new PointSearcher();
+
+            searcher.SetRangePixel(dc, range);
+            searcher.SearchAllLayer(dc, pixp, Controller.DB);
+
+
+            List<MarkPoint> list = searcher.GetXYMatches();
+
+
+            foreach (MarkPoint mp in list)
+            {
+                string s = "fig:" + mp.FigureID.ToString() + ";idx:" + mp.PointIndex.ToString();
+                Controller.InteractOut.print(s);
+            }
+
+            return 0;
+        }
+
+
+        Regex FigPtn = new Regex(@"fig[ ]*\:[ ]*([0-9]+)[ ]*;[ ]*idx\:[ ]*([0-9]+)[ ]*;[ ]*");
+
+        public void MessageSelected(List<string> messages)
+        {
+            if (messages.Count == 0)
+            {
+                return;
+            }
+
+            string s = messages[messages.Count - 1];
+
+            Match match = FigPtn.Match(s);
+
+            if (match.Success && match.Groups.Count==3)
+            {
+                string sId = match.Groups[1].Value;
+                string sIdx = match.Groups[2].Value;
+
+                uint id = UInt32.Parse(sId);
+                int idx = Int32.Parse(sIdx);
+            }
         }
 
         private int Scale(int argCount, Evaluator.ValueStack stack)

@@ -180,7 +180,7 @@ namespace Plotter
         }
         #endregion
         
-        private void SetCurrentFigure(CadFigure fig)
+        public void SetCurrentFigure(CadFigure fig)
         {
             if (CurrentFigure != null)
             {
