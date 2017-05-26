@@ -92,9 +92,14 @@ namespace Plotter
         private int Find(int argCount, Evaluator.ValueStack stack)
         {
             CadPoint org = Controller.LastDownPoint;
-            Evaluator.Value v = stack.Pop();
 
-            double range = v.GetDouble();
+            double range = 8;
+
+            if (argCount == 1)
+            {
+                Evaluator.Value v = stack.Pop();
+                range = v.GetDouble();
+            }
 
             DrawContext dc = Controller.CurrentDC;
 
@@ -112,7 +117,7 @@ namespace Plotter
 
             foreach (MarkPoint mp in list)
             {
-                string s = "fig:" + mp.FigureID.ToString() + ";idx:" + mp.PointIndex.ToString();
+                string s = "fig{id:" + mp.FigureID.ToString() + ";idx:" + mp.PointIndex.ToString() + ";}";
                 Controller.InteractOut.print(s);
             }
 
@@ -120,7 +125,7 @@ namespace Plotter
         }
 
 
-        Regex FigPtn = new Regex(@"fig[ ]*\:[ ]*([0-9]+)[ ]*;[ ]*idx\:[ ]*([0-9]+)[ ]*;[ ]*");
+        Regex FigPtn = new Regex(@"fig[ ]*{[ ]*id\:[ ]*([0-9]+)[ ]*;[ ]*idx\:[ ]*([0-9]+)[ ]*;[ ]*}[ ]*");
 
         public void MessageSelected(List<string> messages)
         {
@@ -140,6 +145,15 @@ namespace Plotter
 
                 uint id = UInt32.Parse(sId);
                 int idx = Int32.Parse(sIdx);
+
+                if (Controller.SelectMode == PlotterController.SelectModes.POINT)
+                {
+                    Controller.SelectById(id, idx);
+                }
+                else
+                {
+                    Controller.SelectById(id, -1);
+                }
             }
         }
 

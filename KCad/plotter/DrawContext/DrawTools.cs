@@ -155,7 +155,7 @@ namespace Plotter
             PenTbl[PEN_POINT_HIGHTLITE]     = new PenHolder(Pens.Orange, false);
             PenTbl[PEN_MATCH_FIGURE]        = new PenHolder(Pens.Red, false);
             PenTbl[PEN_MATCH_SEG]           = new PenHolder(Pens.Green, false);
-            PenTbl[PEN_LAST_POINT_MARKER]   = new PenHolder(Pens.Aqua, false);
+            PenTbl[PEN_LAST_POINT_MARKER]   = new PenHolder(Pens.CornflowerBlue, false);
             PenTbl[PEN_LAST_POINT_MARKER2]  = new PenHolder(Pens.YellowGreen, false);
             PenTbl[PEN_AXIS]                = new PenHolder(new Pen(Color.FromArgb(60, 60, 92), 0), true);
             PenTbl[PEN_ARROW_AXIS]          = new PenHolder(new Pen(Color.FromArgb(82, 82, 112), 0), true);

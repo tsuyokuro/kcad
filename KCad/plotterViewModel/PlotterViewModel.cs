@@ -1056,6 +1056,8 @@ namespace Plotter
         public void MessageSelected(List<string> messages)
         {
             mController.ScriptEnv.MessageSelected(messages);
+
+            DrawAll();
         }
     }
 }

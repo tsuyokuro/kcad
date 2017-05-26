@@ -1039,5 +1039,31 @@ namespace Plotter
                 DrawAll(dc);
             }
         }
+
+        public void SelectById(uint id, int idx, bool clearSelect=true)
+        {
+            CadFigure fig = mDB.getFigure(id);
+
+            if (fig == null)
+            {
+                return;
+            }
+
+            if (clearSelect)
+            {
+                ClearSelection();
+            }
+
+            if (idx>=0)
+            {
+                fig.SelectPointAt(idx, true);
+            }
+            else
+            {
+                fig.Select();
+            }
+
+            SetCurrentFigure(fig);
+        }
     }
 }
