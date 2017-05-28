@@ -79,6 +79,33 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Load に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_load {
+            get {
+                return ResourceManager.GetString("menu_load", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Print に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_print {
+            get {
+                return ResourceManager.GetString("menu_print", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Save に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_save {
+            get {
+                return ResourceManager.GetString("menu_save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Snap に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_snap {

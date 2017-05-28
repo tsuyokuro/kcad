@@ -340,8 +340,8 @@ namespace Plotter
 
             UpdateRelPoints();
 
-            dc.Drawing.Clear();
-            Draw(dc);
+            Clear(dc);
+            DrawAll(dc);
         }
 
         public void redo(DrawContext dc)
@@ -351,8 +351,8 @@ namespace Plotter
 
             UpdateRelPoints();
 
-            dc.Drawing.Clear();
-            Draw(dc);
+            Clear(dc);
+            DrawAll(dc);
         }
         #endregion
 
@@ -1064,6 +1064,40 @@ namespace Plotter
             }
 
             SetCurrentFigure(fig);
+        }
+
+        public void Scale(CadPoint org, double scale)
+        {
+            StartEdit();
+
+            List<uint> idlist = GetSelectedFigIDList();
+
+            foreach (uint id in idlist)
+            {
+                CadFigure fig = DB.getFigure(id);
+
+                if (fig == null)
+                {
+                    continue;
+                }
+
+                int n = fig.PointList.Count;
+
+                for (int i = 0; i < n; i++)
+                {
+                    if (fig.PointList[i].Selected)
+                    {
+                        CadPoint p = fig.PointList[i];
+                        p -= org;
+                        p *= scale;
+                        p += org;
+
+                        fig.SetPointAt(i, p);
+                    }
+                }
+            }
+
+            EndEdit();
         }
     }
 }

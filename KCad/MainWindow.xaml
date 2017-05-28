@@ -107,10 +107,10 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" >
-            <MenuItem Header="{x:Static properties:Resources.menu_edit}" >
-                <MenuItem Tag="load" Header="Load" Click="MenuItem_Click" />
-                <MenuItem Tag="save" Header="Save" Click="MenuItem_Click"/>
-                <MenuItem Tag="print" Header="Print" Click="MenuItem_Click"/>
+            <MenuItem Header="{x:Static properties:Resources.menu_file}" >
+                <MenuItem Tag="load" Header="{x:Static properties:Resources.menu_load}" Click="MenuItem_Click" />
+                <MenuItem Tag="save" Header="{x:Static properties:Resources.menu_save}" Click="MenuItem_Click"/>
+                <MenuItem Tag="print" Header="{x:Static properties:Resources.menu_print}" Click="MenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="{x:Static properties:Resources.menu_edit}" >
                 <MenuItem Tag="undo" Header="Undo" Click="MenuItem_Click"/>
