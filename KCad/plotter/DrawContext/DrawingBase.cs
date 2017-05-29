@@ -147,7 +147,7 @@ namespace Plotter
 
             CadPoint normal = CadMath.Normal(va, vb);
 
-            int div = 64;
+            int div = 128;
 
             double dt = (double)(2.0 * Math.PI) / (double)div;
 
