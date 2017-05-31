@@ -45,9 +45,13 @@ namespace Plotter
 
         private void InitScrExecutor()
         {
+            //
             // 引数の数とstackを受け取る
+            //
             // int func(int argCount, Evaluator.ValueStack stack)
+            //
             // 戻り値は、stackにpushした値の数
+            //
 
             mScrExecutor = new Executor();
             mScrExecutor.evaluator.PreFuncCall = PreFuncCall;
@@ -68,6 +72,7 @@ namespace Plotter
             mScrExecutor.AddFunction("cursor1", ShowLastDownPoint);
             mScrExecutor.AddFunction("scale", Scale);
             mScrExecutor.AddFunction("find", Find);
+            mScrExecutor.AddFunction("layerList", LayerList);
         }
 
         private void InitAutoCompleteList()
@@ -86,8 +91,20 @@ namespace Plotter
                 "cursor1()",
                 "scale(0.5)",
                 "find(4)",
+                "layerList"
             };
         }
+
+        private int LayerList(int argCount, Evaluator.ValueStack stack)
+        {
+            foreach (CadLayer layer in Controller.DB.LayerList)
+            {
+                Controller.InteractOut.print("layer{Name: " + layer.Name + " ID: " + layer.ID + "}");
+            }
+
+            return 0;
+        }
+
 
         private int Find(int argCount, Evaluator.ValueStack stack)
         {

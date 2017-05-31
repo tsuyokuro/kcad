@@ -163,12 +163,33 @@ namespace KCad
             if (e.Key == Key.Enter)
             {
                 var s = textCommand.Text;
+
+                textCommand.Text = "";
+
                 if (s.Length > 0)
                 {
                     ViewModel.TextCommand(s);
                 }
 
                 viewContainer.Focus();
+            }
+            else if (e.Key == Key.Up)
+            {
+                if (!textCommand.IsDropDownOpen)
+                {
+                    string s = ViewModel.CommandHistory.Rewind();
+                    textCommand.Text = s;
+
+                }
+            }
+            else if (e.Key == Key.Down)
+            {
+                if (!textCommand.IsDropDownOpen)
+                {
+                    string s = ViewModel.CommandHistory.Forward();
+                    textCommand.Text = s;
+
+                }
             }
         }
         #endregion

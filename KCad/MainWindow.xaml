@@ -10,7 +10,7 @@
         xmlns:pl="clr-namespace:Plotter"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="732" Width="1177.667"
+        Title="KCad" Height="732" Width="1177.667"
         >
     <!--<WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"

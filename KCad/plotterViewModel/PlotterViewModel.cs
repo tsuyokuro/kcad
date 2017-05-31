@@ -261,7 +261,9 @@ namespace Plotter
             {
                 return mPlotterView.FromsControl;
             }
-        } 
+        }
+
+        public TextCommandHistory CommandHistory = new TextCommandHistory();
 
         public PlotterViewModel(Window mainWindow, WindowsFormsHost viewHost)
         {
@@ -905,6 +907,7 @@ namespace Plotter
         public void TextCommand(string s)
         {
             mController.ScriptEnv.command(s);
+            CommandHistory.Add(s);
             DrawAll();
         }
 
@@ -1058,6 +1061,47 @@ namespace Plotter
             mController.ScriptEnv.MessageSelected(messages);
 
             DrawAll();
+        }
+    }
+
+    public class TextCommandHistory
+    {
+        private List<string> History = new List<string>();
+        int Pos = 0;
+
+        private string empty = "";
+
+        public void Add(string s)
+        {
+            History.Add(s);
+            Pos = History.Count;
+        }
+
+        public string Rewind()
+        {
+            Pos--;
+
+            if (Pos<0)
+            {
+                Pos = 0;
+                return empty;
+            }
+
+            return History[Pos];
+        }
+
+
+        public string Forward()
+        {
+            Pos++;
+
+            if (Pos >= History.Count)
+            {
+                Pos = History.Count;
+                return empty;
+            }
+
+            return History[Pos];
         }
     }
 }
