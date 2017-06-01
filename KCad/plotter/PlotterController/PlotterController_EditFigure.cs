@@ -5,7 +5,7 @@ namespace Plotter
 {
     public partial class PlotterController
     {
-        public void remove(DrawContext dc)
+        public void Remove(DrawContext dc)
         {
             StartEdit();
 
@@ -19,14 +19,14 @@ namespace Plotter
             Draw(dc);
         }
 
-        public void toBezier(DrawContext dc)
+        public void ToBezier(DrawContext dc)
         {
-            toBezier(dc, mSelectedSegs.LastSel);
+            ToBezier(dc, mSelectedSegs.LastSel);
             ClearSelection();
             Draw(dc);
         }
 
-        public void toBezier(DrawContext dc, MarkSeg seg)
+        public void ToBezier(DrawContext dc, MarkSeg seg)
         {
             if (seg.FigureID == 0)
             {
@@ -50,14 +50,14 @@ namespace Plotter
             Draw(dc);
         }
 
-        public void separateFigures(DrawContext dc)
+        public void SeparateFigures(DrawContext dc)
         {
-            separateFigures(mSelList.List);
+            SeparateFigures(mSelList.List);
             ClearSelection();
             Draw(dc);
         }
 
-        public void separateFigures(List<SelectItem> selList)
+        public void SeparateFigures(List<SelectItem> selList)
         {
             CadFigureCutter fa = new CadFigureCutter(mDB);
 
@@ -94,14 +94,14 @@ namespace Plotter
             mHistoryManager.foward(opeRoot);
         }
 
-        public void bondFigures(DrawContext dc)
+        public void BondFigures(DrawContext dc)
         {
-            bondFigures(mSelList.List);
+            BondFigures(mSelList.List);
             ClearSelection();
             Draw(dc);
         }
 
-        public void bondFigures(List<SelectItem> selList)
+        public void BondFigures(List<SelectItem> selList)
         {
             CadFigureBonder fa = new CadFigureBonder(mDB, CurrentLayer);
 
@@ -138,16 +138,16 @@ namespace Plotter
             mHistoryManager.foward(opeRoot);
         }
 
-        public void cutSegment(DrawContext dc)
+        public void CutSegment(DrawContext dc)
         {
             MarkSeg ms = mSelectedSegs.LastSel;
-            cutSegment(ms);
+            CutSegment(ms);
             ClearSelection();
 
             Draw(dc);
         }
 
-        public void cutSegment(MarkSeg ms)
+        public void CutSegment(MarkSeg ms)
         {
             if (!ms.Valid)
             {
@@ -194,7 +194,7 @@ namespace Plotter
             mHistoryManager.foward(opeRoot);
         }
 
-        public void addCenterPoint(DrawContext dc)
+        public void AddCenterPoint(DrawContext dc)
         {
             if (mSelectedSegs.List.Count > 0)
             {
@@ -413,7 +413,7 @@ namespace Plotter
             DrawAll(dc);
         }
 
-        public bool insPointToLastSelectedSeg()
+        public bool InsPointToLastSelectedSeg()
         {
             MarkSeg seg = SelSegList.LastSel;
 

@@ -582,7 +582,7 @@ namespace Plotter
 
         private int InsPoint(int argCount, Evaluator.ValueStack stack)
         {
-            if (!Controller.insPointToLastSelectedSeg())
+            if (!Controller.InsPointToLastSelectedSeg())
             {
                 Controller.InteractOut.print("Can not inser point.");
             }

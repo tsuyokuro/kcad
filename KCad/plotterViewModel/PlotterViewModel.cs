@@ -416,42 +416,42 @@ namespace Plotter
         public void Remove()
         {
             DrawContext dc = StartDraw();
-            mController.remove(dc);
+            mController.Remove(dc);
             EndDraw();
         }
 
         public void SeparateFigure()
         {
             DrawContext dc = StartDraw();
-            mController.separateFigures(dc);
+            mController.SeparateFigures(dc);
             EndDraw();
         }
 
         public void BondFigure()
         {
             DrawContext g = StartDraw();
-            mController.bondFigures(g);
+            mController.BondFigures(g);
             EndDraw();
         }
 
         public void ToBezier()
         {
             DrawContext dc = StartDraw();
-            mController.toBezier(dc);
+            mController.ToBezier(dc);
             EndDraw();
         }
 
         public void CutSegment()
         {
             DrawContext dc = StartDraw();
-            mController.cutSegment(dc);
+            mController.CutSegment(dc);
             EndDraw();
         }
 
         public void AddCenterPoint()
         {
             DrawContext dc = StartDraw();
-            mController.addCenterPoint(dc);
+            mController.AddCenterPoint(dc);
             EndDraw();
         }
 
