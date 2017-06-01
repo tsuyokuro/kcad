@@ -400,6 +400,24 @@ namespace MyScript
                 return (float)val;
             }
 
+            public uint GetUint()
+            {
+                if (val is String)
+                {
+                    return 0;
+                }
+                else if (val is int)
+                {
+                    return (uint)val;
+                }
+                else if (val is Int64)
+                {
+                    return (uint)(Int64)val;
+                }
+
+                return (uint)val;
+            }
+
             public String GetString()
             {
                 return val.ToString();
