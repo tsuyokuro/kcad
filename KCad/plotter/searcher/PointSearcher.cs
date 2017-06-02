@@ -78,6 +78,11 @@ namespace Plotter
             return xymatch;
         }
 
+        public List<MarkPoint> GetXYMatches()
+        {
+            return XYMatchList;
+        }
+
         public void SearchAllLayer(DrawContext dc, CadPoint p, CadObjectDB db)
         {
             TargetPoint = p;

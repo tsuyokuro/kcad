@@ -5,6 +5,15 @@ namespace Plotter
 {
     public class CadMath
     {
+        public const double VRange = 0.0000005;
+
+        public const double R1Min = 1.0 - VRange;
+        public const double R1Max = 1.0 + VRange;
+
+        public const double R0Min = -VRange;
+        public const double R0Max = VRange;
+
+
         // 内積
         #region inner product
         public static double InnrProduct2D(CadPoint v1, CadPoint v2)

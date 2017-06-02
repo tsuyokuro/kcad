@@ -10,7 +10,7 @@
         xmlns:pl="clr-namespace:Plotter"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="732" Width="1177.667"
+        Title="KCad" Height="732" Width="1177.667"
         >
     <!--<WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"
@@ -55,8 +55,8 @@
 
             <Style x:Key="MsgListBoxItem" TargetType="ListBoxItem">
 
-                <Setter Property="Background" Value="{StaticResource BGColor}"/>
-                <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+                <Setter Property="Background" Value="{StaticResource MsgBGColor}"/>
+                <Setter Property="Foreground" Value="{StaticResource MsgTextColor}"/>
 
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 <Setter Property="Template">
@@ -67,10 +67,10 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsSelected" Value="true">
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Foreground" Value="{StaticResource MsgTextColor}"/>
                                     <Setter TargetName="Border"
                                             Property="Background"
-                                            Value="{StaticResource ListBoxSelColor}"/>
+                                            Value="{StaticResource MsgSelectedBGColor}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -107,10 +107,10 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" >
-            <MenuItem Header="{x:Static properties:Resources.menu_edit}" >
-                <MenuItem Tag="load" Header="Load" Click="MenuItem_Click" />
-                <MenuItem Tag="save" Header="Save" Click="MenuItem_Click"/>
-                <MenuItem Tag="print" Header="Print" Click="MenuItem_Click"/>
+            <MenuItem Header="{x:Static properties:Resources.menu_file}" >
+                <MenuItem Tag="load" Header="{x:Static properties:Resources.menu_load}" Click="MenuItem_Click" />
+                <MenuItem Tag="save" Header="{x:Static properties:Resources.menu_save}" Click="MenuItem_Click"/>
+                <MenuItem Tag="print" Header="{x:Static properties:Resources.menu_print}" Click="MenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="{x:Static properties:Resources.menu_edit}" >
                 <MenuItem Tag="undo" Header="Undo" Click="MenuItem_Click"/>
@@ -121,7 +121,6 @@
                 <MenuItem Tag="bond" Header="Bond" Click="MenuItem_Click"/>
                 <MenuItem Tag="to_bezier" Header="To Bezier" Click="MenuItem_Click"/>
                 <MenuItem Tag="cut_segment" Header="Cut Segment" Click="MenuItem_Click"/>
-                <MenuItem Tag="add_center_point" Header="Add crnter point" Click="MenuItem_Click"/>
                 <MenuItem Tag="to_loop" Header="To Loop lines" Click="MenuItem_Click"/>
                 <MenuItem Tag="to_unloop" Header="To Unloop lines" Click="MenuItem_Click"/>
                 <MenuItem Header="Flip" >
@@ -316,7 +315,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100*"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="10*"/>
+                    <RowDefinition Height="20*"/>
                 </Grid.RowDefinitions>
 
                 <WindowsFormsHost x:Name="viewContainer" Grid.Row="0">
@@ -339,10 +338,11 @@
 
                     <ListBox Grid.Row="0"
                              x:Name="listMessage"
-                             Foreground="{StaticResource TextColor}"
-                             Background="{StaticResource BGColor}"
+                             Foreground="{StaticResource MsgTextColor}"
+                             Background="{StaticResource MsgBGColor}"
                              ItemContainerStyle="{StaticResource MsgListBoxItem}"
-                             BorderThickness="0"/>
+                             BorderThickness="0"
+                             Padding="8,0,0,0"/>
 
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
@@ -362,7 +362,7 @@
 
                         <toolkit:AutoCompleteBox Grid.Column="1"
                                 x:Name="textCommand"
-                                BorderThickness="0,1,1,1"
+                                BorderThickness="1,1,1,1"
                                 BorderBrush="{StaticResource BoarderColor}"
                                 Foreground="{StaticResource TextColor}"
                                 Background="{StaticResource BGColor}"

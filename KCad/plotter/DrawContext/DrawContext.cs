@@ -120,7 +120,15 @@ namespace Plotter
 
         protected DrawTools Tools = new DrawTools();
 
-        public DrawingBase Drawing;
+        protected IDrawing mDrawing;
+
+        public IDrawing Drawing
+        {
+            get
+            {
+                return mDrawing;
+            }
+        }
 
 
         public virtual void SetupTools(DrawTools.ToolsType type)

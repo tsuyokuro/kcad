@@ -124,7 +124,8 @@ namespace Plotter
 
                 PrevMousePos = t;
             }
-            else if (DownButton == MouseButtons.None) // とりあえずDragできない様にしときます
+            // TODO とりあえずDragできない様にしときます
+            else if (DownButton == MouseButtons.None)
             {
                 DrawContext dc = StartDraw();
 

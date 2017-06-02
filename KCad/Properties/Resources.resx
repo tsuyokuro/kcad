@@ -123,6 +123,15 @@
   <data name="menu_file" xml:space="preserve">
     <value>File</value>
   </data>
+  <data name="menu_load" xml:space="preserve">
+    <value>Load</value>
+  </data>
+  <data name="menu_print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="menu_save" xml:space="preserve">
+    <value>Save</value>
+  </data>
   <data name="menu_snap" xml:space="preserve">
     <value>Snap</value>
   </data>

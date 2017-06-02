@@ -340,8 +340,8 @@ namespace Plotter
 
             UpdateRelPoints();
 
-            dc.Drawing.Clear();
-            Draw(dc);
+            Clear(dc);
+            DrawAll(dc);
         }
 
         public void redo(DrawContext dc)
@@ -351,8 +351,8 @@ namespace Plotter
 
             UpdateRelPoints();
 
-            dc.Drawing.Clear();
-            Draw(dc);
+            Clear(dc);
+            DrawAll(dc);
         }
         #endregion
 
@@ -385,7 +385,15 @@ namespace Plotter
             {
                 if (layer.Visible)
                 {
-                    dc.Drawing.Draw(layer);
+                    int pen = DrawTools.PEN_DEFAULT_FIGURE;
+
+                    if (layer.ID != CurrentLayer.ID)
+                    {
+                        pen = DrawTools.PEN_PALE_FIGURE;
+                    }
+
+                    dc.Drawing.Draw(layer, pen);
+
                     DrawRelPoints(dc, layer.RelPointList);
                 }
             }
@@ -412,7 +420,7 @@ namespace Plotter
         public void DrawLastPoint(DrawContext dc)
         {
             dc.Drawing.DrawDownPointCursor(
-                DrawTools.PEN_LAST_POINT_MARKER, FreeDownPoint);
+                DrawTools.PEN_LAST_POINT_MARKER, LastDownPoint);
 
             if (mObjDownPoint != null)
             {
@@ -613,6 +621,21 @@ namespace Plotter
 
             UpdateSelectItemPoints();
         }
+
+        public void CancelEdit()
+        {
+            EditIdList = GetSelectedFigIDList();
+
+            foreach (uint id in EditIdList)
+            {
+                CadFigure fig = mDB.getFigure(id);
+                if (fig != null)
+                {
+                    fig.CancelEdit();
+                }
+            }
+        }
+
 
         private void UpdateSelectItemPoints()
         {
@@ -849,7 +872,7 @@ namespace Plotter
             {
                 CadPoint pp = default(CadPoint);
 
-                pp = FreeDownPoint;
+                pp = LastDownPoint;
 
                 Log.d("paste");
                 List<CadFigure> list = (List<CadFigure>)Clipboard.GetData("List.CadFiguer");
@@ -985,55 +1008,6 @@ namespace Plotter
             InteractOut.print("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
         }
 
-        public void AddCentroid(DrawContext dc)
-        {
-            List<uint> idList = GetSelectedFigIDList();
-
-            Centroid cent = default(Centroid);
-
-            cent.IsInvalid = true;
-
-            foreach (uint id in idList)
-            {
-                CadFigure fig = mDB.getFigure(id);
-
-                Centroid t = fig.GetCentroid();
-
-                if (cent.IsInvalid)
-                {
-                    cent = t;
-                    continue;
-                }
-
-                if (t.IsInvalid)
-                {
-                    continue;
-                }
-
-                cent = CadUtil.MergeCentroid(cent, t, false);
-            }
-
-            if (cent.IsInvalid)
-            {
-                return;
-            }
-
-            CadFigure pointFig = mDB.newFigure(CadFigure.Types.POINT);
-            pointFig.AddPoint(cent.Point);
-
-            pointFig.EndCreate(dc);
-
-            CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, pointFig.ID);
-            HistoryManager.foward(ope);
-            CurrentLayer.addFigure(pointFig);
-
-            String s = string.Format("({0:0.000},{1:0.000},{2:0.000})",
-                               cent.Point.x, cent.Point.y, cent.Point.z);
-
-            InteractOut.print("Centroid:" + s);
-            InteractOut.print("Area:" + (cent.Area/100).ToString() + "(㎠)");
-        }
-
         public void SelectAllInCurrentLayer(DrawContext dc)
         {
             foreach (CadFigure fig in CurrentLayer.FigureList)
@@ -1043,6 +1017,87 @@ namespace Plotter
 
             dc.Drawing.Clear();
             DrawAll(dc);
+        }
+
+        public void Cancel(DrawContext dc)
+        {
+            if (State == States.START_CREATE || State == States.CREATING)
+            {
+                startCreateFigure(CadFigure.Types.NONE, dc);
+                Clear(dc);
+                DrawAll(dc);
+                NotifyStateChange();
+            }
+            else if (State == States.DRAGING_POINTS)
+            {
+                CancelEdit();
+
+                State = States.SELECT;
+                ClearSelection();
+
+                Clear(dc);
+                DrawAll(dc);
+            }
+        }
+
+        public void SelectById(uint id, int idx, bool clearSelect=true)
+        {
+            CadFigure fig = mDB.getFigure(id);
+
+            if (fig == null)
+            {
+                return;
+            }
+
+            if (clearSelect)
+            {
+                ClearSelection();
+            }
+
+            if (idx>=0)
+            {
+                fig.SelectPointAt(idx, true);
+            }
+            else
+            {
+                fig.Select();
+            }
+
+            SetCurrentFigure(fig);
+        }
+
+        public void Scale(CadPoint org, double scale)
+        {
+            StartEdit();
+
+            List<uint> idlist = GetSelectedFigIDList();
+
+            foreach (uint id in idlist)
+            {
+                CadFigure fig = DB.getFigure(id);
+
+                if (fig == null)
+                {
+                    continue;
+                }
+
+                int n = fig.PointList.Count;
+
+                for (int i = 0; i < n; i++)
+                {
+                    if (fig.PointList[i].Selected)
+                    {
+                        CadPoint p = fig.PointList[i];
+                        p -= org;
+                        p *= scale;
+                        p += org;
+
+                        fig.SetPointAt(i, p);
+                    }
+                }
+            }
+
+            EndEdit();
         }
     }
 }

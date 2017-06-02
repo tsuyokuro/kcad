@@ -56,7 +56,7 @@ namespace Plotter
 
             public override void Draw(CadFigure fig, DrawContext dc, int pen)
             {
-                if (fig.Closed)
+                if (fig.Closed && CadUtil.IsConvex(fig.PointList))
                 {
                     dc.Drawing.DrawFace(pen, GetPoints(fig, 32), fig.Normal);
                 }

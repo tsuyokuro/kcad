@@ -5,7 +5,7 @@ namespace Plotter
 {
     public partial class PlotterController
     {
-        public void remove(DrawContext dc)
+        public void Remove(DrawContext dc)
         {
             StartEdit();
 
@@ -19,14 +19,14 @@ namespace Plotter
             Draw(dc);
         }
 
-        public void toBezier(DrawContext dc)
+        public void ToBezier(DrawContext dc)
         {
-            toBezier(dc, mSelectedSegs.LastSel);
+            ToBezier(dc, mSelectedSegs.LastSel);
             ClearSelection();
             Draw(dc);
         }
 
-        public void toBezier(DrawContext dc, MarkSeg seg)
+        public void ToBezier(DrawContext dc, MarkSeg seg)
         {
             if (seg.FigureID == 0)
             {
@@ -50,14 +50,14 @@ namespace Plotter
             Draw(dc);
         }
 
-        public void separateFigures(DrawContext dc)
+        public void SeparateFigures(DrawContext dc)
         {
-            separateFigures(mSelList.List);
+            SeparateFigures(mSelList.List);
             ClearSelection();
             Draw(dc);
         }
 
-        public void separateFigures(List<SelectItem> selList)
+        public void SeparateFigures(List<SelectItem> selList)
         {
             CadFigureCutter fa = new CadFigureCutter(mDB);
 
@@ -94,14 +94,14 @@ namespace Plotter
             mHistoryManager.foward(opeRoot);
         }
 
-        public void bondFigures(DrawContext dc)
+        public void BondFigures(DrawContext dc)
         {
-            bondFigures(mSelList.List);
+            BondFigures(mSelList.List);
             ClearSelection();
             Draw(dc);
         }
 
-        public void bondFigures(List<SelectItem> selList)
+        public void BondFigures(List<SelectItem> selList)
         {
             CadFigureBonder fa = new CadFigureBonder(mDB, CurrentLayer);
 
@@ -138,16 +138,16 @@ namespace Plotter
             mHistoryManager.foward(opeRoot);
         }
 
-        public void cutSegment(DrawContext dc)
+        public void CutSegment(DrawContext dc)
         {
             MarkSeg ms = mSelectedSegs.LastSel;
-            cutSegment(ms);
+            CutSegment(ms);
             ClearSelection();
 
             Draw(dc);
         }
 
-        public void cutSegment(MarkSeg ms)
+        public void CutSegment(MarkSeg ms)
         {
             if (!ms.Valid)
             {
@@ -194,7 +194,7 @@ namespace Plotter
             mHistoryManager.foward(opeRoot);
         }
 
-        public void addCenterPoint(DrawContext dc)
+        public void AddCenterPoint(DrawContext dc)
         {
             if (mSelectedSegs.List.Count > 0)
             {
@@ -411,6 +411,137 @@ namespace Plotter
 
             Clear(dc);
             DrawAll(dc);
+        }
+
+        public bool InsPointToLastSelectedSeg()
+        {
+            MarkSeg seg = SelSegList.LastSel;
+
+            CadFigure fig = DB.getFigure(seg.FigureID);
+
+            if (fig == null)
+            {
+                return false;
+            }
+
+            if (fig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return false;
+            }
+
+            int ins = 0;
+
+            bool handle = false;
+
+            handle |= fig.GetPointAt(seg.PtIndexA).Type == CadPoint.Types.HANDLE;
+            handle |= fig.GetPointAt(seg.PtIndexB).Type == CadPoint.Types.HANDLE;
+
+            if (handle)
+            {
+                return false;
+            }
+
+            if (seg.PtIndexA < seg.PtIndexB)
+            {
+                ins = seg.PtIndexB;
+            }
+            else
+            {
+                ins = seg.PtIndexA;
+            }
+
+            StartEdit();
+
+            fig.InsertPointAt(ins, LastDownPoint);
+
+            EndEdit();
+
+            return true;
+        }
+
+        public void AddCentroid(DrawContext dc)
+        {
+            List<uint> idList = GetSelectedFigIDList();
+
+            Centroid cent = default(Centroid);
+
+            cent.IsInvalid = true;
+
+            foreach (uint id in idList)
+            {
+                CadFigure fig = mDB.getFigure(id);
+
+                Centroid t = fig.GetCentroid();
+
+                if (cent.IsInvalid)
+                {
+                    cent = t;
+                    continue;
+                }
+
+                if (t.IsInvalid)
+                {
+                    continue;
+                }
+
+                cent = CadUtil.MergeCentroid(cent, t, false);
+            }
+
+            if (cent.IsInvalid)
+            {
+                return;
+            }
+
+            CadFigure pointFig = mDB.newFigure(CadFigure.Types.POINT);
+            pointFig.AddPoint(cent.Point);
+
+            pointFig.EndCreate(dc);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, pointFig.ID);
+            HistoryManager.foward(ope);
+            CurrentLayer.addFigure(pointFig);
+
+            String s = string.Format("({0:0.000},{1:0.000},{2:0.000})",
+                               cent.Point.x, cent.Point.y, cent.Point.z);
+
+            InteractOut.print("Centroid:" + s);
+            InteractOut.print("Area:" + (cent.Area / 100).ToString() + "(㎠)");
+        }
+
+        public double Area()
+        {
+            List<uint> idList = GetSelectedFigIDList();
+
+            Centroid cent = default(Centroid);
+
+            cent.IsInvalid = true;
+
+            foreach (uint id in idList)
+            {
+                CadFigure fig = mDB.getFigure(id);
+
+                Centroid t = fig.GetCentroid();
+
+                if (cent.IsInvalid)
+                {
+                    cent = t;
+                    continue;
+                }
+
+                if (t.IsInvalid)
+                {
+                    continue;
+                }
+
+                cent = CadUtil.MergeCentroid(cent, t, false);
+            }
+
+            if (cent.IsInvalid)
+            {
+                return 0;
+            }
+
+            return cent.Area;
         }
     }
 }

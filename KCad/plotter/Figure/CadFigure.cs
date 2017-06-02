@@ -292,6 +292,20 @@ namespace Plotter
             return diff;
         }
 
+        public void CancelEdit()
+        {
+            if (Locked) return;
+
+            if (mStoreList == null)
+            {
+                return;
+            }
+
+            mPointList.Clear();
+            mStoreList.ForEach(a => mPointList.Add(a));
+            mStoreList = null;
+        }
+
         public List<CadPoint> GetPointListCopy()
         {
             return new List<CadPoint>(mPointList);

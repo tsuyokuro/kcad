@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace KCad
 {
@@ -16,7 +18,7 @@ namespace KCad
 
         private ObservableCollection<string> messageList = new ObservableCollection<string>();
 
-        private PlotterController.Interaction mInteractionIn = new PlotterController.Interaction();
+        private PlotterController.Interaction mInteractionOut = new PlotterController.Interaction();
 
         public MainWindow()
         {
@@ -45,9 +47,9 @@ namespace KCad
 
             textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
 
-            mInteractionIn.print = MessageOut;
+            mInteractionOut.print = MessageOut;
 
-            ViewModel.InteractOut = mInteractionIn;
+            ViewModel.InteractOut = mInteractionOut;
 
             AddLayerButton.Click += ViewModel.ButtonClicked;
             RemoveLayerButton.Click += ViewModel.ButtonClicked;
@@ -56,6 +58,8 @@ namespace KCad
             ViewModePanel.DataContext = ViewModel;
 
             SnapMenu.DataContext = ViewModel;
+
+            listMessage.SelectionChanged += ListMessage_SelectionChanged;
 
             Loaded += MainWindow_Loaded;
             Closed += MainWindow_Closed;
@@ -81,20 +85,38 @@ namespace KCad
             ViewModel.DebugCommand(s);
         }
 
-        #region Message出力
-        // string classは、インスタンスが違っても内容が同じだと
-        // Eqauls()がtrueを返してしまうため、このクラスでwrapする
-        public class MessageLine
+
+        private void ListMessage_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            private string Line;
-            public MessageLine(string s)
+            List<string> lines = new List<string>();
+
+
+            for (int i = 0; i < listMessage.SelectedItems.Count; i++)
             {
-                Line = s;
+                MessageLine line = (MessageLine)listMessage.SelectedItems[i];
+                lines.Add(line.Content.ToString());
             }
 
-            override public String ToString()
+            ViewModel.MessageSelected(lines);
+        }
+
+
+        #region Message出力
+        public class MessageLine : ListBoxItem
+        {
+            public MessageLine(string s)
             {
-                return Line;
+                Content = s;
+                // 行ごとに色を変えるならこれ
+                //Content = new Run(s) { Foreground = Brushes.Cyan };
+
+                // 複数個所に色をつけるなら以下で行ける
+                /*
+                TextBlock tb = new TextBlock();
+                tb.Inlines.Add(new Run(s) { Foreground = Brushes.Cyan });
+                tb.Inlines.Add(new Run(" test") { Foreground = Brushes.Green});
+                Content = tb;
+                */
             }
         }
 
@@ -141,12 +163,33 @@ namespace KCad
             if (e.Key == Key.Enter)
             {
                 var s = textCommand.Text;
+
+                textCommand.Text = "";
+
                 if (s.Length > 0)
                 {
                     ViewModel.TextCommand(s);
                 }
 
                 viewContainer.Focus();
+            }
+            else if (e.Key == Key.Up)
+            {
+                if (!textCommand.IsDropDownOpen)
+                {
+                    string s = ViewModel.CommandHistory.Rewind();
+                    textCommand.Text = s;
+
+                }
+            }
+            else if (e.Key == Key.Down)
+            {
+                if (!textCommand.IsDropDownOpen)
+                {
+                    string s = ViewModel.CommandHistory.Forward();
+                    textCommand.Text = s;
+
+                }
             }
         }
         #endregion
@@ -156,7 +199,7 @@ namespace KCad
         {
             if (!textCommand.IsFocused)
             {
-                ViewModel.onKeyDown(sender, e);
+                ViewModel.OnKeyDown(sender, e);
             }
         }
 
@@ -164,7 +207,7 @@ namespace KCad
         {
             if (!textCommand.IsFocused)
             {
-                ViewModel.onKeyUp(sender, e);
+                ViewModel.OnKeyUp(sender, e);
             }
         }
         #endregion

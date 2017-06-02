@@ -26,7 +26,7 @@ namespace Plotter
             WoldScale = 0.2f;
             Tools.Setup(DrawTools.ToolsType.DARK_GL);
 
-            Drawing = new DrawingGL(this);
+            mDrawing = new DrawingGL(this);
 
             Eye = Vector3d.Zero;
             Eye.X = 0.0;

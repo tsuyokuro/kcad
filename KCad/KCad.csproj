@@ -105,6 +105,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="plotter\PlotterSettings.cs" />
+    <Compile Include="plotter\Util\CadRuler.cs" />
     <Compile Include="SnapSettingsDialog.xaml.cs">
       <DependentUpon>SnapSettingsDialog.xaml</DependentUpon>
     </Compile>
@@ -188,22 +189,22 @@
     <Compile Include="plotter\Figure\CadFigurePolyLines.cs" />
     <Compile Include="plotter\Figure\CadFigureRect.cs" />
     <Compile Include="plotter\CadLayer.cs" />
-    <Compile Include="plotter\Quaternion.cs" />
+    <Compile Include="plotter\Util\Quaternion.cs" />
     <Compile Include="plotter\Gridding.cs" />
     <Compile Include="plotter\searcher\MarkPoint.cs" />
     <Compile Include="plotter\searcher\MarkSeg.cs" />
     <Compile Include="plotter\searcher\SegSearcher.cs" />
-    <Compile Include="plotter\UMatrix4.cs" />
+    <Compile Include="plotter\Util\UMatrix4.cs" />
     <Compile Include="plotter\Util\CadMath.cs" />
     <Compile Include="plotter\HID\CadMouse.cs" />
     <Compile Include="plotter\CadObjectDB.cs" />
-    <Compile Include="plotter\CadOpe.cs" />
+    <Compile Include="plotter\undo\CadOpe.cs" />
     <Compile Include="plotter\CadPoint.cs" />
     <Compile Include="plotter\CadSelection.cs" />
     <Compile Include="plotter\Util\CadUtil.cs" />
-    <Compile Include="plotter\DiffData.cs" />
+    <Compile Include="plotter\undo\DiffData.cs" />
     <Compile Include="plotter\DrawContext\DrawContext.cs" />
-    <Compile Include="plotter\HistoryManager.cs" />
+    <Compile Include="plotter\undo\HistoryManager.cs" />
     <Compile Include="plotter\Log.cs" />
     <Compile Include="plotter\PlotterController\MyScript.cs" />
     <Compile Include="plotter\Util\CadConst.cs" />
@@ -230,6 +231,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Properties\Resources.ja.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

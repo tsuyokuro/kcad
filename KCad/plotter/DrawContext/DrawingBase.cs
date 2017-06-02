@@ -7,7 +7,64 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
-    public class DrawingBase
+    public interface IDrawing
+    {
+        void Clear();
+
+        void Draw(CadLayer layer, int pen = DrawTools.PEN_DEFAULT_FIGURE);
+
+        void Draw(IReadOnlyList<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE);
+
+        void DrawSelected(CadLayer layer);
+
+        void DrawAxis();
+
+        void DrawPageFrame();
+
+        void DrawGrid(Gridding grid);
+
+        void DrawHighlightPoint(CadPoint pt, int pen = DrawTools.PEN_POINT_HIGHTLITE);
+
+        void DrawSelectedPoint(CadPoint pt, int pen = DrawTools.PEN_SLECT_POINT);
+
+        void DrawDownPointCursor(int pen, CadPoint p);
+
+        void DrawCursor(CadPoint pt);
+
+        void DrawRect(int pen, CadPoint p0, CadPoint p1);
+
+        void DrawCross(int pen, CadPoint p, double size);
+
+        void DrawLine(int pen, CadPoint a, CadPoint b);
+
+        void DrawDot(int pen, CadPoint p);
+
+        void DrawFace(int pen, IReadOnlyList<CadPoint> pointList);
+
+        void DrawFace(int pen, IReadOnlyList<CadPoint> pointList, CadPoint normal);
+
+        void DrawCircle(int pen, CadPoint cp, CadPoint pa, CadPoint pb);
+
+        void DrawText(int font, int brush, CadPoint a, string s);
+
+        void DrawArrow(int pen, CadPoint pt0, CadPoint pt1, ArrowTypes type, ArrowPos pos, double len, double width);
+
+        void DrawBezier(
+            int pen,
+            CadPoint p0, CadPoint p1, CadPoint p2);
+
+        void DrawBezier(
+            int pen,
+            CadPoint p0, CadPoint p1, CadPoint p2, CadPoint p3);
+
+
+        void DrawCursorScrn(CadPoint pp);
+
+        void DrawCrossCursorScrn(CadPoint pp);
+    }
+
+
+    public class DrawingBase : IDrawing
     {
         public virtual void Clear()
         {
@@ -90,7 +147,7 @@ namespace Plotter
 
             CadPoint normal = CadMath.Normal(va, vb);
 
-            int div = 64;
+            int div = 128;
 
             double dt = (double)(2.0 * Math.PI) / (double)div;
 

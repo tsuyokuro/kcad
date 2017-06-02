@@ -77,14 +77,11 @@ namespace Plotter
 
         private PlotterController mController = new PlotterController();
 
-        PlotterController.Interaction mInteractOut = new PlotterController.Interaction();
-
         public PlotterController.Interaction InteractOut
         {
             set
             {
-                mInteractOut = value;
-                mController.InteractOut = mInteractOut;
+                mController.InteractOut = value;
             }
         }
 
@@ -264,7 +261,9 @@ namespace Plotter
             {
                 return mPlotterView.FromsControl;
             }
-        } 
+        }
+
+        public TextCommandHistory CommandHistory = new TextCommandHistory();
 
         public PlotterViewModel(Window mainWindow, WindowsFormsHost viewHost)
         {
@@ -367,6 +366,7 @@ namespace Plotter
                 { "delete", Remove },
                 { "ctrl+s", Save },
                 { "ctrl+a", SelectAll },
+                { "escape", Cancel },
             };
         }
 
@@ -416,42 +416,42 @@ namespace Plotter
         public void Remove()
         {
             DrawContext dc = StartDraw();
-            mController.remove(dc);
+            mController.Remove(dc);
             EndDraw();
         }
 
         public void SeparateFigure()
         {
             DrawContext dc = StartDraw();
-            mController.separateFigures(dc);
+            mController.SeparateFigures(dc);
             EndDraw();
         }
 
         public void BondFigure()
         {
             DrawContext g = StartDraw();
-            mController.bondFigures(g);
+            mController.BondFigures(g);
             EndDraw();
         }
 
         public void ToBezier()
         {
             DrawContext dc = StartDraw();
-            mController.toBezier(dc);
+            mController.ToBezier(dc);
             EndDraw();
         }
 
         public void CutSegment()
         {
             DrawContext dc = StartDraw();
-            mController.cutSegment(dc);
+            mController.CutSegment(dc);
             EndDraw();
         }
 
         public void AddCenterPoint()
         {
             DrawContext dc = StartDraw();
-            mController.addCenterPoint(dc);
+            mController.AddCenterPoint(dc);
             EndDraw();
         }
 
@@ -578,9 +578,18 @@ namespace Plotter
             }
         }
 
+        public void RedrawAll()
+        {
+            DrawContext dc = StartDraw();
+            mController.Clear(dc);
+            mController.DrawAll(dc);
+            EndDraw();
+        }
+
         public void AddLayer()
         {
             mController.AddLayer(null);
+            RedrawAll();
         }
 
         public void RemoveLayer()
@@ -602,6 +611,14 @@ namespace Plotter
             mController.SelectAllInCurrentLayer(dc);
             EndDraw();
         }
+
+        public void Cancel()
+        {
+            DrawContext dc = StartDraw();
+            mController.Cancel(dc);
+            EndDraw();
+        }
+
         #endregion
 
 
@@ -689,6 +706,8 @@ namespace Plotter
                 if (mController.CurrentLayer.ID != layer.ID)
                 {
                     mController.setCurrentLayer(layer.ID);
+
+                    RedrawAll();
                 }
             }
             else
@@ -730,11 +749,11 @@ namespace Plotter
         }
 
 
-        public void onKeyDown(object sender, KeyEventArgs e)
+        public void OnKeyDown(object sender, KeyEventArgs e)
         {
         }
 
-        public void onKeyUp(object sender, KeyEventArgs e)
+        public void OnKeyUp(object sender, KeyEventArgs e)
         {
             string ks = ModifyerKeysStr();
 
@@ -888,13 +907,9 @@ namespace Plotter
         public void TextCommand(string s)
         {
             mController.ScriptEnv.command(s);
-            Draw(true);
+            CommandHistory.Add(s);
+            DrawAll();
         }
-
-        //public void MenuCommand(string tag)
-        //{
-        //    ExecCommand(tag);
-        //}
 
         public void DebugCommand(string s)
         {
@@ -903,12 +918,6 @@ namespace Plotter
             mPlotterView.EndDraw();
         }
         #endregion
-
-
-        public void MessageOut(String s)
-        {
-            mInteractOut.print(s);
-        }
 
         private bool UpdateFigureType(CadFigure.Types newType)
         {
@@ -934,6 +943,7 @@ namespace Plotter
             {
                 DrawContext dc = mPlotterView.StartDraw();
                 mController.endCreateFigure(dc);
+                mController.Clear(dc);
                 mController.Draw(dc);
                 mPlotterView.EndDraw();
             }
@@ -1001,16 +1011,7 @@ namespace Plotter
 
         public void SetupTextCommandView(AutoCompleteBox textBox)
         {
-            textBox.ItemsSource = new List<string>()
-            {
-                "rect(",
-                "distance",
-                "revOrder",
-                "group",
-                "ungroup",
-                "addLayer",
-            };
-
+            textBox.ItemsSource = Controller.ScriptEnv.AutoCompleteList;
             textBox.ItemFilter = ScriptFilter;
         }
 
@@ -1053,6 +1054,54 @@ namespace Plotter
             settings.LineSnapRange = mController.LineSnapRange;
 
             settings.Save();
+        }
+
+        public void MessageSelected(List<string> messages)
+        {
+            mController.ScriptEnv.MessageSelected(messages);
+
+            DrawAll();
+        }
+    }
+
+    public class TextCommandHistory
+    {
+        private List<string> History = new List<string>();
+        int Pos = 0;
+
+        private string empty = "";
+
+        public void Add(string s)
+        {
+            History.Add(s);
+            Pos = History.Count;
+        }
+
+        public string Rewind()
+        {
+            Pos--;
+
+            if (Pos<0)
+            {
+                Pos = 0;
+                return empty;
+            }
+
+            return History[Pos];
+        }
+
+
+        public string Forward()
+        {
+            Pos++;
+
+            if (Pos >= History.Count)
+            {
+                Pos = History.Count;
+                return empty;
+            }
+
+            return History[Pos];
         }
     }
 }
