@@ -225,7 +225,6 @@ namespace Plotter
             Start2D();
 
             DrawSelectedFigurePoint(layer.FigureList);
-            DrawSelectedRelPoint(layer.RelPointList);
 
             End2D();
         }
@@ -243,14 +242,6 @@ namespace Plotter
             foreach (CadFigure fig in list)
             {
                 fig.DrawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
-            }
-        }
-
-        private void DrawSelectedRelPoint(List<CadRelativePoint> list)
-        {
-            foreach (CadRelativePoint relp in list)
-            {
-                relp.drawSelected(DC);
             }
         }
 

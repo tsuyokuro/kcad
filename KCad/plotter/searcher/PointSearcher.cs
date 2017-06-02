@@ -157,26 +157,6 @@ namespace Plotter
             }
         }
 
-        public void CheckRelativePoints(DrawContext dc, CadObjectDB db)
-        {
-            foreach (CadLayer layer in db.LayerList)
-            {
-                CheckRelativePoints(dc, layer);
-            }
-        }
-
-        public void CheckRelativePoints(DrawContext dc, CadLayer layer)
-        {
-            List<CadRelativePoint> list = layer.RelPointList;
-
-            int idx = 0;
-            foreach (CadRelativePoint rp in list)
-            {
-                CheckFigPoint(dc, rp.point, layer.ID, null, idx, MarkPoint.Types.RELATIVE_POINT);
-                idx++;
-            }
-        }
-
         private void CheckFigPoint(DrawContext dc, CadPoint pt, uint layerID, CadFigure fig, int ptIdx, MarkPoint.Types type)
         {
             if (fig != null && IsIgnore(fig.ID, ptIdx))

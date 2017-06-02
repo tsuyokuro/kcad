@@ -214,58 +214,6 @@ namespace Plotter
 
 
 
-        #region "Manage Relative point"
-        private Dictionary<uint, CadRelativePoint> mRelPointIdMap = new Dictionary<uint, CadRelativePoint>();
-        public Dictionary<uint, CadRelativePoint> RelPointMap
-        {
-            get
-            {
-                return mRelPointIdMap;
-            }
-
-            private set
-            {
-                mRelPointIdMap = value;
-            }
-        }
-
-        private IdProvider mRelPointIdProvider = new IdProvider();
-        public IdProvider RelPointIdProvider
-        {
-            get
-            {
-                return mRelPointIdProvider;
-            }
-        }
-
-        public CadRelativePoint getRelPoint(uint id)
-        {
-            return mRelPointIdMap[id];
-        }
-
-        public CadRelativePoint newRelPoint()
-        {
-            CadRelativePoint rp = new CadRelativePoint();
-            addRelPoint(rp);
-            return rp;
-        }
-
-        public uint addRelPoint(CadRelativePoint rp)
-        {
-            rp.ID = mRelPointIdProvider.getNew();
-            mRelPointIdMap.Add(rp.ID, rp);
-            return rp.ID;
-        }
-
-        public void relaseRelPoint(uint id)
-        {
-            mLayerIdMap.Remove(id);
-        }
-        #endregion
-
-
-
-
         public JObject ToJson()
         {
             JObject root = new JObject();
@@ -275,10 +223,8 @@ namespace Plotter
 
             root.Add("layer_id_counter", LayerIdProvider.Counter);
             root.Add("fig_id_counter", FigIdProvider.Counter);
-            root.Add("relpoint_id_counter", RelPointIdProvider.Counter);
 
             root.Add("fig_map", JsonUtil.DictToJsonList(FigureMap));
-            root.Add("relpt_map", JsonUtil.DictToJsonList(RelPointMap));
             root.Add("layer_map", JsonUtil.DictToJsonList(LayerMap));
             root.Add("layer_id_list", JsonUtil.ListToJsonIdList(LayerList));
 
@@ -309,16 +255,11 @@ namespace Plotter
         {
             LayerIdProvider.Counter = (uint)jo["layer_id_counter"];
             FigIdProvider.Counter = (uint)jo["fig_id_counter"];
-            RelPointIdProvider.Counter = (uint)jo["relpoint_id_counter"];
 
             JArray ja;
 
             ja = (JArray)jo["fig_map"];
             FigureMap = JsonUtil.JsonListToDictionary<CadFigure>(ja);
-
-
-            ja = (JArray)jo["relpt_map"];
-            RelPointMap = JsonUtil.JsonListToDictionary<CadRelativePoint>(ja);
 
 
             ja = (JArray)jo["layer_map"];

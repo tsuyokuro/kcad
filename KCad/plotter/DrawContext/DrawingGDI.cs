@@ -43,7 +43,6 @@ namespace Plotter
         public override void DrawSelected(CadLayer layer)
         {
             DrawSelectedFigurePoint(layer.FigureList);
-            DrawSelectedRelPoint(layer.RelPointList);
         }
 
         #region "Draw base"
@@ -356,14 +355,6 @@ namespace Plotter
             foreach (CadFigure fig in list)
             {
                 fig.DrawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
-            }
-        }
-
-        private void DrawSelectedRelPoint(List<CadRelativePoint> list)
-        {
-            foreach (CadRelativePoint relp in list)
-            {
-                relp.drawSelected(DC);
             }
         }
 

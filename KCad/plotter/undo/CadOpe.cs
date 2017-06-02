@@ -65,12 +65,6 @@ namespace Plotter
             return ope;
         }
 
-        public static CadOpe CreateRemoveRelPointOpe(CadLayer layer, CadRelativePoint rp)
-        {
-            CadOpe ope = new CadOpeRemoveRelPoint(layer.ID, rp);
-            return ope;
-        }
-
         public static CadOpe CreateChangeNormalOpe(uint figID, CadPoint oldNormal, CadPoint newNormal)
         {
             CadOpe ope = new CadOpeChangeNormal(figID, oldNormal, newNormal);
@@ -332,30 +326,6 @@ namespace Plotter
         }
     }
     #endregion
-
-    public class CadOpeRemoveRelPoint : CadOpe
-    {
-        protected uint LayerID;
-        CadRelativePoint RelPoint;
-
-        public CadOpeRemoveRelPoint(uint layerID, CadRelativePoint relPoint)
-        {
-            LayerID = layerID;
-            RelPoint = relPoint;
-        }
-
-        public override void Undo(CadObjectDB db)
-        {
-            CadLayer layer = db.getLayer(LayerID);
-            layer.RelPointList.Add(RelPoint);
-        }
-
-        public override void Redo(CadObjectDB db)
-        {
-            CadLayer layer = db.getLayer(LayerID);
-            layer.RelPointList.RemoveAll( rp => rp.ID == RelPoint.ID);
-        }
-    }
 
     public class CadOpeAddChildlen : CadOpe
     {

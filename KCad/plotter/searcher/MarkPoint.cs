@@ -7,7 +7,6 @@ namespace Plotter
         public enum Types : byte
         {
             POINT = 0,
-            RELATIVE_POINT = 1,
             IDEPEND_POINT = 2,
         }
 

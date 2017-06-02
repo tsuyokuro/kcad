@@ -11,8 +11,6 @@ namespace Plotter
 
             RemoveSelectedPoints();
 
-            MarkRemoveSelectedRelPoints();
-
             EndEdit();
 
             Clear(dc);
@@ -192,57 +190,6 @@ namespace Plotter
             }
 
             mHistoryManager.foward(opeRoot);
-        }
-
-        public void AddCenterPoint(DrawContext dc)
-        {
-            if (mSelectedSegs.List.Count > 0)
-            {
-                foreach (MarkSeg seg in mSelectedSegs.List)
-                {
-                    CadFigure fig = mDB.getFigure(seg.FigureID);
-
-                    CadRelativePoint rp = mDB.newRelPoint();
-
-                    rp.set(
-                        CadRelativePoint.Types.CENTER,
-                        fig, seg.PtIndexA,
-                        fig, seg.PtIndexB
-                        );
-
-                    CadLayer layer = mDB.getLayer(seg.LayerID);
-
-                    layer.RelPointList.Add(rp);
-                }
-
-                Draw(dc);
-                return;
-            }
-
-            if (mSelList.List.Count == 2)
-            {
-                SelectItem si0 = mSelList.List[0];
-                SelectItem si1 = mSelList.List[1];
-
-                if (si0.LayerID == si1.LayerID)
-                {
-                    CadFigure fig0 = mDB.getFigure(si0.FigureID);
-                    CadFigure fig1 = mDB.getFigure(si1.FigureID);
-
-                    CadRelativePoint rp = mDB.newRelPoint();
-
-                    rp.set(
-                        CadRelativePoint.Types.CENTER,
-                        fig0, si0.PointIndex,
-                        fig1, si1.PointIndex
-                        );
-
-                    CadLayer layer = mDB.getLayer(si0.LayerID);
-                    layer.RelPointList.Add(rp);
-                }
-            }
-
-            Draw(dc);
         }
 
         private CadPoint GetSelectionCenter()

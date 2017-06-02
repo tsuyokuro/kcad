@@ -212,8 +212,6 @@ namespace Plotter
                     mPointSearcher.SetRangePixel(dc, PointSnapRange);
                     mPointSearcher.SearchAllLayer(dc, pixp, mDB);
 
-                    mPointSearcher.CheckRelativePoints(dc, mDB);
-
                     MarkPoint mp = default(MarkPoint);
 
                     mp = mPointSearcher.GetXYMatch(MatchIndex);
@@ -266,12 +264,6 @@ namespace Plotter
 
                             SetCurrentFigure(fig);
                         }
-                    }
-                    else if (mp.Type == MarkPoint.Types.RELATIVE_POINT)
-                    {
-                        CadLayer layer = mDB.getLayer(mp.LayerID);
-                        CadRelativePoint rp = layer.RelPointList[mp.PointIndex];
-                        rp.Selected = true;
                     }
                     else
                     {
@@ -539,8 +531,6 @@ namespace Plotter
                         mPointSearcher.Check(dc, CreatingFigure.GetPointAt(0));
                     }
                 }
-
-                mPointSearcher.CheckRelativePoints(dc, mDB);
 
                 // Search point
                 mPointSearcher.SearchAllLayer(dc, mDB);

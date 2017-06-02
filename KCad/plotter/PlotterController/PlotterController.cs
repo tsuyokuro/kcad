@@ -338,8 +338,6 @@ namespace Plotter
             ClearSelection();
             mHistoryManager.undo();
 
-            UpdateRelPoints();
-
             Clear(dc);
             DrawAll(dc);
         }
@@ -348,8 +346,6 @@ namespace Plotter
         {
             ClearSelection();
             mHistoryManager.redo();
-
-            UpdateRelPoints();
 
             Clear(dc);
             DrawAll(dc);
@@ -393,8 +389,6 @@ namespace Plotter
                     }
 
                     dc.Drawing.Draw(layer, pen);
-
-                    DrawRelPoints(dc, layer.RelPointList);
                 }
             }
 
@@ -426,14 +420,6 @@ namespace Plotter
             {
                 dc.Drawing.DrawDownPointCursor(
                     DrawTools.PEN_LAST_POINT_MARKER2, mObjDownPoint.Value);
-            }
-        }
-
-        public void DrawRelPoints(DrawContext dc, List<CadRelativePoint> list)
-        {
-            foreach (CadRelativePoint rp in list)
-            {
-                rp.draw(dc);
             }
         }
 
@@ -602,9 +588,6 @@ namespace Plotter
             {
                 CadOpeList root = CadOpe.CreateListOpe();
 
-                CadOpeList ropeList = RemoveInvalidRelPoints();
-                root.OpeList.Add(ropeList);
-
                 CadOpe ope = CadOpe.CreateDiffOpe(ddl);
                 root.OpeList.Add(ope);
 
@@ -612,11 +595,6 @@ namespace Plotter
                 root.OpeList.Add(fopeList);
 
                 mHistoryManager.foward(root);
-            }
-            else
-            {
-                CadOpeList ropeList = RemoveInvalidRelPoints();
-                mHistoryManager.foward(ropeList);
             }
 
             UpdateSelectItemPoints();
@@ -713,8 +691,6 @@ namespace Plotter
                     fig.MoveSelectedPoints(dc, delta);
                 }
             }
-
-            UpdateRelPoints();
         }
 
         private void RemoveSelectedPoints()
@@ -727,113 +703,6 @@ namespace Plotter
             }
         }
 
-        private void UpdateRelPoints()
-        {
-            foreach (CadLayer layer in mDB.LayerList)
-            {
-                UpdateRelPoints(layer.RelPointList);
-            }
-        }
-
-        private void UpdateRelPoints(List<CadRelativePoint> list)
-        {
-            foreach (CadRelativePoint rp in list)
-            {
-                CadFigure figA = mDB.getFigure(rp.FigureIdA);
-                CadFigure figB = mDB.getFigure(rp.FigureIdB);
-
-                if (figA == null || figB == null)
-                {
-                    continue;
-                }
-
-                rp.update(figA, figB);
-            }
-        }
-
-        private void MarkRemoveSelectedRelPoints()
-        {
-            foreach (CadLayer layer in mDB.LayerList)
-            {
-                MarkRemoveSelectedRelPoints(layer);
-            }
-        }
-
-
-        private void MarkRemoveSelectedRelPoints(CadLayer layer)
-        {
-            List<CadRelativePoint> list = layer.RelPointList;
-            int i = list.Count - 1;
-
-            for (; i >= 0; i--)
-            {
-                CadRelativePoint rp = list[i];
-
-                if (!rp.Selected)
-                {
-                    continue;
-                }
-
-                rp.RemoveMark = true;
-            }
-        }
-
-        private CadOpeList RemoveInvalidRelPoints()
-        {
-            CadOpeList opeList = new CadOpeList();
-
-            foreach (CadLayer layer in mDB.LayerList)
-            {
-                CadOpeList subList = RemoveInvalidRelPointsWithLayer(layer);
-                opeList.OpeList.Add(subList);
-            }
-
-            return opeList;
-        }
-
-        private CadOpeList RemoveInvalidRelPointsWithLayer(CadLayer layer)
-        {
-            List<CadRelativePoint> list = layer.RelPointList;
-
-            CadOpeList opeList = new CadOpeList();
-
-            CadOpe ope = null;
-
-            int i = list.Count - 1;
-
-            for (; i >= 0; i--)
-            {
-                CadRelativePoint rp = list[i];
-
-                if (rp.RemoveMark)
-                {
-                    ope = CadOpe.CreateRemoveRelPointOpe(layer, rp);
-                    opeList.OpeList.Add(ope);
-
-                    list.RemoveAt(i);
-                    continue;
-                }
-
-
-                CadFigure figA = layer.getFigureByID(rp.FigureIdA);
-                CadFigure figB = layer.getFigureByID(rp.FigureIdB);
-
-                if (
-                    (figA != null && figA.PointList.Count > rp.IndexA) &&
-                    (figB != null && figB.PointList.Count > rp.IndexB)
-                    )
-                {
-                    continue;
-                }
-
-                ope = CadOpe.CreateRemoveRelPointOpe(layer, rp);
-                opeList.OpeList.Add(ope);
-
-                list.RemoveAt(i);
-            }
-
-            return opeList;
-        }
         #endregion
 
         #region "Copy and paste"

@@ -69,9 +69,6 @@ namespace Plotter
 
         private List<CadFigure> mFigureList = new List<CadFigure>();
 
-        private List<CadRelativePoint> mRelPointList = new List<CadRelativePoint>();
-
-        private List<CadRelativePoint> mStoreRelPointList = null;
 
 
         public IReadOnlyList<CadFigure> FigureList
@@ -81,9 +78,6 @@ namespace Plotter
                 return mFigureList;
             }
         }
-
-        public List<CadRelativePoint> RelPointList { get { return mRelPointList; } }
-        public List<CadRelativePoint> StoreRelPointList { get { return mStoreRelPointList; } }
 
 
         public CadLayer()
@@ -157,14 +151,6 @@ namespace Plotter
             {
                 fig.ClearSelectFlags();
             }
-
-
-            List<CadRelativePoint> rpList = RelPointList;
-
-            foreach (CadRelativePoint rp in rpList)
-            {
-                rp.Selected = false;
-            }
         }
 
         public CadOpeList clear()
@@ -172,15 +158,6 @@ namespace Plotter
             CadOpeList opeList = CadOpe.CreateListOpe();
 
             CadOpe ope;
-
-            IEnumerable<CadRelativePoint> rpList = mRelPointList;
-            var revRp = rpList.Reverse();
-
-            foreach (CadRelativePoint rp in revRp)
-            {
-                ope = CadOpe.CreateRemoveRelPointOpe(this, rp);
-                opeList.OpeList.Add(ope);
-            }
 
             IEnumerable<CadFigure> figList = mFigureList;
             var revFig = figList.Reverse();
@@ -192,7 +169,6 @@ namespace Plotter
             }
 
             mFigureList.Clear();
-            mRelPointList.Clear();
 
             return opeList;
         }
@@ -212,7 +188,6 @@ namespace Plotter
             jo.Add("locked", mLocked);
 
             jo.Add("fig_id_list", JsonUtil.ListToJsonIdList(mFigureList));
-            jo.Add("rel_point_id_list", JsonUtil.ListToJsonIdList(mRelPointList));
 
             return jo;
         }
@@ -248,7 +223,6 @@ namespace Plotter
 
             ja = (JArray)jo["rel_point_id_list"];
             idList = JsonUtil.JsonIdListToList(ja);
-            mRelPointList = DUtil.IdListToObjList(idList, db.RelPointMap);
         }
 
         public void sdump(DebugOut dout)

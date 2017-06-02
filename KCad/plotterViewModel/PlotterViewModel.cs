@@ -336,7 +336,6 @@ namespace Plotter
                 { "bond",BondFigure },
                 { "to_bezier",ToBezier },
                 { "cut_segment",CutSegment },
-                { "add_center_point", AddCenterPoint },
                 { "to_loop", ToLoop },
                 { "to_unloop", ToUnloop },
                 { "clear_layer", ClearLayer },
@@ -445,13 +444,6 @@ namespace Plotter
         {
             DrawContext dc = StartDraw();
             mController.CutSegment(dc);
-            EndDraw();
-        }
-
-        public void AddCenterPoint()
-        {
-            DrawContext dc = StartDraw();
-            mController.AddCenterPoint(dc);
             EndDraw();
         }
 
