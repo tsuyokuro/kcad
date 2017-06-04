@@ -34,6 +34,17 @@ namespace Plotter
 
         public CadPoint CrossViewPoint;
 
+        public CadPoint CenterPoint
+        {
+            get
+            {
+                CadPoint t = pB - pA;
+                t /= 2;
+                t += pA;
+                return t;
+            }
+        }
+
         public double Distance;
 
         public bool Valid { get { return FigureID != 0; } }

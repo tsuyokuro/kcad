@@ -276,7 +276,20 @@ namespace Plotter
 
                         if (mseg.FigureID != 0 && !layer.Locked)
                         {
-                            mObjDownPoint = mseg.CrossPoint;
+
+                            CadPoint center = mseg.CenterPoint;
+
+                            CadPoint t = dc.CadPointToUnitPoint(center);
+
+                            if ((t - pixp).Norm() < LineSnapRange)
+                            {
+                                mObjDownPoint = center;
+                            }
+                            else
+                            {
+                                mObjDownPoint = mseg.CrossPoint;
+                            }
+
 
                             CadFigure fig = mDB.getFigure(mseg.FigureID);
 
@@ -550,7 +563,7 @@ namespace Plotter
 
                     mSnapPoint = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
-                    dist = Math.Min(mx.DistX, dist);
+                    dist = (tp - pixp).Norm();
 
                     xmatch = true;
                 }
@@ -566,7 +579,7 @@ namespace Plotter
 
                     mSnapPoint = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
-                    dist = Math.Min(my.DistY, dist);
+                    dist = (tp - pixp).Norm();
 
                     ymatch = true;
                 }
@@ -593,10 +606,25 @@ namespace Plotter
                         CadFigure fig = mDB.getFigure(seg.FigureID);
                         fig.DrawSeg(dc, DrawTools.PEN_MATCH_SEG, seg.PtIndexA, seg.PtIndexB);
 
-                        mSnapPoint = seg.CrossPoint;
+                        CadPoint center = seg.CenterPoint;
 
-                        mSnapScreenPoint = seg.CrossViewPoint;
-                        mSnapScreenPoint.z = 0;
+                        CadPoint t = dc.CadPointToUnitPoint(center);
+
+                        if ((t - pixp).Norm() < LineSnapRange)
+                        {
+                            dc.Drawing.DrawHighlightPoint(center);
+
+                            mSnapPoint = center;
+                            mSnapScreenPoint = t;
+                            mSnapScreenPoint.z = 0;
+                        }
+                        else
+                        {
+                            mSnapPoint = seg.CrossPoint;
+                            mSnapScreenPoint = seg.CrossViewPoint;
+                            mSnapScreenPoint.z = 0;
+                        }
+
 
                         segmatch = true;
 
