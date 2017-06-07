@@ -1,4 +1,4 @@
-﻿using MyScript;
+﻿using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -7,9 +7,63 @@ namespace Plotter
 {
     public class ScriptEnvironment
     {
+private const string Script =
+@"
+import math
+def rect(w, h):
+    SE.Rect(w, h)
+
+def area():
+    SE.Area()
+
+def find(range):
+    SE.Find(range)
+
+def layerList():
+    SE.LayerList()
+
+def lastDown():
+    SE.ShowLastDownPoint()
+
+def distance():
+    SE.Distance()
+
+def group():
+    SE.Group()
+
+def ungroup():
+    SE.Ungroup()
+
+def addPoint(x, y, z):
+    SE.AddPoint(x, y, z)
+
+def addLayer(name):
+    SE.AddLayer(name)
+
+def reverse():
+    SE.ReverseOrder()
+
+def move(x, y, z):
+    SE.Move(x, y, z)
+
+def segLen(len):
+    SE.SegLen(len)
+
+def insPoint(x, y, z):
+    SE.InsPoint(x, y, z)
+
+"
+;
+
         private PlotterController Controller;
 
-        private Executor mScrExecutor;
+
+        private ScriptEngine Engine;
+
+        private ScriptScope Scope;
+
+        private ScriptSource Source;
+
 
         private List<string> mAutoCompleteList;
 
@@ -21,59 +75,24 @@ namespace Plotter
             }
         }
 
-        private enum Coord
-        {
-            XY,
-            XZ,
-            ZY,
-        }
-
-
         public ScriptEnvironment(PlotterController controller)
         {
             Controller = controller;
 
             InitAutoCompleteList();
-            InitScrExecutor();
+            InitScriptingEngine();
         }
 
-        // スクリプトエンジンが関数を呼び出す直前にこのメソッドが呼び出されます
-        // stackに値をpushすると引数の追加が出来ます
-        private void PreFuncCall(Evaluator evaluator, string funcName, Evaluator.ValueStack stack)
+        private void InitScriptingEngine()
         {
+            Engine = IronPython.Hosting.Python.CreateEngine();
+            Scope = Engine.CreateScope();
+            Source = Engine.CreateScriptSourceFromString(Script);
+
+            Scope.SetVariable("SE", this);
+            Source.Execute(Scope);
         }
 
-        private void InitScrExecutor()
-        {
-            //
-            // 引数の数とstackを受け取る
-            //
-            // int func(int argCount, Evaluator.ValueStack stack)
-            //
-            // 戻り値は、stackにpushした値の数
-            //
-
-            mScrExecutor = new Executor();
-            mScrExecutor.evaluator.PreFuncCall = PreFuncCall;
-            mScrExecutor.AddFunction("rect", AddRect);
-            mScrExecutor.AddFunction("rectSide", AddRectSide);
-            mScrExecutor.AddFunction("rectTop", AddRectTop);
-            mScrExecutor.AddFunction("point", AddPoint);
-            mScrExecutor.AddFunction("distance", Distance);
-            mScrExecutor.AddFunction("group", Group);
-            mScrExecutor.AddFunction("ungroup", Ungroup);
-            mScrExecutor.AddFunction("addLayer", AddLayer);
-            mScrExecutor.AddFunction("revOrder", ReverseOrder);
-            mScrExecutor.AddFunction("tapltest", tapltest);
-            mScrExecutor.AddFunction("move", Move);
-            mScrExecutor.AddFunction("length", SegLen);
-            mScrExecutor.AddFunction("insPoint", InsPoint);
-            mScrExecutor.AddFunction("area", Area);
-            mScrExecutor.AddFunction("cursor1", ShowLastDownPoint);
-            mScrExecutor.AddFunction("scale", Scale);
-            mScrExecutor.AddFunction("find", Find);
-            mScrExecutor.AddFunction("layerList", LayerList);
-        }
 
         private void InitAutoCompleteList()
         {
@@ -95,28 +114,18 @@ namespace Plotter
             };
         }
 
-        private int LayerList(int argCount, Evaluator.ValueStack stack)
+        public void LayerList()
         {
             foreach (CadLayer layer in Controller.DB.LayerList)
             {
                 Controller.InteractOut.print("layer{Name: " + layer.Name + " ID: " + layer.ID + "}");
             }
-
-            return 0;
         }
 
 
-        private int Find(int argCount, Evaluator.ValueStack stack)
+        public void Find(double range)
         {
             CadPoint org = Controller.LastDownPoint;
-
-            double range = 8;
-
-            if (argCount == 1)
-            {
-                Evaluator.Value v = stack.Pop();
-                range = v.GetDouble();
-            }
 
             DrawContext dc = Controller.CurrentDC;
 
@@ -137,8 +146,6 @@ namespace Plotter
                 string s = "fig{id:" + mp.FigureID.ToString() + ";idx:" + mp.PointIndex.ToString() + ";}";
                 Controller.InteractOut.print(s);
             }
-
-            return 0;
         }
 
 
@@ -174,36 +181,30 @@ namespace Plotter
             }
         }
 
-        private int Scale(int argCount, Evaluator.ValueStack stack)
+        public void Scale(double scale)
         {
             CadPoint org = Controller.LastDownPoint;
-
-            Evaluator.Value v = stack.Pop();
-
-            double scale = v.GetDouble();
-
             Controller.Scale(org, scale);
-
-            return 0;
         }
 
-        private int ShowLastDownPoint(int argCount, Evaluator.ValueStack stack)
+        public void ShowLastDownPoint()
         {
-            stack.Push(Controller.LastDownPoint.x);
-            stack.Push(Controller.LastDownPoint.y);
-            stack.Push(Controller.LastDownPoint.z);
-
-            return 3;
+            Controller.InteractOut.print(
+                "( " +
+                Controller.LastDownPoint.x.ToString() + ", " +
+                Controller.LastDownPoint.y.ToString() + ", " +
+                Controller.LastDownPoint.z.ToString() +
+                " )"
+            );
         }
 
-        private int Group(int argCount, Evaluator.ValueStack stack)
+        private void Group()
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();
 
             if (idlist.Count < 2+1)
             {
                 Controller.InteractOut.print("Please select two or more objects.");
-                return 0;
             }
 
             CadFigure parent = Controller.DB.newFigure(CadFigure.Types.GROUP);
@@ -224,11 +225,9 @@ namespace Plotter
             Controller.HistoryManager.foward(ope);
 
             Controller.InteractOut.print("Grouped");
-
-            return 0;
         }
 
-        private int Ungroup(int argCount, Evaluator.ValueStack stack)
+        public void Ungroup()
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();
 
@@ -262,11 +261,9 @@ namespace Plotter
             Controller.HistoryManager.foward(opeList);
 
             Controller.InteractOut.print("Ungrouped");
-
-            return 0;
         }
 
-        private int Distance(int argCount, Evaluator.ValueStack stack)
+        public void Distance()
         {
             if (Controller.SelList.List.Count == 2)
             {
@@ -281,37 +278,13 @@ namespace Plotter
             {
                 Controller.InteractOut.print("cmd dist error. After select 2 points");
             }
-
-            return 0;
         }
 
-        private int AddPoint(int argCount, Evaluator.ValueStack stack)
+        public void AddPoint(double x, double y, double z)
         {
-            if (!(argCount == 0 || argCount == 2 || argCount == 3))
-            {
-                return 0;
-            }
-
-
             CadPoint p = default(CadPoint);
 
-            if (argCount == 0)
-            {
-                p = Controller.LastDownPoint;
-            }
-            else if (argCount == 2)
-            {
-                Evaluator.Value y = stack.Pop();
-                Evaluator.Value x = stack.Pop();
-                p.set(x.GetDouble(), y.GetDouble(), 0);
-            }
-            else if (argCount == 3)
-            {
-                Evaluator.Value z = stack.Pop();
-                Evaluator.Value y = stack.Pop();
-                Evaluator.Value x = stack.Pop();
-                p.set(x.GetDouble(), y.GetDouble(), z.GetDouble());
-            }
+            p.set(x, y, z);
 
             CadFigure fig = Controller.DB.newFigure(CadFigure.Types.POINT);
             fig.AddPoint(p);
@@ -321,117 +294,34 @@ namespace Plotter
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.addFigure(fig);
-
-            return 0;
         }
 
-        private int AddRect(int argCount, Evaluator.ValueStack stack)
+        public void Rect(double w, double h)
         {
-            CreateRect(argCount, stack, Coord.XY);
-            return 0;
-        }
-
-        private int AddRectSide(int argCount, Evaluator.ValueStack stack)
-        {
-            CreateRect(argCount, stack, Coord.ZY);
-            return 0;
-        }
-
-        private int AddRectTop(int argCount, Evaluator.ValueStack stack)
-        {
-            CreateRect(argCount,stack, Coord.XZ);
-            return 0;
-        }
-
-        private void CreateRect(int argCount, Evaluator.ValueStack stack, Coord coord)
-        {
-            if (!(argCount == 2 || argCount == 4))
-            {
-                return;
-            }
-
             CadPoint p0 = default(CadPoint);
-            double w = 0;
-            double h = 0;
 
-            if (argCount == 2)
-            {
-                Evaluator.Value v2 = stack.Pop();
-                Evaluator.Value v1 = stack.Pop();
-                w = v1.GetDouble();
-                h = v2.GetDouble();
-
-                p0 = Controller.LastDownPoint;
-            }
-            else if (argCount == 4)
-            {
-                Evaluator.Value vh = stack.Pop();
-                Evaluator.Value vw = stack.Pop();
-                Evaluator.Value y = stack.Pop();
-                Evaluator.Value x = stack.Pop();
-                p0 = CadPoint.Create(x.GetDouble(), y.GetDouble(), 0);
-
-                w = vw.GetDouble();
-                h = vh.GetDouble();
-            }
-
+            p0 = Controller.LastDownPoint;
 
             CadFigure fig = Controller.DB.newFigure(CadFigure.Types.RECT);
 
             CadPoint p1 = p0;
 
             fig.AddPoint(p0);
-            if (coord == Coord.XY)
-            {
-                p1.x = p0.x + w;
-                p1.y = p0.y;
-                p1.z = p0.z;
-                fig.AddPoint(p1);
 
-                p1.x = p0.x + w;
-                p1.y = p0.y + h;
-                p1.z = p0.z;
-                fig.AddPoint(p1);
+            p1.x = p0.x + w;
+            p1.y = p0.y;
+            p1.z = p0.z;
+            fig.AddPoint(p1);
 
-                p1.x = p0.x;
-                p1.y = p0.y + h;
-                p1.z = p0.z;
-                fig.AddPoint(p1);
-            }
-            else if (coord == Coord.XZ)
-            {
-                p1.x = p0.x + w;
-                p1.y = p0.y;
-                p1.z = p0.z;
-                fig.AddPoint(p1);
+            p1.x = p0.x + w;
+            p1.y = p0.y + h;
+            p1.z = p0.z;
+            fig.AddPoint(p1);
 
-                p1.x = p0.x + w;
-                p1.y = p0.y;
-                p1.z = p0.z - h;
-                fig.AddPoint(p1);
-
-                p1.x = p0.x;
-                p1.y = p0.y;
-                p1.z = p0.z - h;
-                fig.AddPoint(p1);
-            }
-            else if (coord == Coord.ZY)
-            {
-                p1.x = p0.x;
-                p1.y = p0.y;
-                p1.z = p0.z - w;
-                fig.AddPoint(p1);
-
-                p1.x = p0.x;
-                p1.y = p0.y + h;
-                p1.z = p0.z - w;
-                fig.AddPoint(p1);
-
-                p1.x = p0.x;
-                p1.y = p0.y + h;
-                p1.z = p0.z;
-                fig.AddPoint(p1);
-            }
+            p1.x = p0.x;
+            p1.y = p0.y + h;
+            p1.z = p0.z;
+            fig.AddPoint(p1);
 
             fig.Closed = true;
 
@@ -442,31 +332,13 @@ namespace Plotter
             Controller.CurrentLayer.addFigure(fig);
         }
 
-        private int AddLayer(int argCount, Evaluator.ValueStack stack)
+        public void AddLayer(string name)
         {
-            Evaluator.Value v0 = stack.Pop();
-            PlotterController controller = (PlotterController)(v0.GetObj());
-            argCount--;
-
-            String name = null;
-
-            if (argCount > 0)
-            {
-                Evaluator.Value namev = stack.Pop();
-                name = namev.GetString();
-            }
-
             Controller.AddLayer(name);
-
-            return 0;
         }
 
-        private int ReverseOrder(int argCount, Evaluator.ValueStack stack)
+        public void ReverseOrder()
         {
-            Evaluator.Value v0 = stack.Pop();
-            PlotterController controller = (PlotterController)(v0.GetObj());
-            argCount--;
-
             List<uint> idlist = Controller.GetSelectedFigIDList();
 
             foreach (uint id in idlist)
@@ -480,68 +352,22 @@ namespace Plotter
 
                 fig.PointList.Reverse();
             }
-
-            return 0;
         }
 
-        private int tapltest(int argCount, Evaluator.ValueStack stack)
+        public void Move(double x, double y, double z)
         {
-            if (argCount != 2)
-            {
-                return 0;
-            }
-            Evaluator.Value v1 = stack.Pop();
-            Evaluator.Value v0 = stack.Pop();
-
-            stack.Push(v0);
-            stack.Push(v1);
-
-            return 2;
-        }
-
-        private int Move(int argCount, Evaluator.ValueStack stack)
-        {
-            if (argCount != 3)
-            {
-                Controller.InteractOut.print("Invalid argument.");
-                Controller.InteractOut.print("move(x, y, z)");
-
-                return 0;
-            }
-            Evaluator.Value v2 = stack.Pop();
-            Evaluator.Value v1 = stack.Pop();
-            Evaluator.Value v0 = stack.Pop();
-
-            double x = v0.GetDouble();
-            double y = v1.GetDouble();
-            double z = v2.GetDouble();
-
             CadPoint delta = CadPoint.Create(x, y, z);
 
             Controller.MoveSelectedPoints(delta);
-
-            return 0;
         }
 
-        private int SegLen(int argCount, Evaluator.ValueStack stack)
+        public void SegLen(double len)
         {
-            if (argCount != 1)
-            {
-                Controller.InteractOut.print("Invalid argument.");
-                Controller.InteractOut.print("len( LineLength )");
-
-                return 0;
-            }
-
-            Evaluator.Value v0 = stack.Pop();
-
-            double len = v0.GetDouble();
-
             MarkSeg seg = Controller.SelSegList.LastSel;
 
             if (seg.FigureID == 0)
             {
-                return 0;
+                return;
             }
 
             CadFigure fig = Controller.DB.getFigure(seg.FigureID);
@@ -576,26 +402,20 @@ namespace Plotter
 
                 Controller.EndEdit();
             }
-
-            return 0;
         }
 
-        private int InsPoint(int argCount, Evaluator.ValueStack stack)
+        public void InsPoint()
         {
             if (!Controller.InsPointToLastSelectedSeg())
             {
                 Controller.InteractOut.print("Can not inser point.");
             }
-
-            return 0;
         }
 
-        private int Area(int argCount, Evaluator.ValueStack stack)
+        public void Area()
         {
             double area = Controller.Area();
-
             Controller.InteractOut.print("Area:" + (area / 100).ToString() + "(㎠)");
-            return 0;
         }
 
         public void command(string s)
@@ -603,21 +423,19 @@ namespace Plotter
             s = s.Trim();
             Controller.InteractOut.print("> " + s);
 
-            if (!s.EndsWith(";"))
+
+            try
             {
-                s += ";";
-            }
+                dynamic ret = Engine.Execute(s, Scope);
 
-            Executor.Error error = mScrExecutor.Eval(s);
-
-            if (error == Executor.Error.NO_ERROR)
-            {
-                List<Evaluator.Value> vlist = mScrExecutor.GetOutput();
-
-                foreach (Evaluator.Value value in vlist)
+                if (ret != null)
                 {
-                    Controller.InteractOut.print(value.GetString());
+                    Controller.InteractOut.print(ret.ToString());
                 }
+            }
+            catch (Exception e)
+            {
+                Controller.InteractOut.print("error:" + e.Message);
             }
         }
     }
