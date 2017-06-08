@@ -10,6 +10,9 @@ namespace Plotter
 private const string Script =
 @"
 import math
+def putMsg(s):
+    SE.PutMsg(s)
+
 def rect(w, h):
     SE.Rect(w, h)
 
@@ -51,6 +54,17 @@ def segLen(len):
 
 def insPoint(x, y, z):
     SE.InsPoint(x, y, z)
+
+def getLastDownPoint():
+    return SE.GetLastDownPoint()
+
+def createCadPoint(x, y, z):
+    return SE.CreatePoint(x, y, z)
+
+def test():
+    putMsg('Test!!')
+    p = getLastDownPoint()
+    putMsg(str(p.x) + ', ' + str(p.y) + ', ' + str(p.z))
 
 "
 ;
@@ -122,6 +136,20 @@ def insPoint(x, y, z):
             }
         }
 
+        public void PutMsg(string s)
+        {
+            Controller.InteractOut.print(s);
+        }
+
+        public CadPoint GetLastDownPoint()
+        {
+            return Controller.LastDownPoint;
+        }
+
+        public CadPoint CreatePoint(double x, double y, double z)
+        {
+            return CadPoint.Create(x, y, z);
+        }
 
         public void Find(double range)
         {
