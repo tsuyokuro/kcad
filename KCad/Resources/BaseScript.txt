@@ -1,0 +1,57 @@
+import math
+def putMsg(s):
+    SE.PutMsg(s)
+
+def rect(w, h):
+    SE.Rect(w, h)
+
+def area():
+    SE.Area()
+
+def find(range):
+    SE.Find(range)
+
+def layerList():
+    SE.LayerList()
+
+def lastDown():
+    SE.ShowLastDownPoint()
+
+def distance():
+    SE.Distance()
+
+def group():
+    SE.Group()
+
+def ungroup():
+    SE.Ungroup()
+
+def addPoint(x, y, z):
+    SE.AddPoint(x, y, z)
+
+def addLayer(name):
+    SE.AddLayer(name)
+
+def reverse():
+    SE.ReverseOrder()
+
+def move(x, y, z):
+    SE.Move(x, y, z)
+
+def segLen(len):
+    SE.SegLen(len)
+
+def insPoint(x, y, z):
+    SE.InsPoint(x, y, z)
+
+def getLastDownPoint():
+    return SE.GetLastDownPoint()
+
+def createCadPoint(x, y, z):
+    return SE.CreatePoint(x, y, z)
+
+def test():
+    putMsg('Test!!')
+    p = getLastDownPoint()
+    putMsg(str(p.x) + ', ' + str(p.y) + ', ' + str(p.z))
+

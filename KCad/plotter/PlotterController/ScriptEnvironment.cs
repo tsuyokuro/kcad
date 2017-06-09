@@ -1,4 +1,6 @@
-﻿using Microsoft.Scripting.Hosting;
+﻿using KCad.Properties;
+using Microsoft.Scripting;
+using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -7,70 +9,7 @@ namespace Plotter
 {
     public class ScriptEnvironment
     {
-private const string Script =
-@"
-import math
-def putMsg(s):
-    SE.PutMsg(s)
-
-def rect(w, h):
-    SE.Rect(w, h)
-
-def area():
-    SE.Area()
-
-def find(range):
-    SE.Find(range)
-
-def layerList():
-    SE.LayerList()
-
-def lastDown():
-    SE.ShowLastDownPoint()
-
-def distance():
-    SE.Distance()
-
-def group():
-    SE.Group()
-
-def ungroup():
-    SE.Ungroup()
-
-def addPoint(x, y, z):
-    SE.AddPoint(x, y, z)
-
-def addLayer(name):
-    SE.AddLayer(name)
-
-def reverse():
-    SE.ReverseOrder()
-
-def move(x, y, z):
-    SE.Move(x, y, z)
-
-def segLen(len):
-    SE.SegLen(len)
-
-def insPoint(x, y, z):
-    SE.InsPoint(x, y, z)
-
-def getLastDownPoint():
-    return SE.GetLastDownPoint()
-
-def createCadPoint(x, y, z):
-    return SE.CreatePoint(x, y, z)
-
-def test():
-    putMsg('Test!!')
-    p = getLastDownPoint()
-    putMsg(str(p.x) + ', ' + str(p.y) + ', ' + str(p.z))
-
-"
-;
-
         private PlotterController Controller;
-
 
         private ScriptEngine Engine;
 
@@ -79,7 +18,7 @@ def test():
         private ScriptSource Source;
 
 
-        private List<string> mAutoCompleteList;
+        private List<string> mAutoCompleteList = new List<string>();
 
         public List<string> AutoCompleteList
         {
@@ -93,39 +32,30 @@ def test():
         {
             Controller = controller;
 
-            InitAutoCompleteList();
             InitScriptingEngine();
         }
 
+
+        Regex FuncPtn = new Regex(@"def[ \t]+(\w+\(.*\))\:");
+
         private void InitScriptingEngine()
         {
+            string script = Resources.BaseScript;
+
             Engine = IronPython.Hosting.Python.CreateEngine();
             Scope = Engine.CreateScope();
-            Source = Engine.CreateScriptSourceFromString(Script);
+            Source = Engine.CreateScriptSourceFromString(script);
 
             Scope.SetVariable("SE", this);
             Source.Execute(Scope);
-        }
 
+            MatchCollection matches = FuncPtn.Matches(script);
 
-        private void InitAutoCompleteList()
-        {
-            mAutoCompleteList = new List<string>()
+            foreach (Match m in matches)
             {
-                "rect(10,10)",
-                "distance",
-                "revOrder",
-                "group",
-                "ungroup",
-                "addLayer",
-                "move(0,0,0)",
-                "length()",
-                "insPoint()",
-                "cursor1()",
-                "scale(0.5)",
-                "find(4)",
-                "layerList"
-            };
+                string s = m.Groups[1].Value;
+                mAutoCompleteList.Add(s);
+            }
         }
 
         public void LayerList()

@@ -271,6 +271,7 @@
     <Resource Include="ResDict\Images\locked.png" />
     <Resource Include="ResDict\Images\unlocked.png" />
     <Resource Include="ResDict\Images\visible.png" />
+    <None Include="Resources\BaseScript.txt" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ResDict\Images\xy.png" />
