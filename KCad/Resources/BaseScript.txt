@@ -44,14 +44,9 @@ def segLen(len):
 def insPoint(x, y, z):
     SE.InsPoint(x, y, z)
 
-def getLastDownPoint():
-    return SE.GetLastDownPoint()
-
 def createCadPoint(x, y, z):
     return SE.CreatePoint(x, y, z)
 
-def test():
-    putMsg('Test!!')
-    p = getLastDownPoint()
-    putMsg(str(p.x) + ', ' + str(p.y) + ', ' + str(p.z))
-
+def getldp():
+    pt = SE.GetLastDownPoint()
+    return (pt.x, pt.y, pt.z)

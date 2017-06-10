@@ -156,7 +156,7 @@ namespace Plotter
             );
         }
 
-        private void Group()
+        public void Group()
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();
 
