@@ -220,9 +220,6 @@ namespace Plotter
                     a.LayerID = ID;
                     mFigureList.Add(a);
                 });
-
-            ja = (JArray)jo["rel_point_id_list"];
-            idList = JsonUtil.JsonIdListToList(ja);
         }
 
         public void sdump(DebugOut dout)
