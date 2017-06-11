@@ -393,7 +393,7 @@ namespace Plotter
             }
             catch (Exception e)
             {
-                Controller.InteractOut.print("error:" + e.Message);
+                Controller.InteractOut.print("error: " + e.Message);
             }
         }
     }
