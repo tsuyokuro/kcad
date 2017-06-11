@@ -82,6 +82,7 @@
             <pl:SelectModeConverter x:Key="SelModeConv"/>
             <pl:FigureTypeConverter x:Key="FigTypeConv"/>
             <pl:ViewModeConverter x:Key="ViewModeConv"/>
+            <pl:MeasureModeConverter x:Key="MeasureModeConv"/>
 
 
             <DataTemplate x:Key="AutoCompleteBoxItemTemplate">
@@ -237,6 +238,17 @@
                                 Binding FigureType,
                                 ConverterParameter=POINT,
                                 Converter={StaticResource FigTypeConv}
+                            }"
+                        />
+
+                        <RadioButton
+                            Template="{StaticResource MyTggleButtonTemplate}"
+                            Tag="POLY_LINE"
+                            Content="Measure" 
+                            IsChecked="{
+                                Binding MeasureMode,
+                                ConverterParameter=POLY_LINE,
+                                Converter={StaticResource MeasureModeConv}
                             }"
                         />
                     </StackPanel>

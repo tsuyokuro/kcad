@@ -15,6 +15,7 @@ namespace Plotter
 {
     public class SelectModeConverter : EnumBoolConverter<PlotterController.SelectModes> { }
     public class FigureTypeConverter : EnumBoolConverter<CadFigure.Types> { }
+    public class MeasureModeConverter : EnumBoolConverter<PlotterController.MeasureModes> { }
 
     public enum ViewModes
     {
@@ -129,6 +130,26 @@ namespace Plotter
             get
             {
                 return mFigureType;
+            }
+        }
+
+        private PlotterController.MeasureModes mMeasureMode = PlotterController.MeasureModes.NONE;
+
+        public PlotterController.MeasureModes MeasureMode
+        {
+            set
+            {
+                bool changed = UpdateMeasuerType(value);
+
+                if (changed)
+                {
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MeasureMode)));
+                }
+            }
+
+            get
+            {
+                return mMeasureMode;
             }
         }
 
@@ -632,6 +653,11 @@ namespace Plotter
             {
                 FigureType = si.CreatingFigureType;
             }
+
+            if (MeasureMode != si.MeasureMode)
+            {
+                MeasureMode = si.MeasureMode;
+            }
         }
 
         public void LayerListChanged(PlotterController sender, PlotterController.LayerListInfo layerListInfo)
@@ -927,17 +953,51 @@ namespace Plotter
 
             if (mFigureType != CadFigure.Types.NONE)
             {
+                MeasureMode = PlotterController.MeasureModes.NONE;
+
                 DrawContext dc = mPlotterView.StartDraw();
-                mController.startCreateFigure(mFigureType, dc);
+                mController.StartCreateFigure(mFigureType, dc);
                 mPlotterView.EndDraw();
             }
             else if (prev != CadFigure.Types.NONE)
             {
                 DrawContext dc = mPlotterView.StartDraw();
-                mController.endCreateFigure(dc);
+                mController.EndCreateFigure(dc);
                 mController.Clear(dc);
                 mController.Draw(dc);
                 mPlotterView.EndDraw();
+            }
+
+            return true;
+        }
+
+        private bool UpdateMeasuerType(PlotterController.MeasureModes newType)
+        {
+            var prev = mMeasureMode;
+
+            if (mMeasureMode == newType)
+            {
+                // 現在のタイプを再度選択したら解除する
+                mMeasureMode = PlotterController.MeasureModes.NONE;
+            }
+            else
+            {
+                mMeasureMode = newType;
+            }
+
+            if (mMeasureMode != PlotterController.MeasureModes.NONE)
+            {
+                FigureType = CadFigure.Types.NONE;
+                mController.StartMeasure(newType);
+            }
+            else if (prev != PlotterController.MeasureModes.NONE)
+            {
+                mController.EndMeasure();
+
+                DrawContext dc = StartDraw();
+                mController.Clear(dc);
+                mController.DrawAll(dc);
+                EndDraw();
             }
 
             return true;

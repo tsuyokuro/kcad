@@ -403,9 +403,39 @@ namespace Plotter
                     }
                     break;
 
+                case States.MEASURING:
+                    {
+                        LastDownPoint = mSnapPoint;
+                        CadPoint p = dc.UnitPointToCadPoint(mSnapScreenPoint);
+
+                        SetPointInMeasuring(dc, p);
+                        Draw(dc);
+
+                        PutMeasure();
+                    }
+                    break;
+
                 default:
                     break;
 
+            }
+        }
+
+        private void PutMeasure()
+        {
+            double d = CadUtil.AroundLength(MeasureFigure);
+
+            d = Math.Round(d, 4);
+
+            int cnt = MeasureFigure.PointCount;
+
+            if (d >= 10.0)
+            {
+                InteractOut.print("(" + cnt.ToString() + ") " + (d / 10.0).ToString() + "cm");
+            }
+            else
+            {
+                InteractOut.print("(" + cnt.ToString() + ") " + d.ToString() + "mm");
             }
         }
 
@@ -544,6 +574,12 @@ namespace Plotter
                         mPointSearcher.Check(dc, CreatingFigure.GetPointAt(0));
                     }
                 }
+
+                if (MeasureFigure != null)
+                {
+                    mPointSearcher.Check(dc, MeasureFigure.PointList);
+                }
+
 
                 // Search point
                 mPointSearcher.SearchAllLayer(dc, mDB);
@@ -693,6 +729,17 @@ namespace Plotter
                         }
                         break;
                     }
+                case States.MEASURING:
+                    {
+                        DrawAll(dc);
+
+                        if (MeasureFigure != null)
+                        {
+                            CadPoint p = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                            MeasureFigure.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
+                        }
+                        break;
+                    }
                 default:
                     DrawAll(dc);
                     break;
@@ -705,6 +752,47 @@ namespace Plotter
         {
             //Log.d("LDrag");
             MovePointer(pointer, dc, x, y);
+        }
+
+
+        private void SetPointInCreating(DrawContext dc, CadPoint p)
+        {
+            CreatingFigure.AddPointInCreating(dc, p);
+
+            CadFigure.States state = CreatingFigure.State;
+
+            if (state == CadFigure.States.FULL)
+            {
+                CreatingFigure.EndCreate(dc);
+
+                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
+                mHistoryManager.foward(ope);
+                CurrentLayer.addFigure(CreatingFigure);
+
+                NextState(dc);
+            }
+            else if (state == CadFigure.States.ENOUGH)
+            {
+                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
+                mHistoryManager.foward(ope);
+                CurrentLayer.addFigure(CreatingFigure);
+            }
+            else if (state == CadFigure.States.CONTINUE)
+            {
+                CadOpe ope = CadOpe.CreateAddPointOpe(
+                    CurrentLayer.ID,
+                    CreatingFigure.ID,
+                    CreatingFigure.PointCount - 1,
+                    ref p
+                    );
+
+                mHistoryManager.foward(ope);
+            }
+        }
+
+        private void SetPointInMeasuring(DrawContext dc, CadPoint p)
+        {
+            MeasureFigure.AddPointInCreating(dc, p);
         }
     }
 }

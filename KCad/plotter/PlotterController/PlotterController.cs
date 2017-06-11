@@ -26,6 +26,7 @@ namespace Plotter
             DRAGING_POINTS,
             START_CREATE,
             CREATING,
+            MEASURING,
         }
 
         public enum SelectModes
@@ -34,12 +35,19 @@ namespace Plotter
             OBJECT,
         }
 
+        public enum MeasureModes
+        {
+            NONE,
+            POLY_LINE,
+        }
+
         public struct StateInfo
         {
             public States State;
             public SelectModes SelectMode;
             public CadFigure.Types CreatingFigureType;
             public int CreatingFigurePointCnt;
+            public MeasureModes MeasureMode;
 
             public void set(PlotterController pc)
             {
@@ -52,6 +60,8 @@ namespace Plotter
                 {
                     CreatingFigurePointCnt = pc.CreatingFigure.PointCount;
                 }
+
+                MeasureMode = pc.MeasureMode;
             }
         }
 
@@ -119,6 +129,22 @@ namespace Plotter
                 return mCreatingFigType;
             }
         }
+
+        MeasureModes mMeasureMode = MeasureModes.NONE;
+
+        public MeasureModes MeasureMode
+        {
+            set
+            {
+                mMeasureMode = value;
+            }
+            get
+            {
+                return mMeasureMode;
+            }
+        }
+
+        private CadFigure MeasureFigure = null;
 
         private CadFigure CreatingFigure
         {
@@ -275,7 +301,7 @@ namespace Plotter
 
         #region Start and End creating figure
 
-        public void startCreateFigure(CadFigure.Types type, DrawContext dc)
+        public void StartCreateFigure(CadFigure.Types type, DrawContext dc)
         {
             State = States.START_CREATE;
             CreatingFigType = type;
@@ -286,7 +312,7 @@ namespace Plotter
             // So, at the moment, not yet a creation start.
         }
 
-        public void endCreateFigure(DrawContext dc)
+        public void EndCreateFigure(DrawContext dc)
         {
             CreatingFigType = CadFigure.Types.NONE;
 
@@ -310,6 +336,20 @@ namespace Plotter
             }
 
             NextState(dc);
+        }
+
+        public void StartMeasure(MeasureModes mode)
+        {
+            State = States.MEASURING;
+            MeasureMode = mode;
+            MeasureFigure = new CadFigure(CadFigure.Types.POLY_LINES);
+        }
+
+        public void EndMeasure()
+        {
+            State = States.SELECT;
+            MeasureMode = MeasureModes.NONE;
+            MeasureFigure = null;
         }
 
         public void closeFigure(DrawContext dc)
@@ -393,6 +433,11 @@ namespace Plotter
             }
 
             dc.Drawing.Draw(TempFigureList, DrawTools.PEN_TEST_FIGURE);
+
+            if (MeasureFigure != null)
+            {
+                MeasureFigure.Draw(dc, DrawTools.PEN_MEASURE_FIGURE);
+            }
         }
 
         public void DrawGrid(DrawContext dc)
@@ -456,7 +501,7 @@ namespace Plotter
                 {
                     CadFigure.Types type = CreatingFigure.Type;
                     CreatingFigure = null;
-                    startCreateFigure(type, dc);
+                    StartCreateFigure(type, dc);
                 }
                 else
                 {
@@ -465,41 +510,6 @@ namespace Plotter
                     State = States.SELECT;
                     NotifyStateChange();
                 }
-            }
-        }
-
-        private void SetPointInCreating(DrawContext dc, CadPoint p)
-        {
-            CreatingFigure.AddPointInCreating(dc, p);
-
-            CadFigure.States state = CreatingFigure.State;
-
-            if (state == CadFigure.States.FULL)
-            {
-                CreatingFigure.EndCreate(dc);
-
-                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
-                mHistoryManager.foward(ope);
-                CurrentLayer.addFigure(CreatingFigure);
-
-                NextState(dc);
-            }
-            else if (state == CadFigure.States.ENOUGH)
-            {
-                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
-                mHistoryManager.foward(ope);
-                CurrentLayer.addFigure(CreatingFigure);
-            }
-            else if (state == CadFigure.States.CONTINUE)
-            {
-                CadOpe ope = CadOpe.CreateAddPointOpe(
-                    CurrentLayer.ID,
-                    CreatingFigure.ID,
-                    CreatingFigure.PointCount - 1,
-                    ref p
-                    );
-
-                mHistoryManager.foward(ope);
             }
         }
 
@@ -892,7 +902,7 @@ namespace Plotter
         {
             if (State == States.START_CREATE || State == States.CREATING)
             {
-                startCreateFigure(CadFigure.Types.NONE, dc);
+                StartCreateFigure(CadFigure.Types.NONE, dc);
                 Clear(dc);
                 DrawAll(dc);
                 NotifyStateChange();
@@ -906,6 +916,16 @@ namespace Plotter
 
                 Clear(dc);
                 DrawAll(dc);
+            }
+            else if (State == States.MEASURING)
+            {
+                State = States.SELECT;
+                MeasureMode = MeasureModes.NONE;
+                MeasureFigure = null;
+
+                Clear(dc);
+                DrawAll(dc);
+                NotifyStateChange();
             }
         }
 

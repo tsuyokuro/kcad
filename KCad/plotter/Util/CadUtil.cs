@@ -108,6 +108,42 @@ namespace Plotter
             return ret;
         }
 
+        public static double AroundLength(CadFigure fig)
+        {
+            if (fig == null)
+            {
+                return 0;
+            }
+
+            int cnt = fig.PointCount;
+
+            if (cnt < 2)
+            {
+                return 0;
+            }
+
+            List<CadPoint> list = fig.PointList;
+
+            CadPoint p0;
+            CadPoint p1;
+
+            CadPoint pd;
+
+            double d = 0;
+
+            for (int i = 0; i < cnt - 1; i++)
+            {
+                p0 = list[i];
+                p1 = list[i + 1];
+
+                pd = p1 - p0;
+
+                d += pd.Norm();
+            }
+
+            return d;
+        }
+
 
         public static void BezierPoints(
             CadPoint p0, CadPoint p1, CadPoint p2, int s, List<CadPoint> ret)

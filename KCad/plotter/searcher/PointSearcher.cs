@@ -139,6 +139,14 @@ namespace Plotter
             CheckFigPoint(dc, pt, 0, null, 0, MarkPoint.Types.IDEPEND_POINT);
         }
 
+        public void Check(DrawContext dc, List<CadPoint> list)
+        {
+            foreach(CadPoint pt in list)
+            {
+                Check(dc, pt);
+            }
+        }
+
         private void CheckFigure(DrawContext dc, CadLayer layer, CadFigure fig)
         {
             IReadOnlyList<CadPoint> pointList = fig.PointList;
