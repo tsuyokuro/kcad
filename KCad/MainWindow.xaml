@@ -26,6 +26,7 @@
                 <ResourceDictionary Source="ResDict/ButtonStyle.xaml"/>
                 <ResourceDictionary Source="ResDict/ImageCheckBoxs.xaml"/>
                 <ResourceDictionary Source="ResDict/MenuStyle.xaml"/>
+                <ResourceDictionary Source="ResDict/ScrollBarStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
@@ -95,7 +96,7 @@
                 <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
                 <Setter Property="Background" Value="{StaticResource BGColor}"/>
             </Style>-->
-            
+
         </ResourceDictionary>
 
     </Window.Resources>
@@ -285,38 +286,42 @@
 
                     <Grid x:Name="LayerListPanel" Height="250">
 
-                        <ListBox
-                            x:Name="LayerListView"
-                            ItemsSource="{Binding}"
-                            SelectionMode="Single"
-                            ItemContainerStyle="{StaticResource SimpleListBoxItem}"
-                            BorderBrush="{StaticResource BoarderColor}"
-                            Background="{StaticResource BaseColor}"
-                            >
+                        <ScrollViewer Grid.Row="0"
+                                  Style="{StaticResource CustomScrollViewerStyle}"
+                                  VerticalScrollBarVisibility = "Auto">
 
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto"/>
-                                            <RowDefinition Height="auto"/>
-                                        </Grid.RowDefinitions>
+                            <ListBox
+                                x:Name="LayerListView"
+                                ItemsSource="{Binding}"
+                                SelectionMode="Single"
+                                ItemContainerStyle="{StaticResource SimpleListBoxItem}"
+                                BorderBrush="{StaticResource BoarderColor}"
+                                Background="{StaticResource BaseColor}"
+                                >
 
-                                        <StackPanel Grid.Row="0" Orientation="Horizontal" >
-                                            <CheckBox IsChecked="{Binding Path=Visible}"
-                                                      Style="{StaticResource VisibleCheckBox}"
-                                                      Foreground="White"/>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                            </Grid.RowDefinitions>
 
-                                            <CheckBox IsChecked="{Binding Path=Locked}"
-                                                      Style="{StaticResource LockedCheckBox}"
-                                                      Foreground="White"/>
-                                        </StackPanel>
-                                        <TextBlock Grid.Row="1" Margin="4" Text="{Binding Path=Name}" />
-                                    </Grid>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                                            <StackPanel Grid.Row="0" Orientation="Horizontal" >
+                                                <CheckBox IsChecked="{Binding Path=Visible}"
+                                                          Style="{StaticResource VisibleCheckBox}"
+                                                          Foreground="White"/>
 
+                                                <CheckBox IsChecked="{Binding Path=Locked}"
+                                                          Style="{StaticResource LockedCheckBox}"
+                                                          Foreground="White"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Row="1" Margin="4" Text="{Binding Path=Name}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ScrollViewer>
                     </Grid>
 
                 </StackPanel>
@@ -348,14 +353,17 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <ListBox Grid.Row="0"
+                    <ScrollViewer Grid.Row="0"
+                                  Style="{StaticResource CustomScrollViewerStyle}"
+                                  VerticalScrollBarVisibility = "Auto">
+                        <ListBox 
                              x:Name="listMessage"
                              Foreground="{StaticResource MsgTextColor}"
                              Background="{StaticResource MsgBGColor}"
                              ItemContainerStyle="{StaticResource MsgListBoxItem}"
                              BorderThickness="0"
                              Padding="8,0,0,0"/>
-
+                    </ScrollViewer>
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>

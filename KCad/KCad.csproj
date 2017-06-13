@@ -167,6 +167,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ResDict\ScrollBarStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ResDict\ToggleBtnRadio.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
