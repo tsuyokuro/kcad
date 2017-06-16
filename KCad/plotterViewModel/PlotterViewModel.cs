@@ -1061,10 +1061,9 @@ namespace Plotter
             return true;
         }
 
-        public void SetupTextCommandView(AutoCompleteBox textBox)
+        public void SetupTextCommandView(AutoCompleteTextBox textBox)
         {
-            textBox.ItemsSource = Controller.ScriptEnv.AutoCompleteList;
-            textBox.ItemFilter = ScriptFilter;
+            textBox.CandidateList = Controller.ScriptEnv.AutoCompleteList;
         }
 
         public AutoCompleteFilterPredicate<object> ScriptFilter

@@ -141,6 +141,8 @@ namespace KCad
         {
             ViewModel.SetupTextCommandView(textCommand);
 
+            textCommand.Determine += TextCommand_Determine;
+
             textCommand.KeyDown += textCommand_KeyDown;
             textCommand.KeyUp += textCommand_KeyUp;
         }
@@ -154,26 +156,26 @@ namespace KCad
             }
         }
 
+        private void TextCommand_Determine(object sender, AutoCompleteTextBox.TextEventArgs e)
+        {
+            var s = e.Text;
+
+            textCommand.Text = "";
+
+            if (s.Length > 0)
+            {
+                ViewModel.TextCommand(s);
+                viewContainer.Focus();
+            }
+        }
+
         private void textCommand_KeyDown(object sender, KeyEventArgs e)
         {
         }
 
         private void textCommand_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                var s = textCommand.Text;
-
-                textCommand.Text = "";
-
-                if (s.Length > 0)
-                {
-                    ViewModel.TextCommand(s);
-                }
-
-                viewContainer.Focus();
-            }
-            else if (e.Key == Key.Up)
+            if (e.Key == Key.Up)
             {
                 if (!textCommand.IsDropDownOpen)
                 {

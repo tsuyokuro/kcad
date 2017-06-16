@@ -8,6 +8,7 @@
         xmlns:properties="clr-namespace:KCad.Properties"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:pl="clr-namespace:Plotter"
+        xmlns:me="clr-namespace:KCad"
         
         mc:Ignorable="d"
         Title="KCad" Height="732" Width="1177.667"
@@ -380,7 +381,7 @@
                         </Border>
 
 
-                        <toolkit:AutoCompleteBox Grid.Column="1"
+                        <me:AutoCompleteTextBox Grid.Column="1"
                                 x:Name="textCommand"
                                 BorderThickness="1,1,1,1"
                                 BorderBrush="{StaticResource BoarderColor}"

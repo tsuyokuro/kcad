@@ -122,6 +122,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AutoCompleteTextBox.cs" />
     <Compile Include="plotter\PlotterSettings.cs" />
     <Compile Include="plotter\Util\CadRuler.cs" />
     <Compile Include="SnapSettingsDialog.xaml.cs">
