@@ -142,9 +142,6 @@ namespace KCad
             ViewModel.SetupTextCommandView(textCommand);
 
             textCommand.Determine += TextCommand_Determine;
-
-            textCommand.KeyDown += textCommand_KeyDown;
-            textCommand.KeyUp += textCommand_KeyUp;
         }
 
         public void RunTextCommandButtonClicked(object sender, RoutedEventArgs e)
@@ -153,6 +150,7 @@ namespace KCad
             if (s.Length > 0)
             {
                 ViewModel.TextCommand(s);
+                textCommand.History.Add(s);
             }
         }
 
@@ -165,33 +163,8 @@ namespace KCad
             if (s.Length > 0)
             {
                 ViewModel.TextCommand(s);
+                textCommand.History.Add(s);
                 viewContainer.Focus();
-            }
-        }
-
-        private void textCommand_KeyDown(object sender, KeyEventArgs e)
-        {
-        }
-
-        private void textCommand_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Up)
-            {
-                if (!textCommand.IsDropDownOpen)
-                {
-                    string s = ViewModel.CommandHistory.Rewind();
-                    textCommand.Text = s;
-
-                }
-            }
-            else if (e.Key == Key.Down)
-            {
-                if (!textCommand.IsDropDownOpen)
-                {
-                    string s = ViewModel.CommandHistory.Forward();
-                    textCommand.Text = s;
-
-                }
             }
         }
         #endregion

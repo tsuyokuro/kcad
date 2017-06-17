@@ -41,8 +41,8 @@ def move(x, y, z):
 def segLen(len):
     SE.SegLen(len)
 
-def insPoint(x, y, z):
-    SE.InsPoint(x, y, z)
+def insPoint():
+    SE.InsPoint()
 
 def createCadPoint(x, y, z):
     return SE.CreatePoint(x, y, z)

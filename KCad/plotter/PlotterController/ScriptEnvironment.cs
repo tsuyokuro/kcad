@@ -373,7 +373,7 @@ namespace Plotter
         public void Area()
         {
             double area = Controller.Area();
-            Controller.InteractOut.print("Area:" + (area / 100).ToString() + "(㎠)");
+            Controller.InteractOut.print("Area: " + (area / 100).ToString() + " (㎠)");
         }
 
         public void command(string s)
