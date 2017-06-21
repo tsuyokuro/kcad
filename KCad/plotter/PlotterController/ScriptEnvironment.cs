@@ -101,11 +101,22 @@ namespace Plotter
 
             foreach (MarkPoint mp in list)
             {
-                string s = "fig{id:" + mp.FigureID.ToString() + ";idx:" + mp.PointIndex.ToString() + ";}";
+                string s = "fig{ id: " + mp.FigureID.ToString() + "; idx: " + mp.PointIndex.ToString() + "; }";
                 Controller.InteractOut.print(s);
             }
         }
 
+        public void SelectFigure(uint id)
+        {
+            CadFigure fig = Controller.DB.getFigure(id);
+
+            if (fig == null)
+            {
+                return;
+            }
+
+            fig.Select();
+        }
 
         Regex FigPtn = new Regex(@"fig[ ]*{[ ]*id\:[ ]*([0-9]+)[ ]*;[ ]*idx\:[ ]*([0-9]+)[ ]*;[ ]*}[ ]*");
 
@@ -374,6 +385,12 @@ namespace Plotter
         {
             double area = Controller.Area();
             Controller.InteractOut.print("Area: " + (area / 100).ToString() + " (㎠)");
+        }
+
+        public CadPoint Centroid()
+        {
+            Centroid c = Controller.Centroid();
+            return c.Point;
         }
 
         public void command(string s)

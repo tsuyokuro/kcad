@@ -406,7 +406,7 @@ namespace Plotter
             return true;
         }
 
-        public void AddCentroid(DrawContext dc)
+        public Centroid Centroid()
         {
             List<uint> idList = GetSelectedFigIDList();
 
@@ -433,6 +433,14 @@ namespace Plotter
 
                 cent = CadUtil.MergeCentroid(cent, t, false);
             }
+
+            return cent;
+        }
+
+
+        public void AddCentroid(DrawContext dc)
+        {
+            Centroid cent = Centroid();
 
             if (cent.IsInvalid)
             {

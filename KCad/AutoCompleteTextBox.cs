@@ -163,8 +163,6 @@ namespace KCad
                 }
             }
 
-            Console.WriteLine("CandidateListBox_PreviewLostKeyboardFocus focus:" + focus.ToString());
-
             if (!focus)
             {
                 ClosePopup();
