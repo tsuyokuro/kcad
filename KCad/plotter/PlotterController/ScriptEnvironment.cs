@@ -249,6 +249,55 @@ namespace Plotter
             }
         }
 
+        public void MoveCursor(double x, double y, double z)
+        {
+            Controller.LastDownPoint.x += x;
+            Controller.LastDownPoint.y += y;
+            Controller.LastDownPoint.z += z;
+        }
+
+        public void MoveCursorAbs(double x, double y, double z)
+        {
+            Controller.LastDownPoint.x = x;
+            Controller.LastDownPoint.y = y;
+            Controller.LastDownPoint.z = z;
+        }
+
+        public void Line(double x, double y, double z)
+        {
+            CadPoint p0 = Controller.LastDownPoint;
+
+            CadPoint p1 = default(CadPoint);
+
+            p1 = p0;
+
+            p1.x += x;
+            p1.y += y;
+            p1.z += z;
+
+            CadFigure fig = Controller.DB.newFigure(CadFigure.Types.POLY_LINES);
+            fig.AddPoint(p0);
+            fig.AddPoint(p1);
+
+            fig.EndCreate(Controller.CurrentDC);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+            Controller.CurrentLayer.addFigure(fig);
+
+
+            Controller.LastDownPoint = p1;
+        }
+
+        public void AddPoint()
+        {
+            AddPoint(
+                Controller.LastDownPoint.x,
+                Controller.LastDownPoint.y,
+                Controller.LastDownPoint.z);
+
+        }
+
         public void AddPoint(double x, double y, double z)
         {
             CadPoint p = default(CadPoint);
