@@ -3,6 +3,9 @@ using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Plotter
@@ -440,6 +443,50 @@ namespace Plotter
         {
             Centroid c = Controller.Centroid();
             return c.Point;
+        }
+
+        public dynamic ExecPartial(string fname)
+        {
+            Assembly myAssembly = Assembly.GetEntryAssembly();
+
+            string str = "";
+
+            string path = myAssembly.Location;
+
+            path = Path.GetDirectoryName(path) + @"\script\" + fname;
+
+
+            StreamReader sr = new StreamReader(
+                    path, Encoding.GetEncoding("Shift_JIS"));
+
+            str = sr.ReadToEnd();
+
+            sr.Close();
+
+            return Engine.Execute(str, Scope);
+        }
+
+        public CadPoint NewPoint()
+        {
+            return default(CadPoint);
+        }
+
+        public CadFigure NewPolyLines()
+        {
+            CadFigure fig = Controller.DB.newFigure(CadFigure.Types.POLY_LINES);
+            return fig;
+        }
+
+        public void EndCreateFigure(CadFigure fig)
+        {
+            fig.EndCreate(Controller.CurrentDC);
+        }
+
+        public void AddFigure(CadFigure fig)
+        {
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+            Controller.CurrentLayer.addFigure(fig);
         }
 
         public void command(string s)

@@ -63,3 +63,5 @@ def line(x, y, z):
 def selFig(id):
     SE.SelectFigure(id)
 
+def execPartial(fname):
+    return SE.ExecPartial(fname)
