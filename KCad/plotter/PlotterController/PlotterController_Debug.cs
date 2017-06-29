@@ -97,7 +97,7 @@ namespace Plotter
 
             CadPoint pt = LastDownPoint;
 
-            CrossInfo ret = CadUtil.getPerpCrossSeg2D(a, b, pt);
+            CrossInfo ret = CadUtil.PerpendicularCrossSeg2D(a, b, pt);
 
             if (ret.IsCross)
             {
@@ -112,6 +112,149 @@ namespace Plotter
             Clear(dc);
             Draw(dc);
         }
+
+        private void test_crossPlane(DrawContext dc)
+        {
+            if (mSelList.List.Count == 0)
+            {
+                return;
+            }
+
+            SelectItem si = mSelList.List[0];
+
+            CadFigure fig = mDB.getFigure(si.FigureID);
+            
+            if (fig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return;
+            }
+
+            if (fig.PointCount < 3)
+            {
+                return;
+            }
+
+            CadPoint a = LastDownPoint;
+
+            CadPoint normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
+
+            if (normal.IsZero())
+            {
+                return;
+            }
+
+            CadPoint cp = CadUtil.CrossPlane(a, fig.PointList[0], normal);
+
+            CadFigure line = DB.newFigure(CadFigure.Types.POLY_LINES);
+
+            line.AddPoint(a);
+            line.AddPoint(cp);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, line.ID);
+            HistoryManager.foward(ope);
+            CurrentLayer.addFigure(line);
+        }
+
+        private void test_crossPlane2(DrawContext dc)
+        {
+            if (mSelList.List.Count == 0)
+            {
+                return;
+            }
+
+            SelectItem si = mSelList.List[0];
+
+            CadFigure fig = mDB.getFigure(si.FigureID);
+
+            if (fig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return;
+            }
+
+            if (fig.PointCount < 3)
+            {
+                return;
+            }
+
+            CadPoint a = LastDownPoint;
+            CadPoint b = a + CadPoint.Create(dc.ViewDir);
+
+            CadPoint normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
+
+            if (normal.IsZero())
+            {
+                return;
+            }
+
+            CadPoint cp = CadUtil.CrossPlane(a, b, fig.PointList[0], normal);
+
+            if (!cp.Valid)
+            {
+                return;
+            }
+
+            CadFigure line = DB.newFigure(CadFigure.Types.POLY_LINES);
+
+            line.AddPoint(a);
+            line.AddPoint(cp);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, line.ID);
+            HistoryManager.foward(ope);
+            CurrentLayer.addFigure(line);
+        }
+
+        private void test_crossPlane3(DrawContext dc)
+        {
+            if (mSelList.List.Count == 0)
+            {
+                return;
+            }
+
+            SelectItem si = mSelList.List[0];
+
+            CadFigure fig = mDB.getFigure(si.FigureID);
+
+            if (fig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return;
+            }
+
+            if (fig.PointCount < 3)
+            {
+                return;
+            }
+
+            CadPoint a = dc.CadPointToUnitPoint(LastDownPoint);
+            CadPoint b = a;
+            b.z -= 100;
+
+            a = dc.UnitPointToCadPoint(a);
+            b = dc.UnitPointToCadPoint(b);
+
+            CadPoint normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
+
+            if (normal.IsZero())
+            {
+                return;
+            }
+
+            CadPoint cp = CadUtil.CrossPlane(a, b, fig.PointList[0], normal);
+
+            if (!cp.Valid)
+            {
+                return;
+            }
+
+            CadFigure line = DB.newFigure(CadFigure.Types.POLY_LINES);
+
+            line.AddPoint(a);
+            line.AddPoint(cp);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, line.ID);
+            HistoryManager.foward(ope);
+            CurrentLayer.addFigure(line);
+        }
+
 
         private void test_areaCollector()
         {
@@ -354,6 +497,21 @@ namespace Plotter
             else if (s == "test isPointInTriangle")
             {
                 test_isPointInTriangle3D(dc);
+            }
+
+            else if (s == "test crossPlane")
+            {
+                test_crossPlane(dc);
+            }
+
+            else if (s == "test crossPlane2")
+            {
+                test_crossPlane2(dc);
+            }
+
+            else if (s == "test crossPlane3")
+            {
+                test_crossPlane3(dc);
             }
 
             else if (s == "dump figv")

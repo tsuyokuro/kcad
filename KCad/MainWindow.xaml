@@ -231,7 +231,6 @@
                             }"
                         />
 
-
                         <RadioButton
                             Template="{StaticResource MyTggleButtonTemplate}"
                             Tag="POINT"
@@ -242,6 +241,19 @@
                                 Converter={StaticResource FigTypeConv}
                             }"
                         />
+
+                        <RadioButton
+                            Template="{StaticResource MyTggleButtonTemplate}"
+                            Tag="DIMENTION_LINE"
+                            Content="Dimention" 
+                            IsChecked="{
+                                Binding FigureType,
+                                ConverterParameter=DIMENTION_LINE,
+                                Converter={StaticResource FigTypeConv}
+                            }"
+                        />
+
+                        <Label Height="4"/>
 
                         <RadioButton
                             Template="{StaticResource MyTggleButtonTemplate}"

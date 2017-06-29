@@ -28,7 +28,7 @@ namespace Plotter
             RulerInfo ret = default(RulerInfo);
             CrossInfo ci = default(CrossInfo);
 
-            ci = CadUtil.getPerpCrossLine(P0, P1, p);
+            ci = CadUtil.PerpendicularCrossLine(P0, P1, p);
 
             double d = (ci.CrossPoint - p).Norm();
 

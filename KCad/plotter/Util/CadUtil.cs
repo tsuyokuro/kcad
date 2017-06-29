@@ -450,7 +450,7 @@ namespace Plotter
         }
 
         // 点pから線分abに向かう垂線との交点を求める
-        public static CrossInfo getPerpCrossSeg(CadPoint a, CadPoint b, CadPoint p)
+        public static CrossInfo PerpendicularCrossSeg(CadPoint a, CadPoint b, CadPoint p)
         {
             CrossInfo ret = default(CrossInfo);
 
@@ -490,7 +490,7 @@ namespace Plotter
         }
 
         // 点pから線分abに向かう垂線との交点を求める2D
-        public static CrossInfo getPerpCrossSeg2D(CadPoint a, CadPoint b, CadPoint p)
+        public static CrossInfo PerpendicularCrossSeg2D(CadPoint a, CadPoint b, CadPoint p)
         {
             CrossInfo ret = default(CrossInfo);
 
@@ -530,9 +530,15 @@ namespace Plotter
 
 
         // 点pから直線abに向かう垂線との交点を求める
-        public static CrossInfo getPerpCrossLine(CadPoint a, CadPoint b, CadPoint p)
+        public static CrossInfo PerpendicularCrossLine(CadPoint a, CadPoint b, CadPoint p)
         {
             CrossInfo ret = default(CrossInfo);
+
+            if (a.coordEquals(b))
+            {
+                return ret;
+            }
+
 
             CadPoint ab = b - a;
             CadPoint ap = p - a;
@@ -547,11 +553,13 @@ namespace Plotter
             ret.CrossPoint.y = a.y + (unit_ab.y * dist_ax);
             ret.CrossPoint.z = a.z + (unit_ab.z * dist_ax);
 
+            ret.IsCross = true;
+
             return ret;
         }
 
         // 点pから直線abに向かう垂線との交点を求める2D
-        public static CrossInfo getPerpCrossLine2D(CadPoint a, CadPoint b, CadPoint p)
+        public static CrossInfo PerpendicularCrossLine2D(CadPoint a, CadPoint b, CadPoint p)
         {
             CrossInfo ret = default(CrossInfo);
 
@@ -708,6 +716,53 @@ namespace Plotter
 
             return rect;
         }
-    }
 
+        // aに最も近い平面上の点を求める
+        // a: チェック対象
+        // p: 平面上の任意の点
+        // normal: 平面の法線
+        public static CadPoint CrossPlane(CadPoint a, CadPoint p, CadPoint normal)
+        {
+            CadPoint pa = a - p;
+    
+            // 法線とpaの内積をとる
+            // 法線の順方向に点Aがあれば d>0 逆方向だと d<0
+            double d = CadMath.InnerProduct(normal, pa);
+
+            //内積値から平面上の最近点を求める
+            CadPoint cp = default(CadPoint);
+            cp.x = a.x - (normal.x * d);
+            cp.y = a.y - (normal.y * d);
+            cp.z = a.z - (normal.z * d);
+
+            return cp;
+        }
+
+        public static CadPoint CrossPlane(CadPoint a, CadPoint b, CadPoint p, CadPoint normal)
+        {
+            CadPoint cp = default(CadPoint);
+
+            CadPoint e = b - a;
+
+            double de = CadMath.InnerProduct(normal, e);
+
+            if (0.0 == de)
+            {
+                // 平面と直線は平行
+                cp.Valid = false;
+                return cp;
+            }
+
+            cp.Valid = true;
+
+            double d = CadMath.InnerProduct(normal, p);
+            double t = (d - CadMath.InnerProduct(normal, a)) / de;
+
+            cp = a + (e * t);
+
+            return cp;
+        }
+
+
+    }
 }

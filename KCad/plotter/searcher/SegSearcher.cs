@@ -110,7 +110,7 @@ namespace Plotter
             CadPoint pa = dc.CadPointToUnitPoint(a);
             CadPoint pb = dc.CadPointToUnitPoint(b);
 
-            CrossInfo ret = CadUtil.getPerpCrossSeg2D(pa, pb, TargetPoint);
+            CrossInfo ret = CadUtil.PerpendicularCrossSeg2D(pa, pb, TargetPoint);
 
             if (!ret.IsCross)
             {
@@ -130,7 +130,7 @@ namespace Plotter
             if (dist < minDist)
             {
                 CadPoint tp = dc.UnitPointToCadPoint(TargetPoint);
-                CrossInfo ret3d = CadUtil.getPerpCrossLine(a, b, tp);
+                CrossInfo ret3d = CadUtil.PerpendicularCrossLine(a, b, tp);
 
                 seg.LayerID = layerID;
                 seg.Figure = fig;
@@ -286,6 +286,7 @@ namespace Plotter
                 case CadFigure.Types.LINE:
                 case CadFigure.Types.POLY_LINES:
                 case CadFigure.Types.RECT:
+                case CadFigure.Types.DIMENTION_LINE:
                     CheckSegs(dc, layer, fig);
                     break;
                 case CadFigure.Types.CIRCLE:

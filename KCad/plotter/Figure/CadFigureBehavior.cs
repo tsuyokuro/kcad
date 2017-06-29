@@ -60,6 +60,21 @@ namespace Plotter
             {
                 return fig.PointList;
             }
+
+            public virtual void StartEdit(CadFigure fig)
+            {
+
+            }
+
+            public virtual void EndEdit(CadFigure fig)
+            {
+
+            }
+
+            public virtual void CancelEdit(CadFigure fig)
+            {
+
+            }
         }
 
         #region Nop Behavior

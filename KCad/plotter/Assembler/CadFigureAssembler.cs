@@ -203,7 +203,7 @@ namespace Plotter
         {
             ProcResult.clear();
 
-            var ci = CadUtil.getPerpCrossSeg(seg.pA, seg.pB, p);
+            var ci = CadUtil.PerpendicularCrossSeg(seg.pA, seg.pB, p);
 
             if (!ci.IsCross)
             {

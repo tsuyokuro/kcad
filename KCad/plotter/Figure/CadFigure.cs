@@ -22,6 +22,7 @@ namespace Plotter
             CIRCLE,
             POINT,
             GROUP,
+            DIMENTION_LINE,
             MAX,
         }
 
@@ -129,6 +130,7 @@ namespace Plotter
             BehaviorTbl[(int)Types.CIRCLE] = new CadFigureCircle();
             BehaviorTbl[(int)Types.POINT] = new CadFigurePoint();
             BehaviorTbl[(int)Types.GROUP] = new CadNopBehavior();
+            BehaviorTbl[(int)Types.DIMENTION_LINE] = new CadFigureDimLine();
         }
 
         public CadFigure()
@@ -274,6 +276,8 @@ namespace Plotter
         {
             if (Locked) return;
 
+            Behavior.StartEdit(this);
+
             if (mStoreList != null)
             {
                 return;
@@ -287,6 +291,8 @@ namespace Plotter
         {
             if (Locked) return null;
 
+            Behavior.EndEdit(this);
+
             DiffData diff = DiffData.create(this);
             mStoreList = null;
             return diff;
@@ -295,6 +301,8 @@ namespace Plotter
         public void CancelEdit()
         {
             if (Locked) return;
+
+            Behavior.CancelEdit(this);
 
             if (mStoreList == null)
             {

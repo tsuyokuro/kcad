@@ -152,7 +152,7 @@ namespace Plotter
             PenTbl[PEN_CURSOR]              = new PenHolder(Pens.LightBlue, false);
             PenTbl[PEN_CURSOR2]             = new PenHolder(Pens.DarkSlateBlue, false);
             PenTbl[PEN_DEFAULT_FIGURE]      = new PenHolder(Pens.White, false);
-            PenTbl[PEN_TEMP_FIGURE]         = new PenHolder(Pens.Blue, false);
+            PenTbl[PEN_TEMP_FIGURE]         = new PenHolder(Pens.CadetBlue, false);
             PenTbl[PEN_POINT_HIGHTLITE]     = new PenHolder(Pens.Orange, false);
             PenTbl[PEN_MATCH_FIGURE]        = new PenHolder(Pens.Red, false);
             PenTbl[PEN_MATCH_SEG]           = new PenHolder(Pens.Green, false);
@@ -231,7 +231,7 @@ namespace Plotter
             GLPenTbl[PEN_CURSOR]            = new GLPen(Pens.LightBlue.Color, width);
             GLPenTbl[PEN_CURSOR2]           = new GLPen(Pens.DarkSlateBlue.Color, width);
             GLPenTbl[PEN_DEFAULT_FIGURE]    = new GLPen(Pens.White.Color, width);
-            GLPenTbl[PEN_TEMP_FIGURE]       = new GLPen(Pens.Blue.Color, width);
+            GLPenTbl[PEN_TEMP_FIGURE]       = new GLPen(Pens.CadetBlue.Color, width);
             GLPenTbl[PEN_POINT_HIGHTLITE]   = new GLPen(Pens.BlueViolet.Color, width);
             GLPenTbl[PEN_MATCH_FIGURE]      = new GLPen(Pens.Red.Color, width);
             GLPenTbl[PEN_MATCH_SEG]         = new GLPen(Pens.Green.Color, width);

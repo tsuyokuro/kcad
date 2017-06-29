@@ -11,6 +11,10 @@ namespace Plotter
         public class CadFigurePolyLines : CadFigureBehavior
         {
             // Do not have data member.
+            //
+            // CadFigureのstaticなtableで管理されるのでデータメンバを持っては
+            // いけません
+            //
 
             public override States GetState(CadFigure fig)
             {
