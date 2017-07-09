@@ -763,6 +763,30 @@ namespace Plotter
             return cp;
         }
 
+        public static void Dump(DebugOut dout, Vector4d v, string prefix)
+        {
+            dout.print(prefix);
+            dout.println("{");
+            dout.Indent++;
+            dout.println("x:" + v.X.ToString());
+            dout.println("y:" + v.Y.ToString());
+            dout.println("z:" + v.Z.ToString());
+            dout.println("w:" + v.W.ToString());
+            dout.Indent--;
+            dout.println("}");
+        }
 
+        public static void Dump(DebugOut o, UMatrix4 m, string prefix)
+        {
+            o.print(prefix);
+            o.println("{");
+            o.Indent++;
+            o.println(m.M11.ToString() + "," + m.M12.ToString() + "," + m.M13.ToString() + "," + m.M14.ToString());
+            o.println(m.M21.ToString() + "," + m.M22.ToString() + "," + m.M23.ToString() + "," + m.M24.ToString());
+            o.println(m.M31.ToString() + "," + m.M32.ToString() + "," + m.M33.ToString() + "," + m.M34.ToString());
+            o.println(m.M41.ToString() + "," + m.M42.ToString() + "," + m.M43.ToString() + "," + m.M44.ToString());
+            o.Indent--;
+            o.println("}");
+        }
     }
 }

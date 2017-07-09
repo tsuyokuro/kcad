@@ -21,11 +21,13 @@ namespace Plotter
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
+            /*
             mViewMatrix = UMatrixs.ViewXY;
             mViewMatrixInv = UMatrixs.ViewXYInv;
+            */
 
-            mProjectionMatrix = UMatrixs.Unit;
-            mProjectionMatrixInv = UMatrixs.Unit;
+            mProjectionMatrix = UMatrix4.Unit;
+            mProjectionMatrixInv = UMatrix4.Unit;
 
             mDrawing = new DrawingGDI(this);
         }

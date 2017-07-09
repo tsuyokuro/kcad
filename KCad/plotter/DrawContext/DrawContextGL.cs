@@ -23,7 +23,9 @@ namespace Plotter
 
         public DrawContextGL()
         {
-            WoldScale = 0.2f;
+            //WoldScale = 0.2f;
+
+            WoldScale = 1.0f;
             Tools.Setup(DrawTools.ToolsType.DARK_GL);
 
             mDrawing = new DrawingGL(this);
@@ -31,13 +33,13 @@ namespace Plotter
             Eye = Vector3d.Zero;
             Eye.X = 0.0;
             Eye.Y = 0.0;
-            Eye.Z = 40.0;
+            Eye.Z = 200.0;
 
             LookAt = Vector3d.Zero;
             UpVector = Vector3d.UnitY;
 
-            ProjectionNear = 10.0;
-            ProjectionFar = 10000.0;
+            ProjectionNear = 80.0;
+            ProjectionFar = 1000.0;
 
 
             mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
@@ -121,60 +123,70 @@ namespace Plotter
             pt *= WoldScale;
 
             // 透視変換用にWが必要なので、Vector4に変換
-            Vector4d ptv = (Vector4d)pt;
+            Vector4d wv = (Vector4d)pt;
 
-            ptv.W = 1.0f;
+            wv.W = 1.0f;
 
-            ptv = ptv * mViewMatrix;
-            ptv = ptv * mProjectionMatrix;
+            Vector4d sv = wv * mViewMatrix;
+            Vector4d pv = sv * mProjectionMatrix;
 
-            ptv.X /= ptv.W;
-            ptv.Y /= ptv.W;
-            ptv.Z /= ptv.W;
+            Vector4d dv;
 
-            ptv.X = ptv.X * (ViewWidth / 2.0);
-            ptv.Y = -ptv.Y * (ViewHeight / 2.0);
-            ptv.Z = 0;
+            dv.X = pv.X / pv.W;
+            dv.Y = pv.Y / pv.W;
+            dv.Z = pv.Z / pv.W;
+            dv.W = pv.W;
 
-            CadPoint p = CadPoint.Create(ptv);
+            #region Debug
+            /*
+            Vector4d rv = pv * mProjectionMatrixInv;
 
-            return p;
+            DebugOut.Std.println("==================");
+            Vector3d epv = pt.vector - Eye;
+            DebugOut.Std.println("Eye -> pt length" + epv.Length.ToString());
+
+            CadUtil.Dump(DebugOut.Std, wv, "wold v");
+            CadUtil.Dump(DebugOut.Std, sv, "scr v");
+            CadUtil.Dump(DebugOut.Std, pv, "proj v");
+            CadUtil.Dump(DebugOut.Std, mViewMatrix, "ViewMatrix");
+            CadUtil.Dump(DebugOut.Std, mProjectionMatrix, "ProjectionMatrix");
+            CadUtil.Dump(DebugOut.Std, mProjectionMatrixInv, "ProjectionMatrixInv");
+
+            CadUtil.Dump(DebugOut.Std, rv, "proj rev v");
+
+            DebugOut.Std.println("==================");
+            */
+            #endregion
+
+            dv.X = dv.X * (ViewWidth / 2.0);
+            dv.Y = -dv.Y * (ViewHeight / 2.0);
+            dv.Z = 0;
+
+            return CadPoint.Create(dv);
         }
 
         public override CadPoint UnitVectorToCadVector(CadPoint pt)
         {
-            Vector4d t;
-
-            t.X = LookAt.X;
-            t.Y = LookAt.Y;
-            t.Z = LookAt.Z;
-            t.W = 1.0f;
-
-            t = t * mViewMatrix;
-            t = t * mProjectionMatrix;
-
-
             pt.x = pt.x / (ViewWidth / 2.0);
             pt.y = -pt.y / (ViewHeight / 2.0);
 
-            Vector4d vw = (Vector4d)pt;
+            Vector3d epv = pt.vector - Eye;
 
-            vw.W = t.W;
-            vw.Z = t.Z;
+            Vector4d wv;
 
-            vw.X *= vw.W;
-            vw.Y *= vw.W;
+            wv.W = epv.Length;
+            wv.Z = (ProjectionMatrix.M33 * (-wv.W)) + (ProjectionMatrix.M43);
 
-            vw = vw * mProjectionMatrixInv;
-            vw = vw * mViewMatrixInv;
+            wv.X = pt.x * wv.W;
+            wv.Y = pt.y * wv.W;
 
-            vw /= WoldScale;
+            wv = wv * mProjectionMatrixInv;
+            wv = wv * mViewMatrixInv;
 
-            CadPoint p = CadPoint.Create(vw);
+            wv /= WoldScale;
 
-            return p;
+            return CadPoint.Create(wv);
         }
-
 
         private void SetupLight()
         {

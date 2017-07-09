@@ -2,6 +2,7 @@
 #define LOG_DEBUG
 
 using Newtonsoft.Json.Linq;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -255,6 +256,24 @@ namespace Plotter
             CurrentLayer.addFigure(line);
         }
 
+        private void test_depthLine(DrawContext dc)
+        {
+            CadPoint a = dc.CadPointToUnitPoint(LastDownPoint);
+            CadPoint b = a;
+            b.z -= 100;
+
+            a = dc.UnitPointToCadPoint(a);
+            b = dc.UnitPointToCadPoint(b);
+
+            CadFigure line = DB.newFigure(CadFigure.Types.POLY_LINES);
+
+            line.AddPoint(a);
+            line.AddPoint(b);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, line.ID);
+            HistoryManager.foward(ope);
+            CurrentLayer.addFigure(line);
+        }
 
         private void test_areaCollector()
         {
@@ -378,15 +397,6 @@ namespace Plotter
 
         private void test_dc(DrawContext dc)
         {
-            DrawContext tdc = new DrawContextGDI();
-
-            tdc.SetViewMatrix(UMatrixs.ViewXY);
-
-            CadPoint p = CadPoint.Create(0, 0, -100);
-
-            CadPoint vp = tdc.CadPointToUnitPoint(p);
-
-            vp.dump(DebugOut.Std);
         }
 
         private void dump_figv(DrawContext dc)
@@ -399,16 +409,16 @@ namespace Plotter
 
         private void test(DrawContext dc)
         {
-            CadPoint p = CadPoint.Create(12, 34, 0);
+            UMatrix4 m = new UMatrix4(
+                1, 0, 0, 0,
+                10, 0, 0, 0,
+                100, 0, 0, 0,
+                1000, 0, 0, 0
+                );
 
-            CadPoint pp = dc.UnitPointToCadPoint(p);
+            Vector4d v = new Vector4d(1, 2, 3, 4);
 
-            CadPoint p0 = dc.CadPointToUnitPoint(pp);
-
-            dc.ViewOrg.dump(DebugOut.Std);
-            p.dump(DebugOut.Std);
-            pp.dump(DebugOut.Std);
-            p0.dump(DebugOut.Std);
+            Vector4d vd = Vector4d.Transform(v, m.GLMatrix);
         }
 
         private void testGLInvert()
@@ -452,6 +462,11 @@ namespace Plotter
             else if (s == "clean temp")
             {
                 TempFigureList.Clear();
+            }
+
+            else if (s == "depthLine")
+            {
+                test_depthLine(dc);
             }
 
             else if (s == "test q")
