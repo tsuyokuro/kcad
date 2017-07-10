@@ -738,6 +738,9 @@ namespace Plotter
             return cp;
         }
 
+        //
+        // 直線 a b と p と normalが示す平面との交点を求める
+        //
         public static CadPoint CrossPlane(CadPoint a, CadPoint b, CadPoint p, CadPoint normal)
         {
             CadPoint cp = default(CadPoint);

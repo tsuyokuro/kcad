@@ -248,7 +248,7 @@ namespace Plotter
 
             CadFigure line = DB.newFigure(CadFigure.Types.POLY_LINES);
 
-            line.AddPoint(a);
+            line.AddPoint(LastDownPoint);
             line.AddPoint(cp);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, line.ID);
@@ -517,17 +517,17 @@ namespace Plotter
                 test_isPointInTriangle3D(dc);
             }
 
-            else if (s == "test crossPlane")
+            else if (s == "crossPlane")
             {
                 test_crossPlane(dc);
             }
 
-            else if (s == "test crossPlane2")
+            else if (s == "crossPlane2")
             {
                 test_crossPlane2(dc);
             }
 
-            else if (s == "test crossPlane3")
+            else if (s == "crossPlane3")
             {
                 test_crossPlane3(dc);
             }
