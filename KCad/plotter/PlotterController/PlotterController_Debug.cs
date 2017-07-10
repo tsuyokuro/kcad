@@ -273,6 +273,9 @@ namespace Plotter
             CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, line.ID);
             HistoryManager.foward(ope);
             CurrentLayer.addFigure(line);
+
+            Clear(dc);
+            Draw(dc);
         }
 
         private void test_areaCollector()

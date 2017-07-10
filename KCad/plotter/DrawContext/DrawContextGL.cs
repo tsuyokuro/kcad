@@ -137,27 +137,6 @@ namespace Plotter
             dv.Z = pv.Z / pv.W;
             dv.W = pv.W;
 
-            #region Debug
-            /*
-            Vector4d rv = pv * mProjectionMatrixInv;
-
-            DebugOut.Std.println("==================");
-            Vector3d epv = pt.vector - Eye;
-            DebugOut.Std.println("Eye -> pt length" + epv.Length.ToString());
-
-            CadUtil.Dump(DebugOut.Std, wv, "wold v");
-            CadUtil.Dump(DebugOut.Std, sv, "scr v");
-            CadUtil.Dump(DebugOut.Std, pv, "proj v");
-            CadUtil.Dump(DebugOut.Std, mViewMatrix, "ViewMatrix");
-            CadUtil.Dump(DebugOut.Std, mProjectionMatrix, "ProjectionMatrix");
-            CadUtil.Dump(DebugOut.Std, mProjectionMatrixInv, "ProjectionMatrixInv");
-
-            CadUtil.Dump(DebugOut.Std, rv, "proj rev v");
-
-            DebugOut.Std.println("==================");
-            */
-            #endregion
-
             dv.X = dv.X * (ViewWidth / 2.0);
             dv.Y = -dv.Y * (ViewHeight / 2.0);
             dv.Z = 0;

@@ -269,9 +269,9 @@ namespace Plotter
         private WindowsFormsHost mViewHost = null;
 
 
-        private PlotterView plotterView1 = null;
+        private PlotterView PlotterView1 = null;
 
-        private PlotterViewGL plotterViewGL1 = null;
+        private PlotterViewGL PlotterViewGL1 = null;
 
 
         private IPlotterView mPlotterView = null;
@@ -289,11 +289,10 @@ namespace Plotter
         public PlotterViewModel(Window mainWindow, WindowsFormsHost viewHost)
         {
             mMainWindow = mainWindow;
+            mViewHost = viewHost;
 
             InitCommandMap();
             InitKeyMap();
-
-            mViewHost = viewHost;
 
             SelectMode = mController.SelectMode;
             FigureType = mController.CreatingFigType;
@@ -306,15 +305,15 @@ namespace Plotter
 
             mController.CursorPosChanged = CursorPosChanged;
 
-            plotterView1 = new PlotterView();
-            plotterViewGL1 = PlotterViewGL.Create();
+            PlotterView1 = new PlotterView();
+            PlotterViewGL1 = PlotterViewGL.Create();
 
-            SetView(plotterView1);
+            SetView(PlotterView1);
 
             ViewMode = ViewModes.FRONT;
         }
 
-        public void SetView(IPlotterView view)
+        private void SetView(IPlotterView view)
         {
             if (view == mPlotterView)
             {
@@ -1015,45 +1014,45 @@ namespace Plotter
             switch (mViewMode)
             {
                 case ViewModes.FRONT:
-                    SetView(plotterView1);
+                    SetView(PlotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitZ, Vector3d.UnitY);
                     DrawAll();
                     break;
 
                 case ViewModes.BACK:
-                    SetView(plotterView1);
+                    SetView(PlotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitZ, Vector3d.UnitY);
                     DrawAll();
                     break;
 
                 case ViewModes.TOP:
-                    SetView(plotterView1);
+                    SetView(PlotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitY, -Vector3d.UnitZ);
                     DrawAll();
                     break;
 
                 case ViewModes.BOTTOM:
-                    SetView(plotterView1);
+                    SetView(PlotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitY, Vector3d.UnitZ);
                     DrawAll();
                     break;
 
                 case ViewModes.RIGHT:
-                    SetView(plotterView1);
+                    SetView(PlotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitX, Vector3d.UnitY);
                     DrawAll();
                     break;
 
                 case ViewModes.LEFT:
-                    SetView(plotterView1);
+                    SetView(PlotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitX, Vector3d.UnitY);
                     DrawAll();
                     break;
 
                 case ViewModes.FREE:
-                    plotterViewGL1.Size = plotterView1.Size;
-                    plotterViewGL1.DrawContext.SetUnitPerMilli(plotterView1.DrawContext.UnitPerMilli);
-                    SetView(plotterViewGL1);
+                    PlotterViewGL1.Size = PlotterView1.Size;
+                    PlotterViewGL1.DrawContext.SetUnitPerMilli(PlotterView1.DrawContext.UnitPerMilli);
+                    SetView(PlotterViewGL1);
                     DrawAll();
                     break;
             }
