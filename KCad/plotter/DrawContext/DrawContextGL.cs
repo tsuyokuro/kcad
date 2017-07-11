@@ -20,6 +20,14 @@ namespace Plotter
 
         public bool LightingEnable = true;
 
+        double FovY = Math.PI / 2;
+
+        public enum PresetCamera
+        {
+            TELESCOPE,
+            STANDERD,
+            WIDE_ANGLE,
+        }
 
         public DrawContextGL()
         {
@@ -30,17 +38,7 @@ namespace Plotter
 
             mDrawing = new DrawingGL(this);
 
-            Eye = Vector3d.Zero;
-            Eye.X = 0.0;
-            Eye.Y = 0.0;
-            Eye.Z = 200.0;
-
-            LookAt = Vector3d.Zero;
-            UpVector = Vector3d.UnitY;
-
-            ProjectionNear = 80.0;
-            ProjectionFar = 1000.0;
-
+            InitCamera(PresetCamera.STANDERD);
 
             mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
             mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
@@ -63,6 +61,68 @@ namespace Plotter
             MaterialShininess = new Color4(0.1f, 0.1f, 0.1f, 1.0f);
             
             RecalcViewDirFromCameraDirection();
+        }
+
+        public void InitCamera(PresetCamera type)
+        {
+            double a = 1.0;
+
+            switch (type)
+            {
+                case PresetCamera.TELESCOPE:
+                    // 望遠
+                    a = 2.0;
+
+                    Eye = Vector3d.Zero;
+                    Eye.X = 0.0;
+                    Eye.Y = 0.0;
+                    Eye.Z = 1000.0 / a;
+
+                    FovY = Math.PI / 4;
+
+                    ProjectionNear = 500.0 / a;
+                    ProjectionFar = 1500.0 / a;
+
+                    LookAt = Vector3d.Zero;
+                    UpVector = Vector3d.UnitY;
+
+                    break;
+                case PresetCamera.STANDERD:
+                    a = 4.0;
+
+                    Eye = Vector3d.Zero;
+                    Eye.X = 0.0;
+                    Eye.Y = 0.0;
+                    Eye.Z = 1000.0 / a;
+
+                    FovY = Math.PI / 3;
+
+                    ProjectionNear = 500.0 / a;
+                    ProjectionFar = 1500.0 / a;
+
+                    LookAt = Vector3d.Zero;
+                    UpVector = Vector3d.UnitY;
+
+                    break;
+
+                case PresetCamera.WIDE_ANGLE:
+                    a = 4;
+
+                    Eye = Vector3d.Zero;
+                    Eye.X = 0.0;
+                    Eye.Y = 0.0;
+                    Eye.Z = 1000.0 / a;
+
+                    FovY = Math.PI / 2;
+
+                    ProjectionNear = 500.0 / a;
+                    ProjectionFar = 1500.0 / a;
+
+                    LookAt = Vector3d.Zero;
+                    UpVector = Vector3d.UnitY;
+
+                    break;
+            }
         }
 
         public GLPen Pen(int id)
@@ -209,7 +269,7 @@ namespace Plotter
             double fovy = Math.PI / 2.0f; // Yの傾き
 
             mProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
-                                            fovy,
+                                            FovY,
                                             aspect,
                                             ProjectionNear,
                                             ProjectionFar
