@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using System;
 using System.Drawing;
 
 using static System.Math;
@@ -25,13 +26,23 @@ namespace Plotter
         // Screen 座標系の原点 
         public CadPoint mViewOrg;
 
-
+        // 視点
         protected Vector3d Eye = Vector3d.UnitZ;
+
+        // 注視点
         protected Vector3d LookAt = Vector3d.Zero;
+
+        // 上を示す Vector
         protected Vector3d UpVector = Vector3d.UnitY;
 
+        // 投影面までの距離
         protected double ProjectionNear = 10.0;
+
+        // 視野空間の遠方側クリップ面までの距離
         protected double ProjectionFar = 10000.0;
+
+        // 視野角　大きければ広角レンズ、小さければ望遠レンズ
+        protected double FovY = Math.PI / 4;
 
 
         // 投影スクリーンの向き

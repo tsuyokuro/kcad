@@ -20,7 +20,6 @@ namespace Plotter
 
         public bool LightingEnable = true;
 
-        double FovY = Math.PI / 2;
 
         public enum PresetCamera
         {
@@ -214,6 +213,8 @@ namespace Plotter
             Vector4d wv;
 
             wv.W = epv.Length;
+
+            // mProjectionMatrixInvに掛けて wv.W=1.0 となる z を求める
             wv.Z = (ProjectionMatrix.M33 * (-wv.W)) + (ProjectionMatrix.M43);
 
             wv.X = pt.x * wv.W;

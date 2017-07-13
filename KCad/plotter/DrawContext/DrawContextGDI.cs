@@ -82,7 +82,6 @@ namespace Plotter
 
         public override CadPoint CadVectorToUnitVector(CadPoint pt)
         {
-            // 透視変換用にWが必要なので、Vector4に変換
             Vector4d ptv = (Vector4d)pt;
 
             ptv.W = 1.0f;
