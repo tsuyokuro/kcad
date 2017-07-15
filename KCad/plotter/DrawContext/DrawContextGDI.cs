@@ -29,7 +29,29 @@ namespace Plotter
             mProjectionMatrix = UMatrix4.Unit;
             mProjectionMatrixInv = UMatrix4.Unit;
 
+
             mDrawing = new DrawingGDI(this);
+        }
+
+        public override void SetViewSize(double w, double h)
+        {
+            mViewWidth = w;
+            mViewHeight = h;
+
+            if (w == 0 || h==0)
+            {
+                return;
+            }
+
+            /*
+            mProjectionMatrix.GLMatrix =
+                Matrix4d.CreateOrthographic(mViewWidth, mViewHeight, ProjectionNear, ProjectionFar);
+
+            mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
+
+            CadUtil.Dump(DebugOut.Std, mProjectionMatrix, "Proj");
+            CadUtil.Dump(DebugOut.Std, mProjectionMatrixInv, "Proj inv");
+            */
         }
 
         public override void StartDraw(Bitmap image)
@@ -97,25 +119,27 @@ namespace Plotter
 
             p.x = ptv.X * (UnitPerMilli * DeviceScaleX);
             p.y = ptv.Y * (UnitPerMilli * DeviceScaleY);
-            p.z = ptv.Z * UnitPerMilli;
+            //p.z = ptv.Z * UnitPerMilli;
+            p.z = 0;
 
             return p;
         }
 
         public override CadPoint UnitVectorToCadVector(CadPoint pt)
         {
-            CadPoint p = default(CadPoint);
-            p.x = pt.x / (UnitPerMilli * DeviceScaleX);
-            p.y = pt.y / (UnitPerMilli * DeviceScaleY);
-            p.z = pt.z / UnitPerMilli;
+            Vector4d wv = default(Vector4d);
+            wv.X = pt.x / (UnitPerMilli * DeviceScaleX);
+            wv.Y = pt.y / (UnitPerMilli * DeviceScaleY);
+            //wv.Z = pt.z / UnitPerMilli;
+            wv.Z = pt.z;
 
-            p = p * mProjectionMatrixInv;
+            wv = wv * mProjectionMatrixInv;
 
-            p = p * mViewMatrixInv;
+            wv = wv * mViewMatrixInv;
 
-            p /= WoldScale;
+            wv /= WoldScale;
 
-            return p;
+            return CadPoint.Create(wv);
         }
 
         public Pen Pen(int id)

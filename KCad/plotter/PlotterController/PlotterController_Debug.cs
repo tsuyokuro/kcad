@@ -445,11 +445,39 @@ namespace Plotter
             ClearLayer(dc, CurrentLayer.ID);
         }
 
+        private void mtest(DrawContext dc)
+        {
+            DrawContextGDI tdc = new DrawContextGDI();
+
+
+            tdc.SetViewSize(120, 60);
+            tdc.ViewOrg = CadPoint.Create(60, 30, 0);
+
+            tdc.SetCamera(Vector3d.UnitZ, Vector3d.Zero, Vector3d.UnitY);
+
+            CadPoint p = CadPoint.Create(0, 0, 0);
+
+            CadPoint tp = default(CadPoint);
+
+
+            tp = tdc.CadPointToUnitPoint(p);
+
+            CadUtil.Dump(DebugOut.Std, p, "p");
+            CadUtil.Dump(DebugOut.Std, tp, "tp");
+
+        }
+
+
         public void debugCommand(DrawContext dc, string s)
         {
             if (s == "test")
             {
                 test(dc);
+            }
+
+            else if (s == "mtest")
+            {
+                mtest(dc);
             }
 
             else if (s == "clear layer")

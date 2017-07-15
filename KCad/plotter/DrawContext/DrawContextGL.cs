@@ -21,7 +21,7 @@ namespace Plotter
         public bool LightingEnable = true;
 
 
-        public enum PresetCamera
+        public enum ProjectionType
         {
             TELESCOPE,
             STANDERD,
@@ -37,7 +37,7 @@ namespace Plotter
 
             mDrawing = new DrawingGL(this);
 
-            InitCamera(PresetCamera.STANDERD);
+            InitCamera(ProjectionType.STANDERD);
 
             mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
             mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
@@ -62,60 +62,65 @@ namespace Plotter
             RecalcViewDirFromCameraDirection();
         }
 
-        public void InitCamera(PresetCamera type)
+        public void InitCamera(ProjectionType type)
         {
             double a = 1.0;
 
+            double ez = 1000.0;
+            double near = 500.0;
+            double far = 1500.0;
+
+
             switch (type)
             {
-                case PresetCamera.TELESCOPE:
+                case ProjectionType.TELESCOPE:
                     // 望遠
                     a = 2.0;
 
                     Eye = Vector3d.Zero;
                     Eye.X = 0.0;
                     Eye.Y = 0.0;
-                    Eye.Z = 1000.0 / a;
+                    Eye.Z = ez / a;
 
                     FovY = Math.PI / 4;
 
-                    ProjectionNear = 500.0 / a;
-                    ProjectionFar = 1500.0 / a;
+                    ProjectionNear = near / a;
+                    ProjectionFar = far / a;
 
                     LookAt = Vector3d.Zero;
                     UpVector = Vector3d.UnitY;
 
                     break;
-                case PresetCamera.STANDERD:
+                case ProjectionType.STANDERD:
                     a = 4.0;
 
                     Eye = Vector3d.Zero;
                     Eye.X = 0.0;
                     Eye.Y = 0.0;
-                    Eye.Z = 1000.0 / a;
+                    Eye.Z = ez / a;
 
                     FovY = Math.PI / 3;
 
-                    ProjectionNear = 500.0 / a;
-                    ProjectionFar = 1500.0 / a;
+                    ProjectionNear = near / a;
+                    ProjectionFar = far / a;
 
                     LookAt = Vector3d.Zero;
                     UpVector = Vector3d.UnitY;
 
                     break;
 
-                case PresetCamera.WIDE_ANGLE:
+                case ProjectionType.WIDE_ANGLE:
                     a = 4;
 
                     Eye = Vector3d.Zero;
                     Eye.X = 0.0;
                     Eye.Y = 0.0;
-                    Eye.Z = 1000.0 / a;
+                    Eye.Z = ez / a;
 
                     FovY = Math.PI / 2;
 
-                    ProjectionNear = 500.0 / a;
-                    ProjectionFar = 1500.0 / a;
+                    ProjectionNear = near / a;
+                    ProjectionFar = far / a;
 
                     LookAt = Vector3d.Zero;
                     UpVector = Vector3d.UnitY;
@@ -215,7 +220,8 @@ namespace Plotter
             wv.W = epv.Length;
 
             // mProjectionMatrixInvに掛けて wv.W=1.0 となる z を求める
-            wv.Z = (ProjectionMatrix.M33 * (-wv.W)) + (ProjectionMatrix.M43);
+            //wv.Z = (ProjectionMatrix.M33 * (-wv.W)) + (ProjectionMatrix.M43);
+            wv.Z = (1.0 - (wv.W * mProjectionMatrixInv.M44)) / mProjectionMatrixInv.M34;
 
             wv.X = pt.x * wv.W;
             wv.Y = pt.y * wv.W;

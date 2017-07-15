@@ -27,7 +27,7 @@ namespace Plotter
         public CadPoint mViewOrg;
 
         // 視点
-        protected Vector3d Eye = Vector3d.UnitZ;
+        protected Vector3d Eye = Vector3d.UnitZ * 1000.0;
 
         // 注視点
         protected Vector3d LookAt = Vector3d.Zero;
@@ -36,10 +36,10 @@ namespace Plotter
         protected Vector3d UpVector = Vector3d.UnitY;
 
         // 投影面までの距離
-        protected double ProjectionNear = 10.0;
+        protected double ProjectionNear = 500.0;
 
         // 視野空間の遠方側クリップ面までの距離
-        protected double ProjectionFar = 10000.0;
+        protected double ProjectionFar = 1500.0;
 
         // 視野角　大きければ広角レンズ、小さければ望遠レンズ
         protected double FovY = Math.PI / 4;
@@ -196,44 +196,18 @@ namespace Plotter
             return d * UnitPerMilli;
         }
 
-        public virtual void SetMatrix(UMatrix4 viewMatrix, UMatrix4 projMatrix)
-        {
-            mViewMatrix = viewMatrix;
-            mViewMatrixInv = UMatrix4.Invert(viewMatrix);
-
-            mProjectionMatrix = projMatrix;
-            mProjectionMatrixInv = UMatrix4.Invert(projMatrix);
-            RecalcCamera();
-        }
-
-        public virtual void SetViewMatrix(UMatrix4 viewMatrix)
-        {
-            mViewMatrix = viewMatrix;
-            mViewMatrixInv = UMatrix4.Invert(viewMatrix);
-            RecalcCamera();
-        }
-
-        public virtual void RecalcCamera()
-        {
-            CadPoint p0 = CadPoint.Create(0, 0, 0);
-            CadPoint p1 = CadPoint.Create(0, 0, 1);
-
-            CadPoint cp0 = UnitPointToCadPoint(p0);
-            CadPoint cp1 = UnitPointToCadPoint(p1);
-
-            Vector3d ret = cp0.vector - cp1.vector;
-            ret.Normalize();
-
-            mViewDir = ret;
-            LookAt = mViewDir;
-            Eye = Vector3d.Zero;
-        }
-
         public virtual void RecalcViewDirFromCameraDirection()
         {
             Vector3d ret = LookAt - Eye;
             ret.Normalize();
             mViewDir = ret;
+        }
+
+        public virtual void CopyCamera(DrawContext dc)
+        {
+            SetCamera(dc.Eye, dc.LookAt, dc.UpVector);
+            mProjectionMatrix = dc.mProjectionMatrix;
+            mProjectionMatrixInv = dc.mProjectionMatrixInv;
         }
 
         public virtual void SetCamera(Vector3d eye, Vector3d lookAt, Vector3d upVector)

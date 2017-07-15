@@ -791,5 +791,17 @@ namespace Plotter
             o.Indent--;
             o.println("}");
         }
+
+        public static void Dump(DebugOut dout, CadPoint v, string prefix)
+        {
+            dout.print(prefix);
+            dout.println("{");
+            dout.Indent++;
+            dout.println("x:" + v.x.ToString());
+            dout.println("y:" + v.y.ToString());
+            dout.println("z:" + v.z.ToString());
+            dout.Indent--;
+            dout.println("}");
+        }
     }
 }

@@ -59,7 +59,7 @@ namespace Plotter
             {
                 mCursorPos = value;
 
-                String s = string.Format("({0:0.000},{1:0.000},{2:0.000})",
+                String s = string.Format("({0:0.00},{1:0.00},{2:0.00})",
                     mCursorPos.x, mCursorPos.y, mCursorPos.z);
 
                 StrCursorPos = s;
@@ -895,10 +895,7 @@ namespace Plotter
             // Default printers's unit is 1/100 inch
             dc.SetUnitPerInch(100.0);
 
-            dc.SetMatrix(
-                mController.CurrentDC.ViewMatrix,
-                mController.CurrentDC.ProjectionMatrix
-                );
+            dc.CopyCamera(mController.CurrentDC);
 
             if (mController.CurrentDC is DrawContextGL)
             {
@@ -1015,37 +1012,43 @@ namespace Plotter
             {
                 case ViewModes.FRONT:
                     SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitZ, Vector3d.UnitY);
+                    //mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitZ, Vector3d.UnitY);
+                    mPlotterView.DrawContext.SetCamera(Vector3d.UnitZ, Vector3d.Zero, Vector3d.UnitY);
                     DrawAll();
                     break;
 
                 case ViewModes.BACK:
                     SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitZ, Vector3d.UnitY);
+                    //mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitZ, Vector3d.UnitY);
+                    mPlotterView.DrawContext.SetCamera(-Vector3d.UnitZ, Vector3d.Zero, Vector3d.UnitY);
                     DrawAll();
                     break;
 
                 case ViewModes.TOP:
                     SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitY, -Vector3d.UnitZ);
+                    //mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitY, -Vector3d.UnitZ);
+                    mPlotterView.DrawContext.SetCamera(Vector3d.UnitY, Vector3d.Zero, -Vector3d.UnitZ);
                     DrawAll();
                     break;
 
                 case ViewModes.BOTTOM:
                     SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitY, Vector3d.UnitZ);
+                    //mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitY, Vector3d.UnitZ);
+                    mPlotterView.DrawContext.SetCamera(-Vector3d.UnitY, Vector3d.Zero, Vector3d.UnitZ);
                     DrawAll();
                     break;
 
                 case ViewModes.RIGHT:
                     SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitX, Vector3d.UnitY);
+                    //mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitX, Vector3d.UnitY);
+                    mPlotterView.DrawContext.SetCamera(Vector3d.UnitX, Vector3d.Zero, Vector3d.UnitY);
                     DrawAll();
                     break;
 
                 case ViewModes.LEFT:
                     SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitX, Vector3d.UnitY);
+                    //mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitX, Vector3d.UnitY);
+                    mPlotterView.DrawContext.SetCamera(-Vector3d.UnitX, Vector3d.Zero, Vector3d.UnitY);
                     DrawAll();
                     break;
 
