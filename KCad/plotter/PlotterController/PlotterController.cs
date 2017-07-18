@@ -15,7 +15,15 @@ namespace Plotter
 
     public delegate void DataChanged(PlotterController sender, bool redraw);
 
-    public delegate void CursorPosChanged(PlotterController sender, CadPoint pt);
+
+    public enum CursorType
+    {
+        TRACKING,
+        LAST_DOWN,
+    }
+
+
+    public delegate void CursorPosChanged(PlotterController sender, CadPoint pt, CursorType type);
 
     public partial class PlotterController
     {
@@ -223,7 +231,7 @@ namespace Plotter
             }
         }
 
-        private CursorPosChanged mCursorPosChanged = (a, b) => { };
+        private CursorPosChanged mCursorPosChanged = (a, b, c) => { };
 
         public CursorPosChanged CursorPosChanged
         {
@@ -232,7 +240,7 @@ namespace Plotter
                 mCursorPosChanged = value;
                 if (mCursorPosChanged == null)
                 {
-                    mCursorPosChanged = (a, b) => { };
+                    mCursorPosChanged = (a, b, c) => { };
                 }
             }
             get

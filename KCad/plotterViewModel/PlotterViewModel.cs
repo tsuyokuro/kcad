@@ -35,7 +35,7 @@ namespace Plotter
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private string mStrCursorPos;
+        private string mStrCursorPos = "";
 
         public string StrCursorPos
         {
@@ -51,12 +51,33 @@ namespace Plotter
             }
         }
 
+        private string mStrCursorPos2 = "";
+
+        public string StrCursorPos2
+        {
+            set
+            {
+                mStrCursorPos2 = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StrCursorPos2)));
+            }
+
+            get
+            {
+                return mStrCursorPos2;
+            }
+        }
+
         private CadPoint mCursorPos;
 
         public CadPoint CursorPos
         {
             set
             {
+                if (!String.IsNullOrEmpty(mStrCursorPos) && mCursorPos.coordEquals(value))
+                {
+                    return;
+                }
+
                 mCursorPos = value;
 
                 String s = string.Format("({0:0.00},{1:0.00},{2:0.00})",
@@ -68,6 +89,31 @@ namespace Plotter
             get
             {
                 return mCursorPos;
+            }
+        }
+
+        private CadPoint mCursorPos2;
+
+        public CadPoint CursorPos2
+        {
+            set
+            {
+                if (!String.IsNullOrEmpty(mStrCursorPos2) && mCursorPos2.coordEquals(value))
+                {
+                    return;
+                }
+
+                mCursorPos2 = value;
+
+                String s = string.Format("({0:0.00},{1:0.00},{2:0.00})",
+                    mCursorPos2.x, mCursorPos2.y, mCursorPos2.z);
+
+                StrCursorPos2 = s;
+            }
+
+            get
+            {
+                return mCursorPos2;
             }
         }
     }
@@ -698,9 +744,16 @@ namespace Plotter
             return -1;
         }
 
-        private void CursorPosChanged(PlotterController sender, CadPoint pt)
+        private void CursorPosChanged(PlotterController sender, CadPoint pt, CursorType type)
         {
-            FreqChangedInfo.CursorPos = pt;
+            if (type == CursorType.TRACKING)
+            {
+                FreqChangedInfo.CursorPos = pt;
+            }
+            else if (type == CursorType.LAST_DOWN)
+            {
+                FreqChangedInfo.CursorPos2 = pt;
+            }
         }
 
         #endregion

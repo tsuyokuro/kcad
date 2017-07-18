@@ -46,6 +46,7 @@ namespace KCad
             InitTextCommand();
 
             textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
+            textBlockXYZ2.DataContext = ViewModel.FreqChangedInfo;
 
             mInteractionOut.print = MessageOut;
 

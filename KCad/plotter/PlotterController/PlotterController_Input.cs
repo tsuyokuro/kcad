@@ -419,6 +419,8 @@ namespace Plotter
                     break;
 
             }
+
+            CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
         }
 
         private void PutMeasure()
@@ -745,7 +747,8 @@ namespace Plotter
                     break;
             }
 
-            CursorPosChanged(this, mSnapPoint);
+            CursorPosChanged(this, mSnapPoint, CursorType.TRACKING);
+            CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
         }
 
         private void LDrag(CadMouse pointer, DrawContext dc, int x, int y)
