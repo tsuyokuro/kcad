@@ -18,6 +18,9 @@ namespace KCad
         override protected void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            OpenTK.Toolkit.Init();
+
             NativeMethods.AllocConsole();
         }
 
