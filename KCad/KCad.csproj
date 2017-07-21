@@ -114,6 +114,9 @@
     <Compile Include="AutoCompleteTextBox.cs" />
     <Compile Include="ftgl\FontWrapper.cs" />
     <Compile Include="ftgl\FtglAPI.cs" />
+    <Compile Include="MySplashWindow.xaml.cs">
+      <DependentUpon>MySplashWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
     <Compile Include="plotter\PlotterSettings.cs" />
     <Compile Include="plotter\primitive\CadPrimitive.cs" />
@@ -122,6 +125,10 @@
       <DependentUpon>SnapSettingsDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="GridSettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MySplashWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

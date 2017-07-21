@@ -19,9 +19,17 @@ namespace KCad
         {
             base.OnStartup(e);
 
+            NativeMethods.AllocConsole();
+
+            var splashWindow = new MySplashWindow();
+            splashWindow.Show();
+
             OpenTK.Toolkit.Init();
 
-            NativeMethods.AllocConsole();
+            this.MainWindow = new MainWindow();
+            this.MainWindow.Show();
+
+            splashWindow.Close();
         }
 
         protected override void OnExit(ExitEventArgs e)
