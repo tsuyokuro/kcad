@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+#define USE_CONSOLE
+
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -7,34 +10,50 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 
+
+
 namespace KCad
 {
-    /// <summary>
-    /// App.xaml の相互作用ロジック
-    /// </summary>
     public partial class App : Application
     {
+        public DebugInputThread InputThread = null;
+
+        public MySplashWindow SplashWindow = null;
+
+        public static App GetCurrent()
+        {
+            return (App)Application.Current;
+        }
+
+
         [STAThread]
         override protected void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
+#if USE_CONSOLE
             NativeMethods.AllocConsole();
 
-            var splashWindow = new MySplashWindow();
-            splashWindow.Show();
+            InputThread = new DebugInputThread();
+            InputThread.start();
+#endif
+            SplashWindow = new MySplashWindow();
+            SplashWindow.Show();
 
             OpenTK.Toolkit.Init();
 
             this.MainWindow = new MainWindow();
             this.MainWindow.Show();
 
-            splashWindow.Close();
+            SplashWindow.Close();
+            SplashWindow = null;
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
+#if USE_CONSOLE
             NativeMethods.FreeConsole();
+#endif
             base.OnExit(e);
         }
     }

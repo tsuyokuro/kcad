@@ -24,8 +24,10 @@ namespace KCad
         {
             InitializeComponent();
 
-            InputThread = new DebugInputThread(debugCommand);
-            InputThread.start();
+            if (App.GetCurrent().InputThread != null)
+            {
+                App.GetCurrent().InputThread.OnLineArrived = DebugCommand;
+            }
 
             ViewModel = new PlotterViewModel(this, viewContainer);
 
@@ -81,7 +83,7 @@ namespace KCad
             ViewModel.MenuItemClicked(sender, e);
         }
 
-        private void debugCommand(String s)
+        private void DebugCommand(String s)
         {
             ViewModel.DebugCommand(s);
         }

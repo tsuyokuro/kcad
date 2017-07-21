@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:KCad"
         mc:Ignorable="d"
         Height="236.757" Width="428.107" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None">
-    <Grid Background="DarkSlateBlue">
-        <Label Content="KCad" HorizontalAlignment="Center" FontSize="50" VerticalAlignment="Center" Foreground="White"/>
+    <Grid Background="#ff424247">
+        <Label Content="KCad" HorizontalAlignment="Center" FontSize="30" VerticalAlignment="Center" Foreground="White"/>
     </Grid>
 </Window>

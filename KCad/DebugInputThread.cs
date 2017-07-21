@@ -18,9 +18,21 @@ namespace KCad
 
         Dispatcher dispatcher = Application.Current.Dispatcher;
 
-        public DebugInputThread(LineArrived lineArrived)
+        public LineArrived OnLineArrived
         {
-            mLineArrived = lineArrived;
+            set
+            {
+                mLineArrived = value;
+            }
+            get
+            {
+                return mLineArrived;
+            }
+        }
+
+
+        public DebugInputThread()
+        {
         }
 
         public void start()
@@ -72,7 +84,10 @@ namespace KCad
                 }
 
                 // Run on ui thread
-                dispatcher.Invoke(mLineArrived, s);
+                if (mLineArrived != null)
+                {
+                    dispatcher.Invoke(mLineArrived, s);
+                }
             }
         }
         #pragma warning restore 0168
