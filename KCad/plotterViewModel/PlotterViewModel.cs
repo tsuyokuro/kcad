@@ -354,8 +354,9 @@ namespace Plotter
             PlotterView1 = new PlotterView();
             PlotterViewGL1 = PlotterViewGL.Create();
 
-            SetView(PlotterView1);
+            //SetView(PlotterView1);
 
+            ViewMode = ViewModes.FREE;  // 一旦GL側を設定してViewをLoadしておく
             ViewMode = ViewModes.FRONT;
         }
 

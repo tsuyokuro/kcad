@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-
+using FTGL;
 
 namespace Plotter
 {
@@ -23,9 +23,13 @@ namespace Plotter
         private const BeginMode LINE_STRIP = BeginMode.LineStrip;
 #endif
 
+        FontWrapper FontW;
+
         public DrawingGL(DrawContextGL dc)
         {
             DC = dc;
+            FontW = FontWrapper.LoadFile("C:\\Windows\\Fonts\\msgothic.ttc");
+            FontW.FontSize = 20;
         }
 
         public override void Clear()
@@ -58,7 +62,7 @@ namespace Plotter
         {
             GLPen glpen = DC.Pen(pen);
 
-            GL.Begin(LINES);
+            GL.Begin(PrimitiveType.Lines);
             GL.Color4(glpen.Color);
 
             a *= DC.WoldScale;
@@ -87,7 +91,7 @@ namespace Plotter
             GL.Enable(EnableCap.Light0);
 
 
-            GL.Begin(POLYGON);
+            GL.Begin(PrimitiveType.Polygon);
             GL.Color4(0.8f, 0.8f, 0.8f, 1.0f);
 
             if (normalValid)
@@ -119,7 +123,7 @@ namespace Plotter
 
             CadPoint shift = (CadPoint)t;
 
-            GL.Begin(LINE_STRIP);
+            GL.Begin(PrimitiveType.LineStrip);
 
             foreach (CadPoint pt in pointList)
             {
@@ -177,6 +181,17 @@ namespace Plotter
             p1.z = len;
 
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+
+            /*
+            GL.PushMatrix();
+
+            GL.Translate(0, 0, 0);
+            GL.Color4(Color4.White);
+
+            FontW.RenderW("黒木", RenderMode.All);
+
+            GL.PopMatrix();
+            */
         }
 
         private void PushMatrixes()
@@ -266,7 +281,7 @@ namespace Plotter
 
             GLPen glpen = DC.Pen(pen);
 
-            GL.Begin(LINE_STRIP);
+            GL.Begin(PrimitiveType.LineStrip);
 
             GL.Color4(glpen.Color);
             GL.Vertex3(v0);

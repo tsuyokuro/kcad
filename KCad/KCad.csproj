@@ -112,6 +112,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AutoCompleteTextBox.cs" />
+    <Compile Include="ftgl\FontWrapper.cs" />
+    <Compile Include="ftgl\FtglAPI.cs" />
     <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
     <Compile Include="plotter\PlotterSettings.cs" />
     <Compile Include="plotter\primitive\CadPrimitive.cs" />
@@ -290,6 +292,11 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ftgl.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
