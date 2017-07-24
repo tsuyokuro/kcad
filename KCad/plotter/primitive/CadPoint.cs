@@ -226,6 +226,12 @@ namespace Plotter
             return this;
         }
 
+        public CadPoint setVector(CadPoint p)
+        {
+            vector = p.vector;
+            return this;
+        }
+
         public void set(ref CadPoint p)
         {
             Flag = p.Flag;
@@ -239,12 +245,12 @@ namespace Plotter
             return (x == p.x && y == p.y && z == p.z);
         }
 
-        public bool coordEqualsR(CadPoint p, double m = 0.000001)
+        public bool coordEqualsThreshold(CadPoint p, double m = 0.000001)
         {
             return (
                 x > p.x - m && x < p.x + m &&
                 y > p.y - m && y < p.y + m &&
-                x > p.z - m && x < p.z + m
+                z > p.z - m && z < p.z + m
                 );
         }
 

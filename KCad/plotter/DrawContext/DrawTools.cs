@@ -82,7 +82,8 @@ namespace Plotter
         public const int PEN_AXIS2 = 19;
         public const int PEN_PALE_FIGURE = 20;
         public const int PEN_MEASURE_FIGURE = 21;
-        public const int PEN_TBL_SIZE = 22;
+        public const int PEN_DIMENTION = 22;
+        public const int PEN_TBL_SIZE = 23;
 
         public const int BRUSH_DEFAULT = 0;
         public const int BRUSH_BACKGROUND = 1;
@@ -169,6 +170,7 @@ namespace Plotter
             PenTbl[PEN_AXIS2]               = new PenHolder(Pens.LightSeaGreen, false);
             PenTbl[PEN_PALE_FIGURE]         = new PenHolder(new Pen(Color.FromArgb(0x7E, 0x7E, 0x7E), 0), true);
             PenTbl[PEN_MEASURE_FIGURE]      = new PenHolder(Pens.OrangeRed, false);
+            PenTbl[PEN_DIMENTION]           = new PenHolder(Pens.PaleGreen, false);
 
             ColorTbl[COLOR_DEFAULT]         = new ColorHolder(Color.FromArgb(255, 255, 255), false);
             ColorTbl[COLOR_BACKGROUND]      = new ColorHolder(Color.FromArgb(0x1e, 0x1e, 0x1e), false);
@@ -207,6 +209,7 @@ namespace Plotter
             PenTbl[PEN_AXIS2]               = new PenHolder(null, false);
             PenTbl[PEN_PALE_FIGURE]         = new PenHolder(new Pen(Brushes.Black, 0), true);
             PenTbl[PEN_MEASURE_FIGURE]      = new PenHolder(null, false);
+            PenTbl[PEN_DIMENTION]           = new PenHolder(new Pen(Brushes.Black, 0), true);
 
 
             ColorTbl[COLOR_DEFAULT]         = new ColorHolder(Color.Black, false);
@@ -248,6 +251,7 @@ namespace Plotter
             GLPenTbl[PEN_AXIS2]             = new GLPen(Pens.LightSeaGreen.Color, width);
             GLPenTbl[PEN_PALE_FIGURE]       = new GLPen(Color.FromArgb(0x7E, 0x7E, 0x7E), width);
             GLPenTbl[PEN_MEASURE_FIGURE]    = new GLPen(Pens.OrangeRed.Color, width);
+            GLPenTbl[PEN_DIMENTION]         = new GLPen(Pens.PaleGreen.Color, width);
 
             GLColorTbl[COLOR_DEFAULT]       = Color.FromArgb(255, 255, 255);
             GLColorTbl[COLOR_BACKGROUND]    = Color.FromArgb(0x1e, 0x1e, 0x1e);

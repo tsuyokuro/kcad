@@ -558,6 +558,36 @@ namespace Plotter
             return ret;
         }
 
+
+        //
+        // 点pを通り、a - b に平行で、a-bに垂直な線分を求める
+        //
+        //   +----------p------------+
+        //   |                       |
+        //   |                       |
+        //   a                       b
+        //
+        public static CadSegment PerpendicularSeg(CadPoint a, CadPoint b, CadPoint p)
+        {
+            CadSegment seg = default(CadSegment);
+
+            seg.P0 = a;
+            seg.P1 = b;
+
+            CrossInfo ci = CadUtil.PerpendicularCrossLine(a, b, p);
+
+            if (ci.IsCross)
+            {
+                CadPoint nv = p - ci.CrossPoint;
+
+                seg.P0 += nv;
+                seg.P1 += nv;
+            }
+
+            return seg;
+        }
+
+
         // 点pから直線abに向かう垂線との交点を求める2D
         public static CrossInfo PerpendicularCrossLine2D(CadPoint a, CadPoint b, CadPoint p)
         {
