@@ -93,9 +93,12 @@
                 </StackPanel>
             </DataTemplate>
 
-            <!--<Style x:Key="DarkMenu" TargetType="Menu">
+            <!--<Style TargetType="Menu">
                 <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
-                <Setter Property="Background" Value="{StaticResource BGColor}"/>
+                <Setter Property="Background" Value="{StaticResource MenuColor}"/>
+            </Style>
+
+            <Style TargetType="MenuItem" BasedOn="{StaticResource MLB_MenuItem}">
             </Style>-->
 
         </ResourceDictionary>

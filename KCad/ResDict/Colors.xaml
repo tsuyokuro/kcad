@@ -7,6 +7,7 @@
     <SolidColorBrush x:Key="BoarderColor" Color="#FF3F3F46" />
     <SolidColorBrush x:Key="TextColor" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="BGColor" Color="#FF252526" />
+    <SolidColorBrush x:Key="MenuColor" Color="#FF3F3F46" />
     <!--<SolidColorBrush x:Key="ListBoxSelColor" Color="#FF228b22" />-->
     <SolidColorBrush x:Key="ListBoxSelColor" Color="#FF007ACC" />
     <SolidColorBrush x:Key="ToggleButtonCheckedBGColor" Color="#FF007ACC" />

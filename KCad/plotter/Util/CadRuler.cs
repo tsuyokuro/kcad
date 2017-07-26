@@ -117,7 +117,7 @@ namespace Plotter
             RulerInfo match = default(RulerInfo);
             RulerInfo ri = default(RulerInfo);
 
-            double range = dc.UnitToMilli(12);
+            double range = dc.UnitToMilli(rangePixel);
 
             double min = range;
 
