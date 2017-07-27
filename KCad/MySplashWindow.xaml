@@ -7,6 +7,14 @@
         mc:Ignorable="d"
         Height="236.757" Width="428.107" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None">
     <Grid Background="#ff424247">
-        <Label Content="KCad" HorizontalAlignment="Center" FontSize="30" VerticalAlignment="Center" Foreground="White"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120" />
+            <RowDefinition Height="80" />
+            <RowDefinition Height="80" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Foreground="PaleGreen" Content="KCad" HorizontalAlignment="Center" FontSize="30" VerticalAlignment="Bottom" />
+        <Label Grid.Row="1" Foreground="PaleGreen" Content="KCad is simple CAD application" HorizontalAlignment="Center" FontSize="12" VerticalAlignment="Top" />
+        <Label Grid.Row="2" Foreground="PaleGreen" Content="v0.1" HorizontalAlignment="Center" FontSize="12" VerticalAlignment="Top"/>
     </Grid>
 </Window>
