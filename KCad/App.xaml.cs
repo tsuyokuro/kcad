@@ -1,5 +1,17 @@
 ﻿
+/**
+ * TODO
+ * 
+ * プロジェクト->KCadのプロパティー->アプリケーソンタブ
+ * 出力の種類をコンソールアプリケーションにするとデバッグ実行時も
+ * コンソールに出力されるようになる
+ * コンソールの使用を止めるときは、出力の種類を Windowsアプリケーションもどすこと
+ *
+ * 
+ **/
+
 #define USE_CONSOLE
+
 
 using System;
 using System.Collections.Generic;
@@ -58,6 +70,7 @@ namespace KCad
         }
     }
 
+#if USE_CONSOLE
     internal static class NativeMethods
     {
         [DllImport("kernel32.dll")]
@@ -70,4 +83,5 @@ namespace KCad
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool AllocConsole();
     }
+#endif
 }
