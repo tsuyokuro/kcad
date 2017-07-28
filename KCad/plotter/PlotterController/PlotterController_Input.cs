@@ -772,7 +772,7 @@ namespace Plotter
                 mHistoryManager.foward(ope);
                 CurrentLayer.addFigure(CreatingFigure);
 
-                NextState(dc);
+                NextState();
             }
             else if (state == CadFigure.States.ENOUGH)
             {

@@ -442,7 +442,9 @@ namespace Plotter
 
         private void test_ClearLayer(DrawContext dc)
         {
-            ClearLayer(dc, CurrentLayer.ID);
+            ClearLayer(CurrentLayer.ID);
+            Clear(dc);
+            DrawAll(dc);
         }
 
         private void mtest(DrawContext dc)

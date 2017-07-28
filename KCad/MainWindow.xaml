@@ -127,6 +127,7 @@
                 <MenuItem Tag="bond" Header="Bond" Click="MenuItem_Click"/>
                 <MenuItem Tag="to_bezier" Header="To Bezier" Click="MenuItem_Click"/>
                 <MenuItem Tag="cut_segment" Header="Cut Segment" Click="MenuItem_Click"/>
+                <MenuItem Tag="ins_point" Header="Insert point" Click="MenuItem_Click"/>
                 <MenuItem Tag="to_loop" Header="To Loop lines" Click="MenuItem_Click"/>
                 <MenuItem Tag="to_unloop" Header="To Unloop lines" Click="MenuItem_Click"/>
                 <MenuItem Header="Flip" >

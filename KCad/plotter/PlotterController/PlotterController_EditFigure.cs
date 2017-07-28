@@ -5,26 +5,22 @@ namespace Plotter
 {
     public partial class PlotterController
     {
-        public void Remove(DrawContext dc)
+        public void Remove()
         {
             StartEdit();
 
             RemoveSelectedPoints();
 
             EndEdit();
-
-            Clear(dc);
-            Draw(dc);
         }
 
-        public void ToBezier(DrawContext dc)
+        public void ToBezier()
         {
-            ToBezier(dc, mSelectedSegs.LastSel);
+            ToBezier(mSelectedSegs.LastSel);
             ClearSelection();
-            Draw(dc);
         }
 
-        public void ToBezier(DrawContext dc, MarkSeg seg)
+        public void ToBezier(MarkSeg seg)
         {
             if (seg.FigureID == 0)
             {
@@ -44,15 +40,12 @@ namespace Plotter
             }
 
             ClearSelection();
-
-            Draw(dc);
         }
 
-        public void SeparateFigures(DrawContext dc)
+        public void SeparateFigures()
         {
             SeparateFigures(mSelList.List);
             ClearSelection();
-            Draw(dc);
         }
 
         public void SeparateFigures(List<SelectItem> selList)
@@ -92,11 +85,10 @@ namespace Plotter
             mHistoryManager.foward(opeRoot);
         }
 
-        public void BondFigures(DrawContext dc)
+        public void BondFigures()
         {
             BondFigures(mSelList.List);
             ClearSelection();
-            Draw(dc);
         }
 
         public void BondFigures(List<SelectItem> selList)
@@ -136,13 +128,11 @@ namespace Plotter
             mHistoryManager.foward(opeRoot);
         }
 
-        public void CutSegment(DrawContext dc)
+        public void CutSegment()
         {
             MarkSeg ms = mSelectedSegs.LastSel;
             CutSegment(ms);
             ClearSelection();
-
-            Draw(dc);
         }
 
         public void CutSegment(MarkSeg ms)
@@ -228,7 +218,7 @@ namespace Plotter
             return cp;
         }
 
-        public void SetLoop(DrawContext dc, bool isLoop)
+        public void SetLoop(bool isLoop)
         {
             List<uint> list = GetSelectedFigIDList();
 
@@ -259,12 +249,9 @@ namespace Plotter
             }
 
             mHistoryManager.foward(opeRoot);
-
-            Clear(dc);
-            Draw(dc);
         }
 
-        public void Flip(DrawContext dc, TargetCoord coord)
+        public void Flip(TargetCoord coord)
         {
             CadPoint cp = GetSelectionCenter();
 
@@ -316,27 +303,24 @@ namespace Plotter
             }
 
             EndEdit();
-
-            Clear(dc);
-            DrawAll(dc);
         }
 
-        public void FlipX(DrawContext dc)
+        public void FlipX()
         {
-            Flip(dc, TargetCoord.X);
+            Flip(TargetCoord.X);
         }
 
-        public void FlipY(DrawContext dc)
+        public void FlipY()
         {
-            Flip(dc, TargetCoord.Y);
+            Flip(TargetCoord.Y);
         }
 
-        public void FlipZ(DrawContext dc)
+        public void FlipZ()
         {
-            Flip(dc, TargetCoord.Z);
+            Flip(TargetCoord.Z);
         }
 
-        public void FlipNormal(DrawContext dc)
+        public void FlipNormal()
         {
             List<uint> ids = GetSelectedFigIDList();
 
@@ -355,9 +339,6 @@ namespace Plotter
 
 
             HistoryManager.foward(opeList);
-
-            Clear(dc);
-            DrawAll(dc);
         }
 
         public bool InsPointToLastSelectedSeg()
@@ -438,7 +419,7 @@ namespace Plotter
         }
 
 
-        public void AddCentroid(DrawContext dc)
+        public void AddCentroid()
         {
             Centroid cent = Centroid();
 
@@ -450,7 +431,7 @@ namespace Plotter
             CadFigure pointFig = mDB.newFigure(CadFigure.Types.POINT);
             pointFig.AddPoint(cent.Point);
 
-            pointFig.EndCreate(dc);
+            pointFig.EndCreate(CurrentDC);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, pointFig.ID);
             HistoryManager.foward(ope);

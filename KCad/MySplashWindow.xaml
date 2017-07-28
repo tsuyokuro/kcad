@@ -13,8 +13,8 @@
             <RowDefinition Height="80" />
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Foreground="PaleGreen" Content="KCad" HorizontalAlignment="Center" FontSize="30" VerticalAlignment="Bottom" />
-        <Label Grid.Row="1" Foreground="PaleGreen" Content="KCad is simple CAD application" HorizontalAlignment="Center" FontSize="12" VerticalAlignment="Top" />
-        <Label Grid.Row="2" Foreground="PaleGreen" Content="v0.1" HorizontalAlignment="Center" FontSize="12" VerticalAlignment="Top"/>
+        <Label Grid.Row="0" Foreground="PaleGreen" Content="KCad" HorizontalAlignment="Center" FontSize="40" VerticalAlignment="Bottom" />
+        <Label Grid.Row="1" Foreground="PaleGreen" Content="Version 0.5" HorizontalAlignment="Center" FontSize="14" VerticalAlignment="Top" />
+        <Label Grid.Row="2" Foreground="DarkGray" Content="Copyright 2017 Tsuyoshi Kuroki All Rights Reserved." HorizontalAlignment="Center" FontSize="12" VerticalAlignment="Top"/>
     </Grid>
 </Window>

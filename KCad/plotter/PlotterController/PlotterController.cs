@@ -309,7 +309,7 @@ namespace Plotter
 
         #region Start and End creating figure
 
-        public void StartCreateFigure(CadFigure.Types type, DrawContext dc)
+        public void StartCreateFigure(CadFigure.Types type)
         {
             State = States.START_CREATE;
             CreatingFigType = type;
@@ -343,7 +343,7 @@ namespace Plotter
                 CreatingFigure = null;
             }
 
-            NextState(dc);
+            NextState();
         }
 
         public void StartMeasure(MeasureModes mode)
@@ -371,7 +371,7 @@ namespace Plotter
             CadOpe ope = CadOpe.CreateSetCloseOpe(CurrentLayer.ID, CreatingFigure.ID, true);
             mHistoryManager.foward(ope);
 
-            NextState(dc);
+            NextState();
         }
         #endregion
 
@@ -381,22 +381,16 @@ namespace Plotter
         }
 
         #region "undo redo"
-        public void undo(DrawContext dc)
+        public void Undo()
         {
             ClearSelection();
             mHistoryManager.undo();
-
-            Clear(dc);
-            DrawAll(dc);
         }
 
-        public void redo(DrawContext dc)
+        public void Redo()
         {
             ClearSelection();
             mHistoryManager.redo();
-
-            Clear(dc);
-            DrawAll(dc);
         }
         #endregion
 
@@ -501,7 +495,7 @@ namespace Plotter
 
         #region Private editing figure methods
 
-        private void NextState(DrawContext dc)
+        private void NextState()
         {
             if (State == States.CREATING)
             {
@@ -509,7 +503,7 @@ namespace Plotter
                 {
                     CadFigure.Types type = CreatingFigure.Type;
                     CreatingFigure = null;
-                    StartCreateFigure(type, dc);
+                    StartCreateFigure(type);
                 }
                 else
                 {
@@ -724,15 +718,14 @@ namespace Plotter
         #endregion
 
         #region "Copy and paste"
-        public void Copy(DrawContext dc)
+        public void Copy()
         {
             CopyFigures();
         }
 
-        public void Paste(DrawContext dc)
+        public void Paste()
         {
             PasteFigure();
-            Draw(dc);
         }
 
         public void CopyFigures()
@@ -824,7 +817,7 @@ namespace Plotter
         }
         #endregion
 
-        public void ClearLayer(DrawContext dc, uint layerID)
+        public void ClearLayer(uint layerID)
         {
             if (layerID == 0)
             {
@@ -838,9 +831,6 @@ namespace Plotter
             CadOpeList opeList = layer.clear();
 
             mHistoryManager.foward(opeList);
-
-            dc.Drawing.Clear();
-            Draw(dc);
         }
 
         public void AddLayer(string name)
@@ -895,24 +885,19 @@ namespace Plotter
             InteractOut.print("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
         }
 
-        public void SelectAllInCurrentLayer(DrawContext dc)
+        public void SelectAllInCurrentLayer()
         {
             foreach (CadFigure fig in CurrentLayer.FigureList)
             {
                 fig.Select();
             }
-
-            dc.Drawing.Clear();
-            DrawAll(dc);
         }
 
-        public void Cancel(DrawContext dc)
+        public void Cancel()
         {
             if (State == States.START_CREATE || State == States.CREATING)
             {
-                StartCreateFigure(CadFigure.Types.NONE, dc);
-                Clear(dc);
-                DrawAll(dc);
+                StartCreateFigure(CadFigure.Types.NONE);
                 NotifyStateChange();
             }
             else if (State == States.DRAGING_POINTS)
@@ -921,9 +906,6 @@ namespace Plotter
 
                 State = States.SELECT;
                 ClearSelection();
-
-                Clear(dc);
-                DrawAll(dc);
             }
             else if (State == States.MEASURING)
             {
@@ -931,8 +913,6 @@ namespace Plotter
                 MeasureMode = MeasureModes.NONE;
                 MeasureFigure = null;
 
-                Clear(dc);
-                DrawAll(dc);
                 NotifyStateChange();
             }
         }

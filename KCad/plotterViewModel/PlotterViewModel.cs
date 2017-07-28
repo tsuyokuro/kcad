@@ -403,6 +403,7 @@ namespace Plotter
                 { "bond",BondFigure },
                 { "to_bezier",ToBezier },
                 { "cut_segment",CutSegment },
+                { "ins_point",InsPoint },
                 { "to_loop", ToLoop },
                 { "to_unloop", ToUnloop },
                 { "clear_layer", ClearLayer },
@@ -433,6 +434,7 @@ namespace Plotter
                 { "ctrl+s", Save },
                 { "ctrl+a", SelectAll },
                 { "escape", Cancel },
+                { "ctrl+p", InsPoint },
             };
         }
 
@@ -467,114 +469,104 @@ namespace Plotter
         #region Actions
         public void Undo()
         {
-            DrawContext dc = StartDraw();
-            mController.undo(dc);
-            EndDraw();
+            mController.Undo();
+            RedrawAll();
         }
 
         public void Redo()
         {
-            DrawContext dc = StartDraw();
-            mController.redo(dc);
-            EndDraw();
+            mController.Redo();
+            RedrawAll();
         }
 
         public void Remove()
         {
-            DrawContext dc = StartDraw();
-            mController.Remove(dc);
-            EndDraw();
+            mController.Remove();
+            RedrawAll();
         }
 
         public void SeparateFigure()
         {
-            DrawContext dc = StartDraw();
-            mController.SeparateFigures(dc);
-            EndDraw();
+            mController.SeparateFigures();
+            RedrawAll();
         }
 
         public void BondFigure()
         {
-            DrawContext g = StartDraw();
-            mController.BondFigures(g);
-            EndDraw();
+            mController.BondFigures();
+            RedrawAll();
         }
 
         public void ToBezier()
         {
-            DrawContext dc = StartDraw();
-            mController.ToBezier(dc);
-            EndDraw();
+            mController.ToBezier();
+            RedrawAll();
         }
 
         public void CutSegment()
         {
-            DrawContext dc = StartDraw();
-            mController.CutSegment(dc);
-            EndDraw();
+            mController.CutSegment();
+            RedrawAll();
+        }
+
+        public void InsPoint()
+        {
+            mController.InsPointToLastSelectedSeg();
+            RedrawAll();
         }
 
         public void ToLoop()
         {
-            DrawContext dc = StartDraw();
-            mController.SetLoop(dc, true);
-            EndDraw();
+            mController.SetLoop(true);
+            RedrawAll();
         }
 
         public void ToUnloop()
         {
-            DrawContext dc = StartDraw();
-            mController.SetLoop(dc, false);
-            EndDraw();
+            mController.SetLoop(false);
+            RedrawAll();
         }
 
         public void FlipX()
         {
-            DrawContext dc = StartDraw();
-            mController.FlipX(dc);
-            EndDraw();
+            mController.FlipX();
+            RedrawAll();
         }
 
         public void FlipY()
         {
-            DrawContext dc = StartDraw();
-            mController.FlipY(dc);
-            EndDraw();
+            mController.FlipY();
+            RedrawAll();
         }
 
         public void FlipZ()
         {
-            DrawContext dc = StartDraw();
-            mController.FlipZ(dc);
-            EndDraw();
+            mController.FlipZ();
+            RedrawAll();
         }
 
         public void FlipNormal()
         {
-            DrawContext dc = StartDraw();
-            mController.FlipNormal(dc);
-            EndDraw();
+            mController.FlipNormal();
+            RedrawAll();
         }
 
         public void ClearLayer()
         {
-            DrawContext dc = StartDraw();
-            mController.ClearLayer(dc, 0);
-            EndDraw();
+            mController.ClearLayer(0);
+            RedrawAll();
         }
 
         public void Copy()
         {
-            DrawContext dc = StartDraw();
-            mController.Copy(dc);
-            EndDraw();
+            mController.Copy();
+            RedrawAll();
         }
 
         public void Paste()
         {
-            DrawContext dc = StartDraw();
-            mController.Paste(dc);
-            EndDraw();
+            mController.Paste();
+            RedrawAll();
         }
 
         public void Load()
@@ -609,9 +601,7 @@ namespace Plotter
             {
                 mController.Grid.GridSize = dlg.GridSize;
 
-                DrawContext dc = StartDraw();
-                mController.DrawAll(dc);
-                EndDraw();
+                RedrawAll();
             }
         }
 
@@ -631,9 +621,7 @@ namespace Plotter
                 mController.PointSnapRange = dlg.PointSnapRange;
                 mController.LineSnapRange = dlg.LineSnapRange;
 
-                DrawContext dc = StartDraw();
-                mController.DrawAll(dc);
-                EndDraw();
+                RedrawAll();
             }
         }
 
@@ -654,28 +642,25 @@ namespace Plotter
         public void RemoveLayer()
         {
             mController.RemoveLayer(mController.CurrentLayer.ID);
-            Draw();
+            RedrawAll();
         }
 
         public void AddCentroid()
         {
-            DrawContext dc = StartDraw();
-            mController.AddCentroid(dc);
-            EndDraw();
+            mController.AddCentroid();
+            RedrawAll();
         }
 
         public void SelectAll()
         {
-            DrawContext dc = StartDraw();
-            mController.SelectAllInCurrentLayer(dc);
-            EndDraw();
+            mController.SelectAllInCurrentLayer();
+            RedrawAll();
         }
 
         public void Cancel()
         {
-            DrawContext dc = StartDraw();
-            mController.Cancel(dc);
-            EndDraw();
+            mController.Cancel();
+            RedrawAll();
         }
 
         #endregion
@@ -865,14 +850,7 @@ namespace Plotter
         private void LoadFile(String fname)
         {
             mController.LoadFromJsonFile(fname);
-
-            DrawContext dc = mPlotterView.StartDraw();
-
-            mController.Clear(dc);
-
-            mController.Draw(dc);
-
-            mPlotterView.EndDraw();
+            RedrawAll();
         }
         #endregion
 
@@ -1004,17 +982,18 @@ namespace Plotter
             if (mFigureType != CadFigure.Types.NONE)
             {
                 MeasureMode = PlotterController.MeasureModes.NONE;
+                mController.StartCreateFigure(mFigureType);
 
-                DrawContext dc = mPlotterView.StartDraw();
-                mController.StartCreateFigure(mFigureType, dc);
-                mPlotterView.EndDraw();
+                RedrawAll();
             }
             else if (prev != CadFigure.Types.NONE)
             {
                 DrawContext dc = mPlotterView.StartDraw();
+
                 mController.EndCreateFigure(dc);
+
                 mController.Clear(dc);
-                mController.Draw(dc);
+                mController.DrawAll(dc);
                 mPlotterView.EndDraw();
             }
 
@@ -1043,11 +1022,7 @@ namespace Plotter
             else if (prev != PlotterController.MeasureModes.NONE)
             {
                 mController.EndMeasure();
-
-                DrawContext dc = StartDraw();
-                mController.Clear(dc);
-                mController.DrawAll(dc);
-                EndDraw();
+                RedrawAll();
             }
 
             return true;
@@ -1066,42 +1041,36 @@ namespace Plotter
             {
                 case ViewModes.FRONT:
                     SetView(PlotterView1);
-                    //mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitZ, Vector3d.UnitY);
                     mPlotterView.DrawContext.SetCamera(Vector3d.UnitZ, Vector3d.Zero, Vector3d.UnitY);
                     DrawAll();
                     break;
 
                 case ViewModes.BACK:
                     SetView(PlotterView1);
-                    //mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitZ, Vector3d.UnitY);
                     mPlotterView.DrawContext.SetCamera(-Vector3d.UnitZ, Vector3d.Zero, Vector3d.UnitY);
                     DrawAll();
                     break;
 
                 case ViewModes.TOP:
                     SetView(PlotterView1);
-                    //mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitY, -Vector3d.UnitZ);
                     mPlotterView.DrawContext.SetCamera(Vector3d.UnitY, Vector3d.Zero, -Vector3d.UnitZ);
                     DrawAll();
                     break;
 
                 case ViewModes.BOTTOM:
                     SetView(PlotterView1);
-                    //mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitY, Vector3d.UnitZ);
                     mPlotterView.DrawContext.SetCamera(-Vector3d.UnitY, Vector3d.Zero, Vector3d.UnitZ);
                     DrawAll();
                     break;
 
                 case ViewModes.RIGHT:
                     SetView(PlotterView1);
-                    //mPlotterView.DrawContext.SetCamera(Vector3d.Zero, -Vector3d.UnitX, Vector3d.UnitY);
                     mPlotterView.DrawContext.SetCamera(Vector3d.UnitX, Vector3d.Zero, Vector3d.UnitY);
                     DrawAll();
                     break;
 
                 case ViewModes.LEFT:
                     SetView(PlotterView1);
-                    //mPlotterView.DrawContext.SetCamera(Vector3d.Zero, Vector3d.UnitX, Vector3d.UnitY);
                     mPlotterView.DrawContext.SetCamera(-Vector3d.UnitX, Vector3d.Zero, Vector3d.UnitY);
                     DrawAll();
                     break;
