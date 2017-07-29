@@ -988,13 +988,9 @@ namespace Plotter
             }
             else if (prev != CadFigure.Types.NONE)
             {
-                DrawContext dc = mPlotterView.StartDraw();
+                mController.EndCreateFigure();
 
-                mController.EndCreateFigure(dc);
-
-                mController.Clear(dc);
-                mController.DrawAll(dc);
-                mPlotterView.EndDraw();
+                RedrawAll();
             }
 
             return true;

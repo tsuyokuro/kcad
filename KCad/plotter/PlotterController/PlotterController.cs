@@ -320,7 +320,7 @@ namespace Plotter
             // So, at the moment, not yet a creation start.
         }
 
-        public void EndCreateFigure(DrawContext dc)
+        public void EndCreateFigure()
         {
             CreatingFigType = CadFigure.Types.NONE;
 
@@ -328,18 +328,18 @@ namespace Plotter
 
             if (CreatingFigure != null)
             {
-                CreatingFigure.EndCreate(dc);
+                CreatingFigure.EndCreate(CurrentDC);
                 CreatingFigure = null;
             }
 
             NotifyStateChange();
         }
 
-        public void endCreateFigureState(DrawContext dc)
+        public void EndCreateFigureState()
         {
             if (CreatingFigure != null)
             {
-                CreatingFigure.EndCreate(dc);
+                CreatingFigure.EndCreate(CurrentDC);
                 CreatingFigure = null;
             }
 
@@ -360,13 +360,11 @@ namespace Plotter
             MeasureFigure = null;
         }
 
-        public void closeFigure(DrawContext dc)
+        public void CloseFigure()
         {
-            Log.d("PlotterController closeFigure");
-
             CreatingFigure.Closed = true;
 
-            CreatingFigure.EndCreate(dc);
+            CreatingFigure.EndCreate(CurrentDC);
 
             CadOpe ope = CadOpe.CreateSetCloseOpe(CurrentLayer.ID, CreatingFigure.ID, true);
             mHistoryManager.foward(ope);
@@ -943,7 +941,7 @@ namespace Plotter
             SetCurrentFigure(fig);
         }
 
-        public void Scale(CadPoint org, double scale)
+        public void ScaleSelectedFigure(CadPoint org, double scale)
         {
             StartEdit();
 
@@ -958,23 +956,25 @@ namespace Plotter
                     continue;
                 }
 
-                int n = fig.PointList.Count;
-
-                for (int i = 0; i < n; i++)
-                {
-                    if (fig.PointList[i].Selected)
-                    {
-                        CadPoint p = fig.PointList[i];
-                        p -= org;
-                        p *= scale;
-                        p += org;
-
-                        fig.SetPointAt(i, p);
-                    }
-                }
+                ScaleFugure(org, scale, fig);
             }
 
             EndEdit();
+        }
+
+        public void ScaleFugure(CadPoint org, double scale, CadFigure fig)
+        {
+            int n = fig.PointList.Count;
+
+            for (int i = 0; i < n; i++)
+            {
+                CadPoint p = fig.PointList[i];
+                p -= org;
+                p *= scale;
+                p += org;
+
+                fig.SetPointAt(i, p);
+            }
         }
     }
 }

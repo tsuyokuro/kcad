@@ -7,6 +7,8 @@ z=0
 w=10
 h=10
 
+ratio=0.5
+
 def putMsg(s):
     SE.PutMsg(s)
 
@@ -73,3 +75,6 @@ def selFig(id):
 
 def execPartial(fname):
     return SE.ExecPartial(fname)
+
+def scale(ratio):
+    return SE.Scale(ratio)

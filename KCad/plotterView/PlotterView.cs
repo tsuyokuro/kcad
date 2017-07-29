@@ -179,7 +179,7 @@ namespace Plotter
             msg.Arg1 = e.X;
             msg.Arg2 = e.Y;
 
-            mMessageHandler.SendMessage(msg, 2);
+            mMessageHandler.SendMessage(msg, 1);
         }
 
         private void mouseDown(Object sender, MouseEventArgs e)
@@ -251,17 +251,22 @@ namespace Plotter
         {
             if (sender == mMnItemClosePolyLines)
             {
-                DrawContext g = StartDraw();
-                mController.closeFigure(g);
-                EndDraw();
+                mController.CloseFigure();
+                RedrawAll();
             }
             else if (sender == mMnItemEndPolyLines || sender == mMnItemQuitRect)
             {
-                DrawContext g = StartDraw();
-                mController.endCreateFigureState(g);
-                EndDraw();
-
+                mController.EndCreateFigureState();
+                RedrawAll();
             }
+        }
+
+        public void RedrawAll()
+        {
+            DrawContext dc = StartDraw();
+            mController.Clear(dc);
+            mController.DrawAll(dc);
+            EndDraw();
         }
 
         public void SetController(PlotterController controller)

@@ -156,7 +156,7 @@ namespace Plotter
         public void Scale(double scale)
         {
             CadPoint org = Controller.LastDownPoint;
-            Controller.Scale(org, scale);
+            Controller.ScaleSelectedFigure(org, scale);
         }
 
         public void ShowLastDownPoint()
