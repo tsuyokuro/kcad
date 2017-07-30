@@ -174,9 +174,13 @@ namespace Plotter
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();
 
-            if (idlist.Count < 2+1)
+            if (idlist.Count < 2)
             {
-                Controller.InteractOut.print("Please select two or more objects.");
+                Controller.InteractOut.print(
+                    global::KCad.Properties.Resources.error_select_2_or_more
+                    );
+
+                return;
             }
 
             CadFigure parent = Controller.DB.newFigure(CadFigure.Types.GROUP);
@@ -196,7 +200,9 @@ namespace Plotter
             var ope = new CadOpeAddChildlen(parent, parent.ChildList);
             Controller.HistoryManager.foward(ope);
 
-            Controller.InteractOut.print("Grouped");
+            Controller.InteractOut.print(
+                    global::KCad.Properties.Resources.notice_was_grouped
+                );
         }
 
         public void Ungroup()
@@ -232,7 +238,9 @@ namespace Plotter
 
             Controller.HistoryManager.foward(opeList);
 
-            Controller.InteractOut.print("Ungrouped");
+            Controller.InteractOut.print(
+                global::KCad.Properties.Resources.notice_was_ungrouped
+                );
         }
 
         public void Distance()
@@ -248,7 +256,9 @@ namespace Plotter
             }
             else
             {
-                Controller.InteractOut.print("cmd dist error. After select 2 points");
+                Controller.InteractOut.print(
+                    global::KCad.Properties.Resources.error_select_2_points
+                    );
             }
         }
 
@@ -429,8 +439,15 @@ namespace Plotter
         {
             if (!Controller.InsPointToLastSelectedSeg())
             {
-                Controller.InteractOut.print("Can not inser point.");
+                Controller.InteractOut.print(
+                    global::KCad.Properties.Resources.error_operation_failed
+                    );
+                return;
             }
+
+            Controller.InteractOut.print(
+                global::KCad.Properties.Resources.notice_operation_success
+                );
         }
 
         public void Area()

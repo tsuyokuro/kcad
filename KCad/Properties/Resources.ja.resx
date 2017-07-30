@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="error_operation_failed" xml:space="preserve">
+    <value>失敗しました</value>
+  </data>
+  <data name="error_select_2_or_more" xml:space="preserve">
+    <value>2個以上のオブジェクトを選択してください</value>
+  </data>
+  <data name="error_select_2_points" xml:space="preserve">
+    <value>Pointを2個選択してください</value>
+  </data>
   <data name="menu_edit" xml:space="preserve">
     <value>編集</value>
   </data>
@@ -134,5 +143,14 @@
   </data>
   <data name="menu_snap" xml:space="preserve">
     <value>スナップ</value>
+  </data>
+  <data name="notice_operation_success" xml:space="preserve">
+    <value>操作は成功しました</value>
+  </data>
+  <data name="notice_was_grouped" xml:space="preserve">
+    <value>グループ化されました</value>
+  </data>
+  <data name="notice_was_ungrouped" xml:space="preserve">
+    <value>グループが解除されました</value>
   </data>
 </root>

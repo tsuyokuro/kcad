@@ -62,6 +62,16 @@ namespace KCad.Properties {
         
         /// <summary>
         ///   import math
+        ///
+        ///x=0
+        ///y=0
+        ///z=0
+        ///
+        ///w=10
+        ///h=10
+        ///
+        ///ratio=0.5
+        ///
         ///def putMsg(s):
         ///    SE.PutMsg(s)
         ///
@@ -89,21 +99,45 @@ namespace KCad.Properties {
         ///def ungroup():
         ///    SE.Ungroup()
         ///
-        ///def addPoint(x, y, z):
-        ///    SE.AddPoint(x, y, z)
+        ///def addPoint():
+        ///    SE.AddPoint()
         ///
         ///def addLayer(name):
         ///    SE.AddLayer(name)
         ///
         ///def reverse():
-        ///    SE.ReverseOrder()
-        ///
-        ///def move(x, y, z):
-        ///    [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        ///    SE.ReverseOr [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string BaseScript {
             get {
                 return ResourceManager.GetString("BaseScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Operation failed に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string error_operation_failed {
+            get {
+                return ResourceManager.GetString("error_operation_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Please select two or more object. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string error_select_2_or_more {
+            get {
+                return ResourceManager.GetString("error_select_2_or_more", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Please select 2 point に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string error_select_2_points {
+            get {
+                return ResourceManager.GetString("error_select_2_points", resourceCulture);
             }
         }
         
@@ -158,6 +192,33 @@ namespace KCad.Properties {
         public static string menu_snap {
             get {
                 return ResourceManager.GetString("menu_snap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Operation success に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string notice_operation_success {
+            get {
+                return ResourceManager.GetString("notice_operation_success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Objects was grouped に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string notice_was_grouped {
+            get {
+                return ResourceManager.GetString("notice_was_grouped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Objects was ungrouped に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string notice_was_ungrouped {
+            get {
+                return ResourceManager.GetString("notice_was_ungrouped", resourceCulture);
             }
         }
     }

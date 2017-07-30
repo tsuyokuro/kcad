@@ -121,6 +121,15 @@
   <data name="BaseScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BaseScript.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;shift_jis</value>
   </data>
+  <data name="error_operation_failed" xml:space="preserve">
+    <value>Operation failed</value>
+  </data>
+  <data name="error_select_2_or_more" xml:space="preserve">
+    <value>Please select two or more object.</value>
+  </data>
+  <data name="error_select_2_points" xml:space="preserve">
+    <value>Please select 2 point</value>
+  </data>
   <data name="menu_edit" xml:space="preserve">
     <value>Edit</value>
   </data>
@@ -138,5 +147,14 @@
   </data>
   <data name="menu_snap" xml:space="preserve">
     <value>Snap</value>
+  </data>
+  <data name="notice_operation_success" xml:space="preserve">
+    <value>Operation success</value>
+  </data>
+  <data name="notice_was_grouped" xml:space="preserve">
+    <value>Objects was grouped</value>
+  </data>
+  <data name="notice_was_ungrouped" xml:space="preserve">
+    <value>Objects was ungrouped</value>
   </data>
 </root>
