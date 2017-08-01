@@ -402,14 +402,6 @@ namespace Plotter
         {
         }
 
-        private void dump_figv(DrawContext dc)
-        {
-            CadFigure fig = getSelFig();
-            if (fig == null) return;
-
-            fig.DumpV(DebugOut.Std, dc);
-        }
-
         private void test(DrawContext dc)
         {
             UMatrix4 m = new UMatrix4(
@@ -562,11 +554,6 @@ namespace Plotter
                 test_crossPlane3(dc);
             }
 
-            else if (s == "dump figv")
-            {
-                dump_figv(dc);
-            }
-
             else if (s == "dump sels")
             {
                 DebugOut dout = new DebugOut();
@@ -611,7 +598,7 @@ namespace Plotter
                 dout.Indent++;
                 foreach (CadFigure fig in TempFigureList)
                 {
-                    fig.Dump(dout);
+                    fig.Dump(dout, "temp fig");
                 }
                 dout.Indent--;
                 dout.println("}");

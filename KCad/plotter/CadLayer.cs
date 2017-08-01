@@ -238,7 +238,7 @@ namespace Plotter
 
             foreach (CadFigure fig in FigureList)
             {
-                fig.Dump(dout);
+                fig.Dump(dout, "fig");
             }
 
             dout.Indent--;

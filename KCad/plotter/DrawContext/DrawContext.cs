@@ -223,17 +223,14 @@ namespace Plotter
             RecalcViewDirFromCameraDirection();
         }
 
-        public virtual void dump(DebugOut dout)
+        public virtual void dump(DebugOut dout, string prefix)
         {
-            dout.println("ViewOrg");
-            ViewOrg.dump(dout);
+            ViewOrg.dump(dout, "ViewOrg");
 
             dout.println("View Width=" + mViewWidth.ToString() + " Height=" + mViewHeight.ToString());
 
             CadPoint t = CadPoint.Create(mViewDir);
-
-            dout.println("GazeVector");
-            t.dump(dout);
+            t.dump(dout, "ViewDir");
         }
     }
 }

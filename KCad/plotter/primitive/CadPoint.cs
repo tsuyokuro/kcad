@@ -368,9 +368,9 @@ namespace Plotter
             return ret;
         }
 
-        public void dump(DebugOut dout)
+        public void dump(DebugOut dout, string prefix = nameof(CadPoint))
         {
-            dout.println("CadPoint {");
+            dout.println(prefix + "{");
             dout.Indent++;
             dout.println("Type:" + Type.ToString());
             dout.println("x:" + x.ToString());

@@ -475,15 +475,15 @@ namespace Plotter
         #endregion
 
         #region "Dump" 
-        public void SimpleDump(DebugOut dout)
+        public void SimpleDump(DebugOut dout, string prefix = nameof(CadFigure))
         {
             dout.println(
-                this.GetType().Name +
+                prefix +
                 "(" + this.GetHashCode().ToString() + ")" +
                 "ID=" + ID.ToString());
         }
 
-        public void Dump(DebugOut dout)
+        public void Dump(DebugOut dout, string prefix = nameof(CadFigure))
         {
             dout.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
             dout.Indent++;
@@ -496,7 +496,7 @@ namespace Plotter
             dout.Indent++;
             foreach (CadPoint point in PointList)
             {
-                point.dump(dout);
+                point.dump(dout, "");
             }
             dout.Indent--;
             dout.println("]");
@@ -517,40 +517,6 @@ namespace Plotter
             dout.println("}");
         }
 
-        public void DumpV(DebugOut dout, DrawContext dc)
-        {
-            dout.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
-            dout.Indent++;
-            dout.println("ID=" + ID.ToString());
-            dout.println("LayerID=" + LayerID.ToString());
-            dout.println("Type=" + Type.ToString());
-            dout.println("State=" + State.ToString());
-
-            dout.println("PointList (View)[");
-            dout.Indent++;
-            foreach (CadPoint point in PointList)
-            {
-                CadPoint vp = dc.CadPointToUnitPoint(point);
-                vp.dump(dout);
-            }
-            dout.Indent--;
-            dout.println("]");
-
-
-            dout.println("ParentID=" + (mParent != null ? mParent.ID : 0));
-
-            dout.println("Child [");
-            dout.Indent++;
-            foreach (CadFigure fig in mChildList)
-            {
-                dout.println("" + fig.ID);
-            }
-            dout.Indent--;
-            dout.println("]");
-
-            dout.Indent--;
-            dout.println("}");
-        }
         #endregion
 
         #region "Behavior"
