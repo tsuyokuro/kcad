@@ -39,7 +39,7 @@ namespace Plotter
             {
             }
 
-            public override void AddPoint(CadFigure fig, CadPoint p)
+            public override void AddPoint(CadFigure fig, CadVector p)
             {
                 fig.mPointList.Add(p);
             }
@@ -53,12 +53,12 @@ namespace Plotter
                 return ret;
             }
 
-            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadVector p)
             {
                 fig.PointList.Add(p);
             }
 
-            public override void SetPointAt(CadFigure fig, int index, CadPoint pt)
+            public override void SetPointAt(CadFigure fig, int index, CadVector pt)
             {
                 fig.mPointList[index] = pt;
             }
@@ -91,7 +91,7 @@ namespace Plotter
             {
                 Draw(fig, dc, pen);
 
-                foreach (CadPoint p in fig.PointList)
+                foreach (CadVector p in fig.PointList)
                 {
                     if (p.Selected)
                     {
@@ -100,7 +100,7 @@ namespace Plotter
                 }
             }
 
-            public override void DrawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
+            public override void DrawTemp(CadFigure fig, DrawContext dc, CadVector tp, int pen)
             {
                 int cnt = fig.PointList.Count;
 
@@ -134,7 +134,7 @@ namespace Plotter
                 return fig.Type;
             }
 
-            public override void MoveSelectedPoint(CadFigure fig, DrawContext dc, CadPoint delta)
+            public override void MoveSelectedPoint(CadFigure fig, DrawContext dc, CadVector delta)
             {
                 if (fig.PointList[0].Selected && fig.PointList[1].Selected &&
                     fig.PointList[2].Selected && fig.PointList[3].Selected)
@@ -148,7 +148,7 @@ namespace Plotter
 
                 if (fig.PointList[2].Selected || fig.PointList[3].Selected)
                 {
-                    CadPoint v0 = fig.StoreList[3] - fig.StoreList[0];
+                    CadVector v0 = fig.StoreList[3] - fig.StoreList[0];
 
                     if (v0.IsZero())
                     {
@@ -157,14 +157,14 @@ namespace Plotter
                         return;
                     }
 
-                    CadPoint v0u = v0.UnitVector();
+                    CadVector v0u = v0.UnitVector();
 
                     double d = CadMath.InnerProduct(v0u, delta);
 
-                    CadPoint vd = v0u * d;
+                    CadVector vd = v0u * d;
 
-                    CadPoint nv3 = fig.StoreList[3] + vd;
-                    CadPoint nv2 = fig.StoreList[2] + vd;
+                    CadVector nv3 = fig.StoreList[3] + vd;
+                    CadVector nv2 = fig.StoreList[2] + vd;
 
                     if (nv3.coordEqualsThreshold(fig.StoreList[0], 0.001) ||
                         nv2.coordEqualsThreshold(fig.StoreList[1], 0.001))
@@ -180,18 +180,18 @@ namespace Plotter
 
                 if (fig.PointList[0].Selected || fig.PointList[1].Selected)
                 {
-                    CadPoint v0 = fig.StoreList[0];
-                    CadPoint v1 = fig.StoreList[1];
-                    CadPoint v2 = fig.StoreList[2];
-                    CadPoint v3 = fig.StoreList[3];
+                    CadVector v0 = fig.StoreList[0];
+                    CadVector v1 = fig.StoreList[1];
+                    CadVector v2 = fig.StoreList[2];
+                    CadVector v3 = fig.StoreList[3];
 
-                    CadPoint lv = v3 - v0;
+                    CadVector lv = v3 - v0;
                     double h = lv.Norm();
 
-                    CadPoint planeNormal = CadMath.Normal(v0, v1, v2);
+                    CadVector planeNormal = CadMath.Normal(v0, v1, v2);
 
-                    CadPoint cp0 = v0;
-                    CadPoint cp1 = v1;
+                    CadVector cp0 = v0;
+                    CadVector cp1 = v1;
 
                     if (fig.PointList[0].Selected)
                     {
@@ -218,8 +218,8 @@ namespace Plotter
                         fig.PointList[1] = fig.PointList[1].setVector(cp1.vector);
                     }
 
-                    CadPoint normal = CadMath.Normal(cp0, cp0 + planeNormal, cp1);
-                    CadPoint d = normal * h;
+                    CadVector normal = CadMath.Normal(cp0, cp0 + planeNormal, cp1);
+                    CadVector d = normal * h;
 
                     fig.PointList[3] = fig.PointList[3].setVector(fig.PointList[0] + d);
                     fig.PointList[2] = fig.PointList[2].setVector(fig.PointList[1] + d);
@@ -229,7 +229,7 @@ namespace Plotter
             // 高さが０の場合、移動方向が定まらないので
             // 投影座標系でz=0とした座標から,List[0] - List[1]への垂線を計算して
             // そこへ移動する
-            private void MoveSelectedPointWithHeight(CadFigure fig, DrawContext dc, CadPoint delta)
+            private void MoveSelectedPointWithHeight(CadFigure fig, DrawContext dc, CadVector delta)
             {
                 CadSegment seg = CadUtil.PerpendicularSeg(fig.PointList[0], fig.PointList[1],
                     fig.StoreList[2] + delta);
@@ -254,9 +254,9 @@ namespace Plotter
             private void DrawDim(
                                 CadFigure fig,
                                 DrawContext dc,
-                                CadPoint a,
-                                CadPoint b,
-                                CadPoint p,
+                                CadVector a,
+                                CadVector b,
+                                CadVector p,
                                 int pen)
             {
                 CadSegment seg = CadUtil.PerpendicularSeg(a, b, p);
@@ -264,7 +264,7 @@ namespace Plotter
                 dc.Drawing.DrawLine(pen, a, seg.P0);
                 dc.Drawing.DrawLine(pen, b, seg.P1);
 
-                CadPoint cp = CadUtil.CenterPoint(seg.P0, seg.P1);
+                CadVector cp = CadUtil.CenterPoint(seg.P0, seg.P1);
 
                 dc.Drawing.DrawArrow(pen, cp, seg.P0, ArrowTypes.CROSS, ArrowPos.END, 4, 2);
                 dc.Drawing.DrawArrow(pen, cp, seg.P1, ArrowTypes.CROSS, ArrowPos.END, 4, 2);
@@ -275,7 +275,7 @@ namespace Plotter
                 dc.Drawing.DrawLine(pen, fig.PointList[0], fig.PointList[3]);
                 dc.Drawing.DrawLine(pen, fig.PointList[1], fig.PointList[2]);
 
-                CadPoint cp = CadUtil.CenterPoint(fig.PointList[3], fig.PointList[2]);
+                CadVector cp = CadUtil.CenterPoint(fig.PointList[3], fig.PointList[2]);
 
                 dc.Drawing.DrawArrow(pen, cp, fig.PointList[3], ArrowTypes.CROSS, ArrowPos.END, 4, 2);
                 dc.Drawing.DrawArrow(pen, cp, fig.PointList[2], ArrowTypes.CROSS, ArrowPos.END, 4, 2);

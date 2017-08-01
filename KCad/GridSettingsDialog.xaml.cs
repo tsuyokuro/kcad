@@ -8,7 +8,7 @@ namespace KCad
 {
     public partial class GridSettingsDialog : Window
     {
-        public CadPoint GridSize = default(CadPoint);
+        public CadVector GridSize = default(CadVector);
 
         public GridSettingsDialog()
         {

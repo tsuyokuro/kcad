@@ -5,9 +5,9 @@ namespace Plotter
 {
     public class Gridding
     {
-        private CadPoint mGridSize;
+        private CadVector mGridSize;
 
-        public CadPoint GridSize
+        public CadVector GridSize
         {
             set
             {
@@ -22,32 +22,32 @@ namespace Plotter
 
         public double Range = 8;
 
-        public CadPoint XMatchU = default(CadPoint);
-        public CadPoint YMatchU = default(CadPoint);
+        public CadVector XMatchU = default(CadVector);
+        public CadVector YMatchU = default(CadVector);
 
-        public CadPoint XMatchW = default(CadPoint);
-        public CadPoint YMatchW = default(CadPoint);
+        public CadVector XMatchW = default(CadVector);
+        public CadVector YMatchW = default(CadVector);
 
         public bool Enable = false;
 
         public Gridding()
         {
-            GridSize = CadPoint.Create(10, 10, 10);
+            GridSize = CadVector.Create(10, 10, 10);
         }
 
         public void Clear()
         {
-            XMatchU.Type = CadPoint.Types.INVALID;
-            YMatchU.Type = CadPoint.Types.INVALID;
+            XMatchU.Type = CadVector.Types.INVALID;
+            YMatchU.Type = CadVector.Types.INVALID;
 
-            XMatchW.Type = CadPoint.Types.INVALID;
-            YMatchW.Type = CadPoint.Types.INVALID;
+            XMatchW.Type = CadVector.Types.INVALID;
+            YMatchW.Type = CadVector.Types.INVALID;
         }
 
 
-        private CadPoint CalcGridSizeU(DrawContext dc, CadPoint gridSizeW)
+        private CadVector CalcGridSizeU(DrawContext dc, CadVector gridSizeW)
         {
-            CadPoint gridSize = dc.CadPointToUnitPoint(gridSizeW) - dc.CadPointToUnitPoint(CadPoint.Zero);
+            CadVector gridSize = dc.CadPointToUnitPoint(gridSizeW) - dc.CadPointToUnitPoint(CadVector.Zero);
 
             gridSize.x = Math.Abs(gridSize.x);
             gridSize.y = Math.Abs(gridSize.y);
@@ -56,7 +56,7 @@ namespace Plotter
             return gridSize;
         }
 
-        public void Check(DrawContext dc, CadPoint up)
+        public void Check(DrawContext dc, CadVector up)
         {
             if (!Enable)
             {
@@ -64,13 +64,13 @@ namespace Plotter
                 return;
             }
 
-            CadPoint scr = CalcGridSizeU(dc, GridSize);
+            CadVector scr = CalcGridSizeU(dc, GridSize);
 
-            CadPoint t = default(CadPoint);
+            CadVector t = default(CadVector);
 
-            CadPoint sp = up;
+            CadVector sp = up;
 
-            CadPoint u0 = dc.mViewOrg;
+            CadVector u0 = dc.mViewOrg;
 
             double range;
 
@@ -123,37 +123,13 @@ namespace Plotter
             double szy = grid.GridSize.y;
             double szz = grid.GridSize.z;
 
-            CadPoint usz;
+            CadVector usz;
             double t = 1;
             double d;
 
-            CadPoint uzero = dc.CadPointToUnitPoint(CadPoint.Zero);
+            CadVector uzero = dc.CadPointToUnitPoint(CadVector.Zero);
 
-            usz = dc.CadPointToUnitPoint(CadPoint.Create(szx, 0, 0)) - uzero;
-
-            if (usz.x != 0 && usz.x < min)
-            {
-                d = Math.Ceiling(min / usz.x) * usz.x;
-                t = d / usz.x;
-            }
-
-            if (t > n)
-            {
-                n = t;
-            }
-
-            if (usz.y != 0 && usz.y < min)
-            {
-                d = Math.Ceiling(min / usz.y) * usz.y;
-                t = d / usz.y;
-            }
-
-            if (t > n)
-            {
-                n = t;
-            }
-
-            usz = dc.CadPointToUnitPoint(CadPoint.Create(0, szy, 0)) - uzero;
+            usz = dc.CadPointToUnitPoint(CadVector.Create(szx, 0, 0)) - uzero;
 
             if (usz.x != 0 && usz.x < min)
             {
@@ -177,7 +153,31 @@ namespace Plotter
                 n = t;
             }
 
-            usz = dc.CadPointToUnitPoint(CadPoint.Create(0, 0, szy)) - uzero;
+            usz = dc.CadPointToUnitPoint(CadVector.Create(0, szy, 0)) - uzero;
+
+            if (usz.x != 0 && usz.x < min)
+            {
+                d = Math.Ceiling(min / usz.x) * usz.x;
+                t = d / usz.x;
+            }
+
+            if (t > n)
+            {
+                n = t;
+            }
+
+            if (usz.y != 0 && usz.y < min)
+            {
+                d = Math.Ceiling(min / usz.y) * usz.y;
+                t = d / usz.y;
+            }
+
+            if (t > n)
+            {
+                n = t;
+            }
+
+            usz = dc.CadPointToUnitPoint(CadVector.Create(0, 0, szy)) - uzero;
 
             if (usz.x != 0 && usz.x < min)
             {

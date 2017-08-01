@@ -25,20 +25,20 @@ namespace Plotter
         public CadFigure Figure;
 
         public int PtIndexA;
-        public CadPoint pA;
+        public CadVector pA;
 
         public int PtIndexB;
-        public CadPoint pB;
+        public CadVector pB;
 
-        public CadPoint CrossPoint;
+        public CadVector CrossPoint;
 
-        public CadPoint CrossViewPoint;
+        public CadVector CrossViewPoint;
 
-        public CadPoint CenterPoint
+        public CadVector CenterPoint
         {
             get
             {
-                CadPoint t = pB - pA;
+                CadVector t = pB - pA;
                 t /= 2;
                 t += pA;
                 return t;

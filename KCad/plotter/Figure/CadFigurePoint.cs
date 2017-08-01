@@ -25,31 +25,31 @@ namespace Plotter
             {
             }
 
-            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadVector p)
             {
-                p.Type = CadPoint.Types.BREAK;
+                p.Type = CadVector.Types.BREAK;
                 fig.mPointList.Add(p);
             }
 
-            public override void AddPoint(CadFigure fig, CadPoint p)
+            public override void AddPoint(CadFigure fig, CadVector p)
             {
                 if (fig.mPointList.Count > 0)
                 {
                     return;
                 }
 
-                p.Type = CadPoint.Types.BREAK;
+                p.Type = CadVector.Types.BREAK;
                 fig.mPointList.Add(p);
             }
 
-            public override void SetPointAt(CadFigure fig, int index, CadPoint pt)
+            public override void SetPointAt(CadFigure fig, int index, CadVector pt)
             {
                 if (index > 0)
                 {
                     return;
                 }
 
-                pt.Type = CadPoint.Types.BREAK;
+                pt.Type = CadVector.Types.BREAK;
                 fig.mPointList[index] = pt;
             }
 
@@ -78,7 +78,7 @@ namespace Plotter
                 drawSelected_Point(fig, dc, pen);
             }
 
-            public override void DrawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
+            public override void DrawTemp(CadFigure fig, DrawContext dc, CadVector tp, int pen)
             {
                 // NOP
             }
@@ -108,9 +108,9 @@ namespace Plotter
                 return fig.Type;
             }
 
-            public override void MoveSelectedPoint(CadFigure fig, DrawContext dc, CadPoint delta)
+            public override void MoveSelectedPoint(CadFigure fig, DrawContext dc, CadVector delta)
             {
-                CadPoint p = fig.StoreList[0];
+                CadVector p = fig.StoreList[0];
 
                 if (p.Selected)
                 {

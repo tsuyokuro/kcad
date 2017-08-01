@@ -48,12 +48,12 @@ namespace Plotter
                 }
             }
 
-            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadVector p)
             {
                 fig.mPointList.Add(p);
             }
 
-            public override void AddPoint(CadFigure fig, CadPoint p)
+            public override void AddPoint(CadFigure fig, CadVector p)
             {
                 fig.mPointList.Add(p);
             }
@@ -77,23 +77,23 @@ namespace Plotter
 
             public override void DrawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB)
             {
-                CadPoint a = fig.PointList[idxA];
-                CadPoint b = fig.PointList[idxB];
+                CadVector a = fig.PointList[idxA];
+                CadVector b = fig.PointList[idxB];
 
                 dc.Drawing.DrawLine(pen, a, b);
             }
 
             protected void drawLines(CadFigure fig, DrawContext dc, int pen)
             {
-                IReadOnlyList<CadPoint> pl = fig.PointList;
+                IReadOnlyList<CadVector> pl = fig.PointList;
 
                 if (pl.Count <= 0)
                 {
                     return;
                 }
 
-                CadPoint a;
-                CadPoint b;
+                CadVector a;
+                CadVector b;
 
                 int i = 0;
                 a = pl[i];
@@ -114,8 +114,8 @@ namespace Plotter
                 {
                     if (i + 3 < pl.Count)
                     {
-                        if (pl[i + 1].Type == CadPoint.Types.HANDLE &&
-                            pl[i + 2].Type == CadPoint.Types.HANDLE)
+                        if (pl[i + 1].Type == CadVector.Types.HANDLE &&
+                            pl[i + 2].Type == CadVector.Types.HANDLE)
                         {
                             dc.Drawing.DrawBezier(pen,
                                 pl[i], pl[i + 1], pl[i + 2], pl[i + 3]);
@@ -124,8 +124,8 @@ namespace Plotter
                             a = pl[i];
                             continue;
                         }
-                        else if (pl[i + 1].Type == CadPoint.Types.HANDLE &&
-                            pl[i + 2].Type == CadPoint.Types.STD)
+                        else if (pl[i + 1].Type == CadVector.Types.HANDLE &&
+                            pl[i + 2].Type == CadVector.Types.STD)
                         {
                             dc.Drawing.DrawBezier(pen,
                                 pl[i], pl[i + 1], pl[i + 2]);
@@ -138,8 +138,8 @@ namespace Plotter
 
                     if (i + 2 < pl.Count)
                     {
-                        if (pl[i + 1].Type == CadPoint.Types.HANDLE &&
-                                                pl[i + 2].Type == CadPoint.Types.STD)
+                        if (pl[i + 1].Type == CadVector.Types.HANDLE &&
+                                                pl[i + 2].Type == CadVector.Types.STD)
                         {
                             dc.Drawing.DrawBezier(pen,
                                 pl[i], pl[i + 1], pl[i + 2]);
@@ -171,11 +171,11 @@ namespace Plotter
                 }
             }
 
-            public override IReadOnlyList<CadPoint> GetPoints(CadFigure fig, int curveSplitNum)
+            public override IReadOnlyList<CadVector> GetPoints(CadFigure fig, int curveSplitNum)
             {
-                List<CadPoint> ret = new List<CadPoint>();
+                List<CadVector> ret = new List<CadVector>();
 
-                IReadOnlyList<CadPoint> pl = fig.PointList;
+                IReadOnlyList<CadVector> pl = fig.PointList;
 
                 if (pl.Count <= 0)
                 {
@@ -188,16 +188,16 @@ namespace Plotter
                 {
                     if (i + 3 < pl.Count)
                     {
-                        if (pl[i + 1].Type == CadPoint.Types.HANDLE &&
-                            pl[i + 2].Type == CadPoint.Types.HANDLE)
+                        if (pl[i + 1].Type == CadVector.Types.HANDLE &&
+                            pl[i + 2].Type == CadVector.Types.HANDLE)
                         {
                             CadUtil.BezierPoints(pl[i], pl[i + 1], pl[i + 2], pl[i + 3], curveSplitNum, ret);
 
                             i += 4;
                             continue;
                         }
-                        else if (pl[i + 1].Type == CadPoint.Types.HANDLE &&
-                            pl[i + 2].Type == CadPoint.Types.STD)
+                        else if (pl[i + 1].Type == CadVector.Types.HANDLE &&
+                            pl[i + 2].Type == CadVector.Types.STD)
                         {
                             CadUtil.BezierPoints(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, ret);
 
@@ -208,8 +208,8 @@ namespace Plotter
 
                     if (i + 2 < pl.Count)
                     {
-                        if (pl[i + 1].Type == CadPoint.Types.HANDLE &&
-                                                pl[i + 2].Type == CadPoint.Types.STD)
+                        if (pl[i + 1].Type == CadVector.Types.HANDLE &&
+                                                pl[i + 2].Type == CadVector.Types.STD)
                         {
                             CadUtil.BezierPoints(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, ret);
 
@@ -232,21 +232,21 @@ namespace Plotter
 
                 for (i = 0; i < num; i++)
                 {
-                    CadPoint p = fig.PointList[i];
+                    CadVector p = fig.PointList[i];
 
                     if (!p.Selected) continue;
 
                     dc.Drawing.DrawSelectedPoint(p);
 
 
-                    if (p.Type == CadPoint.Types.HANDLE)
+                    if (p.Type == CadVector.Types.HANDLE)
                     {
                         int idx = i + 1;
 
                         if (idx < fig.PointCount)
                         {
-                            CadPoint np = fig.GetPointAt(idx);
-                            if (np.Type != CadPoint.Types.HANDLE)
+                            CadVector np = fig.GetPointAt(idx);
+                            if (np.Type != CadVector.Types.HANDLE)
                             {
                                 dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
                                 dc.Drawing.DrawSelectedPoint(np);
@@ -257,8 +257,8 @@ namespace Plotter
 
                         if (idx >= 0)
                         {
-                            CadPoint np = fig.GetPointAt(idx);
-                            if (np.Type != CadPoint.Types.HANDLE)
+                            CadVector np = fig.GetPointAt(idx);
+                            if (np.Type != CadVector.Types.HANDLE)
                             {
                                 dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
                                 dc.Drawing.DrawSelectedPoint(np);
@@ -271,8 +271,8 @@ namespace Plotter
 
                         if (idx < fig.PointCount)
                         {
-                            CadPoint np = fig.GetPointAt(idx);
-                            if (np.Type == CadPoint.Types.HANDLE)
+                            CadVector np = fig.GetPointAt(idx);
+                            if (np.Type == CadVector.Types.HANDLE)
                             {
                                 dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
                                 dc.Drawing.DrawSelectedPoint(np);
@@ -283,8 +283,8 @@ namespace Plotter
 
                         if (idx >= 0)
                         {
-                            CadPoint np = fig.GetPointAt(idx);
-                            if (np.Type == CadPoint.Types.HANDLE)
+                            CadVector np = fig.GetPointAt(idx);
+                            if (np.Type == CadVector.Types.HANDLE)
                             {
                                 dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
                                 dc.Drawing.DrawSelectedPoint(np);
@@ -294,14 +294,14 @@ namespace Plotter
                 }
             }
 
-            public override void DrawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
+            public override void DrawTemp(CadFigure fig, DrawContext dc, CadVector tp, int pen)
             {
                 if (fig.PointCount == 0)
                 {
                     return;
                 }
 
-                CadPoint lastPt = fig.PointList[fig.PointCount - 1];
+                CadVector lastPt = fig.PointList[fig.PointCount - 1];
 
                 dc.Drawing.DrawLine(pen, lastPt, tp);
 
@@ -309,7 +309,7 @@ namespace Plotter
 
             }
 
-            public override void SetPointAt(CadFigure fig, int index, CadPoint pt)
+            public override void SetPointAt(CadFigure fig, int index, CadVector pt)
             {
                 fig.mPointList[index] = pt;
             }
@@ -326,7 +326,7 @@ namespace Plotter
                     //Vector3d normal = CadUtil.RepresentativeNormal(fig.PointList);
                     //double t = Vector3d.Dot(normal, dc.ViewDir);
 
-                    fig.Normal = CadPoint.Create(dc.ViewDir);
+                    fig.Normal = CadVector.Create(dc.ViewDir);
                     fig.Normal *= -1;
                 }
                 return fig.Type;
@@ -380,7 +380,7 @@ namespace Plotter
             {
                 Centroid ret = default(Centroid);
 
-                CadPoint d = fig.PointList[1] - fig.PointList[0];
+                CadVector d = fig.PointList[1] - fig.PointList[0];
 
                 d /= 2.0;
 

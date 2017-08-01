@@ -55,7 +55,7 @@ namespace Plotter
             public uint LayerID;
             public uint FigureID;
             public int PointIndex;
-            public CadPoint Point;
+            public CadVector Point;
 
             public void set(CadObjectDB db, SelectItem si)
             {
@@ -109,8 +109,8 @@ namespace Plotter
             {
                 if (ri.Figure.PointCount > 2)
                 {
-                    CadPoint sp = ri.Figure.PointList[0];
-                    CadPoint ep = ri.Figure.PointList[ri.Figure.PointList.Count-1];
+                    CadVector sp = ri.Figure.PointList[0];
+                    CadVector ep = ri.Figure.PointList[ri.Figure.PointList.Count-1];
 
                     if (ep.coordEquals(sp))
                     {
@@ -199,7 +199,7 @@ namespace Plotter
             }
         }
 
-        private Item findItem(CadPoint p)
+        private Item findItem(CadVector p)
         {
             foreach (Item item in ItemList)
             {
@@ -220,8 +220,8 @@ namespace Plotter
         private void updateItemList(BondInfo bi)
         {
             int pcnt = bi.BondedFigure.PointCount;
-            CadPoint head = bi.BondedFigure.GetPointAt(0);
-            CadPoint tail = bi.BondedFigure.GetPointAt(pcnt - 1);
+            CadVector head = bi.BondedFigure.GetPointAt(0);
+            CadVector tail = bi.BondedFigure.GetPointAt(pcnt - 1);
 
             Item item = null;
 
@@ -282,8 +282,8 @@ namespace Plotter
                 return null;
             }
 
-            CadPoint p0 = fig0.GetPointAt(idx0);
-            CadPoint p1 = fig1.GetPointAt(0);
+            CadVector p0 = fig0.GetPointAt(idx0);
+            CadVector p1 = fig1.GetPointAt(0);
 
 
             int idx1 = -1;

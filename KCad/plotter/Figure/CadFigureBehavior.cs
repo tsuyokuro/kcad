@@ -16,23 +16,23 @@ namespace Plotter
             }
 
             public abstract States GetState(CadFigure fig);
-            public abstract void AddPointInCreating(CadFigure fig, DrawContext dc, CadPoint p);
-            public abstract void AddPoint(CadFigure fig, CadPoint p);
-            public abstract void SetPointAt(CadFigure fig, int index, CadPoint pt);
+            public abstract void AddPointInCreating(CadFigure fig, DrawContext dc, CadVector p);
+            public abstract void AddPoint(CadFigure fig, CadVector p);
+            public abstract void SetPointAt(CadFigure fig, int index, CadVector pt);
             public abstract void RemoveSelected(CadFigure fig);
             public abstract void Draw(CadFigure fig, DrawContext dc, int pen);
             public abstract void DrawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB);
             public abstract void DrawSelected(CadFigure fig, DrawContext dc, int pen);
-            public abstract void DrawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen);
+            public abstract void DrawTemp(CadFigure fig, DrawContext dc, CadVector tp, int pen);
             public abstract void StartCreate(CadFigure fig, DrawContext dc);
             public abstract Types EndCreate(CadFigure fig, DrawContext dc);
             public abstract Centroid GetCentroid(CadFigure fig);
 
-            public virtual void MoveSelectedPoint(CadFigure fig, DrawContext dc, CadPoint delta)
+            public virtual void MoveSelectedPoint(CadFigure fig, DrawContext dc, CadVector delta)
             {
                 for (int i = 0; i < fig.StoreList.Count; i++)
                 {
-                    CadPoint op = fig.StoreList[i];
+                    CadVector op = fig.StoreList[i];
 
                     if (!op.Selected)
                     {
@@ -46,7 +46,7 @@ namespace Plotter
                 }
             }
 
-            public virtual void MoveAllPoints(CadFigure fig, CadPoint delta)
+            public virtual void MoveAllPoints(CadFigure fig, CadVector delta)
             {
                 CadUtil.movePoints(fig.mPointList, delta);
             }
@@ -56,7 +56,7 @@ namespace Plotter
                 return CadUtil.getContainsRect(fig.PointList);
             }
 
-            public virtual IReadOnlyList<CadPoint> GetPoints(CadFigure fig, int curveSplitNum)
+            public virtual IReadOnlyList<CadVector> GetPoints(CadFigure fig, int curveSplitNum)
             {
                 return fig.PointList;
             }
@@ -89,11 +89,11 @@ namespace Plotter
                 return States.NONE;
             }
 
-            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadVector p)
             {
             }
 
-            public override void AddPoint(CadFigure fig, CadPoint p)
+            public override void AddPoint(CadFigure fig, CadVector p)
             {
             }
 
@@ -109,7 +109,7 @@ namespace Plotter
             {
             }
 
-            public override void DrawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
+            public override void DrawTemp(CadFigure fig, DrawContext dc, CadVector tp, int pen)
             {
             }
 
@@ -122,7 +122,7 @@ namespace Plotter
             {
             }
 
-            public override void SetPointAt(CadFigure fig, int index, CadPoint pt)
+            public override void SetPointAt(CadFigure fig, int index, CadVector pt)
             {
             }
 

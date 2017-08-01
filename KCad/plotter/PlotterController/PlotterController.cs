@@ -23,7 +23,7 @@ namespace Plotter
     }
 
 
-    public delegate void CursorPosChanged(PlotterController sender, CadPoint pt, CursorType type);
+    public delegate void CursorPosChanged(PlotterController sender, CadVector pt, CursorType type);
 
     public partial class PlotterController
     {
@@ -547,7 +547,7 @@ namespace Plotter
             {
                 foreach (CadFigure fig in layer.FigureList)
                 {
-                    foreach (CadPoint p in fig.PointList)
+                    foreach (CadVector p in fig.PointList)
                     {
                         if (p.Selected)
                         {
@@ -680,14 +680,14 @@ namespace Plotter
             return opeList;
         }
 
-        public void MoveSelectedPoints(CadPoint delta)
+        public void MoveSelectedPoints(CadVector delta)
         {
             StartEdit();
             MoveSelectedPoints(null, delta);
             EndEdit();
         }
 
-        private void MoveSelectedPoints(DrawContext dc, CadPoint delta)
+        private void MoveSelectedPoints(DrawContext dc, CadVector delta)
         {
             List<uint> figIDList = GetSelectedFigIDList();
 
@@ -748,7 +748,7 @@ namespace Plotter
         {
             if (Clipboard.ContainsData("List.CadFiguer"))
             {
-                CadPoint pp = default(CadPoint);
+                CadVector pp = default(CadVector);
 
                 pp = LastDownPoint;
 
@@ -757,7 +757,7 @@ namespace Plotter
 
                 CadRect cr = CadUtil.getContainsRect(list);
 
-                CadPoint d = pp - cr.p0;
+                CadVector d = pp - cr.p0;
 
                 d.z = 0;
 
@@ -941,7 +941,7 @@ namespace Plotter
             SetCurrentFigure(fig);
         }
 
-        public void ScaleSelectedFigure(CadPoint org, double scale)
+        public void ScaleSelectedFigure(CadVector org, double scale)
         {
             StartEdit();
 
@@ -962,13 +962,13 @@ namespace Plotter
             EndEdit();
         }
 
-        public void ScaleFugure(CadPoint org, double scale, CadFigure fig)
+        public void ScaleFugure(CadVector org, double scale, CadFigure fig)
         {
             int n = fig.PointList.Count;
 
             for (int i = 0; i < n; i++)
             {
-                CadPoint p = fig.PointList[i];
+                CadVector p = fig.PointList[i];
                 p -= org;
                 p *= scale;
                 p += org;

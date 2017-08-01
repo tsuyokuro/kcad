@@ -42,7 +42,7 @@ namespace Plotter
 
             CadFigure fig = si.Figure;
 
-            CadPoint pt = LastDownPoint;
+            CadVector pt = LastDownPoint;
 
             DebugOut dout = new DebugOut();
 
@@ -64,7 +64,7 @@ namespace Plotter
 
             CadFigure fig = si.Figure;
 
-            IReadOnlyList<CadPoint> list = fig.GetPoints(64);
+            IReadOnlyList<CadVector> list = fig.GetPoints(64);
 
             CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
 
@@ -93,10 +93,10 @@ namespace Plotter
 
             CadFigure fig = mDB.getFigure(seg.FigureID);
 
-            CadPoint a = fig.GetPointAt(seg.PtIndexA);
-            CadPoint b = fig.GetPointAt(seg.PtIndexB);
+            CadVector a = fig.GetPointAt(seg.PtIndexA);
+            CadVector b = fig.GetPointAt(seg.PtIndexB);
 
-            CadPoint pt = LastDownPoint;
+            CadVector pt = LastDownPoint;
 
             CrossInfo ret = CadUtil.PerpendicularCrossSeg2D(a, b, pt);
 
@@ -135,16 +135,16 @@ namespace Plotter
                 return;
             }
 
-            CadPoint a = LastDownPoint;
+            CadVector a = LastDownPoint;
 
-            CadPoint normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
+            CadVector normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
 
             if (normal.IsZero())
             {
                 return;
             }
 
-            CadPoint cp = CadUtil.CrossPlane(a, fig.PointList[0], normal);
+            CadVector cp = CadUtil.CrossPlane(a, fig.PointList[0], normal);
 
             CadFigure line = DB.newFigure(CadFigure.Types.POLY_LINES);
 
@@ -177,17 +177,17 @@ namespace Plotter
                 return;
             }
 
-            CadPoint a = LastDownPoint;
-            CadPoint b = a + CadPoint.Create(dc.ViewDir);
+            CadVector a = LastDownPoint;
+            CadVector b = a + CadVector.Create(dc.ViewDir);
 
-            CadPoint normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
+            CadVector normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
 
             if (normal.IsZero())
             {
                 return;
             }
 
-            CadPoint cp = CadUtil.CrossPlane(a, b, fig.PointList[0], normal);
+            CadVector cp = CadUtil.CrossPlane(a, b, fig.PointList[0], normal);
 
             if (!cp.Valid)
             {
@@ -225,21 +225,21 @@ namespace Plotter
                 return;
             }
 
-            CadPoint a = dc.CadPointToUnitPoint(LastDownPoint);
-            CadPoint b = a;
+            CadVector a = dc.CadPointToUnitPoint(LastDownPoint);
+            CadVector b = a;
             b.z -= 100;
 
             a = dc.UnitPointToCadPoint(a);
             b = dc.UnitPointToCadPoint(b);
 
-            CadPoint normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
+            CadVector normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
 
             if (normal.IsZero())
             {
                 return;
             }
 
-            CadPoint cp = CadUtil.CrossPlane(a, b, fig.PointList[0], normal);
+            CadVector cp = CadUtil.CrossPlane(a, b, fig.PointList[0], normal);
 
             if (!cp.Valid)
             {
@@ -258,8 +258,8 @@ namespace Plotter
 
         private void test_depthLine(DrawContext dc)
         {
-            CadPoint a = dc.CadPointToUnitPoint(LastDownPoint);
-            CadPoint b = a;
+            CadVector a = dc.CadPointToUnitPoint(LastDownPoint);
+            CadVector b = a;
             b.z -= 100;
 
             a = dc.UnitPointToCadPoint(a);
@@ -327,7 +327,7 @@ namespace Plotter
             CadFigure fig = getSelFig();
             if (fig == null) return;
 
-            CadPoint axis = default(CadPoint);
+            CadVector axis = default(CadVector);
             //axis.y = -1.0;
             axis.x = -1.0;
             axis.z = -1.0;
@@ -341,13 +341,13 @@ namespace Plotter
 
             CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
 
-            CadPoint tp = default(CadPoint);
+            CadVector tp = default(CadVector);
 
             int i = 0;
 
             for (;i<fig.PointList.Count;i++)
             {
-                CadPoint p = fig.PointList[i];
+                CadVector p = fig.PointList[i];
                 CadQuaternion qp = CadQuaternion.FromPoint(p);
 
                 qp = r * qp;
@@ -418,13 +418,13 @@ namespace Plotter
 
         private void testGLInvert()
         {
-            CadPoint p0 = CadPoint.Create(10, 10, 0);
+            CadVector p0 = CadVector.Create(10, 10, 0);
 
             p0 += CurrentDC.ViewOrg;
 
-            CadPoint pc = CurrentDC.UnitPointToCadPoint(p0);
+            CadVector pc = CurrentDC.UnitPointToCadPoint(p0);
 
-            CadPoint ps = CurrentDC.CadPointToUnitPoint(pc);
+            CadVector ps = CurrentDC.CadPointToUnitPoint(pc);
 
             ps -= CurrentDC.ViewOrg;
 
@@ -445,13 +445,13 @@ namespace Plotter
 
 
             tdc.SetViewSize(120, 60);
-            tdc.ViewOrg = CadPoint.Create(60, 30, 0);
+            tdc.ViewOrg = CadVector.Create(60, 30, 0);
 
             tdc.SetCamera(Vector3d.UnitZ, Vector3d.Zero, Vector3d.UnitY);
 
-            CadPoint p = CadPoint.Create(0, 0, 0);
+            CadVector p = CadVector.Create(0, 0, 0);
 
-            CadPoint tp = default(CadPoint);
+            CadVector tp = default(CadVector);
 
 
             tp = tdc.CadPointToUnitPoint(p);

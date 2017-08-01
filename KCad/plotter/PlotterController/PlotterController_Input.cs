@@ -33,22 +33,22 @@ namespace Plotter
         private CadRulerSet mRulerSet = new CadRulerSet();
 
 
-        private CadPoint StoreViewOrg = default(CadPoint);
+        private CadVector StoreViewOrg = default(CadVector);
 
-        private CadPoint mSnapPoint;
+        private CadVector mSnapPoint;
 
-        private CadPoint mSnapScreenPoint;
+        private CadVector mSnapScreenPoint;
 
-        private CadPoint mMoveOrgScrnPoint;
+        private CadVector mMoveOrgScrnPoint;
 
-        public CadPoint LastDownPoint = default(CadPoint);
+        public CadVector LastDownPoint = default(CadVector);
 
-        private CadPoint? mObjDownPoint = null;
+        private CadVector? mObjDownPoint = null;
 
 
-        private CadPoint mOffsetScreen = default(CadPoint);
+        private CadVector mOffsetScreen = default(CadVector);
 
-        private CadPoint mOffsetWorld = default(CadPoint);
+        private CadVector mOffsetWorld = default(CadVector);
 
         private Gridding mGridding = new Gridding();
 
@@ -197,8 +197,8 @@ namespace Plotter
 
         private void LDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
-            CadPoint pixp = CadPoint.Create(x, y, 0);
-            CadPoint cp = dc.UnitPointToCadPoint(pixp);
+            CadVector pixp = CadVector.Create(x, y, 0);
+            CadVector cp = dc.UnitPointToCadPoint(pixp);
 
             mOffsetScreen = pixp - mSnapScreenPoint;
             mOffsetWorld = cp - mSnapPoint;
@@ -277,9 +277,9 @@ namespace Plotter
                         if (mseg.FigureID != 0 && !layer.Locked)
                         {
 
-                            CadPoint center = mseg.CenterPoint;
+                            CadVector center = mseg.CenterPoint;
 
-                            CadPoint t = dc.CadPointToUnitPoint(center);
+                            CadVector t = dc.CadPointToUnitPoint(center);
 
                             if ((t - pixp).Norm() < LineSnapRange)
                             {
@@ -338,7 +338,7 @@ namespace Plotter
 
                         if (mGridding.Enable)
                         {
-                            CadPoint p = pixp;
+                            CadVector p = pixp;
 
                             bool match = false;
 
@@ -385,7 +385,7 @@ namespace Plotter
                         CreatingFigure.StartCreate(dc);
 
 
-                        CadPoint p = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                        CadVector p = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
                         SetPointInCreating(dc, p);
                         Draw(dc);
@@ -396,7 +396,7 @@ namespace Plotter
                     {
                         LastDownPoint = mSnapPoint;
 
-                        CadPoint p = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                        CadVector p = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
                         SetPointInCreating(dc, p);
                         Draw(dc);
@@ -406,7 +406,7 @@ namespace Plotter
                 case States.MEASURING:
                     {
                         LastDownPoint = mSnapPoint;
-                        CadPoint p = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                        CadVector p = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
                         SetPointInMeasuring(dc, p);
                         Draw(dc);
@@ -456,12 +456,12 @@ namespace Plotter
 
         private void MDrag(CadMouse pointer, DrawContext dc, int x, int y)
         {
-            CadPoint cp = default(CadPoint);
+            CadVector cp = default(CadVector);
             cp.set(x, y, 0);
 
-            CadPoint d = cp - pointer.MDownPoint;
+            CadVector d = cp - pointer.MDownPoint;
 
-            CadPoint op = StoreViewOrg + d;
+            CadVector op = StoreViewOrg + d;
 
             SetOrigin(dc, (int)op.x, (int)op.y);
         }
@@ -522,8 +522,8 @@ namespace Plotter
                     break;
             }
 
-            mOffsetScreen = default(CadPoint);
-            mOffsetWorld = default(CadPoint);
+            mOffsetScreen = default(CadVector);
+            mOffsetWorld = default(CadVector);
         }
 
         private void RUp(CadMouse pointer, DrawContext dc, int x, int y)
@@ -546,9 +546,9 @@ namespace Plotter
                 StartEdit();
             }
 
-            CadPoint pixp = CadPoint.Create(x, y, 0);
-            CadPoint cp = dc.UnitPointToCadPoint(pixp);
-            CadPoint tp = default(CadPoint);
+            CadVector pixp = CadVector.Create(x, y, 0);
+            CadVector cp = dc.UnitPointToCadPoint(pixp);
+            CadVector tp = default(CadVector);
 
             bool xmatch = false;
             bool ymatch = false;
@@ -644,9 +644,9 @@ namespace Plotter
                         CadFigure fig = mDB.getFigure(seg.FigureID);
                         fig.DrawSeg(dc, DrawTools.PEN_MATCH_SEG, seg.PtIndexA, seg.PtIndexB);
 
-                        CadPoint center = seg.CenterPoint;
+                        CadVector center = seg.CenterPoint;
 
-                        CadPoint t = dc.CadPointToUnitPoint(center);
+                        CadVector t = dc.CadPointToUnitPoint(center);
 
                         if ((t - pixp).Norm() < LineSnapRange)
                         {
@@ -709,10 +709,10 @@ namespace Plotter
             {
                 case States.DRAGING_POINTS:
                     {
-                        CadPoint p0 = dc.UnitPointToCadPoint(mMoveOrgScrnPoint);
-                        CadPoint p1 = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                        CadVector p0 = dc.UnitPointToCadPoint(mMoveOrgScrnPoint);
+                        CadVector p1 = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
-                        CadPoint delta = p1 - p0;
+                        CadVector delta = p1 - p0;
 
                         MoveSelectedPoints(dc, delta);
 
@@ -726,7 +726,7 @@ namespace Plotter
 
                         if (CreatingFigure != null)
                         {
-                            CadPoint p = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                            CadVector p = dc.UnitPointToCadPoint(mSnapScreenPoint);
                             CreatingFigure.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
                         }
                         break;
@@ -737,7 +737,7 @@ namespace Plotter
 
                         if (MeasureFigure != null)
                         {
-                            CadPoint p = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                            CadVector p = dc.UnitPointToCadPoint(mSnapScreenPoint);
                             MeasureFigure.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
                         }
                         break;
@@ -758,7 +758,7 @@ namespace Plotter
         }
 
 
-        private void SetPointInCreating(DrawContext dc, CadPoint p)
+        private void SetPointInCreating(DrawContext dc, CadVector p)
         {
             CreatingFigure.AddPointInCreating(dc, p);
 
@@ -793,7 +793,7 @@ namespace Plotter
             }
         }
 
-        private void SetPointInMeasuring(DrawContext dc, CadPoint p)
+        private void SetPointInMeasuring(DrawContext dc, CadVector p)
         {
             MeasureFigure.AddPointInCreating(dc, p);
         }

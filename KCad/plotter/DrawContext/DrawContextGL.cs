@@ -169,20 +169,20 @@ namespace Plotter
         {
         }
 
-        public override CadPoint CadPointToUnitPoint(CadPoint pt)
+        public override CadVector CadPointToUnitPoint(CadVector pt)
         {
-            CadPoint p = CadVectorToUnitVector(pt);
+            CadVector p = CadVectorToUnitVector(pt);
             p = p + mViewOrg;
             return p;
         }
 
-        public override CadPoint UnitPointToCadPoint(CadPoint pt)
+        public override CadVector UnitPointToCadPoint(CadVector pt)
         {
             pt = pt - mViewOrg;
             return UnitVectorToCadVector(pt);
         }
 
-        public override CadPoint CadVectorToUnitVector(CadPoint pt)
+        public override CadVector CadVectorToUnitVector(CadVector pt)
         {
             pt *= WoldScale;
 
@@ -205,10 +205,10 @@ namespace Plotter
             dv.Y = -dv.Y * (ViewHeight / 2.0);
             dv.Z = 0;
 
-            return CadPoint.Create(dv);
+            return CadVector.Create(dv);
         }
 
-        public override CadPoint UnitVectorToCadVector(CadPoint pt)
+        public override CadVector UnitVectorToCadVector(CadVector pt)
         {
             pt.x = pt.x / (ViewWidth / 2.0);
             pt.y = -pt.y / (ViewHeight / 2.0);
@@ -231,7 +231,7 @@ namespace Plotter
 
             wv /= WoldScale;
 
-            return CadPoint.Create(wv);
+            return CadVector.Create(wv);
         }
 
         private void SetupLight()
@@ -311,10 +311,10 @@ namespace Plotter
 
             Vector3d ev = LookAt - Eye;
 
-            CadPoint a = CadPoint.Create(ev);
-            CadPoint b = CadPoint.Create(UpVector);
+            CadVector a = CadVector.Create(ev);
+            CadVector b = CadVector.Create(UpVector);
 
-            CadPoint axis = CadMath.Normal(a, b);
+            CadVector axis = CadMath.Normal(a, b);
 
             if (!axis.IsZero())
             {

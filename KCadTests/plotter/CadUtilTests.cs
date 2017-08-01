@@ -14,9 +14,9 @@ namespace Plotter.Tests
         [TestMethod()]
         public void getTriangleAreaTest()
         {
-            CadPoint p1 = default(CadPoint);
-            CadPoint p2 = default(CadPoint);
-            CadPoint p3 = default(CadPoint);
+            CadVector p1 = default(CadVector);
+            CadVector p2 = default(CadVector);
+            CadVector p3 = default(CadVector);
 
             p1.x = 10;
             p1.y = 10;
@@ -30,7 +30,7 @@ namespace Plotter.Tests
             p3.y = 10;
             p3.z = 0;
 
-            List<CadPoint> pl = new List<CadPoint>();
+            List<CadVector> pl = new List<CadVector>();
 
             pl.Add(p1);
             pl.Add(p2);
@@ -69,7 +69,7 @@ namespace Plotter.Tests
         [TestMethod()]
         public void unitVectorTest()
         {
-            CadPoint p = default(CadPoint);
+            CadVector p = default(CadVector);
 
             p.x = 10;
             p.y = 10;

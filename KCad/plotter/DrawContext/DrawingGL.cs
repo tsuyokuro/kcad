@@ -58,7 +58,7 @@ namespace Plotter
             }
         }
 
-        public override void DrawLine(int pen, CadPoint a, CadPoint b)
+        public override void DrawLine(int pen, CadVector a, CadVector b)
         {
             GLPen glpen = DC.Pen(pen);
 
@@ -74,9 +74,9 @@ namespace Plotter
             GL.End();
         }
 
-        public override void DrawFace(int pen, IReadOnlyList<CadPoint> pointList, CadPoint normal)
+        public override void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector normal)
         {
-            CadPoint p;
+            CadVector p;
             GLPen glpen;
 
             if (normal.IsZero())
@@ -99,7 +99,7 @@ namespace Plotter
                 GL.Normal3(normal.vector);
             }
 
-            foreach (CadPoint pt in pointList)
+            foreach (CadVector pt in pointList)
             {
                 p = pt * DC.WoldScale;
 
@@ -121,17 +121,17 @@ namespace Plotter
 
             Vector3d t = DC.ViewDir * -1.0f;
 
-            CadPoint shift = (CadPoint)t;
+            CadVector shift = (CadVector)t;
 
             GL.Begin(PrimitiveType.LineStrip);
 
-            foreach (CadPoint pt in pointList)
+            foreach (CadVector pt in pointList)
             {
                 p = (pt + shift) * DC.WoldScale;
                 GL.Vertex3(p.vector);
             }
 
-            CadPoint pt0 = pointList[0];
+            CadVector pt0 = pointList[0];
             p = (pt0 + shift) * DC.WoldScale;
 
             GL.Vertex3(p.vector);
@@ -142,8 +142,8 @@ namespace Plotter
 
         public override void DrawAxis()
         {
-            CadPoint p0 = default(CadPoint);
-            CadPoint p1 = default(CadPoint);
+            CadVector p0 = default(CadVector);
+            CadVector p1 = default(CadVector);
 
             double len = 120.0;
             double arrowLen = 12.0;
@@ -244,10 +244,10 @@ namespace Plotter
             End2D();
         }
 
-        public override void DrawSelectedPoint(CadPoint pt, int pen = DrawTools.PEN_SLECT_POINT)
+        public override void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SLECT_POINT)
         {
-            CadPoint p0 = DC.CadPointToUnitPoint(pt) - 2;
-            CadPoint p1 = p0 + 4;
+            CadVector p0 = DC.CadPointToUnitPoint(pt) - 2;
+            CadVector p1 = p0 + 4;
 
             DrawRect2D(p0.vector, p1.vector, pen);
         }
@@ -293,31 +293,31 @@ namespace Plotter
             GL.End();
         }
 
-        public override void DrawDownPointCursor(int pen, CadPoint p)
+        public override void DrawDownPointCursor(int pen, CadVector p)
         {
             DrawCross(pen, p, 10.0);
         }
 
-        public override void DrawCross(int pen, CadPoint p, double size)
+        public override void DrawCross(int pen, CadVector p, double size)
         {
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Light0);
 
             double hs = size;
 
-            CadPoint px0 = p;
+            CadVector px0 = p;
             px0.x -= hs;
-            CadPoint px1 = p;
+            CadVector px1 = p;
             px1.x += hs;
 
-            CadPoint py0 = p;
+            CadVector py0 = p;
             py0.y -= hs;
-            CadPoint py1 = p;
+            CadVector py1 = p;
             py1.y += hs;
 
-            CadPoint pz0 = p;
+            CadVector pz0 = p;
             pz0.z -= hs;
-            CadPoint pz1 = p;
+            CadVector pz1 = p;
             pz1.z += hs;
 
             DrawLine(pen, px0, px1);

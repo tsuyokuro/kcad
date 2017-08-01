@@ -15,7 +15,7 @@ namespace Plotter
 
         public bool SnapToGrid = false;
 
-        public CadPoint GridSize;
+        public CadVector GridSize;
 
         public double PointSnapRange = 6;
 
@@ -23,7 +23,7 @@ namespace Plotter
 
         public PlotterSettings()
         {
-            GridSize = CadPoint.Create(10, 10, 10);
+            GridSize = CadVector.Create(10, 10, 10);
         }
 
         private String FileName()

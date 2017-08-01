@@ -246,7 +246,7 @@
     <Compile Include="plotter\HID\CadMouse.cs" />
     <Compile Include="plotter\CadObjectDB.cs" />
     <Compile Include="plotter\undo\CadOpe.cs" />
-    <Compile Include="plotter\primitive\CadPoint.cs" />
+    <Compile Include="plotter\primitive\CadVector.cs" />
     <Compile Include="plotter\CadSelection.cs" />
     <Compile Include="plotter\Util\CadUtil.cs" />
     <Compile Include="plotter\undo\DiffData.cs" />

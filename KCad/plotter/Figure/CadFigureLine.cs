@@ -29,7 +29,7 @@ namespace Plotter
             {
             }
 
-            public override void AddPoint(CadFigure fig, CadPoint p)
+            public override void AddPoint(CadFigure fig, CadVector p)
             {
                 fig.mPointList.Add(p);
             }
@@ -44,7 +44,7 @@ namespace Plotter
             {
                 Centroid ret = default(Centroid);
 
-                CadPoint t = fig.PointList[1] - fig.PointList[0];
+                CadVector t = fig.PointList[1] - fig.PointList[0];
 
                 ret.Point = (t / 2) + fig.PointList[0];
 

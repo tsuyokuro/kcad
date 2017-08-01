@@ -20,7 +20,7 @@ namespace Plotter
 
         private List<SelectItem> IgnoreList = null;
 
-        private CadPoint TargetPoint;
+        private CadVector TargetPoint;
         private double mRange;
 
         public uint CurrentLayerID
@@ -47,7 +47,7 @@ namespace Plotter
             XYMatchList.Clear();
         }
 
-        public void SetTargetPoint(CadPoint p)
+        public void SetTargetPoint(CadVector p)
         {
             TargetPoint = p;
         }
@@ -83,7 +83,7 @@ namespace Plotter
             return XYMatchList;
         }
 
-        public void SearchAllLayer(DrawContext dc, CadPoint p, CadObjectDB db)
+        public void SearchAllLayer(DrawContext dc, CadVector p, CadObjectDB db)
         {
             TargetPoint = p;
             SearchAllLayer(dc, db);
@@ -112,7 +112,7 @@ namespace Plotter
             }
         }
 
-        public void Search(DrawContext dc, CadPoint p, CadObjectDB db, CadLayer layer)
+        public void Search(DrawContext dc, CadVector p, CadObjectDB db, CadLayer layer)
         {
             TargetPoint = p;
             Search(dc, db, layer);
@@ -134,14 +134,14 @@ namespace Plotter
             }
         }
 
-        public void Check(DrawContext dc, CadPoint pt)
+        public void Check(DrawContext dc, CadVector pt)
         {
             CheckFigPoint(dc, pt, 0, null, 0, MarkPoint.Types.IDEPEND_POINT);
         }
 
-        public void Check(DrawContext dc, List<CadPoint> list)
+        public void Check(DrawContext dc, List<CadVector> list)
         {
-            foreach(CadPoint pt in list)
+            foreach(CadVector pt in list)
             {
                 Check(dc, pt);
             }
@@ -149,7 +149,7 @@ namespace Plotter
 
         private void CheckFigure(DrawContext dc, CadLayer layer, CadFigure fig)
         {
-            IReadOnlyList<CadPoint> pointList = fig.PointList;
+            IReadOnlyList<CadVector> pointList = fig.PointList;
 
             if (pointList == null)
             {
@@ -158,21 +158,21 @@ namespace Plotter
 
             int idx = -1;
 
-            foreach (CadPoint pt in pointList)
+            foreach (CadVector pt in pointList)
             {
                 idx++;
                 CheckFigPoint(dc, pt, layer.ID, fig, idx, MarkPoint.Types.POINT);
             }
         }
 
-        private void CheckFigPoint(DrawContext dc, CadPoint pt, uint layerID, CadFigure fig, int ptIdx, MarkPoint.Types type)
+        private void CheckFigPoint(DrawContext dc, CadVector pt, uint layerID, CadFigure fig, int ptIdx, MarkPoint.Types type)
         {
             if (fig != null && IsIgnore(fig.ID, ptIdx))
             {
                 return;
             }
 
-            CadPoint ppt = dc.CadPointToUnitPoint(pt);
+            CadVector ppt = dc.CadPointToUnitPoint(pt);
 
             double dx = Math.Abs(ppt.x - TargetPoint.x);
             double dy = Math.Abs(ppt.y - TargetPoint.y);

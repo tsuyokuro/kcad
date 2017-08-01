@@ -16,22 +16,22 @@ namespace Plotter
 
         // 内積
         #region inner product
-        public static double InnrProduct2D(CadPoint v1, CadPoint v2)
+        public static double InnrProduct2D(CadVector v1, CadVector v2)
         {
             return (v1.x * v2.x) + (v1.y * v2.y);
         }
 
-        public static double InnrProduct2D(CadPoint v0, CadPoint v1, CadPoint v2)
+        public static double InnrProduct2D(CadVector v0, CadVector v1, CadVector v2)
         {
             return InnrProduct2D(v1 - v0, v2 - v0);
         }
 
-        public static double InnerProduct(CadPoint v1, CadPoint v2)
+        public static double InnerProduct(CadVector v1, CadVector v2)
         {
             return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
         }
 
-        public static double InnerProduct(CadPoint v0, CadPoint v1, CadPoint v2)
+        public static double InnerProduct(CadVector v0, CadVector v1, CadVector v2)
         {
             return InnerProduct(v1 - v0, v2 - v0);
         }
@@ -40,19 +40,19 @@ namespace Plotter
 
         // 外積
         #region Cross product
-        public static double CrossProduct2D(CadPoint v1, CadPoint v2)
+        public static double CrossProduct2D(CadVector v1, CadVector v2)
         {
             return (v1.x * v2.y) - (v1.y * v2.x);
         }
 
-        public static double CrossProduct2D(CadPoint v0, CadPoint v1, CadPoint v2)
+        public static double CrossProduct2D(CadVector v0, CadVector v1, CadVector v2)
         {
             return CrossProduct2D(v1 - v0, v2 - v0);
         }
 
-        public static CadPoint CrossProduct(CadPoint v1, CadPoint v2)
+        public static CadVector CrossProduct(CadVector v1, CadVector v2)
         {
-            CadPoint res = default(CadPoint);
+            CadVector res = default(CadVector);
 
             res.x = v1.y * v2.z - v1.z * v2.y;
             res.y = v1.z * v2.x - v1.x * v2.z;
@@ -61,7 +61,7 @@ namespace Plotter
             return res;
         }
 
-        public static CadPoint CrossProduct(CadPoint v0, CadPoint v1, CadPoint v2)
+        public static CadVector CrossProduct(CadVector v0, CadVector v1, CadVector v2)
         {
             return CrossProduct(v1 - v0, v2 - v0);
         }
@@ -71,12 +71,12 @@ namespace Plotter
          * 法線を求める
          * 
          */ 
-        public static CadPoint Normal(CadPoint v0, CadPoint v1, CadPoint v2)
+        public static CadVector Normal(CadVector v0, CadVector v1, CadVector v2)
         {
-            CadPoint va = v1 - v0;
-            CadPoint vb = v2 - v0;
+            CadVector va = v1 - v0;
+            CadVector vb = v2 - v0;
 
-            CadPoint normal = CadMath.CrossProduct(va, vb);
+            CadVector normal = CadMath.CrossProduct(va, vb);
 
             if (normal.IsZero())
             {
@@ -97,9 +97,9 @@ namespace Plotter
          * v0 /_________va
          * 
          */
-        public static CadPoint Normal(CadPoint va, CadPoint vb)
+        public static CadVector Normal(CadVector va, CadVector vb)
         {
-            CadPoint normal = CadMath.CrossProduct(va, vb);
+            CadVector normal = CadMath.CrossProduct(va, vb);
 
             if (normal.IsZero())
             {
@@ -120,19 +120,19 @@ namespace Plotter
          * list[0]/_________list[1]
          * 
          */
-        public static CadPoint Normal(IReadOnlyList<CadPoint> pointList)
+        public static CadVector Normal(IReadOnlyList<CadVector> pointList)
         {
             if (pointList.Count < 3)
             {
-                return CadPoint.Zero;
+                return CadVector.Zero;
             }
 
-            CadPoint v0 = pointList[0];
+            CadVector v0 = pointList[0];
 
-            CadPoint va = pointList[1] - pointList[0];
-            CadPoint vb = pointList[2] - pointList[0];
+            CadVector va = pointList[1] - pointList[0];
+            CadVector vb = pointList[2] - pointList[0];
 
-            CadPoint normal = CadMath.CrossProduct(va, vb);
+            CadVector normal = CadMath.CrossProduct(va, vb);
 
             if (normal.IsZero())
             {

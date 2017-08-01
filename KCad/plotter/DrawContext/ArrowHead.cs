@@ -21,11 +21,11 @@ namespace Plotter
 
     public struct ArrowHead
     {
-        public CadPoint p0;
-        public CadPoint p1;
-        public CadPoint p2;
-        public CadPoint p3;
-        public CadPoint p4;
+        public CadVector p0;
+        public CadVector p1;
+        public CadVector p2;
+        public CadVector p3;
+        public CadVector p4;
 
         public static ArrowHead Create(ArrowTypes type, ArrowPos pos, double len, double width)
         {
@@ -37,19 +37,19 @@ namespace Plotter
             {
                 if (type == ArrowTypes.CROSS)
                 {
-                    a.p0 = CadPoint.Create(0, 0, 0);
-                    a.p1 = CadPoint.Create(-len, w2, w2);
-                    a.p2 = CadPoint.Create(-len, w2, -w2);
-                    a.p3 = CadPoint.Create(-len, -w2, -w2);
-                    a.p4 = CadPoint.Create(-len, -w2, w2);
+                    a.p0 = CadVector.Create(0, 0, 0);
+                    a.p1 = CadVector.Create(-len, w2, w2);
+                    a.p2 = CadVector.Create(-len, w2, -w2);
+                    a.p3 = CadVector.Create(-len, -w2, -w2);
+                    a.p4 = CadVector.Create(-len, -w2, w2);
                 }
                 else if (type == ArrowTypes.PLUS)
                 {
-                    a.p0 = CadPoint.Create(0, 0, 0);
-                    a.p1 = CadPoint.Create(-len, w2, 0);
-                    a.p2 = CadPoint.Create(-len, 0, -w2);
-                    a.p3 = CadPoint.Create(-len, -w2, 0);
-                    a.p4 = CadPoint.Create(-len, 0, w2);
+                    a.p0 = CadVector.Create(0, 0, 0);
+                    a.p1 = CadVector.Create(-len, w2, 0);
+                    a.p2 = CadVector.Create(-len, 0, -w2);
+                    a.p3 = CadVector.Create(-len, -w2, 0);
+                    a.p4 = CadVector.Create(-len, 0, w2);
                 }
 
             }
@@ -57,26 +57,26 @@ namespace Plotter
             {
                 if (type == ArrowTypes.CROSS)
                 {
-                    a.p0 = CadPoint.Create(0, 0, 0);
-                    a.p1 = CadPoint.Create(len, w2, w2);
-                    a.p2 = CadPoint.Create(len, w2, -w2);
-                    a.p3 = CadPoint.Create(len, -w2, -w2);
-                    a.p4 = CadPoint.Create(len, -w2, w2);
+                    a.p0 = CadVector.Create(0, 0, 0);
+                    a.p1 = CadVector.Create(len, w2, w2);
+                    a.p2 = CadVector.Create(len, w2, -w2);
+                    a.p3 = CadVector.Create(len, -w2, -w2);
+                    a.p4 = CadVector.Create(len, -w2, w2);
                 }
                 else if (type == ArrowTypes.PLUS)
                 {
-                    a.p0 = CadPoint.Create(0, 0, 0);
-                    a.p1 = CadPoint.Create(len, w2, 0);
-                    a.p2 = CadPoint.Create(len, 0, -w2);
-                    a.p3 = CadPoint.Create(len, -w2, 0);
-                    a.p4 = CadPoint.Create(len, 0, w2);
+                    a.p0 = CadVector.Create(0, 0, 0);
+                    a.p1 = CadVector.Create(len, w2, 0);
+                    a.p2 = CadVector.Create(len, 0, -w2);
+                    a.p3 = CadVector.Create(len, -w2, 0);
+                    a.p4 = CadVector.Create(len, 0, w2);
                 }
             }
 
             return a;
         }
 
-        public static ArrowHead operator +(ArrowHead a, CadPoint d)
+        public static ArrowHead operator +(ArrowHead a, CadVector d)
         {
             a.p0 += d;
             a.p1 += d;

@@ -29,21 +29,21 @@ namespace Plotter
             {
             }
 
-            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadVector p)
             {
-                p.Type = CadPoint.Types.BREAK;
+                p.Type = CadVector.Types.BREAK;
                 fig.mPointList.Add(p);
             }
 
-            public override void AddPoint(CadFigure fig, CadPoint p)
+            public override void AddPoint(CadFigure fig, CadVector p)
             {
-                p.Type = CadPoint.Types.BREAK;
+                p.Type = CadVector.Types.BREAK;
                 fig.mPointList.Add(p);
             }
 
-            public override void SetPointAt(CadFigure fig, int index, CadPoint pt)
+            public override void SetPointAt(CadFigure fig, int index, CadVector pt)
             {
-                pt.Type = CadPoint.Types.BREAK;
+                pt.Type = CadVector.Types.BREAK;
                 fig.mPointList[index] = pt;
             }
 
@@ -72,15 +72,15 @@ namespace Plotter
                 drawSelected_Circle(fig, dc, pen);
             }
 
-            public override void DrawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
+            public override void DrawTemp(CadFigure fig, DrawContext dc, CadVector tp, int pen)
             {
                 if (fig.PointList.Count <= 0)
                 {
                     return;
                 }
 
-                CadPoint cp = fig.PointList[0];
-                CadPoint b = getRP(dc, cp, tp, true);
+                CadVector cp = fig.PointList[0];
+                CadVector b = getRP(dc, cp, tp, true);
 
 
                 dc.Drawing.DrawCircle(pen, cp, tp, b);
@@ -122,18 +122,18 @@ namespace Plotter
 
             public override Types EndCreate(CadFigure fig, DrawContext dc)
             {
-                CadPoint b = getRP(dc, fig.mPointList[0], fig.mPointList[1], true);
+                CadVector b = getRP(dc, fig.mPointList[0], fig.mPointList[1], true);
 
                 fig.AddPoint(b);
 
                 return fig.Type;
             }
 
-            public override void MoveSelectedPoint(CadFigure fig, DrawContext dc, CadPoint delta)
+            public override void MoveSelectedPoint(CadFigure fig, DrawContext dc, CadVector delta)
             {
-                CadPoint cp = fig.StoreList[0];
-                CadPoint a = fig.StoreList[1];
-                CadPoint b = fig.StoreList[2];
+                CadVector cp = fig.StoreList[0];
+                CadVector a = fig.StoreList[1];
+                CadVector b = fig.StoreList[2];
 
                 if (cp.Selected)
                 {
@@ -143,23 +143,23 @@ namespace Plotter
                     return;
                 }
 
-                CadPoint va = a - cp;
-                CadPoint vb = b - cp;
+                CadVector va = a - cp;
+                CadVector vb = b - cp;
 
                 if (va.Norm() < 0.01)
                 {
                     return;
                 }
 
-                CadPoint normal = CadMath.CrossProduct(va, vb);
+                CadVector normal = CadMath.CrossProduct(va, vb);
                 normal = normal.UnitVector();
 
                 if (a.Selected)
                 {
                     va += delta;
 
-                    CadPoint uva = va.UnitVector();
-                    CadPoint uvb = vb.UnitVector();
+                    CadVector uva = va.UnitVector();
+                    CadVector uvb = vb.UnitVector();
 
                     if (!uva.coordEqualsThreshold(uvb))
                     {
@@ -184,8 +184,8 @@ namespace Plotter
                 {
                     vb += delta;
 
-                    CadPoint uva = va.UnitVector();
-                    CadPoint uvb = vb.UnitVector();
+                    CadVector uva = va.UnitVector();
+                    CadVector uvb = vb.UnitVector();
 
                     if (!uva.coordEqualsThreshold(uvb))
                     {
@@ -212,10 +212,10 @@ namespace Plotter
             {
                 Centroid ret = default(Centroid);
 
-                CadPoint cp = fig.StoreList[0];
-                CadPoint rp = fig.StoreList[1];
+                CadVector cp = fig.StoreList[0];
+                CadVector rp = fig.StoreList[1];
 
-                CadPoint d = rp - cp;
+                CadVector d = rp - cp;
 
                 double r = d.Norm();
 
@@ -227,13 +227,13 @@ namespace Plotter
                 return ret;
             }
 
-            private CadPoint getRP(DrawContext dc, CadPoint cp, CadPoint p, bool isA)
+            private CadVector getRP(DrawContext dc, CadVector cp, CadVector p, bool isA)
             {
-                CadPoint scp = dc.CadPointToUnitPoint(cp);
-                CadPoint sbasep = dc.CadPointToUnitPoint(p);
+                CadVector scp = dc.CadPointToUnitPoint(cp);
+                CadVector sbasep = dc.CadPointToUnitPoint(p);
 
-                CadPoint t = sbasep - scp;
-                CadPoint r = t;
+                CadVector t = sbasep - scp;
+                CadVector r = t;
 
                 if (isA)
                 {

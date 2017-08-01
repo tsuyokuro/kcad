@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Plotter
 {
     [Serializable]
-    public struct CadPoint
+    public struct CadVector
     {
         public enum Types : byte
         {
@@ -18,18 +18,13 @@ namespace Plotter
             HANDLE = 2,
         }
 
-        public const byte IGNORE_X = 1;
-        public const byte IGNORE_Y = 2;
-        public const byte IGNORE_Z = 4;
-
-        public static class Flags
+        private static class Flags
         {
-            public static uint SELECTED = 0x0001;
-            public static uint REMOVE_MARK = 0x0002;
+            public static byte SELECTED = 0x0001;
         }
 
-        public Types Type;
-        public uint Flag;
+        public Types Type { get; set; }
+        private byte Flag;
 
         public double x
         {
@@ -81,20 +76,7 @@ namespace Plotter
 
             set
             {
-                Flag = value ? (Flag | Flags.SELECTED) : (Flag & ~Flags.SELECTED);
-            }
-        }
-
-        public bool RemoveMark
-        {
-            get
-            {
-                return (Flag & Flags.REMOVE_MARK) != 0;
-            }
-
-            set
-            {
-                Flag = value ? (Flag | Flags.REMOVE_MARK) : (Flag & ~Flags.REMOVE_MARK);
+                Flag = value ? (byte)(Flag | Flags.SELECTED) : (byte)(Flag & ~Flags.SELECTED);
             }
         }
 
@@ -118,9 +100,9 @@ namespace Plotter
             }
         }
 
-        public static CadPoint Zero = default(CadPoint);
+        public static CadVector Zero = default(CadVector);
 
-        public CadPoint(double x, double y, double z, Types type = Types.STD)
+        public CadVector(double x, double y, double z, Types type = Types.STD)
         {
             vector.X = x;
             vector.Y = y;
@@ -130,14 +112,14 @@ namespace Plotter
             this.Type = type;
         }
 
-        public static CadPoint Create(double v)
+        public static CadVector Create(double v)
         {
             return Create(v, v, v);
         }
 
-        public static CadPoint Create(double x, double y, double z, Types type = Types.STD)
+        public static CadVector Create(double x, double y, double z, Types type = Types.STD)
         {
-            CadPoint v = default(CadPoint);
+            CadVector v = default(CadVector);
             v.set(x, y, z);
 
             v.Flag = 0;
@@ -146,9 +128,9 @@ namespace Plotter
             return v;
         }
 
-        public static CadPoint Create()
+        public static CadVector Create()
         {
-            CadPoint v = default(CadPoint);
+            CadVector v = default(CadVector);
             v.set(0, 0, 0);
 
             v.Flag = 0;
@@ -157,9 +139,9 @@ namespace Plotter
             return v;
         }
 
-        public static CadPoint Create(Vector3d v)
+        public static CadVector Create(Vector3d v)
         {
-            CadPoint p = default(CadPoint);
+            CadVector p = default(CadVector);
             p.set(v.X, v.Y, v.Z);
 
             p.Flag = 0;
@@ -168,9 +150,9 @@ namespace Plotter
             return p;
         }
 
-        public static CadPoint Create(Vector4d v)
+        public static CadVector Create(Vector4d v)
         {
-            CadPoint p = default(CadPoint);
+            CadVector p = default(CadVector);
             p.set(v.X, v.Y, v.Z);
 
             p.Flag = 0;
@@ -196,13 +178,13 @@ namespace Plotter
         {
             if (jo == null)
             {
-                this = default(CadPoint);
+                this = default(CadVector);
                 return;
             }
 
 
             Type = (Types)(byte)jo["type"];
-            Flag = (uint)jo["flags"];
+            Flag = (byte)jo["flags"];
             x = (double)jo["x"];
             y = (double)jo["y"];
             z = (double)jo["z"];
@@ -220,19 +202,19 @@ namespace Plotter
             this.z = z;
         }
 
-        public CadPoint setVector(Vector3d v)
+        public CadVector setVector(Vector3d v)
         {
             vector = v;
             return this;
         }
 
-        public CadPoint setVector(CadPoint p)
+        public CadVector setVector(CadVector p)
         {
             vector = p.vector;
             return this;
         }
 
-        public void set(ref CadPoint p)
+        public void set(ref CadVector p)
         {
             Flag = p.Flag;
             x = p.x;
@@ -240,12 +222,12 @@ namespace Plotter
             z = p.z;
         }
 
-        public bool coordEquals(CadPoint p)
+        public bool coordEquals(CadVector p)
         {
             return (x == p.x && y == p.y && z == p.z);
         }
 
-        public bool coordEqualsThreshold(CadPoint p, double m = 0.000001)
+        public bool coordEqualsThreshold(CadVector p, double m = 0.000001)
         {
             return (
                 x > p.x - m && x < p.x + m &&
@@ -254,12 +236,12 @@ namespace Plotter
                 );
         }
 
-        public bool dataEquals(CadPoint p)
+        public bool dataEquals(CadVector p)
         {
             return coordEquals(p) && (Type == p.Type);
         }
 
-        public static CadPoint operator +(CadPoint p1, CadPoint p2)
+        public static CadVector operator +(CadVector p1, CadVector p2)
         {
             p1.x += p2.x;
             p1.y += p2.y;
@@ -268,7 +250,7 @@ namespace Plotter
             return p1;
         }
 
-        public static CadPoint operator -(CadPoint p1, CadPoint p2)
+        public static CadVector operator -(CadVector p1, CadVector p2)
         {
             p1.x -= p2.x;
             p1.y -= p2.y;
@@ -277,7 +259,7 @@ namespace Plotter
             return p1;
         }
 
-        public static CadPoint operator *(CadPoint p1, double f)
+        public static CadVector operator *(CadVector p1, double f)
         {
             p1.x *= f;
             p1.y *= f;
@@ -286,7 +268,7 @@ namespace Plotter
             return p1;
         }
 
-        public static CadPoint operator /(CadPoint p1, double f)
+        public static CadVector operator /(CadVector p1, double f)
         {
             p1.x /= f;
             p1.y /= f;
@@ -295,7 +277,7 @@ namespace Plotter
             return p1;
         }
 
-        public static CadPoint operator -(CadPoint p1, double d)
+        public static CadVector operator -(CadVector p1, double d)
         {
             p1.x -= d;
             p1.y -= d;
@@ -304,7 +286,7 @@ namespace Plotter
             return p1;
         }
 
-        public static CadPoint operator +(CadPoint p1, double d)
+        public static CadVector operator +(CadVector p1, double d)
         {
             p1.x += d;
             p1.y += d;
@@ -313,12 +295,12 @@ namespace Plotter
             return p1;
         }
 
-        public static explicit operator Vector3d (CadPoint p)
+        public static explicit operator Vector3d (CadVector p)
         {
             return new Vector3d(p.vector);
         }
 
-        public static explicit operator CadPoint (Vector3d v)
+        public static explicit operator CadVector (Vector3d v)
         {
             return Create(
                 v.X,
@@ -327,7 +309,7 @@ namespace Plotter
                 );
         }
 
-        public static explicit operator CadPoint(Vector4d v)
+        public static explicit operator CadVector(Vector4d v)
         {
             return Create(
                 v.X,
@@ -336,7 +318,7 @@ namespace Plotter
                 );
         }
 
-        public static explicit operator Vector4d (CadPoint p)
+        public static explicit operator Vector4d (CadVector p)
         {
             return new Vector4d(
                 p.vector.X,
@@ -353,9 +335,9 @@ namespace Plotter
         }
 
         // 単位ベクトルを求める
-        public CadPoint UnitVector()
+        public CadVector UnitVector()
         {
-            CadPoint ret = default(CadPoint);
+            CadVector ret = default(CadVector);
 
             double norm = this.Norm();
 
@@ -368,7 +350,7 @@ namespace Plotter
             return ret;
         }
 
-        public void dump(DebugOut dout, string prefix = nameof(CadPoint))
+        public void dump(DebugOut dout, string prefix = nameof(CadVector))
         {
             dout.println(prefix + "{");
             dout.Indent++;
@@ -381,7 +363,7 @@ namespace Plotter
         }
     }
 
-    class CadPointUtil
+    class CadVectorUtil
     {
         public static int initBezier(CadFigure fig, int idx1, int idx2)
         {
@@ -392,19 +374,19 @@ namespace Plotter
                 idx2 = t;
             }
 
-            CadPoint a = fig.GetPointAt(idx1);
-            CadPoint b = fig.GetPointAt(idx2);
+            CadVector a = fig.GetPointAt(idx1);
+            CadVector b = fig.GetPointAt(idx2);
 
-            CadPoint hp1 = b - a;
+            CadVector hp1 = b - a;
             hp1 = hp1 / 3;
             hp1 = hp1 + a;
 
-            CadPoint hp2 = a - b;
+            CadVector hp2 = a - b;
             hp2 = hp2 / 3;
             hp2 = hp2 + b;
 
-            hp1.Type = CadPoint.Types.HANDLE;
-            hp2.Type = CadPoint.Types.HANDLE;
+            hp1.Type = CadVector.Types.HANDLE;
+            hp2.Type = CadVector.Types.HANDLE;
 
             fig.InsertPointAt(idx1 + 1, hp1);
             fig.InsertPointAt(idx1 + 2, hp2);

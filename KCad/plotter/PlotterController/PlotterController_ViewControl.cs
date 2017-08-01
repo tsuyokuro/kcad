@@ -10,7 +10,7 @@ namespace Plotter
     {
         public void SetOrigin(DrawContext dc, int pixX, int pixY)
         {
-            CadPoint op = default(CadPoint);
+            CadVector op = default(CadVector);
             op.set(pixX, pixY, 0);
 
             dc.ViewOrg = op;
@@ -21,7 +21,7 @@ namespace Plotter
 
         public void MoveOrigin(DrawContext dc, int pixDx, int pixDy)
         {
-            CadPoint d = CadPoint.Create(pixDx, pixDy, 0);
+            CadVector d = CadVector.Create(pixDx, pixDy, 0);
 
             dc.ViewOrg += d;
 
@@ -40,13 +40,13 @@ namespace Plotter
 
         public void DpiUpDown(DrawContext dc, double f)
         {
-            CadPoint op = dc.ViewOrg;
+            CadVector op = dc.ViewOrg;
 
-            CadPoint center = default(CadPoint); 
+            CadVector center = default(CadVector); 
                 
             center.set(dc.ViewWidth / 2, dc.ViewHeight / 2, 0);
 
-            CadPoint d = center - op;
+            CadVector d = center - op;
 
             d *= f;
 

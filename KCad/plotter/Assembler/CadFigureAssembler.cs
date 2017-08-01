@@ -113,7 +113,7 @@ namespace Plotter
                         nfig = DB.newFigure(CadFigure.Types.POLY_LINES);
                         nfig.AddPoints(fig.PointList, sp, num);
 
-                        CadPoint t = fig.GetPointAt(0);
+                        CadVector t = fig.GetPointAt(0);
                         nfig.AddPoint(t);
                     }
                 }
@@ -199,7 +199,7 @@ namespace Plotter
         {
         }
 
-        public Result cutSegment(MarkSeg seg, CadPoint p)
+        public Result cutSegment(MarkSeg seg, CadVector p)
         {
             ProcResult.clear();
 

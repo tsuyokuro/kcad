@@ -24,7 +24,7 @@ namespace Plotter
         public const double MILLI_PER_INCH = 25.4;
 
         // Screen 座標系の原点 
-        public CadPoint mViewOrg;
+        public CadVector mViewOrg;
 
         // 視点
         protected Vector3d Eye = Vector3d.UnitZ * 1000.0;
@@ -92,7 +92,7 @@ namespace Plotter
 
 
         // 座標系の原点がView座標上で何処にあるかを示す
-        public CadPoint ViewOrg
+        public CadVector ViewOrg
         {
             set
             {
@@ -178,13 +178,13 @@ namespace Plotter
             UnitPerMilli = unit / MILLI_PER_INCH;
         }
 
-        public abstract CadPoint CadPointToUnitPoint(CadPoint pt);
+        public abstract CadVector CadPointToUnitPoint(CadVector pt);
 
-        public abstract CadPoint UnitPointToCadPoint(CadPoint pt);
+        public abstract CadVector UnitPointToCadPoint(CadVector pt);
 
-        public abstract CadPoint CadVectorToUnitVector(CadPoint pt);
+        public abstract CadVector CadVectorToUnitVector(CadVector pt);
 
-        public abstract CadPoint UnitVectorToCadVector(CadPoint pt);
+        public abstract CadVector UnitVectorToCadVector(CadVector pt);
 
         public virtual double UnitToMilli(double d)
         {
@@ -229,7 +229,7 @@ namespace Plotter
 
             dout.println("View Width=" + mViewWidth.ToString() + " Height=" + mViewHeight.ToString());
 
-            CadPoint t = CadPoint.Create(mViewDir);
+            CadVector t = CadVector.Create(mViewDir);
             t.dump(dout, "ViewDir");
         }
     }

@@ -9,7 +9,7 @@ namespace Plotter
     public struct RulerInfo
     {
         public bool IsValid;
-        public CadPoint CrossPoint;
+        public CadVector CrossPoint;
         public double Distance;
 
         public CadRuler Ruler;
@@ -19,11 +19,11 @@ namespace Plotter
     public struct CadRuler
     {
         public bool IsValid;
-        public CadPoint P0;
-        public CadPoint P1;
-        public CadPoint V;
+        public CadVector P0;
+        public CadVector P1;
+        public CadVector V;
 
-        public RulerInfo Capture(DrawContext dc, CadPoint p, double range)
+        public RulerInfo Capture(DrawContext dc, CadVector p, double range)
         {
             RulerInfo ret = default(RulerInfo);
             CrossInfo ci = default(CrossInfo);
@@ -48,12 +48,12 @@ namespace Plotter
 
         public void Draw(DrawContext dc, int pen)
         {
-            CadPoint pt = (V * 1000) + P0;
+            CadVector pt = (V * 1000) + P0;
 
             dc.Drawing.DrawLine(pen, P0, pt);
         }
 
-        public static CadRuler Create(CadPoint p0, CadPoint p1)
+        public static CadRuler Create(CadVector p0, CadVector p1)
         {
             CadRuler ret = default(CadRuler);
 
@@ -73,9 +73,9 @@ namespace Plotter
         private int MatchIndex = -1;
 
         public void Set(
-                        IReadOnlyList<CadPoint> list,
+                        IReadOnlyList<CadVector> list,
                         int pointIndex,
-                        CadPoint cp)
+                        CadVector cp)
         {
             if (list.Count < 2)
             {
@@ -112,7 +112,7 @@ namespace Plotter
             Ruler[MatchIndex].Draw(dc, DrawTools.PEN_GRID);
         }
 
-        public RulerInfo Capture(DrawContext dc, CadPoint p, double rangePixel)
+        public RulerInfo Capture(DrawContext dc, CadVector p, double rangePixel)
         {
             RulerInfo match = default(RulerInfo);
             RulerInfo ri = default(RulerInfo);

@@ -74,23 +74,23 @@ namespace Plotter
             Controller.InteractOut.print(s);
         }
 
-        public CadPoint GetLastDownPoint()
+        public CadVector GetLastDownPoint()
         {
             return Controller.LastDownPoint;
         }
 
-        public CadPoint CreatePoint(double x, double y, double z)
+        public CadVector CreatePoint(double x, double y, double z)
         {
-            return CadPoint.Create(x, y, z);
+            return CadVector.Create(x, y, z);
         }
 
         public void Find(double range)
         {
-            CadPoint org = Controller.LastDownPoint;
+            CadVector org = Controller.LastDownPoint;
 
             DrawContext dc = Controller.CurrentDC;
 
-            CadPoint pixp = dc.CadPointToUnitPoint(org);
+            CadVector pixp = dc.CadPointToUnitPoint(org);
 
 
             PointSearcher searcher = new PointSearcher();
@@ -155,7 +155,7 @@ namespace Plotter
 
         public void Scale(double scale)
         {
-            CadPoint org = Controller.LastDownPoint;
+            CadVector org = Controller.LastDownPoint;
             Controller.ScaleSelectedFigure(org, scale);
         }
 
@@ -247,10 +247,10 @@ namespace Plotter
         {
             if (Controller.SelList.List.Count == 2)
             {
-                CadPoint a = Controller.SelList.List[0].Point;
-                CadPoint b = Controller.SelList.List[1].Point;
+                CadVector a = Controller.SelList.List[0].Point;
+                CadVector b = Controller.SelList.List[1].Point;
 
-                CadPoint d = a - b;
+                CadVector d = a - b;
 
                 Controller.InteractOut.print("" + d.Norm() + "(mm)");
             }
@@ -278,9 +278,9 @@ namespace Plotter
 
         public void Line(double x, double y, double z)
         {
-            CadPoint p0 = Controller.LastDownPoint;
+            CadVector p0 = Controller.LastDownPoint;
 
-            CadPoint p1 = default(CadPoint);
+            CadVector p1 = default(CadVector);
 
             p1 = p0;
 
@@ -313,7 +313,7 @@ namespace Plotter
 
         public void AddPoint(double x, double y, double z)
         {
-            CadPoint p = default(CadPoint);
+            CadVector p = default(CadVector);
 
             p.set(x, y, z);
 
@@ -329,13 +329,13 @@ namespace Plotter
 
         public void Rect(double w, double h)
         {
-            CadPoint p0 = default(CadPoint);
+            CadVector p0 = default(CadVector);
 
             p0 = Controller.LastDownPoint;
 
             CadFigure fig = Controller.DB.newFigure(CadFigure.Types.RECT);
 
-            CadPoint p1 = p0;
+            CadVector p1 = p0;
 
             fig.AddPoint(p0);
 
@@ -387,7 +387,7 @@ namespace Plotter
 
         public void Move(double x, double y, double z)
         {
-            CadPoint delta = CadPoint.Create(x, y, z);
+            CadVector delta = CadVector.Create(x, y, z);
 
             Controller.MoveSelectedPoints(delta);
         }
@@ -403,10 +403,10 @@ namespace Plotter
 
             CadFigure fig = Controller.DB.getFigure(seg.FigureID);
 
-            CadPoint pa = fig.GetPointAt(seg.PtIndexA);
-            CadPoint pb = fig.GetPointAt(seg.PtIndexB);
+            CadVector pa = fig.GetPointAt(seg.PtIndexA);
+            CadVector pb = fig.GetPointAt(seg.PtIndexB);
 
-            CadPoint v;
+            CadVector v;
 
             v = pa - Controller.LastDownPoint;
             double da = v.Norm();
@@ -417,7 +417,7 @@ namespace Plotter
 
             if (da < db)
             {
-                CadPoint np = CadUtil.LinePoint(pb, pa, len);
+                CadVector np = CadUtil.LinePoint(pb, pa, len);
                 Controller.StartEdit();
 
                 fig.SetPointAt(seg.PtIndexA, np);
@@ -426,7 +426,7 @@ namespace Plotter
             }
             else
             {
-                CadPoint np = CadUtil.LinePoint(pa, pb, len);
+                CadVector np = CadUtil.LinePoint(pa, pb, len);
                 Controller.StartEdit();
 
                 fig.SetPointAt(seg.PtIndexB, np);
@@ -456,7 +456,7 @@ namespace Plotter
             Controller.InteractOut.print("Area: " + (area / 100).ToString() + " (㎠)");
         }
 
-        public CadPoint Centroid()
+        public CadVector Centroid()
         {
             Centroid c = Controller.Centroid();
             return c.Point;
@@ -483,9 +483,9 @@ namespace Plotter
             return Engine.Execute(str, Scope);
         }
 
-        public CadPoint NewPoint()
+        public CadVector NewPoint()
         {
-            return default(CadPoint);
+            return default(CadVector);
         }
 
         public CadFigure NewPolyLines()

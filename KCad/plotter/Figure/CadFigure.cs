@@ -57,9 +57,9 @@ namespace Plotter
 
         public bool Closed { get; set; }
 
-        public CadPoint Normal;
+        public CadVector Normal;
 
-        public List<CadPoint> PointList
+        public List<CadVector> PointList
         {
             get
             {
@@ -75,7 +75,7 @@ namespace Plotter
             }
         }
 
-        public IReadOnlyList<CadPoint> StoreList
+        public IReadOnlyList<CadVector> StoreList
         {
             get
             {
@@ -90,9 +90,9 @@ namespace Plotter
         public bool Current { set; get; } = false;
         #endregion
 
-        private List<CadPoint> mPointList = new List<CadPoint>();
+        private List<CadVector> mPointList = new List<CadVector>();
 
-        private List<CadPoint> mStoreList = null;
+        private List<CadVector> mStoreList = null;
 
 
         #region Group management
@@ -166,29 +166,29 @@ namespace Plotter
             copyPointList(mPointList, fig.mPointList);
         }
 
-        public void AddPoints(IReadOnlyList<CadPoint> points, int sp, int num)
+        public void AddPoints(IReadOnlyList<CadVector> points, int sp, int num)
         {
             for (int i = 0; i < num; i++)
             {
-                CadPoint p = points[i + sp];
+                CadVector p = points[i + sp];
                 AddPoint(p);
             }
         }
 
-        public void AddPoints(IReadOnlyList<CadPoint> points, int sp)
+        public void AddPoints(IReadOnlyList<CadVector> points, int sp)
         {
             AddPoints(points, sp, points.Count - sp);
         }
 
-        public void AddPoints(IReadOnlyList<CadPoint> points)
+        public void AddPoints(IReadOnlyList<CadVector> points)
         {
-            foreach (CadPoint p in points)
+            foreach (CadVector p in points)
             {
                 AddPoint(p);
             }
         }
 
-        public void AddPointsReverse(IReadOnlyList<CadPoint> points)
+        public void AddPointsReverse(IReadOnlyList<CadVector> points)
         {
             int cnt = points.Count;
             int i = cnt - 1;
@@ -199,7 +199,7 @@ namespace Plotter
             }
         }
 
-        public void AddPointsReverse(IReadOnlyList<CadPoint> points, int sp)
+        public void AddPointsReverse(IReadOnlyList<CadVector> points, int sp)
         {
             int cnt = points.Count;
             int i = cnt - 1 - sp;
@@ -210,7 +210,7 @@ namespace Plotter
             }
         }
 
-        public void InsertPointAt(int index, CadPoint pt)
+        public void InsertPointAt(int index, CadVector pt)
         {
             if (index >= mPointList.Count)
             {
@@ -236,19 +236,19 @@ namespace Plotter
             mPointList.RemoveRange(index, count);
         }
 
-        public void InsertPointsRange(int index, IEnumerable<CadPoint> collection)
+        public void InsertPointsRange(int index, IEnumerable<CadVector> collection)
         {
             mPointList.InsertRange(index, collection);
         }
 
-        public CadPoint GetPointAt(int index)
+        public CadVector GetPointAt(int index)
         {
             return mPointList[index];
         }
 
         public void SelectPointAt(int index, bool sel)
         {
-            CadPoint p = mPointList[index];
+            CadVector p = mPointList[index];
             p.Selected = sel;
             mPointList[index] = p;
         }
@@ -283,7 +283,7 @@ namespace Plotter
                 return;
             }
 
-            mStoreList = new List<CadPoint>();
+            mStoreList = new List<CadVector>();
             mPointList.ForEach(a => mStoreList.Add(a));
         }
 
@@ -314,15 +314,15 @@ namespace Plotter
             mStoreList = null;
         }
 
-        public List<CadPoint> GetPointListCopy()
+        public List<CadVector> GetPointListCopy()
         {
-            return new List<CadPoint>(mPointList);
+            return new List<CadVector>(mPointList);
         }
 
-        public int FindPoint(CadPoint t)
+        public int FindPoint(CadVector t)
         {
             int i = 0;
-            foreach (CadPoint p in mPointList)
+            foreach (CadVector p in mPointList)
             {
                 if (t.coordEquals(p))
                 {
@@ -434,7 +434,7 @@ namespace Plotter
 
             Normal.FromJson((JObject)jo["normal"]);
 
-            mPointList = JsonUtil.JsonListToObjectList<CadPoint>((JArray)jo["point_list"]);
+            mPointList = JsonUtil.JsonListToObjectList<CadVector>((JArray)jo["point_list"]);
         }
 
 
@@ -494,7 +494,7 @@ namespace Plotter
 
             dout.println("PointList [");
             dout.Indent++;
-            foreach (CadPoint point in PointList)
+            foreach (CadVector point in PointList)
             {
                 point.dump(dout, "");
             }
@@ -534,7 +534,7 @@ namespace Plotter
             return Behavior.GetType();
         }
 
-        public void MoveSelectedPoints(DrawContext dc, CadPoint delta)
+        public void MoveSelectedPoints(DrawContext dc, CadVector delta)
         {
             if (Locked) return;
             Log.d("moveSelectedPoints" + 
@@ -545,19 +545,19 @@ namespace Plotter
             Behavior.MoveSelectedPoint(this, dc, delta);
         }
 
-        public void MoveAllPoints(CadPoint delta)
+        public void MoveAllPoints(CadVector delta)
         {
             if (Locked) return;
 
             Behavior.MoveAllPoints(this, delta);
         }
 
-        public void AddPoint(CadPoint p)
+        public void AddPoint(CadVector p)
         {
             Behavior.AddPoint(this, p);
         }
 
-        public void AddPointInCreating(DrawContext dc, CadPoint p)
+        public void AddPointInCreating(DrawContext dc, CadVector p)
         {
             Behavior.AddPointInCreating(this, dc, p);
         }
@@ -569,7 +569,7 @@ namespace Plotter
             Behavior.RemoveSelected(this);
         }
 
-        public void SetPointAt(int index, CadPoint pt)
+        public void SetPointAt(int index, CadVector pt)
         {
             Behavior.SetPointAt(this, index, pt);
         }
@@ -589,7 +589,7 @@ namespace Plotter
             Behavior.DrawSelected(this, dc, pen);
         }
 
-        public void DrawTemp(DrawContext dc, CadPoint tp, int pen)
+        public void DrawTemp(DrawContext dc, CadVector tp, int pen)
         {
             Behavior.DrawTemp(this, dc, tp, pen);
         }
@@ -609,7 +609,7 @@ namespace Plotter
             return Behavior.GetContainsRect(this);
         }
 
-        public IReadOnlyList<CadPoint> GetPoints(int curveSplitNum)
+        public IReadOnlyList<CadVector> GetPoints(int curveSplitNum)
         {
             return Behavior.GetPoints(this, curveSplitNum);
         }
@@ -621,9 +621,9 @@ namespace Plotter
         #endregion
 
         #region "Utilities"
-        private static void copyPointList(List<CadPoint> dest, IReadOnlyList<CadPoint> src)
+        private static void copyPointList(List<CadVector> dest, IReadOnlyList<CadVector> src)
         {
-            foreach (CadPoint p in src)
+            foreach (CadVector p in src)
             {
                 dest.Add(p);
             }

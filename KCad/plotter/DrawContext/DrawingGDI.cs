@@ -48,8 +48,8 @@ namespace Plotter
         #region "Draw base"
         public override void DrawAxis()
         {
-            CadPoint p0 = default(CadPoint);
-            CadPoint p1 = default(CadPoint);
+            CadVector p0 = default(CadVector);
+            CadVector p1 = default(CadVector);
 
             // X軸
             p0.x = -100;
@@ -89,11 +89,11 @@ namespace Plotter
 
         public override void DrawGrid(Gridding grid)
         {
-            CadPoint lt = CadPoint.Zero;
-            CadPoint rb = CadPoint.Create(DC.ViewWidth, DC.ViewHeight, 0);
+            CadVector lt = CadVector.Zero;
+            CadVector rb = CadVector.Create(DC.ViewWidth, DC.ViewHeight, 0);
 
-            CadPoint ltw = DC.UnitPointToCadPoint(lt);
-            CadPoint rbw = DC.UnitPointToCadPoint(rb);
+            CadVector ltw = DC.UnitPointToCadPoint(lt);
+            CadVector rbw = DC.UnitPointToCadPoint(rb);
 
             double minx = Math.Min(ltw.x, rbw.x);
             double maxx = Math.Max(ltw.x, rbw.x);
@@ -107,7 +107,7 @@ namespace Plotter
 
             int pen = DrawTools.PEN_GRID;
 
-            CadPoint p = default(CadPoint);
+            CadVector p = default(CadVector);
 
 
             double n = grid.Decimate(DC, grid, 8);
@@ -183,14 +183,14 @@ namespace Plotter
 
         public override void DrawPageFrame()
         {
-            CadPoint pt = default(CadPoint);
+            CadVector pt = default(CadVector);
 
             // p0
             pt.x = -DC.PageSize.Width / 2;
             pt.y = DC.PageSize.Height / 2;
             pt.z = 0;
 
-            CadPoint p0 = default(CadPoint);
+            CadVector p0 = default(CadVector);
             p0.x = pt.x * DC.UnitPerMilli * DC.DeviceScaleX;
             p0.y = pt.y * DC.UnitPerMilli * DC.DeviceScaleY;
 
@@ -201,7 +201,7 @@ namespace Plotter
             pt.y = -DC.PageSize.Height / 2;
             pt.z = 0;
 
-            CadPoint p1 = default(CadPoint);
+            CadVector p1 = default(CadVector);
             p1.x = pt.x * DC.UnitPerMilli * DC.DeviceScaleX;
             p1.y = pt.y * DC.UnitPerMilli * DC.DeviceScaleY;
 
@@ -212,16 +212,16 @@ namespace Plotter
         #endregion
 
         #region "Draw marker"
-        public override void DrawHighlightPoint(CadPoint pt, int pen = DrawTools.PEN_POINT_HIGHTLITE)
+        public override void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHTLITE)
         {
-            CadPoint pp = DC.CadPointToUnitPoint(pt);
+            CadVector pp = DC.CadPointToUnitPoint(pt);
 
             DrawCircleScrn(pen, pp, 3);
         }
 
-        public override void DrawSelectedPoint(CadPoint pt, int pen = DrawTools.PEN_SLECT_POINT)
+        public override void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SLECT_POINT)
         {
-            CadPoint pp = DC.CadPointToUnitPoint(pt);
+            CadVector pp = DC.CadPointToUnitPoint(pt);
 
             int size = 3;
 
@@ -232,7 +232,7 @@ namespace Plotter
                 );
         }
 
-        public override void DrawDownPointCursor(int pen, CadPoint p)
+        public override void DrawDownPointCursor(int pen, CadVector p)
         {
             DrawCross(pen, p, 10);
         }
@@ -240,10 +240,10 @@ namespace Plotter
 
         #region "Draw cursor"
 
-        public override void DrawCursor(CadPoint pt)
+        public override void DrawCursor(CadVector pt)
         {
             int pen = DrawTools.PEN_CURSOR;
-            CadPoint pp = DC.CadPointToUnitPoint(pt);
+            CadVector pp = DC.CadPointToUnitPoint(pt);
 
             //double size = 16;
             double size = Math.Max(DC.ViewWidth, DC.ViewHeight);
@@ -254,50 +254,50 @@ namespace Plotter
         #endregion
 
         #region "draw primitive"
-        public override void DrawRect(int pen, CadPoint p0, CadPoint p1)
+        public override void DrawRect(int pen, CadVector p0, CadVector p1)
         {
-            CadPoint pp0 = DC.CadPointToUnitPoint(p0);
-            CadPoint pp1 = DC.CadPointToUnitPoint(p1);
+            CadVector pp0 = DC.CadPointToUnitPoint(p0);
+            CadVector pp1 = DC.CadPointToUnitPoint(p1);
 
             DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
         }
 
-        public override void DrawCross(int pen, CadPoint p, double size)
+        public override void DrawCross(int pen, CadVector p, double size)
         {
-            CadPoint a = DC.CadPointToUnitPoint(p);
+            CadVector a = DC.CadPointToUnitPoint(p);
 
             DrawLineScrn(pen, a.x - size, a.y + 0, a.x + size, a.y + 0);
             DrawLineScrn(pen, a.x + 0, a.y + size, a.x + 0, a.y - size);
         }
         #endregion
 
-        public override void DrawLine(int pen, CadPoint a, CadPoint b)
+        public override void DrawLine(int pen, CadVector a, CadVector b)
         {
             if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
 
-            CadPoint pa = DC.CadPointToUnitPoint(a);
-            CadPoint pb = DC.CadPointToUnitPoint(b);
+            CadVector pa = DC.CadPointToUnitPoint(a);
+            CadVector pb = DC.CadPointToUnitPoint(b);
 
             DC.graphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
         }
 
-        public override void DrawDot(int pen, CadPoint p)
+        public override void DrawDot(int pen, CadVector p)
         {
             if (DC.graphics == null)
             {
                 return;
             }
  
-            CadPoint p0 = DC.CadPointToUnitPoint(p);
-            CadPoint p1 = p0;
+            CadVector p0 = DC.CadPointToUnitPoint(p);
+            CadVector p1 = p0;
             p0.x = (int)p0.x;
             p1.x = p0.x + 0.1;
 
             DC.graphics.DrawLine(DC.Pen(pen), (float)p0.x, (float)p0.y, (float)p1.x, (float)p1.y);
         }
 
-        public override void DrawFace(int pen, IReadOnlyList<CadPoint> pointList, CadPoint Normal)
+        public override void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector Normal)
         {
             int cnt = pointList.Count;
             if (cnt == 0)
@@ -305,8 +305,8 @@ namespace Plotter
                 return;
             }
 
-            CadPoint p0 = pointList[0];
-            CadPoint p1;
+            CadVector p0 = pointList[0];
+            CadVector p1;
 
             int i;
             for (i = 1; i < cnt; i++)
@@ -320,17 +320,17 @@ namespace Plotter
             DrawLine(pen, p0, p1);
         }
 
-        public override void DrawText(int font, int brush, CadPoint a, string s)
+        public override void DrawText(int font, int brush, CadVector a, string s)
         {
             if (DC.graphics == null) return;
             if (DC.Brush(brush) == null) return;
             if (DC.Font(font) == null) return;
 
-            CadPoint pa = DC.CadPointToUnitPoint(a);
+            CadVector pa = DC.CadPointToUnitPoint(a);
             DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), (int)pa.x, (int)pa.y);
         }
 
-        public override void DrawCursorScrn(CadPoint pp)
+        public override void DrawCursorScrn(CadVector pp)
         {
             int pen = DrawTools.PEN_CURSOR;
 
@@ -340,7 +340,7 @@ namespace Plotter
             DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
         }
 
-        public override void DrawCrossCursorScrn(CadPoint pp)
+        public override void DrawCrossCursorScrn(CadVector pp)
         {
             int pen = DrawTools.PEN_CURSOR2;
 
@@ -358,12 +358,12 @@ namespace Plotter
             }
         }
 
-        private void DrawRectScrn(int pen, CadPoint pp0, CadPoint pp1)
+        private void DrawRectScrn(int pen, CadVector pp0, CadVector pp1)
         {
             DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
         }
 
-        private void DrawLineScrn(int pen, CadPoint a, CadPoint b)
+        private void DrawLineScrn(int pen, CadVector a, CadVector b)
         {
             if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
@@ -408,7 +408,7 @@ namespace Plotter
             DC.graphics.DrawRectangle(DC.Pen(pen), lx, ty, dx, dy);
         }
 
-        private void DrawCircleScrn(int pen, CadPoint cp, CadPoint p1)
+        private void DrawCircleScrn(int pen, CadVector cp, CadVector p1)
         {
             if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
@@ -417,7 +417,7 @@ namespace Plotter
             DrawCircleScrn(pen, cp, r);
         }
 
-        private void DrawCircleScrn(int pen, CadPoint cp, double r)
+        private void DrawCircleScrn(int pen, CadVector cp, double r)
         {
             if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
@@ -426,7 +426,7 @@ namespace Plotter
                 DC.Pen(pen), (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
         }
 
-        private void DrawTextScrn(int font, int brush, CadPoint a, string s)
+        private void DrawTextScrn(int font, int brush, CadVector a, string s)
         {
             if (DC.graphics == null) return;
             if (DC.Brush(brush) == null) return;
@@ -479,20 +479,20 @@ namespace Plotter
             double size = 20;
 
 
-            CadPoint uv = CadPoint.Create(size, 0, 0);
+            CadVector uv = CadVector.Create(size, 0, 0);
 
-            CadPoint cv = DC.UnitVectorToCadVector(uv);
+            CadVector cv = DC.UnitVectorToCadVector(uv);
 
             double len = cv.Norm();
 
 
-            CadPoint up = CadPoint.Create(size+5, size+5, 0);
+            CadVector up = CadVector.Create(size+5, size+5, 0);
 
-            CadPoint cp = DC.UnitPointToCadPoint(up);
+            CadVector cp = DC.UnitPointToCadPoint(up);
 
 
-            CadPoint p0 = default(CadPoint);
-            CadPoint p1 = default(CadPoint);
+            CadVector p0 = default(CadVector);
+            CadVector p1 = default(CadVector);
 
 
 

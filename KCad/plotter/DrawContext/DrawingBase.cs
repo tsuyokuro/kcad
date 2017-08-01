@@ -23,44 +23,44 @@ namespace Plotter
 
         void DrawGrid(Gridding grid);
 
-        void DrawHighlightPoint(CadPoint pt, int pen = DrawTools.PEN_POINT_HIGHTLITE);
+        void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHTLITE);
 
-        void DrawSelectedPoint(CadPoint pt, int pen = DrawTools.PEN_SLECT_POINT);
+        void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SLECT_POINT);
 
-        void DrawDownPointCursor(int pen, CadPoint p);
+        void DrawDownPointCursor(int pen, CadVector p);
 
-        void DrawCursor(CadPoint pt);
+        void DrawCursor(CadVector pt);
 
-        void DrawRect(int pen, CadPoint p0, CadPoint p1);
+        void DrawRect(int pen, CadVector p0, CadVector p1);
 
-        void DrawCross(int pen, CadPoint p, double size);
+        void DrawCross(int pen, CadVector p, double size);
 
-        void DrawLine(int pen, CadPoint a, CadPoint b);
+        void DrawLine(int pen, CadVector a, CadVector b);
 
-        void DrawDot(int pen, CadPoint p);
+        void DrawDot(int pen, CadVector p);
 
-        void DrawFace(int pen, IReadOnlyList<CadPoint> pointList);
+        void DrawFace(int pen, IReadOnlyList<CadVector> pointList);
 
-        void DrawFace(int pen, IReadOnlyList<CadPoint> pointList, CadPoint normal);
+        void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector normal);
 
-        void DrawCircle(int pen, CadPoint cp, CadPoint pa, CadPoint pb);
+        void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb);
 
-        void DrawText(int font, int brush, CadPoint a, string s);
+        void DrawText(int font, int brush, CadVector a, string s);
 
-        void DrawArrow(int pen, CadPoint pt0, CadPoint pt1, ArrowTypes type, ArrowPos pos, double len, double width);
-
-        void DrawBezier(
-            int pen,
-            CadPoint p0, CadPoint p1, CadPoint p2);
+        void DrawArrow(int pen, CadVector pt0, CadVector pt1, ArrowTypes type, ArrowPos pos, double len, double width);
 
         void DrawBezier(
             int pen,
-            CadPoint p0, CadPoint p1, CadPoint p2, CadPoint p3);
+            CadVector p0, CadVector p1, CadVector p2);
+
+        void DrawBezier(
+            int pen,
+            CadVector p0, CadVector p1, CadVector p2, CadVector p3);
 
 
-        void DrawCursorScrn(CadPoint pp);
+        void DrawCursorScrn(CadVector pp);
 
-        void DrawCrossCursorScrn(CadPoint pp);
+        void DrawCrossCursorScrn(CadVector pp);
     }
 
 
@@ -94,58 +94,58 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawHighlightPoint(CadPoint pt, int pen=DrawTools.PEN_POINT_HIGHTLITE)
+        public virtual void DrawHighlightPoint(CadVector pt, int pen=DrawTools.PEN_POINT_HIGHTLITE)
         {
         }
 
-        public virtual void DrawSelectedPoint(CadPoint pt, int pen = DrawTools.PEN_SLECT_POINT)
+        public virtual void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SLECT_POINT)
         {
         }
 
-        public virtual void DrawDownPointCursor(int pen, CadPoint p)
+        public virtual void DrawDownPointCursor(int pen, CadVector p)
         {
         }
 
-        public virtual void DrawCursor(CadPoint pt)
+        public virtual void DrawCursor(CadVector pt)
         {
         }
 
-        public virtual void DrawRect(int pen, CadPoint p0, CadPoint p1)
+        public virtual void DrawRect(int pen, CadVector p0, CadVector p1)
         {
         }
 
-        public virtual void DrawCross(int pen, CadPoint p, double size)
+        public virtual void DrawCross(int pen, CadVector p, double size)
         {
         }
 
-        public virtual void DrawLine(int pen, CadPoint a, CadPoint b)
+        public virtual void DrawLine(int pen, CadVector a, CadVector b)
         {
         }
 
-        public virtual void DrawDot(int pen, CadPoint p)
+        public virtual void DrawDot(int pen, CadVector p)
         {
         }
 
-        public virtual void DrawFace(int pen, IReadOnlyList<CadPoint> pointList)
+        public virtual void DrawFace(int pen, IReadOnlyList<CadVector> pointList)
         {
-            DrawFace(pen, pointList, default(CadPoint));
+            DrawFace(pen, pointList, default(CadVector));
         }
 
-        public virtual void DrawFace(int pen, IReadOnlyList<CadPoint> pointList, CadPoint normal)
+        public virtual void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector normal)
         {
         }
 
-        public virtual void DrawCircle(int pen, CadPoint cp, CadPoint pa, CadPoint pb)
+        public virtual void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb)
         {
-            CadPoint va = pa - cp;
-            CadPoint vb = pb - cp;
+            CadVector va = pa - cp;
+            CadVector vb = pb - cp;
 
             if (va.Norm() < 0.01)
             {
                 return;
             }
 
-            CadPoint normal = CadMath.Normal(va, vb);
+            CadVector normal = CadMath.Normal(va, vb);
 
             int div = 128;
 
@@ -154,9 +154,9 @@ namespace Plotter
             CadQuaternion q = CadQuaternion.RotateQuaternion(normal, dt);
             CadQuaternion r = q.Conjugate();
 
-            CadPoint p = va;
-            CadPoint tp1 = pa;
-            CadPoint tp2 = pa;
+            CadVector p = va;
+            CadVector tp1 = pa;
+            CadVector tp2 = pa;
 
 
             int i = 0;
@@ -177,15 +177,15 @@ namespace Plotter
             DrawLine(pen, tp1, pa);
         }
 
-        public virtual void DrawText(int font, int brush, CadPoint a, string s)
+        public virtual void DrawText(int font, int brush, CadVector a, string s)
         {
         }
 
-        public virtual void DrawArrow(int pen, CadPoint pt0, CadPoint pt1, ArrowTypes type, ArrowPos pos, double len, double width)
+        public virtual void DrawArrow(int pen, CadVector pt0, CadVector pt1, ArrowTypes type, ArrowPos pos, double len, double width)
         {
             DrawLine(pen, pt0, pt1);
 
-            CadPoint d = pt1 - pt0;
+            CadVector d = pt1 - pt0;
 
             double dl = d.Norm();
 
@@ -195,15 +195,15 @@ namespace Plotter
             }
 
 
-            CadPoint tmp = CadPoint.Create(dl, 0, 0);
+            CadVector tmp = CadVector.Create(dl, 0, 0);
 
             double angle = Vector3d.CalculateAngle(tmp.vector, d.vector);
 
-            CadPoint normal = CadMath.CrossProduct(tmp, d);  // 回転軸
+            CadVector normal = CadMath.CrossProduct(tmp, d);  // 回転軸
 
             if (normal.Norm() < 0.0001)
             {
-                normal = CadPoint.Create(0, 0, 1);
+                normal = CadVector.Create(0, 0, 1);
             }
             else
             {
@@ -247,7 +247,7 @@ namespace Plotter
 
         public virtual void DrawBezier(
             int pen,
-            CadPoint p0, CadPoint p1, CadPoint p2)
+            CadVector p0, CadVector p1, CadVector p2)
         {
             double t = 0;
             double d = 1.0 / 64;
@@ -256,12 +256,12 @@ namespace Plotter
 
             int n = 3;
 
-            CadPoint t0 = p0;
-            CadPoint t1 = p0;
+            CadVector t0 = p0;
+            CadVector t1 = p0;
 
             while (t <= 1.0)
             {
-                t1 = default(CadPoint);
+                t1 = default(CadVector);
                 t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
                 t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
                 t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
@@ -276,7 +276,7 @@ namespace Plotter
 
         public virtual void DrawBezier(
             int pen,
-            CadPoint p0, CadPoint p1, CadPoint p2, CadPoint p3)
+            CadVector p0, CadVector p1, CadVector p2, CadVector p3)
         {
             double t = 0;
             double d = 1.0 / 64;
@@ -285,12 +285,12 @@ namespace Plotter
 
             int n = 4;
 
-            CadPoint t0 = p0;
-            CadPoint t1 = p0;
+            CadVector t0 = p0;
+            CadVector t1 = p0;
 
             while (t <= 1.0)
             {
-                t1 = default(CadPoint);
+                t1 = default(CadVector);
                 t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
                 t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
                 t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
@@ -305,11 +305,11 @@ namespace Plotter
         }
 
 
-        public virtual void DrawCursorScrn(CadPoint pp)
+        public virtual void DrawCursorScrn(CadVector pp)
         {
         }
 
-        public virtual void DrawCrossCursorScrn(CadPoint pp)
+        public virtual void DrawCrossCursorScrn(CadVector pp)
         {
         }
     }

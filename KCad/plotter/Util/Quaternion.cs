@@ -213,7 +213,7 @@ namespace Plotter
          * Vector (v.x, v.y, v.z)を回転軸としてradianだけ回転する四元数を作成
          * 
          */
-        public static CadQuaternion RotateQuaternion(CadPoint axis, double radian)
+        public static CadQuaternion RotateQuaternion(CadVector axis, double radian)
         {
             axis = axis.UnitVector();
 
@@ -257,7 +257,7 @@ namespace Plotter
          * CadPoint - 四元数 変換
          * 
          */
-        public static CadQuaternion FromPoint(CadPoint point)
+        public static CadQuaternion FromPoint(CadVector point)
         {
             CadQuaternion q;
             q.t = 0.0;
@@ -268,14 +268,14 @@ namespace Plotter
             return q;
         }
 
-        public static CadPoint ToPoint(CadQuaternion q)
+        public static CadVector ToPoint(CadQuaternion q)
         {
-            return CadPoint.Create(q.x, q.y, q.z);
+            return CadVector.Create(q.x, q.y, q.z);
         }
 
-        public CadPoint ToPoint()
+        public CadVector ToPoint()
         {
-            CadPoint p = default(CadPoint);
+            CadVector p = default(CadVector);
 
             p.x = x;
             p.y = y;

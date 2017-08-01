@@ -8,7 +8,7 @@ namespace Plotter
     {
         private MarkSeg seg;
 
-        private CadPoint TargetPoint;
+        private CadVector TargetPoint;
         private double mRange;
         private double minDist = 0;
 
@@ -27,7 +27,7 @@ namespace Plotter
             seg = default(MarkSeg);
         }
 
-        public void SetTargetPoint(CadPoint p)
+        public void SetTargetPoint(CadVector p)
         {
             TargetPoint = p;
         }
@@ -47,7 +47,7 @@ namespace Plotter
             return seg;
         }
 
-        public void SearchAllLayer(DrawContext dc, CadPoint p, CadObjectDB db)
+        public void SearchAllLayer(DrawContext dc, CadVector p, CadObjectDB db)
         {
             TargetPoint = p;
             SearchAllLayer(dc, db);
@@ -68,7 +68,7 @@ namespace Plotter
             }
         }
 
-        public void Search(DrawContext dc, CadPoint p, CadObjectDB db, CadLayer layer)
+        public void Search(DrawContext dc, CadVector p, CadObjectDB db, CadLayer layer)
         {
             TargetPoint = p;
             Search(dc, db, layer);
@@ -95,7 +95,7 @@ namespace Plotter
             }
         }
 
-        private void CheckSeg(DrawContext dc, uint layerID, CadFigure fig, int idxA, int idxB, CadPoint a, CadPoint b)
+        private void CheckSeg(DrawContext dc, uint layerID, CadFigure fig, int idxA, int idxB, CadVector a, CadVector b)
         {
             if (fig != null && IsIgnore(fig.ID, idxA))
             {
@@ -107,8 +107,8 @@ namespace Plotter
                 return;
             }
 
-            CadPoint pa = dc.CadPointToUnitPoint(a);
-            CadPoint pb = dc.CadPointToUnitPoint(b);
+            CadVector pa = dc.CadPointToUnitPoint(a);
+            CadVector pb = dc.CadPointToUnitPoint(b);
 
             CrossInfo ret = CadUtil.PerpendicularCrossSeg2D(pa, pb, TargetPoint);
 
@@ -117,7 +117,7 @@ namespace Plotter
                 return;
             }
 
-            CadPoint d = ret.CrossPoint - TargetPoint;
+            CadVector d = ret.CrossPoint - TargetPoint;
 
             double dist = d.Norm();
 
@@ -129,7 +129,7 @@ namespace Plotter
 
             if (dist < minDist)
             {
-                CadPoint tp = dc.UnitPointToCadPoint(TargetPoint);
+                CadVector tp = dc.UnitPointToCadPoint(TargetPoint);
                 CrossInfo ret3d = CadUtil.PerpendicularCrossLine(a, b, tp);
 
                 seg.LayerID = layerID;
@@ -164,13 +164,13 @@ namespace Plotter
                 return;
             }
 
-            CadPoint c = fig.GetPointAt(0);
-            CadPoint a = fig.GetPointAt(1);
-            CadPoint b = fig.GetPointAt(2);
+            CadVector c = fig.GetPointAt(0);
+            CadVector a = fig.GetPointAt(1);
+            CadVector b = fig.GetPointAt(2);
 
-            CadPoint pc = dc.CadPointToUnitPoint(c);
-            CadPoint pa = dc.CadPointToUnitPoint(a);
-            CadPoint pb = dc.CadPointToUnitPoint(b);
+            CadVector pc = dc.CadPointToUnitPoint(c);
+            CadVector pa = dc.CadPointToUnitPoint(a);
+            CadVector pb = dc.CadPointToUnitPoint(b);
 
             double r = CadUtil.segNorm2D(pa, pc);
             double tr = CadUtil.segNorm2D(TargetPoint, pc);
@@ -195,11 +195,11 @@ namespace Plotter
 
             if (dist < minDist)
             {
-                CadPoint tp = dc.UnitPointToCadPoint(TargetPoint);
+                CadVector tp = dc.UnitPointToCadPoint(TargetPoint);
                 r = CadUtil.segNorm(a, c);
                 tr = CadUtil.segNorm(tp, c);
 
-                CadPoint td = tp - c;
+                CadVector td = tp - c;
 
                 td *= (r / tr);
                 td += c;
@@ -221,7 +221,7 @@ namespace Plotter
 
         private void CheckSegs(DrawContext dc, CadLayer layer, CadFigure fig)
         {
-            IReadOnlyList<CadPoint> pl = fig.PointList;
+            IReadOnlyList<CadVector> pl = fig.PointList;
 
             int num = pl.Count;
 
@@ -230,8 +230,8 @@ namespace Plotter
                 return;
             }
 
-            CadPoint a;
-            CadPoint b;
+            CadVector a;
+            CadVector b;
 
             int idx = 0;
             a = pl[idx];
@@ -245,13 +245,13 @@ namespace Plotter
 
                 b = pl[ib];
 
-                if (b.Type == CadPoint.Types.HANDLE)
+                if (b.Type == CadVector.Types.HANDLE)
                 {
                     idx++;
                     continue;
                 }
 
-                if (a.Type == CadPoint.Types.BREAK)
+                if (a.Type == CadVector.Types.BREAK)
                 {
                     idx++;
                     continue;

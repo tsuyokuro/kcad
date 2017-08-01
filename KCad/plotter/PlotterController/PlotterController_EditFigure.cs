@@ -29,7 +29,7 @@ namespace Plotter
 
             CadFigure fig = mDB.getFigure(seg.FigureID);
 
-            int num = CadPointUtil.initBezier(fig, seg.PtIndexA, seg.PtIndexB);
+            int num = CadVectorUtil.initBezier(fig, seg.PtIndexA, seg.PtIndexB);
 
             if (num > 0)
             {
@@ -182,10 +182,10 @@ namespace Plotter
             mHistoryManager.foward(opeRoot);
         }
 
-        private CadPoint GetSelectionCenter()
+        private CadVector GetSelectionCenter()
         {
-            CadPoint min = CadPoint.Create(CadConst.MaxValue);
-            CadPoint max = CadPoint.Create(CadConst.MinValue);
+            CadVector min = CadVector.Create(CadConst.MaxValue);
+            CadVector max = CadVector.Create(CadConst.MinValue);
 
             int selPointCnt = 0;
 
@@ -193,7 +193,7 @@ namespace Plotter
             {
                 foreach (CadFigure fig in layer.FigureList)
                 {
-                    foreach (CadPoint p in fig.PointList)
+                    foreach (CadVector p in fig.PointList)
                     {
                         if (p.Selected)
                         {
@@ -211,7 +211,7 @@ namespace Plotter
                 }
             }
 
-            CadPoint cp = (max - min) / 2f + min;
+            CadVector cp = (max - min) / 2f + min;
 
             DebugOut.Std.println("GetSelectionCenter() sel pt cnt=" + selPointCnt.ToString());
 
@@ -253,7 +253,7 @@ namespace Plotter
 
         public void Flip(TargetCoord coord)
         {
-            CadPoint cp = GetSelectionCenter();
+            CadVector cp = GetSelectionCenter();
 
             StartEdit();
 
@@ -266,13 +266,13 @@ namespace Plotter
 
                     for (int i = 0; i < num; i++)
                     {
-                        CadPoint p = fig.PointList[i];
+                        CadVector p = fig.PointList[i];
 
                         if (p.Selected)
                         {
                             selnum++;
 
-                            CadPoint np = p;
+                            CadVector np = p;
                             if ((coord & TargetCoord.X) != 0)
                             {
                                 np.x -= cp.x;
@@ -329,7 +329,7 @@ namespace Plotter
             foreach (uint id in ids)
             {
                 CadFigure fig = mDB.getFigure(id);
-                CadPoint old = fig.Normal;
+                CadVector old = fig.Normal;
 
                 fig.Normal *= -1;
 
@@ -361,8 +361,8 @@ namespace Plotter
 
             bool handle = false;
 
-            handle |= fig.GetPointAt(seg.PtIndexA).Type == CadPoint.Types.HANDLE;
-            handle |= fig.GetPointAt(seg.PtIndexB).Type == CadPoint.Types.HANDLE;
+            handle |= fig.GetPointAt(seg.PtIndexA).Type == CadVector.Types.HANDLE;
+            handle |= fig.GetPointAt(seg.PtIndexB).Type == CadVector.Types.HANDLE;
 
             if (handle)
             {

@@ -33,9 +33,9 @@ namespace Plotter
         public CadFigure Figure;
         public int PointIndex;
 
-        public CadPoint Point;
+        public CadVector Point;
 
-        public CadPoint ViewPoint;
+        public CadVector ViewPoint;
 
         public uint Flag;
 

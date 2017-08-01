@@ -28,9 +28,9 @@ namespace Plotter
             return ope;
         }
 
-        public static CadOpe CreateAddPointOpe(uint layerID, uint figureID, int pointIndex, ref CadPoint pt)
+        public static CadOpe CreateAddPointOpe(uint layerID, uint figureID, int pointIndex, ref CadVector pt)
         {
-            CadPoint t = pt;
+            CadVector t = pt;
             CadOpe ope = new CadOpeAddPoint(layerID, figureID, pointIndex, ref t);
             return ope;
         }
@@ -65,7 +65,7 @@ namespace Plotter
             return ope;
         }
 
-        public static CadOpe CreateChangeNormalOpe(uint figID, CadPoint oldNormal, CadPoint newNormal)
+        public static CadOpe CreateChangeNormalOpe(uint figID, CadVector oldNormal, CadVector newNormal)
         {
             CadOpe ope = new CadOpeChangeNormal(figID, oldNormal, newNormal);
             return ope;
@@ -156,13 +156,13 @@ namespace Plotter
 
     public class CadOpeAddPoint : CadOpePointBase
     {
-        private CadPoint Point;
+        private CadVector Point;
 
         public CadOpeAddPoint(
             uint layerID,
             uint figureID,
             int pointIndex,
-            ref CadPoint pt)
+            ref CadVector pt)
             : base(layerID, figureID, pointIndex)
         {
             Point = pt;
@@ -186,7 +186,7 @@ namespace Plotter
     {
         private int InsertNum;
 
-        private List<CadPoint> mPointList = null;
+        private List<CadVector> mPointList = null;
 
         public CadOpeInsertPoints(
             uint layerID,
@@ -213,7 +213,7 @@ namespace Plotter
 
             if (mPointList == null)
             {
-                mPointList = new List<CadPoint>();
+                mPointList = new List<CadVector>();
             }
 
             mPointList.Clear();
@@ -408,10 +408,10 @@ namespace Plotter
     public class CadOpeChangeNormal : CadOpe
     {
         private uint FigureID;
-        private CadPoint NewNormal;
-        private CadPoint OldNormal;
+        private CadVector NewNormal;
+        private CadVector OldNormal;
 
-        public CadOpeChangeNormal(uint figID, CadPoint oldNormal, CadPoint newNormal)
+        public CadOpeChangeNormal(uint figID, CadVector oldNormal, CadVector newNormal)
         {
             FigureID = figID;
             OldNormal = oldNormal;

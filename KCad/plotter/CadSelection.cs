@@ -31,7 +31,7 @@ namespace Plotter
             set { mMarkPoint.PointIndex = value; }
         }
 
-        public CadPoint Point
+        public CadVector Point
         {
             get { return mMarkPoint.Point; }
             set { mMarkPoint.Point = value; }
@@ -91,7 +91,7 @@ namespace Plotter
             get { return mList; }
         }
 
-        public void add(uint layerID, CadFigure fig, int pointIndex, CadPoint point)
+        public void add(uint layerID, CadFigure fig, int pointIndex, CadVector point)
         {
             SelectItem f = null;
 
@@ -149,7 +149,7 @@ namespace Plotter
 
             for (int i = si; i <= ei; i++)
             {
-                CadPoint p = fig.GetPointAt(i);
+                CadVector p = fig.GetPointAt(i);
                 add(layerID, fig, i, p);
             }
         }

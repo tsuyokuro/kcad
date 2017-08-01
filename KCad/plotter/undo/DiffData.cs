@@ -18,8 +18,8 @@ namespace Plotter
         public int index;
         public Types Type;
 
-        public CadPoint P0;
-        public CadPoint P1;
+        public CadVector P0;
+        public CadVector P1;
     }
 
     public class DiffData
@@ -107,8 +107,8 @@ namespace Plotter
         public static DiffData create(CadFigure fig)
         {
             uint figID = fig.ID;
-            IReadOnlyList<CadPoint> oldList = fig.StoreList;
-            IReadOnlyList<CadPoint> newList = fig.PointList;
+            IReadOnlyList<CadVector> oldList = fig.StoreList;
+            IReadOnlyList<CadVector> newList = fig.PointList;
 
             if (oldList == null)
             {
@@ -128,8 +128,8 @@ namespace Plotter
             int i = 0;
             for (; i < cnt; i++)
             {
-                CadPoint op = oldList[i];
-                CadPoint np = newList[i];
+                CadVector op = oldList[i];
+                CadVector np = newList[i];
 
                 if (!op.dataEquals(np))
                 {
@@ -148,7 +148,7 @@ namespace Plotter
             {
                 for (; i < ocnt; i++)
                 {
-                    CadPoint op = oldList[i];
+                    CadVector op = oldList[i];
 
                     DiffItem item = new DiffItem();
 
@@ -163,7 +163,7 @@ namespace Plotter
             {
                 for (; i < ncnt; i++)
                 {
-                    CadPoint np = newList[i];
+                    CadVector np = newList[i];
 
                     DiffItem item = new DiffItem();
 

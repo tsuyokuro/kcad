@@ -12,7 +12,7 @@ namespace Plotter
 
         private PlotterController mController = null;
 
-        CadPoint PrevMousePos = default(CadPoint);
+        CadVector PrevMousePos = default(CadVector);
 
         MouseButtons DownButton = MouseButtons.None;
 
@@ -103,7 +103,7 @@ namespace Plotter
         {
             if (DownButton == MouseButtons.Middle)
             {
-                CadPoint t = CadPoint.Create(e.X, e.Y, 0);
+                CadVector t = CadVector.Create(e.X, e.Y, 0);
 
                 Vector2 prev = default(Vector2);
 

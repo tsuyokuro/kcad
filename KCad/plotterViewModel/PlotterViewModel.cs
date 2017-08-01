@@ -67,9 +67,9 @@ namespace Plotter
             }
         }
 
-        private CadPoint mCursorPos;
+        private CadVector mCursorPos;
 
-        public CadPoint CursorPos
+        public CadVector CursorPos
         {
             set
             {
@@ -92,9 +92,9 @@ namespace Plotter
             }
         }
 
-        private CadPoint mCursorPos2;
+        private CadVector mCursorPos2;
 
-        public CadPoint CursorPos2
+        public CadVector CursorPos2
         {
             set
             {
@@ -730,7 +730,7 @@ namespace Plotter
             return -1;
         }
 
-        private void CursorPosChanged(PlotterController sender, CadPoint pt, CursorType type)
+        private void CursorPosChanged(PlotterController sender, CadVector pt, CursorType type)
         {
             if (type == CursorType.TRACKING)
             {
@@ -937,7 +937,7 @@ namespace Plotter
                 dc.DeviceScaleY = -mController.CurrentDC.ViewHeight / 2.0;
             }
 
-            CadPoint org = default(CadPoint);
+            CadVector org = default(CadVector);
 
             org.x = dc.PageSize.widthInch / 2.0 * 100;
             org.y = dc.PageSize.heightInch / 2.0 * 100;

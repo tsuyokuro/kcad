@@ -28,7 +28,7 @@ namespace Plotter
             {
             }
 
-            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadPoint p)
+            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadVector p)
             {
                 if (fig.mPointList.Count == 0)
                 {
@@ -38,13 +38,13 @@ namespace Plotter
                 {
                     // 左回りになるように設定
 
-                    CadPoint pp0 = dc.CadPointToUnitPoint(fig.PointList[0]);
-                    CadPoint pp2 = dc.CadPointToUnitPoint(p);
+                    CadVector pp0 = dc.CadPointToUnitPoint(fig.PointList[0]);
+                    CadVector pp2 = dc.CadPointToUnitPoint(p);
 
-                    CadPoint pp1 = pp0;
+                    CadVector pp1 = pp0;
                     pp1.y = pp2.y;
 
-                    CadPoint pp3 = pp0;
+                    CadVector pp3 = pp0;
                     pp3.x = pp2.x;
 
                     fig.mPointList.Add(dc.UnitPointToCadPoint(pp1));
@@ -55,7 +55,7 @@ namespace Plotter
                 }
             }
 
-            public override void DrawTemp(CadFigure fig, DrawContext dc, CadPoint tp, int pen)
+            public override void DrawTemp(CadFigure fig, DrawContext dc, CadVector tp, int pen)
             {
                 if (fig.PointList.Count <= 0)
                 {
@@ -67,7 +67,7 @@ namespace Plotter
 
             public override CadFigure.Types EndCreate(CadFigure fig, DrawContext dc)
             {
-                fig.Normal = CadPoint.Create(dc.ViewDir);
+                fig.Normal = CadVector.Create(dc.ViewDir);
                 fig.Normal *= -1;
 
                 fig.Type = Types.POLY_LINES;

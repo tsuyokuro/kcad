@@ -89,20 +89,20 @@ namespace Plotter
             mGraphics = null;
         }
 
-        public override CadPoint CadPointToUnitPoint(CadPoint pt)
+        public override CadVector CadPointToUnitPoint(CadVector pt)
         {
-            CadPoint p = CadVectorToUnitVector(pt);
+            CadVector p = CadVectorToUnitVector(pt);
             p = p + mViewOrg;
             return p;
         }
 
-        public override CadPoint UnitPointToCadPoint(CadPoint pt)
+        public override CadVector UnitPointToCadPoint(CadVector pt)
         {
             pt = pt - mViewOrg;
             return UnitVectorToCadVector(pt);
         }
 
-        public override CadPoint CadVectorToUnitVector(CadPoint pt)
+        public override CadVector CadVectorToUnitVector(CadVector pt)
         {
             Vector4d ptv = (Vector4d)pt;
 
@@ -115,7 +115,7 @@ namespace Plotter
             ptv.Y /= ptv.W;
             ptv.Z /= ptv.W;
 
-            CadPoint p = default(CadPoint);
+            CadVector p = default(CadVector);
 
             p.x = ptv.X * (UnitPerMilli * DeviceScaleX);
             p.y = ptv.Y * (UnitPerMilli * DeviceScaleY);
@@ -125,7 +125,7 @@ namespace Plotter
             return p;
         }
 
-        public override CadPoint UnitVectorToCadVector(CadPoint pt)
+        public override CadVector UnitVectorToCadVector(CadVector pt)
         {
             Vector4d wv = default(Vector4d);
             wv.X = pt.x / (UnitPerMilli * DeviceScaleX);
@@ -139,7 +139,7 @@ namespace Plotter
 
             wv /= WoldScale;
 
-            return CadPoint.Create(wv);
+            return CadVector.Create(wv);
         }
 
         public Pen Pen(int id)
