@@ -126,9 +126,9 @@ namespace Plotter
             foreach (CadVector cp in check)
             {
                 if (
-                    cp.coordEquals(tps[0]) ||
-                    cp.coordEquals(tps[1]) ||
-                    cp.coordEquals(tps[2])
+                    cp.CoordEquals(tps[0]) ||
+                    cp.CoordEquals(tps[1]) ||
+                    cp.CoordEquals(tps[2])
                     )
                 {
                     continue;

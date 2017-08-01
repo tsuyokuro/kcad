@@ -285,14 +285,14 @@ namespace Plotter
         public override void Undo(CadObjectDB db)
         {
             CadLayer layer = db.getLayer(LayerID);
-            layer.removeFigureByID(db, FigureID);
+            layer.RemoveFigureByID(db, FigureID);
         }
 
         public override void Redo(CadObjectDB db)
         {
             CadLayer layer = db.getLayer(LayerID);
             CadFigure fig = db.getFigure(FigureID);
-            layer.addFigure(fig);
+            layer.AddFigure(fig);
         }
 
         public override void ReleaseResource(CadObjectDB db)
@@ -308,7 +308,7 @@ namespace Plotter
         public CadOpeRemoveFigure(CadLayer layer, uint figureID)
             : base(layer.ID, figureID)
         {
-            int figIndex = layer.getFigureIndex(figureID);
+            int figIndex = layer.GetFigureIndex(figureID);
             mFigureIndex = figIndex;
         }
 
@@ -316,13 +316,13 @@ namespace Plotter
         {
             CadLayer layer = db.getLayer(LayerID);
             CadFigure fig = db.getFigure(FigureID);
-            layer.insertFigure(mFigureIndex, fig);
+            layer.InsertFigure(mFigureIndex, fig);
         }
 
         public override void Redo(CadObjectDB db)
         {
             CadLayer layer = db.getLayer(LayerID);
-            layer.removeFigureByID(db, FigureID);
+            layer.RemoveFigureByID(db, FigureID);
         }
     }
     #endregion

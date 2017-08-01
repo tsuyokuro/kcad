@@ -296,7 +296,7 @@ namespace Plotter
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
-            Controller.CurrentLayer.addFigure(fig);
+            Controller.CurrentLayer.AddFigure(fig);
 
 
             Controller.LastDownPoint = p1;
@@ -315,7 +315,7 @@ namespace Plotter
         {
             CadVector p = default(CadVector);
 
-            p.set(x, y, z);
+            p.Set(x, y, z);
 
             CadFigure fig = Controller.DB.newFigure(CadFigure.Types.POINT);
             fig.AddPoint(p);
@@ -324,7 +324,7 @@ namespace Plotter
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
-            Controller.CurrentLayer.addFigure(fig);
+            Controller.CurrentLayer.AddFigure(fig);
         }
 
         public void Rect(double w, double h)
@@ -360,7 +360,7 @@ namespace Plotter
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
-            Controller.CurrentLayer.addFigure(fig);
+            Controller.CurrentLayer.AddFigure(fig);
         }
 
         public void AddLayer(string name)
@@ -503,7 +503,7 @@ namespace Plotter
         {
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
-            Controller.CurrentLayer.addFigure(fig);
+            Controller.CurrentLayer.AddFigure(fig);
         }
 
         public void command(string s)

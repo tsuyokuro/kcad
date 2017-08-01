@@ -29,7 +29,7 @@ namespace Plotter
 
             CadFigure fig = mDB.getFigure(seg.FigureID);
 
-            int num = CadVectorUtil.initBezier(fig, seg.PtIndexA, seg.PtIndexB);
+            int num = CadVectorUtil.InitBezier(fig, seg.PtIndexA, seg.PtIndexB);
 
             if (num > 0)
             {
@@ -69,7 +69,7 @@ namespace Plotter
                 ope = CadOpe.CreateAddFigureOpe(ri.LayerID, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
-                layer.addFigure(ri.Figure);
+                layer.AddFigure(ri.Figure);
             }
 
             foreach (CadFigureAssembler.ResultItem ri in res.RemoveList)
@@ -79,7 +79,7 @@ namespace Plotter
                 ope = CadOpe.CreateRemoveFigureOpe(layer, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
-                layer.removeFigureByID(ri.FigureID);
+                layer.RemoveFigureByID(ri.FigureID);
             }
 
             mHistoryManager.foward(opeRoot);
@@ -112,7 +112,7 @@ namespace Plotter
                 ope = CadOpe.CreateAddFigureOpe(ri.LayerID, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
-                layer.addFigure(ri.Figure);
+                layer.AddFigure(ri.Figure);
             }
 
             foreach (CadFigureAssembler.ResultItem ri in res.RemoveList)
@@ -122,7 +122,7 @@ namespace Plotter
                 ope = CadOpe.CreateRemoveFigureOpe(layer, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
-                layer.removeFigureByID(ri.FigureID);
+                layer.RemoveFigureByID(ri.FigureID);
             }
 
             mHistoryManager.foward(opeRoot);
@@ -166,7 +166,7 @@ namespace Plotter
                 ope = CadOpe.CreateAddFigureOpe(ri.LayerID, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
-                layer.addFigure(ri.Figure);
+                layer.AddFigure(ri.Figure);
             }
 
             foreach (CadFigureAssembler.ResultItem ri in res.RemoveList)
@@ -176,7 +176,7 @@ namespace Plotter
                 ope = CadOpe.CreateRemoveFigureOpe(layer, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
-                layer.removeFigureByID(ri.FigureID);
+                layer.RemoveFigureByID(ri.FigureID);
             }
 
             mHistoryManager.foward(opeRoot);
@@ -435,7 +435,7 @@ namespace Plotter
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, pointFig.ID);
             HistoryManager.foward(ope);
-            CurrentLayer.addFigure(pointFig);
+            CurrentLayer.AddFigure(pointFig);
 
             String s = string.Format("({0:0.000},{1:0.000},{2:0.000})",
                                cent.Point.x, cent.Point.y, cent.Point.z);

@@ -161,7 +161,7 @@ namespace Plotter
                     CadVector uva = va.UnitVector();
                     CadVector uvb = vb.UnitVector();
 
-                    if (!uva.coordEqualsThreshold(uvb))
+                    if (!uva.CoordEqualsThreshold(uvb))
                     {
                         normal = CadMath.CrossProduct(va, vb);
                         normal = normal.UnitVector();
@@ -187,7 +187,7 @@ namespace Plotter
                     CadVector uva = va.UnitVector();
                     CadVector uvb = vb.UnitVector();
 
-                    if (!uva.coordEqualsThreshold(uvb))
+                    if (!uva.CoordEqualsThreshold(uvb))
                     {
                         normal = CadMath.CrossProduct(va, vb);
                         normal = normal.UnitVector();

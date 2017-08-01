@@ -153,7 +153,7 @@ namespace Plotter
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, line.ID);
             HistoryManager.foward(ope);
-            CurrentLayer.addFigure(line);
+            CurrentLayer.AddFigure(line);
         }
 
         private void test_crossPlane2(DrawContext dc)
@@ -201,7 +201,7 @@ namespace Plotter
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, line.ID);
             HistoryManager.foward(ope);
-            CurrentLayer.addFigure(line);
+            CurrentLayer.AddFigure(line);
         }
 
         private void test_crossPlane3(DrawContext dc)
@@ -253,7 +253,7 @@ namespace Plotter
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, line.ID);
             HistoryManager.foward(ope);
-            CurrentLayer.addFigure(line);
+            CurrentLayer.AddFigure(line);
         }
 
         private void test_depthLine(DrawContext dc)
@@ -272,7 +272,7 @@ namespace Plotter
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, line.ID);
             HistoryManager.foward(ope);
-            CurrentLayer.addFigure(line);
+            CurrentLayer.AddFigure(line);
 
             Clear(dc);
             Draw(dc);

@@ -120,7 +120,7 @@ namespace Plotter
         public static CadVector Create(double x, double y, double z, Types type = Types.STD)
         {
             CadVector v = default(CadVector);
-            v.set(x, y, z);
+            v.Set(x, y, z);
 
             v.Flag = 0;
             v.Type = type;
@@ -131,7 +131,7 @@ namespace Plotter
         public static CadVector Create()
         {
             CadVector v = default(CadVector);
-            v.set(0, 0, 0);
+            v.Set(0, 0, 0);
 
             v.Flag = 0;
             v.Type = Types.STD;
@@ -142,7 +142,7 @@ namespace Plotter
         public static CadVector Create(Vector3d v)
         {
             CadVector p = default(CadVector);
-            p.set(v.X, v.Y, v.Z);
+            p.Set(v.X, v.Y, v.Z);
 
             p.Flag = 0;
             p.Type = Types.STD;
@@ -153,7 +153,7 @@ namespace Plotter
         public static CadVector Create(Vector4d v)
         {
             CadVector p = default(CadVector);
-            p.set(v.X, v.Y, v.Z);
+            p.Set(v.X, v.Y, v.Z);
 
             p.Flag = 0;
             p.Type = Types.STD;
@@ -195,26 +195,26 @@ namespace Plotter
             return x == 0 && y == 0 && z == 0;
         }
 
-        public void set(double x, double y, double z)
+        public void Set(double x, double y, double z)
         {
             this.x = x;
             this.y = y;
             this.z = z;
         }
 
-        public CadVector setVector(Vector3d v)
+        public CadVector SetVector(Vector3d v)
         {
             vector = v;
             return this;
         }
 
-        public CadVector setVector(CadVector p)
+        public CadVector SetVector(CadVector p)
         {
             vector = p.vector;
             return this;
         }
 
-        public void set(ref CadVector p)
+        public void Set(ref CadVector p)
         {
             Flag = p.Flag;
             x = p.x;
@@ -222,12 +222,12 @@ namespace Plotter
             z = p.z;
         }
 
-        public bool coordEquals(CadVector p)
+        public bool CoordEquals(CadVector p)
         {
             return (x == p.x && y == p.y && z == p.z);
         }
 
-        public bool coordEqualsThreshold(CadVector p, double m = 0.000001)
+        public bool CoordEqualsThreshold(CadVector p, double m = 0.000001)
         {
             return (
                 x > p.x - m && x < p.x + m &&
@@ -236,9 +236,9 @@ namespace Plotter
                 );
         }
 
-        public bool dataEquals(CadVector p)
+        public bool DataEquals(CadVector p)
         {
-            return coordEquals(p) && (Type == p.Type);
+            return CoordEquals(p) && (Type == p.Type);
         }
 
         public static CadVector operator +(CadVector p1, CadVector p2)
@@ -365,7 +365,7 @@ namespace Plotter
 
     class CadVectorUtil
     {
-        public static int initBezier(CadFigure fig, int idx1, int idx2)
+        public static int InitBezier(CadFigure fig, int idx1, int idx2)
         {
             if (idx1 > idx2)
             {

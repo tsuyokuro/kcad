@@ -103,7 +103,7 @@ namespace Plotter
 
             foreach (CadLayer layer in LayerList)
             {
-                int idx = layer.getFigureIndex(figID);
+                int idx = layer.GetFigureIndex(figID);
                 if (idx >= 0)
                 {
                     fb.Layer = layer;

@@ -128,7 +128,7 @@ namespace Plotter
 
                 CadSegment seg = CadUtil.PerpendicularSeg(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
 
-                fig.PointList[2] = fig.PointList[2].setVector(seg.P1.vector);
+                fig.PointList[2] = fig.PointList[2].SetVector(seg.P1.vector);
                 fig.PointList.Add(seg.P0);
 
                 return fig.Type;
@@ -166,8 +166,8 @@ namespace Plotter
                     CadVector nv3 = fig.StoreList[3] + vd;
                     CadVector nv2 = fig.StoreList[2] + vd;
 
-                    if (nv3.coordEqualsThreshold(fig.StoreList[0], 0.001) ||
-                        nv2.coordEqualsThreshold(fig.StoreList[1], 0.001))
+                    if (nv3.CoordEqualsThreshold(fig.StoreList[0], 0.001) ||
+                        nv2.CoordEqualsThreshold(fig.StoreList[1], 0.001))
                     {
                         return;
                     }
@@ -203,26 +203,26 @@ namespace Plotter
                         cp1 = CadUtil.CrossPlane(v1 + delta, v1, planeNormal);
                     }
 
-                    if (cp0.coordEqualsThreshold(cp1, 0.001))
+                    if (cp0.CoordEqualsThreshold(cp1, 0.001))
                     {
                         return;
                     }
 
                     if (fig.PointList[0].Selected)
                     {
-                        fig.PointList[0]  = fig.PointList[0].setVector(cp0.vector);
+                        fig.PointList[0]  = fig.PointList[0].SetVector(cp0.vector);
                     }
 
                     if (fig.PointList[1].Selected)
                     {
-                        fig.PointList[1] = fig.PointList[1].setVector(cp1.vector);
+                        fig.PointList[1] = fig.PointList[1].SetVector(cp1.vector);
                     }
 
                     CadVector normal = CadMath.Normal(cp0, cp0 + planeNormal, cp1);
                     CadVector d = normal * h;
 
-                    fig.PointList[3] = fig.PointList[3].setVector(fig.PointList[0] + d);
-                    fig.PointList[2] = fig.PointList[2].setVector(fig.PointList[1] + d);
+                    fig.PointList[3] = fig.PointList[3].SetVector(fig.PointList[0] + d);
+                    fig.PointList[2] = fig.PointList[2].SetVector(fig.PointList[1] + d);
                 }
             }
 
@@ -234,8 +234,8 @@ namespace Plotter
                 CadSegment seg = CadUtil.PerpendicularSeg(fig.PointList[0], fig.PointList[1],
                     fig.StoreList[2] + delta);
 
-                fig.PointList[2] = fig.PointList[2].setVector(seg.P1.vector);
-                fig.PointList[3] = fig.PointList[3].setVector(seg.P0.vector);
+                fig.PointList[2] = fig.PointList[2].SetVector(seg.P1.vector);
+                fig.PointList[3] = fig.PointList[3].SetVector(seg.P0.vector);
             }
 
             public override void EndEdit(CadFigure fig)
@@ -247,8 +247,8 @@ namespace Plotter
 
                 CadSegment seg = CadUtil.PerpendicularSeg(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
 
-                fig.PointList[2] = fig.PointList[2].setVector(seg.P1.vector);
-                fig.PointList[3] = fig.PointList[3].setVector(seg.P0.vector);
+                fig.PointList[2] = fig.PointList[2].SetVector(seg.P1.vector);
+                fig.PointList[3] = fig.PointList[3].SetVector(seg.P0.vector);
             }
 
             private void DrawDim(

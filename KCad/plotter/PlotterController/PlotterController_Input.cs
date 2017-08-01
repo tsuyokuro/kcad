@@ -457,7 +457,7 @@ namespace Plotter
         private void MDrag(CadMouse pointer, DrawContext dc, int x, int y)
         {
             CadVector cp = default(CadVector);
-            cp.set(x, y, 0);
+            cp.Set(x, y, 0);
 
             CadVector d = cp - pointer.MDownPoint;
 
@@ -770,7 +770,7 @@ namespace Plotter
 
                 CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
                 mHistoryManager.foward(ope);
-                CurrentLayer.addFigure(CreatingFigure);
+                CurrentLayer.AddFigure(CreatingFigure);
 
                 NextState();
             }
@@ -778,7 +778,7 @@ namespace Plotter
             {
                 CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
                 mHistoryManager.foward(ope);
-                CurrentLayer.addFigure(CreatingFigure);
+                CurrentLayer.AddFigure(CreatingFigure);
             }
             else if (state == CadFigure.States.CONTINUE)
             {

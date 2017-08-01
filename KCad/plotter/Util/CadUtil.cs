@@ -534,7 +534,7 @@ namespace Plotter
         {
             CrossInfo ret = default(CrossInfo);
 
-            if (a.coordEquals(b))
+            if (a.CoordEquals(b))
             {
                 return ret;
             }

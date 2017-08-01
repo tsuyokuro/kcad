@@ -112,7 +112,7 @@ namespace Plotter
                     CadVector sp = ri.Figure.PointList[0];
                     CadVector ep = ri.Figure.PointList[ri.Figure.PointList.Count-1];
 
-                    if (ep.coordEquals(sp))
+                    if (ep.CoordEquals(sp))
                     {
                         ri.Figure.RemovePointAt(ri.Figure.PointList.Count - 1);
                         ri.Figure.Closed = true;
@@ -203,7 +203,7 @@ namespace Plotter
         {
             foreach (Item item in ItemList)
             {
-                if (p.coordEquals(item.Point))
+                if (p.CoordEquals(item.Point))
                 {
                     return item;
                 }
@@ -236,7 +236,7 @@ namespace Plotter
                 litem.Point = head;
 
                 ItemList.RemoveAll((a) =>
-                    a.Point.coordEquals(head)
+                    a.Point.CoordEquals(head)
                     );
 
                 ItemList.Add(litem);
@@ -253,7 +253,7 @@ namespace Plotter
                 ritem.Point = tail;
 
                 ItemList.RemoveAll((a) =>
-                    a.Point.coordEquals(tail)
+                    a.Point.CoordEquals(tail)
                     );
 
                 ItemList.Add(ritem);
@@ -288,7 +288,7 @@ namespace Plotter
 
             int idx1 = -1;
 
-            if (p1.coordEquals(p0))
+            if (p1.CoordEquals(p0))
             {
                 idx1 = 0;
             }
@@ -296,7 +296,7 @@ namespace Plotter
             {
                 p1 = fig1.GetPointAt(fig1.PointCount - 1);
 
-                if (p1.coordEquals(p0))
+                if (p1.CoordEquals(p0))
                 {
                     idx1 = fig1.PointCount - 1;
                 }

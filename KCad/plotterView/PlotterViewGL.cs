@@ -79,7 +79,7 @@ namespace Plotter
 
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
-            PrevMousePos.set(e.X, e.Y, 0);
+            PrevMousePos.Set(e.X, e.Y, 0);
             DownButton = e.Button;
 
             if (DownButton != MouseButtons.Middle)

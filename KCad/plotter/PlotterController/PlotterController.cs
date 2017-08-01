@@ -520,7 +520,7 @@ namespace Plotter
 
             foreach (CadLayer layer in mDB.LayerList)
             {
-                layer.clearSelectedFlags();
+                layer.ClearSelectedFlags();
             }
         }
 
@@ -672,7 +672,7 @@ namespace Plotter
                         CadOpe ope = CadOpe.CreateRemoveFigureOpe(layer, fig.ID);
                         opeList.OpeList.Add(ope);
 
-                        layer.removeFigureByIndex(i);
+                        layer.RemoveFigureByIndex(i);
                     }
                 }
             }
@@ -767,7 +767,7 @@ namespace Plotter
                 {
                     fig.MoveAllPoints(d);
                     mDB.addFigure(fig);
-                    CurrentLayer.addFigure(fig);
+                    CurrentLayer.AddFigure(fig);
 
                     CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, fig.ID);
                     opeRoot.OpeList.Add(ope);
@@ -826,7 +826,7 @@ namespace Plotter
 
             if (layer == null) return;
 
-            CadOpeList opeList = layer.clear();
+            CadOpeList opeList = layer.Clear();
 
             mHistoryManager.foward(opeList);
         }

@@ -131,7 +131,7 @@ namespace Plotter
                 CadVector op = oldList[i];
                 CadVector np = newList[i];
 
-                if (!op.dataEquals(np))
+                if (!op.DataEquals(np))
                 {
                     DiffItem item = new DiffItem();
 

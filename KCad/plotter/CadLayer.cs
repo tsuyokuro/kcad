@@ -84,33 +84,33 @@ namespace Plotter
         {
         }
 
-        public void addFigure(CadFigure fig)
+        public void AddFigure(CadFigure fig)
         {
             fig.LayerID = ID;
             mFigureList.Add(fig);
         }
 
-        public CadFigure getFigureByID(uint id)
+        public CadFigure GetFigureByID(uint id)
         {
             return mFigureList.Find(fig => fig.ID == id);
         }
 
-        public void insertFigure(int index, CadFigure fig)
+        public void InsertFigure(int index, CadFigure fig)
         {
             fig.LayerID = ID;
             mFigureList.Insert(index, fig);
         }
 
-        public void removeFigureByID(CadObjectDB db, uint id)
+        public void RemoveFigureByID(CadObjectDB db, uint id)
         {
             CadFigure fig = db.getFigure(id);
             mFigureList.Remove(fig);
             fig.LayerID = 0;
         }
 
-        public void removeFigureByID(uint id)
+        public void RemoveFigureByID(uint id)
         {
-            int index = getFigureIndex(id);
+            int index = GetFigureIndex(id);
 
             if (index < 0)
             {
@@ -123,13 +123,13 @@ namespace Plotter
         }
 
 
-        public void removeFigureByIndex(int index)
+        public void RemoveFigureByIndex(int index)
         {
             mFigureList[index].LayerID = 0;
             mFigureList.RemoveAt(index);
         }
 
-        public int getFigureIndex(uint figID)
+        public int GetFigureIndex(uint figID)
         {
             int index = 0;
             foreach (CadFigure fig in mFigureList)
@@ -145,7 +145,7 @@ namespace Plotter
             return -1;
         }
 
-        public void clearSelectedFlags()
+        public void ClearSelectedFlags()
         {
             foreach (CadFigure fig in FigureList)
             {
@@ -153,7 +153,7 @@ namespace Plotter
             }
         }
 
-        public CadOpeList clear()
+        public CadOpeList Clear()
         {
             CadOpeList opeList = CadOpe.CreateListOpe();
 
