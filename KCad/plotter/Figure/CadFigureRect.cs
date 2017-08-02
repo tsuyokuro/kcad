@@ -8,8 +8,6 @@ namespace Plotter
         [Serializable]
         public class CadFigureRect : CadFigurePolyLines
         {
-            // Do not have data member.
-
             public override States GetState(CadFigure fig)
             {
                 if (fig.PointList.Count < 1)

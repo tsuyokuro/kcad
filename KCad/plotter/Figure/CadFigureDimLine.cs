@@ -19,8 +19,6 @@ namespace Plotter
         [Serializable]
         public class CadFigureDimLine : CadFigureBehavior
         {
-            // Do not have data member.
-
             public override States GetState(CadFigure fig)
             {
                 if (fig.PointList.Count < 2)

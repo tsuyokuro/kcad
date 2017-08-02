@@ -10,12 +10,6 @@ namespace Plotter
         [Serializable]
         public class CadFigurePolyLines : CadFigureBehavior
         {
-            // Do not have data member.
-            //
-            // CadFigureのstaticなtableで管理されるのでデータメンバを持っては
-            // いけません
-            //
-
             public override States GetState(CadFigure fig)
             {
                 if (fig.PointList.Count < 2)
@@ -330,6 +324,25 @@ namespace Plotter
                     fig.Normal *= -1;
                 }
                 return fig.Type;
+            }
+
+            public override void EndEdit(CadFigure fig)
+            {
+                if (fig.PointList.Count == 0)
+                {
+                    return;
+                }
+
+                CadVector prevNormal = fig.Normal;
+
+                CadVector normal = CadVector.Create(CadUtil.RepresentativeNormal(fig.PointList));
+
+                if (CadMath.InnerProduct(prevNormal, normal) < 0)
+                {
+                    normal *= -1;
+                }
+
+                fig.Normal = normal;
             }
 
             public override Centroid GetCentroid(CadFigure fig)

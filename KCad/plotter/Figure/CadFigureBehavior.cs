@@ -9,8 +9,6 @@ namespace Plotter
         [Serializable]
         public abstract class CadFigureBehavior
         {
-            // Do not have data member.
-
             public CadFigureBehavior()
             {
             }

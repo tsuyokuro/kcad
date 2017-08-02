@@ -120,6 +120,9 @@ namespace Plotter
 
         private static CadFigureBehavior[] BehaviorTbl = null;
 
+        /*
+        private static System.Type[] BehaviorTypes = null;
+
         // Static initializer
         static CadFigure()
         {
@@ -132,6 +135,7 @@ namespace Plotter
             BehaviorTbl[(int)Types.GROUP] = new CadNopBehavior();
             BehaviorTbl[(int)Types.DIMENTION_LINE] = new CadFigureDimLine();
         }
+        */
 
         public CadFigure()
         {
@@ -151,7 +155,38 @@ namespace Plotter
         {
             if (type > Types.NONE && type < Types.MAX)
             {
-                Behavior = BehaviorTbl[(int)type];
+                //Behavior = BehaviorTbl[(int)type];
+                Behavior = NewBehavior(type);
+            }
+        }
+
+        private static CadFigureBehavior NewBehavior(Types type)
+        {
+            switch (type)
+            {
+                case Types.LINE:
+                    return new CadFigureLine();
+
+                case Types.RECT:
+                    return new CadFigureRect();
+
+                case Types.POLY_LINES:
+                    return new CadFigurePolyLines();
+
+                case Types.CIRCLE:
+                    return new CadFigureCircle();
+
+                case Types.POINT:
+                    return new CadFigurePoint();
+
+                case Types.GROUP:
+                    return new CadNopBehavior();
+
+                case Types.DIMENTION_LINE:
+                    return new CadFigureDimLine();
+
+                default:
+                    return null;
             }
         }
 
