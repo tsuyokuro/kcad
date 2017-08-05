@@ -52,7 +52,7 @@ namespace Plotter
         {
             CadFigureCutter fa = new CadFigureCutter(mDB);
 
-            var res = fa.cut(selList);
+            var res = fa.Cut(selList);
 
             if (!res.isValid())
             {
@@ -95,7 +95,7 @@ namespace Plotter
         {
             CadFigureBonder fa = new CadFigureBonder(mDB, CurrentLayer);
 
-            var res = fa.bond(selList);
+            var res = fa.Bond(selList);
 
             if (!res.isValid())
             {
@@ -149,7 +149,7 @@ namespace Plotter
 
             CadSegmentCutter segCutter = new CadSegmentCutter(mDB);
 
-            var res = segCutter.cutSegment(ms, mObjDownPoint.Value);
+            var res = segCutter.CutSegment(ms, mObjDownPoint.Value);
 
             if (!res.isValid())
             {

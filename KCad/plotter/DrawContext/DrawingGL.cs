@@ -74,7 +74,7 @@ namespace Plotter
             GL.End();
         }
 
-        public override void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector normal)
+        public override void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector normal, bool drawOutline)
         {
             CadVector p;
             GLPen glpen;
@@ -110,33 +110,37 @@ namespace Plotter
 
 
             #region 輪郭
-            // 輪郭は、光源設定を無効化
-            GL.Disable(EnableCap.Lighting);
-            GL.Disable(EnableCap.Light0);
 
-            glpen = DC.Pen(pen);
-
-            GL.Color4(glpen.Color);
-            GL.LineWidth(1.0f);
-
-            Vector3d t = DC.ViewDir * -1.0f;
-
-            CadVector shift = (CadVector)t;
-
-            GL.Begin(PrimitiveType.LineStrip);
-
-            foreach (CadVector pt in pointList)
+            if (drawOutline)
             {
-                p = (pt + shift) * DC.WoldScale;
+                // 輪郭は、光源設定を無効化
+                GL.Disable(EnableCap.Lighting);
+                GL.Disable(EnableCap.Light0);
+
+                glpen = DC.Pen(pen);
+
+                GL.Color4(glpen.Color);
+                GL.LineWidth(1.0f);
+
+                Vector3d t = DC.ViewDir * -1.0f;
+
+                CadVector shift = (CadVector)t;
+
+                GL.Begin(PrimitiveType.LineStrip);
+
+                foreach (CadVector pt in pointList)
+                {
+                    p = (pt + shift) * DC.WoldScale;
+                    GL.Vertex3(p.vector);
+                }
+
+                CadVector pt0 = pointList[0];
+                p = (pt0 + shift) * DC.WoldScale;
+
                 GL.Vertex3(p.vector);
+
+                GL.End();
             }
-
-            CadVector pt0 = pointList[0];
-            p = (pt0 + shift) * DC.WoldScale;
-
-            GL.Vertex3(p.vector);
-
-            GL.End();
             #endregion
         }
 

@@ -215,7 +215,7 @@ namespace Plotter
             {
                 CadFigure fig = Controller.DB.getFigure(id);
 
-                CadFigure root = fig.getGroupRoot();
+                CadFigure root = fig.GetGroupRoot();
 
                 if (root.ChildList.Count > 0)
                 {

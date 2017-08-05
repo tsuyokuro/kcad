@@ -280,6 +280,13 @@ namespace Plotter
             return ret;
         }
 
+        public static void SetNormal(CadFigure fig)
+        {
+            CadVector nv = CadMath.Normal(fig.PointList);
+            fig.Normal = nv;
+        }
+
+
         // 法線の代表値を求める
         public static Vector3d RepresentativeNormal(IReadOnlyList<CadVector> points)
         {

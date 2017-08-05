@@ -56,7 +56,7 @@ namespace Plotter
             {
                 if (fig.Closed && CadUtil.IsConvex(fig.PointList))
                 {
-                    dc.Drawing.DrawFace(pen, GetPoints(fig, 32), fig.Normal);
+                    dc.Drawing.DrawFace(pen, GetPoints(fig, 32), fig.Normal, true);
                 }
                 else
                 {
@@ -369,7 +369,7 @@ namespace Plotter
             {
                 Centroid ret = default(Centroid);
 
-                List<CadFigure> triangles = TriangleSplitter.split(fig);
+                List<CadFigure> triangles = TriangleSplitter.Split(fig);
 
                 ret = CadUtil.TriangleListCentroid(triangles);
 

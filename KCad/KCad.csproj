@@ -144,6 +144,7 @@
     <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
     <Compile Include="plotter\PlotterSettings.cs" />
     <Compile Include="plotter\primitive\CadPrimitive.cs" />
+    <Compile Include="plotter\Util\CadDxfLoader.cs" />
     <Compile Include="plotter\Util\CadRuler.cs" />
     <Compile Include="SnapSettingsDialog.xaml.cs">
       <DependentUpon>SnapSettingsDialog.xaml</DependentUpon>

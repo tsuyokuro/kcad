@@ -297,7 +297,7 @@ namespace Plotter
             DC.graphics.DrawLine(DC.Pen(pen), (float)p0.x, (float)p0.y, (float)p1.x, (float)p1.y);
         }
 
-        public override void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector Normal)
+        public override void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector Normal, bool drawOutline)
         {
             int cnt = pointList.Count;
             if (cnt == 0)

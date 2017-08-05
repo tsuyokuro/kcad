@@ -72,7 +72,7 @@ namespace Plotter
 
             TempFigureList.Add(tfig);
 
-            List<CadFigure> tl = TriangleSplitter.split(tfig);
+            List<CadFigure> tl = TriangleSplitter.Split(tfig);
 
             tl.ForEach(a => TempFigureList.Add(a));
 
@@ -283,11 +283,11 @@ namespace Plotter
             TempFigureList.Clear();
 
             AreaCollecter ac = new AreaCollecter(mDB);
-            List<CadFigure> figs = ac.collect(mSelList.List);
+            List<CadFigure> figs = ac.Collect(mSelList.List);
 
             figs.ForEach(a => { TempFigureList.Add(a); });
 
-            RequestRedraw();
+            NotifyDataChanged(true);
         }
 
         private void test_getCentroid(DrawContext dc)
@@ -461,12 +461,38 @@ namespace Plotter
 
         }
 
+        private void LoadDxfTest()
+        {
+            CadDxfLoader loader = new CadDxfLoader();
+
+            loader.AsyncLoad(@"f:\work2\dino.dxf", 40, (state, percent, db)=>
+            {
+                mDB = db;
+
+                mHistoryManager = new HistoryManager(mDB);
+
+                NotifyDataChanged(true);
+
+                NotifyLayerInfo();
+
+                InteractOut.print("Complete! point=" + loader.TotalPointCount +
+                    " Face=" + loader.TotalFaceCount);
+            });
+
+            InteractOut.print("Loading ...");
+        }
+
 
         public void debugCommand(DrawContext dc, string s)
         {
             if (s == "test")
             {
                 test(dc);
+            }
+
+            else if (s == "dxf")
+            {
+                LoadDxfTest();
             }
 
             else if (s == "mtest")

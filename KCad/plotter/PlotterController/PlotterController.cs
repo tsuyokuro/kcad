@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 
@@ -274,14 +275,9 @@ namespace Plotter
 
 
         #region Notify
-        private void NotifyDataChanged()
+        private void NotifyDataChanged(bool redraw)
         {
-            mDataChanged(this, false);
-        }
-
-        private void RequestRedraw()
-        {
-            mDataChanged(this, true);
+            mDataChanged(this, redraw);
         }
 
         private void NotifyLayerInfo()
@@ -406,7 +402,6 @@ namespace Plotter
             Draw(dc);
             DrawSelectedItems(dc);
             DrawLastPoint(dc);
-            //DrawCursor(dc);
         }
 
         public void Draw(DrawContext dc)

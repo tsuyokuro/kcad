@@ -84,7 +84,7 @@ namespace Plotter
         {
         }
 
-        public Result cut(List<SelectItem> selList)
+        public Result Cut(List<SelectItem> selList)
         {
             var sels = (
                 from a in selList
@@ -199,7 +199,7 @@ namespace Plotter
         {
         }
 
-        public Result cutSegment(MarkSeg seg, CadVector p)
+        public Result CutSegment(MarkSeg seg, CadVector p)
         {
             ProcResult.clear();
 
@@ -248,13 +248,13 @@ namespace Plotter
             DB = db;
         }
 
-        public List<CadFigure> collect(List<SelectItem> selList)
+        public List<CadFigure> Collect(List<SelectItem> selList)
         {
             List<CadFigure> res = new List<CadFigure>();
 
             CadFigureBonder bonder = new CadFigureBonder(DB, null);
 
-            var bondRes = bonder.bond(selList);
+            var bondRes = bonder.Bond(selList);
 
             foreach (SelectItem si in selList)
             {

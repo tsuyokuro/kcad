@@ -5,7 +5,7 @@ namespace Plotter
 {
     public class TriangleSplitter
     {
-        public static List<CadFigure> split(CadFigure fig)
+        public static List<CadFigure> Split(CadFigure fig)
         {
             CadVector p0 = default(CadVector);
 
@@ -28,7 +28,7 @@ namespace Plotter
                 return triangles;
             }
 
-            triangle = getTriangleWithCenterPoint(pointList, i1);
+            triangle = GetTriangleWithCenterPoint(pointList, i1);
 
             CadVector tp0 = triangle.PointList[0];
             CadVector tp1 = triangle.PointList[1];
@@ -48,7 +48,7 @@ namespace Plotter
                     }
                 }
 
-                triangle = getTriangleWithCenterPoint(pointList, i1);
+                triangle = GetTriangleWithCenterPoint(pointList, i1);
 
                 tp0 = triangle.PointList[0];
                 tp1 = triangle.PointList[1];
@@ -56,7 +56,7 @@ namespace Plotter
 
                 currentDir = CadMath.CrossProduct2D(tp1, tp0, tp2);
 
-                bool hasIn = listContainsPointInTriangle(pointList, triangle);
+                bool hasIn = ListContainsPointInTriangle(pointList, triangle);
                 if (!hasIn && (Math.Sign(dir) == Math.Sign(currentDir)))
                 {
                     triangles.Add(triangle);
@@ -93,7 +93,7 @@ namespace Plotter
             return triangles;
         }
 
-        private static CadFigure getTriangleWithCenterPoint(IReadOnlyList<CadVector> pointList, int cpIndex)
+        private static CadFigure GetTriangleWithCenterPoint(IReadOnlyList<CadVector> pointList, int cpIndex)
         {
             int i1 = cpIndex;
             int endi = pointList.Count - 1;
@@ -119,7 +119,7 @@ namespace Plotter
             return triangle;
         }
 
-        private static bool listContainsPointInTriangle(IReadOnlyList<CadVector> check, CadFigure triangle)
+        private static bool ListContainsPointInTriangle(IReadOnlyList<CadVector> check, CadFigure triangle)
         {
             var tps = triangle.PointList;
 

@@ -57,7 +57,7 @@ namespace Plotter
             public int PointIndex;
             public CadVector Point;
 
-            public void set(CadObjectDB db, SelectItem si)
+            public void Set(CadObjectDB db, SelectItem si)
             {
                 LayerID = si.LayerID;
                 FigureID = si.FigureID;
@@ -81,7 +81,7 @@ namespace Plotter
             public int indexB;
         }
 
-        public Result bond(List<SelectItem> selList)
+        public Result Bond(List<SelectItem> selList)
         {
             SelectList = new List<SelectItem>();
 
@@ -100,10 +100,10 @@ namespace Plotter
 
             // Collect endpoint (first and last point) items
             // to ItemList 
-            collectEndPoint(SelectList);
+            CollectEndPoint(SelectList);
 
             // joint end points
-            bondMain();
+            BondMain();
 
             foreach (ResultItem ri in ProcResult.AddList)
             {
@@ -123,7 +123,7 @@ namespace Plotter
             return ProcResult;
         }
 
-        private void collectEndPoint(List<SelectItem> selList)
+        private void CollectEndPoint(List<SelectItem> selList)
         {
             ItemList = new List<Item>();
 
@@ -145,12 +145,12 @@ namespace Plotter
 
 
                 Item item = new Item();
-                item.set(DB, si);
+                item.Set(DB, si);
                 ItemList.Add(item);
             }
         }
 
-        private void bondMain()
+        private void BondMain()
         {
             while (ItemList.Count > 0)
             {
@@ -165,7 +165,7 @@ namespace Plotter
                         continue;
                     }
 
-                    bondInfo = bondFigure(item, fig1);
+                    bondInfo = BondFigure(item, fig1);
 
                     if (bondInfo != null)
                     {
@@ -175,7 +175,7 @@ namespace Plotter
 
                 if (bondInfo != null)
                 {
-                    updateItemList(bondInfo);
+                    UpdateItemList(bondInfo);
 
                     ProcResult.AddList.Add(new ResultItem(LayerID, bondInfo.BondedFigure));
                     ProcResult.RemoveList.Add(new ResultItem(bondInfo.figA.LayerID, bondInfo.figA));
@@ -199,7 +199,7 @@ namespace Plotter
             }
         }
 
-        private Item findItem(CadVector p)
+        private Item FindItem(CadVector p)
         {
             foreach (Item item in ItemList)
             {
@@ -217,7 +217,7 @@ namespace Plotter
          * replace Item in ItemList to bondedFigure
          *
          */
-        private void updateItemList(BondInfo bi)
+        private void UpdateItemList(BondInfo bi)
         {
             int pcnt = bi.BondedFigure.PointCount;
             CadVector head = bi.BondedFigure.GetPointAt(0);
@@ -226,7 +226,7 @@ namespace Plotter
             Item item = null;
 
             Item litem = null;
-            item = findItem(head);
+            item = FindItem(head);
 
             if (item != null)
             {
@@ -243,7 +243,7 @@ namespace Plotter
             }
 
             Item ritem = null;
-            item = findItem(tail);
+            item = FindItem(tail);
 
             if (item != null)
             {
@@ -266,7 +266,7 @@ namespace Plotter
                 );
         }
 
-        private BondInfo bondFigure(Item item, CadFigure fig1)
+        private BondInfo BondFigure(Item item, CadFigure fig1)
         {
             CadFigure fig0 = DB.getFigure(item.FigureID);
             int idx0 = item.PointIndex;

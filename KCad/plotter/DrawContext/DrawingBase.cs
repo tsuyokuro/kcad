@@ -41,7 +41,7 @@ namespace Plotter
 
         void DrawFace(int pen, IReadOnlyList<CadVector> pointList);
 
-        void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector normal);
+        void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector normal, bool drawOutline);
 
         void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb);
 
@@ -128,10 +128,10 @@ namespace Plotter
 
         public virtual void DrawFace(int pen, IReadOnlyList<CadVector> pointList)
         {
-            DrawFace(pen, pointList, default(CadVector));
+            DrawFace(pen, pointList, default(CadVector), true);
         }
 
-        public virtual void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector normal)
+        public virtual void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector normal, bool drawOutline)
         {
         }
 

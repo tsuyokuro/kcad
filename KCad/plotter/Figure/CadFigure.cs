@@ -198,7 +198,8 @@ namespace Plotter
         public void CopyPoints(CadFigure fig)
         {
             if (Locked) return;
-            copyPointList(mPointList, fig.mPointList);
+            mPointList.Clear();
+            mPointList.AddRange(fig.mPointList);
         }
 
         public void AddPoints(IReadOnlyList<CadVector> points, int sp, int num)
@@ -382,7 +383,7 @@ namespace Plotter
             if (Locked) return;
 
             mChildList.Add(fig);
-            fig.setParent(this);
+            fig.SetParent(this);
         }
 
         public void ReleaseAllChildlen()
@@ -400,7 +401,7 @@ namespace Plotter
         #region "Group"
         public void SelectWithGroup()
         {
-            CadFigure root = getGroupRoot();
+            CadFigure root = GetGroupRoot();
             root.Select();
             root.SelectChildren();
         }
@@ -414,24 +415,24 @@ namespace Plotter
             }
         }
 
-        public void setParent(CadFigure fig)
+        public void SetParent(CadFigure fig)
         {
             mParent = fig;
         }
 
-        public CadFigure getParent()
+        public CadFigure GetParent()
         {
             return mParent;
         }
 
-        public CadFigure getGroupRoot()
+        public CadFigure GetGroupRoot()
         {
             CadFigure fig = this;
             CadFigure parent = null;
 
             while (fig != null)
             {
-                parent = fig.getParent();
+                parent = fig.GetParent();
 
                 if (parent == null)
                 {
@@ -652,16 +653,6 @@ namespace Plotter
         public Centroid GetCentroid()
         {
             return Behavior.GetCentroid(this);
-        }
-        #endregion
-
-        #region "Utilities"
-        private static void copyPointList(List<CadVector> dest, IReadOnlyList<CadVector> src)
-        {
-            foreach (CadVector p in src)
-            {
-                dest.Add(p);
-            }
         }
         #endregion
     }
