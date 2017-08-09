@@ -16,9 +16,11 @@ namespace KCad
 
         private DebugInputThread InputThread;
 
-        private ObservableCollection<string> messageList = new ObservableCollection<string>();
+        //private ObservableCollection<string> messageList = new ObservableCollection<string>();
 
         private PlotterController.Interaction mInteractionOut = new PlotterController.Interaction();
+
+        private bool KeyHandled = false;
 
         public MainWindow()
         {
@@ -50,7 +52,7 @@ namespace KCad
             textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
             textBlockXYZ2.DataContext = ViewModel.FreqChangedInfo;
 
-            mInteractionOut.print = MessageOut;
+            mInteractionOut.println = MessageOut;
 
             ViewModel.InteractOut = mInteractionOut;
 
@@ -66,6 +68,24 @@ namespace KCad
 
             Loaded += MainWindow_Loaded;
             Closed += MainWindow_Closed;
+
+            listMessage.KeyUp += ListMessage_KeyUp;
+        }
+
+        private void ListMessage_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.C)
+            {
+                string copyString = "";
+
+                foreach (MessageLine line in this.listMessage.Items)
+                {
+                    copyString += line.Content + "\n";
+                }
+
+                Clipboard.SetDataObject(copyString, true);
+                KeyHandled = true;
+            }
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
@@ -183,9 +203,16 @@ namespace KCad
 
         private void onKeyUp(object sender, KeyEventArgs e)
         {
-            if (!textCommand.IsFocused)
+            if (KeyHandled)
             {
-                ViewModel.OnKeyUp(sender, e);
+                KeyHandled = false;
+                return;
+            }
+
+
+            if (!textCommand.IsFocused && !listMessage.IsFocused)
+            {
+               ViewModel.OnKeyUp(sender, e);
             }
         }
         #endregion

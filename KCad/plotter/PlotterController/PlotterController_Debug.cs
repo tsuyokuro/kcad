@@ -475,11 +475,11 @@ namespace Plotter
 
                 NotifyLayerInfo();
 
-                InteractOut.print("Complete! point=" + loader.TotalPointCount +
+                InteractOut.println("Complete! point=" + loader.TotalPointCount +
                     " Face=" + loader.TotalFaceCount);
             });
 
-            InteractOut.print("Loading ...");
+            InteractOut.println("Loading ...");
         }
 
 

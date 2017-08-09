@@ -43,6 +43,8 @@ namespace KCad
         {
             base.OnStartup(e);
 
+            OpenTK.Toolkit.Init();
+
 #if USE_CONSOLE
             NativeMethods.AllocConsole();
 
@@ -52,7 +54,6 @@ namespace KCad
             SplashWindow = new MySplashWindow();
             SplashWindow.Show();
 
-            OpenTK.Toolkit.Init();
 
             this.MainWindow = new MainWindow();
             this.MainWindow.Show();

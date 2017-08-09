@@ -82,8 +82,8 @@ namespace Plotter
 
         public class Interaction
         {
-            public delegate void Print(string s);
-            public Print print = (a) => { };
+            public delegate void Println(string s);
+            public Println println = (a) => { };
         }
 
         public Interaction InteractOut { set; get; } = new Interaction();
@@ -838,7 +838,7 @@ namespace Plotter
 
             NotifyLayerInfo();
 
-            InteractOut.print("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
+            InteractOut.println("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
         }
 
         public void RemoveLayer(uint id)
@@ -875,7 +875,7 @@ namespace Plotter
             }
 
             NotifyLayerInfo();
-            InteractOut.print("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
+            InteractOut.println("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
         }
 
         public void SelectAllInCurrentLayer()

@@ -374,12 +374,13 @@
                                   Style="{StaticResource CustomScrollViewerStyle}"
                                   VerticalScrollBarVisibility = "Auto">
                         <ListBox 
-                             x:Name="listMessage"
-                             Foreground="{StaticResource MsgTextColor}"
-                             Background="{StaticResource MsgBGColor}"
-                             ItemContainerStyle="{StaticResource MsgListBoxItem}"
-                             BorderThickness="0"
-                             Padding="8,0,0,0"/>
+                            x:Name="listMessage"
+                            Foreground="{StaticResource MsgTextColor}"
+                            Background="{StaticResource MsgBGColor}"
+                            ItemContainerStyle="{StaticResource MsgListBoxItem}"
+                            BorderThickness="0"
+                            Padding="8,0,0,0"
+                            />
                     </ScrollViewer>
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>

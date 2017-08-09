@@ -65,13 +65,13 @@ namespace Plotter
         {
             foreach (CadLayer layer in Controller.DB.LayerList)
             {
-                Controller.InteractOut.print("layer{Name: " + layer.Name + " ID: " + layer.ID + "}");
+                Controller.InteractOut.println("layer{Name: " + layer.Name + " ID: " + layer.ID + "}");
             }
         }
 
         public void PutMsg(string s)
         {
-            Controller.InteractOut.print(s);
+            Controller.InteractOut.println(s);
         }
 
         public CadVector GetLastDownPoint()
@@ -105,7 +105,7 @@ namespace Plotter
             foreach (MarkPoint mp in list)
             {
                 string s = "fig{ id: " + mp.FigureID.ToString() + "; idx: " + mp.PointIndex.ToString() + "; }";
-                Controller.InteractOut.print(s);
+                Controller.InteractOut.println(s);
             }
         }
 
@@ -161,7 +161,7 @@ namespace Plotter
 
         public void ShowLastDownPoint()
         {
-            Controller.InteractOut.print(
+            Controller.InteractOut.println(
                 "( " +
                 Controller.LastDownPoint.x.ToString() + ", " +
                 Controller.LastDownPoint.y.ToString() + ", " +
@@ -176,7 +176,7 @@ namespace Plotter
 
             if (idlist.Count < 2)
             {
-                Controller.InteractOut.print(
+                Controller.InteractOut.println(
                     global::KCad.Properties.Resources.error_select_2_or_more
                     );
 
@@ -200,7 +200,7 @@ namespace Plotter
             var ope = new CadOpeAddChildlen(parent, parent.ChildList);
             Controller.HistoryManager.foward(ope);
 
-            Controller.InteractOut.print(
+            Controller.InteractOut.println(
                     global::KCad.Properties.Resources.notice_was_grouped
                 );
         }
@@ -238,7 +238,7 @@ namespace Plotter
 
             Controller.HistoryManager.foward(opeList);
 
-            Controller.InteractOut.print(
+            Controller.InteractOut.println(
                 global::KCad.Properties.Resources.notice_was_ungrouped
                 );
         }
@@ -252,11 +252,11 @@ namespace Plotter
 
                 CadVector d = a - b;
 
-                Controller.InteractOut.print("" + d.Norm() + "(mm)");
+                Controller.InteractOut.println("" + d.Norm() + "(mm)");
             }
             else
             {
-                Controller.InteractOut.print(
+                Controller.InteractOut.println(
                     global::KCad.Properties.Resources.error_select_2_points
                     );
             }
@@ -439,13 +439,13 @@ namespace Plotter
         {
             if (!Controller.InsPointToLastSelectedSeg())
             {
-                Controller.InteractOut.print(
+                Controller.InteractOut.println(
                     global::KCad.Properties.Resources.error_operation_failed
                     );
                 return;
             }
 
-            Controller.InteractOut.print(
+            Controller.InteractOut.println(
                 global::KCad.Properties.Resources.notice_operation_success
                 );
         }
@@ -453,7 +453,7 @@ namespace Plotter
         public void Area()
         {
             double area = Controller.Area();
-            Controller.InteractOut.print("Area: " + (area / 100).ToString() + " (㎠)");
+            Controller.InteractOut.println("Area: " + (area / 100).ToString() + " (㎠)");
         }
 
         public CadVector Centroid()
@@ -509,7 +509,7 @@ namespace Plotter
         public void command(string s)
         {
             s = s.Trim();
-            Controller.InteractOut.print("> " + s);
+            Controller.InteractOut.println("> " + s);
 
 
             try
@@ -518,12 +518,12 @@ namespace Plotter
 
                 if (ret != null)
                 {
-                    Controller.InteractOut.print(ret.ToString());
+                    Controller.InteractOut.println(ret.ToString());
                 }
             }
             catch (Exception e)
             {
-                Controller.InteractOut.print("error: " + e.Message);
+                Controller.InteractOut.println("error: " + e.Message);
             }
         }
     }

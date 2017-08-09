@@ -8,11 +8,6 @@ namespace Plotter
 {
     public abstract class DrawContext
     {
-        CadObjectDB DB
-        {
-            set; get;
-        }
-
         // 用紙サイズ
         public PaperPageSize PageSize = new PaperPageSize();
 
@@ -158,6 +153,10 @@ namespace Plotter
         }
 
         public virtual void StartDraw(Bitmap image)
+        {
+        }
+
+        public virtual void StartDraw(Image image)
         {
         }
 

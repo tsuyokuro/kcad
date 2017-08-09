@@ -433,11 +433,11 @@ namespace Plotter
 
             if (d >= 10.0)
             {
-                InteractOut.print("(" + cnt.ToString() + ") " + (d / 10.0).ToString() + "cm");
+                InteractOut.println("(" + cnt.ToString() + ") " + (d / 10.0).ToString() + "cm");
             }
             else
             {
-                InteractOut.print("(" + cnt.ToString() + ") " + d.ToString() + "mm");
+                InteractOut.println("(" + cnt.ToString() + ") " + d.ToString() + "mm");
             }
         }
 

@@ -440,8 +440,8 @@ namespace Plotter
             String s = string.Format("({0:0.000},{1:0.000},{2:0.000})",
                                cent.Point.x, cent.Point.y, cent.Point.z);
 
-            InteractOut.print("Centroid:" + s);
-            InteractOut.print("Area:" + (cent.Area / 100).ToString() + "(㎠)");
+            InteractOut.println("Centroid:" + s);
+            InteractOut.println("Area:" + (cent.Area / 100).ToString() + "(㎠)");
         }
 
         public double Area()
