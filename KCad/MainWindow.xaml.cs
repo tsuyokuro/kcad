@@ -22,6 +22,8 @@ namespace KCad
 
         private bool KeyHandled = false;
 
+        private LBConsole mLBConsole;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,7 +54,10 @@ namespace KCad
             textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
             textBlockXYZ2.DataContext = ViewModel.FreqChangedInfo;
 
-            mInteractionOut.println = MessageOut;
+            mLBConsole = new LBConsole(listMessage, 100);
+
+            mInteractionOut.println = mLBConsole.PrintLn;
+            mInteractionOut.print = mLBConsole.Print;
 
             ViewModel.InteractOut = mInteractionOut;
 
@@ -76,12 +81,7 @@ namespace KCad
         {
             if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.C)
             {
-                string copyString = "";
-
-                foreach (MessageLine line in this.listMessage.Items)
-                {
-                    copyString += line.Content + "\n";
-                }
+                string copyString = mLBConsole.GetStringAll();
 
                 Clipboard.SetDataObject(copyString, true);
                 KeyHandled = true;
@@ -108,56 +108,11 @@ namespace KCad
             ViewModel.DebugCommand(s);
         }
 
-
         private void ListMessage_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            List<string> lines = new List<string>();
-
-
-            for (int i = 0; i < listMessage.SelectedItems.Count; i++)
-            {
-                MessageLine line = (MessageLine)listMessage.SelectedItems[i];
-                lines.Add(line.Content.ToString());
-            }
-
+            List<string> lines = mLBConsole.GetSelectedStrings();
             ViewModel.MessageSelected(lines);
         }
-
-
-        #region Message出力
-        public class MessageLine : ListBoxItem
-        {
-            public MessageLine(string s)
-            {
-                Content = s;
-                // 行ごとに色を変えるならこれ
-                //Content = new Run(s) { Foreground = Brushes.Cyan };
-
-                // 複数個所に色をつけるなら以下で行ける
-                /*
-                TextBlock tb = new TextBlock();
-                tb.Inlines.Add(new Run(s) { Foreground = Brushes.Cyan });
-                tb.Inlines.Add(new Run(" test") { Foreground = Brushes.Green});
-                Content = tb;
-                */
-            }
-        }
-
-        private void MessageOut(string s)
-        {
-            if (listMessage.Items.Count > 30)
-            {
-                listMessage.Items.RemoveAt(0);
-            }
-
-            var line = new MessageLine(s);
-            listMessage.Items.Add(line);
-
-            Object obj = listMessage.Items[listMessage.Items.Count - 1];
-
-            listMessage.ScrollIntoView(obj);
-        }
-        #endregion
 
         #region TextCommand
         private void InitTextCommand()
@@ -216,5 +171,6 @@ namespace KCad
             }
         }
         #endregion
+
     }
 }

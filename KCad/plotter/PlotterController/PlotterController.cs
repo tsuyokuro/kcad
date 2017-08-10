@@ -82,8 +82,9 @@ namespace Plotter
 
         public class Interaction
         {
-            public delegate void Println(string s);
-            public Println println = (a) => { };
+            public delegate void Print(string s);
+            public Print println = (a) => { };
+            public Print print = (a) => { };
         }
 
         public Interaction InteractOut { set; get; } = new Interaction();

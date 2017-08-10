@@ -138,6 +138,7 @@
     <Compile Include="AutoCompleteTextBox.cs" />
     <Compile Include="ftgl\FontWrapper.cs" />
     <Compile Include="ftgl\FtglAPI.cs" />
+    <Compile Include="LBConsole.cs" />
     <Compile Include="MySplashWindow.xaml.cs">
       <DependentUpon>MySplashWindow.xaml</DependentUpon>
     </Compile>
