@@ -37,6 +37,7 @@ namespace KCad
 
             mInteractionOut.println = mLBConsole.PrintLn;
             mInteractionOut.print = mLBConsole.Print;
+            mInteractionOut.clear = mLBConsole.Clear;
 
             DebugOut.StdPrint = mLBConsole.Print;
             DebugOut.StdPrintLn = mLBConsole.PrintLn;

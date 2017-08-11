@@ -506,9 +506,17 @@ namespace Plotter
             Controller.CurrentLayer.AddFigure(fig);
         }
 
-        private void Debug(string s)
+        private void SimpleCommand(string s)
         {
-            Controller.debugCommand(s);
+            if (s == "@clear")
+            {
+                Controller.InteractOut.clear();
+            }
+            else
+            {
+                s = s.Remove(0, 1);
+                Controller.debugCommand(s);
+            }
         }
 
         public void command(string s)
@@ -518,7 +526,7 @@ namespace Plotter
 
             if (s.StartsWith("@"))
             {
-                Debug(s.Remove(0, 1));
+                SimpleCommand(s);
                 return;
             }
 
