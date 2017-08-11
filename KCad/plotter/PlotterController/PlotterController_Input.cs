@@ -749,6 +749,8 @@ namespace Plotter
 
             CursorPosChanged(this, mSnapPoint, CursorType.TRACKING);
             CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
+
+            //mSnapScreenPoint.dump(DebugOut.Std);
         }
 
         private void LDrag(CadMouse pointer, DrawContext dc, int x, int y)

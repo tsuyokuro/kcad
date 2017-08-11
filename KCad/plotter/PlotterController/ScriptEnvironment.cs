@@ -506,11 +506,21 @@ namespace Plotter
             Controller.CurrentLayer.AddFigure(fig);
         }
 
+        private void Debug(string s)
+        {
+            Controller.debugCommand(s);
+        }
+
         public void command(string s)
         {
             s = s.Trim();
             Controller.InteractOut.println("> " + s);
 
+            if (s.StartsWith("@"))
+            {
+                Debug(s.Remove(0, 1));
+                return;
+            }
 
             try
             {

@@ -33,6 +33,14 @@ namespace KCad
                 App.GetCurrent().InputThread.OnLineArrived = DebugCommand;
             }
 
+            mLBConsole = new LBConsole(listMessage, 100);
+
+            mInteractionOut.println = mLBConsole.PrintLn;
+            mInteractionOut.print = mLBConsole.Print;
+
+            DebugOut.StdPrint = mLBConsole.Print;
+            DebugOut.StdPrintLn = mLBConsole.PrintLn;
+
             ViewModel = new PlotterViewModel(this, viewContainer);
 
             viewContainer.Focusable = true;
@@ -54,10 +62,6 @@ namespace KCad
             textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
             textBlockXYZ2.DataContext = ViewModel.FreqChangedInfo;
 
-            mLBConsole = new LBConsole(listMessage, 100);
-
-            mInteractionOut.println = mLBConsole.PrintLn;
-            mInteractionOut.print = mLBConsole.Print;
 
             ViewModel.InteractOut = mInteractionOut;
 
@@ -85,6 +89,10 @@ namespace KCad
 
                 Clipboard.SetDataObject(copyString, true);
                 KeyHandled = true;
+            }
+            else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.X)
+            {
+                mLBConsole.Clear();
             }
         }
 

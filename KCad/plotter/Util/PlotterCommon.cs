@@ -24,12 +24,17 @@ namespace Plotter
 
     public class DebugOut
     {
+        public delegate void PrintFunc(string s);
+
+
         public static DebugOut inst = new DebugOut();
 
         public static DebugOut Std {
             get
             {
                 inst.reset();
+                inst.DelegatePrint = StdPrint;
+                inst.DelegatePrintLn = StdPrintLn;
                 return inst;
             }
         }
@@ -39,6 +44,15 @@ namespace Plotter
         protected int IndentUnit = 2;
 
         protected String space = "";
+
+        public static PrintFunc StdPrintLn = Console.WriteLine;
+
+        public static PrintFunc StdPrint = Console.Write;
+
+
+        public PrintFunc DelegatePrint = StdPrint;
+
+        public PrintFunc DelegatePrintLn = StdPrintLn;
 
         public virtual int Indent
         {
@@ -63,17 +77,17 @@ namespace Plotter
 
         public virtual void printIndent()
         {
-            Console.Write(space);
+            DelegatePrint(space);
         }
 
         public virtual void print(String s)
         {
-            Console.Write(s);
+            DelegatePrint(s);
         }
 
         public virtual void println(String s)
         {
-            Console.WriteLine(space + s);
+            DelegatePrintLn(space + s);
         }
     }
 

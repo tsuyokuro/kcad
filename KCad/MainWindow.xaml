@@ -316,6 +316,13 @@
                                 Background="{StaticResource BaseColor}"
                                 >
 
+                                <!-- Wheel が効かなくなってしまうのでListBox内部のScrollViewerを除去する -->
+                                <ListBox.Template>
+                                    <ControlTemplate>
+                                        <ItemsPresenter/>
+                                    </ControlTemplate>
+                                </ListBox.Template>
+
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Grid>
@@ -370,17 +377,28 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <ScrollViewer Grid.Row="0"
-                                  Style="{StaticResource CustomScrollViewerStyle}"
-                                  VerticalScrollBarVisibility = "Auto">
-                        <ListBox 
+                    <ScrollViewer
+                        Grid.Row="0"
+                        Style="{StaticResource CustomScrollViewerStyle}"
+                        VerticalScrollBarVisibility = "Auto">
+
+                        <ListBox
                             x:Name="listMessage"
+                            ScrollViewer.CanContentScroll="False"
                             Foreground="{StaticResource MsgTextColor}"
                             Background="{StaticResource MsgBGColor}"
                             ItemContainerStyle="{StaticResource MsgListBoxItem}"
                             BorderThickness="0"
                             Padding="8,0,0,0"
-                            />
+                            >
+                            <!-- Wheel が効かなくなってしまうのでListBox内部のScrollViewerを除去する -->
+                            <ListBox.Template>
+                                <ControlTemplate>
+                                    <ItemsPresenter/>
+                                </ControlTemplate>
+                            </ListBox.Template>
+                        </ListBox>
+
                     </ScrollViewer>
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>

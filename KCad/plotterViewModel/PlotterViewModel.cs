@@ -959,9 +959,7 @@ namespace Plotter
 
         public void DebugCommand(string s)
         {
-            DrawContext dc = mPlotterView.StartDraw();
-            mController.debugCommand(dc, s);
-            mPlotterView.EndDraw();
+            mController.debugCommand(s);
         }
         #endregion
 

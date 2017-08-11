@@ -9,12 +9,14 @@ namespace KCad
 {
     public class LBConsole
     {
-        private int mMaxLine = 30;
+        private int mMaxLine = 100;
 
         public int MaxLine
         {
             set
             {
+                mMaxLine = value;
+
                 while (mListBox.Items.Count > mMaxLine)
                 {
                     mListBox.Items.RemoveAt(0);
@@ -32,7 +34,7 @@ namespace KCad
         public LBConsole(ListBox listBox, int maxLine)
         {
             mListBox = listBox;
-            MaxLine = maxLine;
+            mMaxLine = maxLine;
         }
 
         public class MessageLine : ListBoxItem
@@ -72,7 +74,7 @@ namespace KCad
         {
             Print(s);
 
-            while (mListBox.Items.Count > MaxLine)
+            while (mListBox.Items.Count > mMaxLine)
             {
                 mListBox.Items.RemoveAt(0);
             }
@@ -80,7 +82,7 @@ namespace KCad
             var line = new MessageLine();
             mListBox.Items.Add(line);
 
-            PrintScrollToLast();
+            ScrollToLast();
         }
 
         public void Print(string s)
@@ -101,7 +103,7 @@ namespace KCad
 
             line.SetText(line.GetText() + s);
 
-            PrintScrollToLast();
+            ScrollToLast();
         }
 
         public List<string> GetSelectedStrings()
@@ -129,10 +131,15 @@ namespace KCad
             return s;
         }
 
-        public void PrintScrollToLast()
+        public void ScrollToLast()
         {
             Object obj = mListBox.Items[mListBox.Items.Count - 1];
             mListBox.ScrollIntoView(obj);
+        }
+
+        public void Clear()
+        {
+            mListBox.Items.Clear();
         }
     }
 }

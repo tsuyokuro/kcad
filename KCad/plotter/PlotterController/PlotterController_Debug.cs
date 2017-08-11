@@ -29,7 +29,7 @@ namespace Plotter
             return fig;
         }
 
-        private void test_isPointInTriangle3D(DrawContext dc)
+        private void test_isPointInTriangle3D()
         {
             TempFigureList.Clear();
 
@@ -51,7 +51,7 @@ namespace Plotter
             dout.println("ret=" + ret);
         }
 
-        private void test_getPoints(DrawContext dc)
+        private void test_getPoints()
         {
             TempFigureList.Clear();
 
@@ -76,11 +76,10 @@ namespace Plotter
 
             tl.ForEach(a => TempFigureList.Add(a));
 
-            Clear(dc);
-            Draw(dc);
+            NotifyDataChanged(true);
         }
 
-        private void test_crossPoint(DrawContext dc)
+        private void test_crossPoint()
         {
             TempFigureList.Clear();
 
@@ -110,11 +109,10 @@ namespace Plotter
                 TempFigureList.Add(figx);
             }
 
-            Clear(dc);
-            Draw(dc);
+            NotifyDataChanged(true);
         }
 
-        private void test_crossPlane(DrawContext dc)
+        private void test_crossPlane()
         {
             if (mSelList.List.Count == 0)
             {
@@ -156,7 +154,7 @@ namespace Plotter
             CurrentLayer.AddFigure(line);
         }
 
-        private void test_crossPlane2(DrawContext dc)
+        private void test_crossPlane2()
         {
             if (mSelList.List.Count == 0)
             {
@@ -178,7 +176,7 @@ namespace Plotter
             }
 
             CadVector a = LastDownPoint;
-            CadVector b = a + CadVector.Create(dc.ViewDir);
+            CadVector b = a + CadVector.Create(CurrentDC.ViewDir);
 
             CadVector normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
 
@@ -204,7 +202,7 @@ namespace Plotter
             CurrentLayer.AddFigure(line);
         }
 
-        private void test_crossPlane3(DrawContext dc)
+        private void test_crossPlane3()
         {
             if (mSelList.List.Count == 0)
             {
@@ -225,12 +223,12 @@ namespace Plotter
                 return;
             }
 
-            CadVector a = dc.CadPointToUnitPoint(LastDownPoint);
+            CadVector a = CurrentDC.CadPointToUnitPoint(LastDownPoint);
             CadVector b = a;
             b.z -= 100;
 
-            a = dc.UnitPointToCadPoint(a);
-            b = dc.UnitPointToCadPoint(b);
+            a = CurrentDC.UnitPointToCadPoint(a);
+            b = CurrentDC.UnitPointToCadPoint(b);
 
             CadVector normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
 
@@ -256,14 +254,14 @@ namespace Plotter
             CurrentLayer.AddFigure(line);
         }
 
-        private void test_depthLine(DrawContext dc)
+        private void test_depthLine()
         {
-            CadVector a = dc.CadPointToUnitPoint(LastDownPoint);
+            CadVector a = CurrentDC.CadPointToUnitPoint(LastDownPoint);
             CadVector b = a;
             b.z -= 100;
 
-            a = dc.UnitPointToCadPoint(a);
-            b = dc.UnitPointToCadPoint(b);
+            a = CurrentDC.UnitPointToCadPoint(a);
+            b = CurrentDC.UnitPointToCadPoint(b);
 
             CadFigure line = DB.newFigure(CadFigure.Types.POLY_LINES);
 
@@ -274,8 +272,7 @@ namespace Plotter
             HistoryManager.foward(ope);
             CurrentLayer.AddFigure(line);
 
-            Clear(dc);
-            Draw(dc);
+            NotifyDataChanged(true);
         }
 
         private void test_areaCollector()
@@ -290,7 +287,7 @@ namespace Plotter
             NotifyDataChanged(true);
         }
 
-        private void test_getCentroid(DrawContext dc)
+        private void test_getCentroid()
         {
             TempFigureList.Clear();
 
@@ -316,11 +313,10 @@ namespace Plotter
 
             TempFigureList.Add(centfig);
 
-            Clear(dc);
-            Draw(dc);
+            NotifyDataChanged(true);
         }
 
-        private void test_quaternion(DrawContext dc)
+        private void test_quaternion()
         {
             TempFigureList.Clear();
 
@@ -365,8 +361,7 @@ namespace Plotter
 
             //TempFigureList.Add(tfig);
 
-            Clear(dc);
-            Draw(dc);
+            NotifyDataChanged(true);
         }
 
         private void test_matrix()
@@ -398,11 +393,7 @@ namespace Plotter
             m3.dump(o);
         }
 
-        private void test_dc(DrawContext dc)
-        {
-        }
-
-        private void test(DrawContext dc)
+        private void test()
         {
             UMatrix4 m = new UMatrix4(
                 1, 0, 0, 0,
@@ -432,14 +423,13 @@ namespace Plotter
             //ps.dump(DebugOut.Std);
         }
 
-        private void test_ClearLayer(DrawContext dc)
+        private void test_ClearLayer()
         {
             ClearLayer(CurrentLayer.ID);
-            Clear(dc);
-            DrawAll(dc);
+            NotifyDataChanged(true);
         }
 
-        private void mtest(DrawContext dc)
+        private void mtest()
         {
             DrawContextGDI tdc = new DrawContextGDI();
 
@@ -483,11 +473,11 @@ namespace Plotter
         }
 
 
-        public void debugCommand(DrawContext dc, string s)
+        public void debugCommand(string s)
         {
             if (s == "test")
             {
-                test(dc);
+                test();
             }
 
             else if (s == "dxf")
@@ -497,12 +487,12 @@ namespace Plotter
 
             else if (s == "mtest")
             {
-                mtest(dc);
+                mtest();
             }
 
             else if (s == "clear layer")
             {
-                test_ClearLayer(dc);
+                test_ClearLayer();
             }
 
             else if (s == "test gi")
@@ -517,17 +507,12 @@ namespace Plotter
 
             else if (s == "depthLine")
             {
-                test_depthLine(dc);
+                test_depthLine();
             }
 
             else if (s == "test q")
             {
-                test_quaternion(dc);
-            }
-
-            else if (s == "test dc")
-            {
-                test_dc(dc);
+                test_quaternion();
             }
 
             else if (s == "test matrix")
@@ -542,17 +527,17 @@ namespace Plotter
 
             else if (s == "test centroid")
             {
-                test_getCentroid(dc);
+                test_getCentroid();
             }
 
             else if (s == "test getPoints")
             {
-                test_getPoints(dc);
+                test_getPoints();
             }
 
             else if (s == "test cross")
             {
-                test_crossPoint(dc);
+                test_crossPoint();
             }
 
             else if (s == "test areaCollector")
@@ -562,22 +547,22 @@ namespace Plotter
 
             else if (s == "test isPointInTriangle")
             {
-                test_isPointInTriangle3D(dc);
+                test_isPointInTriangle3D();
             }
 
             else if (s == "crossPlane")
             {
-                test_crossPlane(dc);
+                test_crossPlane();
             }
 
             else if (s == "crossPlane2")
             {
-                test_crossPlane2(dc);
+                test_crossPlane2();
             }
 
             else if (s == "crossPlane3")
             {
-                test_crossPlane3(dc);
+                test_crossPlane3();
             }
 
             else if (s == "dump sels")
@@ -682,36 +667,6 @@ namespace Plotter
                 writer.Write(jo.ToString());
 
                 writer.Close();
-            }
-            else if (s == "loadj")
-            {
-                StreamReader reader = new StreamReader("f:\\work\\test.txt");
-
-                String js = reader.ReadToEnd();
-
-                reader.Close();
-
-                JObject jo = JObject.Parse(js);
-
-
-                CadObjectDB db = new CadObjectDB();
-
-
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
-                db.FromJson(jo);
-                sw.Stop();
-
-                DebugOut dout = new DebugOut();
-                dout.println("FromJson time:" + sw.Elapsed);
-
-
-                db.dump(dout);
-
-                mDB = db;
-
-                Clear(dc);
-                Draw(dc);
             }
             else if (s == "copy")
             {

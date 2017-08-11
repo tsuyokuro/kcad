@@ -10,7 +10,7 @@
  * 
  **/
 
-#define USE_CONSOLE
+//#define USE_CONSOLE
 
 
 using System;
