@@ -74,6 +74,8 @@ namespace KCad
 
             SnapMenu.DataContext = ViewModel;
 
+            ToolBar1.DataContext = ViewModel;
+
             listMessage.SelectionChanged += ListMessage_SelectionChanged;
 
             Loaded += MainWindow_Loaded;

@@ -17,6 +17,12 @@ namespace KCad
 {
     public class AutoCompleteTextBox : TextBox
     {
+        static AutoCompleteTextBox()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(
+                typeof(AutoCompleteTextBox), new FrameworkPropertyMetadata(typeof(TextBox)));
+        }
+
         public class TextEventArgs : EventArgs
         {
             public string Text;
@@ -32,7 +38,7 @@ namespace KCad
         {
             get;
             set;
-        }
+        } = new List<string>();
 
         public TextHistory History
         {

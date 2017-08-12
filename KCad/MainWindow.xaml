@@ -3,12 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
         xmlns:local="clr-namespace:KCad"
         xmlns:properties="clr-namespace:KCad.Properties"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:pl="clr-namespace:Plotter"
-        xmlns:me="clr-namespace:KCad"
         
         mc:Ignorable="d"
         Title="KCad" Height="732" Width="1177.667"
@@ -87,11 +85,11 @@
             <pl:MeasureModeConverter x:Key="MeasureModeConv"/>
 
 
-            <DataTemplate x:Key="AutoCompleteBoxItemTemplate">
+            <!--<DataTemplate x:Key="AutoCompleteBoxItemTemplate">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="{Binding Data}" Foreground="{StaticResource TextColor}"/>
                 </StackPanel>
-            </DataTemplate>
+            </DataTemplate>-->
 
             <!--<Style TargetType="Menu">
                 <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
@@ -108,6 +106,7 @@
     <Grid>
         <!--Menu space-->
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="1000*"/>
             <RowDefinition Height="auto"/>
@@ -150,9 +149,51 @@
             </MenuItem>
         </Menu>
 
+        <StackPanel
+            Grid.Row="1"
+            x:Name="ToolBar1"
+            Background="{StaticResource BGColor}" Height="28" HorizontalAlignment="Stretch"
+            Orientation="Horizontal"
+                >
+            <Label Width="32"/>
+
+            <ToggleButton
+                Style="{StaticResource CustomToggleButton}"
+                Template="{StaticResource MyTggleButtonTemplate}"
+                IsChecked="{Binding SnapToPoint}"
+                Margin="2,2,2,2"
+                >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{StaticResource snap_to_point_icon}" Height="24" VerticalAlignment="Top"/>
+                </StackPanel>
+
+            </ToggleButton>
+            <ToggleButton
+                Style="{StaticResource CustomToggleButton}"
+                Template="{StaticResource MyTggleButtonTemplate}"
+                IsChecked="{Binding SnapToSegment}"
+                Margin="2,2,2,2"
+                >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{StaticResource snap_to_seg_icon}" Height="24" VerticalAlignment="Top"/>
+                </StackPanel>
+
+            </ToggleButton>
+            <ToggleButton
+                Style="{StaticResource CustomToggleButton}"
+                Template="{StaticResource MyTggleButtonTemplate}"
+                IsChecked="{Binding SnapToLine}"
+                Margin="2,2,2,2"
+                >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{StaticResource snap_to_line_icon}" Height="24" VerticalAlignment="Top"/>
+                </StackPanel>
+
+            </ToggleButton>
+        </StackPanel>
 
         <!--Work space-->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="95*"/>
@@ -415,21 +456,22 @@
                                 />
                         </Border>
 
+                        <local:AutoCompleteTextBox
+                            Grid.Column="1"
+                            x:Name="textCommand"
+                            BorderThickness="1,1,1,1"
+                            BorderBrush="{StaticResource BoarderColor}"
+                            Foreground="{StaticResource TextColor}"
+                            Background="{StaticResource BGColor}"
+                            />
 
-                        <me:AutoCompleteTextBox Grid.Column="1"
-                                x:Name="textCommand"
-                                BorderThickness="1,1,1,1"
-                                BorderBrush="{StaticResource BoarderColor}"
-                                Foreground="{StaticResource TextColor}"
-                                Background="{StaticResource BGColor}"
-                                />
                     </Grid>    
                 </Grid>
             </Grid>
         </Grid>
 
         <!--Status bar-->
-        <StackPanel Grid.Row="2" Background="{StaticResource BGColor}" Height="20" HorizontalAlignment="Stretch"
+        <StackPanel Grid.Row="3" Background="{StaticResource BGColor}" Height="20" HorizontalAlignment="Stretch"
                     Orientation="Horizontal">
             <Rectangle
                 VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="20"/>
@@ -447,7 +489,7 @@
                 VerticalAlignment="Stretch" >
 
                 <RadioButton
-                    Style="{StaticResource CustomToggle}"
+                    Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     IsChecked="{
                         Binding ViewMode,
@@ -467,7 +509,7 @@
                 </RadioButton>
 
                 <RadioButton
-                    Style="{StaticResource CustomToggle}"
+                    Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     IsChecked="{
                         Binding ViewMode,
@@ -487,7 +529,7 @@
                 </RadioButton>
 
                 <RadioButton
-                    Style="{StaticResource CustomToggle}"
+                    Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     IsChecked="{
                         Binding ViewMode,
@@ -507,7 +549,7 @@
                 </RadioButton>
 
                 <RadioButton
-                    Style="{StaticResource CustomToggle}"
+                    Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     IsChecked="{
                         Binding ViewMode,
@@ -527,7 +569,7 @@
                 </RadioButton>
 
                 <RadioButton
-                    Style="{StaticResource CustomToggle}"
+                    Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     IsChecked="{
                         Binding ViewMode,
@@ -548,7 +590,7 @@
                 </RadioButton>
 
                 <RadioButton
-                    Style="{StaticResource CustomToggle}"
+                    Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     IsChecked="{
                         Binding ViewMode,
@@ -569,7 +611,7 @@
                 </RadioButton>
 
                 <RadioButton
-                    Style="{StaticResource CustomToggle}"
+                    Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     Tag="axis_xyz"
                     IsChecked="{

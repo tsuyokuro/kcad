@@ -217,6 +217,7 @@ namespace Plotter
             }
         }
 
+        #region Snap settings
         public bool SnapToGrid
         {
             set
@@ -272,6 +273,7 @@ namespace Plotter
                 return mController.SnapToLine;
             }
         }
+        #endregion
 
         ListBox mLayerListView;
 

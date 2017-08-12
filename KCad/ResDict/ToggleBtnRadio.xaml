@@ -68,7 +68,7 @@
     </DataTemplate>
 
 
-    <Style x:Key="CustomToggle" TargetType="{x:Type RadioButton}"
+    <Style x:Key="CustomRadioButton" TargetType="{x:Type RadioButton}"
              BasedOn="{StaticResource {x:Type ToggleButton} }">
 
         <Setter Property="BorderBrush" Value="{StaticResource BaseColor}"/>
@@ -88,6 +88,25 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="CustomToggleButton" TargetType="{x:Type ToggleButton}"
+             BasedOn="{StaticResource {x:Type ToggleButton} }">
+
+        <Setter Property="BorderBrush" Value="{StaticResource BaseColor}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="{StaticResource ButtonColor}" />
+        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+
+        <Setter Property="FontSize" Value="12" />
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="ContentTemplate" Value="{StaticResource CustomToggleMouseOverStyle}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="ContentTemplate" Value="{StaticResource CustomToggleCheckedStyle}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 
     <!-- Toggle button template -->
 
