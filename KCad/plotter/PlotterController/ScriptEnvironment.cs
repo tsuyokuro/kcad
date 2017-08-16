@@ -79,7 +79,7 @@ namespace Plotter
             return Controller.LastDownPoint;
         }
 
-        public CadVector CreatePoint(double x, double y, double z)
+        public CadVector CreateVector(double x, double y, double z)
         {
             return CadVector.Create(x, y, z);
         }
@@ -506,11 +506,37 @@ namespace Plotter
             Controller.CurrentLayer.AddFigure(fig);
         }
 
+        public void Rotate(CadVector p0, CadVector v, double t)
+        {
+            v = v.UnitVector();
+
+            Controller.StartEdit();
+
+            Controller.RotateSelectedFigure(p0, v, CadMath.Deg2Rad(t));
+
+            Controller.EndEdit();
+
+            Controller.NotifyDataChanged(true);
+        }
+
         private void SimpleCommand(string s)
         {
             if (s == "@clear")
             {
                 Controller.InteractOut.clear();
+            }
+            else if (s == "@test rote")
+            {
+                Controller.StartEdit();
+
+                CadVector p0 = CadVector.Create(10, 10, 0);
+                CadVector v = CadVector.Create(0, 0, 1.0);
+
+                Controller.RotateSelectedFigure(p0, v, CadMath.Deg2Rad(30));
+
+                Controller.EndEdit();
+
+                Controller.NotifyDataChanged(true);
             }
             else
             {

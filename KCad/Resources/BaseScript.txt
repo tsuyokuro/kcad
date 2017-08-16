@@ -1,14 +1,5 @@
 import math
 
-x=0
-y=0
-z=0
-
-w=10
-h=10
-
-ratio=0.5
-
 def putMsg(s):
     SE.PutMsg(s)
 
@@ -54,8 +45,8 @@ def segLen(len):
 def insPoint():
     SE.InsPoint()
 
-def createPoint(x, y, z):
-    return SE.CreatePoint(x, y, z)
+def createVector(x, y, z):
+    return SE.CreateVector(x, y, z)
 
 def getldp():
     pt = SE.GetLastDownPoint()
@@ -78,3 +69,20 @@ def execPartial(fname):
 
 def scale(ratio):
     return SE.Scale(ratio)
+
+def rotate(p0, v, t):
+    return SE.Rotate(p0, v, t)
+
+x=0
+y=0
+z=0
+
+w=10
+h=10
+
+ratio=0.5
+
+point0 = SE.CreateVector(0,0,0);
+unitVX = SE.CreateVector(1,0,0);
+unitVY = SE.CreateVector(0,1,0);
+unitVZ = SE.CreateVector(0,0,1);

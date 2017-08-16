@@ -277,7 +277,7 @@ namespace Plotter
 
 
         #region Notify
-        private void NotifyDataChanged(bool redraw)
+        public void NotifyDataChanged(bool redraw)
         {
             mDataChanged(this, redraw);
         }
@@ -969,6 +969,58 @@ namespace Plotter
                 p -= org;
                 p *= scale;
                 p += org;
+
+                fig.SetPointAt(i, p);
+            }
+        }
+
+        //
+        // p0 を原点として単位ベクトル v を軸に t ラジアン回転する
+        //
+        public void RotateSelectedFigure(CadVector p0, CadVector v, double t)
+        {
+            StartEdit();
+
+            List<uint> idlist = GetSelectedFigIDList();
+
+            foreach (uint id in idlist)
+            {
+                CadFigure fig = DB.getFigure(id);
+
+                if (fig == null)
+                {
+                    continue;
+                }
+
+                RotateFigure(p0, v, t, fig);
+            }
+
+            EndEdit();
+        }
+
+        public void RotateFigure(CadVector p0, CadVector v, double t, CadFigure fig)
+        {
+            CadQuaternion q = CadQuaternion.RotateQuaternion(v, t);
+            CadQuaternion r = q.Conjugate(); ;
+
+            CadQuaternion qp;
+
+            int n = fig.PointList.Count;
+
+            for (int i = 0; i < n; i++)
+            {
+                CadVector p = fig.PointList[i];
+
+                p -= p0;
+
+                qp = CadQuaternion.FromPoint(p);
+
+                qp = r * qp;
+                qp = qp * q;
+
+                p = qp.ToPoint();
+
+                p += p0;
 
                 fig.SetPointAt(i, p);
             }

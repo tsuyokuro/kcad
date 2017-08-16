@@ -73,6 +73,11 @@ namespace Plotter
             {
 
             }
+
+            public virtual void RecalcNormal(CadFigure fig)
+            {
+
+            }
         }
 
         #region Nop Behavior

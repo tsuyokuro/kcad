@@ -654,6 +654,12 @@ namespace Plotter
         {
             return Behavior.GetCentroid(this);
         }
+
+        public void RecalcNormal()
+        {
+
+        }
+
         #endregion
     }
 }

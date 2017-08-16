@@ -328,21 +328,7 @@ namespace Plotter
 
             public override void EndEdit(CadFigure fig)
             {
-                if (fig.PointList.Count == 0)
-                {
-                    return;
-                }
-
-                CadVector prevNormal = fig.Normal;
-
-                CadVector normal = CadVector.Create(CadUtil.RepresentativeNormal(fig.PointList));
-
-                if (CadMath.InnerProduct(prevNormal, normal) < 0)
-                {
-                    normal *= -1;
-                }
-
-                fig.Normal = normal;
+                RecalcNormal(fig);
             }
 
             public override Centroid GetCentroid(CadFigure fig)
@@ -363,6 +349,25 @@ namespace Plotter
                 }
 
                 return getPointListCentroid(fig);
+            }
+
+            public override void RecalcNormal(CadFigure fig)
+            {
+                if (fig.PointList.Count == 0)
+                {
+                    return;
+                }
+
+                CadVector prevNormal = fig.Normal;
+
+                CadVector normal = CadVector.Create(CadUtil.RepresentativeNormal(fig.PointList));
+
+                if (CadMath.InnerProduct(prevNormal, normal) < 0)
+                {
+                    normal *= -1;
+                }
+
+                fig.Normal = normal;
             }
 
             private Centroid getPointListCentroid(CadFigure fig)
