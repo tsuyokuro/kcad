@@ -267,13 +267,17 @@ namespace Plotter
             Controller.LastDownPoint.x += x;
             Controller.LastDownPoint.y += y;
             Controller.LastDownPoint.z += z;
+
+            Controller.NotifyDataChanged(true);
         }
 
-        public void MoveCursorAbs(double x, double y, double z)
+        public void SetCursor(double x, double y, double z)
         {
             Controller.LastDownPoint.x = x;
             Controller.LastDownPoint.y = y;
             Controller.LastDownPoint.z = z;
+
+            Controller.NotifyDataChanged(true);
         }
 
         public void Line(double x, double y, double z)

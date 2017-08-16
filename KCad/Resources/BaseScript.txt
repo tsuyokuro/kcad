@@ -55,8 +55,8 @@ def getldp():
 def moveCursor(x, y, z):
     SE.MoveCursor(x, y, z)
 
-def moveCursorAbs(x, y, z):
-    SE.MoveCursorAbs(x, y, z)
+def setCursor(x, y, z):
+    SE.SetCursor(x, y, z)
 
 def line(x, y, z):
     SE.Line(x, y, z)
