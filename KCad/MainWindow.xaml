@@ -164,7 +164,7 @@
                 Margin="2,2,2,2"
                 >
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="{StaticResource snap_to_point_icon}" Height="24" VerticalAlignment="Top"/>
+                    <Image Source="{StaticResource snap_to_point_icon}" Height="20" VerticalAlignment="Top"/>
                 </StackPanel>
 
             </ToggleButton>
@@ -175,7 +175,7 @@
                 Margin="2,2,2,2"
                 >
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="{StaticResource snap_to_seg_icon}" Height="24" VerticalAlignment="Top"/>
+                    <Image Source="{StaticResource snap_to_seg_icon}" Height="20" VerticalAlignment="Top"/>
                 </StackPanel>
 
             </ToggleButton>
@@ -186,7 +186,7 @@
                 Margin="2,2,2,2"
                 >
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="{StaticResource snap_to_line_icon}" Height="24" VerticalAlignment="Top"/>
+                    <Image Source="{StaticResource snap_to_line_icon}" Height="20" VerticalAlignment="Top"/>
                 </StackPanel>
 
             </ToggleButton>
