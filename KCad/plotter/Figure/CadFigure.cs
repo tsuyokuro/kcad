@@ -497,13 +497,13 @@ namespace Plotter
             uint parentID = (uint)jo["parent_id"];
             List<uint> childList = JsonUtil.JsonIdListToList((JArray)jo["child_id_list"]);
 
-            mParent = db.getFigure(parentID);
+            mParent = db.GetFigure(parentID);
 
             mChildList.Clear();
 
             foreach (uint id in childList)
             {
-                CadFigure fig = db.getFigure(id);
+                CadFigure fig = db.GetFigure(id);
                 mChildList.Add(fig);
             }
         }

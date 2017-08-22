@@ -110,7 +110,7 @@ namespace Plotter
                 {
                     if (num >= 1)
                     {
-                        nfig = DB.newFigure(CadFigure.Types.POLY_LINES);
+                        nfig = DB.NewFigure(CadFigure.Types.POLY_LINES);
                         nfig.AddPoints(fig.PointList, sp, num);
 
                         CadVector t = fig.GetPointAt(0);
@@ -121,7 +121,7 @@ namespace Plotter
                 {
                     if (num >= 2)
                     {
-                        nfig = DB.newFigure(CadFigure.Types.POLY_LINES);
+                        nfig = DB.NewFigure(CadFigure.Types.POLY_LINES);
                         nfig.AddPoints(fig.PointList, sp, num);
                     }
                 }
@@ -142,7 +142,7 @@ namespace Plotter
                     }
 
                     figId = si.FigureID;
-                    fig = DB.getFigure(figId);
+                    fig = DB.GetFigure(figId);
                     pcnt = fig.PointCount;
                     sp = -1;
                 }
@@ -164,7 +164,7 @@ namespace Plotter
 
                 if (sp + num <= pcnt)
                 {
-                    CadFigure nfig = DB.newFigure(CadFigure.Types.POLY_LINES);
+                    CadFigure nfig = DB.NewFigure(CadFigure.Types.POLY_LINES);
                     nfig.AddPoints(fig.PointList, sp, num);
 
                     ProcResult.AddList.Add(new ResultItem(si.LayerID, nfig));
@@ -180,7 +180,7 @@ namespace Plotter
 
             foreach (SelectItem si in figSet)
             {
-                CadFigure removefig = DB.getFigure(si.FigureID);
+                CadFigure removefig = DB.GetFigure(si.FigureID);
 
                 if (removefig != null)
                 {
@@ -210,14 +210,14 @@ namespace Plotter
                 return ProcResult;
             }
 
-            CadFigure org = DB.getFigure(seg.FigureID);
+            CadFigure org = DB.GetFigure(seg.FigureID);
 
             int a = Math.Min(seg.PtIndexA, seg.PtIndexB);
             int b = Math.Max(seg.PtIndexA, seg.PtIndexB);
 
 
-            CadFigure fa = DB.newFigure(CadFigure.Types.POLY_LINES);
-            CadFigure fb = DB.newFigure(CadFigure.Types.POLY_LINES);
+            CadFigure fa = DB.NewFigure(CadFigure.Types.POLY_LINES);
+            CadFigure fb = DB.NewFigure(CadFigure.Types.POLY_LINES);
 
             fa.AddPoints(org.PointList, 0, a + 1);
             fa.AddPoint(ci.CrossPoint);

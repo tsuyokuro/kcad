@@ -42,7 +42,7 @@ namespace Plotter
 
             CadObjectDB db = new CadObjectDB();
 
-            CadLayer layer = db.newLayer();
+            CadLayer layer = db.NewLayer();
             db.LayerList.Add(layer);
 
             db.CurrentLayer = layer;
@@ -125,7 +125,7 @@ namespace Plotter
                 return;
             }
 
-            CadFigure fig = db.newFigure(CadFigure.Types.POLY_LINES);
+            CadFigure fig = db.NewFigure(CadFigure.Types.POLY_LINES);
 
             foreach (CadVector v in plist)
             {

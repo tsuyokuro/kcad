@@ -264,7 +264,7 @@ namespace Plotter
 
         public PlotterController()
         {
-            CadLayer layer = mDB.newLayer();
+            CadLayer layer = mDB.NewLayer();
             mDB.LayerList.Add(layer);
             CurrentLayer = layer;
 
@@ -272,7 +272,7 @@ namespace Plotter
 
             ScriptEnv = new ScriptEnvironment(this);
 
-            initHid();
+            InitHid();
         }
 
 
@@ -563,7 +563,7 @@ namespace Plotter
 
             foreach (uint id in EditIdList)
             {
-                CadFigure fig = mDB.getFigure(id);
+                CadFigure fig = mDB.GetFigure(id);
                 if (fig != null)
                 {
                     fig.StartEdit();
@@ -579,7 +579,7 @@ namespace Plotter
 
             foreach (uint id in figIDList)
             {
-                CadFigure fig = mDB.getFigure(id);
+                CadFigure fig = mDB.GetFigure(id);
                 if (fig != null)
                 {
                     DiffData dd = fig.EndEdit();
@@ -613,7 +613,7 @@ namespace Plotter
 
             foreach (uint id in EditIdList)
             {
-                CadFigure fig = mDB.getFigure(id);
+                CadFigure fig = mDB.GetFigure(id);
                 if (fig != null)
                 {
                     fig.CancelEdit();
@@ -692,7 +692,7 @@ namespace Plotter
 
             foreach (uint id in figIDList)
             {
-                CadFigure fig = mDB.getFigure(id);
+                CadFigure fig = mDB.GetFigure(id);
                 if (fig != null)
                 {
                     fig.MoveSelectedPoints(dc, delta);
@@ -705,7 +705,7 @@ namespace Plotter
             List<uint> figIDList = GetSelectedFigIDList();
             foreach (uint id in figIDList)
             {
-                CadFigure fig = mDB.getFigure(id);
+                CadFigure fig = mDB.GetFigure(id);
                 fig.RemoveSelected();
             }
         }
@@ -731,7 +731,7 @@ namespace Plotter
 
             figIdList.ForEach(id =>
             {
-                CadFigure fig = mDB.getFigure(id);
+                CadFigure fig = mDB.GetFigure(id);
                 if (fig != null)
                 {
                     figList.Add(fig);
@@ -763,7 +763,7 @@ namespace Plotter
                 foreach (CadFigure fig in list)
                 {
                     fig.MoveAllPoints(d);
-                    mDB.addFigure(fig);
+                    mDB.AddFigure(fig);
                     CurrentLayer.AddFigure(fig);
 
                     CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, fig.ID);
@@ -819,7 +819,7 @@ namespace Plotter
                 layerID = CurrentLayer.ID;
             }
             
-            CadLayer layer = mDB.getLayer(layerID);
+            CadLayer layer = mDB.GetLayer(layerID);
 
             if (layer == null) return;
 
@@ -830,7 +830,7 @@ namespace Plotter
 
         public void AddLayer(string name)
         {
-            CadLayer layer = mDB.newLayer();
+            CadLayer layer = mDB.NewLayer();
 
             layer.Name = name;
 
@@ -850,7 +850,7 @@ namespace Plotter
                 return;
             }
 
-            CadLayer layer = mDB.getLayer(id);
+            CadLayer layer = mDB.GetLayer(id);
 
             if (layer == null)
             {
@@ -861,10 +861,10 @@ namespace Plotter
 
             if (CurrentLayer.ID == id)
             {
-                nextCurrentIdx = mDB.layerIndex(CurrentLayer.ID);
+                nextCurrentIdx = mDB.LayerIndex(CurrentLayer.ID);
             }
 
-            mDB.removeLayer(id);
+            mDB.RemoveLayer(id);
 
             if (nextCurrentIdx >= 0)
             {
@@ -914,7 +914,7 @@ namespace Plotter
 
         public void SelectById(uint id, int idx, bool clearSelect=true)
         {
-            CadFigure fig = mDB.getFigure(id);
+            CadFigure fig = mDB.GetFigure(id);
 
             if (fig == null)
             {
@@ -946,7 +946,7 @@ namespace Plotter
 
             foreach (uint id in idlist)
             {
-                CadFigure fig = DB.getFigure(id);
+                CadFigure fig = DB.GetFigure(id);
 
                 if (fig == null)
                 {
@@ -985,7 +985,7 @@ namespace Plotter
 
             foreach (uint id in idlist)
             {
-                CadFigure fig = DB.getFigure(id);
+                CadFigure fig = DB.GetFigure(id);
 
                 if (fig == null)
                 {

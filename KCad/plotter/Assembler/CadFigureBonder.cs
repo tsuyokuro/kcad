@@ -63,7 +63,7 @@ namespace Plotter
                 FigureID = si.FigureID;
                 PointIndex = si.PointIndex;
 
-                CadFigure fig = db.getFigure(FigureID);
+                CadFigure fig = db.GetFigure(FigureID);
                 Point = fig.PointList[PointIndex];
             }
         }
@@ -135,7 +135,7 @@ namespace Plotter
                 // falldown if index is 0 or last
                 if (si.PointIndex != 0)
                 {
-                    CadFigure fig = DB.getFigure(si.FigureID);
+                    CadFigure fig = DB.GetFigure(si.FigureID);
 
                     if (si.PointIndex != fig.PointCount - 1)
                     {
@@ -268,7 +268,7 @@ namespace Plotter
 
         private BondInfo BondFigure(Item item, CadFigure fig1)
         {
-            CadFigure fig0 = DB.getFigure(item.FigureID);
+            CadFigure fig0 = DB.GetFigure(item.FigureID);
             int idx0 = item.PointIndex;
 
             if (fig0.ID == fig1.ID)
@@ -308,7 +308,7 @@ namespace Plotter
             }
 
             // Create figure that will be marged fig0 and fig1.
-            CadFigure rfig = DB.newFigure(CadFigure.Types.POLY_LINES);
+            CadFigure rfig = DB.NewFigure(CadFigure.Types.POLY_LINES);
             rfig.LayerID = LayerID;
 
             BondInfo ret = new BondInfo();

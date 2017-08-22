@@ -90,7 +90,7 @@ namespace Plotter
                 return;
             }
 
-            CadFigure fig = mDB.getFigure(seg.FigureID);
+            CadFigure fig = mDB.GetFigure(seg.FigureID);
 
             CadVector a = fig.GetPointAt(seg.PtIndexA);
             CadVector b = fig.GetPointAt(seg.PtIndexB);
@@ -121,7 +121,7 @@ namespace Plotter
 
             SelectItem si = mSelList.List[0];
 
-            CadFigure fig = mDB.getFigure(si.FigureID);
+            CadFigure fig = mDB.GetFigure(si.FigureID);
             
             if (fig.Type != CadFigure.Types.POLY_LINES)
             {
@@ -144,7 +144,7 @@ namespace Plotter
 
             CadVector cp = CadUtil.CrossPlane(a, fig.PointList[0], normal);
 
-            CadFigure line = DB.newFigure(CadFigure.Types.POLY_LINES);
+            CadFigure line = DB.NewFigure(CadFigure.Types.POLY_LINES);
 
             line.AddPoint(a);
             line.AddPoint(cp);
@@ -163,7 +163,7 @@ namespace Plotter
 
             SelectItem si = mSelList.List[0];
 
-            CadFigure fig = mDB.getFigure(si.FigureID);
+            CadFigure fig = mDB.GetFigure(si.FigureID);
 
             if (fig.Type != CadFigure.Types.POLY_LINES)
             {
@@ -192,7 +192,7 @@ namespace Plotter
                 return;
             }
 
-            CadFigure line = DB.newFigure(CadFigure.Types.POLY_LINES);
+            CadFigure line = DB.NewFigure(CadFigure.Types.POLY_LINES);
 
             line.AddPoint(a);
             line.AddPoint(cp);
@@ -211,7 +211,7 @@ namespace Plotter
 
             SelectItem si = mSelList.List[0];
 
-            CadFigure fig = mDB.getFigure(si.FigureID);
+            CadFigure fig = mDB.GetFigure(si.FigureID);
 
             if (fig.Type != CadFigure.Types.POLY_LINES)
             {
@@ -244,7 +244,7 @@ namespace Plotter
                 return;
             }
 
-            CadFigure line = DB.newFigure(CadFigure.Types.POLY_LINES);
+            CadFigure line = DB.NewFigure(CadFigure.Types.POLY_LINES);
 
             line.AddPoint(LastDownPoint);
             line.AddPoint(cp);
@@ -263,7 +263,7 @@ namespace Plotter
             a = CurrentDC.UnitPointToCadPoint(a);
             b = CurrentDC.UnitPointToCadPoint(b);
 
-            CadFigure line = DB.newFigure(CadFigure.Types.POLY_LINES);
+            CadFigure line = DB.NewFigure(CadFigure.Types.POLY_LINES);
 
             line.AddPoint(a);
             line.AddPoint(b);

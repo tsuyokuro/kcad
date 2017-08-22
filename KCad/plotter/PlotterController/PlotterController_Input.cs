@@ -112,7 +112,7 @@ namespace Plotter
             get; set;
         } = true;
 
-        private void initHid()
+        private void InitHid()
         {
             Mouse.LDown = LDown;
             Mouse.LUp = LUp;
@@ -157,7 +157,7 @@ namespace Plotter
             return false;
         }
 
-        private void clearSelListConditional(CadMouse pointer, MarkPoint newSel)
+        private void clearSelListConditional(MarkPoint newSel)
         {
             if (!CadKeyboard.IsCtrlKeyDown())
             {
@@ -168,7 +168,7 @@ namespace Plotter
             }
         }
 
-        private void clearSelListConditional(CadMouse pointer, MarkSeg newSel)
+        private void clearSelListConditional(MarkSeg newSel)
         {
             if (!CadKeyboard.IsCtrlKeyDown())
             {
@@ -237,13 +237,13 @@ namespace Plotter
 
 
                         State = States.START_DRAGING_POINTS;
-                        CadFigure fig = mDB.getFigure(mp.FigureID);
+                        CadFigure fig = mDB.GetFigure(mp.FigureID);
 
-                        CadLayer layer = mDB.getLayer(mp.LayerID);
+                        CadLayer layer = mDB.GetLayer(mp.LayerID);
 
                         if (!layer.Locked)
                         {
-                            clearSelListConditional(pointer, mp);
+                            clearSelListConditional(mp);
 
                             if (SelectMode == SelectModes.POINT)
                             {
@@ -252,7 +252,7 @@ namespace Plotter
                             }
                             else if (SelectMode == SelectModes.OBJECT)
                             {
-                                mSelList.add(mp.LayerID, mDB.getFigure(mp.FigureID));
+                                mSelList.add(mp.LayerID, mDB.GetFigure(mp.FigureID));
                                 fig.SelectWithGroup();
                             }
 
@@ -272,7 +272,7 @@ namespace Plotter
                         mSegSearcher.SearchAllLayer(dc, pixp, mDB);
                         MarkSeg mseg = mSegSearcher.GetMatch();
 
-                        CadLayer layer = mDB.getLayer(mseg.LayerID);
+                        CadLayer layer = mDB.GetLayer(mseg.LayerID);
 
                         if (mseg.FigureID != 0 && !layer.Locked)
                         {
@@ -291,19 +291,19 @@ namespace Plotter
                             }
 
 
-                            CadFigure fig = mDB.getFigure(mseg.FigureID);
+                            CadFigure fig = mDB.GetFigure(mseg.FigureID);
 
-                            clearSelListConditional(pointer, mseg);
+                            clearSelListConditional(mseg);
 
                             if (SelectMode == SelectModes.POINT)
                             {
-                                mSelList.add(mseg.LayerID, mDB.getFigure(mseg.FigureID), mseg.PtIndexA, mseg.PtIndexB);
+                                mSelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID), mseg.PtIndexA, mseg.PtIndexB);
                                 fig.SelectPointAt(mseg.PtIndexA, true);
                                 fig.SelectPointAt(mseg.PtIndexB, true);
                             }
                             else if (SelectMode == SelectModes.OBJECT)
                             {
-                                mSelList.add(mseg.LayerID, mDB.getFigure(mseg.FigureID));
+                                mSelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID));
                                 fig.SelectWithGroup();
                             }
 
@@ -379,7 +379,7 @@ namespace Plotter
                     {
                         LastDownPoint = mSnapPoint;
 
-                        CreatingFigure = mDB.newFigure(CreatingFigType);
+                        CreatingFigure = mDB.NewFigure(CreatingFigType);
                         State = States.CREATING;
 
                         CreatingFigure.StartCreate(dc);
@@ -641,7 +641,7 @@ namespace Plotter
                 {
                     if (seg.Distance < dist)
                     {
-                        CadFigure fig = mDB.getFigure(seg.FigureID);
+                        CadFigure fig = mDB.GetFigure(seg.FigureID);
                         fig.DrawSeg(dc, DrawTools.PEN_MATCH_SEG, seg.PtIndexA, seg.PtIndexB);
 
                         CadVector center = seg.CenterPoint;

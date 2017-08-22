@@ -82,7 +82,9 @@ h=10
 
 ratio=0.5
 
-point0 = SE.CreateVector(0,0,0);
-unitVX = SE.CreateVector(1,0,0);
-unitVY = SE.CreateVector(0,1,0);
-unitVZ = SE.CreateVector(0,0,1);
+range = 4
+
+point0 = SE.CreateVector(0,0,0)
+unitVX = SE.CreateVector(1,0,0)
+unitVY = SE.CreateVector(0,1,0)
+unitVZ = SE.CreateVector(0,0,1)

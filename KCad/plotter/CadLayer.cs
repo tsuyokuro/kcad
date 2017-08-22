@@ -103,7 +103,7 @@ namespace Plotter
 
         public void RemoveFigureByID(CadObjectDB db, uint id)
         {
-            CadFigure fig = db.getFigure(id);
+            CadFigure fig = db.GetFigure(id);
             mFigureList.Remove(fig);
             fig.LayerID = 0;
         }

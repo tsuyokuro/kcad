@@ -111,7 +111,7 @@ namespace Plotter
 
         public void SelectFigure(uint id)
         {
-            CadFigure fig = Controller.DB.getFigure(id);
+            CadFigure fig = Controller.DB.GetFigure(id);
 
             if (fig == null)
             {
@@ -183,11 +183,11 @@ namespace Plotter
                 return;
             }
 
-            CadFigure parent = Controller.DB.newFigure(CadFigure.Types.GROUP);
+            CadFigure parent = Controller.DB.NewFigure(CadFigure.Types.GROUP);
 
             foreach (uint id in idlist)
             {
-                CadFigure fig = Controller.DB.getFigure(id);
+                CadFigure fig = Controller.DB.GetFigure(id);
 
                 if (fig == null)
                 {
@@ -213,7 +213,7 @@ namespace Plotter
 
             foreach (uint id in idlist)
             {
-                CadFigure fig = Controller.DB.getFigure(id);
+                CadFigure fig = Controller.DB.GetFigure(id);
 
                 CadFigure root = fig.GetGroupRoot();
 
@@ -227,7 +227,7 @@ namespace Plotter
 
             foreach (uint id in idSet)
             {
-                CadFigure fig = Controller.DB.getFigure(id);
+                CadFigure fig = Controller.DB.GetFigure(id);
 
                 CadOpeRemoveChildlen ope = new CadOpeRemoveChildlen(fig, fig.ChildList);
 
@@ -292,7 +292,7 @@ namespace Plotter
             p1.y += y;
             p1.z += z;
 
-            CadFigure fig = Controller.DB.newFigure(CadFigure.Types.POLY_LINES);
+            CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
             fig.AddPoint(p0);
             fig.AddPoint(p1);
 
@@ -321,7 +321,7 @@ namespace Plotter
 
             p.Set(x, y, z);
 
-            CadFigure fig = Controller.DB.newFigure(CadFigure.Types.POINT);
+            CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POINT);
             fig.AddPoint(p);
 
             fig.EndCreate(Controller.CurrentDC);
@@ -337,7 +337,7 @@ namespace Plotter
 
             p0 = Controller.LastDownPoint;
 
-            CadFigure fig = Controller.DB.newFigure(CadFigure.Types.RECT);
+            CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.RECT);
 
             CadVector p1 = p0;
 
@@ -378,7 +378,7 @@ namespace Plotter
 
             foreach (uint id in idlist)
             {
-                CadFigure fig = Controller.DB.getFigure(id);
+                CadFigure fig = Controller.DB.GetFigure(id);
 
                 if (fig == null)
                 {
@@ -405,7 +405,7 @@ namespace Plotter
                 return;
             }
 
-            CadFigure fig = Controller.DB.getFigure(seg.FigureID);
+            CadFigure fig = Controller.DB.GetFigure(seg.FigureID);
 
             CadVector pa = fig.GetPointAt(seg.PtIndexA);
             CadVector pb = fig.GetPointAt(seg.PtIndexB);
@@ -494,7 +494,7 @@ namespace Plotter
 
         public CadFigure NewPolyLines()
         {
-            CadFigure fig = Controller.DB.newFigure(CadFigure.Types.POLY_LINES);
+            CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
             return fig;
         }
 

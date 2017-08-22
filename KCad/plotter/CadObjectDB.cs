@@ -31,7 +31,7 @@ namespace Plotter
 
             set
             {
-                mCurrentLayer = getLayer(value);
+                mCurrentLayer = GetLayer(value);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Plotter
         }
 
 
-        public CadLayer getLayer(uint id)
+        public CadLayer GetLayer(uint id)
         {
             if (id == 0)
             {
@@ -97,45 +97,27 @@ namespace Plotter
             return mLayerIdMap[id];
         }
 
-        public FigureBelong getFigureBelong(uint figID)
-        {
-            FigureBelong fb = default(FigureBelong);
-
-            foreach (CadLayer layer in LayerList)
-            {
-                int idx = layer.GetFigureIndex(figID);
-                if (idx >= 0)
-                {
-                    fb.Layer = layer;
-                    fb.Index = idx;
-                    break;
-                }
-            }
-
-            return fb;
-        }
-
-        public CadLayer newLayer()
+        public CadLayer NewLayer()
         {
             CadLayer layer = new CadLayer();
-            addLayer(layer);
+            AddLayer(layer);
             return layer;
         }
 
-        public uint addLayer(CadLayer layer)
+        public uint AddLayer(CadLayer layer)
         {
             layer.ID = mLayerIdProvider.getNew();
             mLayerIdMap.Add(layer.ID, layer);
             return layer.ID;
         }
 
-        public void removeLayer(uint id)
+        public void RemoveLayer(uint id)
         {
             mLayerIdMap.Remove(id);
             mLayerList.RemoveAll(a => a.ID == id);
         }
 
-        public int layerIndex(uint id)
+        public int LayerIndex(uint id)
         {
             int idx = 0;
             foreach (CadLayer layer in mLayerList)
@@ -180,7 +162,7 @@ namespace Plotter
         }
 
 
-        public CadFigure getFigure(uint id)
+        public CadFigure GetFigure(uint id)
         {
             if (id == 0)
             {
@@ -190,15 +172,15 @@ namespace Plotter
             return mFigureIdMap[id];
         }
 
-        public CadFigure newFigure(CadFigure.Types type)
+        public CadFigure NewFigure(CadFigure.Types type)
         {
             CadFigure fig = new CadFigure(type);
 
-            addFigure(fig);
+            AddFigure(fig);
             return fig;
         }
 
-        public uint addFigure(CadFigure fig)
+        public uint AddFigure(CadFigure fig)
         {
             fig.ID = mFigIdProvider.getNew();
             mFigureIdMap.Add(fig.ID, fig);
@@ -206,7 +188,7 @@ namespace Plotter
             return fig.ID;
         }
 
-        public void relaseFigure(uint id)
+        public void RelaseFigure(uint id)
         {
             mFigureIdMap.Remove(id);
         }
@@ -273,7 +255,7 @@ namespace Plotter
 
             uint currentLayerID = (uint)jo["current_layer_id"];
 
-            CurrentLayer = getLayer(currentLayerID);
+            CurrentLayer = GetLayer(currentLayerID);
 
             ja = (JArray)jo["group_info"];
             GroupInfoFromJson(ja);
@@ -284,7 +266,7 @@ namespace Plotter
             foreach (JObject jo in ja)
             {
                 uint id = (uint)jo["id"];
-                CadFigure fig = getFigure(id);
+                CadFigure fig = GetFigure(id);
 
                 if (fig == null)
                 {

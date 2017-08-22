@@ -29,7 +29,7 @@ namespace Plotter
 
         public void undo(CadObjectDB db)
         {
-            CadFigure fig = db.getFigure(FigureID);
+            CadFigure fig = db.GetFigure(FigureID);
 
             if (fig == null)
             {
@@ -65,7 +65,7 @@ namespace Plotter
 
         public void redo(CadObjectDB db)
         {
-            CadFigure fig = db.getFigure(FigureID);
+            CadFigure fig = db.GetFigure(FigureID);
 
             if (fig == null)
             {

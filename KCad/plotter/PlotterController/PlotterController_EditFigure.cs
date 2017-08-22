@@ -27,7 +27,7 @@ namespace Plotter
                 return;
             }
 
-            CadFigure fig = mDB.getFigure(seg.FigureID);
+            CadFigure fig = mDB.GetFigure(seg.FigureID);
 
             int num = CadVectorUtil.InitBezier(fig, seg.PtIndexA, seg.PtIndexB);
 
@@ -64,7 +64,7 @@ namespace Plotter
 
             foreach (CadFigureAssembler.ResultItem ri in res.AddList)
             {
-                CadLayer layer = mDB.getLayer(ri.LayerID);
+                CadLayer layer = mDB.GetLayer(ri.LayerID);
 
                 ope = CadOpe.CreateAddFigureOpe(ri.LayerID, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
@@ -74,7 +74,7 @@ namespace Plotter
 
             foreach (CadFigureAssembler.ResultItem ri in res.RemoveList)
             {
-                CadLayer layer = mDB.getLayer(ri.LayerID);
+                CadLayer layer = mDB.GetLayer(ri.LayerID);
 
                 ope = CadOpe.CreateRemoveFigureOpe(layer, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
@@ -107,7 +107,7 @@ namespace Plotter
 
             foreach (CadFigureAssembler.ResultItem ri in res.AddList)
             {
-                CadLayer layer = mDB.getLayer(ri.LayerID);
+                CadLayer layer = mDB.GetLayer(ri.LayerID);
 
                 ope = CadOpe.CreateAddFigureOpe(ri.LayerID, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
@@ -117,7 +117,7 @@ namespace Plotter
 
             foreach (CadFigureAssembler.ResultItem ri in res.RemoveList)
             {
-                CadLayer layer = mDB.getLayer(ri.LayerID);
+                CadLayer layer = mDB.GetLayer(ri.LayerID);
 
                 ope = CadOpe.CreateRemoveFigureOpe(layer, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
@@ -161,7 +161,7 @@ namespace Plotter
 
             foreach (CadFigureAssembler.ResultItem ri in res.AddList)
             {
-                CadLayer layer = mDB.getLayer(ri.LayerID);
+                CadLayer layer = mDB.GetLayer(ri.LayerID);
 
                 ope = CadOpe.CreateAddFigureOpe(ri.LayerID, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
@@ -171,7 +171,7 @@ namespace Plotter
 
             foreach (CadFigureAssembler.ResultItem ri in res.RemoveList)
             {
-                CadLayer layer = mDB.getLayer(ri.LayerID);
+                CadLayer layer = mDB.GetLayer(ri.LayerID);
 
                 ope = CadOpe.CreateRemoveFigureOpe(layer, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
@@ -227,7 +227,7 @@ namespace Plotter
 
             foreach (uint id in list)
             {
-                CadFigure fig = DB.getFigure(id);
+                CadFigure fig = DB.GetFigure(id);
 
                 if (fig.Type != CadFigure.Types.POLY_LINES)
                 {
@@ -328,7 +328,7 @@ namespace Plotter
 
             foreach (uint id in ids)
             {
-                CadFigure fig = mDB.getFigure(id);
+                CadFigure fig = mDB.GetFigure(id);
                 CadVector old = fig.Normal;
 
                 fig.Normal *= -1;
@@ -345,7 +345,7 @@ namespace Plotter
         {
             MarkSeg seg = SelSegList.LastSel;
 
-            CadFigure fig = DB.getFigure(seg.FigureID);
+            CadFigure fig = DB.GetFigure(seg.FigureID);
 
             if (fig == null)
             {
@@ -397,7 +397,7 @@ namespace Plotter
 
             foreach (uint id in idList)
             {
-                CadFigure fig = mDB.getFigure(id);
+                CadFigure fig = mDB.GetFigure(id);
 
                 Centroid t = fig.GetCentroid();
 
@@ -428,7 +428,7 @@ namespace Plotter
                 return;
             }
 
-            CadFigure pointFig = mDB.newFigure(CadFigure.Types.POINT);
+            CadFigure pointFig = mDB.NewFigure(CadFigure.Types.POINT);
             pointFig.AddPoint(cent.Point);
 
             pointFig.EndCreate(CurrentDC);
@@ -454,7 +454,7 @@ namespace Plotter
 
             foreach (uint id in idList)
             {
-                CadFigure fig = mDB.getFigure(id);
+                CadFigure fig = mDB.GetFigure(id);
 
                 Centroid t = fig.GetCentroid();
 
