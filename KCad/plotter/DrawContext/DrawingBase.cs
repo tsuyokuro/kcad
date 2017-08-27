@@ -47,6 +47,10 @@ namespace Plotter
 
         void DrawText(int font, int brush, CadVector a, string s);
 
+        void DrawTextUnitPoint(int font, int brush, CadVector a, string s);
+
+        CadVector MeasureText(int font, string s);
+
         void DrawArrow(int pen, CadVector pt0, CadVector pt1, ArrowTypes type, ArrowPos pos, double len, double width);
 
         void DrawBezier(
@@ -180,6 +184,16 @@ namespace Plotter
         public virtual void DrawText(int font, int brush, CadVector a, string s)
         {
         }
+
+        public virtual void DrawTextUnitPoint(int font, int brush, CadVector a, string s)
+        {
+        }
+
+        public virtual CadVector MeasureText(int font, string s)
+        {
+            return CadVector.Zero;
+        }
+
 
         public virtual void DrawArrow(int pen, CadVector pt0, CadVector pt1, ArrowTypes type, ArrowPos pos, double len, double width)
         {

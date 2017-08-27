@@ -88,6 +88,11 @@ namespace Plotter
         public uint LayerID { set; get; } = 0;
         
         public bool Current { set; get; } = false;
+
+        public int FontID { set; get; } = DrawTools.FONT_SMALL;
+
+        public int BrushID { set; get; } = DrawTools.BRUSH_TEXT;
+
         #endregion
 
         private List<CadVector> mPointList = new List<CadVector>();
@@ -120,23 +125,6 @@ namespace Plotter
 
         private static CadFigureBehavior[] BehaviorTbl = null;
 
-        /*
-        private static System.Type[] BehaviorTypes = null;
-
-        // Static initializer
-        static CadFigure()
-        {
-            BehaviorTbl = new CadFigureBehavior[(int)Types.MAX];
-            BehaviorTbl[(int)Types.LINE] = new CadFigureLine();
-            BehaviorTbl[(int)Types.RECT] = new CadFigureRect();
-            BehaviorTbl[(int)Types.POLY_LINES] = new CadFigurePolyLines();
-            BehaviorTbl[(int)Types.CIRCLE] = new CadFigureCircle();
-            BehaviorTbl[(int)Types.POINT] = new CadFigurePoint();
-            BehaviorTbl[(int)Types.GROUP] = new CadNopBehavior();
-            BehaviorTbl[(int)Types.DIMENTION_LINE] = new CadFigureDimLine();
-        }
-        */
-
         public CadFigure()
         {
             ID = 0;
@@ -155,7 +143,6 @@ namespace Plotter
         {
             if (type > Types.NONE && type < Types.MAX)
             {
-                //Behavior = BehaviorTbl[(int)type];
                 Behavior = NewBehavior(type);
             }
         }

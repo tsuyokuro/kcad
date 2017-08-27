@@ -152,9 +152,9 @@
         <StackPanel
             Grid.Row="1"
             x:Name="ToolBar1"
-            Background="{StaticResource BGColor}" Height="28" HorizontalAlignment="Stretch"
+            Background="#FF505050" Height="28" HorizontalAlignment="Stretch"
             Orientation="Horizontal"
-                >
+            >
             <Label Width="32"/>
 
             <ToggleButton
