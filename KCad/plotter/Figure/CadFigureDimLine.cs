@@ -279,27 +279,31 @@ namespace Plotter
                 dc.Drawing.DrawArrow(pen, cp, fig.PointList[2], ArrowTypes.CROSS, ArrowPos.END, 4, 2);
 
 
-                CadVector d = fig.PointList[3] - fig.PointList[2];
+                CadVector d = fig.PointList[2] - fig.PointList[3];
 
-                double val = d.Norm();
+                double len = d.Norm();
 
-                String s = val.ToString();
+                String s = CadUtil.ValToString(len);
+
+
+                CadVector p0 = dc.CadPointToUnitPoint(fig.PointList[3]);
+                CadVector p1 = dc.CadPointToUnitPoint(fig.PointList[2]);
+
+                d = p1 - p0;
+
+                len = d.Norm();
+
 
                 CadVector sv = dc.Drawing.MeasureText(fig.FontID, s);
 
-                /*
-                sv = dc.UnitVectorToCadVector(sv);
+                double sl = sv.Norm();
 
-                cp -= (sv / 2);
+                double a = ((len - sl)/2) / len;
 
-                dc.Drawing.DrawText(fig.FontID, fig.BrushID, cp, s);
-                */
 
-                CadVector pcp = dc.CadPointToUnitPoint(cp);
+                CadVector sp = (d * a) + p0;
 
-                pcp -= (sv / 2);
-
-                dc.Drawing.DrawTextUnitPoint(fig.FontID, fig.BrushID, pcp, s);
+                dc.Drawing.DrawTextUnitPoint(fig.FontID, fig.BrushID, sp, d.UnitVector(), s);
             }
         }
     }

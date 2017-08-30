@@ -102,6 +102,11 @@ namespace Plotter
 
         public static CadVector Zero = default(CadVector);
 
+        public static CadVector UnitX = CadVector.Create(1, 0, 0);
+        public static CadVector UnitY = CadVector.Create(0, 1, 0);
+        public static CadVector UnitZ = CadVector.Create(0, 0, 1);
+
+
         public CadVector(double x, double y, double z, Types type = Types.STD)
         {
             vector.X = x;
@@ -222,7 +227,7 @@ namespace Plotter
             z = p.z;
         }
 
-        public bool CoordEquals(CadVector p)
+        public bool VectorEquals(CadVector p)
         {
             return (x == p.x && y == p.y && z == p.z);
         }
@@ -238,7 +243,7 @@ namespace Plotter
 
         public bool DataEquals(CadVector p)
         {
-            return CoordEquals(p) && (Type == p.Type);
+            return VectorEquals(p) && (Type == p.Type);
         }
 
         public static CadVector operator +(CadVector p1, CadVector p2)

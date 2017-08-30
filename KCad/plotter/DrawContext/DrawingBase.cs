@@ -47,7 +47,7 @@ namespace Plotter
 
         void DrawText(int font, int brush, CadVector a, string s);
 
-        void DrawTextUnitPoint(int font, int brush, CadVector a, string s);
+        void DrawTextUnitPoint(int font, int brush, CadVector a, CadVector direction, string s);
 
         CadVector MeasureText(int font, string s);
 
@@ -185,7 +185,7 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawTextUnitPoint(int font, int brush, CadVector a, string s)
+        public virtual void DrawTextUnitPoint(int font, int brush, CadVector a, CadVector direction, string s)
         {
         }
 

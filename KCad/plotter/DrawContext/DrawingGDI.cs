@@ -324,16 +324,36 @@ namespace Plotter
         public override void DrawText(int font, int brush, CadVector a, string s)
         {
             CadVector pa = DC.CadPointToUnitPoint(a);
-            DrawTextUnitPoint(font, brush, pa, s);
+            DrawTextUnitPoint(font, brush, pa, CadVector.UnitX, s);
         }
 
-        public override void DrawTextUnitPoint(int font, int brush, CadVector a, string s)
+        public override void DrawTextUnitPoint(int font, int brush, CadVector a, CadVector direction, string s)
         {
             if (DC.graphics == null) return;
             if (DC.Brush(brush) == null) return;
             if (DC.Font(font) == null) return;
 
-            DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), (int)a.x, (int)a.y);
+            double angle = 0;
+
+            if (direction.x != 0 || direction.y != 0)
+            {
+                angle = CadUtil.Angle2D(direction);
+            }
+
+            angle = CadMath.Rad2Deg(angle);
+
+
+            DC.graphics.TranslateTransform((int)a.x, (int)a.y);
+
+            DC.graphics.RotateTransform((float)angle);
+
+
+
+            DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), 0, 0);
+
+
+
+            DC.graphics.ResetTransform();
         }
 
         public override CadVector MeasureText(int font, string s)

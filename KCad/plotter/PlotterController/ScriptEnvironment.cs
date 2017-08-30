@@ -523,12 +523,45 @@ namespace Plotter
             Controller.NotifyDataChanged(true);
         }
 
+        public CadFigure GetTargetFigure()
+        {
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
+            if (idlist.Count == 0)
+            {
+                return null;
+            }
+
+            return Controller.DB.GetFigure(idlist[0]);
+        }
+
+
         private void SimpleCommand(string s)
         {
             if (s == "@clear")
             {
                 Controller.InteractOut.clear();
             }
+            else if (s == "@test angle")
+            {
+                CadFigure fig = GetTargetFigure();
+
+                if (fig == null) return;
+
+                if (fig.PointCount < 2) return;
+
+                CadVector d = Controller.CurrentDC.CadPointToUnitPoint(fig.PointList[1])
+                    - Controller.CurrentDC.CadPointToUnitPoint(fig.PointList[0]);
+
+                d.y *= -1;
+
+                double rad = CadUtil.Angle2D(d);
+
+                double deg = CadMath.Rad2Deg(rad);
+
+                Controller.InteractOut.println("angle=" + deg.ToString());
+            }
+
             else if (s == "@test rote")
             {
                 Controller.StartEdit();

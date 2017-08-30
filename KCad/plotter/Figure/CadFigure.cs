@@ -347,7 +347,7 @@ namespace Plotter
             int i = 0;
             foreach (CadVector p in mPointList)
             {
-                if (t.CoordEquals(p))
+                if (t.VectorEquals(p))
                 {
                     return i;
                 }

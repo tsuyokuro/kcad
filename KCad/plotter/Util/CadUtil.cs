@@ -541,7 +541,7 @@ namespace Plotter
         {
             CrossInfo ret = default(CrossInfo);
 
-            if (a.CoordEquals(b))
+            if (a.VectorEquals(b))
             {
                 return ret;
             }
@@ -802,6 +802,17 @@ namespace Plotter
 
             return cp;
         }
+
+        public static double Angle2D(CadVector v)
+        {
+            return Math.Atan2(v.y, v.x);
+        }
+
+        public static string ValToString(double v)
+        {
+            return v.ToString("f2");
+        }
+
 
         public static void Dump(DebugOut dout, Vector4d v, string prefix)
         {
