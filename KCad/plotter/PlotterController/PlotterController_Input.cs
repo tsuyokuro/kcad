@@ -195,6 +195,188 @@ namespace Plotter
             CurrentFigure = fig;
         }
 
+        /**
+         * 指定デバイス座標について範囲内かつ最も近い図形を選択
+         * 
+         */
+        public void SelectWithPoint(DrawContext dc, CadVector devp)
+        {
+            CadVector cp = dc.UnitPointToCadPoint(devp);
+
+            mObjDownPoint = null;
+
+            mPointSearcher.CleanMatches();
+            mPointSearcher.SetRangePixel(dc, PointSnapRange);
+
+            if (CurrentFigure != null)
+            {
+                mPointSearcher.CheckFigure(dc, CurrentLayer, CurrentFigure);
+            }
+
+            mPointSearcher.SearchAllLayer(dc, devp, mDB);
+
+            MarkPoint mp = default(MarkPoint);
+
+            mp = mPointSearcher.GetXYMatch(MatchIndex);
+
+            if (CadKeyboard.IsShiftKeyDown())
+            {
+                MatchIndex++;
+                mp = mPointSearcher.GetXYMatch(MatchIndex);
+            }
+
+            if (mp.FigureID == 0)
+            {
+                MatchIndex = 0;
+            }
+
+            if (mp.FigureID != 0 && mp.Type == MarkPoint.Types.POINT)
+            {
+                mObjDownPoint = mp.Point;
+
+                mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mp.Point);
+
+                mMoveOrgScrnPoint.z = 0;
+
+
+                State = States.START_DRAGING_POINTS;
+                CadFigure fig = mDB.GetFigure(mp.FigureID);
+
+                CadLayer layer = mDB.GetLayer(mp.LayerID);
+
+                if (!layer.Locked)
+                {
+                    clearSelListConditional(mp);
+
+                    if (SelectMode == SelectModes.POINT)
+                    {
+                        mSelList.add(mp);
+                        fig.SelectPointAt(mp.PointIndex, true);
+                    }
+                    else if (SelectMode == SelectModes.OBJECT)
+                    {
+                        mSelList.add(mp.LayerID, mDB.GetFigure(mp.FigureID));
+                        fig.SelectWithGroup();
+                    }
+
+                    // Set ignore list for snap cursor
+                    mPointSearcher.SetIgnoreList(mSelList.List);
+                    mSegSearcher.SetIgnoreList(mSelList.List);
+
+                    mRulerSet.Set(fig.PointList, mp.PointIndex, cp);
+
+                    SetCurrentFigure(fig);
+                }
+            }
+            else
+            {
+                mSegSearcher.Clean();
+                mSegSearcher.SetRangePixel(dc, LineSnapRange);
+                mSegSearcher.SearchAllLayer(dc, devp, mDB);
+                MarkSeg mseg = mSegSearcher.GetMatch();
+
+                CadLayer layer = mDB.GetLayer(mseg.LayerID);
+
+                if (mseg.FigureID != 0 && !layer.Locked)
+                {
+
+                    CadVector center = mseg.CenterPoint;
+
+                    CadVector t = dc.CadPointToUnitPoint(center);
+
+                    if ((t - devp).Norm() < LineSnapRange)
+                    {
+                        mObjDownPoint = center;
+                    }
+                    else
+                    {
+                        mObjDownPoint = mseg.CrossPoint;
+                    }
+
+
+                    CadFigure fig = mDB.GetFigure(mseg.FigureID);
+
+                    clearSelListConditional(mseg);
+
+                    if (SelectMode == SelectModes.POINT)
+                    {
+                        mSelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID), mseg.PtIndexA, mseg.PtIndexB);
+                        fig.SelectPointAt(mseg.PtIndexA, true);
+                        fig.SelectPointAt(mseg.PtIndexB, true);
+                    }
+                    else if (SelectMode == SelectModes.OBJECT)
+                    {
+                        mSelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID));
+                        fig.SelectWithGroup();
+                    }
+
+                    mSelectedSegs.Add(mseg);
+
+                    mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mObjDownPoint.Value);
+
+                    State = States.START_DRAGING_POINTS;
+
+                    // Set ignore liset for snap cursor
+                    mPointSearcher.SetIgnoreList(mSelList.List);
+                    mSegSearcher.SetIgnoreList(mSelList.List);
+                    mSegSearcher.SetIgnoreSeg(mSelectedSegs.List);
+
+                    SetCurrentFigure(fig);
+                }
+                else
+                {
+                    if (!CadKeyboard.IsCtrlKeyDown())
+                    {
+                        ClearSelection();
+                        SetCurrentFigure(null);
+                    }
+                }
+            }
+
+            if (mObjDownPoint == null)
+            {
+                LastDownPoint = mSnapPoint;
+
+                #region Gridding
+
+                if (mGridding.Enable)
+                {
+                    CadVector p = devp;
+
+                    bool match = false;
+
+                    mGridding.Clear();
+                    mGridding.Check(dc, devp);
+
+                    if (mGridding.XMatchU.Valid)
+                    {
+                        p.x = mGridding.XMatchU.x;
+                        match = true;
+                    }
+
+                    if (mGridding.YMatchU.Valid)
+                    {
+                        p.y = mGridding.YMatchU.y;
+                        match = true;
+                    }
+
+                    if (match)
+                    {
+                        LastDownPoint = dc.UnitPointToCadPoint(p);
+                    }
+                }
+
+                #endregion
+            }
+            else
+            {
+                LastDownPoint = mObjDownPoint.Value;
+            }
+
+            Clear(dc);
+            DrawAll(dc);
+        }
+
         private void LDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
             CadVector pixp = CadVector.Create(x, y, 0);
@@ -206,173 +388,7 @@ namespace Plotter
             switch (State)
             {
                 case States.SELECT:
-                    mObjDownPoint = null;
-
-                    mPointSearcher.CleanMatches();
-                    mPointSearcher.SetRangePixel(dc, PointSnapRange);
-                    mPointSearcher.SearchAllLayer(dc, pixp, mDB);
-
-                    MarkPoint mp = default(MarkPoint);
-
-                    mp = mPointSearcher.GetXYMatch(MatchIndex);
-
-                    if (CadKeyboard.IsShiftKeyDown())
-                    {
-                        MatchIndex++;
-                        mp = mPointSearcher.GetXYMatch(MatchIndex);
-                    }
-
-                    if (mp.FigureID == 0)
-                    {
-                        MatchIndex = 0;
-                    }
-
-                    if (mp.FigureID != 0 && mp.Type == MarkPoint.Types.POINT)
-                    {
-                        mObjDownPoint = mp.Point;
-
-                        mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mp.Point);
-
-                        mMoveOrgScrnPoint.z = 0;
-
-
-                        State = States.START_DRAGING_POINTS;
-                        CadFigure fig = mDB.GetFigure(mp.FigureID);
-
-                        CadLayer layer = mDB.GetLayer(mp.LayerID);
-
-                        if (!layer.Locked)
-                        {
-                            clearSelListConditional(mp);
-
-                            if (SelectMode == SelectModes.POINT)
-                            {
-                                mSelList.add(mp);
-                                fig.SelectPointAt(mp.PointIndex, true);
-                            }
-                            else if (SelectMode == SelectModes.OBJECT)
-                            {
-                                mSelList.add(mp.LayerID, mDB.GetFigure(mp.FigureID));
-                                fig.SelectWithGroup();
-                            }
-
-                            // Set ignore list for snap cursor
-                            mPointSearcher.SetIgnoreList(mSelList.List);
-                            mSegSearcher.SetIgnoreList(mSelList.List);
-
-                            mRulerSet.Set(fig.PointList, mp.PointIndex, cp);
-
-                            SetCurrentFigure(fig);
-                        }
-                    }
-                    else
-                    {
-                        mSegSearcher.Clean();
-                        mSegSearcher.SetRangePixel(dc, LineSnapRange);
-                        mSegSearcher.SearchAllLayer(dc, pixp, mDB);
-                        MarkSeg mseg = mSegSearcher.GetMatch();
-
-                        CadLayer layer = mDB.GetLayer(mseg.LayerID);
-
-                        if (mseg.FigureID != 0 && !layer.Locked)
-                        {
-
-                            CadVector center = mseg.CenterPoint;
-
-                            CadVector t = dc.CadPointToUnitPoint(center);
-
-                            if ((t - pixp).Norm() < LineSnapRange)
-                            {
-                                mObjDownPoint = center;
-                            }
-                            else
-                            {
-                                mObjDownPoint = mseg.CrossPoint;
-                            }
-
-
-                            CadFigure fig = mDB.GetFigure(mseg.FigureID);
-
-                            clearSelListConditional(mseg);
-
-                            if (SelectMode == SelectModes.POINT)
-                            {
-                                mSelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID), mseg.PtIndexA, mseg.PtIndexB);
-                                fig.SelectPointAt(mseg.PtIndexA, true);
-                                fig.SelectPointAt(mseg.PtIndexB, true);
-                            }
-                            else if (SelectMode == SelectModes.OBJECT)
-                            {
-                                mSelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID));
-                                fig.SelectWithGroup();
-                            }
-
-                            mSelectedSegs.Add(mseg);
-
-                            mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mObjDownPoint.Value);
-
-                            State = States.START_DRAGING_POINTS;
-
-                            // Set ignore liset for snap cursor
-                            mPointSearcher.SetIgnoreList(mSelList.List);
-                            mSegSearcher.SetIgnoreList(mSelList.List);
-                            mSegSearcher.SetIgnoreSeg(mSelectedSegs.List);
-
-                            SetCurrentFigure(fig);
-                        }
-                        else
-                        {
-                            if (!CadKeyboard.IsCtrlKeyDown())
-                            {
-                                ClearSelection();
-                                SetCurrentFigure(null);
-                            }
-                        }
-                    }
-
-                    if (mObjDownPoint == null)
-                    {
-                        LastDownPoint = mSnapPoint;
-
-                        #region Gridding
-
-                        if (mGridding.Enable)
-                        {
-                            CadVector p = pixp;
-
-                            bool match = false;
-
-                            mGridding.Clear();
-                            mGridding.Check(dc, pixp);
-
-                            if (mGridding.XMatchU.Valid)
-                            {
-                                p.x = mGridding.XMatchU.x;
-                                match = true;
-                            }
-
-                            if (mGridding.YMatchU.Valid)
-                            {
-                                p.y = mGridding.YMatchU.y;
-                                match = true;
-                            }
-
-                            if (match)
-                            {
-                                LastDownPoint = dc.UnitPointToCadPoint(p);
-                            }
-                        }
-
-                        #endregion
-                    }
-                    else
-                    {
-                        LastDownPoint = mObjDownPoint.Value;
-                    }
-
-                    Clear(dc);
-                    DrawAll(dc);
-
+                    SelectWithPoint(dc, pixp);
                     return;
 
                 case States.START_CREATE:

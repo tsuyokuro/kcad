@@ -147,7 +147,7 @@ namespace Plotter
             }
         }
 
-        private void CheckFigure(DrawContext dc, CadLayer layer, CadFigure fig)
+        public void CheckFigure(DrawContext dc, CadLayer layer, CadFigure fig)
         {
             IReadOnlyList<CadVector> pointList = fig.PointList;
 
@@ -211,7 +211,7 @@ namespace Plotter
 
             if (dx <= mRange && dy <= mRange)
             {
-                if (dx <= xymatch.DistX || dy <= xymatch.DistY)
+                if (dx < xymatch.DistX || dy < xymatch.DistY)
                 {
                     MarkPoint t = default(MarkPoint);
 
