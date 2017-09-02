@@ -303,7 +303,7 @@ namespace Plotter
 
                 CadVector sp = (d * a) + p0;
 
-                dc.Drawing.DrawTextUnitPoint(fig.FontID, fig.BrushID, sp, d.UnitVector(), s);
+                dc.Drawing.DrawTextScrn(fig.FontID, fig.BrushID, sp, d.UnitVector(), s);
             }
         }
     }

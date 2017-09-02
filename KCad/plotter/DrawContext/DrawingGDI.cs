@@ -324,10 +324,10 @@ namespace Plotter
         public override void DrawText(int font, int brush, CadVector a, string s)
         {
             CadVector pa = DC.CadPointToUnitPoint(a);
-            DrawTextUnitPoint(font, brush, pa, CadVector.UnitX, s);
+            DrawTextScrn(font, brush, pa, CadVector.UnitX, s);
         }
 
-        public override void DrawTextUnitPoint(int font, int brush, CadVector a, CadVector direction, string s)
+        public override void DrawTextScrn(int font, int brush, CadVector a, CadVector direction, string s)
         {
             if (DC.graphics == null) return;
             if (DC.Brush(brush) == null) return;
@@ -465,25 +465,6 @@ namespace Plotter
             DC.graphics.DrawEllipse(
                 DC.Pen(pen), (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
         }
-
-        //private void DrawTextScrn(int font, int brush, CadVector a, string s)
-        //{
-        //    if (DC.graphics == null) return;
-        //    if (DC.Brush(brush) == null) return;
-        //    if (DC.Font(font) == null) return;
-
-        //    DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), (int)a.x, (int)a.y);
-        //}
-
-        //private void DrawTextScrn(int font, int brush, double x, double y, string s)
-        //{
-        //    if (DC.graphics == null) return;
-        //    if (DC.Brush(brush) == null) return;
-        //    if (DC.Font(font) == null) return;
-
-        //    DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), (int)x, (int)y);
-        //}
-
 
         private void FillRectangleScrn(int brush, double x0, double y0, double x1, double y1)
         {

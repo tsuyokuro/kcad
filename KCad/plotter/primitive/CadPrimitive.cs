@@ -6,6 +6,20 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
+    public class CadCursor
+    {
+        public enum Types
+        {
+            POINT,
+            LINE,
+        }
+
+        public Types Type = Types.POINT;
+
+        public CadVector Pos;
+        public CadVector Dir = CadVector.UnitX;
+    }
+
     public struct CadSegment
     {
         public CadVector P0;
