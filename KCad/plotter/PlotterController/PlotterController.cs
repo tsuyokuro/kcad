@@ -262,8 +262,14 @@ namespace Plotter
 
         public ScriptEnvironment ScriptEnv;
 
+        public CadCursor CrossCursor = CadCursor.CreateCross();
+
+
+        #region Constructor
         public PlotterController()
         {
+            //CrossCursor.DirX = CadVector.Create(1, 1, 0).UnitVector();
+
             CadLayer layer = mDB.NewLayer();
             mDB.LayerList.Add(layer);
             CurrentLayer = layer;
@@ -272,8 +278,10 @@ namespace Plotter
 
             ScriptEnv = new ScriptEnvironment(this);
 
+
             InitHid();
         }
+        #endregion
 
 
         #region Notify
@@ -472,7 +480,8 @@ namespace Plotter
 
         public void DrawCrossCursor(DrawContext dc)
         {
-            dc.Drawing.DrawCrossCursorScrn(mSnapScreenPoint);
+            CrossCursor.Pos = mSnapScreenPoint;
+            dc.Drawing.DrawCrossCursorScrn(CrossCursor);
         }
 
         public void Print(DrawContext dc)

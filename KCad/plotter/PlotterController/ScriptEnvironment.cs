@@ -96,7 +96,11 @@ namespace Plotter
             PointSearcher searcher = new PointSearcher();
 
             searcher.SetRangePixel(dc, range);
-            searcher.SearchAllLayer(dc, pixp, Controller.DB);
+
+            CadCursor cc = CadCursor.CreatePos(pixp);
+
+            searcher.SetTargetPoint(cc);
+            searcher.SearchAllLayer(dc, Controller.DB);
 
 
             List<MarkPoint> list = searcher.GetXYMatches();

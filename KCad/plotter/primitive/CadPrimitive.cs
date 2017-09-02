@@ -6,18 +6,43 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
-    public class CadCursor
+    public struct CadCursor
     {
-        public enum Types
+        public CadVector Pos;
+        public CadVector DirX;
+        public CadVector DirY;
+        public CadVector DirZ;
+
+        public static CadCursor CreateCross()
         {
-            POINT,
-            LINE,
+            CadCursor cc = default(CadCursor);
+
+            cc.DirX = CadVector.UnitX;
+            cc.DirY = CadVector.UnitY;
+            cc.DirZ = CadVector.UnitZ;
+
+            return cc;
         }
 
-        public Types Type = Types.POINT;
+        public static CadCursor CreatePos(CadVector p)
+        {
+            CadCursor cc = default(CadCursor);
 
-        public CadVector Pos;
-        public CadVector Dir = CadVector.UnitX;
+            cc.Pos = p;
+            cc.DirX = CadVector.Zero;
+            cc.DirY = CadVector.Zero;
+            cc.DirZ = CadVector.Zero;
+
+            return cc;
+        }
+
+        public void CopyFrom(CadCursor cc)
+        {
+            Pos = cc.Pos;
+            DirX = cc.DirX;
+            DirY = cc.DirY;
+            DirZ = cc.DirZ;
+        }
     }
 
     public struct CadSegment

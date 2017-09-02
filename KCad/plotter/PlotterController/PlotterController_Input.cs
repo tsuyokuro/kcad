@@ -199,9 +199,9 @@ namespace Plotter
          * 指定デバイス座標について範囲内かつ最も近い図形を選択
          * 
          */
-        public void SelectWithPoint(DrawContext dc, CadVector devp)
+        public void SelectWithPoint(DrawContext dc, CadVector pixp)
         {
-            CadVector cp = dc.UnitPointToCadPoint(devp);
+            CadVector cp = dc.UnitPointToCadPoint(pixp);
 
             mObjDownPoint = null;
 
@@ -213,7 +213,11 @@ namespace Plotter
                 mPointSearcher.CheckFigure(dc, CurrentLayer, CurrentFigure);
             }
 
-            mPointSearcher.SearchAllLayer(dc, devp, mDB);
+            CadCursor cc = CadCursor.CreatePos(pixp);
+
+            mPointSearcher.SetTargetPoint(cc);
+
+            mPointSearcher.SearchAllLayer(dc, mDB);
 
             MarkPoint mp = default(MarkPoint);
 
@@ -272,7 +276,7 @@ namespace Plotter
             {
                 mSegSearcher.Clean();
                 mSegSearcher.SetRangePixel(dc, LineSnapRange);
-                mSegSearcher.SearchAllLayer(dc, devp, mDB);
+                mSegSearcher.SearchAllLayer(dc, pixp, mDB);
                 MarkSeg mseg = mSegSearcher.GetMatch();
 
                 CadLayer layer = mDB.GetLayer(mseg.LayerID);
@@ -284,7 +288,7 @@ namespace Plotter
 
                     CadVector t = dc.CadPointToUnitPoint(center);
 
-                    if ((t - devp).Norm() < LineSnapRange)
+                    if ((t - pixp).Norm() < LineSnapRange)
                     {
                         mObjDownPoint = center;
                     }
@@ -341,12 +345,12 @@ namespace Plotter
 
                 if (mGridding.Enable)
                 {
-                    CadVector p = devp;
+                    CadVector p = pixp;
 
                     bool match = false;
 
                     mGridding.Clear();
-                    mGridding.Check(dc, devp);
+                    mGridding.Check(dc, pixp);
 
                     if (mGridding.XMatchU.Valid)
                     {
@@ -583,7 +587,10 @@ namespace Plotter
             {
                 mPointSearcher.CleanMatches();
                 mPointSearcher.SetRangePixel(dc, PointSnapRange);
-                mPointSearcher.SetTargetPoint(pixp);
+
+                CrossCursor.Pos = pixp;
+
+                mPointSearcher.SetTargetPoint(CrossCursor);
 
                 if (CreatingFigure != null)
                 {

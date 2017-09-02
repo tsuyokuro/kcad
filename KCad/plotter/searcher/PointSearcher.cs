@@ -20,7 +20,7 @@ namespace Plotter
 
         private List<SelectItem> IgnoreList = null;
 
-        private CadVector TargetPoint;
+        private CadCursor TargetPoint;
         private double mRange;
 
         public uint CurrentLayerID
@@ -47,7 +47,7 @@ namespace Plotter
             XYMatchList.Clear();
         }
 
-        public void SetTargetPoint(CadVector p)
+        public void SetTargetPoint(CadCursor p)
         {
             TargetPoint = p;
         }
@@ -83,12 +83,6 @@ namespace Plotter
             return XYMatchList;
         }
 
-        public void SearchAllLayer(DrawContext dc, CadVector p, CadObjectDB db)
-        {
-            TargetPoint = p;
-            SearchAllLayer(dc, db);
-        }
-
         public void SearchAllLayer(DrawContext dc, CadObjectDB db)
         {
             if (db.CurrentLayer.Visible)
@@ -110,12 +104,6 @@ namespace Plotter
 
                 Search(dc, db, layer);
             }
-        }
-
-        public void Search(DrawContext dc, CadVector p, CadObjectDB db, CadLayer layer)
-        {
-            TargetPoint = p;
-            Search(dc, db, layer);
         }
 
         public void Search(DrawContext dc, CadObjectDB db, CadLayer layer)
@@ -174,8 +162,8 @@ namespace Plotter
 
             CadVector ppt = dc.CadPointToUnitPoint(pt);
 
-            double dx = Math.Abs(ppt.x - TargetPoint.x);
-            double dy = Math.Abs(ppt.y - TargetPoint.y);
+            double dx = Math.Abs(ppt.x - TargetPoint.Pos.x);
+            double dy = Math.Abs(ppt.y - TargetPoint.Pos.y);
 
             if (dx <= mRange)
             {

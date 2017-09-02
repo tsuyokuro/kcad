@@ -63,6 +63,6 @@ namespace Plotter
 
         void DrawCursorScrn(CadVector pp);
 
-        void DrawCrossCursorScrn(CadVector pp);
+        void DrawCrossCursorScrn(CadCursor pp);
     }
 }

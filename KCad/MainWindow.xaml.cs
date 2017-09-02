@@ -14,10 +14,6 @@ namespace KCad
     {
         public PlotterViewModel ViewModel;
 
-        private DebugInputThread InputThread;
-
-        //private ObservableCollection<string> messageList = new ObservableCollection<string>();
-
         private PlotterController.Interaction mInteractionOut = new PlotterController.Interaction();
 
         private bool KeyHandled = false;
