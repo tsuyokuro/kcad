@@ -73,6 +73,13 @@ def scale(ratio):
 def rotate(p0, v, t):
     return SE.Rotate(p0, v, t)
 
+def cursorAngleX(d):
+    SE.CursorAngleX(d)
+
+def cursorAngleY(d):
+    SE.CursorAngleY(d)
+
+
 x=0
 y=0
 z=0

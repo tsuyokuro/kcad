@@ -213,7 +213,7 @@ namespace Plotter
                 mPointSearcher.CheckFigure(dc, CurrentLayer, CurrentFigure);
             }
 
-            CadCursor cc = CadCursor.CreatePos(pixp);
+            CadCursor cc = CadCursor.Create(pixp);
 
             mPointSearcher.SetTargetPoint(cc);
 
@@ -337,7 +337,12 @@ namespace Plotter
                 }
             }
 
-            if (mObjDownPoint == null)
+            if (mObjDownPoint != null)
+            {
+                //LastDownPoint = mObjDownPoint.Value;
+                LastDownPoint = mSnapPoint;
+            }
+            else
             {
                 LastDownPoint = mSnapPoint;
 
@@ -371,10 +376,6 @@ namespace Plotter
                 }
 
                 #endregion
-            }
-            else
-            {
-                LastDownPoint = mObjDownPoint.Value;
             }
 
             Clear(dc);
@@ -615,12 +616,21 @@ namespace Plotter
 
                 if ((mx.Flag & MarkPoint.X_MATCH) != 0)
                 {
+                    //DebugOut.Std.println("x match");
+
                     dc.Drawing.DrawHighlightPoint(mx.Point);
 
                     tp = dc.CadPointToUnitPoint(mx.Point);
+                    //mSnapScreenPoint.x = tp.x;
+                    //mSnapScreenPoint.z = 0;
 
-                    mSnapScreenPoint.x = tp.x;
-                    mSnapScreenPoint.z = 0;
+                    #region New snap
+                    CadVector distanceX = CrossCursor.DistanceX(tp);
+
+                    CrossCursor.Pos += distanceX;
+
+                    mSnapScreenPoint = CrossCursor.Pos;
+                    #endregion
 
                     mSnapPoint = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
@@ -631,12 +641,21 @@ namespace Plotter
 
                 if ((my.Flag & MarkPoint.Y_MATCH) != 0)
                 {
+                    //DebugOut.Std.println("y match");
+
                     dc.Drawing.DrawHighlightPoint(my.Point);
 
                     tp = dc.CadPointToUnitPoint(my.Point);
+                    //mSnapScreenPoint.y = tp.y;
+                    //mSnapScreenPoint.z = 0;
 
-                    mSnapScreenPoint.y = tp.y;
-                    mSnapScreenPoint.z = 0;
+                    #region New snap
+                    CadVector distanceY = CrossCursor.DistanceY(tp);
+
+                    CrossCursor.Pos += distanceY;
+
+                    mSnapScreenPoint = CrossCursor.Pos;
+                    #endregion
 
                     mSnapPoint = dc.UnitPointToCadPoint(mSnapScreenPoint);
 

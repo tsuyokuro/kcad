@@ -165,9 +165,18 @@ namespace Plotter
             double dx = Math.Abs(ppt.x - TargetPoint.Pos.x);
             double dy = Math.Abs(ppt.y - TargetPoint.Pos.y);
 
-            if (dx <= mRange)
+            CrossInfo cix = CadUtil.PerpendicularCrossLine(TargetPoint.Pos, TargetPoint.Pos + TargetPoint.DirX, ppt);
+            CrossInfo ciy = CadUtil.PerpendicularCrossLine(TargetPoint.Pos, TargetPoint.Pos + TargetPoint.DirY, ppt);
+
+            double nx = (ppt - ciy.CrossPoint).Norm(); // Cursor Y軸からの距離
+            double ny = (ppt - cix.CrossPoint).Norm(); // Cursor X軸からの距離
+
+            //DebugOut.Std.println(nx.ToString());
+            //DebugOut.Std.println(ny.ToString());
+
+            if (nx <= mRange)
             {
-                if (dx < xmatch.DistX || (dx == xmatch.DistX && dy < xmatch.DistY))
+                if (nx < xmatch.DistanceX || (nx == xmatch.DistanceX && ny < xmatch.DistanceY))
                 {
                     xmatch.Type = type;
                     xmatch.LayerID = layerID;
@@ -176,14 +185,14 @@ namespace Plotter
                     xmatch.Point = pt;
                     xmatch.ViewPoint = ppt;
                     xmatch.Flag |= MarkPoint.X_MATCH;
-                    xmatch.DistX = dx;
-                    xmatch.DistY = dy;
+                    xmatch.DistanceX = nx;
+                    xmatch.DistanceY = ny;
                 }
             }
 
-            if (dy <= mRange)
+            if (ny <= mRange)
             {
-                if (dy < ymatch.DistY || (dy == ymatch.DistY && dx < ymatch.DistX))
+                if (ny < ymatch.DistanceY || (ny == ymatch.DistanceY && nx < ymatch.DistanceX))
                 {
                     ymatch.Type = type;
                     ymatch.LayerID = layerID;
@@ -192,14 +201,14 @@ namespace Plotter
                     ymatch.Point = pt;
                     ymatch.ViewPoint = ppt;
                     ymatch.Flag |= MarkPoint.Y_MATCH;
-                    ymatch.DistX = dx;
-                    ymatch.DistY = dy;
+                    ymatch.DistanceX = nx;
+                    ymatch.DistanceY = ny;
                 }
             }
 
             if (dx <= mRange && dy <= mRange)
             {
-                if (dx < xymatch.DistX || dy < xymatch.DistY)
+                if (dx <= xymatch.DistanceX || dy <= xymatch.DistanceY)
                 {
                     MarkPoint t = default(MarkPoint);
 
@@ -211,8 +220,8 @@ namespace Plotter
                     t.ViewPoint = ppt;
                     t.Flag |= MarkPoint.X_MATCH;
                     t.Flag |= MarkPoint.Y_MATCH;
-                    t.DistX = dx;
-                    t.DistY = dy;
+                    t.DistanceX = dx;
+                    t.DistanceY = dy;
 
                     xymatch = t;
 

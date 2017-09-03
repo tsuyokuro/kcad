@@ -39,9 +39,9 @@ namespace Plotter
 
         public uint Flag;
 
-        public double DistX;
-        public double DistY;
-        public double DistZ;
+        public double DistanceX;
+        public double DistanceY;
+        public double DistanceZ;
 
         public void reset()
         {
@@ -50,9 +50,9 @@ namespace Plotter
             Figure = null;
             Flag = 0;
 
-            DistX = CadConst.MaxValue;
-            DistY = CadConst.MaxValue;
-            DistZ = CadConst.MaxValue;
+            DistanceX = CadConst.MaxValue;
+            DistanceY = CadConst.MaxValue;
+            DistanceZ = CadConst.MaxValue;
         }
 
         public void dump(DebugOut dout)

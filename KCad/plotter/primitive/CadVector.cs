@@ -106,6 +106,7 @@ namespace Plotter
         public static CadVector UnitY = CadVector.Create(0, 1, 0);
         public static CadVector UnitZ = CadVector.Create(0, 0, 1);
 
+        public static CadVector Invalid = CadVector.CreateInvalid();
 
         public CadVector(double x, double y, double z, Types type = Types.STD)
         {
@@ -163,6 +164,13 @@ namespace Plotter
             p.Flag = 0;
             p.Type = Types.STD;
 
+            return p;
+        }
+
+        public static CadVector CreateInvalid()
+        {
+            CadVector p = default(CadVector);
+            p.Type = Types.INVALID;
             return p;
         }
 

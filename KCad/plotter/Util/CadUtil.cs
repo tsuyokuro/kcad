@@ -803,6 +803,26 @@ namespace Plotter
             return cp;
         }
 
+        public static CadVector CrossLine2D(CadVector a1, CadVector a2, CadVector b1, CadVector b2)
+        {
+            CadVector a = (a2 - a1);
+            CadVector b = (b2 - b1);
+
+            if (a.IsZero() || b.IsZero())
+            {
+                return CadVector.Invalid;
+            }
+
+            double cpBA = CadMath.CrossProduct2D(b, a);
+
+            if (cpBA == 0)
+            {
+                return CadVector.Invalid;
+            }
+
+            return a1 + a * CadMath.CrossProduct2D(b, b1 - a1) / cpBA;
+        }
+
         public static double Angle2D(CadVector v)
         {
             return Math.Atan2(v.y, v.x);

@@ -61,6 +61,22 @@ namespace Plotter
             }
         }
 
+        public void CursorAngleX(double d)
+        {
+            double t = -CadMath.Deg2Rad(d);
+
+            Controller.CrossCursor.DirX.x = Math.Cos(t);
+            Controller.CrossCursor.DirX.y = Math.Sin(t);
+        }
+
+        public void CursorAngleY(double d)
+        {
+            double t = -CadMath.Deg2Rad(d) + Math.PI / 2;
+
+            Controller.CrossCursor.DirY.x = Math.Cos(t);
+            Controller.CrossCursor.DirY.y = Math.Sin(t);
+        }
+
         public void LayerList()
         {
             foreach (CadLayer layer in Controller.DB.LayerList)
@@ -97,7 +113,7 @@ namespace Plotter
 
             searcher.SetRangePixel(dc, range);
 
-            CadCursor cc = CadCursor.CreatePos(pixp);
+            CadCursor cc = CadCursor.Create(pixp);
 
             searcher.SetTargetPoint(cc);
             searcher.SearchAllLayer(dc, Controller.DB);
@@ -578,6 +594,20 @@ namespace Plotter
                 Controller.EndEdit();
 
                 Controller.NotifyDataChanged(true);
+            }
+            else if (s == "@test cross")
+            {
+                double ox = 10;
+                double oy = 10;
+
+                CadVector a1 = CadVector.Create(0 + ox, 0 + oy, 0);
+                CadVector a2 = CadVector.Create(10 + ox, 20 + oy, 0);
+                CadVector b1 = CadVector.Create(0 + ox, 20 + oy, 0);
+                CadVector b2 = CadVector.Create(10 + ox, 0 + ox, 0);
+
+                CadVector cv = CadUtil.CrossLine2D(a1, a2, b1, b2);
+
+                cv.dump(DebugOut.Std, "cv");
             }
             else
             {

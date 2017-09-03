@@ -433,7 +433,6 @@ namespace Plotter
         {
             DrawContextGDI tdc = new DrawContextGDI();
 
-
             tdc.SetViewSize(120, 60);
             tdc.ViewOrg = CadVector.Create(60, 30, 0);
 
@@ -443,12 +442,10 @@ namespace Plotter
 
             CadVector tp = default(CadVector);
 
-
             tp = tdc.CadPointToUnitPoint(p);
 
             CadUtil.Dump(DebugOut.Std, p, "p");
             CadUtil.Dump(DebugOut.Std, tp, "tp");
-
         }
 
         private void LoadDxfTest()
@@ -471,7 +468,6 @@ namespace Plotter
 
             InteractOut.println("Loading ...");
         }
-
 
         public void debugCommand(string s)
         {

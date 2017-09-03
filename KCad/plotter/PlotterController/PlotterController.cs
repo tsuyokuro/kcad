@@ -262,13 +262,14 @@ namespace Plotter
 
         public ScriptEnvironment ScriptEnv;
 
-        public CadCursor CrossCursor = CadCursor.CreateCross();
+        public CadCursor CrossCursor = CadCursor.Create();
 
 
         #region Constructor
         public PlotterController()
         {
             //CrossCursor.DirX = CadVector.Create(1, 1, 0).UnitVector();
+            //CrossCursor.DirY = CadVector.Create(1, -2, 0).UnitVector();
 
             CadLayer layer = mDB.NewLayer();
             mDB.LayerList.Add(layer);
