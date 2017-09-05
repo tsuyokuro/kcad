@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KCad"
         xmlns:properties="clr-namespace:KCad.Properties"
-        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:pl="clr-namespace:Plotter"
         
         mc:Ignorable="d"
@@ -441,9 +440,9 @@
                         </ListBox>
 
                     </ScrollViewer>
-                    <Grid Grid.Row="1">
+                    <Grid Grid.Row="1" Height="20">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="100*"/>
                         </Grid.ColumnDefinitions>
 
@@ -451,7 +450,7 @@
                             <Button Grid.Column="0"
                                 x:Name="RunTextCommandButton"
                                 Tag="run_text_command"
-                                Content=" Run > "
+                                Content=" Enter >"
                                 Style="{StaticResource ButtonStyle}"
                                 />
                         </Border>
