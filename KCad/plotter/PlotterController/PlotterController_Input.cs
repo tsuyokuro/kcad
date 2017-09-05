@@ -199,7 +199,7 @@ namespace Plotter
          * 指定デバイス座標について範囲内かつ最も近い図形を選択
          * 
          */
-        public void SelectWithPoint(DrawContext dc, CadVector pixp)
+        public void SelectNearest(DrawContext dc, CadVector pixp)
         {
             CadVector cp = dc.UnitPointToCadPoint(pixp);
 
@@ -339,8 +339,10 @@ namespace Plotter
 
             if (mObjDownPoint != null)
             {
-                //LastDownPoint = mObjDownPoint.Value;
-                LastDownPoint = mSnapPoint;
+                LastDownPoint = mObjDownPoint.Value;
+
+                // LastDownPointを投影面上にしたい場合は、こちら
+                //LastDownPoint = mSnapPoint;
             }
             else
             {
@@ -393,7 +395,7 @@ namespace Plotter
             switch (State)
             {
                 case States.SELECT:
-                    SelectWithPoint(dc, pixp);
+                    SelectNearest(dc, mSnapScreenPoint);
                     return;
 
                 case States.START_CREATE:
