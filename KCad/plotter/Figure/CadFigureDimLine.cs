@@ -5,6 +5,8 @@ namespace Plotter
 {
     public partial class CadFigure
     {
+        private const double ARROW_LEN = 2;
+        private const double ARROW_W = 1;
 
         //
         // 寸法線クラス
@@ -264,8 +266,8 @@ namespace Plotter
 
                 CadVector cp = CadUtil.CenterPoint(seg.P0, seg.P1);
 
-                dc.Drawing.DrawArrow(pen, cp, seg.P0, ArrowTypes.CROSS, ArrowPos.END, 4, 2);
-                dc.Drawing.DrawArrow(pen, cp, seg.P1, ArrowTypes.CROSS, ArrowPos.END, 4, 2);
+                dc.Drawing.DrawArrow(pen, cp, seg.P0, ArrowTypes.CROSS, ArrowPos.END, ARROW_LEN, ARROW_W);
+                dc.Drawing.DrawArrow(pen, cp, seg.P1, ArrowTypes.CROSS, ArrowPos.END, ARROW_LEN, ARROW_W);
             }
 
             private void DrawDim(CadFigure fig, DrawContext dc, int pen)
@@ -275,8 +277,8 @@ namespace Plotter
 
                 CadVector cp = CadUtil.CenterPoint(fig.PointList[3], fig.PointList[2]);
 
-                dc.Drawing.DrawArrow(pen, cp, fig.PointList[3], ArrowTypes.CROSS, ArrowPos.END, 4, 2);
-                dc.Drawing.DrawArrow(pen, cp, fig.PointList[2], ArrowTypes.CROSS, ArrowPos.END, 4, 2);
+                dc.Drawing.DrawArrow(pen, cp, fig.PointList[3], ArrowTypes.CROSS, ArrowPos.END, ARROW_LEN, ARROW_W);
+                dc.Drawing.DrawArrow(pen, cp, fig.PointList[2], ArrowTypes.CROSS, ArrowPos.END, ARROW_LEN, ARROW_W);
 
 
                 CadVector d = fig.PointList[2] - fig.PointList[3];
