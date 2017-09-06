@@ -39,7 +39,7 @@ namespace Plotter
 
         private CadVector mSnapScreenPoint;
 
-        private CadVector mMoveOrgScrnPoint;
+        private CadVector mMoveOrgScreenPoint;
 
         public CadVector LastDownPoint = default(CadVector);
 
@@ -48,7 +48,7 @@ namespace Plotter
 
         private CadVector mOffsetScreen = default(CadVector);
 
-        private CadVector mOffsetWorld = default(CadVector);
+        //private CadVector mOffsetWorld = default(CadVector);
 
         private Gridding mGridding = new Gridding();
 
@@ -238,9 +238,9 @@ namespace Plotter
             {
                 mObjDownPoint = mp.Point;
 
-                mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mp.Point);
+                mMoveOrgScreenPoint = dc.CadPointToUnitPoint(mp.Point);
 
-                mMoveOrgScrnPoint.z = 0;
+                mMoveOrgScreenPoint.z = 0;
 
 
                 State = States.START_DRAGING_POINTS;
@@ -316,7 +316,7 @@ namespace Plotter
 
                     mSelectedSegs.Add(mseg);
 
-                    mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mObjDownPoint.Value);
+                    mMoveOrgScreenPoint = dc.CadPointToUnitPoint(mObjDownPoint.Value);
 
                     State = States.START_DRAGING_POINTS;
 
@@ -390,7 +390,7 @@ namespace Plotter
             CadVector cp = dc.UnitPointToCadPoint(pixp);
 
             mOffsetScreen = pixp - mSnapScreenPoint;
-            mOffsetWorld = cp - mSnapPoint;
+            //mOffsetWorld = cp - mSnapPoint;
 
             switch (State)
             {
@@ -546,7 +546,7 @@ namespace Plotter
             }
 
             mOffsetScreen = default(CadVector);
-            mOffsetWorld = default(CadVector);
+            //mOffsetWorld = default(CadVector);
         }
 
         private void RUp(CadMouse pointer, DrawContext dc, int x, int y)
@@ -580,7 +580,7 @@ namespace Plotter
             double dist = CadConst.MaxValue;
 
             mSnapScreenPoint = pixp - mOffsetScreen;
-            mSnapPoint = cp - mOffsetWorld;
+            mSnapPoint = cp;// - mOffsetWorld;
 
             //mSnapScrnPoint.dump(DebugOut.Std);
 
@@ -753,7 +753,7 @@ namespace Plotter
             {
                 case States.DRAGING_POINTS:
                     {
-                        CadVector p0 = dc.UnitPointToCadPoint(mMoveOrgScrnPoint);
+                        CadVector p0 = dc.UnitPointToCadPoint(mMoveOrgScreenPoint);
                         CadVector p1 = dc.UnitPointToCadPoint(mSnapScreenPoint);
 
                         CadVector delta = p1 - p0;
