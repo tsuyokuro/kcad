@@ -440,9 +440,9 @@
                         </ListBox>
 
                     </ScrollViewer>
-                    <Grid Grid.Row="1" Height="20">
+                    <Grid Grid.Row="1" Height="auto">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="100*"/>
                         </Grid.ColumnDefinitions>
 
@@ -450,7 +450,8 @@
                             <Button Grid.Column="0"
                                 x:Name="RunTextCommandButton"
                                 Tag="run_text_command"
-                                Content=" Enter >"
+                                Content=" Enter > "
+                                Padding="2,2,2,2"
                                 Style="{StaticResource ButtonStyle}"
                                 />
                         </Border>
@@ -459,6 +460,7 @@
                             Grid.Column="1"
                             x:Name="textCommand"
                             BorderThickness="1,1,1,1"
+                            Padding="2,2,2,2"
                             BorderBrush="{StaticResource BoarderColor}"
                             Foreground="{StaticResource TextColor}"
                             Background="{StaticResource BGColor}"

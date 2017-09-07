@@ -78,7 +78,10 @@ namespace KCad
 
             CandidateListBox.PreviewLostKeyboardFocus += CandidateListBox_PreviewLostKeyboardFocus;
 
-            Application.Current.MainWindow.Deactivated += MainWindow_Deactivated;
+            if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            {
+                Application.Current.MainWindow.Deactivated += MainWindow_Deactivated;
+            }
         }
 
         private void MainWindow_Deactivated(object sender, EventArgs e)
