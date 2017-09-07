@@ -677,18 +677,18 @@ namespace Plotter
                 // Search segment
                 mSegSearcher.Clean();
                 mSegSearcher.SetRangePixel(dc, LineSnapRange);
-                mSegSearcher.SearchAllLayer(dc, pixp, mDB);
+                mSegSearcher.SearchAllLayer(dc, mSnapScreenPoint, mDB);
 
-                MarkSeg seg = mSegSearcher.GetMatch();
+                MarkSeg markSeg = mSegSearcher.GetMatch();
 
-                if (seg.FigureID != 0)
+                if (markSeg.FigureID != 0)
                 {
-                    if (seg.Distance < dist)
+                    if (markSeg.Distance < dist)
                     {
-                        CadFigure fig = mDB.GetFigure(seg.FigureID);
-                        fig.DrawSeg(dc, DrawTools.PEN_MATCH_SEG, seg.PtIndexA, seg.PtIndexB);
+                        CadFigure fig = mDB.GetFigure(markSeg.FigureID);
+                        fig.DrawSeg(dc, DrawTools.PEN_MATCH_SEG, markSeg.PtIndexA, markSeg.PtIndexB);
 
-                        CadVector center = seg.CenterPoint;
+                        CadVector center = markSeg.CenterPoint;
 
                         CadVector t = dc.CadPointToUnitPoint(center);
 
@@ -702,8 +702,8 @@ namespace Plotter
                         }
                         else
                         {
-                            mSnapPoint = seg.CrossPoint;
-                            mSnapScreenPoint = seg.CrossViewPoint;
+                            mSnapPoint = markSeg.CrossPoint;
+                            mSnapScreenPoint = markSeg.CrossViewPoint;
                             mSnapScreenPoint.z = 0;
                         }
 
