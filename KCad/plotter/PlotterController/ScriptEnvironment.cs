@@ -488,23 +488,31 @@ namespace Plotter
 
         public dynamic ExecPartial(string fname)
         {
-            Assembly myAssembly = Assembly.GetEntryAssembly();
+            try
+            {
+                Assembly myAssembly = Assembly.GetEntryAssembly();
 
-            string str = "";
+                string str = "";
 
-            string path = myAssembly.Location;
+                string path = myAssembly.Location;
 
-            path = Path.GetDirectoryName(path) + @"\script\" + fname;
+                path = Path.GetDirectoryName(path) + @"\script\" + fname;
 
 
-            StreamReader sr = new StreamReader(
-                    path, Encoding.GetEncoding("Shift_JIS"));
+                StreamReader sr = new StreamReader(
+                        path, Encoding.GetEncoding("Shift_JIS"));
 
-            str = sr.ReadToEnd();
+                str = sr.ReadToEnd();
 
-            sr.Close();
+                sr.Close();
 
-            return Engine.Execute(str, Scope);
+                return Engine.Execute(str, Scope);
+            }
+            catch (Exception e)
+            {
+                Controller.InteractOut.println("error: " + e.Message);
+                return null;
+            }
         }
 
         public CadVector NewPoint()
@@ -558,56 +566,12 @@ namespace Plotter
 
         private void SimpleCommand(string s)
         {
-            if (s == "@clear")
+            if (s == "@clear" || s == "@cls")
             {
                 Controller.InteractOut.clear();
             }
-            else if (s == "@test angle")
+            else if (s == "@test")
             {
-                CadFigure fig = GetTargetFigure();
-
-                if (fig == null) return;
-
-                if (fig.PointCount < 2) return;
-
-                CadVector d = Controller.CurrentDC.CadPointToUnitPoint(fig.PointList[1])
-                    - Controller.CurrentDC.CadPointToUnitPoint(fig.PointList[0]);
-
-                d.y *= -1;
-
-                double rad = CadUtil.Angle2D(d);
-
-                double deg = CadMath.Rad2Deg(rad);
-
-                Controller.InteractOut.println("angle=" + deg.ToString());
-            }
-
-            else if (s == "@test rote")
-            {
-                Controller.StartEdit();
-
-                CadVector p0 = CadVector.Create(10, 10, 0);
-                CadVector v = CadVector.Create(0, 0, 1.0);
-
-                Controller.RotateSelectedFigure(p0, v, CadMath.Deg2Rad(30));
-
-                Controller.EndEdit();
-
-                Controller.NotifyDataChanged(true);
-            }
-            else if (s == "@test cross")
-            {
-                double ox = 10;
-                double oy = 10;
-
-                CadVector a1 = CadVector.Create(0 + ox, 0 + oy, 0);
-                CadVector a2 = CadVector.Create(10 + ox, 20 + oy, 0);
-                CadVector b1 = CadVector.Create(0 + ox, 20 + oy, 0);
-                CadVector b2 = CadVector.Create(10 + ox, 0 + ox, 0);
-
-                CadVector cv = CadUtil.CrossLine2D(a1, a2, b1, b2);
-
-                cv.dump(DebugOut.Std, "cv");
             }
             else
             {

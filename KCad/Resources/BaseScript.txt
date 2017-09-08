@@ -64,7 +64,7 @@ def line(x, y, z):
 def selFig(id):
     SE.SelectFigure(id)
 
-def execPartial(fname):
+def execScript(fname):
     return SE.ExecPartial(fname)
 
 def scale(ratio):
