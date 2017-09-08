@@ -276,7 +276,10 @@ namespace Plotter
             {
                 mSegSearcher.Clean();
                 mSegSearcher.SetRangePixel(dc, LineSnapRange);
-                mSegSearcher.SearchAllLayer(dc, pixp, mDB);
+                mSegSearcher.SetTargetPoint(cc);
+
+                mSegSearcher.SearchAllLayer(dc, mDB);
+
                 MarkSeg mseg = mSegSearcher.GetMatch();
 
                 CadLayer layer = mDB.GetLayer(mseg.LayerID);
@@ -555,8 +558,6 @@ namespace Plotter
 
         private void MovePointer(CadMouse pointer, DrawContext dc, int x, int y)
         {
-            //Log.d("Move");
-
             if ((Control.MouseButtons & MouseButtons.Middle) != 0)
             {
                 MDrag(pointer, dc, x, y);
@@ -580,7 +581,9 @@ namespace Plotter
             double dist = CadConst.MaxValue;
 
             mSnapScreenPoint = pixp - mOffsetScreen;
-            mSnapPoint = cp;// - mOffsetWorld;
+            mSnapPoint = cp;
+
+            CrossCursor.Pos = mSnapScreenPoint;
 
             //mSnapScrnPoint.dump(DebugOut.Std);
 
@@ -590,8 +593,6 @@ namespace Plotter
             {
                 mPointSearcher.CleanMatches();
                 mPointSearcher.SetRangePixel(dc, PointSnapRange);
-
-                CrossCursor.Pos = pixp;
 
                 mPointSearcher.SetTargetPoint(CrossCursor);
 
@@ -608,7 +609,6 @@ namespace Plotter
                     mPointSearcher.Check(dc, MeasureFigure.PointList);
                 }
 
-
                 // Search point
                 mPointSearcher.SearchAllLayer(dc, mDB);
 
@@ -618,13 +618,9 @@ namespace Plotter
 
                 if ((mx.Flag & MarkPoint.X_MATCH) != 0)
                 {
-                    //DebugOut.Std.println("x match");
-
                     dc.Drawing.DrawHighlightPoint(mx.Point);
 
                     tp = dc.CadPointToUnitPoint(mx.Point);
-                    //mSnapScreenPoint.x = tp.x;
-                    //mSnapScreenPoint.z = 0;
 
                     #region New snap
                     CadVector distanceX = CrossCursor.DistanceX(tp);
@@ -643,13 +639,9 @@ namespace Plotter
 
                 if ((my.Flag & MarkPoint.Y_MATCH) != 0)
                 {
-                    //DebugOut.Std.println("y match");
-
                     dc.Drawing.DrawHighlightPoint(my.Point);
 
                     tp = dc.CadPointToUnitPoint(my.Point);
-                    //mSnapScreenPoint.y = tp.y;
-                    //mSnapScreenPoint.z = 0;
 
                     #region New snap
                     CadVector distanceY = CrossCursor.DistanceY(tp);
@@ -677,7 +669,10 @@ namespace Plotter
                 // Search segment
                 mSegSearcher.Clean();
                 mSegSearcher.SetRangePixel(dc, LineSnapRange);
-                mSegSearcher.SearchAllLayer(dc, mSnapScreenPoint, mDB);
+
+                mSegSearcher.SetTargetPoint(CrossCursor);
+
+                mSegSearcher.SearchAllLayer(dc, mDB);
 
                 MarkSeg markSeg = mSegSearcher.GetMatch();
 
@@ -706,7 +701,6 @@ namespace Plotter
                             mSnapScreenPoint = markSeg.CrossViewPoint;
                             mSnapScreenPoint.z = 0;
                         }
-
 
                         segmatch = true;
 

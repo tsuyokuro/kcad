@@ -8,7 +8,7 @@ namespace Plotter
     {
         private MarkSeg seg;
 
-        private CadVector TargetPoint;
+        private CadCursor TargetPoint;
         private double mRange;
         private double minDist = 0;
 
@@ -27,7 +27,7 @@ namespace Plotter
             seg = default(MarkSeg);
         }
 
-        public void SetTargetPoint(CadVector p)
+        public void SetTargetPoint(CadCursor p)
         {
             TargetPoint = p;
         }
@@ -47,12 +47,6 @@ namespace Plotter
             return seg;
         }
 
-        public void SearchAllLayer(DrawContext dc, CadVector p, CadObjectDB db)
-        {
-            TargetPoint = p;
-            SearchAllLayer(dc, db);
-        }
-
         public void SearchAllLayer(DrawContext dc, CadObjectDB db)
         {
             Search(dc, db, db.CurrentLayer);
@@ -66,12 +60,6 @@ namespace Plotter
 
                 Search(dc, db, layer);
             }
-        }
-
-        public void Search(DrawContext dc, CadVector p, CadObjectDB db, CadLayer layer)
-        {
-            TargetPoint = p;
-            Search(dc, db, layer);
         }
 
         public void Search(DrawContext dc, CadObjectDB db, CadLayer layer)
@@ -110,14 +98,14 @@ namespace Plotter
             CadVector pa = dc.CadPointToUnitPoint(a);
             CadVector pb = dc.CadPointToUnitPoint(b);
 
-            CrossInfo ret = CadUtil.PerpendicularCrossSeg2D(pa, pb, TargetPoint);
+            CrossInfo ret = CadUtil.PerpendicularCrossSeg2D(pa, pb, TargetPoint.Pos);
 
             if (!ret.IsCross)
             {
                 return;
             }
 
-            CadVector d = ret.CrossPoint - TargetPoint;
+            CadVector d = ret.CrossPoint - TargetPoint.Pos;
 
             double dist = d.Norm();
 
@@ -129,7 +117,7 @@ namespace Plotter
 
             if (dist < minDist)
             {
-                CadVector tp = dc.UnitPointToCadPoint(TargetPoint);
+                CadVector tp = dc.UnitPointToCadPoint(TargetPoint.Pos);
                 CrossInfo ret3d = CadUtil.PerpendicularCrossLine(a, b, tp);
 
                 seg.LayerID = layerID;
@@ -173,10 +161,10 @@ namespace Plotter
             CadVector pb = dc.CadPointToUnitPoint(b);
 
             double r = CadUtil.segNorm2D(pa, pc);
-            double tr = CadUtil.segNorm2D(TargetPoint, pc);
+            double tr = CadUtil.segNorm2D(TargetPoint.Pos, pc);
 
-            double pad = CadUtil.segNorm2D(TargetPoint, pa);
-            double pbd = CadUtil.segNorm2D(TargetPoint, pb);
+            double pad = CadUtil.segNorm2D(TargetPoint.Pos, pa);
+            double pbd = CadUtil.segNorm2D(TargetPoint.Pos, pb);
 
             int idxB = 1;
 
@@ -195,7 +183,7 @@ namespace Plotter
 
             if (dist < minDist)
             {
-                CadVector tp = dc.UnitPointToCadPoint(TargetPoint);
+                CadVector tp = dc.UnitPointToCadPoint(TargetPoint.Pos);
                 r = CadUtil.segNorm(a, c);
                 tr = CadUtil.segNorm(tp, c);
 
