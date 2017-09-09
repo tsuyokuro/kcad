@@ -83,6 +83,7 @@ namespace Plotter
             }
         }
 
+        /*
         private void CheckSeg(DrawContext dc, uint layerID, CadFigure fig, int idxA, int idxB, CadVector a, CadVector b)
         {
             if (fig != null && IsIgnore(fig.ID, idxA))
@@ -126,6 +127,95 @@ namespace Plotter
                 seg.PtIndexB = idxB;
                 seg.CrossPoint = ret3d.CrossPoint;
                 seg.CrossViewPoint = ret.CrossPoint;
+                seg.Distance = dist;
+
+                seg.pA = a;
+                seg.pB = b;
+
+                minDist = dist;
+            }
+        }
+        */
+
+        private void CheckSeg(DrawContext dc, uint layerID, CadFigure fig, int idxA, int idxB, CadVector a, CadVector b)
+        {
+            if (fig != null && IsIgnore(fig.ID, idxA))
+            {
+                return;
+            }
+
+            if (fig != null && IsIgnore(fig.ID, idxB))
+            {
+                return;
+            }
+
+            CadVector pa = dc.CadPointToUnitPoint(a);
+            CadVector pb = dc.CadPointToUnitPoint(b);
+
+            // X軸交点
+            CadVector cx = CadUtil.CrossSegLine2D(pa, pb, TargetPoint.Pos, TargetPoint.Pos + TargetPoint.DirX);
+
+            // Y軸交点
+            CadVector cy = CadUtil.CrossSegLine2D(pa, pb, TargetPoint.Pos, TargetPoint.Pos + TargetPoint.DirY);
+
+            if (!cx.Valid && !cy.Valid)
+            {
+                return;
+            }
+
+            CadVector p = CadVector.Invalid;
+            CadVector dv = CadVector.Invalid;
+            double mind = Double.MaxValue;
+            CadVector[] vtbl = new CadVector[] { cx, cy };
+
+            foreach (CadVector v in vtbl)
+            {
+                if (!v.Valid)
+                {
+                    continue;
+                }
+
+                CadVector tdv = v - TargetPoint.Pos;
+
+                double td = dv.Norm();
+
+                if (td < mind)
+                {
+                    mind = td;
+                    p = v;
+                    dv = tdv;
+                }
+            }
+
+            if (!p.Valid)
+            {
+                return;
+            }
+
+            double dist = dv.Norm();
+
+            if (dist > mRange)
+            {
+                return;
+            }
+
+            if (dist < minDist)
+            {
+                CadVector sv = b - a;
+
+                double cd = (p - pa).Norm();
+                double sd = (pb - pa).Norm();
+
+                double f = cd / sd;
+
+                CadVector cp = (b - a) * f + a;
+
+                seg.LayerID = layerID;
+                seg.Figure = fig;
+                seg.PtIndexA = idxA;
+                seg.PtIndexB = idxB;
+                seg.CrossPoint = cp;
+                seg.CrossViewPoint = p;
                 seg.Distance = dist;
 
                 seg.pA = a;

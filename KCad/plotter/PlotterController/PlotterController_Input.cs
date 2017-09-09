@@ -129,7 +129,7 @@ namespace Plotter
         }
 
         #region "Clear selection control"
-        private bool isSelected(MarkPoint mp)
+        private bool IsSelected(MarkPoint mp)
         {
             if (SelectMode == SelectModes.POINT)
             {
@@ -143,7 +143,7 @@ namespace Plotter
             return false;
         }
 
-        private bool isSelectedSeg(MarkSeg ms)
+        private bool IsSelectedSeg(MarkSeg ms)
         {
             if (SelectMode == SelectModes.POINT)
             {
@@ -157,22 +157,22 @@ namespace Plotter
             return false;
         }
 
-        private void clearSelListConditional(MarkPoint newSel)
+        private void ClearSelListConditional(MarkPoint newSel)
         {
             if (!CadKeyboard.IsCtrlKeyDown())
             {
-                if (!isSelected(newSel))
+                if (!IsSelected(newSel))
                 {
                     ClearSelection();
                 }
             }
         }
 
-        private void clearSelListConditional(MarkSeg newSel)
+        private void ClearSelListConditional(MarkSeg newSel)
         {
             if (!CadKeyboard.IsCtrlKeyDown())
             {
-                if (!isSelectedSeg(newSel))
+                if (!IsSelectedSeg(newSel))
                 {
                     ClearSelection();
                 }
@@ -250,7 +250,7 @@ namespace Plotter
 
                 if (!layer.Locked)
                 {
-                    clearSelListConditional(mp);
+                    ClearSelListConditional(mp);
 
                     if (SelectMode == SelectModes.POINT)
                     {
@@ -303,7 +303,7 @@ namespace Plotter
 
                     CadFigure fig = mDB.GetFigure(mseg.FigureID);
 
-                    clearSelListConditional(mseg);
+                    ClearSelListConditional(mseg);
 
                     if (SelectMode == SelectModes.POINT)
                     {

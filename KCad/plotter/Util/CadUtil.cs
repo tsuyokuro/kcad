@@ -823,6 +823,41 @@ namespace Plotter
             return a1 + a * CadMath.CrossProduct2D(b, b1 - a1) / cpBA;
         }
 
+        // 線分と直線の交点
+        public static CadVector CrossSegLine2D(CadVector segp1, CadVector segp2, CadVector lp1, CadVector lp2)
+        {
+            CadVector p = CrossLine2D(segp1, segp2, lp1, lp2);
+
+            if (!p.Valid)
+            {
+                return p;
+            }
+
+            CadVector segv = segp2 - segp1;
+            CadVector pv = p - segp1;
+
+            double ip = CadMath.InnerProduct(segv, pv);
+
+            if (ip < 0)
+            {
+                p.Valid = false;
+                return p;
+            }
+
+            double sd = (segp2 - segp1).Norm();
+
+            double pd = (p - segp1).Norm();
+
+            if (pd > sd)
+            {
+                p.Valid = false;
+                return p;
+            }
+
+            p.Valid = true;
+            return p;
+        }
+
         public static double Angle2D(CadVector v)
         {
             return Math.Atan2(v.y, v.x);
