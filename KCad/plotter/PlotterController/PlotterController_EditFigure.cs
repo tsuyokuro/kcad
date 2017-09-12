@@ -29,7 +29,7 @@ namespace Plotter
 
             CadFigure fig = mDB.GetFigure(seg.FigureID);
 
-            int num = CadVectorUtil.InitBezier(fig, seg.PtIndexA, seg.PtIndexB);
+            int num = CadUtil.InitBezier(fig, seg.PtIndexA, seg.PtIndexB);
 
             if (num > 0)
             {

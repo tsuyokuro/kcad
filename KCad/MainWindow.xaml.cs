@@ -46,7 +46,7 @@ namespace KCad
 
             ViewModel.LayerListView = LayerListView;
 
-            PreviewKeyDown += ViewModel.perviewKeyDown;
+            PreviewKeyDown += ViewModel.PerviewKeyDown;
 
             KeyDown += onKeyDown;
             KeyUp += onKeyUp;

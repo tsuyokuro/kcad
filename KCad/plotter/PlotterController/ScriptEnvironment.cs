@@ -572,6 +572,21 @@ namespace Plotter
             }
             else if (s == "@test")
             {
+                CadVector v = default(CadVector);
+
+                bool b;
+
+                b = v.Valid;
+
+                v.Valid = false;
+
+                b = v.Valid;
+
+                v.Selected = true;
+
+                v.Valid = true;
+
+                v.Selected = false;
             }
             else
             {

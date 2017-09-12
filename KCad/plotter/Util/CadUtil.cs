@@ -144,6 +144,34 @@ namespace Plotter
             return d;
         }
 
+        public static int InitBezier(CadFigure fig, int idx1, int idx2)
+        {
+            if (idx1 > idx2)
+            {
+                int t = idx1;
+                idx1 = idx2;
+                idx2 = t;
+            }
+
+            CadVector a = fig.GetPointAt(idx1);
+            CadVector b = fig.GetPointAt(idx2);
+
+            CadVector hp1 = b - a;
+            hp1 = hp1 / 3;
+            hp1 = hp1 + a;
+
+            CadVector hp2 = a - b;
+            hp2 = hp2 / 3;
+            hp2 = hp2 + b;
+
+            hp1.Type = CadVector.Types.HANDLE;
+            hp2.Type = CadVector.Types.HANDLE;
+
+            fig.InsertPointAt(idx1 + 1, hp1);
+            fig.InsertPointAt(idx1 + 2, hp2);
+
+            return 2;
+        }
 
         public static void BezierPoints(
             CadVector p0, CadVector p1, CadVector p2, int s, List<CadVector> ret)

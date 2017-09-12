@@ -8,11 +8,10 @@ using System.Collections.Generic;
 namespace Plotter
 {
     [Serializable]
-    public struct CadVector
+    public struct CadVector : IEquatable<CadVector>
     {
         public enum Types : byte
         {
-            INVALID = 0xff,
             STD = 0,
             BREAK = 1,
             HANDLE = 2,
@@ -20,7 +19,8 @@ namespace Plotter
 
         private static class Flags
         {
-            public static byte SELECTED = 0x0001;
+            public static byte INVALID = 0x80;
+            public static byte SELECTED = 0x01;
         }
 
         public Types Type { get; set; }
@@ -86,17 +86,17 @@ namespace Plotter
             {
                 if (value)
                 {
-                    Type = Types.STD;
+                    Flag = (byte)(Flag & ~Flags.INVALID);
                 }
                 else
                 {
-                    Type = Types.INVALID;
+                    Flag = (byte)(Flag | Flags.INVALID);
                 }
             }
 
             get
             {
-                return Type != Types.INVALID;
+                return (Flag & Flags.INVALID) == 0;
             }
         }
 
@@ -170,7 +170,7 @@ namespace Plotter
         public static CadVector CreateInvalid()
         {
             CadVector p = default(CadVector);
-            p.Type = Types.INVALID;
+            p.Valid = false;
             return p;
         }
 
@@ -374,37 +374,15 @@ namespace Plotter
             dout.Indent--;
             dout.println("}");
         }
-    }
 
-    class CadVectorUtil
-    {
-        public static int InitBezier(CadFigure fig, int idx1, int idx2)
+        public bool Equals(CadVector v)
         {
-            if (idx1 > idx2)
-            {
-                int t = idx1;
-                idx1 = idx2;
-                idx2 = t;
-            }
+            return x == v.x & y == v.y & z == v.z & Type == v.Type & Flag == v.Flag;
+        }
 
-            CadVector a = fig.GetPointAt(idx1);
-            CadVector b = fig.GetPointAt(idx2);
-
-            CadVector hp1 = b - a;
-            hp1 = hp1 / 3;
-            hp1 = hp1 + a;
-
-            CadVector hp2 = a - b;
-            hp2 = hp2 / 3;
-            hp2 = hp2 + b;
-
-            hp1.Type = CadVector.Types.HANDLE;
-            hp2.Type = CadVector.Types.HANDLE;
-
-            fig.InsertPointAt(idx1 + 1, hp1);
-            fig.InsertPointAt(idx1 + 2, hp2);
-
-            return 2;
+        public override int GetHashCode()
+        {
+            return (int)Type ^ (int)x ^ (int)y ^ (int)z ^ (int)Flag;
         }
     }
 }

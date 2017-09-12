@@ -37,11 +37,11 @@ namespace Plotter
 
         public void Clear()
         {
-            XMatchU.Type = CadVector.Types.INVALID;
-            YMatchU.Type = CadVector.Types.INVALID;
+            XMatchU.Valid = false;
+            YMatchU.Valid = false;
 
-            XMatchW.Type = CadVector.Types.INVALID;
-            YMatchW.Type = CadVector.Types.INVALID;
+            XMatchW.Valid = false;
+            YMatchW.Valid = false;
         }
 
 

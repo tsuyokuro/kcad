@@ -437,6 +437,7 @@ namespace Plotter
                 { "ctrl+a", SelectAll },
                 { "escape", Cancel },
                 { "ctrl+p", InsPoint },
+                { "ctrl+oemplus", SearchNearestPoint },
             };
         }
 
@@ -665,6 +666,12 @@ namespace Plotter
             RedrawAll();
         }
 
+        public void SearchNearestPoint()
+        {
+            mController.SearchNearestPoint();
+            RedrawAll();
+        }
+
         #endregion
 
 
@@ -777,7 +784,7 @@ namespace Plotter
 
         // Keyboard handling
         #region Keyboard handling
-        public void perviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        public void PerviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
 
         }

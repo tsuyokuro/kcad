@@ -1035,5 +1035,10 @@ namespace Plotter
                 fig.SetPointAt(i, p);
             }
         }
+
+        public void SearchNearestPoint()
+        {
+
+        }
     }
 }
