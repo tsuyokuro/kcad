@@ -645,7 +645,12 @@ namespace Plotter
             return ret;
         }
 
-        // a b の中点を求める
+        /// <summary>
+        /// a b の中点を求める
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static CadVector CenterPoint(CadVector a, CadVector b)
         {
             CadVector c = b - a;
@@ -655,7 +660,13 @@ namespace Plotter
             return c;
         }
 
-        // a b を通る直線上で a からの距離がlenの座標を求める
+        /// <summary>
+        /// a b を通る直線上で a からの距離がlenの座標を求める
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="len"></param>
+        /// <returns></returns>
         public static CadVector LinePoint(CadVector a, CadVector b, double len)
         {
             CadVector v = b - a;
@@ -782,10 +793,15 @@ namespace Plotter
             return rect;
         }
 
-        // aに最も近い平面上の点を求める
-        // a: チェック対象
-        // p: 平面上の任意の点
-        // normal: 平面の法線
+        /// <summary>
+        /// 点aに最も近い平面上の点を求める
+        /// </summary>
+        /// <param name="a">点</param>
+        /// <param name="p">平面上の点</param>
+        /// <param name="normal">平面の法線</param>
+        /// <returns>
+        /// 点aに最も近い平面上の点
+        /// </returns>
         public static CadVector CrossPlane(CadVector a, CadVector p, CadVector normal)
         {
             CadVector pa = a - p;
@@ -803,9 +819,15 @@ namespace Plotter
             return cp;
         }
 
-        //
-        // 直線 a b と p と normalが示す平面との交点を求める
-        //
+        /// <summary>
+        /// 直線 a b と p と normalが示す平面との交点を求める
+        /// </summary>
+        /// <param name="a">直線上の点</param>
+        /// <param name="b">直線上の点</param>
+        /// <param name="p">平面上の点</param>
+        /// <param name="normal">平面の法線</param>
+        /// <returns>交点</returns>
+        /// 
         public static CadVector CrossPlane(CadVector a, CadVector b, CadVector p, CadVector normal)
         {
             CadVector cp = default(CadVector);
@@ -831,6 +853,15 @@ namespace Plotter
             return cp;
         }
 
+        /// <summary>
+        /// 直線Aと直線Bの交点を求める
+        /// </summary>
+        /// <param name="a1">直線A上の点1</param>
+        /// <param name="a2">直線A上の点2</param>
+        /// <param name="b1">直線B上の点1</param>
+        /// <param name="b2">直線B上の点2</param>
+        /// <returns></returns>
+        /// 
         public static CadVector CrossLine2D(CadVector a1, CadVector a2, CadVector b1, CadVector b2)
         {
             CadVector a = (a2 - a1);
@@ -851,7 +882,15 @@ namespace Plotter
             return a1 + a * CadMath.CrossProduct2D(b, b1 - a1) / cpBA;
         }
 
-        // 線分と直線の交点
+        /// <summary>
+        /// 線分と直線の交点
+        /// </summary>
+        /// <param name="segp1">線分</param>
+        /// <param name="segp2">線分</param>
+        /// <param name="lp1">直線上の点</param>
+        /// <param name="lp2">直線上の点</param>
+        /// <returns></returns>
+        /// 
         public static CadVector CrossSegLine2D(CadVector segp1, CadVector segp2, CadVector lp1, CadVector lp2)
         {
             CadVector p = CrossLine2D(segp1, segp2, lp1, lp2);
@@ -884,6 +923,66 @@ namespace Plotter
 
             p.Valid = true;
             return p;
+        }
+
+        /// <summary>
+        /// 線分同士の交点が存在するかチェックする
+        /// </summary>
+        /// <param name="p1">線分A</param>
+        /// <param name="p2">線分A</param>
+        /// <param name="p3">線分B</param>
+        /// <param name="p4">線分B</param>
+        /// <returns>
+        /// 交点が存在す場合は、true
+        /// 存在しない場合は、false
+        /// また、同一線上にある場合は、false (交点が無限に存在する)
+        /// </returns>
+        /// 
+        public static bool CheckCrossSegSeg2D(CadVector p1, CadVector p2, CadVector p3, CadVector p4)
+        {
+            if (p1.x >= p2.x)
+            {
+                if ((p1.x < p3.x && p1.x < p4.x) || (p2.x > p3.x && p2.x > p4.x))
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if((p2.x < p3.x && p2.x < p4.x) || (p1.x > p3.x && p1.x > p4.x))
+                {
+                    return false;
+                }
+            }
+
+            if (p1.y >= p2.y)
+            {
+                if ((p1.y < p3.y && p1.y < p4.y) || (p2.y > p3.y && p2.y > p4.y))
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if ((p2.y < p3.y && p2.y < p4.y) || (p1.y > p3.y && p1.y > p4.y))
+                {
+                    return false;
+                }
+            }
+
+            if (((p1.x - p2.x) * (p3.y - p1.y) + (p1.y - p2.y) * (p1.x - p3.x)) *
+                ((p1.x - p2.x) * (p4.y - p1.y) + (p1.y - p2.y) * (p1.x - p4.x)) > 0)
+            {
+                return false;
+            }
+
+            if (((p3.x - p4.x) * (p1.y - p3.y) + (p3.y - p4.y) * (p3.x - p1.x)) *
+                ((p3.x - p4.x) * (p2.y - p3.y) + (p3.y - p4.y) * (p3.x - p2.x)) > 0)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public static double Angle2D(CadVector v)

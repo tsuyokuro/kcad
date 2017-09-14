@@ -563,6 +563,29 @@ namespace Plotter
             return Controller.DB.GetFigure(idlist[0]);
         }
 
+        private void test()
+        {
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+            
+            if (idlist.Count < 2)
+            {
+                return;
+            }
+
+            CadFigure fig0 = Controller.DB.GetFigure(idlist[0]);
+            CadFigure fig1 = Controller.DB.GetFigure(idlist[1]);
+
+            if (fig0.PointCount < 2) return;
+            if (fig1.PointCount < 2) return;
+
+
+            bool ret = CadUtil.CheckCrossSegSeg2D(
+                                fig0.PointList[0], fig0.PointList[1],
+                                fig1.PointList[0], fig1.PointList[1]
+                                );
+
+            DebugOut.Std.println("CheckCrossSegSeg2D ret=" + ret.ToString());
+        }
 
         private void SimpleCommand(string s)
         {
@@ -572,21 +595,7 @@ namespace Plotter
             }
             else if (s == "@test")
             {
-                CadVector v = default(CadVector);
-
-                bool b;
-
-                b = v.Valid;
-
-                v.Valid = false;
-
-                b = v.Valid;
-
-                v.Selected = true;
-
-                v.Valid = true;
-
-                v.Selected = false;
+                test();
             }
             else
             {

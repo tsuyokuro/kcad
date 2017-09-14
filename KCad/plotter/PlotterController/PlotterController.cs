@@ -1041,4 +1041,18 @@ namespace Plotter
 
         }
     }
+
+    public class SpPointSearcher
+    {
+        List<CadVector> CrossList;
+
+        List<MarkPoint> PointList;
+
+        List<MarkSeg> SegList;
+
+        public CadVector TargetPoint;
+
+        public double Range;
+
+    }
 }
