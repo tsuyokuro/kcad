@@ -234,9 +234,9 @@ namespace Plotter
                     continue;
                 }
 
-                if (fig.Closed != isLoop)
+                if (fig.IsLoop != isLoop)
                 {
-                    fig.Closed = isLoop;
+                    fig.IsLoop = isLoop;
 
                     if (isLoop)
                     {

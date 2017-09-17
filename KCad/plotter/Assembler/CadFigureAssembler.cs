@@ -106,7 +106,7 @@ namespace Plotter
 
                 CadFigure nfig = null;
 
-                if (f.Closed)
+                if (f.IsLoop)
                 {
                     if (num >= 1)
                     {
@@ -225,7 +225,7 @@ namespace Plotter
             fb.AddPoint(ci.CrossPoint);
             fb.AddPoints(org.PointList, b);
 
-            if (org.Closed)
+            if (org.IsLoop)
             {
                 fb.AddPoint(fa.GetPointAt(0));
             }

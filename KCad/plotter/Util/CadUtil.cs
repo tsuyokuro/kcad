@@ -985,6 +985,28 @@ namespace Plotter
             return true;
         }
 
+        /// <summary>
+        /// 点が矩形内あるかチェック
+        /// </summary>
+        /// <param name="minp">矩形の最小頂点</param>
+        /// <param name="maxp">矩形の最大頂点</param>
+        /// <param name="p">検査対象点</param>
+        /// <returns>
+        /// true:  点は矩形内
+        /// false: 点は矩形外
+        /// </returns>
+        /// 
+        public static bool IsInRect2D(CadVector minp, CadVector maxp, CadVector p)
+        {
+            if (p.x < minp.x) return false;
+            if (p.x > maxp.x) return false;
+
+            if (p.y < minp.y) return false;
+            if (p.y > maxp.y) return false;
+
+            return true;
+        }
+
         public static double Angle2D(CadVector v)
         {
             return Math.Atan2(v.y, v.x);

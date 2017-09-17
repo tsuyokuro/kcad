@@ -115,7 +115,7 @@ namespace Plotter
                     if (ep.VectorEquals(sp))
                     {
                         ri.Figure.RemovePointAt(ri.Figure.PointList.Count - 1);
-                        ri.Figure.Closed = true;
+                        ri.Figure.IsLoop = true;
                     }
                 }
             }

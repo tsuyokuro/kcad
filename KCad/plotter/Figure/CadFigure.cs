@@ -55,7 +55,7 @@ namespace Plotter
             }
         }
 
-        public bool Closed { get; set; }
+        public bool IsLoop { get; set; }
 
         public CadVector Normal;
 
@@ -128,14 +128,14 @@ namespace Plotter
         public CadFigure()
         {
             ID = 0;
-            Closed = false;
+            IsLoop = false;
             Type = Types.NONE;
         }
 
         public CadFigure(Types type)
         {
             ID = 0;
-            Closed = false;
+            IsLoop = false;
             Type = type;
         }
 
@@ -440,7 +440,7 @@ namespace Plotter
 
             jo.Add("id", ID);
             jo.Add("type", (byte)Type);
-            jo.Add("closed", Closed);
+            jo.Add("closed", IsLoop);
             jo.Add("locked", Locked);
             jo.Add("normal", Normal.ToJson());
 
@@ -452,7 +452,7 @@ namespace Plotter
         {
             ID = (uint)jo["id"];
             Type = (Types)(byte)jo["type"];
-            Closed = (bool)jo["closed"];
+            IsLoop = (bool)jo["closed"];
             Locked = (bool)jo["locked"];
 
             Normal.FromJson((JObject)jo["normal"]);
@@ -645,6 +645,16 @@ namespace Plotter
         public void RecalcNormal()
         {
 
+        }
+
+        public CadSegment GetSegmentAt(int n)
+        {
+            return Behavior.GetSegmentAt(this, n);
+        }
+
+        public int SegmentCount()
+        {
+            return Behavior.SegmentCount(this);
         }
 
         #endregion

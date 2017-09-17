@@ -31,6 +31,7 @@ namespace Plotter
         public enum States
         {
             SELECT,
+            RUBBER_BAND_SELECT,
             START_DRAGING_POINTS,
             DRAGING_POINTS,
             START_CREATE,
@@ -369,7 +370,7 @@ namespace Plotter
 
         public void CloseFigure()
         {
-            CreatingFigure.Closed = true;
+            CreatingFigure.IsLoop = true;
 
             CreatingFigure.EndCreate(CurrentDC);
 
@@ -476,13 +477,18 @@ namespace Plotter
 
         public void DrawCursor(DrawContext dc)
         {
-            dc.Drawing.DrawCursorScrn(mSnapScreenPoint);
+            dc.Drawing.DrawCursorScrn(mSnapScrnPoint);
         }
 
         public void DrawCrossCursor(DrawContext dc)
         {
-            CrossCursor.Pos = mSnapScreenPoint;
+            CrossCursor.Pos = mSnapScrnPoint;
             dc.Drawing.DrawCrossCursorScrn(CrossCursor);
+        }
+
+        public void DrawSelRect(DrawContext dc)
+        {
+            dc.Drawing.DrawRectScrn(DrawTools.PEN_TEMP_FIGURE, RubberBandScrnPoint0, RubberBandScrnPoint1);
         }
 
         public void Print(DrawContext dc)

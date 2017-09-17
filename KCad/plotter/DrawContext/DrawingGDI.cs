@@ -405,7 +405,7 @@ namespace Plotter
             }
         }
 
-        private void DrawRectScrn(int pen, CadVector pp0, CadVector pp1)
+        public override void DrawRectScrn(int pen, CadVector pp0, CadVector pp1)
         {
             DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
         }

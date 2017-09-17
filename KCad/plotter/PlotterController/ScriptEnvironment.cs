@@ -378,7 +378,7 @@ namespace Plotter
             p1.z = p0.z;
             fig.AddPoint(p1);
 
-            fig.Closed = true;
+            fig.IsLoop = true;
 
             fig.EndCreate(Controller.CurrentDC);
 
@@ -563,10 +563,34 @@ namespace Plotter
             return Controller.DB.GetFigure(idlist[0]);
         }
 
-        private void test()
+        private void test001()
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();
             
+            if (idlist.Count == 0)
+            {
+                return;
+            }
+
+            CadFigure fig = Controller.DB.GetFigure(idlist[0]);
+
+            int n = fig.SegmentCount();
+
+            for (int i=0; i<n; i++)
+            {
+                CadSegment seg = fig.GetSegmentAt(i);
+
+                DebugOut.Std.println("Seg " + i.ToString() + " {");
+                seg.P0.dump(DebugOut.Std, "");
+                seg.P1.dump(DebugOut.Std, "");
+                DebugOut.Std.println("}");
+            }
+        }
+
+        private void test002()
+        {
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
             if (idlist.Count < 2)
             {
                 return;
@@ -593,9 +617,13 @@ namespace Plotter
             {
                 Controller.InteractOut.clear();
             }
-            else if (s == "@test")
+            else if (s == "@test001")
             {
-                test();
+                test001();
+            }
+            else if (s == "@test002")
+            {
+                test002();
             }
             else
             {

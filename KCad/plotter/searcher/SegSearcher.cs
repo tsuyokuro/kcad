@@ -350,7 +350,7 @@ namespace Plotter
                 idx++;
             }
 
-            if (fig.Closed)
+            if (fig.IsLoop)
             {
                 b = pl[0];
                 CheckSeg(dc, layer.ID, fig, pl.Count - 1, 0, a, b);

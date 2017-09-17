@@ -341,6 +341,42 @@ namespace Plotter
                 );
         }
 
+        /// <summary>
+        /// 二点の成分から最小の成分でVectorを作成
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+        public static CadVector Min(CadVector v1, CadVector v2)
+        {
+            CadVector v = default(CadVector);
+
+            v.x = Math.Min(v1.x, v2.x);
+            v.y = Math.Min(v1.y, v2.y);
+            v.z = Math.Min(v1.z, v2.z);
+
+            return v;
+        }
+
+        /// <summary>
+        /// 二点の成分から最大の成分でVectorを作成
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+        public static CadVector Max(CadVector v1, CadVector v2)
+        {
+            CadVector v = default(CadVector);
+
+            v.x = Math.Max(v1.x, v2.x);
+            v.y = Math.Max(v1.y, v2.y);
+            v.z = Math.Max(v1.z, v2.z);
+
+            return v;
+        }
+
+
+
         // ベクトルのノルム(長さ)を求める
         public double Norm()
         {

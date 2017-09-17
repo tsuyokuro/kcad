@@ -49,7 +49,7 @@ namespace Plotter
                     fig.mPointList.Add(dc.UnitPointToCadPoint(pp2));
                     fig.mPointList.Add(dc.UnitPointToCadPoint(pp3));
 
-                    fig.Closed = true;
+                    fig.IsLoop = true;
                 }
             }
 

@@ -265,13 +265,13 @@ namespace Plotter
         public override void Undo(CadObjectDB db)
         {
             CadFigure fig = db.GetFigure(FigureID);
-            fig.Closed = !Close;
+            fig.IsLoop = !Close;
         }
 
         public override void Redo(CadObjectDB db)
         {
             CadFigure fig = db.GetFigure(FigureID);
-            fig.Closed = Close;
+            fig.IsLoop = Close;
         }
     }
 

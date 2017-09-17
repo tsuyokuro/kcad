@@ -132,7 +132,7 @@ namespace Plotter
                 fig.AddPoint(v);
             }
 
-            fig.Closed = true;
+            fig.IsLoop = true;
 
             CadUtil.SetNormal(fig);
 

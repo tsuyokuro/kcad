@@ -37,18 +37,24 @@ namespace Plotter
 
         private CadVector mSnapPoint;
 
-        private CadVector mSnapScreenPoint;
+        private CadVector mSnapScrnPoint;
 
-        private CadVector mMoveOrgScreenPoint;
+        private CadVector mMoveOrgScrnPoint;
 
         public CadVector LastDownPoint = default(CadVector);
 
-        private CadVector? mObjDownPoint = null;
 
+        private CadVector? mObjDownPoint = null;
 
         private CadVector mOffsetScreen = default(CadVector);
 
         //private CadVector mOffsetWorld = default(CadVector);
+
+
+        public CadVector RubberBandScrnPoint0 = CadVector.Invalid;
+
+        public CadVector RubberBandScrnPoint1 = default(CadVector);
+
 
         private Gridding mGridding = new Gridding();
 
@@ -114,16 +120,16 @@ namespace Plotter
 
         private void InitHid()
         {
-            Mouse.LDown = LDown;
-            Mouse.LUp = LUp;
+            Mouse.LButtonDown = LButtonDown;
+            Mouse.LButtonUp = LButtonUp;
 
-            Mouse.RDown = RDown;
-            Mouse.RUp = RUp;
+            Mouse.RButtonDown = RButtonDown;
+            Mouse.RButtonUp = RButtonUp;
 
-            Mouse.MDown = MDown;
-            Mouse.MUp= MUp;
+            Mouse.MButtonDown = MButtonDown;
+            Mouse.MButtonUp= MButtonUp;
 
-            Mouse.MovePointer = MovePointer;
+            Mouse.PointerMoved = PointerMoved;
 
             Mouse.Wheel = Wheel;
         }
@@ -195,13 +201,20 @@ namespace Plotter
             CurrentFigure = fig;
         }
 
-        /**
-         * 指定デバイス座標について範囲内かつ最も近い図形を選択
-         * 
-         */
-        public void SelectNearest(DrawContext dc, CadVector pixp)
+        /// <summary>
+        /// 指定デバイス座標について範囲内かつ最も近い図形を選択
+        /// </summary>
+        /// <param name="dc"> DrawContext</param>
+        /// <param name="pixp">スクリーン座標</param>
+        /// <returns>
+        /// true:  何かオブジェクトを選択した
+        /// false: 何も選択しなかった
+        /// </returns>
+        public bool SelectNearest(DrawContext dc, CadVector pixp)
         {
             CadVector cp = dc.UnitPointToCadPoint(pixp);
+
+            bool sel = false;
 
             mObjDownPoint = null;
 
@@ -238,9 +251,9 @@ namespace Plotter
             {
                 mObjDownPoint = mp.Point;
 
-                mMoveOrgScreenPoint = dc.CadPointToUnitPoint(mp.Point);
+                mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mp.Point);
 
-                mMoveOrgScreenPoint.z = 0;
+                mMoveOrgScrnPoint.z = 0;
 
 
                 State = States.START_DRAGING_POINTS;
@@ -255,11 +268,13 @@ namespace Plotter
                     if (SelectMode == SelectModes.POINT)
                     {
                         mSelList.add(mp);
+                        sel = true;
                         fig.SelectPointAt(mp.PointIndex, true);
                     }
                     else if (SelectMode == SelectModes.OBJECT)
                     {
                         mSelList.add(mp.LayerID, mDB.GetFigure(mp.FigureID));
+                        sel = true;
                         fig.SelectWithGroup();
                     }
 
@@ -308,18 +323,22 @@ namespace Plotter
                     if (SelectMode == SelectModes.POINT)
                     {
                         mSelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID), mseg.PtIndexA, mseg.PtIndexB);
+                        sel = true;
+
                         fig.SelectPointAt(mseg.PtIndexA, true);
                         fig.SelectPointAt(mseg.PtIndexB, true);
                     }
                     else if (SelectMode == SelectModes.OBJECT)
                     {
                         mSelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID));
+                        sel = true;
+
                         fig.SelectWithGroup();
                     }
 
                     mSelectedSegs.Add(mseg);
 
-                    mMoveOrgScreenPoint = dc.CadPointToUnitPoint(mObjDownPoint.Value);
+                    mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mObjDownPoint.Value);
 
                     State = States.START_DRAGING_POINTS;
 
@@ -385,20 +404,33 @@ namespace Plotter
 
             Clear(dc);
             DrawAll(dc);
+
+            return sel;
         }
 
-        private void LDown(CadMouse pointer, DrawContext dc, int x, int y)
+        private void LButtonDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
             CadVector pixp = CadVector.Create(x, y, 0);
             CadVector cp = dc.UnitPointToCadPoint(pixp);
 
-            mOffsetScreen = pixp - mSnapScreenPoint;
+            RubberBandScrnPoint1 = pixp;
+            RubberBandScrnPoint0 = pixp;
+
+
+            mOffsetScreen = pixp - mSnapScrnPoint;
             //mOffsetWorld = cp - mSnapPoint;
 
             switch (State)
             {
                 case States.SELECT:
-                    SelectNearest(dc, mSnapScreenPoint);
+                    if (!SelectNearest(dc, mSnapScrnPoint))
+                    {
+                        State = States.RUBBER_BAND_SELECT;
+                    }
+                    return;
+
+                case States.RUBBER_BAND_SELECT:
+
                     return;
 
                 case States.START_CREATE:
@@ -411,7 +443,7 @@ namespace Plotter
                         CreatingFigure.StartCreate(dc);
 
 
-                        CadVector p = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                        CadVector p = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                         SetPointInCreating(dc, p);
                         Draw(dc);
@@ -422,7 +454,7 @@ namespace Plotter
                     {
                         LastDownPoint = mSnapPoint;
 
-                        CadVector p = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                        CadVector p = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                         SetPointInCreating(dc, p);
                         Draw(dc);
@@ -432,7 +464,7 @@ namespace Plotter
                 case States.MEASURING:
                     {
                         LastDownPoint = mSnapPoint;
-                        CadVector p = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                        CadVector p = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                         SetPointInMeasuring(dc, p);
                         Draw(dc);
@@ -467,12 +499,12 @@ namespace Plotter
             }
         }
 
-        private void MDown(CadMouse pointer, DrawContext dc, int x, int y)
+        private void MButtonDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
             StoreViewOrg = dc.ViewOrg;
         }
 
-        private void MUp(CadMouse pointer, DrawContext dc, int x, int y)
+        private void MButtonUp(CadMouse pointer, DrawContext dc, int x, int y)
         {
             if (pointer.MDownPoint.x == x && pointer.MDownPoint.y == y)
             {
@@ -511,7 +543,7 @@ namespace Plotter
             }
         }
 
-        private void RDown(CadMouse pointer, DrawContext dc, int x, int y)
+        private void RButtonDown(CadMouse pointer, DrawContext dc, int x, int y)
         {
             DrawAll(dc);
 
@@ -523,12 +555,70 @@ namespace Plotter
             }
         }
 
-        private void LUp(CadMouse pointer, DrawContext dc, int x, int y)
+        public void RubberBandSelect(CadVector p0, CadVector p1)
+        {
+            mSelList.clear();
+
+            CadVector minp = CadVector.Min(p0, p1);
+            CadVector maxp = CadVector.Max(p0, p1);
+
+            DB.WalkEditable(
+                (layer, fig) =>
+                {
+                    SelectIfContactRect(minp, maxp, layer.ID, fig, mSelList);
+                });
+
+            CollectSelList(mSelList);
+        }
+
+        public void CollectSelList(SelectList selList)
+        {
+            foreach (CadLayer layer in DB.LayerList)
+            {
+                if (layer.Locked || layer.Visible == false)
+                {
+                    continue;
+                }
+
+                foreach (CadFigure fig in layer.FigureList)
+                {
+                    for (int i=0; i<fig.PointCount; i++)
+                    {
+                        if (fig.PointList[i].Selected)
+                        {
+                            selList.add(layer.ID, fig, i, fig.PointList[i]);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void SelectIfContactRect(CadVector minp, CadVector maxp, uint layerID, CadFigure fig, SelectList selList)
+        {
+            for (int i = 0; i < fig.PointCount; i++)
+            {
+                CadVector p = CurrentDC.CadPointToUnitPoint(fig.PointList[i]);
+
+                if (CadUtil.IsInRect2D(minp, maxp, p))
+                {
+                    fig.SelectPointAt(i, true);
+                }
+            }
+            return;
+        }
+
+        private void LButtonUp(CadMouse pointer, DrawContext dc, int x, int y)
         {
             //Log.d("LUp");
             switch (State)
             {
                 case States.SELECT:
+                    break;
+
+                case States.RUBBER_BAND_SELECT:
+                    RubberBandSelect(RubberBandScrnPoint0, RubberBandScrnPoint1);
+
+                    State = States.SELECT;
                     break;
 
                 case States.START_DRAGING_POINTS:
@@ -552,11 +642,11 @@ namespace Plotter
             //mOffsetWorld = default(CadVector);
         }
 
-        private void RUp(CadMouse pointer, DrawContext dc, int x, int y)
+        private void RButtonUp(CadMouse pointer, DrawContext dc, int x, int y)
         {
         }
 
-        private void MovePointer(CadMouse pointer, DrawContext dc, int x, int y)
+        private void PointerMoved(CadMouse pointer, DrawContext dc, int x, int y)
         {
             if ((Control.MouseButtons & MouseButtons.Middle) != 0)
             {
@@ -574,16 +664,19 @@ namespace Plotter
             CadVector cp = dc.UnitPointToCadPoint(pixp);
             CadVector tp = default(CadVector);
 
+
+            RubberBandScrnPoint1 = pixp;
+
             bool xmatch = false;
             bool ymatch = false;
             bool segmatch = false;
 
             double dist = CadConst.MaxValue;
 
-            mSnapScreenPoint = pixp - mOffsetScreen;
+            mSnapScrnPoint = pixp - mOffsetScreen;
             mSnapPoint = cp;
 
-            CrossCursor.Pos = mSnapScreenPoint;
+            CrossCursor.Pos = mSnapScrnPoint;
 
             //mSnapScrnPoint.dump(DebugOut.Std);
 
@@ -627,10 +720,10 @@ namespace Plotter
 
                     CrossCursor.Pos += distanceX;
 
-                    mSnapScreenPoint = CrossCursor.Pos;
+                    mSnapScrnPoint = CrossCursor.Pos;
                     #endregion
 
-                    mSnapPoint = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                    mSnapPoint = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                     dist = (tp - pixp).Norm();
 
@@ -648,10 +741,10 @@ namespace Plotter
 
                     CrossCursor.Pos += distanceY;
 
-                    mSnapScreenPoint = CrossCursor.Pos;
+                    mSnapScrnPoint = CrossCursor.Pos;
                     #endregion
 
-                    mSnapPoint = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                    mSnapPoint = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                     dist = (tp - pixp).Norm();
 
@@ -692,14 +785,14 @@ namespace Plotter
                             dc.Drawing.DrawHighlightPoint(center);
 
                             mSnapPoint = center;
-                            mSnapScreenPoint = t;
-                            mSnapScreenPoint.z = 0;
+                            mSnapScrnPoint = t;
+                            mSnapScrnPoint.z = 0;
                         }
                         else
                         {
                             mSnapPoint = markSeg.CrossPoint;
-                            mSnapScreenPoint = markSeg.CrossViewPoint;
-                            mSnapScreenPoint.z = 0;
+                            mSnapScrnPoint = markSeg.CrossViewPoint;
+                            mSnapScrnPoint.z = 0;
                         }
 
                         segmatch = true;
@@ -717,15 +810,15 @@ namespace Plotter
 
                 if (!xmatch && mGridding.XMatchU.Valid)
                 {
-                    mSnapScreenPoint.x = mGridding.XMatchU.x;
+                    mSnapScrnPoint.x = mGridding.XMatchU.x;
                 }
 
                 if (!ymatch && mGridding.YMatchU.Valid)
                 {
-                    mSnapScreenPoint.y = mGridding.YMatchU.y;
+                    mSnapScrnPoint.y = mGridding.YMatchU.y;
                 }
 
-                mSnapPoint = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                mSnapPoint = dc.UnitPointToCadPoint(mSnapScrnPoint);
             }
             #endregion
 
@@ -738,17 +831,22 @@ namespace Plotter
                     if (ri.IsValid)
                     {
                         mSnapPoint = ri.CrossPoint;
-                        mSnapScreenPoint = dc.CadPointToUnitPoint(mSnapPoint);
+                        mSnapScrnPoint = dc.CadPointToUnitPoint(mSnapPoint);
                     }
                 }
             }
 
             switch (State)
             {
+                case States.RUBBER_BAND_SELECT:
+                    DrawAll(dc);
+                    DrawSelRect(dc);
+                    break;
+
                 case States.DRAGING_POINTS:
                     {
-                        CadVector p0 = dc.UnitPointToCadPoint(mMoveOrgScreenPoint);
-                        CadVector p1 = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                        CadVector p0 = dc.UnitPointToCadPoint(mMoveOrgScrnPoint);
+                        CadVector p1 = dc.UnitPointToCadPoint(mSnapScrnPoint);
 
                         CadVector delta = p1 - p0;
 
@@ -764,7 +862,7 @@ namespace Plotter
 
                         if (CreatingFigure != null)
                         {
-                            CadVector p = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                            CadVector p = dc.UnitPointToCadPoint(mSnapScrnPoint);
                             CreatingFigure.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
                         }
                         break;
@@ -775,7 +873,7 @@ namespace Plotter
 
                         if (MeasureFigure != null)
                         {
-                            CadVector p = dc.UnitPointToCadPoint(mSnapScreenPoint);
+                            CadVector p = dc.UnitPointToCadPoint(mSnapScrnPoint);
                             MeasureFigure.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
                         }
                         break;
@@ -794,7 +892,7 @@ namespace Plotter
         private void LDrag(CadMouse pointer, DrawContext dc, int x, int y)
         {
             //Log.d("LDrag");
-            MovePointer(pointer, dc, x, y);
+            PointerMoved(pointer, dc, x, y);
         }
 
 

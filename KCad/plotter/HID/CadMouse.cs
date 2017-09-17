@@ -12,15 +12,15 @@ namespace Plotter
         public delegate void WheelHandler(CadMouse pointer, DrawContext dc, int x, int y, int delta);
 
 
-        public ButtonHandler LDown;
-        public ButtonHandler LUp;
-        public ButtonHandler RDown;
-        public ButtonHandler RUp;
-        public ButtonHandler MDown;
-        public ButtonHandler MUp;
+        public ButtonHandler LButtonDown;
+        public ButtonHandler LButtonUp;
+        public ButtonHandler RButtonDown;
+        public ButtonHandler RButtonUp;
+        public ButtonHandler MButtonDown;
+        public ButtonHandler MButtonUp;
 
         public WheelHandler Wheel;
-        public MoveHandler MovePointer;
+        public MoveHandler PointerMoved;
 
         public CadVector LDownPoint = default(CadVector);
         public CadVector RDownPoint = default(CadVector);
@@ -28,9 +28,9 @@ namespace Plotter
 
         public void MouseMove(DrawContext dc, int x, int y)
         {
-            if (MovePointer != null)
+            if (PointerMoved != null)
             {
-                MovePointer?.Invoke(this, dc, x, y);
+                PointerMoved?.Invoke(this, dc, x, y);
             }
         }
 
@@ -41,21 +41,21 @@ namespace Plotter
                 LDownPoint.x = x;
                 LDownPoint.y = y;
 
-                if (LDown != null) LDown(this, dc, x, y);
+                if (LButtonDown != null) LButtonDown(this, dc, x, y);
             }
             else if (btn == MouseButtons.Right)
             {
                 RDownPoint.x = x;
                 RDownPoint.y = y;
 
-                if (LDown != null) RDown(this, dc, x, y);
+                if (LButtonDown != null) RButtonDown(this, dc, x, y);
             }
             else if (btn == MouseButtons.Middle)
             {
                 MDownPoint.x = x;
                 MDownPoint.y = y;
 
-                if (MDown != null) MDown(this, dc, x, y);
+                if (MButtonDown != null) MButtonDown(this, dc, x, y);
             }
         }
 
@@ -63,15 +63,15 @@ namespace Plotter
         {
             if (btn == MouseButtons.Left)
             {
-                if (LUp != null) LUp(this, dc, x, y);
+                if (LButtonUp != null) LButtonUp(this, dc, x, y);
             }
             else if (btn == MouseButtons.Right)
             {
-                if (LUp != null) RUp(this, dc, x, y);
+                if (LButtonUp != null) RButtonUp(this, dc, x, y);
             }
             else if (btn == MouseButtons.Middle)
             {
-                if (MUp != null) MUp(this, dc, x, y);
+                if (MButtonUp != null) MButtonUp(this, dc, x, y);
             }
         }
 

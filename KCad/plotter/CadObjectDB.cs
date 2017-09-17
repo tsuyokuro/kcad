@@ -192,8 +192,58 @@ namespace Plotter
         {
             mFigureIdMap.Remove(id);
         }
-        #endregion
 
+        #endregion Manage Figure
+
+
+        
+        #region Walk
+
+        public delegate void WalkFunction(CadLayer layer, CadFigure fig);
+
+        public delegate bool LayerFilterFunction(CadLayer layer);
+
+        public void Walk(WalkFunction walk, LayerFilterFunction layerFilter)
+        {
+            foreach (CadLayer layer in mLayerList)
+            {
+                if (layerFilter!=null && !layerFilter(layer))
+                {
+                    continue;
+                }
+
+                foreach (CadFigure fig in layer.FigureList)
+                {
+                    walk(layer, fig);
+                }
+            }
+        }
+
+        public static LayerFilterFunction EditableLayerFilter = (layer) =>
+        {
+            if (layer.Locked) return false;
+            if (!layer.Visible) return false;
+
+            return true;
+        };
+
+        public void WalkEditable(WalkFunction walk)
+        {
+            foreach (CadLayer layer in mLayerList)
+            {
+                if (!EditableLayerFilter(layer))
+                {
+                    continue;
+                }
+
+                foreach (CadFigure fig in layer.FigureList)
+                {
+                    walk(layer, fig);
+                }
+            }
+        }
+
+        #endregion Walk
 
 
         public JObject ToJson()

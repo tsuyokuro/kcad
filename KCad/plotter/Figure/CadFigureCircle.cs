@@ -250,6 +250,16 @@ namespace Plotter
 
                 return r;
             }
+
+            public override CadSegment GetSegmentAt(CadFigure fig, int n)
+            {
+                return new CadSegment(CadVector.Invalid, CadVector.Invalid);
+            }
+
+            public override int SegmentCount(CadFigure fig)
+            {
+                return 0;
+            }
         }
     }
 }

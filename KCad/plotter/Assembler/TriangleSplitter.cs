@@ -85,7 +85,7 @@ namespace Plotter
                 triangle = new CadFigure(CadFigure.Types.POLY_LINES);
 
                 triangle.AddPoints(pointList,0,3);
-                triangle.Closed = true;
+                triangle.IsLoop = true;
 
                 triangles.Add(triangle);
             }
@@ -114,7 +114,7 @@ namespace Plotter
             triangle.AddPoint(tp1);
             triangle.AddPoint(tp2);
 
-            triangle.Closed = true;
+            triangle.IsLoop = true;
 
             return triangle;
         }
