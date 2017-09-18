@@ -586,7 +586,7 @@ namespace Plotter
                     {
                         if (fig.PointList[i].Selected)
                         {
-                            selList.add(layer.ID, fig, i, fig.PointList[i]);
+                            selList.add(layer.ID, fig, i);
                         }
                     }
                 }

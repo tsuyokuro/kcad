@@ -6,50 +6,53 @@ namespace Plotter
 {
     public class SelectItem
     {
-        public MarkPoint mMarkPoint;
-
         public uint LayerID
         {
-            get { return mMarkPoint.LayerID; }
-            set { mMarkPoint.LayerID = value; }
+            get; set;
         }
 
         public uint FigureID
         {
-            get { return mMarkPoint.FigureID; }
+            get
+            {
+                return Figure.ID;
+            }
         }
 
         public CadFigure Figure
         {
-            get { return mMarkPoint.Figure; }
-            set { mMarkPoint.Figure = value; }
+            get; set;
         }
 
         public int PointIndex
         {
-            get { return mMarkPoint.PointIndex; }
-            set { mMarkPoint.PointIndex = value; }
+            get; set;
         }
 
         public CadVector Point
         {
-            get { return mMarkPoint.Point; }
-            set { mMarkPoint.Point = value; }
+            get
+            {
+                return Figure.PointList[PointIndex];
+            }
         }
 
         public SelectItem()
         {
-            mMarkPoint = default(MarkPoint);
         }
 
         public SelectItem(MarkPoint mp)
         {
-            mMarkPoint = mp;
+            LayerID = mp.LayerID;
+            Figure = mp.Figure;
+            PointIndex = mp.PointIndex;
         }
 
         public SelectItem(SelectItem src)
         {
-            mMarkPoint = src.mMarkPoint;
+            LayerID = src.LayerID;
+            Figure = src.Figure;
+            PointIndex = src.PointIndex;
         }
 
         public void dump(DebugOut dout)
@@ -75,9 +78,6 @@ namespace Plotter
                 return false;
             }
 
-
-            Point = Figure.PointList[PointIndex];
-
             return true;
         }
     }
@@ -91,7 +91,7 @@ namespace Plotter
             get { return mList; }
         }
 
-        public void add(uint layerID, CadFigure fig, int pointIndex, CadVector point)
+        public void add(uint layerID, CadFigure fig, int pointIndex)
         {
             SelectItem f = null;
 
@@ -102,7 +102,6 @@ namespace Plotter
 
             if (f != null)
             {
-                //f.Point = point;
                 return;
             }
 
@@ -112,7 +111,6 @@ namespace Plotter
             item.Figure = fig;
             item.PointIndex = pointIndex;
 
-            item.Point = point;
             mList.Add(item);
         }
 
@@ -120,7 +118,7 @@ namespace Plotter
         {
             for (int idx = 0; idx < fig.PointCount; idx++)
             {
-                add(layerID, fig, idx, fig.GetPointAt(idx));
+                add(layerID, fig, idx);
             }
         }
 
@@ -138,8 +136,8 @@ namespace Plotter
 
         public void add(MarkSeg ms)
         {
-            add(ms.LayerID, ms.Figure, ms.PtIndexA, ms.pA);
-            add(ms.LayerID, ms.Figure, ms.PtIndexB, ms.pB);
+            add(ms.LayerID, ms.Figure, ms.PtIndexA);
+            add(ms.LayerID, ms.Figure, ms.PtIndexB);
         }
 
         public void add(uint layerID, CadFigure fig, int a, int b)
@@ -149,8 +147,7 @@ namespace Plotter
 
             for (int i = si; i <= ei; i++)
             {
-                CadVector p = fig.GetPointAt(i);
-                add(layerID, fig, i, p);
+                add(layerID, fig, i);
             }
         }
 
