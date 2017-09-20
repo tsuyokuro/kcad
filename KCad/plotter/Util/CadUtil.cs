@@ -418,7 +418,7 @@ namespace Plotter
         // 線分apと点pの距離
         // 垂線がab内に無い場合は、点a,bで近い方への距離を返す
         // 2D
-        public static double distancePtoSeg2D(CadVector a, CadVector b, CadVector p)
+        public static double DistancePointToSeg2D(CadVector a, CadVector b, CadVector p)
         {
             double t;
 
@@ -429,7 +429,7 @@ namespace Plotter
 
             if (t < 0)
             {
-                return vectNorm2D(ap);
+                return ap.Norm2D();
             }
 
             CadVector ba = a - b;
@@ -439,19 +439,22 @@ namespace Plotter
 
             if (t < 0)
             {
-                return vectNorm2D(bp);
+                return bp.Norm2D();
             }
 
+            // 外積結果が a->p a->b を辺とする平行四辺形の面積になる
             double d = Math.Abs(CadMath.CrossProduct2D(ab, ap));
-            double abl = vectNorm2D(ab);
 
+            double abl = ab.Norm2D();
+
+            // 高さ = 面積 / 底辺の長さ
             return d / abl;
         }
 
         // 線分apと点pの距離
         // 垂線がab内に無い場合は、点a,bで近い方への距離を返す
         // 3D対応
-        public static double distancePtoSeg(CadVector a, CadVector b, CadVector p)
+        public static double DistancePointToSeg(CadVector a, CadVector b, CadVector p)
         {
             double t;
 
@@ -480,7 +483,7 @@ namespace Plotter
             // 外積結果の長さが a->p a->b を辺とする平行四辺形の面積になる
             double s = cp.Norm();
 
-            // 面積を底辺で割って高さを求める
+            // 高さ = 面積 / 底辺の長さ
             return s / ab.Norm();
         }
 
@@ -553,7 +556,7 @@ namespace Plotter
                 return ret;
             }
 
-            double abl = vectNorm2D(ab);
+            double abl = ab.Norm2D();
             double abl2 = abl * abl;
 
             ret.IsCross = true;
@@ -635,7 +638,7 @@ namespace Plotter
 
             t1 = CadMath.InnrProduct2D(ab, ap);
 
-            double norm = vectNorm2D(ab);
+            double norm = ab.Norm2D();
             double norm2 = norm * norm;
 
             ret.IsCross = true;
@@ -680,18 +683,18 @@ namespace Plotter
             return v;
         }
 
-        public static double vectNorm2D(CadVector v)
-        {
-            return Math.Sqrt(v.x * v.x + v.y * v.y);
-        }
+        //public static double VectorNorm2D(CadVector v)
+        //{
+        //    return Math.Sqrt(v.x * v.x + v.y * v.y);
+        //}
 
-        public static double segNorm(CadVector a, CadVector b)
+        public static double SegNorm(CadVector a, CadVector b)
         {
             CadVector v = b - a;
             return v.Norm();
         }
 
-        public static double segNorm2D(CadVector a, CadVector b)
+        public static double SegNorm2D(CadVector a, CadVector b)
         {
             double dx = b.x - a.x;
             double dy = b.y - a.y;
@@ -699,7 +702,7 @@ namespace Plotter
             return Math.Sqrt((dx * dx) + (dy * dy));
         }
 
-        public static void movePoints(List<CadVector> list, CadVector delta)
+        public static void MovePoints(List<CadVector> list, CadVector delta)
         {
             for (int i = 0; i < list.Count; i++)
             {
@@ -708,7 +711,7 @@ namespace Plotter
             }
         }
 
-        public static CadRect getContainsRect(IReadOnlyList<CadVector> list)
+        public static CadRect GetContainsRect(IReadOnlyList<CadVector> list)
         {
             CadRect rect = default(CadRect);
 
@@ -745,7 +748,7 @@ namespace Plotter
             return rect;
         }
 
-        public static CadRect getContainsRect(List<CadFigure> list)
+        public static CadRect GetContainsRect(List<CadFigure> list)
         {
             CadRect rect = default(CadRect);
             CadRect fr;

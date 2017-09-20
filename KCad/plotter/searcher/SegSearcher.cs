@@ -250,11 +250,11 @@ namespace Plotter
             CadVector pa = dc.CadPointToUnitPoint(a);
             CadVector pb = dc.CadPointToUnitPoint(b);
 
-            double r = CadUtil.segNorm2D(pa, pc);
-            double tr = CadUtil.segNorm2D(TargetPoint.Pos, pc);
+            double r = CadUtil.SegNorm2D(pa, pc);
+            double tr = CadUtil.SegNorm2D(TargetPoint.Pos, pc);
 
-            double pad = CadUtil.segNorm2D(TargetPoint.Pos, pa);
-            double pbd = CadUtil.segNorm2D(TargetPoint.Pos, pb);
+            double pad = CadUtil.SegNorm2D(TargetPoint.Pos, pa);
+            double pbd = CadUtil.SegNorm2D(TargetPoint.Pos, pb);
 
             int idxB = 1;
 
@@ -274,8 +274,8 @@ namespace Plotter
             if (dist < minDist)
             {
                 CadVector tp = dc.UnitPointToCadPoint(TargetPoint.Pos);
-                r = CadUtil.segNorm(a, c);
-                tr = CadUtil.segNorm(tp, c);
+                r = CadUtil.SegNorm(a, c);
+                tr = CadUtil.SegNorm(tp, c);
 
                 CadVector td = tp - c;
 

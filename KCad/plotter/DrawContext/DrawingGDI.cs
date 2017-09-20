@@ -460,7 +460,7 @@ namespace Plotter
             if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
 
-            double r = CadUtil.segNorm(cp, p1);
+            double r = CadUtil.SegNorm(cp, p1);
             DrawCircleScrn(pen, cp, r);
         }
 

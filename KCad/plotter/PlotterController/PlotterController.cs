@@ -768,7 +768,7 @@ namespace Plotter
                 Log.d("paste");
                 List<CadFigure> list = (List<CadFigure>)Clipboard.GetData("List.CadFiguer");
 
-                CadRect cr = CadUtil.getContainsRect(list);
+                CadRect cr = CadUtil.GetContainsRect(list);
 
                 CadVector d = pp - cr.p0;
 
@@ -933,6 +933,11 @@ namespace Plotter
             CadFigure fig = mDB.GetFigure(id);
 
             if (fig == null)
+            {
+                return;
+            }
+
+            if (idx >= fig.PointCount)
             {
                 return;
             }

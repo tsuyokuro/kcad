@@ -108,6 +108,9 @@ namespace Plotter
 
         public static CadVector Invalid = CadVector.CreateInvalid();
 
+        public static CadVector MaxValue = CadVector.Create(CadConst.MaxValue);
+        public static CadVector MinValue = CadVector.Create(CadConst.MinValue);
+
         public CadVector(double x, double y, double z, Types type = Types.STD)
         {
             vector.X = x;
@@ -172,6 +175,13 @@ namespace Plotter
             CadVector p = default(CadVector);
             p.Valid = false;
             return p;
+        }
+
+        public CadVector(double x, double y, double z, Types type = Types.STD, byte flag = 0)
+        {
+            vector = new Vector3d(x, y, z);
+            Type = type;
+            Flag = flag;
         }
 
         public JObject ToJson()
@@ -380,7 +390,12 @@ namespace Plotter
         // ベクトルのノルム(長さ)を求める
         public double Norm()
         {
-            return System.Math.Sqrt((x * x) + (y * y) + (z * z));
+            return Math.Sqrt((x * x) + (y * y) + (z * z));
+        }
+
+        public double Norm2D()
+        {
+            return Math.Sqrt((x * x) + (y * y));
         }
 
         // 単位ベクトルを求める
