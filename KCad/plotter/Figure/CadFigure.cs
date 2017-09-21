@@ -652,9 +652,12 @@ namespace Plotter
             return Behavior.GetSegmentAt(this, n);
         }
 
-        public int SegmentCount()
+        public int SegmentCount
         {
-            return Behavior.SegmentCount(this);
+            get
+            {
+                return Behavior.SegmentCount(this);
+            }
         }
 
         #endregion

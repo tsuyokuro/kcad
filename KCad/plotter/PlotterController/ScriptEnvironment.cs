@@ -574,7 +574,7 @@ namespace Plotter
 
             CadFigure fig = Controller.DB.GetFigure(idlist[0]);
 
-            int n = fig.SegmentCount();
+            int n = fig.SegmentCount;
 
             for (int i=0; i<n; i++)
             {

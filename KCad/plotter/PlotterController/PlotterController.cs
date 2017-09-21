@@ -1049,21 +1049,20 @@ namespace Plotter
 
         public void SearchNearestPoint()
         {
+            SpPointSearcher sps = new SpPointSearcher();
+            CadVector sv = sps.search(this, CrossCursor.Pos);
 
+            if (sv.Invalid)
+            {
+                return;
+            }
+
+
+
+            CadVector tv = CurrentDC.UnitPointToCadPoint(sv);
+            CadFigure tfig = new CadFigure(CadFigure.Types.POINT);
+            tfig.AddPoint(tv);
+            TempFigureList.Add(tfig);
         }
-    }
-
-    public class SpPointSearcher
-    {
-        List<CadVector> CrossList;
-
-        List<MarkPoint> PointList;
-
-        List<MarkSeg> SegList;
-
-        public CadVector TargetPoint;
-
-        public double Range;
-
     }
 }

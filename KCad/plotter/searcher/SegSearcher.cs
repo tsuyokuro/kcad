@@ -163,8 +163,8 @@ namespace Plotter
                 return;
             }
 
-            CadVector p = CadVector.Invalid;
-            CadVector dv = CadVector.Invalid;
+            CadVector p = CadVector.InvalidValue;
+            CadVector dv = CadVector.InvalidValue;
             double mind = Double.MaxValue;
             CadVector[] vtbl = new CadVector[] { cx, cy };
 

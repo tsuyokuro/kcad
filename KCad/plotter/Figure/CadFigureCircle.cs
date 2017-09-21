@@ -253,7 +253,7 @@ namespace Plotter
 
             public override CadSegment GetSegmentAt(CadFigure fig, int n)
             {
-                return new CadSegment(CadVector.Invalid, CadVector.Invalid);
+                return new CadSegment(CadVector.InvalidValue, CadVector.InvalidValue);
             }
 
             public override int SegmentCount(CadFigure fig)

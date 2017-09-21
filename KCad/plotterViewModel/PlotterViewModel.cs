@@ -437,7 +437,8 @@ namespace Plotter
                 { "ctrl+a", SelectAll },
                 { "escape", Cancel },
                 { "ctrl+p", InsPoint },
-                { "ctrl+oemplus", SearchNearestPoint },
+                //{ "ctrl+oemplus", SearchNearestPoint },
+                { "tab", SearchNearestPoint },
             };
         }
 

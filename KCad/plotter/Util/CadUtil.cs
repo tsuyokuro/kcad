@@ -872,14 +872,14 @@ namespace Plotter
 
             if (a.IsZero() || b.IsZero())
             {
-                return CadVector.Invalid;
+                return CadVector.InvalidValue;
             }
 
             double cpBA = CadMath.CrossProduct2D(b, a);
 
             if (cpBA == 0)
             {
-                return CadVector.Invalid;
+                return CadVector.InvalidValue;
             }
 
             return a1 + a * CadMath.CrossProduct2D(b, b1 - a1) / cpBA;

@@ -51,7 +51,7 @@ namespace Plotter
         //private CadVector mOffsetWorld = default(CadVector);
 
 
-        public CadVector RubberBandScrnPoint0 = CadVector.Invalid;
+        public CadVector RubberBandScrnPoint0 = CadVector.InvalidValue;
 
         public CadVector RubberBandScrnPoint1 = default(CadVector);
 

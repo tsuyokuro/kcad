@@ -84,19 +84,32 @@ namespace Plotter
         {
             set
             {
+                Invalid = !value;
+            }
+
+            get
+            {
+                return !Invalid;
+            }
+        }
+
+        public bool Invalid
+        {
+            set
+            {
                 if (value)
                 {
-                    Flag = (byte)(Flag & ~Flags.INVALID);
+                    Flag = (byte)(Flag | Flags.INVALID);
                 }
                 else
                 {
-                    Flag = (byte)(Flag | Flags.INVALID);
+                    Flag = (byte)(Flag & ~Flags.INVALID);
                 }
             }
 
             get
             {
-                return (Flag & Flags.INVALID) == 0;
+                return (Flag & Flags.INVALID) != 0;
             }
         }
 
@@ -106,7 +119,7 @@ namespace Plotter
         public static CadVector UnitY = CadVector.Create(0, 1, 0);
         public static CadVector UnitZ = CadVector.Create(0, 0, 1);
 
-        public static CadVector Invalid = CadVector.CreateInvalid();
+        public static CadVector InvalidValue = CadVector.CreateInvalid();
 
         public static CadVector MaxValue = CadVector.Create(CadConst.MaxValue);
         public static CadVector MinValue = CadVector.Create(CadConst.MinValue);

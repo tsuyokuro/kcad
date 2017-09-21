@@ -81,7 +81,7 @@ namespace Plotter
 
             public virtual CadSegment GetSegmentAt(CadFigure fig, int n )
             {
-                if ( n < fig.mPointList.Count - 2)
+                if ( n < fig.mPointList.Count - 1)
                 {
                     return new CadSegment(fig.mPointList[n], fig.mPointList[n + 1]);
                 }
@@ -91,7 +91,7 @@ namespace Plotter
                     return new CadSegment(fig.mPointList[n], fig.mPointList[0]);
                 }
 
-                return new CadSegment(CadVector.Invalid, CadVector.Invalid);
+                return new CadSegment(CadVector.InvalidValue, CadVector.InvalidValue);
             }
 
             public virtual int SegmentCount(CadFigure fig)
