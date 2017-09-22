@@ -19,7 +19,7 @@ namespace Plotter
             Draw(dc);
         }
 
-        public void MoveOrigin(DrawContext dc, int pixDx, int pixDy)
+        public void MoveOrigin(DrawContext dc, double pixDx, double pixDy)
         {
             CadVector d = CadVector.Create(pixDx, pixDy, 0);
 
@@ -29,10 +29,10 @@ namespace Plotter
             Draw(dc);
         }
 
-        public void AdjustOrigin(DrawContext dc, int pixX, int pixY, int vw, int vh)
+        public void AdjustOrigin(DrawContext dc, double pixX, double pixY, int vw, int vh)
         {
-            int dx = vw / 2 - pixX;
-            int dy = vh / 2 - pixY;
+            double dx = vw / 2 - pixX;
+            double dy = vh / 2 - pixY;
 
             Clear(dc);
             MoveOrigin(dc, dx, dy);

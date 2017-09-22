@@ -139,6 +139,11 @@ namespace Plotter
             return Create(v, v, v);
         }
 
+        public static CadVector Create(double x, double y)
+        {
+            return Create(x, y, 0);
+        }
+
         public static CadVector Create(double x, double y, double z, Types type = Types.STD)
         {
             CadVector v = default(CadVector);

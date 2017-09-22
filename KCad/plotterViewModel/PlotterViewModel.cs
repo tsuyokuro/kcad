@@ -438,7 +438,7 @@ namespace Plotter
                 { "escape", Cancel },
                 { "ctrl+p", InsPoint },
                 //{ "ctrl+oemplus", SearchNearestPoint },
-                { "tab", SearchNearestPoint },
+                { "f2", SearchNearestPoint },
             };
         }
 
@@ -454,16 +454,18 @@ namespace Plotter
             action?.Invoke();
         }
 
-        public void ExecShortcutKey(string keyCmd)
+        public bool ExecShortcutKey(string keyCmd)
         {
             if (!KeyMap.ContainsKey(keyCmd))
             {
-                return;
+                return false;
             }
 
             Action action = KeyMap[keyCmd];
 
             action?.Invoke();
+
+            return true;
         }
 
         #endregion
@@ -814,18 +816,26 @@ namespace Plotter
             return s;
         }
 
-
-        public void OnKeyDown(object sender, KeyEventArgs e)
-        {
-        }
-
-        public void OnKeyUp(object sender, KeyEventArgs e)
+        private string KeyString(KeyEventArgs e)
         {
             string ks = ModifyerKeysStr();
 
             ks += e.Key.ToString().ToLower();
 
-            ExecShortcutKey(ks);
+            return ks;
+        }
+
+
+        public bool OnKeyDown(object sender, KeyEventArgs e)
+        {
+            string ks = KeyString(e);
+            return KeyMap.ContainsKey(ks);
+        }
+
+        public bool OnKeyUp(object sender, KeyEventArgs e)
+        {
+            string ks = KeyString(e);
+            return ExecShortcutKey(ks);
         }
         #endregion
 

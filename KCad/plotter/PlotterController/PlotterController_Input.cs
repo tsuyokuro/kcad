@@ -26,6 +26,8 @@ namespace Plotter
 
         public CadMouse Mouse { get; } = new CadMouse();
 
+        public CadCursor CrossCursor = CadCursor.Create();
+
         private PointSearcher mPointSearcher = new PointSearcher();
 
         private SegSearcher mSegSearcher = new SegSearcher();
@@ -61,6 +63,8 @@ namespace Plotter
         private CadFigure CurrentFigure = null;
 
         private int MatchIndex = 0;
+
+        private bool LockCursor = false;
 
         public bool SnapToGrid
         {
@@ -127,7 +131,7 @@ namespace Plotter
             Mouse.RButtonUp = RButtonUp;
 
             Mouse.MButtonDown = MButtonDown;
-            Mouse.MButtonUp= MButtonUp;
+            Mouse.MButtonUp = MButtonUp;
 
             Mouse.PointerMoved = PointerMoved;
 
@@ -185,7 +189,7 @@ namespace Plotter
             }
         }
         #endregion
-        
+
         public void SetCurrentFigure(CadFigure fig)
         {
             if (CurrentFigure != null)
@@ -408,8 +412,15 @@ namespace Plotter
             return sel;
         }
 
-        private void LButtonDown(CadMouse pointer, DrawContext dc, int x, int y)
+        private void LButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
+            if (LockCursor)
+            {
+                x = CrossCursor.Pos.x;
+                y = CrossCursor.Pos.y;
+                LockCursor = false;
+            }
+
             CadVector pixp = CadVector.Create(x, y, 0);
             CadVector cp = dc.UnitPointToCadPoint(pixp);
 
@@ -499,12 +510,12 @@ namespace Plotter
             }
         }
 
-        private void MButtonDown(CadMouse pointer, DrawContext dc, int x, int y)
+        private void MButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
             StoreViewOrg = dc.ViewOrg;
         }
 
-        private void MButtonUp(CadMouse pointer, DrawContext dc, int x, int y)
+        private void MButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
         {
             if (pointer.MDownPoint.x == x && pointer.MDownPoint.y == y)
             {
@@ -512,7 +523,7 @@ namespace Plotter
             }
         }
 
-        private void MDrag(CadMouse pointer, DrawContext dc, int x, int y)
+        private void MDrag(CadMouse pointer, DrawContext dc, double x, double y)
         {
             CadVector cp = default(CadVector);
             cp.Set(x, y, 0);
@@ -524,7 +535,7 @@ namespace Plotter
             SetOrigin(dc, (int)op.x, (int)op.y);
         }
 
-        private void Wheel(CadMouse pointer, DrawContext dc, int x, int y, int delta)
+        private void Wheel(CadMouse pointer, DrawContext dc, double x, double y, int delta)
         {
             if (CadKeyboard.IsCtrlKeyDown())
             {
@@ -543,7 +554,7 @@ namespace Plotter
             }
         }
 
-        private void RButtonDown(CadMouse pointer, DrawContext dc, int x, int y)
+        private void RButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
             DrawAll(dc);
 
@@ -551,7 +562,7 @@ namespace Plotter
             {
                 StateInfo si = default(StateInfo);
                 si.set(this);
-                RequestContextMenu(this, si, x, y);
+                RequestContextMenu(this, si, (int)x, (int)y);
             }
         }
 
@@ -582,7 +593,7 @@ namespace Plotter
 
                 foreach (CadFigure fig in layer.FigureList)
                 {
-                    for (int i=0; i<fig.PointCount; i++)
+                    for (int i = 0; i < fig.PointCount; i++)
                     {
                         if (fig.PointList[i].Selected)
                         {
@@ -607,7 +618,7 @@ namespace Plotter
             return;
         }
 
-        private void LButtonUp(CadMouse pointer, DrawContext dc, int x, int y)
+        private void LButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
         {
             //Log.d("LUp");
             switch (State)
@@ -642,16 +653,22 @@ namespace Plotter
             //mOffsetWorld = default(CadVector);
         }
 
-        private void RButtonUp(CadMouse pointer, DrawContext dc, int x, int y)
+        private void RButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
         {
         }
 
-        private void PointerMoved(CadMouse pointer, DrawContext dc, int x, int y)
+        private void PointerMoved(CadMouse pointer, DrawContext dc, double x, double y)
         {
             if ((Control.MouseButtons & MouseButtons.Middle) != 0)
             {
                 MDrag(pointer, dc, x, y);
                 return;
+            }
+
+            if (LockCursor)
+            {
+                x = CrossCursor.Pos.x;
+                y = CrossCursor.Pos.y;
             }
 
             if (State == States.START_DRAGING_POINTS)
@@ -934,6 +951,33 @@ namespace Plotter
         private void SetPointInMeasuring(DrawContext dc, CadVector p)
         {
             MeasureFigure.AddPointInCreating(dc, p);
+        }
+
+        public void SearchNearestPoint()
+        {
+            SpPointSearcher sps = new SpPointSearcher();
+            CadVector sv = sps.search(this, CrossCursor.Pos);
+
+            if (sv.Invalid)
+            {
+                return;
+            }
+
+            LockCursorScrn(sv);
+
+            //CadVector tv = CurrentDC.UnitPointToCadPoint(sv);
+            //CadFigure tfig = new CadFigure(CadFigure.Types.POINT);
+            //tfig.AddPoint(tv);
+            //TempFigureList.Add(tfig);
+        }
+
+        public void LockCursorScrn(CadVector p)
+        {
+            LockCursor = true;
+
+            mSnapScrnPoint = p;
+            mSnapPoint = CurrentDC.UnitPointToCadPoint(p);
+            CrossCursor.Pos = p;
         }
     }
 }

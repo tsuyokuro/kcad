@@ -7,9 +7,9 @@ namespace Plotter
 {
     public class CadMouse
     {
-        public delegate void ButtonHandler(CadMouse pointer, DrawContext dc, int x, int y);
-        public delegate void MoveHandler(CadMouse pointer, DrawContext dc, int x, int y);
-        public delegate void WheelHandler(CadMouse pointer, DrawContext dc, int x, int y, int delta);
+        public delegate void ButtonHandler(CadMouse pointer, DrawContext dc, double x, double y);
+        public delegate void MoveHandler(CadMouse pointer, DrawContext dc, double x, double y);
+        public delegate void WheelHandler(CadMouse pointer, DrawContext dc, double x, double y, int delta);
 
 
         public ButtonHandler LButtonDown;

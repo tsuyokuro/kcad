@@ -57,7 +57,7 @@ namespace Plotter
 
         public CadVector TargetPoint = CadVector.InvalidValue;
 
-        public double Range = 32;
+        public double Range = 64;
 
         public CadVector search(PlotterController controller, CadVector p)
         {

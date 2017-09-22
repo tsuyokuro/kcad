@@ -171,10 +171,9 @@ namespace KCad
                 return;
             }
 
-
             if (!textCommand.IsFocused && !listMessage.IsFocused)
             {
-               ViewModel.OnKeyUp(sender, e);
+               e.Handled = ViewModel.OnKeyUp(sender, e);
             }
         }
         #endregion
