@@ -787,11 +787,6 @@ namespace Plotter
 
         // Keyboard handling
         #region Keyboard handling
-        public void PerviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-
-        }
-
         private string ModifyerKeysStr()
         {
             ModifierKeys modifierKeys = Keyboard.Modifiers;

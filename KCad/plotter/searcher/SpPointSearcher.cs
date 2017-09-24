@@ -12,6 +12,7 @@ namespace Plotter
         {
             NONE,
             POINT,
+            CENTER_POINT,
             CROSS_POINT,
         }
 
@@ -22,6 +23,15 @@ namespace Plotter
             public CadLayer Layer;
             public CadFigure Fig;
             public int PointIndex;
+            public double Distance;
+            public CadVector ScrPoint;
+        }
+
+        struct CenterItem
+        {
+            public CadLayer Layer;
+            public CadFigure Fig;
+            public int SegIndex;
             public double Distance;
             public CadVector ScrPoint;
         }
@@ -48,6 +58,8 @@ namespace Plotter
         private DrawContext DC;
 
         PointItem Point = default(PointItem);
+
+        CenterItem Center = default(CenterItem);
 
         CrossItem Cross = default(CrossItem);
 
@@ -77,6 +89,10 @@ namespace Plotter
             if (Type == Types.POINT)
             {
                 return Point.ScrPoint;
+            }
+            else if (Type == Types.CENTER_POINT)
+            {
+                return Center.ScrPoint;
             }
             else if (Type == Types.CROSS_POINT)
             {
@@ -118,6 +134,7 @@ namespace Plotter
             }
 
             // 範囲内の線分リスト作成
+            // ついでに中点のチェックも行う
             n = fig.SegmentCount;
             for (int i = 0; i < n; i++)
             {
@@ -125,6 +142,22 @@ namespace Plotter
 
                 CadVector p0 = DC.CadPointToUnitPoint(seg.P0);
                 CadVector p1 = DC.CadPointToUnitPoint(seg.P1);
+
+                CadVector pc = (p1 - p0) / 2 + p0;
+
+                double dist = (pc - TargetPoint).Norm2D();
+
+                if (dist < Range && dist < MinDist)
+                {
+                    Center.Layer = layer;
+                    Center.Fig = fig;
+                    Center.SegIndex = i;
+                    Center.Distance = dist;
+                    Center.ScrPoint = pc;
+
+                    Type = Types.CENTER_POINT;
+                    MinDist = dist;
+                }
 
                 double d = CadUtil.DistancePointToSeg(p0, p1, TargetPoint);
 

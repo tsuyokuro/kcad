@@ -64,7 +64,7 @@ namespace Plotter
 
         private int MatchIndex = 0;
 
-        private bool LockCursor = false;
+        private bool CursorLocked = false;
 
         public bool SnapToGrid
         {
@@ -414,11 +414,11 @@ namespace Plotter
 
         private void LButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
-            if (LockCursor)
+            if (CursorLocked)
             {
                 x = CrossCursor.Pos.x;
                 y = CrossCursor.Pos.y;
-                LockCursor = false;
+                CursorLocked = false;
             }
 
             CadVector pixp = CadVector.Create(x, y, 0);
@@ -665,7 +665,7 @@ namespace Plotter
                 return;
             }
 
-            if (LockCursor)
+            if (CursorLocked)
             {
                 x = CrossCursor.Pos.x;
                 y = CrossCursor.Pos.y;
@@ -973,7 +973,7 @@ namespace Plotter
 
         public void LockCursorScrn(CadVector p)
         {
-            LockCursor = true;
+            CursorLocked = true;
 
             mSnapScrnPoint = p;
             mSnapPoint = CurrentDC.UnitPointToCadPoint(p);

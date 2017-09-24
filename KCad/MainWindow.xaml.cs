@@ -46,7 +46,7 @@ namespace KCad
 
             ViewModel.LayerListView = LayerListView;
 
-            PreviewKeyDown += ViewModel.PerviewKeyDown;
+            PreviewKeyDown += OnPreviewKeyDown;
 
             KeyDown += onKeyDown;
             KeyUp += onKeyUp;
@@ -78,6 +78,10 @@ namespace KCad
             Closed += MainWindow_Closed;
 
             listMessage.KeyUp += ListMessage_KeyUp;
+        }
+
+        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
         }
 
         private void ListMessage_KeyUp(object sender, KeyEventArgs e)

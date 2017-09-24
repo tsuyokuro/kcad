@@ -914,6 +914,11 @@ namespace Plotter
 
         public void Cancel()
         {
+            if (CursorLocked)
+            {
+                CursorLocked = false;
+            }
+
             if (State == States.START_CREATE || State == States.CREATING)
             {
                 StartCreateFigure(CadFigure.Types.NONE);
