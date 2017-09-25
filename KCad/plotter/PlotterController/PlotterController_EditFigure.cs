@@ -48,7 +48,7 @@ namespace Plotter
             ClearSelection();
         }
 
-        public void SeparateFigures(List<SelectItem> selList)
+        public void SeparateFigures(IReadOnlyList<SelectItem> selList)
         {
             CadFigureCutter fa = new CadFigureCutter(mDB);
 
@@ -91,7 +91,7 @@ namespace Plotter
             ClearSelection();
         }
 
-        public void BondFigures(List<SelectItem> selList)
+        public void BondFigures(IReadOnlyList<SelectItem> selList)
         {
             CadFigureBonder fa = new CadFigureBonder(mDB, CurrentLayer);
 

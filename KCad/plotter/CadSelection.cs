@@ -86,9 +86,19 @@ namespace Plotter
     {
         private List<SelectItem> mList = new List<SelectItem>();
 
-        public List<SelectItem> List
+        public IReadOnlyList<SelectItem> List
         {
             get { return mList; }
+        }
+
+        public int RemoveAll(Predicate<SelectItem> match)
+        {
+            return mList.RemoveAll(match);
+        }
+
+        public void ForEach(Action<SelectItem> action)
+        {
+            mList.ForEach(action);
         }
 
         public void add(uint layerID, CadFigure fig, int pointIndex)

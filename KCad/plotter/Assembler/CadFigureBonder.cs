@@ -81,7 +81,7 @@ namespace Plotter
             public int indexB;
         }
 
-        public Result Bond(List<SelectItem> selList)
+        public Result Bond(IReadOnlyList<SelectItem> selList)
         {
             SelectList = new List<SelectItem>();
 

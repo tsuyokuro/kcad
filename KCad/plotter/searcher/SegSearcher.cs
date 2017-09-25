@@ -14,7 +14,7 @@ namespace Plotter
 
         private List<MarkSeg> IgnoreSegList;
 
-        private List<SelectItem> IgnoreList = null;
+        private IReadOnlyList<SelectItem> IgnoreList = null;
 
         public void SetRangePixel(DrawContext dc, double pixel)
         {
@@ -32,9 +32,9 @@ namespace Plotter
             TargetPoint = p;
         }
 
-        public void SetIgnoreList(List<SelectItem> list)
+        public void SetIgnoreList(IReadOnlyList<SelectItem> list)
         {
-            IgnoreList = list;
+            IgnoreList = list; 
         }
 
         public void SetIgnoreSeg(List<MarkSeg> segList)

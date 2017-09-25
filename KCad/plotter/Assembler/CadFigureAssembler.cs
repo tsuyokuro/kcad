@@ -84,7 +84,7 @@ namespace Plotter
         {
         }
 
-        public Result Cut(List<SelectItem> selList)
+        public Result Cut(IReadOnlyList<SelectItem> selList)
         {
             var sels = (
                 from a in selList
@@ -248,7 +248,7 @@ namespace Plotter
             DB = db;
         }
 
-        public List<CadFigure> Collect(List<SelectItem> selList)
+        public List<CadFigure> Collect(IReadOnlyList<SelectItem> selList)
         {
             List<CadFigure> res = new List<CadFigure>();
 

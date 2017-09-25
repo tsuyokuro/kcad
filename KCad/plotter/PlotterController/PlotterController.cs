@@ -549,13 +549,13 @@ namespace Plotter
         {
             HashSet<uint> idSet = new HashSet<uint>();
 
-            mSelList.List.ForEach(a =>
+            foreach (SelectItem a in mSelList.List)
             {
                 if (!idSet.Contains(a.FigureID))
                 {
                     idSet.Add(a.FigureID);
                 }
-            });
+            }
 
             return idSet;
         }
@@ -658,7 +658,7 @@ namespace Plotter
                 }
             }
 
-            mSelList.List.RemoveAll(a => removeSels.Contains(a));
+            mSelList.RemoveAll(a => removeSels.Contains(a));
 
 
             HashSet<MarkSeg> removeSegs = new HashSet<MarkSeg>();

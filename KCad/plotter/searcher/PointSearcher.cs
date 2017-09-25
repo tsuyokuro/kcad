@@ -18,7 +18,7 @@ namespace Plotter
         private List<MarkPoint> XYMatchList = new List<MarkPoint>();
 
 
-        private List<SelectItem> IgnoreList = null;
+        private IReadOnlyList<SelectItem> IgnoreList = null;
 
         private CadCursor TargetPoint;
         private double mRange;
@@ -52,7 +52,7 @@ namespace Plotter
             TargetPoint = p;
         }
 
-        public void SetIgnoreList(List<SelectItem> list)
+        public void SetIgnoreList(IReadOnlyList<SelectItem> list)
         {
             IgnoreList = list;
         }
