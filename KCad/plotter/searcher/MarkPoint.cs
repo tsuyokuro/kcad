@@ -4,14 +4,6 @@ namespace Plotter
 {
     public struct MarkPoint
     {
-        public enum Types : byte
-        {
-            POINT = 0,
-            IDEPEND_POINT = 2,
-        }
-
-        public Types Type { get; set; }
-
         public static UInt32 X_MATCH = 1;
         public static UInt32 Y_MATCH = 2;
         public static UInt32 Z_MATCH = 4;

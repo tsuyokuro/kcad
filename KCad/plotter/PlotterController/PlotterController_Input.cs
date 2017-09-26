@@ -251,7 +251,7 @@ namespace Plotter
                 MatchIndex = 0;
             }
 
-            if (mp.FigureID != 0 && mp.Type == MarkPoint.Types.POINT)
+            if (mp.FigureID != 0)
             {
                 mObjDownPoint = mp.Point;
 
@@ -768,7 +768,7 @@ namespace Plotter
                     ymatch = true;
                 }
 
-                if (mxy.FigureID != 0 && mxy.Type == MarkPoint.Types.POINT)
+                if (mxy.FigureID != 0)
                 {
                     dc.Drawing.DrawHighlightPoint(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2);
                 }

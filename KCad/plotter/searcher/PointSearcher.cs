@@ -7,8 +7,6 @@ using System.Linq;
 
 namespace Plotter
 {
-
-
     public class PointSearcher
     {
         private MarkPoint xmatch = default(MarkPoint);
@@ -124,7 +122,7 @@ namespace Plotter
 
         public void Check(DrawContext dc, CadVector pt)
         {
-            CheckFigPoint(dc, pt, 0, null, 0, MarkPoint.Types.IDEPEND_POINT);
+            CheckFigPoint(dc, pt, 0, null, 0);
         }
 
         public void Check(DrawContext dc, List<CadVector> list)
@@ -149,11 +147,11 @@ namespace Plotter
             foreach (CadVector pt in pointList)
             {
                 idx++;
-                CheckFigPoint(dc, pt, layer.ID, fig, idx, MarkPoint.Types.POINT);
+                CheckFigPoint(dc, pt, layer.ID, fig, idx);
             }
         }
 
-        private void CheckFigPoint(DrawContext dc, CadVector pt, uint layerID, CadFigure fig, int ptIdx, MarkPoint.Types type)
+        private void CheckFigPoint(DrawContext dc, CadVector pt, uint layerID, CadFigure fig, int ptIdx)
         {
             if (fig != null && IsIgnore(fig.ID, ptIdx))
             {
@@ -178,7 +176,6 @@ namespace Plotter
             {
                 if (nx < xmatch.DistanceX || (nx == xmatch.DistanceX && ny < xmatch.DistanceY))
                 {
-                    xmatch.Type = type;
                     xmatch.LayerID = layerID;
                     xmatch.Figure = fig;
                     xmatch.PointIndex = ptIdx;
@@ -194,7 +191,6 @@ namespace Plotter
             {
                 if (ny < ymatch.DistanceY || (ny == ymatch.DistanceY && nx < ymatch.DistanceX))
                 {
-                    ymatch.Type = type;
                     ymatch.LayerID = layerID;
                     ymatch.Figure = fig;
                     ymatch.PointIndex = ptIdx;
@@ -212,7 +208,6 @@ namespace Plotter
                 {
                     MarkPoint t = default(MarkPoint);
 
-                    t.Type = type;
                     t.LayerID = layerID;
                     t.Figure = fig;
                     t.PointIndex = ptIdx;
