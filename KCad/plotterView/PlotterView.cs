@@ -311,9 +311,9 @@ namespace Plotter
             {
                 mPlotterView.Invoke(new Action(() =>
                 {
-                    DrawContext g = mPlotterView.StartDraw();
+                    DrawContext dc = mPlotterView.StartDraw();
 
-                    mPlotterView.mController.Mouse.MouseMove(g, x, y);
+                    mPlotterView.mController.Mouse.MouseMove(dc, x, y);
 
                     mPlotterView.EndDraw();
                 }));

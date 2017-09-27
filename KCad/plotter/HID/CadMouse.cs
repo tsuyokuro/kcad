@@ -26,7 +26,7 @@ namespace Plotter
         public CadVector RDownPoint = default(CadVector);
         public CadVector MDownPoint = default(CadVector);
 
-        public void MouseMove(DrawContext dc, int x, int y)
+        public void MouseMove(DrawContext dc, double x, double y)
         {
             if (PointerMoved != null)
             {
@@ -34,7 +34,7 @@ namespace Plotter
             }
         }
 
-        public void MouseDown(DrawContext dc, MouseButtons btn, int x, int y)
+        public void MouseDown(DrawContext dc, MouseButtons btn, double x, double y)
         {
             if (btn == MouseButtons.Left)
             {
@@ -59,7 +59,7 @@ namespace Plotter
             }
         }
 
-        public void MouseUp(DrawContext dc, MouseButtons btn, int x, int y)
+        public void MouseUp(DrawContext dc, MouseButtons btn, double x, double y)
         {
             if (btn == MouseButtons.Left)
             {
@@ -75,7 +75,7 @@ namespace Plotter
             }
         }
 
-        public void MouseWheel(DrawContext dc, int x, int y, int delta)
+        public void MouseWheel(DrawContext dc, double x, double y, int delta)
         {
             if (Wheel != null)
             {

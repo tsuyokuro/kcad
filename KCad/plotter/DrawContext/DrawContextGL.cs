@@ -71,6 +71,9 @@ namespace Plotter
             double far = 1500.0;
 
 
+            // FovY 視野角を指定
+            // 視野角に合わせて視点、視錐台の近遠を調整
+
             switch (type)
             {
                 case ProjectionType.TELESCOPE:
@@ -273,7 +276,6 @@ namespace Plotter
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 
             double aspect = mViewWidth / mViewHeight;
-            double fovy = Math.PI / 2.0f; // Yの傾き
 
             mProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
                                             FovY,

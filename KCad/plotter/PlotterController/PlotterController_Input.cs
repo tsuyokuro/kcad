@@ -133,7 +133,7 @@ namespace Plotter
             Mouse.MButtonDown = MButtonDown;
             Mouse.MButtonUp = MButtonUp;
 
-            Mouse.PointerMoved = PointerMoved;
+            Mouse.PointerMoved = MouseMove;
 
             Mouse.Wheel = Wheel;
         }
@@ -657,7 +657,7 @@ namespace Plotter
         {
         }
 
-        private void PointerMoved(CadMouse pointer, DrawContext dc, double x, double y)
+        private void MouseMove(CadMouse pointer, DrawContext dc, double x, double y)
         {
             if ((Control.MouseButtons & MouseButtons.Middle) != 0)
             {
@@ -909,7 +909,7 @@ namespace Plotter
         private void LDrag(CadMouse pointer, DrawContext dc, int x, int y)
         {
             //Log.d("LDrag");
-            PointerMoved(pointer, dc, x, y);
+            MouseMove(pointer, dc, x, y);
         }
 
 
@@ -953,10 +953,10 @@ namespace Plotter
             MeasureFigure.AddPointInCreating(dc, p);
         }
 
-        public void SearchNearestPoint()
+        public void MoveCursorNearestPoint(DrawContext dc)
         {
             SpPointSearcher sps = new SpPointSearcher();
-            CadVector sv = sps.search(this, CrossCursor.Pos);
+            CadVector sv = sps.Search(this, CrossCursor.Pos);
 
             if (sv.Invalid)
             {
@@ -964,6 +964,8 @@ namespace Plotter
             }
 
             LockCursorScrn(sv);
+
+            Mouse.MouseMove(dc, sv.x, sv.y);
 
             //CadVector tv = CurrentDC.UnitPointToCadPoint(sv);
             //CadFigure tfig = new CadFigure(CadFigure.Types.POINT);

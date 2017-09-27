@@ -71,7 +71,7 @@ namespace Plotter
 
         public double Range = 64;
 
-        public CadVector search(PlotterController controller, CadVector p)
+        public CadVector Search(PlotterController controller, CadVector p)
         {
             Controller = controller;
             DC = Controller.CurrentDC;
@@ -109,6 +109,11 @@ namespace Plotter
             {
                 CadVector p = fig.PointList[i];
 
+                if (p.Selected)
+                {
+                    continue;
+                }
+
                 p = DC.CadPointToUnitPoint(p);
 
                 CadVector d = p - TargetPoint;
@@ -139,6 +144,11 @@ namespace Plotter
             for (int i = 0; i < n; i++)
             {
                 CadSegment seg = fig.GetSegmentAt(i);
+
+                if (seg.P0.Selected || seg.P1.Selected)
+                {
+                    continue;
+                }
 
                 CadVector p0 = DC.CadPointToUnitPoint(seg.P0);
                 CadVector p1 = DC.CadPointToUnitPoint(seg.P1);
