@@ -42,16 +42,6 @@ namespace Plotter
             {
                 return;
             }
-
-            /*
-            mProjectionMatrix.GLMatrix =
-                Matrix4d.CreateOrthographic(mViewWidth, mViewHeight, ProjectionNear, ProjectionFar);
-
-            mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
-
-            CadUtil.Dump(DebugOut.Std, mProjectionMatrix, "Proj");
-            CadUtil.Dump(DebugOut.Std, mProjectionMatrixInv, "Proj inv");
-            */
         }
 
         public override void StartDraw(Bitmap image)

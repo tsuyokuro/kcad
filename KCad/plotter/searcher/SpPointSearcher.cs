@@ -141,6 +141,7 @@ namespace Plotter
             // 範囲内の線分リスト作成
             // ついでに中点のチェックも行う
             n = fig.SegmentCount;
+
             for (int i = 0; i < n; i++)
             {
                 CadSegment seg = fig.GetSegmentAt(i);

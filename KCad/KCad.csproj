@@ -163,6 +163,7 @@
     <Compile Include="MySplashWindow.xaml.cs">
       <DependentUpon>MySplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="plotter\DrawContext\DrawContextPrinter.cs" />
     <Compile Include="plotter\DrawContext\IDrawing.cs" />
     <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
     <Compile Include="plotter\PlotterSettings.cs" />

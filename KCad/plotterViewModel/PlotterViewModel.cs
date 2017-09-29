@@ -936,32 +936,7 @@ namespace Plotter
 
         private void DrawPage(System.Drawing.Graphics g)
         {
-            DrawContextGDI dc = new DrawContextGDI();
-
-            dc.graphics = g;
-            dc.SetupTools(DrawTools.ToolsType.PRINTER);
-            dc.PageSize = mPlotterView.PageSize;
-
-            // Default printers's unit is 1/100 inch
-            dc.SetUnitPerInch(100.0);
-
-            dc.CopyCamera(mController.CurrentDC);
-
-            if (mController.CurrentDC is DrawContextGL)
-            {
-                dc.WoldScale = 0.2;
-                dc.UnitPerMilli = 1.0;
-                dc.DeviceScaleX = mController.CurrentDC.ViewWidth / 2.0;
-                dc.DeviceScaleY = -mController.CurrentDC.ViewHeight / 2.0;
-            }
-
-            CadVector org = default(CadVector);
-
-            org.x = dc.PageSize.widthInch / 2.0 * 100;
-            org.y = dc.PageSize.heightInch / 2.0 * 100;
-
-            dc.ViewOrg = org;
-
+            DrawContextPrinter dc = new DrawContextPrinter(mController.CurrentDC, g, mPlotterView.PageSize);
             mController.Print(dc);
         }
         #endregion
