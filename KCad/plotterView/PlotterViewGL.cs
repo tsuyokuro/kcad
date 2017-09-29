@@ -63,6 +63,9 @@ namespace Plotter
             MouseMove += OnMouseMove;
             MouseDown += OnMouseDown;
             MouseUp += OnMouseUp;
+
+            mDrawContext.OnPush = OnPush;
+
             //SwapBuffers();
         }
 
@@ -163,12 +166,19 @@ namespace Plotter
         public void EndDraw()
         {
             mDrawContext.EndDraw();
-            SwapBuffers();
         }
 
         public void SetController(PlotterController controller)
         {
             mController = controller;
         }
+
+        public void OnPush(DrawContext dc)
+        {
+            if (dc == mDrawContext)
+            {
+                SwapBuffers();
+            }
+        } 
     }
 }

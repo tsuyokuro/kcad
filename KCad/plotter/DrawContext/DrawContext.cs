@@ -6,8 +6,22 @@ using static System.Math;
 
 namespace Plotter
 {
-    public abstract class DrawContext
+    public abstract class DrawContext : IDisposable
     {
+        public delegate void DelegatePush(DrawContext dc);
+
+        DelegatePush mOnPush;
+
+
+        public DelegatePush OnPush
+        {
+            set
+            {
+                mOnPush = value;
+            }
+        }
+
+
         // 用紙サイズ
         public PaperPageSize PageSize = new PaperPageSize();
 
@@ -152,18 +166,18 @@ namespace Plotter
         {
         }
 
-        public virtual void StartDraw(Bitmap image)
-        {
-        }
-
-        public virtual void StartDraw(Image image)
-        {
-        }
-
         public virtual void EndDraw()
         {
+            Push();
         }
 
+        public void Push()
+        {
+            if (mOnPush != null)
+            {
+                mOnPush(this);
+            }
+        }
 
         // set dots per milli.
         public virtual void SetUnitPerMilli(double upm)
@@ -230,6 +244,10 @@ namespace Plotter
 
             CadVector t = CadVector.Create(mViewDir);
             t.dump(dout, "ViewDir");
+        }
+
+        public virtual void Dispose()
+        {
         }
     }
 }

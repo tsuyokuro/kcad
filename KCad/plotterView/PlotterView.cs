@@ -17,7 +17,6 @@ namespace Plotter
 
     public partial class PlotterView : PictureBox, IPlotterView
     {
-        private Bitmap mImage;
         private PlotterController mController = null;
 
         private bool firstSizeChange = true;
@@ -34,7 +33,7 @@ namespace Plotter
 
         MyMessageHandler mMessageHandler;
 
-        private DrawContext mDrawContext = new DrawContextGDI();
+        private DrawContextGDI mDrawContext = new DrawContextGDI();
 
         public DrawContext DrawContext
         {
@@ -69,6 +68,8 @@ namespace Plotter
             mMessageHandler.start();
 
             mDrawContext.SetupTools(DrawTools.ToolsType.DARK);
+
+            mDrawContext.OnPush = OnPush;
 
             base.MouseMove += mouseMove;
             base.MouseDown += mouseDown;
@@ -108,10 +109,7 @@ namespace Plotter
 
         protected override void Dispose(bool disposing)
         {
-            if (mImage != null)
-            {
-                mImage.Dispose();
-            }
+            mDrawContext.Dispose();
 
             base.Dispose(disposing);
         }
@@ -122,15 +120,8 @@ namespace Plotter
 
         private void onSizeChanged(object sender, System.EventArgs e)
         {
-            if (mImage != null)
-            {
-                mImage.Dispose();
-            }
-
             if (Width > 0 && Height > 0)
             {
-                mImage = new Bitmap(Width, Height);
-
                 mDrawContext.SetViewSize(Width, Height);
 
                 if (firstSizeChange)
@@ -153,24 +144,34 @@ namespace Plotter
 
         public DrawContext StartDraw()
         {
-            mDrawContext.StartDraw(mImage);
+            mDrawContext.StartDraw();
             return mDrawContext;
         }
 
         public void EndDraw()
         {
             mDrawContext.EndDraw();
-            Image = mImage;
+        }
+
+        public void OnPush(DrawContext dc)
+        {
+            if (dc == mDrawContext)
+            {
+                Image = mDrawContext.Image;
+            }
         }
 
         private void mouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            /*
-            DrawContext g = StartDraw();
-            mController.Mouse.MouseMove(g, e.X, e.Y);
-            EndDraw();
-            */
+            // Mouse eventを直接処理
+            //DrawContext g = StartDraw();
+            //mController.Mouse.MouseMove(g, e.X, e.Y);
+            //EndDraw();
 
+
+            // Mouse eventを別スレッドで処理
+
+            // 未処理のEventは破棄
             mMessageHandler.RemoveAll(MyMessageHandler.MOUSE_MOVE);
 
             MessageHandler.Message msg = mMessageHandler.ObtainMessage();
@@ -283,7 +284,6 @@ namespace Plotter
                 mController.RequestContextMenu += ShowContextMenu;
             }
         }
-
 
         class MyMessageHandler : MessageHandler
         {

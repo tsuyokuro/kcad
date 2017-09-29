@@ -168,10 +168,6 @@ namespace Plotter
             SetupLight();
         }
 
-        public override void EndDraw()
-        {
-        }
-
         public override CadVector CadPointToUnitPoint(CadVector pt)
         {
             CadVector p = CadVectorToUnitVector(pt);

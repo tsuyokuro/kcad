@@ -9,10 +9,20 @@ namespace Plotter
 
         protected Graphics mGraphics = null;
 
+        private Bitmap mImage = null;
+
         public Graphics graphics
         {
             set { mGraphics = value; }
             get { return mGraphics; }
+        }
+
+        public Bitmap Image
+        {
+            get
+            {
+                return mImage;
+            }
         }
 
         public DrawContextGDI()
@@ -42,41 +52,51 @@ namespace Plotter
             {
                 return;
             }
+
+            DisposeGraphics();
+
+
+            mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
+            mGraphics = Graphics.FromImage(mImage);
         }
 
-        public override void StartDraw(Bitmap image)
-        {
-            if (image == null)
-            {
-                return;
-            }
+        //public override void StartDraw(Bitmap image)
+        //{
+        //    if (image == null)
+        //    {
+        //        return;
+        //    }
 
-            if (mGraphics == null)
-            {
-                mGraphics = Graphics.FromImage(image);
-            }
-            GraphicsRef++;
-        }
+        //    if (mGraphics == null)
+        //    {
+        //        mGraphics = Graphics.FromImage(image);
+        //    }
+        //    GraphicsRef++;
+        //}
 
-        public override void EndDraw()
-        {
-            GraphicsRef--;
-            if (GraphicsRef <= 0)
-            {
-                DisposeGraphics();
-                GraphicsRef = 0;
-            }
-        }
+        //public override void EndDraw()
+        //{
+        //    GraphicsRef--;
+        //    if (GraphicsRef <= 0)
+        //    {
+        //        DisposeGraphics();
+        //        GraphicsRef = 0;
+        //    }
+        //}
 
         private void DisposeGraphics()
         {
-            if (mGraphics == null)
+            if (mGraphics != null)
             {
-                return;
+                mGraphics.Dispose();
+                mGraphics = null;
             }
 
-            mGraphics.Dispose();
-            mGraphics = null;
+            if (mImage != null)
+            {
+                mImage.Dispose();
+                mImage = null;
+            }
         }
 
         public override CadVector CadPointToUnitPoint(CadVector pt)
@@ -130,6 +150,11 @@ namespace Plotter
             wv /= WoldScale;
 
             return CadVector.Create(wv);
+        }
+
+        public override void Dispose()
+        {
+            DisposeGraphics();
         }
 
         public Pen Pen(int id)
