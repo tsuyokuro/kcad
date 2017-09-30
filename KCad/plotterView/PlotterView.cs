@@ -69,7 +69,7 @@ namespace Plotter
 
             mDrawContext.SetupTools(DrawTools.ToolsType.DARK);
 
-            mDrawContext.OnPush = OnPush;
+            mDrawContext.OnPush = OnPushDraw;
 
             base.MouseMove += mouseMove;
             base.MouseDown += mouseDown;
@@ -153,7 +153,7 @@ namespace Plotter
             mDrawContext.EndDraw();
         }
 
-        public void OnPush(DrawContext dc)
+        public void OnPushDraw(DrawContext dc)
         {
             if (dc == mDrawContext)
             {

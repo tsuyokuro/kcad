@@ -64,7 +64,7 @@ namespace Plotter
             MouseDown += OnMouseDown;
             MouseUp += OnMouseUp;
 
-            mDrawContext.OnPush = OnPush;
+            mDrawContext.OnPush = OnPushDraw;
 
             //SwapBuffers();
         }
@@ -173,7 +173,7 @@ namespace Plotter
             mController = controller;
         }
 
-        public void OnPush(DrawContext dc)
+        public void OnPushDraw(DrawContext dc)
         {
             if (dc == mDrawContext)
             {

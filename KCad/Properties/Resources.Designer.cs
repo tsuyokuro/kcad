@@ -19,7 +19,7 @@ namespace KCad.Properties {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -63,15 +63,6 @@ namespace KCad.Properties {
         /// <summary>
         ///   import math
         ///
-        ///x=0
-        ///y=0
-        ///z=0
-        ///
-        ///w=10
-        ///h=10
-        ///
-        ///ratio=0.5
-        ///
         ///def putMsg(s):
         ///    SE.PutMsg(s)
         ///
@@ -106,7 +97,10 @@ namespace KCad.Properties {
         ///    SE.AddLayer(name)
         ///
         ///def reverse():
-        ///    SE.ReverseOr [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        ///    SE.ReverseOrder()
+        ///
+        ///def move(x, y, z):
+        ///    SE.Move(x,  [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string BaseScript {
             get {
