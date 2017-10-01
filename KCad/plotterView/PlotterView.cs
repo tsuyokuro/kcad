@@ -135,10 +135,7 @@ namespace Plotter
                     firstSizeChange = false;
                 }
 
-                DrawContext dc = StartDraw();
-                mController.Clear(dc);
-                mController.Draw(dc);
-                EndDraw();
+                RedrawAll();
             }
         }
 
@@ -166,7 +163,7 @@ namespace Plotter
             // Mouse eventを直接処理
             //DrawContext g = StartDraw();
             //mController.Mouse.MouseMove(g, e.X, e.Y);
-            //EndDraw();
+            //RedrawAll();
 
 
             // Mouse eventを別スレッドで処理
@@ -198,7 +195,7 @@ namespace Plotter
 
             mController.Mouse.MouseDown(dc, e.Button, e.X, e.Y);
 
-            EndDraw();
+            RedrawAll();
         }
 
         private void mouseUp(Object sender, MouseEventArgs e)
@@ -207,7 +204,7 @@ namespace Plotter
 
             mController.Mouse.MouseUp(g, e.Button, e.X, e.Y);
 
-            EndDraw();
+            RedrawAll();
         }
 
         private void mouseWheel(object sender, MouseEventArgs e)
@@ -216,7 +213,7 @@ namespace Plotter
 
             mController.Mouse.MouseWheel(g, e.X, e.Y, e.Delta);
 
-            EndDraw();
+            RedrawAll();
         }
 
         public void ShowContextMenu(PlotterController sender, PlotterController.StateInfo state, int x, int y)
@@ -315,7 +312,7 @@ namespace Plotter
 
                     mPlotterView.mController.Mouse.MouseMove(dc, x, y);
 
-                    mPlotterView.EndDraw();
+                    mPlotterView.RedrawAll();
                 }));
             }
         }

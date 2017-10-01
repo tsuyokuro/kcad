@@ -422,6 +422,9 @@ namespace Plotter
             Draw(dc);
             DrawSelectedItems(dc);
             DrawLastPoint(dc);
+
+            DrawHighlightPoint(dc);
+            DrawAccordingState(dc);
         }
 
         public void Draw(DrawContext dc)
@@ -485,12 +488,12 @@ namespace Plotter
 
         public void DrawCursor(DrawContext dc)
         {
-            dc.Drawing.DrawCursorScrn(mSnapScrnPoint);
+            dc.Drawing.DrawCursorScrn(mSnapPointScrn);
         }
 
         public void DrawCrossCursor(DrawContext dc)
         {
-            CrossCursor.Pos = mSnapScrnPoint;
+            CrossCursor.Pos = mSnapPointScrn;
             dc.Drawing.DrawCrossCursorScrn(CrossCursor);
         }
 

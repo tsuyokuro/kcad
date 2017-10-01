@@ -32,7 +32,7 @@ namespace Plotter
 
         public CadVector CrossPoint;
 
-        public CadVector CrossViewPoint;
+        public CadVector CrossPointScrn;
 
         public CadVector CenterPoint
         {

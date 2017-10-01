@@ -215,7 +215,7 @@ namespace Plotter
                 seg.PtIndexA = idxA;
                 seg.PtIndexB = idxB;
                 seg.CrossPoint = cp;
-                seg.CrossViewPoint = p;
+                seg.CrossPointScrn = p;
                 seg.Distance = dist;
 
                 seg.pA = a;
@@ -287,7 +287,7 @@ namespace Plotter
                 seg.PtIndexA = 0;
                 seg.PtIndexB = idxB;
                 seg.CrossPoint = td;
-                seg.CrossViewPoint = dc.CadPointToUnitPoint(td);
+                seg.CrossPointScrn = dc.CadPointToUnitPoint(td);
                 seg.Distance = dist;
 
                 seg.pA = c;

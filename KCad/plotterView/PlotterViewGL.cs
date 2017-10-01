@@ -16,9 +16,6 @@ namespace Plotter
 
         MouseButtons DownButton = MouseButtons.None;
 
-
-
-
         public DrawContext DrawContext
         {
             get
@@ -72,12 +69,9 @@ namespace Plotter
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
             DownButton = MouseButtons.None;
-
-            StartDraw();
-
             mController.Mouse.MouseUp(mDrawContext, e.Button, e.X, e.Y);
 
-            EndDraw();
+            RedrawAll();
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
@@ -87,11 +81,8 @@ namespace Plotter
 
             if (DownButton != MouseButtons.Middle)
             {
-                StartDraw();
-
                 mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
 
-                EndDraw();
             }
         }
 
@@ -120,22 +111,27 @@ namespace Plotter
 
                 mDrawContext.RotateEyePoint(prev, current);
 
-                StartDraw();
-                mController.Clear(mDrawContext);
-                mController.DrawAll(mDrawContext);
-                EndDraw();
+                RedrawAll();
 
                 PrevMousePos = t;
             }
             // TODO とりあえずDragできない様にしときます
             else if (DownButton == MouseButtons.None)
             {
-                DrawContext dc = StartDraw();
+                //DrawContext dc = StartDraw();
 
-                mController.Mouse.MouseMove(dc, e.X, e.Y);
+                mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
 
-                EndDraw();
+                RedrawAll();
             }
+        }
+
+        public void RedrawAll()
+        {
+            DrawContext dc = StartDraw();
+            mController.Clear(dc);
+            mController.DrawAll(dc);
+            EndDraw();
         }
 
         private void OnPaint(object sender, PaintEventArgs e)
@@ -149,10 +145,7 @@ namespace Plotter
 
             if (mController != null)
             {
-                DrawContext dc = StartDraw();
-                mController.Clear(dc);
-                mController.Draw(dc);
-                EndDraw();
+                RedrawAll();
             }
         }
 
