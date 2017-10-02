@@ -628,7 +628,12 @@ namespace Plotter
             else
             {
                 s = s.Remove(0, 1);
-                Controller.debugCommand(s);
+
+                Controller.CurrentDC.StartDraw();
+
+                Controller.debugCommand(Controller.CurrentDC, s);
+
+                Controller.CurrentDC.EndDraw();
             }
         }
 

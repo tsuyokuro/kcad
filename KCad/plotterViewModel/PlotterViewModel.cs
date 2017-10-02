@@ -671,11 +671,8 @@ namespace Plotter
 
         public void SearchNearestPoint()
         {
-            DrawContext dc = StartDraw();
-            mController.Clear(dc);
-            mController.MoveCursorNearestPoint(dc);
-            mController.DrawAll(dc);
-            EndDraw();
+            mController.MoveCursorNearestPoint(mPlotterView.DrawContext);
+            RedrawAll();
         }
 
         #endregion
@@ -952,7 +949,14 @@ namespace Plotter
 
         public void DebugCommand(string s)
         {
-            mController.debugCommand(s);
+            DrawContext dc = StartDraw();
+
+            mController.Clear(dc);
+
+            mController.debugCommand(dc, s);
+
+            mController.DrawAll(dc);
+            EndDraw();
         }
         #endregion
 

@@ -60,30 +60,6 @@ namespace Plotter
             mGraphics = Graphics.FromImage(mImage);
         }
 
-        //public override void StartDraw(Bitmap image)
-        //{
-        //    if (image == null)
-        //    {
-        //        return;
-        //    }
-
-        //    if (mGraphics == null)
-        //    {
-        //        mGraphics = Graphics.FromImage(image);
-        //    }
-        //    GraphicsRef++;
-        //}
-
-        //public override void EndDraw()
-        //{
-        //    GraphicsRef--;
-        //    if (GraphicsRef <= 0)
-        //    {
-        //        DisposeGraphics();
-        //        GraphicsRef = 0;
-        //    }
-        //}
-
         private void DisposeGraphics()
         {
             if (mGraphics != null)

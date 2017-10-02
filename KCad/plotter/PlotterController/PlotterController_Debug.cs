@@ -154,7 +154,7 @@ namespace Plotter
             CurrentLayer.AddFigure(line);
         }
 
-        private void test_crossPlane2()
+        private void test_crossPlane2(DrawContext dc)
         {
             if (mSelList.List.Count == 0)
             {
@@ -176,7 +176,7 @@ namespace Plotter
             }
 
             CadVector a = LastDownPoint;
-            CadVector b = a + CadVector.Create(CurrentDC.ViewDir);
+            CadVector b = a + CadVector.Create(dc.ViewDir);
 
             CadVector normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
 
@@ -202,7 +202,7 @@ namespace Plotter
             CurrentLayer.AddFigure(line);
         }
 
-        private void test_crossPlane3()
+        private void test_crossPlane3(DrawContext dc)
         {
             if (mSelList.List.Count == 0)
             {
@@ -223,12 +223,12 @@ namespace Plotter
                 return;
             }
 
-            CadVector a = CurrentDC.CadPointToUnitPoint(LastDownPoint);
+            CadVector a = dc.CadPointToUnitPoint(LastDownPoint);
             CadVector b = a;
             b.z -= 100;
 
-            a = CurrentDC.UnitPointToCadPoint(a);
-            b = CurrentDC.UnitPointToCadPoint(b);
+            a = dc.UnitPointToCadPoint(a);
+            b = dc.UnitPointToCadPoint(b);
 
             CadVector normal = CadMath.Normal(fig.PointList[0], fig.PointList[1], fig.PointList[2]);
 
@@ -254,14 +254,14 @@ namespace Plotter
             CurrentLayer.AddFigure(line);
         }
 
-        private void test_depthLine()
+        private void test_depthLine(DrawContext dc)
         {
-            CadVector a = CurrentDC.CadPointToUnitPoint(LastDownPoint);
+            CadVector a = dc.CadPointToUnitPoint(LastDownPoint);
             CadVector b = a;
             b.z -= 100;
 
-            a = CurrentDC.UnitPointToCadPoint(a);
-            b = CurrentDC.UnitPointToCadPoint(b);
+            a = dc.UnitPointToCadPoint(a);
+            b = dc.UnitPointToCadPoint(b);
 
             CadFigure line = DB.NewFigure(CadFigure.Types.POLY_LINES);
 
@@ -407,17 +407,17 @@ namespace Plotter
             Vector4d vd = Vector4d.Transform(v, m.GLMatrix);
         }
 
-        private void testGLInvert()
+        private void testGLInvert(DrawContext dc)
         {
             CadVector p0 = CadVector.Create(10, 10, 0);
 
-            p0 += CurrentDC.ViewOrg;
+            p0 += dc.ViewOrg;
 
-            CadVector pc = CurrentDC.UnitPointToCadPoint(p0);
+            CadVector pc = dc.UnitPointToCadPoint(p0);
 
-            CadVector ps = CurrentDC.CadPointToUnitPoint(pc);
+            CadVector ps = dc.CadPointToUnitPoint(pc);
 
-            ps -= CurrentDC.ViewOrg;
+            ps -= dc.ViewOrg;
 
             //DebugOut.Std.println("View");
             //ps.dump(DebugOut.Std);
@@ -469,7 +469,7 @@ namespace Plotter
             InteractOut.println("Loading ...");
         }
 
-        public void debugCommand(string s)
+        public void debugCommand(DrawContext dc, string s)
         {
             if (s == "test")
             {
@@ -493,7 +493,7 @@ namespace Plotter
 
             else if (s == "test gi")
             {
-                testGLInvert();
+                testGLInvert(dc);
             }
 
             else if (s == "clean temp")
@@ -503,7 +503,7 @@ namespace Plotter
 
             else if (s == "depthLine")
             {
-                test_depthLine();
+                test_depthLine(dc);
             }
 
             else if (s == "test q")
@@ -553,12 +553,12 @@ namespace Plotter
 
             else if (s == "crossPlane2")
             {
-                test_crossPlane2();
+                test_crossPlane2(dc);
             }
 
             else if (s == "crossPlane3")
             {
-                test_crossPlane3();
+                test_crossPlane3(dc);
             }
 
             else if (s == "dump sels")
