@@ -256,6 +256,11 @@ namespace Plotter
                 return new CadSegment(CadVector.InvalidValue, CadVector.InvalidValue);
             }
 
+            public virtual FigureSegment GetFigSegmentAt(CadFigure fig, int n)
+            {
+                return new FigureSegment(null, -1, -1);
+            }
+
             public override int SegmentCount(CadFigure fig)
             {
                 return 0;

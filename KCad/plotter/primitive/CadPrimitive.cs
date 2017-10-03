@@ -72,6 +72,20 @@ namespace Plotter
         }
     }
 
+    public struct FigureSegment
+    {
+        CadFigure Fig;
+        public int Index0;
+        public int Index1;
+
+        public FigureSegment(CadFigure fig, int a, int b)
+        {
+            Fig = fig;
+            Index0 = a;
+            Index1 = b;
+        }
+    }
+
     public struct CadRect
     {
         public CadVector p0;

@@ -652,6 +652,12 @@ namespace Plotter
             return Behavior.GetSegmentAt(this, n);
         }
 
+        public FigureSegment GetFigSegmentAt(int n)
+        {
+            return Behavior.GetFigSegmentAt(this, n);
+        }
+
+
         public int SegmentCount
         {
             get
