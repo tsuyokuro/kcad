@@ -8,7 +8,24 @@ namespace Plotter
 {
     public struct MarkSeg
     {
-        public uint LayerID;
+        public CadLayer Layer;
+
+        public uint LayerID
+        {
+            get
+            {
+                if (Layer == null)
+                {
+                    return 0;
+                }
+
+                return Layer.ID;
+            }
+        }
+
+
+        public CadFigure Figure;
+
         public uint FigureID
         {
             get
@@ -21,8 +38,6 @@ namespace Plotter
                 return Figure.ID;
             }
         }
-
-        public CadFigure Figure;
 
         public int PtIndexA;
         public CadVector pA;

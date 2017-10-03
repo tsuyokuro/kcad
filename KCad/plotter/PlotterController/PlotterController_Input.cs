@@ -227,7 +227,7 @@ namespace Plotter
             mPointSearcher.CleanMatches();
             mPointSearcher.SetRangePixel(dc, PointSnapRange);
 
-            if (CurrentFigure != null)
+            if (CurrentFigure != null && !CadKeyboard.IsShiftKeyDown())
             {
                 mPointSearcher.CheckFigure(dc, CurrentLayer, CurrentFigure);
             }
@@ -240,15 +240,24 @@ namespace Plotter
 
             MarkPoint mp = default(MarkPoint);
 
+            DebugOut.StdPrintLn("MatchIndex = " + MatchIndex.ToString());
+
             mp = mPointSearcher.GetXYMatch(MatchIndex);
 
             if (CadKeyboard.IsShiftKeyDown())
             {
                 MatchIndex++;
-                mp = mPointSearcher.GetXYMatch(MatchIndex);
+                if (MatchIndex >= mPointSearcher.GetXYMatches().Count)
+                {
+                    MatchIndex = 0;
+                }
+            }
+            else
+            {
+                MatchIndex = 0;
             }
 
-            if (mp.FigureID == 0)
+            if (!mp.IsValid)
             {
                 MatchIndex = 0;
             }
@@ -724,7 +733,7 @@ namespace Plotter
                 MarkPoint mx = mPointSearcher.GetXMatch();
                 MarkPoint my = mPointSearcher.GetYMatch();
 
-                if ((mx.Flag & MarkPoint.X_MATCH) != 0)
+                if (mx.IsValid)
                 {
                     HighlightPointList.Add(new HighlightPointListItem(mx.Point));
 
@@ -745,7 +754,7 @@ namespace Plotter
                     xmatch = true;
                 }
 
-                if ((my.Flag & MarkPoint.Y_MATCH) != 0)
+                if (my.IsValid)
                 {
                     HighlightPointList.Add(new HighlightPointListItem(my.Point));
 
@@ -766,7 +775,7 @@ namespace Plotter
                     ymatch = true;
                 }
 
-                if (mxy.FigureID != 0)
+                if (mxy.IsValid)
                 {
                     HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
                 }

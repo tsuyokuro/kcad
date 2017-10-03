@@ -83,61 +83,7 @@ namespace Plotter
             }
         }
 
-        /*
-        private void CheckSeg(DrawContext dc, uint layerID, CadFigure fig, int idxA, int idxB, CadVector a, CadVector b)
-        {
-            if (fig != null && IsIgnore(fig.ID, idxA))
-            {
-                return;
-            }
-
-            if (fig != null && IsIgnore(fig.ID, idxB))
-            {
-                return;
-            }
-
-            CadVector pa = dc.CadPointToUnitPoint(a);
-            CadVector pb = dc.CadPointToUnitPoint(b);
-
-            CrossInfo ret = CadUtil.PerpendicularCrossSeg2D(pa, pb, TargetPoint.Pos);
-
-            if (!ret.IsCross)
-            {
-                return;
-            }
-
-            CadVector d = ret.CrossPoint - TargetPoint.Pos;
-
-            double dist = d.Norm();
-
-
-            if (dist > mRange)
-            {
-                return;
-            }
-
-            if (dist < minDist)
-            {
-                CadVector tp = dc.UnitPointToCadPoint(TargetPoint.Pos);
-                CrossInfo ret3d = CadUtil.PerpendicularCrossLine(a, b, tp);
-
-                seg.LayerID = layerID;
-                seg.Figure = fig;
-                seg.PtIndexA = idxA;
-                seg.PtIndexB = idxB;
-                seg.CrossPoint = ret3d.CrossPoint;
-                seg.CrossViewPoint = ret.CrossPoint;
-                seg.Distance = dist;
-
-                seg.pA = a;
-                seg.pB = b;
-
-                minDist = dist;
-            }
-        }
-        */
-
-        private void CheckSeg(DrawContext dc, uint layerID, CadFigure fig, int idxA, int idxB, CadVector a, CadVector b)
+        private void CheckSeg(DrawContext dc, CadLayer layer, CadFigure fig, int idxA, int idxB, CadVector a, CadVector b)
         {
             if (fig != null && IsIgnore(fig.ID, idxA))
             {
@@ -210,7 +156,7 @@ namespace Plotter
 
                 CadVector cp = (b - a) * f + a;
 
-                seg.LayerID = layerID;
+                seg.Layer = layer;
                 seg.Figure = fig;
                 seg.PtIndexA = idxA;
                 seg.PtIndexB = idxB;
@@ -282,7 +228,7 @@ namespace Plotter
                 td *= (r / tr);
                 td += c;
 
-                seg.LayerID = layer.ID;
+                seg.Layer = layer;
                 seg.Figure = fig;
                 seg.PtIndexA = 0;
                 seg.PtIndexB = idxB;
@@ -341,7 +287,7 @@ namespace Plotter
                     continue;
                 }
 
-                CheckSeg(dc, layer.ID, fig, ia, ib, a, b);
+                CheckSeg(dc, layer, fig, ia, ib, a, b);
 
                 a = b;
 
@@ -353,7 +299,7 @@ namespace Plotter
             if (fig.IsLoop)
             {
                 b = pl[0];
-                CheckSeg(dc, layer.ID, fig, pl.Count - 1, 0, a, b);
+                CheckSeg(dc, layer, fig, pl.Count - 1, 0, a, b);
             }
         }
 

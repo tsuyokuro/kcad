@@ -65,15 +65,19 @@ namespace Plotter
             return ymatch;
         }
 
-        public MarkPoint GetXYMatch(int n = 0)
+        public MarkPoint GetXYMatch(int n = -1)
         {
-            if (XYMatchList.Count > 0)
+            if (n==-1)
             {
-                n %= XYMatchList.Count;
-                return XYMatchList[n];
+                return xymatch;
             }
 
-            return xymatch;
+            if (XYMatchList.Count == 0)
+            {
+                return xymatch;
+            }
+
+            return XYMatchList[n];
         }
 
         public List<MarkPoint> GetXYMatches()
@@ -122,7 +126,7 @@ namespace Plotter
 
         public void Check(DrawContext dc, CadVector pt)
         {
-            CheckFigPoint(dc, pt, 0, null, 0);
+            CheckFigPoint(dc, pt, null, null, 0);
         }
 
         public void Check(DrawContext dc, List<CadVector> list)
@@ -147,11 +151,11 @@ namespace Plotter
             foreach (CadVector pt in pointList)
             {
                 idx++;
-                CheckFigPoint(dc, pt, layer.ID, fig, idx);
+                CheckFigPoint(dc, pt, layer, fig, idx);
             }
         }
 
-        private void CheckFigPoint(DrawContext dc, CadVector pt, uint layerID, CadFigure fig, int ptIdx)
+        private void CheckFigPoint(DrawContext dc, CadVector pt, CadLayer layer, CadFigure fig, int ptIdx)
         {
             if (fig != null && IsIgnore(fig.ID, ptIdx))
             {
@@ -176,12 +180,12 @@ namespace Plotter
             {
                 if (nx < xmatch.DistanceX || (nx == xmatch.DistanceX && ny < xmatch.DistanceY))
                 {
-                    xmatch.LayerID = layerID;
+                    xmatch.IsValid = true;
+                    xmatch.Layer = layer;
                     xmatch.Figure = fig;
                     xmatch.PointIndex = ptIdx;
                     xmatch.Point = pt;
                     xmatch.ViewPoint = ppt;
-                    xmatch.Flag |= MarkPoint.X_MATCH;
                     xmatch.DistanceX = nx;
                     xmatch.DistanceY = ny;
                 }
@@ -191,12 +195,12 @@ namespace Plotter
             {
                 if (ny < ymatch.DistanceY || (ny == ymatch.DistanceY && nx < ymatch.DistanceX))
                 {
-                    ymatch.LayerID = layerID;
+                    ymatch.IsValid = true;
+                    ymatch.Layer = layer;
                     ymatch.Figure = fig;
                     ymatch.PointIndex = ptIdx;
                     ymatch.Point = pt;
                     ymatch.ViewPoint = ppt;
-                    ymatch.Flag |= MarkPoint.Y_MATCH;
                     ymatch.DistanceX = nx;
                     ymatch.DistanceY = ny;
                 }
@@ -208,22 +212,38 @@ namespace Plotter
                 {
                     MarkPoint t = default(MarkPoint);
 
-                    t.LayerID = layerID;
+                    t.IsValid = true;
+                    t.Layer = layer;
                     t.Figure = fig;
                     t.PointIndex = ptIdx;
                     t.Point = pt;
                     t.ViewPoint = ppt;
-                    t.Flag |= MarkPoint.X_MATCH;
-                    t.Flag |= MarkPoint.Y_MATCH;
                     t.DistanceX = dx;
                     t.DistanceY = dy;
 
                     xymatch = t;
 
-                    XYMatchList.Add(xymatch);
+                    if (!ContainsXYMatch(t))
+                    {
+                        XYMatchList.Add(xymatch);
+                    }
                 }
             }
         }
+
+        private bool ContainsXYMatch(MarkPoint mp)
+        {
+            foreach (MarkPoint lmp in XYMatchList)
+            {
+                if (mp.FigureID == lmp.FigureID && mp.PointIndex == lmp.PointIndex)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
         private bool IsIgnore(uint figId, int index)
         {
