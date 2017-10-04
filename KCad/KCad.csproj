@@ -169,6 +169,7 @@
     <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
     <Compile Include="plotter\PlotterSettings.cs" />
     <Compile Include="plotter\primitive\CadPrimitive.cs" />
+    <Compile Include="plotter\searcher\MarkItem.cs" />
     <Compile Include="plotter\searcher\SpPointSearcher.cs" />
     <Compile Include="plotter\Util\CadDxfLoader.cs" />
     <Compile Include="plotter\Util\CadRuler.cs" />
@@ -265,8 +266,6 @@
     <Compile Include="plotter\CadLayer.cs" />
     <Compile Include="plotter\Util\Quaternion.cs" />
     <Compile Include="plotter\Gridding.cs" />
-    <Compile Include="plotter\searcher\MarkPoint.cs" />
-    <Compile Include="plotter\searcher\MarkSeg.cs" />
     <Compile Include="plotter\searcher\SegSearcher.cs" />
     <Compile Include="plotter\Util\UMatrix4.cs" />
     <Compile Include="plotter\Util\CadMath.cs" />
