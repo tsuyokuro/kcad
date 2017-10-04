@@ -666,6 +666,35 @@ namespace Plotter
             }
         }
 
+
+        public delegate bool DelegateForEachFigureSegment(FigureSegment seg);
+
+        public void ForEachFigureSegment(DelegateForEachFigureSegment dg)
+        {
+            int cnt = SegmentCount;
+            for (int i=0; i<cnt; i++)
+            {
+                if (!dg( GetFigSegmentAt(i) ))
+                {
+                    break;
+                }
+            }
+        }
+
+        public delegate bool DelegateForEachSegment(CadSegment seg);
+
+        public void ForEachSegment(DelegateForEachSegment dg)
+        {
+            int cnt = SegmentCount;
+            for (int i = 0; i < cnt; i++)
+            {
+                if (!dg(GetSegmentAt(i)))
+                {
+                    break;
+                }
+            }
+        }
+
         #endregion
     }
 }
