@@ -688,7 +688,7 @@ namespace Plotter
             int cnt = SegmentCount;
             for (int i = 0; i < cnt; i++)
             {
-                if (!dg(GetSegmentAt(i)))
+                if (!dg( GetSegmentAt(i) ))
                 {
                     break;
                 }

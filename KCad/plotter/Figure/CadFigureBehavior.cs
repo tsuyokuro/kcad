@@ -98,15 +98,15 @@ namespace Plotter
             {
                 if (n < fig.mPointList.Count - 1)
                 {
-                    return new FigureSegment(fig, n, n + 1);
+                    return new FigureSegment(fig, n, n, n + 1);
                 }
 
                 if (n == fig.mPointList.Count && fig.IsLoop)
                 {
-                    return new FigureSegment(fig, n, 0);
+                    return new FigureSegment(fig, n, n, 0);
                 }
 
-                return new FigureSegment(null, -1, -1);
+                return new FigureSegment(null, -1, -1, -1);
             }
 
             public virtual int SegmentCount(CadFigure fig)

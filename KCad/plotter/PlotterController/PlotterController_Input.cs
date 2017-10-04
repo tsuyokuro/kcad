@@ -240,7 +240,6 @@ namespace Plotter
 
             MarkPoint mp = default(MarkPoint);
 
-            DebugOut.StdPrintLn("MatchIndex = " + MatchIndex.ToString());
 
             mp = mPointSearcher.GetXYMatch(MatchIndex);
 

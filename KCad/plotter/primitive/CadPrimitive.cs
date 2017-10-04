@@ -75,12 +75,16 @@ namespace Plotter
     public struct FigureSegment
     {
         CadFigure Fig;
+        public int SegIndex;
         public int Index0;
         public int Index1;
 
-        public FigureSegment(CadFigure fig, int a, int b)
+        public static FigureSegment InvalidValue = new FigureSegment(null, -1, -1, -1);
+
+        public FigureSegment(CadFigure fig, int segIndex, int a, int b)
         {
             Fig = fig;
+            SegIndex = segIndex;
             Index0 = a;
             Index1 = b;
         }

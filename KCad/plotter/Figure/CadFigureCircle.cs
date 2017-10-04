@@ -258,7 +258,7 @@ namespace Plotter
 
             public virtual FigureSegment GetFigSegmentAt(CadFigure fig, int n)
             {
-                return new FigureSegment(null, -1, -1);
+                return new FigureSegment(null, -1, -1, -1);
             }
 
             public override int SegmentCount(CadFigure fig)
