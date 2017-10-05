@@ -185,7 +185,7 @@ namespace Plotter
                     xmatch.Figure = fig;
                     xmatch.PointIndex = ptIdx;
                     xmatch.Point = pt;
-                    xmatch.ViewPoint = ppt;
+                    xmatch.PointScrn = ppt;
                     xmatch.DistanceX = nx;
                     xmatch.DistanceY = ny;
                 }
@@ -200,7 +200,7 @@ namespace Plotter
                     ymatch.Figure = fig;
                     ymatch.PointIndex = ptIdx;
                     ymatch.Point = pt;
-                    ymatch.ViewPoint = ppt;
+                    ymatch.PointScrn = ppt;
                     ymatch.DistanceX = nx;
                     ymatch.DistanceY = ny;
                 }
@@ -217,7 +217,7 @@ namespace Plotter
                     t.Figure = fig;
                     t.PointIndex = ptIdx;
                     t.Point = pt;
-                    t.ViewPoint = ppt;
+                    t.PointScrn = ppt;
                     t.DistanceX = dx;
                     t.DistanceY = dy;
 

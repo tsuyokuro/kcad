@@ -44,7 +44,7 @@ namespace Plotter
 
         public CadVector Point;
 
-        public CadVector ViewPoint;
+        public CadVector PointScrn;
 
         public double DistanceX;
         public double DistanceY;
@@ -70,7 +70,7 @@ namespace Plotter
         }
     }
 
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -107,10 +107,14 @@ namespace Plotter
             }
         }
 
+        public FigureSegment FSegment;
+
         public int PtIndexA;
+
         public CadVector pA;
 
         public int PtIndexB;
+
         public CadVector pB;
 
         public CadVector CrossPoint;

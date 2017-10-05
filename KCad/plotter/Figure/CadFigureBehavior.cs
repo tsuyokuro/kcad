@@ -86,12 +86,12 @@ namespace Plotter
                     return new CadSegment(fig.mPointList[n], fig.mPointList[n + 1]);
                 }
 
-                if (n == fig.mPointList.Count && fig.IsLoop)
+                if (n == fig.mPointList.Count - 1 && fig.IsLoop)
                 {
                     return new CadSegment(fig.mPointList[n], fig.mPointList[0]);
                 }
 
-                return new CadSegment(CadVector.InvalidValue, CadVector.InvalidValue);
+                throw new System.ArgumentException("GetSegmentAt", "bad index");
             }
 
             public virtual FigureSegment GetFigSegmentAt(CadFigure fig, int n)
@@ -101,12 +101,12 @@ namespace Plotter
                     return new FigureSegment(fig, n, n, n + 1);
                 }
 
-                if (n == fig.mPointList.Count && fig.IsLoop)
+                if (n == fig.mPointList.Count - 1 && fig.IsLoop)
                 {
                     return new FigureSegment(fig, n, n, 0);
                 }
 
-                return new FigureSegment(null, -1, -1, -1);
+                throw new System.ArgumentException("GetFigSegmentAt", "bad index");
             }
 
             public virtual int SegmentCount(CadFigure fig)

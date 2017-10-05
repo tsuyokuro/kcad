@@ -565,26 +565,15 @@ namespace Plotter
 
         private void test001()
         {
-            List<uint> idlist = Controller.GetSelectedFigIDList();
-            
-            if (idlist.Count == 0)
+            CadFigure fig = GetTargetFig();
+
+            if (fig == null) return;
+
+            fig.ForEachFigureSegment(seg =>
             {
-                return;
-            }
-
-            CadFigure fig = Controller.DB.GetFigure(idlist[0]);
-
-            int n = fig.SegmentCount;
-
-            for (int i=0; i<n; i++)
-            {
-                CadSegment seg = fig.GetSegmentAt(i);
-
-                DebugOut.Std.println("Seg " + i.ToString() + " {");
-                seg.P0.dump(DebugOut.Std, "");
-                seg.P1.dump(DebugOut.Std, "");
-                DebugOut.Std.println("}");
-            }
+                seg.dump(DebugOut.Std);
+                return true;
+            });
         }
 
         private void test002()
@@ -609,6 +598,18 @@ namespace Plotter
                                 );
 
             DebugOut.Std.println("CheckCrossSegSeg2D ret=" + ret.ToString());
+        }
+
+        private CadFigure GetTargetFig()
+        {
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
+            if (idlist.Count == 0)
+            {
+                return null;
+            }
+
+            return Controller.DB.GetFigure(idlist[0]);
         }
 
         private void SimpleCommand(string s)

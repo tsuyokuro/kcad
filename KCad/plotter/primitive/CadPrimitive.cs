@@ -81,12 +81,50 @@ namespace Plotter
 
         public static FigureSegment InvalidValue = new FigureSegment(null, -1, -1, -1);
 
+        public CadVector Point0
+        {
+            get
+            {
+                return Fig.GetPointAt(Index0);
+            }
+
+        }
+
+        public CadVector Point1
+        {
+            get
+            {
+                return Fig.GetPointAt(Index1);
+            }
+        }
+
+        public CadSegment Segment
+        {
+            get
+            {
+                return Fig.GetSegmentAt(SegIndex);
+            }
+
+        }
+
         public FigureSegment(CadFigure fig, int segIndex, int a, int b)
         {
             Fig = fig;
             SegIndex = segIndex;
             Index0 = a;
             Index1 = b;
+        }
+
+        public void dump(DebugOut dout, string name = "FigureSegment")
+        {
+            dout.println(name + "{");
+            dout.Indent++;
+            dout.println("FigureID:" + Fig.ID.ToString());
+            dout.println("Index0:" + Index0.ToString());
+            dout.println("Index1:" + Index1.ToString());
+            dout.Indent--;
+            dout.println("}");
+
         }
     }
 
