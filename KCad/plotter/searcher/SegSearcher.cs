@@ -18,7 +18,6 @@ namespace Plotter
 
         public void SetRangePixel(DrawContext dc, double pixel)
         {
-            //double d = dc.pixelsToMilli(pixel);
             mRange = pixel;
         }
 
@@ -83,8 +82,15 @@ namespace Plotter
             }
         }
 
-        private void CheckSeg(DrawContext dc, CadLayer layer, CadFigure fig, int idxA, int idxB, CadVector a, CadVector b)
+        private void CheckSeg(DrawContext dc, CadLayer layer, FigureSegment fseg)
         {
+            CadFigure fig = fseg.Figure;
+            int idxA = fseg.Index0;
+            int idxB = fseg.Index1;
+            CadVector a = fseg.Point0;
+            CadVector b = fseg.Point1;
+
+
             if (fig != null && IsIgnore(fig.ID, idxA))
             {
                 return;
@@ -308,9 +314,9 @@ namespace Plotter
 
         private void CheckSegs(DrawContext dc, CadLayer layer, CadFigure fig)
         {
-            fig.ForEachFigureSegment(seg =>
+            fig.ForEachFigureSegment(fseg =>
             {
-                CheckSeg(dc, layer, fig, seg.Index0, seg.Index1, seg.Point0, seg.Point1);
+                CheckSeg(dc, layer, fseg);
                 return true;
             });
         }

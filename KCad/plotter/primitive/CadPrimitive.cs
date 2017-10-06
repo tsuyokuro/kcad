@@ -74,7 +74,7 @@ namespace Plotter
 
     public struct FigureSegment
     {
-        CadFigure Fig;
+        public CadFigure Figure;
         public int SegIndex;
         public int Index0;
         public int Index1;
@@ -85,7 +85,7 @@ namespace Plotter
         {
             get
             {
-                return Fig.GetPointAt(Index0);
+                return Figure.GetPointAt(Index0);
             }
 
         }
@@ -94,7 +94,7 @@ namespace Plotter
         {
             get
             {
-                return Fig.GetPointAt(Index1);
+                return Figure.GetPointAt(Index1);
             }
         }
 
@@ -102,14 +102,14 @@ namespace Plotter
         {
             get
             {
-                return Fig.GetSegmentAt(SegIndex);
+                return Figure.GetSegmentAt(SegIndex);
             }
 
         }
 
         public FigureSegment(CadFigure fig, int segIndex, int a, int b)
         {
-            Fig = fig;
+            Figure = fig;
             SegIndex = segIndex;
             Index0 = a;
             Index1 = b;
@@ -119,7 +119,7 @@ namespace Plotter
         {
             dout.println(name + "{");
             dout.Indent++;
-            dout.println("FigureID:" + Fig.ID.ToString());
+            dout.println("FigureID:" + Figure.ID.ToString());
             dout.println("Index0:" + Index0.ToString());
             dout.println("Index1:" + Index1.ToString());
             dout.Indent--;
