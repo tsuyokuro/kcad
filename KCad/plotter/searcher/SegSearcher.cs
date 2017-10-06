@@ -163,15 +163,10 @@ namespace Plotter
                 CadVector cp = (b - a) * f + a;
 
                 seg.Layer = layer;
-                seg.Figure = fig;
-                seg.PtIndexA = idxA;
-                seg.PtIndexB = idxB;
+                seg.FSegment = fseg;
                 seg.CrossPoint = cp;
                 seg.CrossPointScrn = p;
                 seg.Distance = dist;
-
-                seg.pA = a;
-                seg.pB = b;
 
                 minDist = dist;
             }
@@ -234,16 +229,14 @@ namespace Plotter
                 td *= (r / tr);
                 td += c;
 
+                FigureSegment fseg = new FigureSegment(fig, 0, 0, idxB);
+
                 seg.Layer = layer;
-                seg.Figure = fig;
-                seg.PtIndexA = 0;
-                seg.PtIndexB = idxB;
+                seg.FSegment = fseg;
                 seg.CrossPoint = td;
                 seg.CrossPointScrn = dc.CadPointToUnitPoint(td);
                 seg.Distance = dist;
 
-                seg.pA = c;
-                seg.pB = fig.GetPointAt(idxB);
 
                 minDist = dist;
             }

@@ -76,6 +76,57 @@ namespace Plotter
     /// </summary>
     public struct MarkSeg
     {
+        public FigureSegment FSegment;
+
+        public CadFigure Figure
+        {
+            get
+            {
+                return FSegment.Figure;
+            }
+        }
+
+        public uint FigureID
+        {
+            get
+            {
+                return FSegment.FigureID;
+            }
+        }
+
+        public int PtIndexA
+        {
+            get
+            {
+                return FSegment.Index0;
+            }
+        }
+
+        public CadVector pA
+        {
+            get
+            {
+                return FSegment.Point0;
+            }
+        }
+
+        public int PtIndexB
+        {
+            get
+            {
+                return FSegment.Index1;
+            }
+        }
+
+        public CadVector pB
+        {
+            get
+            {
+                return FSegment.Point1;
+            }
+        }
+
+
         public CadLayer Layer;
 
         public uint LayerID
@@ -91,32 +142,6 @@ namespace Plotter
             }
         }
 
-
-        public CadFigure Figure;
-
-        public uint FigureID
-        {
-            get
-            {
-                if (Figure == null)
-                {
-                    return 0;
-                }
-
-                return Figure.ID;
-            }
-        }
-
-        public FigureSegment FSegment;
-
-        public int PtIndexA;
-
-        public CadVector pA;
-
-        public int PtIndexB;
-
-        public CadVector pB;
-
         public CadVector CrossPoint;
 
         public CadVector CrossPointScrn;
@@ -125,10 +150,7 @@ namespace Plotter
         {
             get
             {
-                CadVector t = pB - pA;
-                t /= 2;
-                t += pA;
-                return t;
+                return CadUtil.CenterPoint(FSegment.Point0, FSegment.Point1);
             }
         }
 
@@ -136,37 +158,31 @@ namespace Plotter
 
         public bool Valid { get { return FigureID != 0; } }
 
-        public void dump(DebugOut dout)
+        public void dump(DebugOut dout, string name= "MarkSeg")
         {
-            dout.println("MarkSeg {");
+            dout.println(name + " {");
             dout.Indent++;
-            dout.println("FigureID:" + FigureID.ToString());
-            dout.println("PtIndexA:" + PtIndexA.ToString());
-            dout.println("PtIndexB:" + PtIndexB.ToString());
+            FSegment.dump(dout, "FSegment");
             dout.Indent--;
             dout.println("}");
         }
 
         public bool Update()
         {
-            if (Figure == null)
+            if (FSegment.Figure == null)
             {
                 return true;
             }
 
-            if (PtIndexA >= Figure.PointList.Count)
+            if (PtIndexA >= FSegment.Figure.PointList.Count)
             {
                 return false;
             }
 
-            if (PtIndexB >= Figure.PointList.Count)
+            if (PtIndexB >= FSegment.Figure.PointList.Count)
             {
                 return false;
             }
-
-
-            pA = Figure.PointList[PtIndexA];
-            pB = Figure.PointList[PtIndexB];
 
             return true;
         }

@@ -81,6 +81,19 @@ namespace Plotter
 
         public static FigureSegment InvalidValue = new FigureSegment(null, -1, -1, -1);
 
+        public uint FigureID
+        {
+            get
+            {
+                if (Figure == null)
+                {
+                    return 0;
+                }
+
+                return Figure.ID;
+            }
+        }
+
         public CadVector Point0
         {
             get
@@ -120,6 +133,7 @@ namespace Plotter
             dout.println(name + "{");
             dout.Indent++;
             dout.println("FigureID:" + Figure.ID.ToString());
+            dout.println("SegIndex:" + SegIndex.ToString());
             dout.println("Index0:" + Index0.ToString());
             dout.println("Index1:" + Index1.ToString());
             dout.Indent--;
