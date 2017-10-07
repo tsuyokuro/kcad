@@ -120,6 +120,11 @@ namespace Plotter
 
             public override Types EndCreate(CadFigure fig, DrawContext dc)
             {
+                if (fig.PointCount < 2)
+                {
+                    return Types.NONE;
+                }
+
                 CadVector b = getRP(dc, fig.mPointList[0], fig.mPointList[1], true);
 
                 fig.AddPoint(b);

@@ -323,6 +323,11 @@ namespace Plotter
                     fig.Normal = CadVector.Create(dc.ViewDir);
                     fig.Normal *= -1;
                 }
+                else if (fig.PointList.Count < 2)
+                {
+                    return Types.NONE;
+                }
+
                 return fig.Type;
             }
 
