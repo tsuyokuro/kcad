@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
@@ -253,6 +254,8 @@ namespace Plotter
             }
         }
         #endregion
+
+        public ObservableCollection<CadObjectItem> ObjectTreeItemsSource;
 
         private List<CadFigure> TempFigureList = new List<CadFigure>();
 

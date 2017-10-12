@@ -448,6 +448,8 @@ namespace Plotter
                     {
                         State = States.RUBBER_BAND_SELECT;
                     }
+
+                    NotifySelectList();
                     return;
 
                 case States.RUBBER_BAND_SELECT:
@@ -496,6 +498,22 @@ namespace Plotter
             }
 
             CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
+        }
+
+        private void NotifySelectList()
+        {
+            List<uint> ids = GetSelectedFigIDList();
+
+
+            ObjectTreeItemsSource.Clear();
+
+            foreach(uint id in ids)
+            {
+                CadFigure fig = DB.GetFigure(id);
+
+                CadObjectItem item = new CadObjectItem(fig);
+                ObjectTreeItemsSource.Add(item);
+            }
         }
 
         private void PutMeasure()
@@ -634,6 +652,8 @@ namespace Plotter
 
                 case States.RUBBER_BAND_SELECT:
                     RubberBandSelect(RubberBandScrnPoint0, RubberBandScrnPoint1);
+
+                    NotifySelectList();
 
                     State = States.SELECT;
                     break;

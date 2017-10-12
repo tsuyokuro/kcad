@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Drawing;
 using KCad;
 using System.Drawing.Printing;
+using System.Collections;
 
 namespace Plotter
 {
@@ -304,6 +305,9 @@ namespace Plotter
             }
         }
 
+        private ObservableCollection<CadObjectItem> ObjectTreeItemsSource = new ObservableCollection<CadObjectItem>();
+
+
         public PlotterController Controller
         {
             get
@@ -333,6 +337,9 @@ namespace Plotter
         }
 
         public TextCommandHistory CommandHistory = new TextCommandHistory();
+
+        private TreeView ObjectTreeView;
+
 
         public PlotterViewModel(Window mainWindow, WindowsFormsHost viewHost)
         {
@@ -381,6 +388,15 @@ namespace Plotter
 
             mViewHost.Child = view.FromsControl;
         }
+
+        public void SetObjectTreeView(TreeView treeView)
+        {
+            ObjectTreeView = treeView;
+            ObjectTreeView.ItemsSource = ObjectTreeItemsSource;
+
+            mController.ObjectTreeItemsSource = ObjectTreeItemsSource;
+        }
+
 
         public void ViewFocus()
         {

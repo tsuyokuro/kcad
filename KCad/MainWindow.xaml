@@ -194,15 +194,23 @@
         <!--Work space-->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="95*"/>
             </Grid.ColumnDefinitions>
 
             <!--Left panel-->
             <Border BorderBrush="{StaticResource BoarderColor}" BorderThickness="1">
-                <StackPanel x:Name="LeftPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
-
-                    <StackPanel x:Name="SlsectModePanel">
+                <Grid
+                    x:Name="LeftPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="100*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Grid.Row="0" x:Name="SlsectModePanel">
                         <Label />
                         <RadioButton
                             Template="{StaticResource MyTggleButtonTemplate}"
@@ -227,7 +235,7 @@
                         />
                     </StackPanel>
 
-                    <StackPanel x:Name="FigurePanel">
+                    <StackPanel Grid.Row="1" x:Name="FigurePanel">
                         
                         <Label />
 
@@ -311,9 +319,10 @@
                         />
                     </StackPanel>
 
-                    <Label Height="4"/>
+                    <Label Grid.Row="2" Height="4"/>
 
-                    <Grid>
+                    <!-- Layer list tool-->
+                    <Grid Grid.Row="3">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
@@ -340,12 +349,16 @@
                                 FontSize="20"
                                 FontWeight="ExtraBold" />
                     </Grid>
+                    <Grid Grid.Row="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="200"/>
+                            <RowDefinition Height="100*"/>
+                        </Grid.RowDefinitions>
 
-                    <Grid x:Name="LayerListPanel" Height="250">
-
-                        <ScrollViewer Grid.Row="0"
-                                  Style="{StaticResource CustomScrollViewerStyle}"
-                                  VerticalScrollBarVisibility = "Auto">
+                        <ScrollViewer
+                            Grid.Row="0"
+                            Style="{StaticResource CustomScrollViewerStyle}"
+                            VerticalScrollBarVisibility = "Auto">
 
                             <ListBox
                                 x:Name="LayerListView"
@@ -356,12 +369,6 @@
                                 Background="{StaticResource BaseColor}"
                                 >
 
-                                <!-- Wheel が効かなくなってしまうのでListBox内部のScrollViewerを除去する -->
-                                <ListBox.Template>
-                                    <ControlTemplate>
-                                        <ItemsPresenter/>
-                                    </ControlTemplate>
-                                </ListBox.Template>
 
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
@@ -373,12 +380,12 @@
 
                                             <StackPanel Grid.Row="0" Orientation="Horizontal" >
                                                 <CheckBox IsChecked="{Binding Path=Visible}"
-                                                          Style="{StaticResource VisibleCheckBox}"
-                                                          Foreground="White"/>
+                                                            Style="{StaticResource VisibleCheckBox}"
+                                                            Foreground="White"/>
 
                                                 <CheckBox IsChecked="{Binding Path=Locked}"
-                                                          Style="{StaticResource LockedCheckBox}"
-                                                          Foreground="White"/>
+                                                            Style="{StaticResource LockedCheckBox}"
+                                                            Foreground="White"/>
                                             </StackPanel>
                                             <TextBlock Grid.Row="1" Margin="4" Text="{Binding Path=Name}" />
                                         </Grid>
@@ -386,9 +393,51 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </ScrollViewer>
-                    </Grid>
+                        <ScrollViewer
+                            Grid.Row="1"
+                            Style="{StaticResource CustomScrollViewerStyle}"
+                            HorizontalScrollBarVisibility="Visible"
+                            ScrollViewer.IsDeferredScrollingEnabled="True"
+                            VerticalScrollBarVisibility = "Visible"
+                            >
 
-                </StackPanel>
+                            <TreeView
+                                x:Name="ObjectTree" Background="Black"
+                                VirtualizingStackPanel.IsVirtualizing="True"
+                                VirtualizingStackPanel.VirtualizationMode="Recycling"
+                                >
+                                <TreeView.Resources>
+                                    <Style TargetType="TreeViewItem">
+                                        <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded,Mode=TwoWay}"/>
+                                        <Setter Property="IsSelected" Value="{Binding Path=IsSelected,Mode=TwoWay}"/>
+                                    </Style>
+                                </TreeView.Resources>
+
+                                <!-- Wheel が効かなくなってしまうのでListBox内部のScrollViewerを除去する -->
+                                <TreeView.Template>
+                                    <ControlTemplate>
+                                        <ItemsPresenter/>
+                                    </ControlTemplate>
+                                </TreeView.Template>
+
+
+                                <TreeView.ItemTemplate>
+                                    <HierarchicalDataTemplate DataType="local:CadObjectItem" ItemsSource="{Binding Children}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="20"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column ="0" Text="{Binding ID}" Background="Transparent" Foreground="White"/>
+                                            <TextBlock Grid.Column ="1" Text="{Binding Type}" Background="Transparent" Foreground="White"/>
+                                        </Grid>
+                                    </HierarchicalDataTemplate>
+                                </TreeView.ItemTemplate>
+
+                            </TreeView>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
             </Border>
 
             <!--Plotter view and Command view-->

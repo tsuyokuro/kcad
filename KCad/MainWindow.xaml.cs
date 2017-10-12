@@ -40,6 +40,8 @@ namespace KCad
 
             ViewModel = new PlotterViewModel(this, viewContainer);
 
+            ViewModel.SetObjectTreeView(ObjectTree);
+
             viewContainer.Focusable = true;
 
             LayerListView.DataContext = ViewModel.LayerList;
