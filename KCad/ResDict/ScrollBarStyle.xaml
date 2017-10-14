@@ -5,7 +5,7 @@
 
     <!-- サイズと色の定義。簡潔に記述する為に半透明の白で指定しているので、親の背景色が白の場合は白以外の色を指定してください -->
     <!-- スクロールバーの幅 -->
-    <sys:Double x:Key="ScrollBarSize">12</sys:Double>
+    <sys:Double x:Key="ScrollBarSize">10</sys:Double>
     <!-- ボタンの長さ -->
     <sys:Double x:Key="ScrollBarRepeatButtonSize">16</sys:Double>
     <!-- スクロールバーのマージン -->

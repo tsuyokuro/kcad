@@ -511,7 +511,7 @@ namespace Plotter
             {
                 CadFigure fig = DB.GetFigure(id);
 
-                CadObjectItem item = new CadObjectItem(fig);
+                CadObjectItem item = CadObjectItem.CreateFigure(fig);
                 ObjectTreeItemsSource.Add(item);
             }
         }

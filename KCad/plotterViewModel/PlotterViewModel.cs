@@ -397,7 +397,6 @@ namespace Plotter
             mController.ObjectTreeItemsSource = ObjectTreeItemsSource;
         }
 
-
         public void ViewFocus()
         {
             if (CurrentView != null)

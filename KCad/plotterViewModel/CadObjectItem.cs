@@ -5,12 +5,25 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Plotter
 {
     public class CadObjectItem : INotifyPropertyChanged
     {
+        public enum ItemType
+        {
+            NONE,
+            FIGURE,
+            POINT,
+        }
+
+        public ItemType Type = ItemType.NONE;
+
         public CadFigure Figure;
+
+        public int PointIndex;
 
         public ObservableCollection<CadObjectItem> mChildren;
 
@@ -23,40 +36,69 @@ namespace Plotter
                 return mChildren;
             }
         }
-
-        public string ID
+        public string Text
         {
             get
             {
-                if (Figure == null)
+                String s = "Unknown";
+
+                if (Type == ItemType.NONE)
                 {
-                    return "0";
+
+                }
+                else if (Type == ItemType.FIGURE)
+                {
+                    if (Figure != null)
+                    {
+                        s = Figure.ID.ToString() + ":" + Figure.Type.ToString();
+                    }
+                }
+                else if (Type == ItemType.POINT)
+                {
+                    if (Figure != null)
+                    {
+                        CadVector v = Figure.PointList[PointIndex];
+
+                        s = "[" + PointIndex.ToString() + "] " +
+                            v.x.ToString() + "," + v.y.ToString() + "," + v.z.ToString();
+                    }
                 }
 
-                return Figure.ID.ToString();
+                return s;
             }
         }
 
-        public string Type
+
+        bool mIsChecked = false;
+
+        public bool IsChecked
         {
+            set
+            {
+                if (value != mIsChecked)
+                {
+                    mIsChecked = value;
+                    OnPropertyChanged("IsChecked");
+                    CheckedChildren(mIsChecked);
+                }
+            }
+
             get
             {
-                if (Figure == null)
-                {
-                    return CadFigure.Types.NONE.ToString();
-                }
-
-                return Figure.Type.ToString();
+                return mIsChecked;
             }
         }
-
 
         bool mIsSelected = false;
         public bool IsSelected
         {
             set
             {
-                mIsSelected = value;
+                if (value != mIsSelected)
+                {
+                    mIsSelected = value;
+                    OnPropertyChanged("IsSelected");
+                }
             }
             get
             {
@@ -69,7 +111,11 @@ namespace Plotter
         {
             set
             {
-                mIsExpanded = value;
+                if (value != mIsExpanded)
+                {
+                    mIsExpanded = value;
+                    OnPropertyChanged("mIsExpanded");
+                }
             }
             get
             {
@@ -77,21 +123,79 @@ namespace Plotter
             }
         }
 
-        public CadObjectItem(CadFigure fig)
+        public static CadObjectItem CreateFigure(CadFigure fig)
         {
-            Figure = fig;
-            mChildren = new ObservableCollection<CadObjectItem>();
+            CadObjectItem item = new CadObjectItem();
 
-            if (Figure.ChildList != null)
+            item.Type = ItemType.FIGURE;
+            item.Figure = fig;
+
+            if (item.Figure.ChildList != null)
             {
-                foreach (CadFigure child in Figure.ChildList)
+                item.mChildren = new ObservableCollection<CadObjectItem>();
+
+                foreach (CadFigure child in item.Figure.ChildList)
                 {
-                    mChildren.Add(new CadObjectItem(child));
+                    item.mChildren.Add( CreateFigure(child) );
                 }
+            }
+
+            int pcnt = item.Figure.PointList.Count;
+
+            if (pcnt > 0)
+            {
+                for (int i = 0; i < pcnt; i++)
+                {
+                    item.AddChild(CreatePoint(item.Figure, i));
+                }
+
+                /*
+                bool allSelected = true;
+
+                for (int i = 0; i < pcnt; i++)
+                {
+                    if (!item.Children[i].IsChecked)
+                    {
+                        allSelected = false;
+                        break;
+                    }
+                }
+
+                item.IsChecked = allSelected;
+                */
+            }
+            return item;
+        }
+
+        public static CadObjectItem CreatePoint(CadFigure fig, int pointIndex)
+        {
+            CadObjectItem item = new CadObjectItem();
+
+            item.Type = ItemType.POINT;
+            item.Figure = fig;
+            item.PointIndex = pointIndex;
+
+            CadVector v = item.Figure.GetPointAt(pointIndex);
+
+            item.IsChecked = v.Selected;
+
+            return item;
+        }
+
+        public void CheckedChildren(bool check)
+        {
+            if (mChildren == null)
+            {
+                return;
+            }
+
+            for (int i=0; i<mChildren.Count; i++)
+            {
+                mChildren[i].IsChecked = check;
             }
         }
 
-        public void Add(CadObjectItem item)
+        public void AddChild(CadObjectItem item)
         {
             mChildren.Add(item);
         }

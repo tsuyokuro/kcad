@@ -194,12 +194,13 @@
         <!--Work space-->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="95*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="100*"/>
             </Grid.ColumnDefinitions>
 
             <!--Left panel-->
-            <Border BorderBrush="{StaticResource BoarderColor}" BorderThickness="1">
+            <Border Grid.Column="0" BorderBrush="{StaticResource BoarderColor}" BorderThickness="0">
                 <Grid
                     x:Name="LeftPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
                     <Grid.RowDefinitions>
@@ -351,7 +352,8 @@
                     </Grid>
                     <Grid Grid.Row="4">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="200"/>
+                            <RowDefinition Height="200*"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="100*"/>
                         </Grid.RowDefinitions>
 
@@ -393,44 +395,76 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </ScrollViewer>
+
+                        <GridSplitter
+                            Grid.Row="1" Height="6" 
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Stretch"
+                            Background="{StaticResource BoarderColor}"
+                            />
+                        
                         <ScrollViewer
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Style="{StaticResource CustomScrollViewerStyle}"
                             HorizontalScrollBarVisibility="Visible"
-                            ScrollViewer.IsDeferredScrollingEnabled="True"
                             VerticalScrollBarVisibility = "Visible"
                             >
 
                             <TreeView
-                                x:Name="ObjectTree" Background="Black"
+                                x:Name="ObjectTree"
                                 VirtualizingStackPanel.IsVirtualizing="True"
                                 VirtualizingStackPanel.VirtualizationMode="Recycling"
                                 >
-                                <TreeView.Resources>
-                                    <Style TargetType="TreeViewItem">
-                                        <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded,Mode=TwoWay}"/>
-                                        <Setter Property="IsSelected" Value="{Binding Path=IsSelected,Mode=TwoWay}"/>
-                                    </Style>
-                                </TreeView.Resources>
 
                                 <!-- Wheel が効かなくなってしまうのでListBox内部のScrollViewerを除去する -->
                                 <TreeView.Template>
                                     <ControlTemplate>
-                                        <ItemsPresenter/>
+                                        <ItemsPresenter />
                                     </ControlTemplate>
                                 </TreeView.Template>
 
+                                <TreeView.ItemContainerStyle>
+                                    <Style TargetType="{x:Type TreeViewItem}">
+                                        <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded, Mode=TwoWay}" />
+                                        <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+                                    </Style>
+                                </TreeView.ItemContainerStyle>
 
                                 <TreeView.ItemTemplate>
                                     <HierarchicalDataTemplate DataType="local:CadObjectItem" ItemsSource="{Binding Children}">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="20"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column ="0" Text="{Binding ID}" Background="Transparent" Foreground="White"/>
-                                            <TextBlock Grid.Column ="1" Text="{Binding Type}" Background="Transparent" Foreground="White"/>
-                                        </Grid>
+                                        <StackPanel
+                                            Name="bd" Margin="-1,0,0,0"
+                                            Orientation="Horizontal"
+                                            Background="{StaticResource BaseColor}"
+                                            Height="Auto"
+                                            >
+
+                                            <CheckBox
+                                                Margin="4,0,0,0"
+                                                IsChecked="{Binding IsChecked}"
+                                                />
+
+                                            <TextBlock
+                                                Margin="4,0,4,0"
+                                                Text="{Binding Text}"
+                                                Background="Transparent"
+                                                Foreground="White"
+                                                FontSize="9"
+                                                VerticalAlignment="Center"
+                                                />
+                                        
+                                        </StackPanel>
+
+                                        <HierarchicalDataTemplate.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}"
+                                                Value="True">
+                                                
+                                                <Setter TargetName="bd" Property="Background" Value="Green"/>
+                                            
+                                            </DataTrigger>
+                                        </HierarchicalDataTemplate.Triggers>
+
                                     </HierarchicalDataTemplate>
                                 </TreeView.ItemTemplate>
 
@@ -440,8 +474,16 @@
                 </Grid>
             </Border>
 
+            <GridSplitter
+                Grid.Column="1"
+                Width="4"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Stretch"
+                Background="{StaticResource BoarderColor}" 
+                />
+
             <!--Plotter view and Command view-->
-            <Grid Grid.Column="1" Background="{DynamicResource BGColor}">
+            <Grid Grid.Column="2" Background="{DynamicResource BGColor}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100*"/>
                     <RowDefinition Height="auto"/>
@@ -454,7 +496,8 @@
                 <GridSplitter Grid.Row="1"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
-                    Background="{StaticResource BoarderColor}" 
+                    Background="{StaticResource BoarderColor}"
+                    BorderThickness="0"
                     ShowsPreview="False"
                     Height="3"
                     />

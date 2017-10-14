@@ -3,6 +3,7 @@ using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -600,6 +601,18 @@ namespace Plotter
             DebugOut.Std.println("CheckCrossSegSeg2D ret=" + ret.ToString());
         }
 
+        private void test003()
+        {
+            var list = Controller.ObjectTreeItemsSource;
+
+            if (list.Count == 0)
+            {
+                return;
+            }
+
+            list[0].IsChecked = true;
+        }
+
         private CadFigure GetTargetFig()
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();
@@ -625,6 +638,10 @@ namespace Plotter
             else if (s == "@test002")
             {
                 test002();
+            }
+            else if (s == "@test003")
+            {
+                test003();
             }
             else
             {
