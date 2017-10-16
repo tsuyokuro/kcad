@@ -305,8 +305,7 @@ namespace Plotter
             }
         }
 
-        private ObservableCollection<CadObjectItem> ObjectTreeItemsSource = new ObservableCollection<CadObjectItem>();
-
+        private CadObjectItem ObjectTreeRootItem = null;
 
         public PlotterController Controller
         {
@@ -391,10 +390,25 @@ namespace Plotter
 
         public void SetObjectTreeView(TreeView treeView)
         {
-            ObjectTreeView = treeView;
-            ObjectTreeView.ItemsSource = ObjectTreeItemsSource;
+            if (ObjectTreeRootItem == null)
+            {
+                ObjectTreeRootItem = CadObjectItem.CreateNode("root");
 
-            mController.ObjectTreeItemsSource = ObjectTreeItemsSource;
+                CadObjectItem.ItemsContext context = new CadObjectItem.ItemsContext();
+                context.HandleItemChanged = ObjectTreeItemChanged;
+
+                ObjectTreeRootItem.setContext(context);
+            }
+
+            ObjectTreeView = treeView;
+            ObjectTreeView.ItemsSource = ObjectTreeRootItem.Children;
+
+            mController.ObjectTreeRoot = ObjectTreeRootItem;
+        }
+
+        public void ObjectTreeItemChanged(CadObjectItem item)
+        {
+            DrawAll();
         }
 
         public void ViewFocus()

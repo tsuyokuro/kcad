@@ -255,7 +255,7 @@ namespace Plotter
         }
         #endregion
 
-        public ObservableCollection<CadObjectItem> ObjectTreeItemsSource;
+        public CadObjectItem ObjectTreeRoot;
 
         private List<CadFigure> TempFigureList = new List<CadFigure>();
 

@@ -603,7 +603,7 @@ namespace Plotter
 
         private void test003()
         {
-            var list = Controller.ObjectTreeItemsSource;
+            var list = Controller.ObjectTreeRoot.Children;
 
             if (list.Count == 0)
             {

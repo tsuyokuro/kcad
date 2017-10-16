@@ -17,7 +17,10 @@ namespace Plotter
             NONE,
             FIGURE,
             POINT,
+            NODE,
         }
+
+        private ItemsContext mContext;
 
         public ItemType Type = ItemType.NONE;
 
@@ -29,13 +32,16 @@ namespace Plotter
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<CadObjectItem> Children
+        public string Name;
+
+        public IReadOnlyList<CadObjectItem> Children
         {
             get
             {
                 return mChildren;
             }
         }
+
         public string Text
         {
             get
@@ -45,6 +51,10 @@ namespace Plotter
                 if (Type == ItemType.NONE)
                 {
 
+                }
+                else if (Type == ItemType.NODE)
+                {
+                    s = Name;
                 }
                 else if (Type == ItemType.FIGURE)
                 {
@@ -77,9 +87,7 @@ namespace Plotter
             {
                 if (value != mIsChecked)
                 {
-                    mIsChecked = value;
-                    OnPropertyChanged("IsChecked");
-                    CheckedChildren(mIsChecked);
+                    CheckedChange(value);
                 }
             }
 
@@ -123,6 +131,15 @@ namespace Plotter
             }
         }
 
+        public static CadObjectItem CreateNode(string name)
+        {
+            CadObjectItem item = new CadObjectItem();
+            item.Type = ItemType.NODE;
+            item.Name = name;
+            item.mChildren = new ObservableCollection<CadObjectItem>();
+            return item;
+        }
+
         public static CadObjectItem CreateFigure(CadFigure fig)
         {
             CadObjectItem item = new CadObjectItem();
@@ -136,7 +153,7 @@ namespace Plotter
 
                 foreach (CadFigure child in item.Figure.ChildList)
                 {
-                    item.mChildren.Add( CreateFigure(child) );
+                    item.AddChild( CreateFigure(child) );
                 }
             }
 
@@ -146,7 +163,7 @@ namespace Plotter
             {
                 for (int i = 0; i < pcnt; i++)
                 {
-                    item.AddChild(CreatePoint(item.Figure, i));
+                    item.AddChild( CreatePoint(item.Figure, i) );
                 }
 
                 /*
@@ -182,6 +199,27 @@ namespace Plotter
             return item;
         }
 
+        private void CheckedChange(bool value, bool notify=true)
+        {
+            mIsChecked = value;
+
+            if (Type == ItemType.POINT)
+            {
+                CadVector p = Figure.PointList[PointIndex];
+                p.Selected = value;
+
+                Figure.PointList[PointIndex] = p;
+            }
+
+            OnPropertyChanged("IsChecked");
+            CheckedChildren(value);
+
+            if (mContext != null && notify)
+            {
+                mContext.HandleItemChanged(this);
+            }
+        }
+
         public void CheckedChildren(bool check)
         {
             if (mChildren == null)
@@ -191,12 +229,18 @@ namespace Plotter
 
             for (int i=0; i<mChildren.Count; i++)
             {
-                mChildren[i].IsChecked = check;
+                mChildren[i].CheckedChange(check, false);
             }
+        }
+
+        public void ClearChildren()
+        {
+            mChildren.Clear();
         }
 
         public void AddChild(CadObjectItem item)
         {
+            item.setContext(mContext);
             mChildren.Add(item);
         }
 
@@ -208,6 +252,31 @@ namespace Plotter
                 var e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
+        }
+
+        public void setContext(ItemsContext context)
+        {
+            mContext = context;
+            setContextToChildren(context);
+        }
+
+        public void setContextToChildren(ItemsContext context)
+        {
+            if (mChildren == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < mChildren.Count; i++)
+            {
+                mChildren[i].setContext(context);
+            }
+        }
+
+        public class ItemsContext
+        {
+            public delegate void ItemChanged(CadObjectItem item);
+            public ItemChanged HandleItemChanged = ( a => { } );
         }
     }
 }

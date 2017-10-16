@@ -505,14 +505,14 @@ namespace Plotter
             List<uint> ids = GetSelectedFigIDList();
 
 
-            ObjectTreeItemsSource.Clear();
+            ObjectTreeRoot.ClearChildren();
 
             foreach(uint id in ids)
             {
                 CadFigure fig = DB.GetFigure(id);
 
                 CadObjectItem item = CadObjectItem.CreateFigure(fig);
-                ObjectTreeItemsSource.Add(item);
+                ObjectTreeRoot.AddChild(item);
             }
         }
 

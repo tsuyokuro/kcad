@@ -442,6 +442,7 @@
                                             <CheckBox
                                                 Margin="4,0,0,0"
                                                 IsChecked="{Binding IsChecked}"
+                                                Background="DarkGray"
                                                 />
 
                                             <TextBlock
