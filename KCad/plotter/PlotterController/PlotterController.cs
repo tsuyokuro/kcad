@@ -635,6 +635,8 @@ namespace Plotter
             }
 
             UpdateSelectItemPoints();
+
+            NotifySelectList();
         }
 
         public void CancelEdit()

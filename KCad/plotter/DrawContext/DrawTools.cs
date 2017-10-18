@@ -149,7 +149,7 @@ namespace Plotter
             allocGDITbl();
 
             PenTbl[PEN_DEFAULT]             = new PenHolder(Pens.White, false);
-            PenTbl[PEN_SLECT_POINT]         = new PenHolder(Pens.LightGreen, false);
+            PenTbl[PEN_SLECT_POINT]         = new PenHolder(new Pen(Color.FromArgb(128, 60, 255, 60), 0), true);
             PenTbl[PEN_CURSOR]              = new PenHolder(Pens.LightBlue, false);
             PenTbl[PEN_CURSOR2]             = new PenHolder(Pens.DarkSlateBlue, false);
             PenTbl[PEN_DEFAULT_FIGURE]      = new PenHolder(Pens.White, false);
@@ -230,7 +230,7 @@ namespace Plotter
             float width = 1.0f;
 
             GLPenTbl[PEN_DEFAULT]           = new GLPen(Pens.White.Color, width);
-            GLPenTbl[PEN_SLECT_POINT]       = new GLPen(Pens.LightGreen.Color, width);
+            GLPenTbl[PEN_SLECT_POINT]       = new GLPen(Color.FromArgb(128, 60, 255, 60), width);
             GLPenTbl[PEN_CURSOR]            = new GLPen(Pens.LightBlue.Color, width);
             GLPenTbl[PEN_CURSOR2]           = new GLPen(Pens.DarkSlateBlue.Color, width);
             GLPenTbl[PEN_DEFAULT_FIGURE]    = new GLPen(Pens.White.Color, width);

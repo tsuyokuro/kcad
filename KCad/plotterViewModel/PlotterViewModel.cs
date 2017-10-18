@@ -392,12 +392,10 @@ namespace Plotter
         {
             if (ObjectTreeRootItem == null)
             {
-                ObjectTreeRootItem = CadObjectItem.CreateNode("root");
-
                 CadObjectItem.ItemsContext context = new CadObjectItem.ItemsContext();
                 context.HandleItemChanged = ObjectTreeItemChanged;
 
-                ObjectTreeRootItem.setContext(context);
+                ObjectTreeRootItem = CadObjectItem.CreateNode("root", context);
             }
 
             ObjectTreeView = treeView;
