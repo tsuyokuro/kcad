@@ -10,7 +10,6 @@ namespace Plotter
     using BrushHolder = ToolHolder<Brush>;
     using ColorHolder = ToolHolder<Color>;
     using FontHolder = ToolHolder<Font>;
-    //using ArrowCapHolder = ToolHolder<AdjustableArrowCap>;
 
     public class GLPen
     {
@@ -58,10 +57,52 @@ namespace Plotter
         }
     }
 
+    public class DarkColors
+    {
+        public static Color[] PenColorTbl;
+        public static Color[] BrushColorTbl;
+
+        static DarkColors()
+        {
+            PenColorTbl = new Color[DrawTools.PEN_TBL_SIZE];
+
+            PenColorTbl[DrawTools.PEN_DEFAULT] = Color.White;
+            PenColorTbl[DrawTools.PEN_SELECT_POINT] = Color.FromArgb(128, 60, 255, 60);
+            PenColorTbl[DrawTools.PEN_CURSOR] = Color.LightBlue;
+            PenColorTbl[DrawTools.PEN_CURSOR2] = Color.DarkSlateBlue;
+            PenColorTbl[DrawTools.PEN_DEFAULT_FIGURE] = Color.White;
+            PenColorTbl[DrawTools.PEN_TEMP_FIGURE] = Color.CadetBlue;
+            PenColorTbl[DrawTools.PEN_POINT_HIGHTLITE] = Color.Orange;
+            PenColorTbl[DrawTools.PEN_MATCH_FIGURE] = Color.Red;
+            PenColorTbl[DrawTools.PEN_MATCH_SEG] = Color.Green;
+            PenColorTbl[DrawTools.PEN_LAST_POINT_MARKER] = Color.CornflowerBlue;
+            PenColorTbl[DrawTools.PEN_LAST_POINT_MARKER2] = Color.YellowGreen;
+            PenColorTbl[DrawTools.PEN_AXIS] = Color.FromArgb(60, 60, 92);
+            PenColorTbl[DrawTools.PEN_ARROW_AXIS] = Color.FromArgb(82, 82, 112);
+            PenColorTbl[DrawTools.PEN_PAGE_FRAME] = Color.FromArgb(92, 92, 92);
+            PenColorTbl[DrawTools.PEN_RELATIVE_POINT] = Color.CornflowerBlue;
+            PenColorTbl[DrawTools.PEN_TEST_FIGURE] = Color.Yellow;
+            PenColorTbl[DrawTools.PEN_GRID] = Color.FromArgb(192, 128, 92);
+            PenColorTbl[DrawTools.PEN_POINT_HIGHTLITE2] = Color.SpringGreen;
+            PenColorTbl[DrawTools.PEN_FIGURE_HIGHLIGHT] = Color.HotPink;
+            PenColorTbl[DrawTools.PEN_AXIS2] = Color.LightSeaGreen;
+            PenColorTbl[DrawTools.PEN_PALE_FIGURE] = Color.FromArgb(0x7E, 0x7E, 0x7E);
+            PenColorTbl[DrawTools.PEN_MEASURE_FIGURE] = Color.OrangeRed;
+            PenColorTbl[DrawTools.PEN_DIMENTION] = Color.PaleGreen;
+
+
+            BrushColorTbl = new Color[DrawTools.BRUSH_TBL_SIZE];
+
+            BrushColorTbl[DrawTools.BRUSH_DEFAULT] = Color.FromArgb(255, 255, 255);
+            BrushColorTbl[DrawTools.BRUSH_BACKGROUND] = Color.FromArgb(0x1e, 0x1e, 0x1e);
+            BrushColorTbl[DrawTools.BRUSH_TEXT] = Color.White;
+        }
+    }
+
     public class DrawTools : IDisposable
     {
         public const int PEN_DEFAULT = 0;
-        public const int PEN_SLECT_POINT = 1;
+        public const int PEN_SELECT_POINT = 1;
         public const int PEN_CURSOR = 2;
         public const int PEN_CURSOR2 = 3;
         public const int PEN_DEFAULT_FIGURE = 4;
@@ -90,10 +131,6 @@ namespace Plotter
         public const int BRUSH_TEXT = 2;
         public const int BRUSH_TBL_SIZE = 3;
 
-        public const int COLOR_DEFAULT = 0;
-        public const int COLOR_BACKGROUND = 1;
-        public const int COLOR_TBL_SIZE = 2;
-
         public const int FONT_DEFAULT = 0;
         public const int FONT_SMALL = 1;
         public const int FONT_TBL_SIZE = 2;
@@ -108,7 +145,6 @@ namespace Plotter
 
         PenHolder[] PenTbl = null;
         BrushHolder[] BrushTbl = null;
-        ColorHolder[] ColorTbl = null;
         FontHolder[] FontTbl = null;
 
         GLPen[] GLPenTbl = null;
@@ -118,14 +154,13 @@ namespace Plotter
         {
             PenTbl = new PenHolder[PEN_TBL_SIZE];
             BrushTbl = new BrushHolder[BRUSH_TBL_SIZE];
-            ColorTbl = new ColorHolder[COLOR_TBL_SIZE];
             FontTbl = new FontHolder[FONT_TBL_SIZE];
         }
 
         private void allocGLTbl()
         {
             GLPenTbl = new GLPen[PEN_TBL_SIZE];
-            GLColorTbl = new Color4[COLOR_TBL_SIZE];
+            GLColorTbl = new Color4[BRUSH_TBL_SIZE];
         }
 
         public void Setup(ToolsType t)
@@ -148,36 +183,15 @@ namespace Plotter
         {
             allocGDITbl();
 
-            PenTbl[PEN_DEFAULT]             = new PenHolder(Pens.White, false);
-            PenTbl[PEN_SLECT_POINT]         = new PenHolder(new Pen(Color.FromArgb(128, 60, 255, 60), 0), true);
-            PenTbl[PEN_CURSOR]              = new PenHolder(Pens.LightBlue, false);
-            PenTbl[PEN_CURSOR2]             = new PenHolder(Pens.DarkSlateBlue, false);
-            PenTbl[PEN_DEFAULT_FIGURE]      = new PenHolder(Pens.White, false);
-            PenTbl[PEN_TEMP_FIGURE]         = new PenHolder(Pens.CadetBlue, false);
-            PenTbl[PEN_POINT_HIGHTLITE]     = new PenHolder(Pens.Orange, false);
-            PenTbl[PEN_MATCH_FIGURE]        = new PenHolder(Pens.Red, false);
-            PenTbl[PEN_MATCH_SEG]           = new PenHolder(Pens.Green, false);
-            PenTbl[PEN_LAST_POINT_MARKER]   = new PenHolder(Pens.CornflowerBlue, false);
-            PenTbl[PEN_LAST_POINT_MARKER2]  = new PenHolder(Pens.YellowGreen, false);
-            PenTbl[PEN_AXIS]                = new PenHolder(new Pen(Color.FromArgb(60, 60, 92), 0), true);
-            PenTbl[PEN_ARROW_AXIS]          = new PenHolder(new Pen(Color.FromArgb(82, 82, 112), 0), true);
-            PenTbl[PEN_PAGE_FRAME]          = new PenHolder(new Pen(Color.FromArgb(92, 92, 92), 0), true);
-            PenTbl[PEN_RELATIVE_POINT]      = new PenHolder(Pens.CornflowerBlue, false);
-            PenTbl[PEN_TEST_FIGURE]         = new PenHolder(Pens.Yellow, false);
-            PenTbl[PEN_GRID]                = new PenHolder(new Pen(Color.FromArgb(192, 128, 92), 0), true);
-            PenTbl[PEN_POINT_HIGHTLITE2]    = new PenHolder(Pens.SpringGreen, false);
-            PenTbl[PEN_FIGURE_HIGHLIGHT]    = new PenHolder(Pens.HotPink, false);
-            PenTbl[PEN_AXIS2]               = new PenHolder(Pens.LightSeaGreen, false);
-            PenTbl[PEN_PALE_FIGURE]         = new PenHolder(new Pen(Color.FromArgb(0x7E, 0x7E, 0x7E), 0), true);
-            PenTbl[PEN_MEASURE_FIGURE]      = new PenHolder(Pens.OrangeRed, false);
-            PenTbl[PEN_DIMENTION]           = new PenHolder(Pens.PaleGreen, false);
+            for (int i=0; i<PEN_TBL_SIZE; i++)
+            {
+                PenTbl[i] = new PenHolder(new Pen(DarkColors.PenColorTbl[i]), true);
+            }
 
-            ColorTbl[COLOR_DEFAULT]         = new ColorHolder(Color.FromArgb(255, 255, 255), false);
-            ColorTbl[COLOR_BACKGROUND]      = new ColorHolder(Color.FromArgb(0x1e, 0x1e, 0x1e), false);
-
-            BrushTbl[BRUSH_DEFAULT]         = new BrushHolder(new SolidBrush(ColorTbl[COLOR_DEFAULT]), true);
-            BrushTbl[BRUSH_BACKGROUND]      = new BrushHolder(new SolidBrush(ColorTbl[COLOR_BACKGROUND]), true);
-            BrushTbl[BRUSH_TEXT]            = new BrushHolder(new SolidBrush(Color.White), true);
+            for (int i = 0; i < BRUSH_TBL_SIZE; i++)
+            {
+                BrushTbl[i] = new BrushHolder(new SolidBrush(DarkColors.BrushColorTbl[i]), true);
+            }
 
             FontTbl[FONT_DEFAULT]           = new FontHolder(new Font("MS UI Gothic", 9), true);
             FontTbl[FONT_SMALL]             = new FontHolder(new Font("MS UI Gothic", 9), true);
@@ -187,37 +201,19 @@ namespace Plotter
         {
             allocGDITbl();
 
+            for (int i = 0; i < PEN_TBL_SIZE; i++)
+            {
+                PenTbl[i] = new PenHolder(null, false);
+            }
+
             PenTbl[PEN_DEFAULT]             = new PenHolder(new Pen(Brushes.Black, 0), true);
-            PenTbl[PEN_SLECT_POINT]         = new PenHolder(null, false);
-            PenTbl[PEN_CURSOR]              = new PenHolder(null, false);
-            PenTbl[PEN_CURSOR2]             = new PenHolder(null, false);
             PenTbl[PEN_DEFAULT_FIGURE]      = new PenHolder(new Pen(Brushes.Black, 0), true);
-            PenTbl[PEN_TEMP_FIGURE]         = new PenHolder(null, false);
-            PenTbl[PEN_POINT_HIGHTLITE]     = new PenHolder(null, false);
-            PenTbl[PEN_MATCH_FIGURE]        = new PenHolder(null, false);
-            PenTbl[PEN_MATCH_SEG]           = new PenHolder(null, false);
-            PenTbl[PEN_LAST_POINT_MARKER]   = new PenHolder(null, false);
-            PenTbl[PEN_LAST_POINT_MARKER2]  = new PenHolder(null, false);
-            PenTbl[PEN_AXIS]                = new PenHolder(null, false);
-            PenTbl[PEN_ARROW_AXIS]          = new PenHolder(null, false);
-            PenTbl[PEN_PAGE_FRAME]          = new PenHolder(null, false);
-            PenTbl[PEN_RELATIVE_POINT]      = new PenHolder(null, false);
-            PenTbl[PEN_TEST_FIGURE]         = new PenHolder(null, false);
-            PenTbl[PEN_GRID]                = new PenHolder(null, false);
-            PenTbl[PEN_POINT_HIGHTLITE2]    = new PenHolder(null, false);
-            PenTbl[PEN_FIGURE_HIGHLIGHT]    = new PenHolder(null, false);
-            PenTbl[PEN_AXIS2]               = new PenHolder(null, false);
             PenTbl[PEN_PALE_FIGURE]         = new PenHolder(new Pen(Brushes.Black, 0), true);
-            PenTbl[PEN_MEASURE_FIGURE]      = new PenHolder(null, false);
             PenTbl[PEN_DIMENTION]           = new PenHolder(new Pen(Brushes.Black, 0), true);
 
-
-            ColorTbl[COLOR_DEFAULT]         = new ColorHolder(Color.Black, false);
-            ColorTbl[COLOR_BACKGROUND]      = new ColorHolder(Color.Black, false);
-
-            BrushTbl[BRUSH_DEFAULT]         = new BrushHolder(new SolidBrush(ColorTbl[COLOR_DEFAULT]), false);
+            BrushTbl[BRUSH_DEFAULT]         = new BrushHolder(new SolidBrush(Color.Black), false);
             BrushTbl[BRUSH_BACKGROUND]      = new BrushHolder(null, false);
-            BrushTbl[BRUSH_TEXT]            = new BrushHolder(new SolidBrush(ColorTbl[COLOR_DEFAULT]), false);
+            BrushTbl[BRUSH_TEXT]            = new BrushHolder(new SolidBrush(Color.Black), false);
 
             FontTbl[FONT_DEFAULT]           = new FontHolder(new Font("MS UI Gothic", 9), true);
             FontTbl[FONT_SMALL]             = new FontHolder(new Font("MS UI Gothic", 9), true);
@@ -229,34 +225,16 @@ namespace Plotter
 
             float width = 1.0f;
 
-            GLPenTbl[PEN_DEFAULT]           = new GLPen(Pens.White.Color, width);
-            GLPenTbl[PEN_SLECT_POINT]       = new GLPen(Color.FromArgb(128, 60, 255, 60), width);
-            GLPenTbl[PEN_CURSOR]            = new GLPen(Pens.LightBlue.Color, width);
-            GLPenTbl[PEN_CURSOR2]           = new GLPen(Pens.DarkSlateBlue.Color, width);
-            GLPenTbl[PEN_DEFAULT_FIGURE]    = new GLPen(Pens.White.Color, width);
-            GLPenTbl[PEN_TEMP_FIGURE]       = new GLPen(Pens.CadetBlue.Color, width);
-            GLPenTbl[PEN_POINT_HIGHTLITE]   = new GLPen(Pens.BlueViolet.Color, width);
-            GLPenTbl[PEN_MATCH_FIGURE]      = new GLPen(Pens.Red.Color, width);
-            GLPenTbl[PEN_MATCH_SEG]         = new GLPen(Pens.Green.Color, width);
-            GLPenTbl[PEN_LAST_POINT_MARKER] = new GLPen(Pens.Aqua.Color, width);
-            GLPenTbl[PEN_LAST_POINT_MARKER2] = new  GLPen(Pens.YellowGreen.Color, width);
-            GLPenTbl[PEN_AXIS]              = new GLPen(Color.FromArgb(60, 60, 92), width);
-            GLPenTbl[PEN_ARROW_AXIS]        = new GLPen(Color.FromArgb(82, 82, 112), width);
-            GLPenTbl[PEN_PAGE_FRAME]        = new GLPen(Color.FromArgb(92, 92, 92), width);
-            GLPenTbl[PEN_RELATIVE_POINT]    = new GLPen(Pens.CornflowerBlue.Color, width);
-            GLPenTbl[PEN_TEST_FIGURE]       = new GLPen(Pens.Yellow.Color, width);
-            GLPenTbl[PEN_GRID]              = new GLPen(Color.FromArgb(192, 128, 92), width);
-            GLPenTbl[PEN_POINT_HIGHTLITE2]  = new GLPen(Pens.Yellow.Color, width);
-            GLPenTbl[PEN_FIGURE_HIGHLIGHT]  = new GLPen(Pens.HotPink.Color, width);
-            GLPenTbl[PEN_AXIS2]             = new GLPen(Pens.LightSeaGreen.Color, width);
-            GLPenTbl[PEN_PALE_FIGURE]       = new GLPen(Color.FromArgb(0x7E, 0x7E, 0x7E), width);
-            GLPenTbl[PEN_MEASURE_FIGURE]    = new GLPen(Pens.OrangeRed.Color, width);
-            GLPenTbl[PEN_DIMENTION]         = new GLPen(Pens.PaleGreen.Color, width);
+            for (int i = 0; i < PEN_TBL_SIZE; i++)
+            {
+                GLPenTbl[i] = new GLPen(DarkColors.PenColorTbl[i], width);
+            }
 
-            GLColorTbl[COLOR_DEFAULT]       = Color.FromArgb(255, 255, 255);
-            GLColorTbl[COLOR_BACKGROUND]    = Color.FromArgb(0x1e, 0x1e, 0x1e);
+            for (int i = 0; i < BRUSH_TBL_SIZE; i++)
+            {
+                GLColorTbl[i] = DarkColors.BrushColorTbl[i];
+            }
         }
-
 
         public void Dispose()
         {
@@ -286,8 +264,6 @@ namespace Plotter
                 BrushTbl = null;
             }
 
-            ColorTbl = null;
-
             if (FontTbl != null)
             {
                 foreach (ToolHolder<Font> fontHolder in FontTbl)
@@ -315,11 +291,6 @@ namespace Plotter
         public Brush brush(int id)
         {
             return BrushTbl[id].ToolObj;
-        }
-
-        public Color color(int id)
-        {
-            return ColorTbl[id].ToolObj;
         }
 
         public Font font(int id)

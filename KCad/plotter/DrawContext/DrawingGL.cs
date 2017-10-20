@@ -34,7 +34,7 @@ namespace Plotter
 
         public override void Clear()
         {
-            GL.ClearColor(DC.Color(DrawTools.COLOR_BACKGROUND));
+            GL.ClearColor(DC.Color(DrawTools.BRUSH_BACKGROUND));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
@@ -248,7 +248,7 @@ namespace Plotter
             End2D();
         }
 
-        public override void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SLECT_POINT)
+        public override void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT)
         {
             CadVector p0 = DC.CadPointToUnitPoint(pt) - 2;
             CadVector p1 = p0 + 4;

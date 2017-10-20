@@ -41,7 +41,7 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SLECT_POINT)
+        public virtual void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT)
         {
         }
 

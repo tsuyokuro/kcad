@@ -24,7 +24,7 @@ namespace Plotter
 
         void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHTLITE);
 
-        void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SLECT_POINT);
+        void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT);
 
         void DrawDownPointCursor(int pen, CadVector p);
 

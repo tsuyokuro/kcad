@@ -220,7 +220,7 @@ namespace Plotter
             DrawCircleScrn(pen, pp, 3);
         }
 
-        public override void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SLECT_POINT)
+        public override void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT)
         {
             CadVector pp = DC.CadPointToUnitPoint(pt);
 
