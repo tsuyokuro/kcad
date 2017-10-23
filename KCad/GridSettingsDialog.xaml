@@ -10,9 +10,10 @@
         ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10*" />
-            <ColumnDefinition Width="10*" />
-            <ColumnDefinition Width="60*" />
+            <ColumnDefinition Width="38*" />
+            <ColumnDefinition Width="38*" />
+            <ColumnDefinition Width="102*" />
+            <ColumnDefinition Width="127*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20*" />
@@ -22,62 +23,98 @@
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="1" 
-               Grid.Column="1"
-               Content="X"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Center"
-               Width="Auto"
-               Height="Auto"
-               />
+        <Label
+            Grid.Row="1" 
+            Grid.Column="1"
+            Content="X"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Width="Auto"
+            Height="Auto"
+            />
 
-        <TextBox x:Name="grid_x_size"
-                 Grid.Row="1"
-                 Grid.Column="2" 
-                 HorizontalAlignment="Left"
-                 Height="Auto"
-                 TextWrapping="Wrap"
-                 VerticalAlignment="Center"
-                 Width="100"
-                 />
+        <TextBox
+            x:Name="grid_x_size"
+            Grid.Row="1"
+            Grid.Column="2" 
+            HorizontalAlignment="Stretch"
+            TextWrapping="Wrap"
+            VerticalAlignment="Center"
+            Width="Auto"
+            Height="Auto"
+            />
 
-        <Label Grid.Row="2" 
-               Grid.Column="1"
-               Content="Y"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Center"
-               Width="Auto"
-               Height="Auto"
-               />
+        <Label
+            Grid.Row="1"
+            Grid.Column="3"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Width="31"
+            Height="26"
+            Content="mm"/>
 
-        <TextBox x:Name="grid_y_size"
-                 Grid.Row="2"
-                 Grid.Column="2" 
-                 HorizontalAlignment="Left"
-                 Height="Auto"
-                 TextWrapping="Wrap"
-                 VerticalAlignment="Center"
-                 Width="100"
-                 />
 
-        <Label Grid.Row="3" 
-               Grid.Column="1"
-               Content="Z"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Center"
-               Width="Auto"
-               Height="Auto"
-               />
+        <Label
+            Grid.Row="2" 
+            Grid.Column="1"
+            Content="Y"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Width="Auto"
+            Height="Auto"
+            />
 
-        <TextBox x:Name="grid_z_size"
-                 Grid.Row="3"
-                 Grid.Column="3" 
-                 HorizontalAlignment="Left"
-                 Height="Auto"
-                 TextWrapping="Wrap"
-                 VerticalAlignment="Center"
-                 Width="100"
-                 />
+        <TextBox
+            x:Name="grid_y_size"
+            Grid.Row="2"
+            Grid.Column="2" 
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            Width="Auto"
+            Height="Auto"
+            TextWrapping="Wrap"
+            />
+
+        <Label
+            Grid.Row="2"
+            Grid.Column="3"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Width="Auto"
+            Height="Auto"
+            Content="mm"/>
+
+
+        <Label
+            Grid.Row="3" 
+            Grid.Column="1"
+            Content="Z"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Width="Auto"
+            Height="Auto"
+            />
+
+        <TextBox
+            x:Name="grid_z_size"
+            Grid.Row="3"
+            Grid.Column="2" 
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            Width="Auto"
+            Height="Auto"
+            TextWrapping="Wrap"
+            />
+
+        <Label
+            Grid.Row="3"
+            Grid.Column="3"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Width="Auto"
+            Height="Auto"
+            Content="mm"/>
+
 
         <Button x:Name="ok_button" 
                 Grid.Row="4" Grid.Column="2"
@@ -86,17 +123,17 @@
                 Margin="0,15,90,0"
                 VerticalAlignment="Top"
                 Width="75"
-                Height="Auto"
+                Height="20" Grid.ColumnSpan="2"
                 />
 
         <Button x:Name="cancel_button" 
-                Grid.Row="4" Grid.Column="2"
+                Grid.Row="4" Grid.Column="3"
                 Content="Cancel"
                 HorizontalAlignment="Right"
                 Margin="0,15,10,0"
                 VerticalAlignment="Top"
                 Width="75"
-                Height="Auto"
+                Height="20"
                 />
     </Grid>
 </Window>
