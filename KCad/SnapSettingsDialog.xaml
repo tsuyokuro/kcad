@@ -5,46 +5,109 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KCad"
         mc:Ignorable="d"
-        Title="Snap settings" Height="160" Width="300"
+        Title="Snap settings"
+        Height="176.667"
+        Width="246.667"
         WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        WindowStyle="ToolWindow"
+        >
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="227*"/>
-            <ColumnDefinition Width="46*"/>
-            <ColumnDefinition Width="21*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="8" />
             <RowDefinition Height="100*" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="8" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Button x:Name="ok_button" Content="OK" HorizontalAlignment="Left" Margin="127,0,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="cancel_button" Content="Cancel" HorizontalAlignment="Left" Margin="207,0,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="3"/>
 
-        <StackPanel Grid.Row="1" Orientation="Vertical" Grid.ColumnSpan="3">
+        <StackPanel Grid.Row="1" Orientation="Vertical">
             <Grid Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="150*" />
                     <ColumnDefinition Width="100*" />
-                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="100*" />
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="1" Content="Point snap range (pixel)" />
-                <TextBox x:Name="point_snap" Grid.Column="2" Text="" />
+
+                <Label
+                    Grid.Column="0"
+                    Content="Point snap range"
+                    Margin="10,0,0,0"
+                    />
+
+                <StackPanel
+                    Grid.Column="1"
+                    Orientation="Horizontal"
+                    Width="Auto"
+                    HorizontalAlignment="Stretch"
+                    >
+                    <TextBox
+                        x:Name="point_snap" 
+                        Grid.Column="1"
+                        Height="Auto"
+                        Width="70"
+                        HorizontalAlignment="Left"
+                        Text=""
+                    />
+                    <Label Content="pixel"/>
+                </StackPanel>
             </Grid>
             <Grid Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="150*" />
                     <ColumnDefinition Width="100*" />
-                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="100*" />
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="1" Content="Line snap range (pixel)" />
-                <TextBox x:Name="line_snap" Grid.Column="2" Text="" />
+                <Label
+                    Grid.Column="0"
+                    Content="Line snap range"
+                    Margin="10,0,0,0"
+                    />
+
+                <StackPanel
+                    Grid.Column="1"
+                    Orientation="Horizontal"
+                    Width="Auto"
+                    HorizontalAlignment="Stretch"
+                    >
+                    <TextBox
+                        x:Name="line_snap"
+                        Grid.Column="1"
+                        Text=""
+                        Width="70"
+                        HorizontalAlignment="Left"
+                    />
+                    <Label Content="pixel"/>
+                </StackPanel>
             </Grid>
+
+        </StackPanel>
+        <StackPanel
+            Grid.Row="2"
+            Width="Auto"
+            Height="Auto"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            Margin="0,8,8,8"
+            >
+
+            <Button
+                x:Name="ok_button"
+                Content="OK"
+                Width="75"
+                Height="Auto"
+                Padding="4"
+                BorderThickness="0"
+                Background="LightGray"
+                />
+
+            <Button
+                x:Name="cancel_button"
+                Content="Cancel"
+                Width="75"
+                Height="Auto"
+                Padding="4"
+                BorderThickness="0"
+                Margin="8,0,0,0"
+                Background="LightGray"
+                />
 
         </StackPanel>
 
