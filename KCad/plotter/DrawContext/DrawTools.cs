@@ -143,8 +143,13 @@ namespace Plotter
         }
 
 
+        public Color[] PenColorTbl;
         PenHolder[] PenTbl = null;
+
+        public Color[] BrushColorTbl;
         BrushHolder[] BrushTbl = null;
+
+
         FontHolder[] FontTbl = null;
 
         GLPen[] GLPenTbl = null;
@@ -182,6 +187,9 @@ namespace Plotter
         private void setupDarkSet()
         {
             allocGDITbl();
+
+            PenColorTbl = DarkColors.PenColorTbl;
+            BrushColorTbl = DarkColors.BrushColorTbl;
 
             for (int i=0; i<PEN_TBL_SIZE; i++)
             {
@@ -288,9 +296,19 @@ namespace Plotter
             return PenTbl[id].ToolObj;
         }
 
+        public Color PenColor(int id)
+        {
+            return PenColorTbl[id];
+        }
+
         public Brush brush(int id)
         {
             return BrushTbl[id].ToolObj;
+        }
+
+        public Color BrushColor(int id)
+        {
+            return BrushColorTbl[id];
         }
 
         public Font font(int id)

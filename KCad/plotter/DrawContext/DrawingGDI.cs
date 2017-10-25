@@ -291,11 +291,16 @@ namespace Plotter
             }
  
             CadVector p0 = DC.CadPointToUnitPoint(p);
-            CadVector p1 = p0;
-            p0.x = (int)p0.x;
-            p1.x = p0.x + 0.1;
+            //CadVector p1 = p0;
+            //p0.x = (int)p0.x;
+            //p1.x = p0.x + 0.1;
 
-            DC.graphics.DrawLine(DC.Pen(pen), (float)p0.x, (float)p0.y, (float)p1.x, (float)p1.y);
+            //DC.graphics.DrawLine(DC.Pen(pen), (float)p0.x, (float)p0.y, (float)p1.x, (float)p1.y);
+
+            if (p0.x >= 0 && p0.y >= 0 && p0.x < DC.ViewWidth && p0.y < DC.ViewHeight)
+            {
+                DC.Image.SetPixel((int)p0.x, (int)p0.y, DC.PenColor(pen));
+            }
         }
 
         public override void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector Normal, bool drawOutline)

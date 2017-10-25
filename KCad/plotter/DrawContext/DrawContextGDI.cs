@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using OpenTK.Graphics;
 using System.Drawing;
 
 namespace Plotter
@@ -27,18 +28,12 @@ namespace Plotter
 
         public DrawContextGDI()
         {
-            SetUnitPerMilli(4); // 1mm = 2.5dot
+            SetUnitPerMilli(4); // 4 pix = 1mm
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
-            /*
-            mViewMatrix = UMatrixs.ViewXY;
-            mViewMatrixInv = UMatrixs.ViewXYInv;
-            */
-
             mProjectionMatrix = UMatrix4.Unit;
             mProjectionMatrixInv = UMatrix4.Unit;
-
 
             mDrawing = new DrawingGDI(this);
         }
@@ -133,9 +128,15 @@ namespace Plotter
             DisposeGraphics();
         }
 
+        #region Depend GDI Graphics
         public Pen Pen(int id)
         {
             return Tools.pen(id);
+        }
+
+        public Color PenColor(int id)
+        {
+            return Tools.PenColorTbl[id];
         }
 
         public Font Font(int id)
@@ -147,5 +148,11 @@ namespace Plotter
         {
             return Tools.brush(id);
         }
+
+        public Color BrushColor(int id)
+        {
+            return Tools.BrushColorTbl[id];
+        }
+        #endregion
     }
 }
