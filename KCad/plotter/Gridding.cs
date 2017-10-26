@@ -129,12 +129,18 @@ namespace Plotter
 
             CadVector uzero = dc.CadPointToUnitPoint(CadVector.Zero);
 
+            double uszx;
+            double uszy;
+
             usz = dc.CadPointToUnitPoint(CadVector.Create(szx, 0, 0)) - uzero;
 
-            if (usz.x != 0 && usz.x < min)
+            uszx = Math.Abs(usz.x);
+            uszy = Math.Abs(usz.y);
+
+            if (uszx != 0 && uszx < min)
             {
-                d = Math.Ceiling(min / usz.x) * usz.x;
-                t = d / usz.x;
+                d = Math.Ceiling(min / uszx) * uszx;
+                t = d / uszx;
             }
 
             if (t > n)
@@ -142,10 +148,10 @@ namespace Plotter
                 n = t;
             }
 
-            if (usz.y != 0 && usz.y < min)
+            if (uszy != 0 && uszy < min)
             {
-                d = Math.Ceiling(min / usz.y) * usz.y;
-                t = d / usz.y;
+                d = Math.Ceiling(min / uszy) * uszy;
+                t = d / uszy;
             }
 
             if (t > n)
@@ -155,10 +161,13 @@ namespace Plotter
 
             usz = dc.CadPointToUnitPoint(CadVector.Create(0, szy, 0)) - uzero;
 
-            if (usz.x != 0 && usz.x < min)
+            uszx = Math.Abs(usz.x);
+            uszy = Math.Abs(usz.y);
+
+            if (uszx != 0 && uszx < min)
             {
-                d = Math.Ceiling(min / usz.x) * usz.x;
-                t = d / usz.x;
+                d = Math.Ceiling(min / uszx) * uszx;
+                t = d / uszx;
             }
 
             if (t > n)
@@ -166,10 +175,10 @@ namespace Plotter
                 n = t;
             }
 
-            if (usz.y != 0 && usz.y < min)
+            if (uszy != 0 && uszy < min)
             {
-                d = Math.Ceiling(min / usz.y) * usz.y;
-                t = d / usz.y;
+                d = Math.Ceiling(min / uszy) * uszy;
+                t = d / uszy;
             }
 
             if (t > n)
@@ -179,10 +188,14 @@ namespace Plotter
 
             usz = dc.CadPointToUnitPoint(CadVector.Create(0, 0, szy)) - uzero;
 
-            if (usz.x != 0 && usz.x < min)
+            uszx = Math.Abs(usz.x);
+            uszy = Math.Abs(usz.y);
+
+
+            if (uszx != 0 && uszx < min)
             {
-                d = Math.Ceiling(min / usz.x) * usz.x;
-                t = d / usz.x;
+                d = Math.Ceiling(min / uszx) * uszx;
+                t = d / uszx;
             }
 
             if (t > n)
@@ -190,10 +203,10 @@ namespace Plotter
                 n = t;
             }
 
-            if (usz.y != 0 && usz.y < min)
+            if (uszy != 0 && uszy < min)
             {
-                d = Math.Ceiling(min / usz.y) * usz.y;
-                t = d / usz.y;
+                d = Math.Ceiling(min / uszy) * uszy;
+                t = d / uszy;
             }
 
             if (t > n)

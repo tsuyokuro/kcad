@@ -1,7 +1,9 @@
 ﻿using OpenTK;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Plotter
 {
@@ -88,6 +90,7 @@ namespace Plotter
             DrawAxis2();
         }
 
+        /*
         public override void DrawGrid(Gridding grid)
         {
             CadVector lt = CadVector.Zero;
@@ -122,6 +125,10 @@ namespace Plotter
             sx = Math.Round(minx / szx) * szx;
             sy = Math.Round(miny / szy) * szy;
             sz = Math.Round(minz / szz) * szz;
+
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
             x = sx;
             while (x < maxx)
@@ -180,6 +187,168 @@ namespace Plotter
 
                 x += szx;
             }
+
+            sw.Stop();
+            DebugOut.StdPrintLn(sw.ElapsedMilliseconds.ToString());
+        }
+        */
+
+        public override void DrawGrid(Gridding grid)
+        {
+            CadVector lt = CadVector.Zero;
+            CadVector rb = CadVector.Create(DC.ViewWidth, DC.ViewHeight, 0);
+
+            CadVector ltw = DC.UnitPointToCadPoint(lt);
+            CadVector rbw = DC.UnitPointToCadPoint(rb);
+
+            double minx = Math.Min(ltw.x, rbw.x);
+            double maxx = Math.Max(ltw.x, rbw.x);
+
+            double miny = Math.Min(ltw.y, rbw.y);
+            double maxy = Math.Max(ltw.y, rbw.y);
+
+            double minz = Math.Min(ltw.z, rbw.z);
+            double maxz = Math.Max(ltw.z, rbw.z);
+
+
+            int pen = DrawTools.PEN_GRID;
+
+            Color c = DC.PenColor(DrawTools.PEN_GRID);
+
+            int argb = c.ToArgb();
+
+            CadVector p = default(CadVector);
+
+
+            double n = grid.Decimate(DC, grid, 8);
+
+            double x, y, z;
+            double sx, sy, sz;
+            double szx = grid.GridSize.x * n;
+            double szy = grid.GridSize.y * n;
+            double szz = grid.GridSize.z * n;
+
+            sx = Math.Round(minx / szx) * szx;
+            sy = Math.Round(miny / szy) * szy;
+            sz = Math.Round(minz / szz) * szz;
+
+
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
+
+            DrawDots(sx, sy, sz, szx, szy, szz, maxx, maxy, maxz, argb);
+
+            //sw.Stop();
+            //DebugOut.StdPrintLn(sw.ElapsedMilliseconds.ToString());
+        }
+
+        private void DrawDots(
+            double sx,
+            double sy,
+            double sz,
+            double szx,
+            double szy,
+            double szz,
+            double maxx,
+            double maxy,
+            double maxz,
+            int argb
+            )
+        {
+            double x;
+            double y;
+            double z;
+
+            CadVector p = default(CadVector);
+            CadVector up = default(CadVector);
+
+
+            Bitmap tgt = DC.Image;
+
+            BitmapData bitmapData = tgt.LockBits(
+                    new System.Drawing.Rectangle(0, 0, tgt.Width, tgt.Height),
+                    System.Drawing.Imaging.ImageLockMode.WriteOnly, tgt.PixelFormat);
+
+            unsafe
+            {
+                int* srcPixels = (int*)bitmapData.Scan0;
+
+                x = sx;
+                while (x < maxx)
+                {
+                    p.x = x;
+                    p.z = 0;
+
+                    y = sy;
+
+                    while (y < maxy)
+                    {
+                        p.y = y;
+                        up = DC.CadPointToUnitPoint(p);
+
+                        if (up.x >= 0 && up.x < tgt.Width && up.y >= 0 && up.y < tgt.Height)
+                        {
+                            *(srcPixels + ((int)up.y * tgt.Width) + (int)up.x) = argb;
+                        }
+
+                        y += szy;
+                    }
+
+                    x += szx;
+                }
+
+                z = sz;
+                while (z < maxz)
+                {
+                    p.z = z;
+                    p.x = 0;
+
+                    y = sy;
+
+                    while (y < maxy)
+                    {
+                        p.y = y;
+
+                        up = DC.CadPointToUnitPoint(p);
+
+                        if (up.x >= 0 && up.x < tgt.Width && up.y >= 0 && up.y < tgt.Height)
+                        {
+                            *(srcPixels + ((int)up.y * tgt.Width) + (int)up.x) = argb;
+                        }
+
+                        y += szy;
+                    }
+
+                    z += szz;
+                }
+
+                x = sx;
+                while (x < maxx)
+                {
+                    p.x = x;
+                    p.y = 0;
+
+                    z = sz;
+
+                    while (z < maxz)
+                    {
+                        p.z = z;
+
+                        up = DC.CadPointToUnitPoint(p);
+
+                        if (up.x >= 0 && up.x < tgt.Width && up.y >= 0 && up.y < tgt.Height)
+                        {
+                            *(srcPixels + ((int)up.y * tgt.Width) + (int)up.x) = argb;
+                        }
+
+                        z += szz;
+                    }
+
+                    x += szx;
+                }
+            }
+
+            tgt.UnlockBits(bitmapData);
         }
 
         public override void DrawPageFrame()
