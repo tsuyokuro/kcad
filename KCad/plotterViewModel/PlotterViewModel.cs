@@ -337,9 +337,6 @@ namespace Plotter
 
         public TextCommandHistory CommandHistory = new TextCommandHistory();
 
-        private TreeView ObjectTreeView;
-
-
         public PlotterViewModel(Window mainWindow, WindowsFormsHost viewHost)
         {
             mMainWindow = mainWindow;
@@ -386,22 +383,6 @@ namespace Plotter
             mController.CurrentDC = view.DrawContext;
 
             mViewHost.Child = view.FromsControl;
-        }
-
-        public void SetObjectTreeView(TreeView treeView)
-        {
-            if (ObjectTreeRootItem == null)
-            {
-                CadObjectItem.ItemsContext context = new CadObjectItem.ItemsContext();
-                context.HandleItemChanged = ObjectTreeItemChanged;
-
-                ObjectTreeRootItem = CadObjectItem.CreateNode("root", context);
-            }
-
-            ObjectTreeView = treeView;
-            ObjectTreeView.ItemsSource = ObjectTreeRootItem.Children;
-
-            mController.ObjectTreeRoot = ObjectTreeRootItem;
         }
 
         public void ObjectTreeItemChanged(CadObjectItem item)

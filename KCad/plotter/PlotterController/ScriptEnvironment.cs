@@ -603,14 +603,6 @@ namespace Plotter
 
         private void test003()
         {
-            var list = Controller.ObjectTreeRoot.Children;
-
-            if (list.Count == 0)
-            {
-                return;
-            }
-
-            list[0].IsChecked = true;
         }
 
         private CadFigure GetTargetFig()

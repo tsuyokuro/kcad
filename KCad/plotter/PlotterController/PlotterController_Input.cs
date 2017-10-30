@@ -503,23 +503,6 @@ namespace Plotter
         private void NotifySelectList()
         {
             List<uint> ids = GetSelectedFigIDList();
-
-            ObjectTreeRoot.ClearChildren();
-
-            foreach(uint id in ids)
-            {
-                CadFigure fig = DB.GetFigure(id);
-
-                if (ObjectTreeRoot.Context.FigureIDSet.Contains(id))
-                {
-                    continue;
-                }
-
-                CadObjectItem item = CadObjectItem.CreateFigure(fig, ObjectTreeRoot.Context);
-                ObjectTreeRoot.AddChild(item);
-            }
-
-            ObjectTreeRoot.ExpandAll(true);
         }
 
         private void PutMeasure()
