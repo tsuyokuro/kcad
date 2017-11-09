@@ -660,9 +660,10 @@ namespace Plotter
                     }
 
                     State = States.SELECT;
-
                     break;
             }
+
+            UpdateTreeView(false);
 
             mOffsetScreen = default(CadVector);
             //mOffsetWorld = default(CadVector);

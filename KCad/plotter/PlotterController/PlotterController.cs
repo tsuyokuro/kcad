@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using KCad;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -125,6 +126,7 @@ namespace Plotter
             set
             {
                 mDB.CurrentLayer = value;
+                UpdateTreeView(true);
             }
         }
 
@@ -294,8 +296,34 @@ namespace Plotter
         }
         #endregion
 
+    #region TreeView
+        CadObjectTreeView mCadObjectTreeView;
 
-        #region Notify
+        public void SetObjectTreeView(CadObjectTreeView treeView)
+        {
+            mCadObjectTreeView = treeView;
+        }
+
+        public void UpdateTreeView(bool remakeTree)
+        {
+            if (mCadObjectTreeView == null)
+            {
+                return;
+            }
+
+            if (remakeTree)
+            {
+                CadLayerTreeItem item = new CadLayerTreeItem(CurrentLayer);
+                mCadObjectTreeView.AttachRoot(item);
+            }
+            else
+            {
+                mCadObjectTreeView.Redraw();
+            }
+        }
+    #endregion
+
+    #region Notify
         public void NotifyDataChanged(bool redraw)
         {
             mDataChanged(this, redraw);
@@ -322,9 +350,9 @@ namespace Plotter
 
             StateChanged(this, si);
         }
-        #endregion
+    #endregion
 
-        #region Start and End creating figure
+    #region Start and End creating figure
 
         public void StartCreateFigure(CadFigure.Types type)
         {
@@ -348,6 +376,8 @@ namespace Plotter
                 CreatingFigure.EndCreate(CurrentDC);
                 CreatingFigure = null;
             }
+
+            UpdateTreeView(true);
 
             NotifyStateChange();
         }
@@ -393,6 +423,7 @@ namespace Plotter
         public void setCurrentLayer(uint id)
         {
             mDB.CurrentLayerID = id;
+            UpdateTreeView(true);
         }
 
         #region "undo redo"
@@ -407,10 +438,9 @@ namespace Plotter
             ClearSelection();
             mHistoryManager.redo();
         }
-        #endregion
+    #endregion
 
-
-        #region "Draw methods"
+    #region "Draw methods"
         public void Clear(DrawContext dc)
         {
             if (dc == null) return;
@@ -512,11 +542,9 @@ namespace Plotter
         }
         #endregion
 
-
+    #region Private editing figure methods
         //-----------------------------------------------------------------------------------------
         // Edit figure methods
-
-        #region Private editing figure methods
 
         private void NextState()
         {
@@ -740,9 +768,9 @@ namespace Plotter
             }
         }
 
-        #endregion
+    #endregion
 
-        #region "Copy and paste"
+    #region "Copy and paste"
         public void Copy()
         {
             CopyFigures();
@@ -806,9 +834,9 @@ namespace Plotter
             }
         }
 
-        #endregion
+    #endregion
 
-        #region "File access"
+    #region "File access"
         public void SaveToJsonFile(String fname)
         {
             StreamWriter writer = new StreamWriter(fname);
@@ -839,8 +867,10 @@ namespace Plotter
             mHistoryManager = new HistoryManager(mDB);
 
             NotifyLayerInfo();
+
+            UpdateTreeView(true);
         }
-        #endregion
+    #endregion
 
         public void ClearLayer(uint layerID)
         {

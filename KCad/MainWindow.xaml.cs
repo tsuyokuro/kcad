@@ -45,6 +45,8 @@ namespace KCad
             LayerListView.DataContext = ViewModel.LayerList;
 
             ViewModel.LayerListView = LayerListView;
+            ViewModel.SetObjectTreeView(ObjTree);
+
 
             PreviewKeyDown += OnPreviewKeyDown;
 

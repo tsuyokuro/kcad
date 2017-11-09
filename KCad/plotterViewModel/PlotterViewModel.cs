@@ -305,8 +305,6 @@ namespace Plotter
             }
         }
 
-        private CadObjectItem ObjectTreeRootItem = null;
-
         public PlotterController Controller
         {
             get
@@ -385,9 +383,12 @@ namespace Plotter
             mViewHost.Child = view.FromsControl;
         }
 
-        public void ObjectTreeItemChanged(CadObjectItem item)
+        CadObjectTreeView mCadObjectTreeView;
+
+        public void SetObjectTreeView(CadObjectTreeView treeView)
         {
-            DrawAll();
+            mCadObjectTreeView = treeView;
+            mController.SetObjectTreeView(treeView);
         }
 
         public void ViewFocus()
