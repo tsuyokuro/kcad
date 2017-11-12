@@ -389,6 +389,16 @@ namespace Plotter
         {
             mCadObjectTreeView = treeView;
             mController.SetObjectTreeView(treeView);
+
+            if (mCadObjectTreeView != null)
+            {
+                mCadObjectTreeView.CheckChanged += ObjectTreeView_CheckChanged;
+            }
+        }
+
+        private void ObjectTreeView_CheckChanged(object sender, EventArgs e)
+        {
+            DrawAll();
         }
 
         public void ViewFocus()

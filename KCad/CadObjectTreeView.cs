@@ -43,6 +43,18 @@ namespace KCad
         {
         }
 
+        #region Event
+        public event EventHandler CheckChanged;
+
+        protected virtual void OnCheckChanged(EventArgs e)
+        {
+            if (CheckChanged != null)
+            {
+                CheckChanged(this, e);
+            }
+        }
+        #endregion
+
         public Brush Background
         {
             get
@@ -146,14 +158,14 @@ namespace KCad
 
         protected Brush mCheckedForeground = Brushes.Black;
 
-        protected Brush mCheckedBackground = Brushes.GreenYellow;
+        protected Brush mCheckedBackground = new SolidColorBrush(Color.FromRgb(120,160,0));
 
 
         protected double mItemHeight = 20.0;
 
         protected double mTextSize = 14.0;
 
-        protected double mIndentSize = 14.0;
+        protected double mIndentSize = 8.0;
 
         public CadObjectTreeView()
         {
@@ -200,6 +212,8 @@ namespace KCad
 
 
             item.IsChecked = item.IsChecked == false;
+
+            OnCheckChanged(EventArgs.Empty);
 
             InvalidateVisual();
         }

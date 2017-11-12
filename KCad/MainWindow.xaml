@@ -352,9 +352,9 @@
                     </Grid>
                     <Grid Grid.Row="4">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="200*"/>
-                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="100*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="200*"/>
                         </Grid.RowDefinitions>
 
                         <ScrollViewer
@@ -406,6 +406,7 @@
                         <ScrollViewer
                             Grid.Row="2"
                             Style="{StaticResource CustomScrollViewerStyle}"
+                            VerticalAlignment="Stretch"
                             HorizontalScrollBarVisibility="Visible"
                             VerticalScrollBarVisibility = "Visible"
                             >
@@ -413,6 +414,7 @@
                             <local:CadObjectTreeView
                                 x:Name="ObjTree"
                                 HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
                                 Height="0"
                                 Background="{StaticResource BaseColor}"
                                 Foreground="White"

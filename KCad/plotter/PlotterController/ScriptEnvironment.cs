@@ -214,7 +214,6 @@ namespace Plotter
                 {
                     continue;
                 }
-
                 parent.AddChild(fig);
             }
 

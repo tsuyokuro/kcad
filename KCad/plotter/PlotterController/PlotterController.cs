@@ -766,6 +766,8 @@ namespace Plotter
                 CadFigure fig = mDB.GetFigure(id);
                 fig.RemoveSelected();
             }
+
+            UpdateTreeView(true);
         }
 
     #endregion
