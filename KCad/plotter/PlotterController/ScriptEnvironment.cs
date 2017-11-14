@@ -225,6 +225,59 @@ namespace Plotter
                 );
         }
 
+        /*
+        public void Group()
+        {
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
+            if (idlist.Count < 2)
+            {
+                Controller.InteractOut.println(
+                    global::KCad.Properties.Resources.error_select_2_or_more
+                    );
+
+                return;
+            }
+
+            CadFigure parent = Controller.DB.NewFigure(CadFigure.Types.GROUP);
+
+            CadOpeList opeRoot = new CadOpeList();
+            
+            foreach (uint id in idlist)
+            {
+                CadFigure fig = Controller.DB.GetFigure(id);
+
+                if (fig == null)
+                {
+                    continue;
+                }
+
+                int idx = Controller.CurrentLayer.GetFigureIndex(id);
+
+                if (idx < 0)
+                {
+                    continue;
+                }
+
+                CadOpe ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, id);
+
+                opeRoot.Add(ope);
+
+                Controller.CurrentLayer.RemoveFigureByIndex(idx);
+
+
+                parent.AddChild(fig);
+            }
+
+
+            Controller.HistoryManager.foward(ope);
+
+            Controller.InteractOut.println(
+                    global::KCad.Properties.Resources.notice_was_grouped
+                );
+        }
+        */
+
         public void Ungroup()
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();

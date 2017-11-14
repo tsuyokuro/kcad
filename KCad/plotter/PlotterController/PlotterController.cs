@@ -798,6 +798,7 @@ namespace Plotter
                 }
             });
 
+            // Serializable機構が使われて、複製されたCadFigureのlistがClipboardに格納される
             Clipboard.SetData("List.CadFiguer", figList);
         }
 
@@ -823,7 +824,7 @@ namespace Plotter
                 foreach (CadFigure fig in list)
                 {
                     fig.MoveAllPoints(d);
-                    mDB.AddFigure(fig);
+                    mDB.AddFigure(fig); // IDが設定しなおされる
                     CurrentLayer.AddFigure(fig);
 
                     CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, fig.ID);

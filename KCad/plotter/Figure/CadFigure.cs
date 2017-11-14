@@ -433,6 +433,23 @@ namespace Plotter
         }
         #endregion
 
+        public void CopyFrom(CadFigure fig)
+        {
+            Type = fig.Type;
+            IsLoop = fig.IsLoop;
+            Locked = fig.Locked;
+            Normal = fig.Normal;
+
+            mPointList.Clear();
+            mPointList.AddRange(fig.mPointList);
+
+            mParent = fig.mParent;
+
+            mChildList.Clear();
+            mChildList.AddRange(fig.mChildList);
+        }
+
+
         #region "JSON"
         public JObject ToJson()
         {
