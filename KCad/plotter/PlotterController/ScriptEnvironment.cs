@@ -1,4 +1,6 @@
-﻿using KCad.Properties;
+﻿//#define NEW_GROUPING
+
+using KCad.Properties;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using System;
@@ -8,6 +10,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+
 
 namespace Plotter
 {
@@ -191,6 +194,123 @@ namespace Plotter
             );
         }
 
+#if NEW_GROUPING
+        public void Group()
+        {
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
+            if (idlist.Count < 2)
+            {
+                Controller.InteractOut.println(
+                    global::KCad.Properties.Resources.error_select_2_or_more
+                    );
+
+                return;
+            }
+
+            CadFigure parent = Controller.DB.NewFigure(CadFigure.Types.GROUP);
+
+            CadOpeList opeRoot = new CadOpeList();
+
+            CadOpe ope;
+
+            foreach (uint id in idlist)
+            {
+                CadFigure fig = Controller.DB.GetFigure(id);
+
+                if (fig == null)
+                {
+                    continue;
+                }
+
+                int idx = Controller.CurrentLayer.GetFigureIndex(id);
+
+                if (idx < 0)
+                {
+                    continue;
+                }
+
+                ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, id);
+
+                opeRoot.Add(ope);
+
+                Controller.CurrentLayer.RemoveFigureByIndex(idx);
+
+                parent.AddChild(fig);
+            }
+
+            Controller.CurrentLayer.AddFigure(parent);
+
+            ope = new CadOpeAddChildlen(parent, parent.ChildList);
+
+            opeRoot.Add(ope);
+            
+            ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, parent.ID);
+
+            opeRoot.Add(ope);
+
+            Controller.HistoryManager.foward(opeRoot);
+
+            Controller.InteractOut.println(
+                    global::KCad.Properties.Resources.notice_was_grouped
+                );
+        }
+
+        public void Ungroup()
+        {
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
+            var idSet = new HashSet<uint>();
+
+            foreach (uint id in idlist)
+            {
+                CadFigure fig = Controller.DB.GetFigure(id);
+
+                if (fig.ChildList.Count > 0)
+                {
+                    idSet.Add(fig.ID);
+                }
+            }
+
+            CadOpeList opeList = new CadOpeList();
+
+            CadOpe ope;
+
+            foreach (uint id in idSet)
+            {
+                CadFigure fig = Controller.DB.GetFigure(id);
+
+                fig.ChildList.ForEach(c =>
+                {
+                    ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, c.ID);
+
+                    opeList.Add(ope);
+
+                    Controller.CurrentLayer.AddFigure(c);
+                });
+
+                ope = new CadOpeRemoveChildlen(fig, fig.ChildList);
+
+                opeList.Add(ope);
+
+                fig.ReleaseAllChildlen();
+
+                if (fig.PointCount == 0)
+                {
+                    ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, fig.ID);
+                    opeList.Add(ope);
+
+                    Controller.CurrentLayer.RemoveFigureByID(fig.ID);
+                }
+            }
+
+            Controller.HistoryManager.foward(opeList);
+
+            Controller.InteractOut.println(
+                global::KCad.Properties.Resources.notice_was_ungrouped
+                );
+        }
+#else
         public void Group()
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();
@@ -224,59 +344,6 @@ namespace Plotter
                     global::KCad.Properties.Resources.notice_was_grouped
                 );
         }
-
-        /*
-        public void Group()
-        {
-            List<uint> idlist = Controller.GetSelectedFigIDList();
-
-            if (idlist.Count < 2)
-            {
-                Controller.InteractOut.println(
-                    global::KCad.Properties.Resources.error_select_2_or_more
-                    );
-
-                return;
-            }
-
-            CadFigure parent = Controller.DB.NewFigure(CadFigure.Types.GROUP);
-
-            CadOpeList opeRoot = new CadOpeList();
-            
-            foreach (uint id in idlist)
-            {
-                CadFigure fig = Controller.DB.GetFigure(id);
-
-                if (fig == null)
-                {
-                    continue;
-                }
-
-                int idx = Controller.CurrentLayer.GetFigureIndex(id);
-
-                if (idx < 0)
-                {
-                    continue;
-                }
-
-                CadOpe ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, id);
-
-                opeRoot.Add(ope);
-
-                Controller.CurrentLayer.RemoveFigureByIndex(idx);
-
-
-                parent.AddChild(fig);
-            }
-
-
-            Controller.HistoryManager.foward(ope);
-
-            Controller.InteractOut.println(
-                    global::KCad.Properties.Resources.notice_was_grouped
-                );
-        }
-        */
 
         public void Ungroup()
         {
@@ -315,7 +382,7 @@ namespace Plotter
                 global::KCad.Properties.Resources.notice_was_ungrouped
                 );
         }
-
+#endif
         public void Distance()
         {
             if (Controller.SelList.List.Count == 2)

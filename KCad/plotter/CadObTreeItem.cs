@@ -223,6 +223,12 @@ namespace Plotter
                 Add(pi);
                 idx++;
             });
+
+            Fig.ChildList.ForEach(c =>
+            {
+                CadFigTreeItem pi = new CadFigTreeItem(c);
+                Add(pi);
+            });
         }
     }
 

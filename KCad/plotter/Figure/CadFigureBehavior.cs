@@ -28,6 +28,11 @@ namespace Plotter
 
             public virtual void MoveSelectedPoint(CadFigure fig, DrawContext dc, CadVector delta)
             {
+                if (fig.StoreList == null)
+                {
+                    return;
+                }
+
                 for (int i = 0; i < fig.StoreList.Count; i++)
                 {
                     CadVector op = fig.StoreList[i];

@@ -264,6 +264,20 @@ namespace Plotter
             mPointList.InsertRange(index, collection);
         }
 
+        public bool HasSelectedPoint()
+        {
+            int i;
+            for (i=0; i<mPointList.Count; i++)
+            {
+                if (mPointList[i].Selected)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public CadVector GetPointAt(int index)
         {
             return mPointList[index];
@@ -283,6 +297,11 @@ namespace Plotter
             {
                 SelectPointAt(i, false);
             }
+
+            mChildList.ForEach(c =>
+            {
+                c.ClearSelectFlags();
+            });
         }
 
         public void Select()
@@ -583,6 +602,11 @@ namespace Plotter
                 " dz=" + delta.z.ToString()
                 );
             Behavior.MoveSelectedPoint(this, dc, delta);
+
+            mChildList.ForEach(c =>
+            {
+               c.MoveSelectedPoints(dc, delta);
+            });
         }
 
         public void MoveAllPoints(CadVector delta)
@@ -617,6 +641,11 @@ namespace Plotter
         public void Draw(DrawContext dc, int pen)
         {
             Behavior.Draw(this, dc, pen);
+
+            mChildList.ForEach(fig =>
+            {
+                fig.Draw(dc, pen);
+            });
         }
 
         public void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
@@ -627,6 +656,11 @@ namespace Plotter
         public void DrawSelected(DrawContext dc, int pen)
         {
             Behavior.DrawSelected(this, dc, pen);
+
+            mChildList.ForEach(fig =>
+            {
+                fig.DrawSelected(dc, pen);
+            });
         }
 
         public void DrawTemp(DrawContext dc, CadVector tp, int pen)

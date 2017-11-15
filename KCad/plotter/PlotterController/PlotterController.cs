@@ -600,13 +600,9 @@ namespace Plotter
             {
                 foreach (CadFigure fig in layer.FigureList)
                 {
-                    foreach (CadVector p in fig.PointList)
+                    if (fig.HasSelectedPoint())
                     {
-                        if (p.Selected)
-                        {
-                            idList.Add(fig.ID);
-                            break;
-                        }
+                        idList.Add(fig.ID);
                     }
                 }
             }
