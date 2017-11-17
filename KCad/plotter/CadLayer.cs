@@ -147,10 +147,10 @@ namespace Plotter
 
         public void ClearSelectedFlags()
         {
-            foreach (CadFigure fig in FigureList)
+            ForEachFig(fig =>
             {
                 fig.ClearSelectFlags();
-            }
+            });
         }
 
         public CadOpeList Clear()
@@ -171,6 +171,40 @@ namespace Plotter
             mFigureList.Clear();
 
             return opeList;
+        }
+
+        /// <summary>
+        /// 全てのFigureを列挙(中止可能版)
+        /// Figureが子を持つ場合もフラットに列挙される
+        /// </summary>
+        /// <param name="d"></param>
+        public void ForEachFig(ForEachDelegate<CadFigure> d)
+        {
+            int i;
+            for (i=0; i<mFigureList.Count; i++)
+            {
+                CadFigure fig = mFigureList[i];
+
+                if (!fig.ForEachFig(d))
+                {
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 全てのFigureを列挙(中止不可版)
+        /// Figureが子を持つ場合もフラットに列挙される
+        /// </summary>
+        /// <param name="d"></param>
+        public void ForEachFig(Action<CadFigure> d)
+        {
+            int i;
+            for (i = 0; i < mFigureList.Count; i++)
+            {
+                CadFigure fig = mFigureList[i];
+                fig.ForEachFig(d);
+            }
         }
 
         public JObject ToJson()

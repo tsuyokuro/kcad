@@ -115,6 +115,13 @@ namespace Plotter
                 return;
             }
 
+            layer.ForEachFig(fig =>
+            {
+                CheckFigure(dc, layer, fig);
+            });
+
+
+            /*
             int n = layer.FigureList.Count-1;
 
             for (int i = n; i >= 0; i--)
@@ -122,6 +129,7 @@ namespace Plotter
                 CadFigure fig = layer.FigureList[i];
                 CheckFigure(dc, layer, fig);
             }
+            */
         }
 
         public void Check(DrawContext dc, CadVector pt)
@@ -153,10 +161,6 @@ namespace Plotter
                 idx++;
                 CheckFigPoint(dc, pt, layer, fig, idx);
             }
-
-            fig.ChildList.ForEach(c => {
-                CheckFigure(dc, layer, c);
-            });
         }
 
         private void CheckFigPoint(DrawContext dc, CadVector pt, CadLayer layer, CadFigure fig, int ptIdx)

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace Plotter
 {
+    public delegate bool ForEachDelegate<T>(T obj);
+
     public struct CrossInfo
     {
         public bool IsCross;

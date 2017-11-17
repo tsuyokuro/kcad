@@ -119,6 +119,88 @@ namespace Plotter
                 return mChildList;
             }
         }
+
+        /// <summary>
+        /// 自分とその下にあるFigureを全て列挙(中止可能版)
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns>true:列挙を継続</returns>
+        public bool ForEachFig(ForEachDelegate<CadFigure> d)
+        {
+            int i;
+
+            if (!d(this))
+            {
+                return false;
+            }
+
+            for (i=0; i< mChildList.Count; i++)
+            {
+                CadFigure c = mChildList[i];
+
+                if (!c.ForEachFig(d))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 自分の下にあるFigureを全て列挙(中止可能版)
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns>true:列挙を継続</returns>
+        public bool ForEachNode(ForEachDelegate<CadFigure> d)
+        {
+            int i;
+            for (i = 0; i < mChildList.Count; i++)
+            {
+                CadFigure c = mChildList[i];
+
+                if (!c.ForEachFig(d))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
+        /// <summary>
+        /// 自分とその下にあるFigureを全て列挙(中止不可版)
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns>true:列挙を継続</returns>
+        public void ForEachFig(Action<CadFigure> d)
+        {
+            d(this);
+
+            int i;
+            for (i = 0; i < mChildList.Count; i++)
+            {
+                CadFigure c = mChildList[i];
+                c.ForEachFig(d);
+            }
+        }
+
+        /// <summary>
+        /// 自分の下にあるFigureを全て列挙(中止不可版)
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns>true:列挙を継続</returns>
+        public void ForEachNode(Action<CadFigure> d)
+        {
+            int i;
+            for (i = 0; i < mChildList.Count; i++)
+            {
+                CadFigure c = mChildList[i];
+                c.ForEachFig(d);
+            }
+        }
+
         #endregion
 
         private CadFigureBehavior Behavior = null;
@@ -297,11 +379,6 @@ namespace Plotter
             {
                 SelectPointAt(i, false);
             }
-
-            mChildList.ForEach(c =>
-            {
-                c.ClearSelectFlags();
-            });
         }
 
         public void Select()
@@ -641,11 +718,6 @@ namespace Plotter
         public void Draw(DrawContext dc, int pen)
         {
             Behavior.Draw(this, dc, pen);
-
-            mChildList.ForEach(fig =>
-            {
-                fig.Draw(dc, pen);
-            });
         }
 
         public void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
@@ -656,11 +728,6 @@ namespace Plotter
         public void DrawSelected(DrawContext dc, int pen)
         {
             Behavior.DrawSelected(this, dc, pen);
-
-            mChildList.ForEach(fig =>
-            {
-                fig.DrawSelected(dc, pen);
-            });
         }
 
         public void DrawTemp(DrawContext dc, CadVector tp, int pen)

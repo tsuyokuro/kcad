@@ -1,4 +1,4 @@
-﻿//#define NEW_GROUPING
+﻿#define NEW_GROUPING
 
 using KCad.Properties;
 using Microsoft.Scripting;
@@ -722,6 +722,11 @@ namespace Plotter
 
         private void test003()
         {
+            Controller.CurrentLayer.ForEachFig(fig =>
+            {
+                DebugOut.StdPrintLn("fig:" + fig.ID.ToString());
+                return true;
+            });
         }
 
         private CadFigure GetTargetFig()

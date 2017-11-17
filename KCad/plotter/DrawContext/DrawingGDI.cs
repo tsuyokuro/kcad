@@ -25,12 +25,7 @@ namespace Plotter
 
         public override void Draw(CadLayer layer, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
-            Draw(layer.FigureList, pen);
-        }
-
-        public override void Draw(IReadOnlyList<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
-        {
-            foreach (CadFigure fig in list)
+            layer.ForEachFig(fig =>
             {
                 if (fig.Current)
                 {
@@ -40,6 +35,24 @@ namespace Plotter
                 {
                     fig.Draw(DC, pen);
                 }
+            });
+        }
+
+        public override void Draw(IReadOnlyList<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
+        {
+            foreach (CadFigure fig in list)
+            {
+                fig.ForEachFig(a =>
+                {
+                    if (a.Current)
+                    {
+                        a.Draw(DC, DrawTools.PEN_FIGURE_HIGHLIGHT);
+                    }
+                    else
+                    {
+                        a.Draw(DC, pen);
+                    }
+                });
             }
         }
 
