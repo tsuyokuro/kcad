@@ -598,13 +598,13 @@ namespace Plotter
 
             foreach (CadLayer layer in mDB.LayerList)
             {
-                foreach (CadFigure fig in layer.FigureList)
+                layer.ForEachFig(fig =>
                 {
                     if (fig.HasSelectedPoint())
                     {
                         idList.Add(fig.ID);
                     }
-                }
+                });
             }
             return idList;
         }
@@ -718,7 +718,7 @@ namespace Plotter
                 {
                     CadFigure fig = list[i];
 
-                    if (fig.PointCount == 0)
+                    if (fig.IsEmpty)
                     {
                         CadOpe ope = CadOpe.CreateRemoveFigureOpe(layer, fig.ID);
                         opeList.OpeList.Add(ope);

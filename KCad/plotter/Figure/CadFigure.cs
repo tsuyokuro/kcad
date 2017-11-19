@@ -120,6 +120,15 @@ namespace Plotter
             }
         }
 
+        public bool IsEmpty
+        {
+            get
+            {
+                return mPointList.Count == 0 && mChildList.Count == 0;
+            }
+        }
+
+
         /// <summary>
         /// 自分とその下にあるFigureを全て列挙(中止可能版)
         /// </summary>

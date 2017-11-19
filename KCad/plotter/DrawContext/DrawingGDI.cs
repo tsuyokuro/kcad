@@ -58,7 +58,10 @@ namespace Plotter
 
         public override void DrawSelected(CadLayer layer)
         {
-            DrawSelectedFigurePoint(layer.FigureList);
+            layer.ForEachFig(fig =>
+            {
+                fig.DrawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
+            });
         }
 
         #region "Draw base"
@@ -582,14 +585,6 @@ namespace Plotter
             p1 = pp.Pos + (pp.DirY * size);
 
             DrawLineScrn(pen, p0.x, p0.y, p1.x, p1.y);
-        }
-
-        private void DrawSelectedFigurePoint(IReadOnlyList<CadFigure> list)
-        {
-            foreach (CadFigure fig in list)
-            {
-                fig.DrawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
-            }
         }
 
         public override void DrawRectScrn(int pen, CadVector pp0, CadVector pp1)

@@ -254,6 +254,8 @@ namespace Plotter
             Controller.InteractOut.println(
                     global::KCad.Properties.Resources.notice_was_grouped
                 );
+
+            Controller.UpdateTreeView(true);
         }
 
         public void Ungroup()
@@ -309,6 +311,8 @@ namespace Plotter
             Controller.InteractOut.println(
                 global::KCad.Properties.Resources.notice_was_ungrouped
                 );
+
+            Controller.UpdateTreeView(true);
         }
 #else
         public void Group()

@@ -258,7 +258,10 @@ namespace Plotter
 
             Start2D();
 
-            DrawSelectedFigurePoint(layer.FigureList);
+            layer.ForEachFig(fig =>
+            {
+                fig.DrawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
+            });
 
             End2D();
         }
@@ -269,14 +272,6 @@ namespace Plotter
             CadVector p1 = p0 + 4;
 
             DrawRect2D(p0.vector, p1.vector, pen);
-        }
-
-        private void DrawSelectedFigurePoint(IReadOnlyList<CadFigure> list)
-        {
-            foreach (CadFigure fig in list)
-            {
-                fig.DrawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
-            }
         }
 
         private void DrawRect2D(Vector3d p0, Vector3d p1, int pen)
