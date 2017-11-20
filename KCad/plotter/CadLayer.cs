@@ -207,6 +207,16 @@ namespace Plotter
             }
         }
 
+        public void ForEachFigRev(Action<CadFigure> d)
+        {
+            int i = mFigureList.Count - 1;
+            for (; i>=0; i--)
+            {
+                CadFigure fig = mFigureList[i];
+                fig.ForEachFig(d);
+            }
+        }
+
         public JObject ToJson()
         {
             JObject jo = new JObject();

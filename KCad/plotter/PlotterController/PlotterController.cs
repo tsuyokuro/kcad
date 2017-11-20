@@ -315,6 +315,7 @@ namespace Plotter
             {
                 CadLayerTreeItem item = new CadLayerTreeItem(CurrentLayer);
                 mCadObjectTreeView.AttachRoot(item);
+                mCadObjectTreeView.Redraw();
             }
             else
             {
@@ -431,12 +432,14 @@ namespace Plotter
         {
             ClearSelection();
             mHistoryManager.undo();
+            UpdateTreeView(true);
         }
 
         public void Redo()
         {
             ClearSelection();
             mHistoryManager.redo();
+            UpdateTreeView(true);
         }
     #endregion
 

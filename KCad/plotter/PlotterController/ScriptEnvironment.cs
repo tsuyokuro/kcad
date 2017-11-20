@@ -268,7 +268,7 @@ namespace Plotter
             {
                 CadFigure fig = Controller.DB.GetFigure(id);
 
-                if (fig.ChildList.Count > 0)
+                if (fig.Parent != null)
                 {
                     idSet.Add(fig.ID);
                 }
@@ -282,28 +282,21 @@ namespace Plotter
             {
                 CadFigure fig = Controller.DB.GetFigure(id);
 
-                fig.ChildList.ForEach(c =>
+                CadFigure parent = fig.Parent;
+
+                if (parent==null)
                 {
-                    ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, c.ID);
-
-                    opeList.Add(ope);
-
-                    Controller.CurrentLayer.AddFigure(c);
-                });
-
-                ope = new CadOpeRemoveChildlen(fig, fig.ChildList);
-
-                opeList.Add(ope);
-
-                fig.ReleaseAllChildlen();
-
-                if (fig.PointCount == 0)
-                {
-                    ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, fig.ID);
-                    opeList.Add(ope);
-
-                    Controller.CurrentLayer.RemoveFigureByID(fig.ID);
+                    continue;
                 }
+
+                ope = new CadOpeRemoveChild(parent, fig);
+                opeList.Add(ope);
+                parent.ChildList.Remove(fig);
+                fig.Parent = null;
+
+                ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
+                opeList.Add(ope);
+                Controller.CurrentLayer.AddFigure(fig);
             }
 
             Controller.HistoryManager.foward(opeList);

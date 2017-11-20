@@ -405,6 +405,34 @@ namespace Plotter
         }
     }
 
+    public class CadOpeRemoveChild : CadOpe
+    {
+        private uint ParentID = 0;
+        private uint ChildID;
+
+        public CadOpeRemoveChild(CadFigure parent, CadFigure child)
+        {
+            ParentID = parent.ID;
+            ChildID = child.ID;
+        }
+
+        public override void Undo(CadObjectDB db)
+        {
+            CadFigure parent = db.GetFigure(ParentID);
+            CadFigure child = db.GetFigure(ChildID);
+            parent.AddChild(child);
+        }
+
+        public override void Redo(CadObjectDB db)
+        {
+            CadFigure parent = db.GetFigure(ParentID);
+
+            parent.ChildList.RemoveAll(a => a.ID == ChildID);
+            CadFigure fig = db.GetFigure(ChildID);
+            fig.Parent = null;
+        }
+    }
+
     public class CadOpeChangeNormal : CadOpe
     {
         private uint FigureID;

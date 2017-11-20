@@ -75,11 +75,10 @@ namespace Plotter
 
             minDist = CadConst.MaxValue;
 
-            IEnumerable<CadFigure> list = layer.FigureList;
-            foreach (CadFigure fig in list.Reverse())
+            layer.ForEachFigRev(fig =>
             {
                 CheckFig(dc, layer, fig);
-            }
+            });
         }
 
         private void CheckSeg(DrawContext dc, CadLayer layer, FigureSegment fseg)
