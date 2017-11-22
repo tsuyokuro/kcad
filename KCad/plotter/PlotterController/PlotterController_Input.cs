@@ -579,6 +579,7 @@ namespace Plotter
             }
         }
 
+        #region RubberBand
         public void RubberBandSelect(CadVector p0, CadVector p1)
         {
             mSelList.clear();
@@ -592,29 +593,7 @@ namespace Plotter
                     SelectIfContactRect(minp, maxp, layer.ID, fig, mSelList);
                 });
 
-            CollectSelList(mSelList);
-        }
-
-        public void CollectSelList(SelectList selList)
-        {
-            foreach (CadLayer layer in DB.LayerList)
-            {
-                if (layer.Locked || layer.Visible == false)
-                {
-                    continue;
-                }
-
-                foreach (CadFigure fig in layer.FigureList)
-                {
-                    for (int i = 0; i < fig.PointCount; i++)
-                    {
-                        if (fig.PointList[i].Selected)
-                        {
-                            selList.add(layer.ID, fig, i);
-                        }
-                    }
-                }
-            }
+            //CollectSelList(mSelList);
         }
 
         public void SelectIfContactRect(CadVector minp, CadVector maxp, uint layerID, CadFigure fig, SelectList selList)
@@ -626,10 +605,16 @@ namespace Plotter
                 if (CadUtil.IsInRect2D(minp, maxp, p))
                 {
                     fig.SelectPointAt(i, true);
+
+                    if (selList != null)
+                    {
+                        selList.add(layerID, fig, i);
+                    }
                 }
             }
             return;
         }
+        #endregion
 
         private void LButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
         {

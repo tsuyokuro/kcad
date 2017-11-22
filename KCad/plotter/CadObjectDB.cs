@@ -205,18 +205,18 @@ namespace Plotter
 
         public void Walk(WalkFunction walk, LayerFilterFunction layerFilter)
         {
-            foreach (CadLayer layer in mLayerList)
+            mLayerList.ForEach(layer =>
             {
-                if (layerFilter!=null && !layerFilter(layer))
+                if (layerFilter != null && !layerFilter(layer))
                 {
-                    continue;
+                    return;
                 }
 
-                foreach (CadFigure fig in layer.FigureList)
+                layer.ForEachFig(fig =>
                 {
                     walk(layer, fig);
-                }
-            }
+                });
+            });
         }
 
         public static LayerFilterFunction EditableLayerFilter = (layer) =>
@@ -229,18 +229,18 @@ namespace Plotter
 
         public void WalkEditable(WalkFunction walk)
         {
-            foreach (CadLayer layer in mLayerList)
+            mLayerList.ForEach(layer =>
             {
                 if (!EditableLayerFilter(layer))
                 {
-                    continue;
+                    return;
                 }
 
-                foreach (CadFigure fig in layer.FigureList)
+                layer.ForEachFig(fig =>
                 {
                     walk(layer, fig);
-                }
-            }
+                });
+            });
         }
 
         #endregion Walk

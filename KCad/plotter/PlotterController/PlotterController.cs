@@ -1097,5 +1097,32 @@ namespace Plotter
                 fig.SetPointAt(i, p);
             }
         }
+
+        /// <summary>
+        /// 選択されたPointをselListに追加する
+        /// </summary>
+        /// <param name="selList">追加されるSelectList</param>
+        /// 
+        public void CollectSelList(SelectList selList)
+        {
+            foreach (CadLayer layer in DB.LayerList)
+            {
+                if (layer.Locked || layer.Visible == false)
+                {
+                    continue;
+                }
+
+                foreach (CadFigure fig in layer.FigureList)
+                {
+                    for (int i = 0; i < fig.PointCount; i++)
+                    {
+                        if (fig.PointList[i].Selected)
+                        {
+                            selList.add(layer.ID, fig, i);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
