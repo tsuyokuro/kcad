@@ -276,6 +276,12 @@ namespace Plotter
             foreach (CadFigure fig in FigureMap.Values)
             {
                 JObject jo = fig.GroupInfoToJson();
+
+                if (jo == null)
+                {
+                    continue;
+                }
+
                 ja.Add(jo);
             }
 

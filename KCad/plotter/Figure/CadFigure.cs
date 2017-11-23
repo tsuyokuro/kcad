@@ -585,10 +585,14 @@ namespace Plotter
 
         public JObject GroupInfoToJson()
         {
+            if (mChildList.Count==0)
+            {
+                return null;
+            }
+
             JObject jo = new JObject();
 
             jo.Add("id", ID);
-            jo.Add("parent_id", mParent != null ? mParent.ID : 0);
             jo.Add("child_id_list", JsonUtil.ListToJsonIdList<CadFigure>(mChildList));
 
             return jo;
@@ -598,21 +602,14 @@ namespace Plotter
         {
             uint joid = (uint)jo["id"];
 
-            if (ID != joid)
-            {
-                Log.e("CadFigure#GroupInfoFromJson() invalid JObject. ID missmatch");
-            }
-
-            uint parentID = (uint)jo["parent_id"];
             List<uint> childList = JsonUtil.JsonIdListToList((JArray)jo["child_id_list"]);
-
-            mParent = db.GetFigure(parentID);
 
             mChildList.Clear();
 
             foreach (uint id in childList)
             {
                 CadFigure fig = db.GetFigure(id);
+                fig.mParent = this;
                 mChildList.Add(fig);
             }
         }
