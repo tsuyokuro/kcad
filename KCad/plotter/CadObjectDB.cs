@@ -13,6 +13,8 @@ namespace Plotter
     [Serializable]
     public class CadObjectDB
     {
+        public const uint Version = 0x00010000;
+
         #region "Manage Layer"
 
         public uint CurrentLayerID
@@ -245,29 +247,49 @@ namespace Plotter
 
         #endregion Walk
 
+        public uint ToVersionCode(string sv)
+        {
+            if (sv == "1.0")
+            {
+                return 0x00010000;
+            }
+
+            return 0;
+        }
+
+        public string ToVersionString(uint version)
+        {
+            if (version == 0x00010000)
+            {
+                return "1.0";
+            }
+
+            return "0";
+        }
+
 
         public JObject ToJson()
         {
             JObject root = new JObject();
 
             root.Add("DataType", "CadObjectDB");
-            root.Add("version", "1.0");
+            root.Add("version", ToVersionString(Version));
 
             root.Add("layer_id_counter", LayerIdProvider.Counter);
             root.Add("fig_id_counter", FigIdProvider.Counter);
 
-            root.Add("fig_map", JsonUtil.DictToJsonList(FigureMap));
-            root.Add("layer_map", JsonUtil.DictToJsonList(LayerMap));
-            root.Add("layer_id_list", JsonUtil.ListToJsonIdList(LayerList));
+            root.Add("fig_map", JsonUtil.DictToJsonList(FigureMap, Version));
+            root.Add("layer_map", JsonUtil.DictToJsonList(LayerMap, Version));
+            root.Add("layer_id_list", JsonUtil.ListToJsonIdList(LayerList, Version));
 
             root.Add("current_layer_id", CurrentLayerID);
 
-            root.Add("group_info", GroupInfoToJson());
+            root.Add("group_info", GroupInfoToJson(Version));
 
             return root;
         }
 
-        public JArray GroupInfoToJson()
+        public JArray GroupInfoToJson(uint version)
         {
             JArray ja = new JArray();
 
@@ -275,7 +297,7 @@ namespace Plotter
 
             foreach (CadFigure fig in FigureMap.Values)
             {
-                JObject jo = fig.GroupInfoToJson();
+                JObject jo = fig.GroupInfoToJson(version);
 
                 if (jo == null)
                 {
@@ -291,17 +313,21 @@ namespace Plotter
 
         public void FromJson(JObject jo)
         {
+            string sv = (string)jo["version"];
+
+            uint version = ToVersionCode(sv);
+
             LayerIdProvider.Counter = (uint)jo["layer_id_counter"];
             FigIdProvider.Counter = (uint)jo["fig_id_counter"];
 
             JArray ja;
 
             ja = (JArray)jo["fig_map"];
-            FigureMap = JsonUtil.JsonListToDictionary<CadFigure>(ja);
+            FigureMap = JsonUtil.JsonListToDictionary<CadFigure>(ja, version);
 
 
             ja = (JArray)jo["layer_map"];
-            LayerMap = JsonUtil.JsonListToDictionary<CadLayer>(this, ja);
+            LayerMap = JsonUtil.JsonListToDictionary<CadLayer>(this, ja, version);
 
 
             ja = (JArray)jo["layer_id_list"];
@@ -314,10 +340,10 @@ namespace Plotter
             CurrentLayer = GetLayer(currentLayerID);
 
             ja = (JArray)jo["group_info"];
-            GroupInfoFromJson(ja);
+            GroupInfoFromJson(ja, Version);
         }
 
-        public void GroupInfoFromJson(JArray ja)
+        public void GroupInfoFromJson(JArray ja, uint version)
         {
             foreach (JObject jo in ja)
             {
@@ -330,7 +356,7 @@ namespace Plotter
                     continue;
                 }
 
-                fig.GroupInfoFromJson(this, jo);
+                fig.GroupInfoFromJson(this, jo, version);
             }
         }
 
@@ -419,138 +445,6 @@ namespace Plotter
             }
 
             return objList;
-        }
-    }
-
-    public static class JsonUtil
-    {
-        public static JArray DictToJsonList<Tkey, TValue>(Dictionary<Tkey, TValue> map)
-        {
-            JArray ja = new JArray();
-
-            List<Tkey> ids = new List<Tkey>(map.Keys);
-
-            foreach (Tkey id in ids)
-            {
-                dynamic x = map[id];
-                ja.Add(x.ToJson());
-            }
-
-            return ja;
-        }
-
-        public static JArray ListToJsonList<T>(IReadOnlyList<T> list)
-        {
-            JArray ja = new JArray();
-
-            foreach (T item in list)
-            {
-                dynamic x = item;
-                ja.Add(x.ToJson());
-            }
-
-            return ja;
-        }
-
-        public static JArray ListToJsonIdList<T>(List<T> list)
-        {
-            JArray ja = new JArray();
-
-            foreach (T item in list)
-            {
-                dynamic x = item;
-                ja.Add(x.ID);
-            }
-
-            return ja;
-        }
-
-        public static List<uint> JsonIdListToList(JArray ja)
-        {
-            List<uint> list = new List<uint>();
-
-            foreach (uint id in ja)
-            {
-                list.Add(id);
-            }
-
-            return list;
-        }
-
-        public static List<T> JsonListToObjectList<T>(JArray ja) where T : new()
-        {
-            List<T> list = new List<T>();
-
-            if (ja == null)
-            {
-                return list;
-            }
-
-            foreach (JObject jo in ja)
-            {
-                T obj = new T();
-                dynamic d = obj;
-
-                d.FromJson(jo);
-
-                obj = d;
-
-                list.Add(obj);
-            }
-
-            return list;
-        }
-
-        public static List<T> JsonListToObjectList<T>(CadObjectDB db, JArray ja) where T : new()
-        {
-            List<T> list = new List<T>();
-
-            foreach (JObject jo in ja)
-            {
-                T obj = new T();
-                dynamic d = obj;
-
-                d.FromJson(db, jo);
-
-                list.Add(obj);
-            }
-
-            return list;
-        }
-
-
-        public static Dictionary<uint, T> JsonListToDictionary<T>(JArray ja) where T : new()
-        {
-            Dictionary<uint, T> dict = new Dictionary<uint, T>();
-
-            foreach (JObject jo in ja)
-            {
-                T obj = new T();
-                dynamic d = obj;
-
-                d.FromJson(jo);
-
-                dict.Add(d.ID, obj);
-            }
-
-            return dict;
-        }
-
-        public static Dictionary<uint, T> JsonListToDictionary<T>(CadObjectDB db, JArray ja) where T : new()
-        {
-            Dictionary<uint, T> dict = new Dictionary<uint, T>();
-
-            foreach (JObject jo in ja)
-            {
-                T obj = new T();
-                dynamic d = obj;
-
-                d.FromJson(db, jo);
-
-                dict.Add(d.ID, obj);
-            }
-
-            return dict;
         }
     }
 }

@@ -202,7 +202,7 @@ namespace Plotter
             Flag = flag;
         }
 
-        public JObject ToJson()
+        public JObject ToJson(uint version)
         {
             var jo = new JObject();
 
@@ -215,7 +215,7 @@ namespace Plotter
             return jo;
         }
 
-        public void FromJson(JObject jo)
+        public void FromJson(JObject jo, uint version)
         {
             if (jo == null)
             {

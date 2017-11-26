@@ -173,6 +173,7 @@
     <Compile Include="plotter\DrawContext\DrawContextPrinter.cs" />
     <Compile Include="plotter\DrawContext\IDrawing.cs" />
     <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
+    <Compile Include="plotter\JsonUtil.cs" />
     <Compile Include="plotter\PlotterSettings.cs" />
     <Compile Include="plotter\primitive\CadPrimitive.cs" />
     <Compile Include="plotter\searcher\MarkItem.cs" />

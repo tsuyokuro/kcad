@@ -217,7 +217,7 @@ namespace Plotter
             }
         }
 
-        public JObject ToJson()
+        public JObject ToJson(uint version)
         {
             JObject jo = new JObject();
 
@@ -231,12 +231,12 @@ namespace Plotter
             jo.Add("visible", mVisible);
             jo.Add("locked", mLocked);
 
-            jo.Add("fig_id_list", JsonUtil.ListToJsonIdList(mFigureList));
+            jo.Add("fig_id_list", JsonUtil.ListToJsonIdList(mFigureList, version));
 
             return jo;
         }
 
-        public void FromJson(CadObjectDB db, JObject jo)
+        public void FromJson(CadObjectDB db, JObject jo, uint version)
         {
             ID = (uint)jo["id"];
             List<uint> idList;
