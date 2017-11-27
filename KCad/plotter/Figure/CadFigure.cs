@@ -556,6 +556,13 @@ namespace Plotter
 
 
         #region "JSON"
+
+        public void SetPointList(List<CadVector> list)
+        {
+            mPointList = list;
+        }
+
+
         public JObject ToJson(uint version)
         {
             JObject jo = new JObject();

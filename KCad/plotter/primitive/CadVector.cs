@@ -24,7 +24,7 @@ namespace Plotter
         }
 
         public Types Type { get; set; }
-        private byte Flag;
+        public byte Flag;
 
         public double x
         {

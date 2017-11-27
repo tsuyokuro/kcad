@@ -60,7 +60,7 @@ namespace Plotter
                 return mLayerIdMap;
             }
 
-            private set
+            set
             {
                 mLayerIdMap = value;
             }
@@ -80,9 +80,12 @@ namespace Plotter
         private List<CadLayer> mLayerList = new List<CadLayer>();
         public List<CadLayer> LayerList
         {
-            get { return mLayerList; }
+            get
+            {
+                return mLayerList;
+            }
 
-            private set
+            set
             {
                 mLayerList = value;
             }
@@ -148,7 +151,7 @@ namespace Plotter
                 return mFigureIdMap;
             }
 
-            private set
+            set
             {
                 mFigureIdMap = value;
             }

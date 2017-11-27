@@ -647,23 +647,6 @@ namespace Plotter
 
                 mDB = db;
             }
-            else if (s == "savej")
-            {
-                StreamWriter writer = new StreamWriter("f:\\work\\test.txt");
-
-                Stopwatch sw = new Stopwatch();
-
-                sw.Start();
-                JObject jo = mDB.ToJson();
-                sw.Stop();
-
-                DebugOut dout = new DebugOut();
-                dout.println("ToJson time:" + sw.Elapsed);
-
-                writer.Write(jo.ToString());
-
-                writer.Close();
-            }
             else if (s == "copy")
             {
                 CopyFigures();

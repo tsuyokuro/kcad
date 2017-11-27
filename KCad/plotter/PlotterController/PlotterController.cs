@@ -843,7 +843,9 @@ namespace Plotter
         {
             StreamWriter writer = new StreamWriter(fname);
 
-            JObject jo = mDB.ToJson();
+            //JObject jo = mDB.ToJson();
+
+            JObject jo = CadJson.DbToJson(mDB);
 
             writer.Write(jo.ToString());
             writer.Close();
@@ -859,8 +861,10 @@ namespace Plotter
 
             JObject jo = JObject.Parse(js);
 
-            CadObjectDB db = new CadObjectDB();
-            db.FromJson(jo);
+            //CadObjectDB db = new CadObjectDB();
+            //db.FromJson(jo);
+
+            CadObjectDB db = CadJson.DbFromJson(jo);
 
             mDB = db;
 
