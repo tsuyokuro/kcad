@@ -554,74 +554,10 @@ namespace Plotter
             mChildList.AddRange(fig.mChildList);
         }
 
-
-        #region "JSON"
-
         public void SetPointList(List<CadVector> list)
         {
             mPointList = list;
         }
-
-
-        public JObject ToJson(uint version)
-        {
-            JObject jo = new JObject();
-
-            jo.Add("id", ID);
-            jo.Add("type", (byte)Type);
-            jo.Add("closed", IsLoop);
-            jo.Add("locked", Locked);
-            jo.Add("normal", Normal.ToJson(version));
-
-            jo.Add("point_list", JsonUtil.ListToJsonList(PointList, version));
-            return jo;
-        }
-
-        public void FromJson(JObject jo, uint version)
-        {
-            ID = (uint)jo["id"];
-            Type = (Types)(byte)jo["type"];
-            IsLoop = (bool)jo["closed"];
-            Locked = (bool)jo["locked"];
-
-            Normal.FromJson((JObject)jo["normal"], version);
-
-            mPointList = JsonUtil.JsonListToObjectList<CadVector>((JArray)jo["point_list"], version);
-        }
-
-
-        public JObject GroupInfoToJson(uint version)
-        {
-            if (mChildList.Count==0)
-            {
-                return null;
-            }
-
-            JObject jo = new JObject();
-
-            jo.Add("id", ID);
-            jo.Add("child_id_list", JsonUtil.ListToJsonIdList<CadFigure>(mChildList, version));
-
-            return jo;
-        }
-
-        public void GroupInfoFromJson(CadObjectDB db, JObject jo, uint version)
-        {
-            uint joid = (uint)jo["id"];
-
-            List<uint> childIdList = JsonUtil.JsonIdListToList((JArray)jo["child_id_list"]);
-
-            mChildList.Clear();
-
-            foreach (uint id in childIdList)
-            {
-                CadFigure fig = db.GetFigure(id);
-                fig.mParent = this;
-                mChildList.Add(fig);
-            }
-        }
-
-        #endregion
 
         #region "Dump" 
         public void SimpleDump(DebugOut dout, string prefix = nameof(CadFigure))

@@ -202,35 +202,6 @@ namespace Plotter
             Flag = flag;
         }
 
-        public JObject ToJson(uint version)
-        {
-            var jo = new JObject();
-
-            jo.Add("type", (byte)Type);
-            jo.Add("flags", Flag);
-            jo.Add("x", x);
-            jo.Add("y", y);
-            jo.Add("z", z);
-
-            return jo;
-        }
-
-        public void FromJson(JObject jo, uint version)
-        {
-            if (jo == null)
-            {
-                this = default(CadVector);
-                return;
-            }
-
-
-            Type = (Types)(byte)jo["type"];
-            Flag = (byte)jo["flags"];
-            x = (double)jo["x"];
-            y = (double)jo["y"];
-            z = (double)jo["z"];
-        }
-
         public bool IsZero()
         {
             return x == 0 && y == 0 && z == 0;

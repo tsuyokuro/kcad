@@ -7,158 +7,42 @@ using Newtonsoft.Json.Linq;
 
 namespace Plotter
 {
-    public static class JsonUtil
-    {
-        public static JArray DictToJsonList<Tkey, TValue>(Dictionary<Tkey, TValue> map, uint version)
-        {
-            JArray ja = new JArray();
-
-            List<Tkey> ids = new List<Tkey>(map.Keys);
-
-            foreach (Tkey id in ids)
-            {
-                dynamic x = map[id];
-                ja.Add(x.ToJson(version));
-            }
-
-            return ja;
-        }
-
-        public static JArray ListToJsonList<T>(IReadOnlyList<T> list, uint version)
-        {
-            JArray ja = new JArray();
-
-            foreach (T item in list)
-            {
-                dynamic x = item;
-                ja.Add(x.ToJson(version));
-            }
-
-            return ja;
-        }
-
-        public static JArray ListToJsonIdList<T>(List<T> list, uint version)
-        {
-            JArray ja = new JArray();
-
-            foreach (T item in list)
-            {
-                dynamic x = item;
-                ja.Add(x.ID);
-            }
-
-            return ja;
-        }
-
-        public static List<uint> JsonIdListToList(JArray ja)
-        {
-            List<uint> list = new List<uint>();
-
-            foreach (uint id in ja)
-            {
-                list.Add(id);
-            }
-
-            return list;
-        }
-
-        public static List<T> JsonListToObjectList<T>(JArray ja, uint version) where T : new()
-        {
-            List<T> list = new List<T>();
-
-            if (ja == null)
-            {
-                return list;
-            }
-
-            foreach (JObject jo in ja)
-            {
-                T obj = new T();
-                dynamic d = obj;
-
-                d.FromJson(jo, version);
-
-                obj = d;
-
-                list.Add(obj);
-            }
-
-            return list;
-        }
-
-        public static List<T> JsonListToObjectList<T>(CadObjectDB db, JArray ja, uint version) where T : new()
-        {
-            List<T> list = new List<T>();
-
-            foreach (JObject jo in ja)
-            {
-                T obj = new T();
-                dynamic d = obj;
-
-                d.FromJson(db, jo, version);
-
-                list.Add(obj);
-            }
-
-            return list;
-        }
-
-
-        public static Dictionary<uint, T> JsonListToDictionary<T>(JArray ja, uint version) where T : new()
-        {
-            Dictionary<uint, T> dict = new Dictionary<uint, T>();
-
-            foreach (JObject jo in ja)
-            {
-                T obj = new T();
-                dynamic d = obj;
-
-                d.FromJson(jo, version);
-
-                dict.Add(d.ID, obj);
-            }
-
-            return dict;
-        }
-
-        public static Dictionary<uint, T> JsonListToDictionary<T>(CadObjectDB db, JArray ja, uint version) where T : new()
-        {
-            Dictionary<uint, T> dict = new Dictionary<uint, T>();
-
-            foreach (JObject jo in ja)
-            {
-                T obj = new T();
-                dynamic d = obj;
-
-                d.FromJson(db, jo, version);
-
-                dict.Add(d.ID, obj);
-            }
-
-            return dict;
-        }
-    }
-
     public class CadJson
     {
-        public static uint VersionCode1_0 = 0x00010000;
+        public enum VersionCode
+        {
+            NULL = 0,
+            VER_1_0_0_0 = 0x01000000,
+            VER_1_0_0_1 = 0x01000001,
+        }
 
 
-        public static uint ToVersionCode(string sv)
+        // public static uint VersionCode1_0 = 0x00010000;
+
+
+        public static VersionCode ToVersionCode(string sv)
         {
             if (sv == "1.0")
             {
-                return VersionCode1_0;
+                return VersionCode.VER_1_0_0_0;
+            }
+            else if (sv == "1.0.0.1")
+            {
+                return VersionCode.VER_1_0_0_1;
             }
 
-            return 0;
+            return VersionCode.NULL;
         }
 
-        public static string ToVersionString(uint version)
+        public static string ToVersionString(VersionCode version)
         {
-            if (version == VersionCode1_0)
+            if (version == VersionCode.VER_1_0_0_0)
             {
                 return "1.0";
+            }
+            else if (version == VersionCode.VER_1_0_0_1)
+            {
+                return "1.0.0.1";
             }
 
             return "0";
@@ -169,7 +53,7 @@ namespace Plotter
         {
             JObject root = new JObject();
 
-            uint version = VersionCode1_0;
+            VersionCode version = VersionCode.VER_1_0_0_1;
 
             root.Add("DataType", "CadObjectDB");
             root.Add("version", ToVersionString(version));
@@ -189,7 +73,7 @@ namespace Plotter
             return root;
         }
 
-        public static JArray GroupInfoToJson(CadObjectDB db, uint version)
+        public static JArray GroupInfoToJson(CadObjectDB db, VersionCode version)
         {
             JArray ja = new JArray();
 
@@ -222,7 +106,7 @@ namespace Plotter
             return ja;
         }
 
-        public static JArray FigMapToJson(Dictionary<uint, CadFigure> dic, uint version)
+        public static JArray FigMapToJson(Dictionary<uint, CadFigure> dic, VersionCode version)
         {
             JArray ja = new JArray();
 
@@ -235,7 +119,7 @@ namespace Plotter
             return ja;
         }
 
-        public static JArray LayerMapToJson(Dictionary<uint, CadLayer> dic, uint version)
+        public static JArray LayerMapToJson(Dictionary<uint, CadLayer> dic, VersionCode version)
         {
             JArray ja = new JArray();
 
@@ -248,7 +132,7 @@ namespace Plotter
             return ja;
         }
 
-        public static JObject LayerToJson(CadLayer layer, uint version)
+        public static JObject LayerToJson(CadLayer layer, VersionCode version)
         {
             JObject jo = new JObject();
 
@@ -274,7 +158,7 @@ namespace Plotter
             return jo;
         }
 
-        public static JObject FigToJson(CadFigure fig, uint version)
+        public static JObject FigToJson(CadFigure fig, VersionCode version)
         {
             JObject jo = new JObject();
 
@@ -296,20 +180,33 @@ namespace Plotter
             return jo;
         }
 
-        public static JObject VectorToJson(CadVector v, uint version)
+        public static JObject VectorToJson(CadVector v, VersionCode version)
         {
             var jo = new JObject();
 
             jo.Add("type", (byte)v.Type);
             jo.Add("flags", v.Flag);
-            jo.Add("x", v.x);
-            jo.Add("y", v.y);
-            jo.Add("z", v.z);
+
+            if (version == VersionCode.VER_1_0_0_0)
+            {
+                jo.Add("x", v.x);
+                jo.Add("y", v.y);
+                jo.Add("z", v.z);
+            }
+            else if (version == VersionCode.VER_1_0_0_1)
+            {
+                JArray va = new JArray();
+
+                va.Add(v.x);
+                va.Add(v.y);
+                va.Add(v.z);
+                jo.Add("v", va);
+            }
 
             return jo;
         }
 
-        public static JObject FigGroupInfoToJson(CadFigure fig, uint version)
+        public static JObject FigGroupInfoToJson(CadFigure fig, VersionCode version)
         {
             if (fig.ChildList.Count == 0)
             {
@@ -340,7 +237,7 @@ namespace Plotter
 
             string sv = (string)jo["version"];
 
-            uint version = ToVersionCode(sv);
+            VersionCode version = ToVersionCode(sv);
 
             db.LayerIdProvider.Counter = (uint)jo["layer_id_counter"];
             db.FigIdProvider.Counter = (uint)jo["fig_id_counter"];
@@ -368,7 +265,7 @@ namespace Plotter
             return db;
         }
 
-        public static void GroupInfoFromJson(CadObjectDB db, JArray ja, uint version)
+        public static void GroupInfoFromJson(CadObjectDB db, JArray ja, VersionCode version)
         {
             foreach (JObject jo in ja)
             {
@@ -385,7 +282,7 @@ namespace Plotter
             }
         }
 
-        public static Dictionary<uint, CadFigure> JArrayToFigMap(JArray ja, uint version)
+        public static Dictionary<uint, CadFigure> JArrayToFigMap(JArray ja, VersionCode version)
         {
             var figMap = new Dictionary<uint, CadFigure>();
 
@@ -398,7 +295,7 @@ namespace Plotter
             return figMap;
         }
 
-        public static Dictionary<uint, CadLayer> JArrayToLayerMap(CadObjectDB db, JArray ja, uint version)
+        public static Dictionary<uint, CadLayer> JArrayToLayerMap(CadObjectDB db, JArray ja, VersionCode version)
         {
             var layerMap = new Dictionary<uint, CadLayer>();
 
@@ -427,7 +324,7 @@ namespace Plotter
             return layerList;
         }
 
-        public static CadLayer LayerFromJson(CadObjectDB db, JObject jo, uint version)
+        public static CadLayer LayerFromJson(CadObjectDB db, JObject jo, VersionCode version)
         {
             CadLayer layer = new CadLayer();
 
@@ -460,7 +357,7 @@ namespace Plotter
             return layer;
         }
 
-        public static CadFigure FigFromJson(JObject jo, uint version)
+        public static CadFigure FigFromJson(JObject jo, VersionCode version)
         {
             CadFigure fig = new CadFigure();
 
@@ -488,7 +385,7 @@ namespace Plotter
             return fig;
         }
 
-        public static CadVector VectorFromJson(JObject jo, uint version)
+        public static CadVector VectorFromJson(JObject jo, VersionCode version)
         {
             CadVector v = default(CadVector);
 
@@ -499,14 +396,29 @@ namespace Plotter
 
             v.Type = (CadVector.Types)(byte)jo["type"];
             v.Flag = (byte)jo["flags"];
-            v.x = (double)jo["x"];
-            v.y = (double)jo["y"];
-            v.z = (double)jo["z"];
+
+            if (version == VersionCode.VER_1_0_0_0)
+            {
+                v.x = (double)jo["x"];
+                v.y = (double)jo["y"];
+                v.z = (double)jo["z"];
+            }
+            else if (version == VersionCode.VER_1_0_0_1)
+            {
+                JArray va = (JArray)jo["v"];
+
+                if (va.Count >= 3)
+                {
+                    v.x = (double)va[0];
+                    v.y = (double)va[1];
+                    v.z = (double)va[2];
+                }
+            }
 
             return v;
         }
 
-        public static void FigGroupInfoFromJson(CadFigure fig, CadObjectDB db, JObject jo, uint version)
+        public static void FigGroupInfoFromJson(CadFigure fig, CadObjectDB db, JObject jo, VersionCode version)
         {
             uint joid = (uint)jo["id"];
 

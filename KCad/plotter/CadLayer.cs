@@ -217,55 +217,6 @@ namespace Plotter
             }
         }
 
-        public JObject ToJson(uint version)
-        {
-            JObject jo = new JObject();
-
-            jo.Add("id", ID);
-
-            if (mName != null)
-            {
-                jo.Add("name", mName);
-            }
-
-            jo.Add("visible", mVisible);
-            jo.Add("locked", mLocked);
-
-            jo.Add("fig_id_list", JsonUtil.ListToJsonIdList(mFigureList, version));
-
-            return jo;
-        }
-
-        public void FromJson(CadObjectDB db, JObject jo, uint version)
-        {
-            ID = (uint)jo["id"];
-            List<uint> idList;
-
-            mName = (String)jo["name"];
-
-            if (jo["visible"] == null)
-            {
-                mVisible = true;
-            }
-            else
-            {
-                mVisible = (bool)jo["visible"];
-            }
-
-            mLocked = (bool)jo["locked"];
-
-            JArray ja;
-                
-            ja = (JArray)jo["fig_id_list"];
-            idList = JsonUtil.JsonIdListToList(ja);
-
-            List<CadFigure> figList = DUtil.IdListToObjList(idList, db.FigureMap);
-            figList.ForEach(a => {
-                    a.LayerID = ID;
-                    mFigureList.Add(a);
-                });
-        }
-
         public void sdump(DebugOut dout)
         {
             dout.println(
