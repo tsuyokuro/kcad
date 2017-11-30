@@ -94,6 +94,29 @@ namespace Plotter
             return ja;
         }
 
+        public static JObject FigGroupInfoToJson(CadFigure fig, VersionCode version)
+        {
+            if (fig.ChildList.Count == 0)
+            {
+                return null;
+            }
+
+            JObject jo = new JObject();
+
+            jo.Add("id", fig.ID);
+
+            JArray ja = new JArray();
+
+            fig.ChildList.ForEach(c =>
+            {
+                ja.Add(c.ID);
+            });
+
+            jo.Add("child_id_list", ja);
+
+            return jo;
+        }
+
         public static JArray LayerListToIDJArray(List<CadLayer> list)
         {
             JArray ja = new JArray();
@@ -206,31 +229,6 @@ namespace Plotter
             return jo;
         }
 
-        public static JObject FigGroupInfoToJson(CadFigure fig, VersionCode version)
-        {
-            if (fig.ChildList.Count == 0)
-            {
-                return null;
-            }
-
-            JObject jo = new JObject();
-
-            jo.Add("id", fig.ID);
-
-            JArray ja = new JArray();
-
-            fig.ChildList.ForEach(c =>
-            {
-                ja.Add(c.ID);                
-            });
-
-            jo.Add("child_id_list", ja);
-
-            return jo;
-        }
-
-
-
         public static CadObjectDB DbFromJson(JObject jo)
         {
             CadObjectDB db = new CadObjectDB();
@@ -279,6 +277,22 @@ namespace Plotter
                 }
 
                 FigGroupInfoFromJson(fig, db, jo, version);
+            }
+        }
+
+        public static void FigGroupInfoFromJson(CadFigure fig, CadObjectDB db, JObject jo, VersionCode version)
+        {
+            uint joid = (uint)jo["id"];
+
+            JArray ja = (JArray)jo["child_id_list"];
+
+            fig.ChildList.Clear();
+
+            foreach (uint id in ja)
+            {
+                CadFigure c = db.GetFigure(id);
+                c.Parent = fig;
+                fig.ChildList.Add(c);
             }
         }
 
@@ -416,22 +430,6 @@ namespace Plotter
             }
 
             return v;
-        }
-
-        public static void FigGroupInfoFromJson(CadFigure fig, CadObjectDB db, JObject jo, VersionCode version)
-        {
-            uint joid = (uint)jo["id"];
-
-            JArray ja = (JArray)jo["child_id_list"];
-
-            fig.ChildList.Clear();
-
-            foreach (uint id in ja)
-            {
-                CadFigure c = db.GetFigure(id);
-                c.Parent = fig;
-                fig.ChildList.Add(c);
-            }
         }
     }
 }
