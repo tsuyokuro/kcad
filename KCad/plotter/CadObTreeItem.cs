@@ -200,6 +200,7 @@ namespace Plotter
 
             set
             {
+                SelectAllPoints(value);
             }
         }
 
@@ -228,6 +229,14 @@ namespace Plotter
             {
                 CadFigTreeItem pi = new CadFigTreeItem(c);
                 Add(pi);
+            });
+        }
+
+        private void SelectAllPoints(bool sel)
+        {
+            Children.ForEach(c =>
+            {
+                c.IsChecked = sel;
             });
         }
     }
