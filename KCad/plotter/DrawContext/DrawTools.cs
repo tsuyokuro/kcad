@@ -155,14 +155,14 @@ namespace Plotter
         GLPen[] GLPenTbl = null;
         Color4[] GLColorTbl = null;
 
-        private void allocGDITbl()
+        private void AllocGDITbl()
         {
             PenTbl = new PenHolder[PEN_TBL_SIZE];
             BrushTbl = new BrushHolder[BRUSH_TBL_SIZE];
             FontTbl = new FontHolder[FONT_TBL_SIZE];
         }
 
-        private void allocGLTbl()
+        private void AllocGLTbl()
         {
             GLPenTbl = new GLPen[PEN_TBL_SIZE];
             GLColorTbl = new Color4[BRUSH_TBL_SIZE];
@@ -172,21 +172,42 @@ namespace Plotter
         {
             if (t == ToolsType.DARK)
             {
-                setupDarkSet();
+                SetupDarkSet();
             }
             else if (t == ToolsType.PRINTER)
             {
-                setupPrinterSet();
+                SetupPrinterSet();
             }
             else if (t == ToolsType.DARK_GL)
             {
-                setupDarkSetGL();
+                SetupDarkSetGL();
             }
         }
 
-        private void setupDarkSet()
+        public static bool IsTypeForGL(ToolsType t)
         {
-            allocGDITbl();
+            if (t == ToolsType.DARK_GL)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsTypeForGDI(ToolsType t)
+        {
+            if (t == ToolsType.DARK || t == ToolsType.PRINTER)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
+        private void SetupDarkSet()
+        {
+            AllocGDITbl();
 
             PenColorTbl = DarkColors.PenColorTbl;
             BrushColorTbl = DarkColors.BrushColorTbl;
@@ -205,9 +226,9 @@ namespace Plotter
             FontTbl[FONT_SMALL]             = new FontHolder(new Font("MS UI Gothic", 9), true);
         }
 
-        private void setupPrinterSet()
+        private void SetupPrinterSet()
         {
-            allocGDITbl();
+            AllocGDITbl();
 
             for (int i = 0; i < PEN_TBL_SIZE; i++)
             {
@@ -227,9 +248,9 @@ namespace Plotter
             FontTbl[FONT_SMALL]             = new FontHolder(new Font("MS UI Gothic", 9), true);
         }
 
-        private void setupDarkSetGL()
+        private void SetupDarkSetGL()
         {
-            allocGLTbl();
+            AllocGLTbl();
 
             float width = 1.0f;
 

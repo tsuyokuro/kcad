@@ -162,14 +162,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AutoCompleteTextBox.cs" />
-    <Compile Include="CadObjectTreeView.cs" />
+    <Compile Include="TreeView\CadObjectTreeView.cs" />
     <Compile Include="ftgl\FontWrapper.cs" />
     <Compile Include="ftgl\FtglAPI.cs" />
     <Compile Include="LBConsole.cs" />
     <Compile Include="MySplashWindow.xaml.cs">
       <DependentUpon>MySplashWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="plotter\CadObTreeItem.cs" />
+    <Compile Include="plotter\CadObTreeItemImpl.cs" />
     <Compile Include="plotter\DrawContext\DrawContextPrinter.cs" />
     <Compile Include="plotter\DrawContext\IDrawing.cs" />
     <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
@@ -183,6 +183,7 @@
     <Compile Include="SnapSettingsDialog.xaml.cs">
       <DependentUpon>SnapSettingsDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TreeView\CadObjTreeItem.cs" />
     <Page Include="GridSettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

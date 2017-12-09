@@ -21,7 +21,6 @@ namespace Plotter
             }
         }
 
-
         // 用紙サイズ
         public PaperPageSize PageSize = new PaperPageSize();
 
@@ -31,9 +30,6 @@ namespace Plotter
 
         // 1inchは何ミリ?
         public const double MILLI_PER_INCH = 25.4;
-
-        // Screen 座標系の原点 
-        public CadVector mViewOrg;
 
         // 視点
         protected Vector3d Eye = Vector3d.UnitZ * 1000.0;
@@ -100,6 +96,9 @@ namespace Plotter
         }
 
 
+        // Screen 座標系の原点 
+        public CadVector mViewOrg;
+
         // 座標系の原点がView座標上で何処にあるかを示す
         public CadVector ViewOrg
         {
@@ -138,6 +137,7 @@ namespace Plotter
         public double DeviceScaleX = 1.0;
         public double DeviceScaleY = -1.0;
 
+
         protected DrawTools Tools = new DrawTools();
 
         protected IDrawing mDrawing;
@@ -148,6 +148,33 @@ namespace Plotter
             {
                 return mDrawing;
             }
+        }
+
+        public virtual void CopyFrom(DrawContext dc)
+        {
+            PageSize = dc.PageSize.clone();
+            UnitPerMilli = dc.UnitPerMilli;
+            mViewOrg = dc.mViewOrg;
+            Eye = dc.Eye;
+            LookAt = dc.LookAt;
+            UpVector = dc.UpVector;
+            ProjectionNear = dc.ProjectionNear;
+            ProjectionFar = dc.ProjectionFar;
+            FovY = dc.FovY;
+            mViewDir = dc.mViewDir;
+
+            mViewMatrix = dc.mViewMatrix;
+            mViewMatrixInv = dc.mViewMatrixInv;
+
+            mProjectionMatrix = dc.mProjectionMatrix;
+            mProjectionMatrixInv = dc.mProjectionMatrixInv;
+
+            mViewWidth = dc.mViewWidth;
+            mViewHeight = dc.mViewHeight;
+
+            WoldScale = dc.WoldScale;
+            DeviceScaleX = dc.DeviceScaleX;
+            DeviceScaleY = dc.DeviceScaleY;
         }
 
 

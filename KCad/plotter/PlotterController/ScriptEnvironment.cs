@@ -502,6 +502,7 @@ namespace Plotter
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
+            Controller.UpdateTreeView(true);
         }
 
         public void AddLayer(string name)
@@ -726,6 +727,26 @@ namespace Plotter
             });
         }
 
+        private void test004()
+        {
+            CadObjectDB db = Controller.DB;
+
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
+            var figList = new List<CadFigure>();
+
+            idlist.ForEach(id =>
+            {
+                figList.Add(db.GetFigure(id));
+            });
+
+            CadRect r = CadUtil.GetContainsRectScrn(Controller.CurrentDC, figList);
+
+            Controller.CurrentDC.Drawing.DrawRectScrn(DrawTools.PEN_LAST_POINT_MARKER, r.p0, r.p1);
+
+            Controller.CurrentDC.Push();
+        }
+
         private CadFigure GetTargetFig()
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();
@@ -755,6 +776,10 @@ namespace Plotter
             else if (s == "@test003")
             {
                 test003();
+            }
+            else if (s == "@test004")
+            {
+                test004();
             }
             else
             {
@@ -792,6 +817,9 @@ namespace Plotter
             {
                 Controller.InteractOut.println("error: " + e.Message);
             }
+
+            Controller.DrawAll(Controller.CurrentDC);
+            Controller.CurrentDC.Push();
         }
     }
 }

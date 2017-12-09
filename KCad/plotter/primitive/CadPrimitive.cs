@@ -146,6 +146,42 @@ namespace Plotter
     {
         public CadVector p0;
         public CadVector p1;
+
+        public void Normalize()
+        {
+            CadVector minv = p0;
+            CadVector maxv = p0;
+
+            if (p0.x < p1.x)
+            {
+                maxv.x = p1.x;
+            }
+            else
+            {
+                minv.x = p1.x;
+            }
+
+            if (p0.y < p1.y)
+            {
+                maxv.y = p1.y;
+            }
+            else
+            {
+                minv.y = p1.y;
+            }
+
+            if (p0.z < p1.z)
+            {
+                maxv.z = p1.z;
+            }
+            else
+            {
+                minv.z = p1.z;
+            }
+
+            p0 = minv;
+            p1 = maxv;
+        }
     }
 
     public struct Plane

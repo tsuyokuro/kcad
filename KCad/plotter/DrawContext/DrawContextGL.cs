@@ -144,7 +144,10 @@ namespace Plotter
 
         public override void SetupTools(DrawTools.ToolsType type)
         {
-            Tools.Setup(DrawTools.ToolsType.DARK_GL);
+            if (DrawTools.IsTypeForGL(type))
+            {
+                Tools.Setup(type);
+            }
         }
 
         public override void StartDraw()

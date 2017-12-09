@@ -798,6 +798,78 @@ namespace Plotter
             return rect;
         }
 
+        public static CadRect GetContainsRectScrn(DrawContext dc, List<CadFigure> list)
+        {
+            CadRect rect = default(CadRect);
+            CadRect fr;
+
+            double minx = CadConst.MaxValue;
+            double miny = CadConst.MaxValue;
+
+            double maxx = CadConst.MinValue;
+            double maxy = CadConst.MinValue;
+
+            foreach (CadFigure fig in list)
+            {
+                fr = fig.GetContainsRectScrn(dc);
+
+                fr.Normalize();
+
+                minx = Math.Min(minx, fr.p0.x);
+                miny = Math.Min(miny, fr.p0.y);
+                maxx = Math.Max(minx, fr.p1.x);
+                maxy = Math.Max(miny, fr.p1.y);
+            }
+
+            rect.p0 = default(CadVector);
+            rect.p1 = default(CadVector);
+
+            rect.p0.x = minx;
+            rect.p0.y = miny;
+            rect.p0.z = 0;
+
+            rect.p1.x = maxx;
+            rect.p1.y = maxy;
+            rect.p1.z = 0;
+
+            return rect;
+        }
+
+        public static CadRect GetContainsRectScrn(DrawContext dc, List<CadVector> list)
+        {
+            CadRect rect = default(CadRect);
+
+            double minx = CadConst.MaxValue;
+            double miny = CadConst.MaxValue;
+
+            double maxx = CadConst.MinValue;
+            double maxy = CadConst.MinValue;
+
+            list.ForEach(p =>
+            {
+                CadVector v = dc.CadPointToUnitPoint(p);
+
+                minx = Math.Min(minx, v.x);
+                miny = Math.Min(miny, v.y);
+
+                maxx = Math.Max(maxx, v.x);
+                maxy = Math.Max(maxy, v.y);
+            });
+
+            rect.p0 = default(CadVector);
+            rect.p1 = default(CadVector);
+
+            rect.p0.x = minx;
+            rect.p0.y = miny;
+            rect.p0.z = 0;
+
+            rect.p1.x = maxx;
+            rect.p1.y = maxy;
+            rect.p1.z = 0;
+
+            return rect;
+        }
+
         /// <summary>
         /// 点aに最も近い平面上の点を求める
         /// </summary>

@@ -699,6 +699,11 @@ namespace Plotter
             return Behavior.GetContainsRect(this);
         }
 
+        public CadRect GetContainsRectScrn(DrawContext dc)
+        {
+            return Behavior.GetContainsRectScrn(this, dc);
+        }
+
         public IReadOnlyList<CadVector> GetPoints(int curveSplitNum)
         {
             return Behavior.GetPoints(this, curveSplitNum);

@@ -27,6 +27,7 @@ namespace KCad
         bool IsChecked { get; set; }
 
         string Text { get; }
+
         List<ICadObjectTreeItem> Children { get; }
         int GetTotalCount();
         void Add(ICadObjectTreeItem item);
