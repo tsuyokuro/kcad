@@ -16,10 +16,10 @@ namespace Plotter
             DC = dc;
         }
 
-        public override void Clear()
+        public override void Clear(int brush)
         {
             FillRectangleScrn(
-                DrawTools.BRUSH_BACKGROUND,
+                brush,
                 0, 0, (int)DC.ViewWidth, (int)DC.ViewHeight);
         }
 

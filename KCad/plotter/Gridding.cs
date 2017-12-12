@@ -70,7 +70,7 @@ namespace Plotter
 
             CadVector sp = up;
 
-            CadVector u0 = dc.mViewOrg;
+            CadVector u0 = dc.ViewOrg;
 
             double range;
 

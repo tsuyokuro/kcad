@@ -100,6 +100,11 @@ namespace Plotter
         {
             bool ret = false;
 
+            if (Children == null)
+            {
+                return ret;
+            }
+
             int i;
             for (i=0; i<Children.Count;i++)
             {

@@ -9,7 +9,7 @@ namespace Plotter
 {
     public class DrawingBase : IDrawing
     {
-        public virtual void Clear()
+        public virtual void Clear(int brush = DrawTools.BRUSH_BACKGROUND)
         {
         }
 

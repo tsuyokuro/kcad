@@ -97,7 +97,7 @@ namespace Plotter
 
 
         // Screen 座標系の原点 
-        public CadVector mViewOrg;
+        protected CadVector mViewOrg;
 
         // 座標系の原点がView座標上で何処にあるかを示す
         public CadVector ViewOrg
@@ -138,7 +138,7 @@ namespace Plotter
         public double DeviceScaleY = -1.0;
 
 
-        protected DrawTools Tools = new DrawTools();
+        public DrawTools Tools = new DrawTools();
 
         protected IDrawing mDrawing;
 
@@ -152,9 +152,14 @@ namespace Plotter
 
         public virtual void CopyFrom(DrawContext dc)
         {
+            CopyMetrics(dc);
+            SetViewSize(dc.mViewWidth, dc.mViewHeight);
+        }
+
+        public virtual void CopyMetrics(DrawContext dc)
+        {
             PageSize = dc.PageSize.clone();
             UnitPerMilli = dc.UnitPerMilli;
-            mViewOrg = dc.mViewOrg;
             Eye = dc.Eye;
             LookAt = dc.LookAt;
             UpVector = dc.UpVector;
@@ -169,14 +174,12 @@ namespace Plotter
             mProjectionMatrix = dc.mProjectionMatrix;
             mProjectionMatrixInv = dc.mProjectionMatrixInv;
 
-            mViewWidth = dc.mViewWidth;
-            mViewHeight = dc.mViewHeight;
-
             WoldScale = dc.WoldScale;
             DeviceScaleX = dc.DeviceScaleX;
             DeviceScaleY = dc.DeviceScaleY;
-        }
 
+            mViewOrg = dc.mViewOrg;
+        }
 
         public virtual void SetupTools(DrawTools.ToolsType type)
         {

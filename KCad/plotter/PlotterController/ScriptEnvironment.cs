@@ -6,6 +6,7 @@ using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -729,6 +730,8 @@ namespace Plotter
 
         private void test004()
         {
+            DrawContext dc = Controller.CurrentDC;
+
             CadObjectDB db = Controller.DB;
 
             List<uint> idlist = Controller.GetSelectedFigIDList();
@@ -740,11 +743,63 @@ namespace Plotter
                 figList.Add(db.GetFigure(id));
             });
 
-            CadRect r = CadUtil.GetContainsRectScrn(Controller.CurrentDC, figList);
+            CadRect r = CadUtil.GetContainsRectScrn(dc, figList);
 
-            Controller.CurrentDC.Drawing.DrawRectScrn(DrawTools.PEN_LAST_POINT_MARKER, r.p0, r.p1);
+            CadRect wr = default(CadRect);
+            wr.p0 = dc.UnitPointToCadPoint(r.p0);
+            wr.p1 = dc.UnitPointToCadPoint(r.p1);
 
-            Controller.CurrentDC.Push();
+            //dc.Drawing.DrawRectScrn(DrawTools.PEN_LAST_POINT_MARKER, r.p0, r.p1);
+
+            DrawContextGDI tdc = new DrawContextGDI();
+
+            tdc.CopyMetrics(dc);
+
+            tdc.SetViewSize(128, 128);
+
+            tdc.ViewOrg = CadVector.Create(64, 64, 0);
+
+            tdc.SetupTools(DrawTools.ToolsType.DARK);
+
+            Pen pen = tdc.Pen(DrawTools.PEN_DEFAULT_FIGURE);
+
+            pen.Width = 2;
+
+            double sw = r.p1.x - r.p0.x;
+            double sh = r.p1.y - r.p0.y;
+
+            double a = 128.0 / (Math.Max(sw, sh) + 1.0);
+
+            tdc.DeviceScaleX *= a;
+            tdc.DeviceScaleY *= a;
+
+            CadRect tr = CadUtil.GetContainsRectScrn(tdc, figList);
+
+            CadVector trcp = (tr.p1 - tr.p0) / 2 + tr.p0;
+
+            CadVector d = trcp - tdc.ViewOrg;
+
+            tdc.ViewOrg -= d;
+
+            tdc.Drawing.Clear(DrawTools.BRUSH_TRANSPARENT);
+
+            foreach (CadFigure fig in figList)
+            {
+                fig.Draw(tdc, DrawTools.PEN_DEFAULT_FIGURE);
+            }
+
+            if (dc is DrawContextGDI)
+            {
+                ((DrawContextGDI)dc).graphics.DrawImage(tdc.Image, new System.Drawing.Point(0, 0));
+            }
+
+            dc.Push();
+
+            //tdc.Image.Save(@"F:\work3\test.bmp");
+
+            Bitmap bitmap = BitmapUtil.CreateAABitmap2x2(tdc.Image, Color.White);
+
+            bitmap.Save(@"F:\work3\test.bmp");
         }
 
         private CadFigure GetTargetFig()

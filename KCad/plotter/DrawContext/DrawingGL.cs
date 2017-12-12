@@ -32,9 +32,9 @@ namespace Plotter
             FontW.FontSize = 20;
         }
 
-        public override void Clear()
+        public override void Clear(int brush)
         {
-            GL.ClearColor(DC.Color(DrawTools.BRUSH_BACKGROUND));
+            GL.ClearColor(DC.Color(brush));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 

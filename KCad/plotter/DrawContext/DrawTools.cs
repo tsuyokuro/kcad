@@ -89,6 +89,8 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_PALE_FIGURE] = Color.FromArgb(0x7E, 0x7E, 0x7E);
             PenColorTbl[DrawTools.PEN_MEASURE_FIGURE] = Color.OrangeRed;
             PenColorTbl[DrawTools.PEN_DIMENTION] = Color.PaleGreen;
+            PenColorTbl[DrawTools.PEN_BLACK] = Color.Black;
+            PenColorTbl[DrawTools.PEN_TEST] = Color.FromArgb(0xFF, 0xBB, 0xCC, 0xDD);
 
 
             BrushColorTbl = new Color[DrawTools.BRUSH_TBL_SIZE];
@@ -96,6 +98,7 @@ namespace Plotter
             BrushColorTbl[DrawTools.BRUSH_DEFAULT] = Color.FromArgb(255, 255, 255);
             BrushColorTbl[DrawTools.BRUSH_BACKGROUND] = Color.FromArgb(0x1e, 0x1e, 0x1e);
             BrushColorTbl[DrawTools.BRUSH_TEXT] = Color.White;
+            BrushColorTbl[DrawTools.BRUSH_TRANSPARENT] = Color.FromArgb(0,0,0,0);
         }
     }
 
@@ -124,12 +127,15 @@ namespace Plotter
         public const int PEN_PALE_FIGURE = 20;
         public const int PEN_MEASURE_FIGURE = 21;
         public const int PEN_DIMENTION = 22;
-        public const int PEN_TBL_SIZE = 23;
+        public const int PEN_BLACK = 23;
+        public const int PEN_TEST = 24;
+        public const int PEN_TBL_SIZE = 25;
 
         public const int BRUSH_DEFAULT = 0;
         public const int BRUSH_BACKGROUND = 1;
         public const int BRUSH_TEXT = 2;
-        public const int BRUSH_TBL_SIZE = 3;
+        public const int BRUSH_TRANSPARENT = 3;
+        public const int BRUSH_TBL_SIZE = 4;
 
         public const int FONT_DEFAULT = 0;
         public const int FONT_SMALL = 1;

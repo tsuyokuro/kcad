@@ -8,7 +8,7 @@ namespace Plotter
 {
     public interface IDrawing
     {
-        void Clear();
+        void Clear(int brush = DrawTools.BRUSH_BACKGROUND);
 
         void Draw(CadLayer layer, int pen = DrawTools.PEN_DEFAULT_FIGURE);
 
