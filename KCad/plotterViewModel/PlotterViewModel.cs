@@ -413,6 +413,7 @@ namespace Plotter
         private void InitCommandMap()
         {
             CommandMap = new Dictionary<string, Action>{
+                { "new_doc", NewDocument },
                 { "load", Load },
                 { "save",Save },
                 { "print",StartPrint },
@@ -591,6 +592,12 @@ namespace Plotter
         public void Paste()
         {
             mController.Paste();
+            RedrawAll();
+        }
+
+        public void NewDocument()
+        {
+            mController.ClearAll();
             RedrawAll();
         }
 

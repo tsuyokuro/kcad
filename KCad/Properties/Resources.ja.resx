@@ -135,6 +135,9 @@
   <data name="menu_load" xml:space="preserve">
     <value>読み込み</value>
   </data>
+  <data name="menu_new_doc" xml:space="preserve">
+    <value>新規作成</value>
+  </data>
   <data name="menu_print" xml:space="preserve">
     <value>印刷</value>
   </data>

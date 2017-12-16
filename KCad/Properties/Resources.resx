@@ -139,6 +139,9 @@
   <data name="menu_load" xml:space="preserve">
     <value>Load</value>
   </data>
+  <data name="menu_new_doc" xml:space="preserve">
+    <value>New</value>
+  </data>
   <data name="menu_print" xml:space="preserve">
     <value>Print</value>
   </data>

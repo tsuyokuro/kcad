@@ -1122,5 +1122,14 @@ namespace Plotter
                 }
             }
         }
+
+        public void ClearAll()
+        {
+            mDB.ClearAll();
+            mHistoryManager.Clear();
+
+            NotifyLayerInfo();
+            UpdateTreeView(true);
+        }
     }
 }

@@ -112,6 +112,7 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" >
             <MenuItem Header="{x:Static properties:Resources.menu_file}" >
+                <MenuItem Tag="new_doc" Header="{x:Static properties:Resources.menu_new_doc}" Click="MenuItem_Click"/>
                 <MenuItem Tag="load" Header="{x:Static properties:Resources.menu_load}" Click="MenuItem_Click" />
                 <MenuItem Tag="save" Header="{x:Static properties:Resources.menu_save}" Click="MenuItem_Click"/>
                 <MenuItem Tag="print" Header="{x:Static properties:Resources.menu_print}" Click="MenuItem_Click"/>

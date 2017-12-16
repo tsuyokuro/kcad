@@ -250,7 +250,21 @@ namespace Plotter
 
         #endregion Walk
 
+        public void ClearAll()
+        {
+            LayerMap.Clear();
+            mLayerIdProvider.Reset();
+            LayerList.Clear();
+            FigureMap.Clear();
+            FigIdProvider.Reset();
 
+            CadLayer layer = NewLayer();
+
+            LayerList.Add(layer);
+
+            CurrentLayerID = layer.ID;
+            CurrentLayer = layer;
+        }
 
         #region "For debug"
         public void dump(DebugOut dout)

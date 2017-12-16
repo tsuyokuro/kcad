@@ -18,6 +18,11 @@ namespace Plotter
         {
             return ++mCounter;
         }
+
+        public void Reset()
+        {
+            mCounter = 0;
+        }
     }
 
     public delegate void VoidFunc();

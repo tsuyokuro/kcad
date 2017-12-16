@@ -163,6 +163,15 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   New に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_new_doc {
+            get {
+                return ResourceManager.GetString("menu_new_doc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Print に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_print {
