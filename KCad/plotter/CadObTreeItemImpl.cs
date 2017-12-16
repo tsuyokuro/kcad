@@ -90,6 +90,11 @@ namespace Plotter
 
         private void SelectAllPoints(bool sel)
         {
+            if (Children == null)
+            {
+                return;
+            }
+
             Children.ForEach(c =>
             {
                 c.IsChecked = sel;

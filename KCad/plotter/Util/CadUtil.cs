@@ -817,8 +817,8 @@ namespace Plotter
 
                 minx = Math.Min(minx, fr.p0.x);
                 miny = Math.Min(miny, fr.p0.y);
-                maxx = Math.Max(minx, fr.p1.x);
-                maxy = Math.Max(miny, fr.p1.y);
+                maxx = Math.Max(maxx, fr.p1.x);
+                maxy = Math.Max(maxy, fr.p1.y);
             }
 
             rect.p0 = default(CadVector);

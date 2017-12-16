@@ -79,6 +79,8 @@ def cursorAngleX(d):
 def cursorAngleY(d):
     SE.CursorAngleY(d)
 
+def toBitmap(w, h, fname):
+    SE.CreateBitmap(w, h, fname)
 
 x=0
 y=0

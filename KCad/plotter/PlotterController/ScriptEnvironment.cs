@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -670,6 +671,73 @@ namespace Plotter
             Controller.NotifyDataChanged(true);
         }
 
+        public void CreateBitmap(int w, int h, string fname)
+        {
+            DrawContext dc = Controller.CurrentDC;
+
+            CadObjectDB db = Controller.DB;
+
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
+            var figList = new List<CadFigure>();
+
+            idlist.ForEach(id =>
+            {
+                figList.Add(db.GetFigure(id));
+            });
+
+            CadRect r = CadUtil.GetContainsRectScrn(dc, figList);
+
+            CadRect wr = default(CadRect);
+            wr.p0 = dc.UnitPointToCadPoint(r.p0);
+            wr.p1 = dc.UnitPointToCadPoint(r.p1);
+
+            DrawContextGDI tdc = new DrawContextGDI();
+
+            tdc.CopyMetrics(dc);
+
+            tdc.SetViewSize(w, h);
+
+            tdc.ViewOrg = CadVector.Create(w/2, h/2, 0);
+
+            tdc.SetupTools(DrawTools.ToolsType.DARK);
+
+            Pen pen = tdc.Pen(DrawTools.PEN_DEFAULT_FIGURE);
+
+            double sw = r.p1.x - r.p0.x;
+            double sh = r.p1.y - r.p0.y;
+
+            double a = Math.Min(w, h) / (Math.Max(sw, sh) + 1.0);
+
+            tdc.DeviceScaleX *= a;
+            tdc.DeviceScaleY *= a;
+
+            CadRect tr = CadUtil.GetContainsRectScrn(tdc, figList);
+
+            CadVector trcp = (tr.p1 - tr.p0) / 2 + tr.p0;
+
+            CadVector d = trcp - tdc.ViewOrg;
+
+            tdc.ViewOrg -= d;
+
+            tdc.Drawing.Clear(DrawTools.BRUSH_TRANSPARENT);
+
+            tdc.graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            foreach (CadFigure fig in figList)
+            {
+                fig.Draw(tdc, DrawTools.PEN_DEFAULT_FIGURE);
+            }
+
+            if (dc is DrawContextGDI)
+            {
+                ((DrawContextGDI)dc).graphics.DrawImage(tdc.Image, new System.Drawing.Point(0, 0));
+            }
+            dc.Push();
+
+            tdc.Image.Save(fname);
+        }
+
         public CadFigure GetTargetFigure()
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();
@@ -763,7 +831,7 @@ namespace Plotter
 
             Pen pen = tdc.Pen(DrawTools.PEN_DEFAULT_FIGURE);
 
-            pen.Width = 2;
+            //pen.Width = 2;
 
             double sw = r.p1.x - r.p0.x;
             double sh = r.p1.y - r.p0.y;
@@ -783,6 +851,8 @@ namespace Plotter
 
             tdc.Drawing.Clear(DrawTools.BRUSH_TRANSPARENT);
 
+            tdc.graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
             foreach (CadFigure fig in figList)
             {
                 fig.Draw(tdc, DrawTools.PEN_DEFAULT_FIGURE);
@@ -796,10 +866,6 @@ namespace Plotter
             dc.Push();
 
             //tdc.Image.Save(@"F:\work3\test.bmp");
-
-            Bitmap bitmap = BitmapUtil.CreateAABitmap2x2(tdc.Image, Color.White);
-
-            bitmap.Save(@"F:\work3\test.bmp");
         }
 
         private CadFigure GetTargetFig()
