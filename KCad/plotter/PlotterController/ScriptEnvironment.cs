@@ -735,7 +735,10 @@ namespace Plotter
             }
             dc.Push();
 
-            tdc.Image.Save(fname);
+            if (fname.Length > 0)
+            {
+                tdc.Image.Save(fname);
+            }
         }
 
         public CadFigure GetTargetFigure()

@@ -58,7 +58,7 @@ namespace Plotter
             MaterialDiffuse = new Color4(0.7f, 0.7f, 0.7f, 1.0f);
             MaterialSpecular = new Color4(0.0f, 0.0f, 0.0f, 1.0f);
             MaterialShininess = new Color4(0.1f, 0.1f, 0.1f, 1.0f);
-            
+
             RecalcViewDirFromCameraDirection();
         }
 
@@ -340,6 +340,11 @@ namespace Plotter
             mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
 
             RecalcViewDirFromCameraDirection();
+        }
+
+        public override void Dispose()
+        {
+            Tools.Dispose();
         }
     }
 }

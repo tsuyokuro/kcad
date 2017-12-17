@@ -25,35 +25,24 @@ namespace Plotter
 
     public class ToolHolder<T>
     {
-        public bool NeedDispose;
         public T ToolObj;
 
-        public ToolHolder(T obj, bool dispose)
+        public ToolHolder(T obj)
         {
             ToolObj = obj;
-            NeedDispose = dispose;
         }
 
         public ToolHolder()
         {
             ToolObj = default(T);
-            NeedDispose = false;
         }
 
         public void Dispose()
         {
-            if (NeedDispose)
+            if (ToolObj != null)
             {
-                if (ToolObj != null)
-                {
-                    ((IDisposable)ToolObj).Dispose();
-                }
+                ((IDisposable)ToolObj).Dispose();
             }
-        }
-
-        public static implicit operator T(ToolHolder<T> holder)
-        {
-            return holder.ToolObj;
         }
     }
 
@@ -220,16 +209,16 @@ namespace Plotter
 
             for (int i=0; i<PEN_TBL_SIZE; i++)
             {
-                PenTbl[i] = new PenHolder(new Pen(DarkColors.PenColorTbl[i]), true);
+                PenTbl[i] = new PenHolder(new Pen(DarkColors.PenColorTbl[i]));
             }
 
             for (int i = 0; i < BRUSH_TBL_SIZE; i++)
             {
-                BrushTbl[i] = new BrushHolder(new SolidBrush(DarkColors.BrushColorTbl[i]), true);
+                BrushTbl[i] = new BrushHolder(new SolidBrush(DarkColors.BrushColorTbl[i]));
             }
 
-            FontTbl[FONT_DEFAULT]           = new FontHolder(new Font("MS UI Gothic", 9), true);
-            FontTbl[FONT_SMALL]             = new FontHolder(new Font("MS UI Gothic", 9), true);
+            FontTbl[FONT_DEFAULT]           = new FontHolder(new Font("MS UI Gothic", 9));
+            FontTbl[FONT_SMALL]             = new FontHolder(new Font("MS UI Gothic", 9));
         }
 
         private void SetupPrinterSet()
@@ -238,20 +227,20 @@ namespace Plotter
 
             for (int i = 0; i < PEN_TBL_SIZE; i++)
             {
-                PenTbl[i] = new PenHolder(null, false);
+                PenTbl[i] = new PenHolder(null);
             }
 
-            PenTbl[PEN_DEFAULT]             = new PenHolder(new Pen(Brushes.Black, 0), true);
-            PenTbl[PEN_DEFAULT_FIGURE]      = new PenHolder(new Pen(Brushes.Black, 0), true);
-            PenTbl[PEN_PALE_FIGURE]         = new PenHolder(new Pen(Brushes.Black, 0), true);
-            PenTbl[PEN_DIMENTION]           = new PenHolder(new Pen(Brushes.Black, 0), true);
+            PenTbl[PEN_DEFAULT]             = new PenHolder(new Pen(Brushes.Black, 0));
+            PenTbl[PEN_DEFAULT_FIGURE]      = new PenHolder(new Pen(Brushes.Black, 0));
+            PenTbl[PEN_PALE_FIGURE]         = new PenHolder(new Pen(Brushes.Black, 0));
+            PenTbl[PEN_DIMENTION]           = new PenHolder(new Pen(Brushes.Black, 0));
 
-            BrushTbl[BRUSH_DEFAULT]         = new BrushHolder(new SolidBrush(Color.Black), false);
-            BrushTbl[BRUSH_BACKGROUND]      = new BrushHolder(null, false);
-            BrushTbl[BRUSH_TEXT]            = new BrushHolder(new SolidBrush(Color.Black), false);
+            BrushTbl[BRUSH_DEFAULT]         = new BrushHolder(new SolidBrush(Color.Black));
+            BrushTbl[BRUSH_BACKGROUND]      = new BrushHolder(null);
+            BrushTbl[BRUSH_TEXT]            = new BrushHolder(new SolidBrush(Color.Black));
 
-            FontTbl[FONT_DEFAULT]           = new FontHolder(new Font("MS UI Gothic", 9), true);
-            FontTbl[FONT_SMALL]             = new FontHolder(new Font("MS UI Gothic", 9), true);
+            FontTbl[FONT_DEFAULT]           = new FontHolder(new Font("MS UI Gothic", 9));
+            FontTbl[FONT_SMALL]             = new FontHolder(new Font("MS UI Gothic", 9));
         }
 
         private void SetupDarkSetGL()

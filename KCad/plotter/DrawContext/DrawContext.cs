@@ -276,8 +276,6 @@ namespace Plotter
             t.dump(dout, "ViewDir");
         }
 
-        public virtual void Dispose()
-        {
-        }
+        public abstract void Dispose();
     }
 }

@@ -126,6 +126,7 @@ namespace Plotter
         public override void Dispose()
         {
             DisposeGraphics();
+            Tools.Dispose();
         }
 
         #region Depend GDI Graphics
