@@ -2,15 +2,31 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Plotter
 {
     public class BitmapUtil
     {
+        public static void BitmapToClipboardAsPNG(Bitmap bmp)
+        {
+            MemoryStream ms = new MemoryStream();
+
+            bmp.Save(ms, ImageFormat.Png);
+
+            IDataObject dataObject = new DataObject();
+
+            dataObject.SetData("PNG", false, ms);
+
+            Clipboard.SetDataObject(dataObject);
+        }
+
+
         public static Bitmap CreateAABitmap2x2(Bitmap src, Color color)
         {
             int dw = (int)src.Width / 2;
@@ -87,89 +103,5 @@ namespace Plotter
             return dest;
         }
 
-        public static Bitmap CreateFXAABitmap(Bitmap src, Color color)
-        {
-            int width = (int)src.Width;
-            int height = (int)src.Height;
-
-            Bitmap dest = new Bitmap(width, height);
-
-            BitmapData dstBits = dest.LockBits(
-                    new System.Drawing.Rectangle(0, 0, dest.Width, dest.Height),
-                    System.Drawing.Imaging.ImageLockMode.WriteOnly, dest.PixelFormat);
-
-            BitmapData srcBits = src.LockBits(
-                    new System.Drawing.Rectangle(0, 0, src.Width, src.Height),
-                    System.Drawing.Imaging.ImageLockMode.ReadOnly, src.PixelFormat);
-
-            byte r = color.R;
-            byte g = color.G;
-            byte b = color.B;
-
-            unsafe
-            {
-                byte* w;
-                byte* n;
-                byte* e;
-                byte* s;
-                byte* m;
-
-                uint* srcPixels = (uint*)srcBits.Scan0;
-                uint* dstPixels = (uint*)dstBits.Scan0;
-
-                uint* psrcLine = srcPixels;
-                uint* pdstLine = dstPixels;
-
-                int sstride = srcBits.Stride;
-                int dstride = dstBits.Stride;
-
-                int wo = -1;
-                int no = -sstride;
-                int eo = 1;
-                int so = sstride;
-
-                int x = 0;
-                int y = 0;
-
-                for (; x < width; x++)
-                {
-                    *(pdstLine + x) = *(psrcLine + x);
-                }
-
-                psrcLine += sstride;
-                pdstLine += dstride;
-
-                y = 1;
-
-                for (; y<height-1; y++)
-                {
-                    x = 0;
-                    *(pdstLine + x) = *(psrcLine + x);
-                    *(pdstLine + (width - 1)) = *(psrcLine + (width - 1));
-
-                    x = 1;
-
-                    for (; x<width-1; x++)
-                    {
-                        w = (byte*)(psrcLine + (x + wo));
-                        n = (byte*)(psrcLine + (x + no));
-                        e = (byte*)(psrcLine + (x + eo));
-                        s = (byte*)(psrcLine + (x + so));
-                        m = (byte*)(psrcLine + x);
-
-                    }
-                    psrcLine += sstride;
-                    pdstLine += dstride;
-                }
-
-                x = 0;
-                for (; x < width; x++)
-                {
-                    *(pdstLine + x) = *(psrcLine + x);
-                }
-            }
-
-            return dest;
-        }
     }
 }

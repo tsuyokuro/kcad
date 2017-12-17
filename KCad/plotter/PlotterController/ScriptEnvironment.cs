@@ -1,6 +1,4 @@
-﻿#define NEW_GROUPING
-
-using KCad.Properties;
+﻿using KCad.Properties;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using System;
@@ -8,11 +6,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-
+using System.Windows.Forms;
 
 namespace Plotter
 {
@@ -599,7 +598,7 @@ namespace Plotter
             Controller.NotifyDataChanged(true);
         }
 
-        public void CreateBitmap(int w, int h, string fname)
+        public void CreateBitmap(int w, int h, uint argb, int lineW, string fname)
         {
             DrawContext dc = Controller.CurrentDC;
 
@@ -631,11 +630,13 @@ namespace Plotter
             tdc.SetupTools(DrawTools.ToolsType.DARK);
 
             Pen pen = tdc.Pen(DrawTools.PEN_DEFAULT_FIGURE);
+            pen.Color = Color.FromArgb((int)argb);
+            pen.Width = lineW;
 
             double sw = r.p1.x - r.p0.x;
             double sh = r.p1.y - r.p0.y;
 
-            double a = Math.Min(w, h) / (Math.Max(sw, sh) + 1.0);
+            double a = Math.Min(w, h) / (Math.Max(sw, sh) + lineW);
 
             tdc.DeviceScaleX *= a;
             tdc.DeviceScaleY *= a;
@@ -668,6 +669,10 @@ namespace Plotter
             if (fname.Length > 0)
             {
                 tdc.Image.Save(fname);
+            }
+            else
+            {
+                BitmapUtil.BitmapToClipboardAsPNG(tdc.Image);
             }
 
             tdc.Dispose();

@@ -105,10 +105,10 @@ def cursorAngleX(d):
 def cursorAngleY(d):
     SE.CursorAngleY(d)
 
-#[AC] toBmp(bw, bh)
-#[AC] toBmp(bw, bh, fname)
-def toBmp(bw, bh, fname=""):
-    SE.CreateBitmap(bw, bh, fname)
+#[AC] toBmp(32, 32)
+#[AC] toBmp(32, 32, 0xffffffff, 1, "")
+def toBmp(bw, bh, argb=0xffffffff, linew=1, fname=""):
+    SE.CreateBitmap(bw, bh, argb, linew, fname)
 
 x=0
 y=0
@@ -116,9 +116,6 @@ z=0
 
 w=10
 h=10
-
-bw = 32
-bh = 32
 
 ratio=0.5
 
