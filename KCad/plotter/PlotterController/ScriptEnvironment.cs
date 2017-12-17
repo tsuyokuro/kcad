@@ -46,6 +46,7 @@ namespace Plotter
 
 
         Regex FuncPtn = new Regex(@"def[ \t]+(\w+\(.*\))\:");
+        Regex AutoCompPtn = new Regex(@"#\[AC\][ \t]*(.+)\r\n");
 
         private void InitScriptingEngine()
         {
@@ -58,7 +59,7 @@ namespace Plotter
             Scope.SetVariable("SE", this);
             Source.Execute(Scope);
 
-            MatchCollection matches = FuncPtn.Matches(script);
+            MatchCollection matches = AutoCompPtn.Matches(script);
 
             foreach (Match m in matches)
             {
@@ -196,7 +197,6 @@ namespace Plotter
             );
         }
 
-#if NEW_GROUPING
         public void Group()
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();
@@ -309,79 +309,7 @@ namespace Plotter
 
             Controller.UpdateTreeView(true);
         }
-#else
-        public void Group()
-        {
-            List<uint> idlist = Controller.GetSelectedFigIDList();
 
-            if (idlist.Count < 2)
-            {
-                Controller.InteractOut.println(
-                    global::KCad.Properties.Resources.error_select_2_or_more
-                    );
-
-                return;
-            }
-
-            CadFigure parent = Controller.DB.NewFigure(CadFigure.Types.GROUP);
-
-            foreach (uint id in idlist)
-            {
-                CadFigure fig = Controller.DB.GetFigure(id);
-
-                if (fig == null)
-                {
-                    continue;
-                }
-                parent.AddChild(fig);
-            }
-
-            var ope = new CadOpeAddChildlen(parent, parent.ChildList);
-            Controller.HistoryManager.foward(ope);
-
-            Controller.InteractOut.println(
-                    global::KCad.Properties.Resources.notice_was_grouped
-                );
-        }
-
-        public void Ungroup()
-        {
-            List<uint> idlist = Controller.GetSelectedFigIDList();
-
-            var idSet = new HashSet<uint>();
-
-            foreach (uint id in idlist)
-            {
-                CadFigure fig = Controller.DB.GetFigure(id);
-
-                CadFigure root = fig.GetGroupRoot();
-
-                if (root.ChildList.Count > 0)
-                {
-                    idSet.Add(root.ID);
-                }
-            }
-
-            CadOpeList opeList = new CadOpeList();
-
-            foreach (uint id in idSet)
-            {
-                CadFigure fig = Controller.DB.GetFigure(id);
-
-                CadOpeRemoveChildlen ope = new CadOpeRemoveChildlen(fig, fig.ChildList);
-
-                opeList.OpeList.Add(ope);
-
-                fig.ReleaseAllChildlen();
-            }
-
-            Controller.HistoryManager.foward(opeList);
-
-            Controller.InteractOut.println(
-                global::KCad.Properties.Resources.notice_was_ungrouped
-                );
-        }
-#endif
         public void Distance()
         {
             if (Controller.SelList.List.Count == 2)
@@ -729,16 +657,20 @@ namespace Plotter
                 fig.Draw(tdc, DrawTools.PEN_DEFAULT_FIGURE);
             }
 
+            //>>>> debug
             if (dc is DrawContextGDI)
             {
                 ((DrawContextGDI)dc).graphics.DrawImage(tdc.Image, new System.Drawing.Point(0, 0));
             }
             dc.Push();
+            //<<<< debug
 
             if (fname.Length > 0)
             {
                 tdc.Image.Save(fname);
             }
+
+            tdc.Dispose();
         }
 
         public CadFigure GetTargetFigure()

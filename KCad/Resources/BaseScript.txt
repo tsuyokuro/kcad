@@ -1,86 +1,114 @@
 import math
 
+#[AC] putMsg(s)
 def putMsg(s):
     SE.PutMsg(s)
 
+#[AC] rect(w, h)
 def rect(w, h):
     SE.Rect(w, h)
 
+#[AC] area()
 def area():
     SE.Area()
 
+#[AC] find(range)
 def find(range):
     SE.Find(range)
 
+#[AC] layerList()
 def layerList():
     SE.LayerList()
 
+#[AC] lastDown()
 def lastDown():
     SE.ShowLastDownPoint()
 
+#[AC] distance()
 def distance():
     SE.Distance()
 
+#[AC] group()
 def group():
     SE.Group()
 
+#[AC] ungroup()
 def ungroup():
     SE.Ungroup()
 
+#[AC] addPoint()
 def addPoint():
     SE.AddPoint()
 
+#[AC] addLayer(name)
 def addLayer(name):
     SE.AddLayer(name)
 
+#[AC] reverse()
 def reverse():
     SE.ReverseOrder()
 
+#[AC] move(x, y, z)
 def move(x, y, z):
     SE.Move(x, y, z)
 
+#[AC] segLen(len)
 def segLen(len):
     SE.SegLen(len)
 
+#[AC] insPoint()
 def insPoint():
     SE.InsPoint()
 
+#[AC] createVector(x, y, z)
 def createVector(x, y, z):
     return SE.CreateVector(x, y, z)
 
+#[AC] getldp()
 def getldp():
     pt = SE.GetLastDownPoint()
     return (pt.x, pt.y, pt.z)
 
+#[AC] moveCursor(x, y, z)
 def moveCursor(x, y, z):
     SE.MoveCursor(x, y, z)
 
+#[AC] setCursor(x, y, z)
 def setCursor(x, y, z):
     SE.SetCursor(x, y, z)
 
+#[AC] line(x, y, z)
 def line(x, y, z):
     SE.Line(x, y, z)
 
+#[AC] selFig(id)
 def selFig(id):
     SE.SelectFigure(id)
 
+#[AC] execScript(fname)
 def execScript(fname):
     return SE.ExecPartial(fname)
 
+#[AC] scale(ratio)
 def scale(ratio):
     return SE.Scale(ratio)
 
+#[AC] rotate(p0, v, t)
 def rotate(p0, v, t):
     return SE.Rotate(p0, v, t)
 
+#[AC] cursorAngleX(d)
 def cursorAngleX(d):
     SE.CursorAngleX(d)
 
+#[AC] cursorAngleY(d)
 def cursorAngleY(d):
     SE.CursorAngleY(d)
 
-def toBmp(bw, bh, fname):
-    SE.CreateBitmap(w, h, fname)
+#[AC] toBmp(bw, bh)
+#[AC] toBmp(bw, bh, fname)
+def toBmp(bw, bh, fname=""):
+    SE.CreateBitmap(bw, bh, fname)
 
 x=0
 y=0
