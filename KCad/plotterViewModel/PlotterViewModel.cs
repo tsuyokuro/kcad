@@ -11,6 +11,7 @@ using System.Drawing;
 using KCad;
 using System.Drawing.Printing;
 using System.Collections;
+using static System.Drawing.Printing.PrinterSettings;
 
 namespace Plotter
 {
@@ -936,6 +937,7 @@ namespace Plotter
             PageSettings storePageSettings = pd.DefaultPageSettings;
 
             pd.DefaultPageSettings.Landscape = mPlotterView.DrawContext.PageSize.IsLandscape();
+            pd.DefaultPageSettings.PrinterResolution.Kind = PrinterResolutionKind.High;
 
             pd.PrintPage += PrintPage;
 
@@ -951,17 +953,16 @@ namespace Plotter
             pd.DefaultPageSettings = storePageSettings;
         }
 
-        private void PrintPage(object sender,
-            System.Drawing.Printing.PrintPageEventArgs e)
+        private void PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
-            DrawPage(e.Graphics);
-        }
+            Graphics g = e.Graphics;
+            CadSize2D size = new CadSize2D(e.PageBounds.Size.Width, e.PageBounds.Size.Height);
+            
+            DrawContextPrinter dc = new DrawContextPrinter(mController.CurrentDC, g, mPlotterView.PageSize, size);
 
-        private void DrawPage(System.Drawing.Graphics g)
-        {
-            DrawContextPrinter dc = new DrawContextPrinter(mController.CurrentDC, g, mPlotterView.PageSize);
             mController.Print(dc);
         }
+
         #endregion
 
 

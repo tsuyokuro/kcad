@@ -743,5 +743,60 @@ namespace Plotter
             DrawLine(DrawTools.PEN_AXIS2, p0, p1);
             DrawText(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, p1, "z");
         }
+
+        public override void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb)
+        {
+            CadVector va = pa - cp;
+            CadVector vb = pb - cp;
+
+            if (va.Norm() < 0.01)
+            {
+                return;
+            }
+
+            CadVector uva = DC.CadVectorToUnitVector(va);
+            CadVector uvb = DC.CadVectorToUnitVector(vb);
+
+            double uva_n = uva.Norm();
+            double uvb_n = uvb.Norm();
+
+            double max_n = Math.Max(uva_n, uvb_n);
+
+            double dt = Math.Atan2(4.0, max_n);
+
+            if (dt > Math.PI/4.0)
+            {
+                dt = Math.PI / 4.0;
+            }
+
+            int div = (int)((2.0 * Math.PI) / dt);
+
+            CadVector normal = CadMath.Normal(va, vb);
+
+            CadQuaternion q = CadQuaternion.RotateQuaternion(normal, dt);
+            CadQuaternion r = q.Conjugate();
+
+            CadVector p = va;
+            CadVector tp1 = pa;
+            CadVector tp2 = pa;
+
+
+            int i = 0;
+            for (; i < div - 1; i++)
+            {
+                CadQuaternion qp = CadQuaternion.FromPoint(p);
+                qp = r * qp;
+                qp = qp * q;
+
+                p = qp.ToPoint();
+
+                tp2 = p + cp;
+
+                DrawLine(pen, tp1, tp2);
+                tp1 = tp2;
+            }
+
+            DrawLine(pen, tp1, pa);
+        }
     }
 }

@@ -9,14 +9,13 @@ namespace Plotter
 {
     class DrawContextPrinter : DrawContextGDI
     {
-        public DrawContextPrinter(DrawContext currentDC, Graphics g, PaperPageSize pageSize)
+        public DrawContextPrinter(DrawContext currentDC, Graphics g, PaperPageSize pageSize, CadSize2D unitSize)
         {
             graphics = g;
             SetupTools(DrawTools.ToolsType.PRINTER);
             PageSize = pageSize;
 
-            // Default printers's unit is 1/100 inch
-            SetUnitPerInch(100.0);
+            UnitPerMilli = unitSize.Width / PageSize.Width;
 
             CopyCamera(currentDC);
 
@@ -30,14 +29,14 @@ namespace Plotter
 
             CadVector org = default(CadVector);
 
-            org.x = PageSize.widthInch / 2.0 * 100;
-            org.y = PageSize.heightInch / 2.0 * 100;
+            org.x = unitSize.Width / 2.0;
+            org.y = unitSize.Height / 2.0;
 
             ViewOrg = org;
         }
 
-        public override void SetViewSize(double w, double h)
-        {
-        }
+        //public override void SetViewSize(double w, double h)
+        //{
+        //}
     }
 }
