@@ -86,7 +86,7 @@ namespace Plotter
     {
         private List<SelectItem> mList = new List<SelectItem>();
 
-        public IReadOnlyList<SelectItem> List
+        public List<SelectItem> List
         {
             get { return mList; }
         }

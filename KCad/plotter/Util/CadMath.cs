@@ -120,7 +120,7 @@ namespace Plotter
          * list[0]/_________list[1]
          * 
          */
-        public static CadVector Normal(IReadOnlyList<CadVector> pointList)
+        public static CadVector Normal(List<CadVector> pointList)
         {
             if (pointList.Count < 3)
             {

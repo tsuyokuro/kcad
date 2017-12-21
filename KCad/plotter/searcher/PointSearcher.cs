@@ -50,7 +50,7 @@ namespace Plotter
             TargetPoint = p;
         }
 
-        public void SetIgnoreList(IReadOnlyList<SelectItem> list)
+        public void SetIgnoreList(List<SelectItem> list)
         {
             IgnoreList = list;
         }

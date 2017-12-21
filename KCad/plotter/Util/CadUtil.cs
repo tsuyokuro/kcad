@@ -318,7 +318,7 @@ namespace Plotter
 
 
         // 法線の代表値を求める
-        public static Vector3d RepresentativeNormal(IReadOnlyList<CadVector> points)
+        public static Vector3d RepresentativeNormal(List<CadVector> points)
         {
             if (points.Count < 3)
             {
@@ -1094,6 +1094,33 @@ namespace Plotter
             return v.ToString("f2");
         }
 
+        public static void RotateFigure(CadFigure fig, CadVector org, CadVector axis, double t)
+        {
+            CadQuaternion q = CadQuaternion.RotateQuaternion(axis, t);
+            CadQuaternion r = q.Conjugate(); ;
+
+            CadQuaternion qp;
+
+            int n = fig.PointList.Count;
+
+            for (int i = 0; i < n; i++)
+            {
+                CadVector p = fig.PointList[i];
+
+                p -= org;
+
+                qp = CadQuaternion.FromPoint(p);
+
+                qp = r * qp;
+                qp = qp * q;
+
+                p = qp.ToPoint();
+
+                p += org;
+
+                fig.SetPointAt(i, p);
+            }
+        }
 
         public static void Dump(DebugOut dout, Vector4d v, string prefix)
         {

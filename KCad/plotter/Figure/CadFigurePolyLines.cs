@@ -165,7 +165,7 @@ namespace Plotter
                 }
             }
 
-            public override IReadOnlyList<CadVector> GetPoints(CadFigure fig, int curveSplitNum)
+            public override List<CadVector> GetPoints(CadFigure fig, int curveSplitNum)
             {
                 List<CadVector> ret = new List<CadVector>();
 

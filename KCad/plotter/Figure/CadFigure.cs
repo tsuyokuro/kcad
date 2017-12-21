@@ -704,7 +704,7 @@ namespace Plotter
             return Behavior.GetContainsRectScrn(this, dc);
         }
 
-        public IReadOnlyList<CadVector> GetPoints(int curveSplitNum)
+        public List<CadVector> GetPoints(int curveSplitNum)
         {
             return Behavior.GetPoints(this, curveSplitNum);
         }

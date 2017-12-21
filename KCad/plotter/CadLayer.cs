@@ -71,7 +71,7 @@ namespace Plotter
 
 
 
-        public IReadOnlyList<CadFigure> FigureList
+        public List<CadFigure> FigureList
         {
             get
             {

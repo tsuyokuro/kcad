@@ -64,7 +64,7 @@ namespace Plotter
                 return CadUtil.GetContainsRectScrn(dc, fig.PointList);
             }
 
-            public virtual IReadOnlyList<CadVector> GetPoints(CadFigure fig, int curveSplitNum)
+            public virtual List<CadVector> GetPoints(CadFigure fig, int curveSplitNum)
             {
                 return fig.PointList;
             }

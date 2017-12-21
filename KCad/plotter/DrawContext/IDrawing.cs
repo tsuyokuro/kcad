@@ -12,7 +12,7 @@ namespace Plotter
 
         void Draw(CadLayer layer, int pen = DrawTools.PEN_DEFAULT_FIGURE);
 
-        void Draw(IReadOnlyList<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE);
+        void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE);
 
         void DrawSelected(CadLayer layer);
 
@@ -38,9 +38,9 @@ namespace Plotter
 
         void DrawDot(int pen, CadVector p);
 
-        void DrawFace(int pen, IReadOnlyList<CadVector> pointList);
+        void DrawFace(int pen, List<CadVector> pointList);
 
-        void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector normal, bool drawOutline);
+        void DrawFace(int pen, List<CadVector> pointList, CadVector normal, bool drawOutline);
 
         void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb);
 

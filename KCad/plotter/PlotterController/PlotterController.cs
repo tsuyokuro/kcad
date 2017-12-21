@@ -1047,7 +1047,7 @@ namespace Plotter
         //
         // p0 を原点として単位ベクトル v を軸に t ラジアン回転する
         //
-        public void RotateSelectedFigure(CadVector p0, CadVector v, double t)
+        public void RotateSelectedFigure(CadVector org, CadVector axisDir, double t)
         {
             StartEdit();
 
@@ -1062,38 +1062,10 @@ namespace Plotter
                     continue;
                 }
 
-                RotateFigure(p0, v, t, fig);
+                CadUtil.RotateFigure(fig, org, axisDir, t);
             }
 
             EndEdit();
-        }
-
-        public void RotateFigure(CadVector p0, CadVector v, double t, CadFigure fig)
-        {
-            CadQuaternion q = CadQuaternion.RotateQuaternion(v, t);
-            CadQuaternion r = q.Conjugate(); ;
-
-            CadQuaternion qp;
-
-            int n = fig.PointList.Count;
-
-            for (int i = 0; i < n; i++)
-            {
-                CadVector p = fig.PointList[i];
-
-                p -= p0;
-
-                qp = CadQuaternion.FromPoint(p);
-
-                qp = r * qp;
-                qp = qp * q;
-
-                p = qp.ToPoint();
-
-                p += p0;
-
-                fig.SetPointAt(i, p);
-            }
         }
 
         /// <summary>

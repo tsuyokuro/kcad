@@ -17,7 +17,7 @@ namespace Plotter
         {
         }
 
-        public virtual void Draw(IReadOnlyList<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
+        public virtual void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
         }
 
@@ -69,12 +69,12 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawFace(int pen, IReadOnlyList<CadVector> pointList)
+        public virtual void DrawFace(int pen, List<CadVector> pointList)
         {
             DrawFace(pen, pointList, default(CadVector), true);
         }
 
-        public virtual void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector normal, bool drawOutline)
+        public virtual void DrawFace(int pen, List<CadVector> pointList, CadVector normal, bool drawOutline)
         {
         }
 

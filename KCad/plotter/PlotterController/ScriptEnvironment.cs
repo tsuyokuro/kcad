@@ -1,6 +1,7 @@
 ﻿using KCad.Properties;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -585,13 +586,13 @@ namespace Plotter
             Controller.CurrentLayer.AddFigure(fig);
         }
 
-        public void Rotate(CadVector p0, CadVector v, double t)
+        public void Rotate(CadVector org, CadVector axisDir, double angle)
         {
-            v = v.UnitVector();
+            axisDir = axisDir.UnitVector();
 
             Controller.StartEdit();
 
-            Controller.RotateSelectedFigure(p0, v, CadMath.Deg2Rad(t));
+            Controller.RotateSelectedFigure(org, axisDir, CadMath.Deg2Rad(angle));
 
             Controller.EndEdit();
 
@@ -742,70 +743,23 @@ namespace Plotter
 
             CadObjectDB db = Controller.DB;
 
-            List<uint> idlist = Controller.GetSelectedFigIDList();
+            CadFigure fig = GetTargetFig();
 
-            var figList = new List<CadFigure>();
-
-            idlist.ForEach(id =>
+            if (fig == null)
             {
-                figList.Add(db.GetFigure(id));
-            });
-
-            CadRect r = CadUtil.GetContainsRectScrn(dc, figList);
-
-            CadRect wr = default(CadRect);
-            wr.p0 = dc.UnitPointToCadPoint(r.p0);
-            wr.p1 = dc.UnitPointToCadPoint(r.p1);
-
-            //dc.Drawing.DrawRectScrn(DrawTools.PEN_LAST_POINT_MARKER, r.p0, r.p1);
-
-            DrawContextGDI tdc = new DrawContextGDI();
-
-            tdc.CopyMetrics(dc);
-
-            tdc.SetViewSize(128, 128);
-
-            tdc.ViewOrg = CadVector.Create(64, 64, 0);
-
-            tdc.SetupTools(DrawTools.ToolsType.DARK);
-
-            Pen pen = tdc.Pen(DrawTools.PEN_DEFAULT_FIGURE);
-
-            //pen.Width = 2;
-
-            double sw = r.p1.x - r.p0.x;
-            double sh = r.p1.y - r.p0.y;
-
-            double a = 128.0 / (Math.Max(sw, sh) + 1.0);
-
-            tdc.DeviceScaleX *= a;
-            tdc.DeviceScaleY *= a;
-
-            CadRect tr = CadUtil.GetContainsRectScrn(tdc, figList);
-
-            CadVector trcp = (tr.p1 - tr.p0) / 2 + tr.p0;
-
-            CadVector d = trcp - tdc.ViewOrg;
-
-            tdc.ViewOrg -= d;
-
-            tdc.Drawing.Clear(DrawTools.BRUSH_TRANSPARENT);
-
-            tdc.graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            foreach (CadFigure fig in figList)
-            {
-                fig.Draw(tdc, DrawTools.PEN_DEFAULT_FIGURE);
+                return;
             }
 
-            if (dc is DrawContextGDI)
-            {
-                ((DrawContextGDI)dc).graphics.DrawImage(tdc.Image, new System.Drawing.Point(0, 0));
-            }
+            
+        }
 
-            dc.Push();
+        private void FaceToDirection(DrawContext dc, CadFigure fig, CadVector org, CadVector dir)
+        {
+            CadVector faceNormal = (CadVector)CadUtil.RepresentativeNormal(fig.PointList);
 
-            //tdc.Image.Save(@"F:\work3\test.bmp");
+            CadVector rv = CadMath.Normal(faceNormal, dir); //回転軸の向き
+
+
         }
 
         private CadFigure GetTargetFig()

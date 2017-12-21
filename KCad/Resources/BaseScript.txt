@@ -93,7 +93,7 @@ def execScript(fname):
 def scale(ratio):
     return SE.Scale(ratio)
 
-#[AC] rotate(p0, v, t)
+#[AC] rotate(point0, unitVZ, 45)
 def rotate(p0, v, t):
     return SE.Rotate(p0, v, t)
 

@@ -56,7 +56,7 @@ namespace Plotter
             });
         }
 
-        public override void Draw(IReadOnlyList<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
+        public override void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
             foreach (CadFigure fig in list)
             {
@@ -90,7 +90,7 @@ namespace Plotter
             GL.End();
         }
 
-        public override void DrawFace(int pen, IReadOnlyList<CadVector> pointList, CadVector normal, bool drawOutline)
+        public override void DrawFace(int pen, List<CadVector> pointList, CadVector normal, bool drawOutline)
         {
             CadVector p;
             GLPen glpen;
