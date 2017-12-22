@@ -971,7 +971,6 @@ namespace Plotter
         {
             mController.ScriptEnv.command(s);
             CommandHistory.Add(s);
-            //DrawAll();
         }
 
         public void DebugCommand(string s)

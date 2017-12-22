@@ -26,6 +26,7 @@ namespace Plotter
 
         private ScriptSource Source;
 
+        private bool DisableClear = false;
 
         private List<string> mAutoCompleteList = new List<string>();
 
@@ -662,6 +663,7 @@ namespace Plotter
             //>>>> debug
             if (dc is DrawContextGDI)
             {
+                DisableClear = true;
                 ((DrawContextGDI)dc).graphics.DrawImage(tdc.Image, new System.Drawing.Point(0, 0));
             }
             dc.Push();
@@ -677,6 +679,91 @@ namespace Plotter
             }
 
             tdc.Dispose();
+        }
+
+        public void SetZero(uint flag)
+        {
+            Controller.StartEdit();
+
+            TransSelectedPoints((p) =>
+            {
+                if ((flag & 4)!=0)
+                {
+                    p.x = 0;
+                }
+                if ((flag & 2) != 0)
+                {
+                    p.y = 0;
+                }
+                if ((flag & 1) != 0)
+                {
+                    p.z = 0;
+                }
+
+                return p;
+            });
+
+            Controller.EndEdit();
+
+            Controller.UpdateTreeView(false);
+        }
+
+        public void TransSelectedPoints(Func<CadVector, CadVector> dele)
+        {
+            DrawContext dc = Controller.CurrentDC;
+
+            CadObjectDB db = Controller.DB;
+
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
+            int i;
+            for (i = 0; i < idlist.Count; i++)
+            {
+                CadFigure fig = db.GetFigure(idlist[i]);
+
+                if (fig == null)
+                {
+                    continue;
+                }
+
+                int j;
+                for (j = 0; j < fig.PointList.Count; j++)
+                {
+                    if (!fig.PointList[j].Selected)
+                    {
+                        continue;
+                    }
+
+                    fig.PointList[j] = dele(fig.PointList[j]);
+                }
+            }
+        }
+
+        public void FaceToDirection(CadVector dir)
+        {
+            DrawContext dc = Controller.CurrentDC;
+
+            CadObjectDB db = Controller.DB;
+
+            CadFigure fig = GetTargetFig();
+
+            if (fig == null)
+            {
+                return;
+            }
+
+            FaceToDirection(dc, fig, Controller.LastDownPoint, dir);
+        }
+
+        private void FaceToDirection(DrawContext dc, CadFigure fig, CadVector org, CadVector dir)
+        {
+            CadVector faceNormal = (CadVector)CadUtil.RepresentativeNormal(fig.PointList);
+
+            CadVector rv = CadMath.Normal(faceNormal, dir); //回転軸の向き
+
+            double t = CadMath.AngleOfVector(faceNormal, dir);
+
+            CadUtil.RotateFigure(fig, org, rv, t);
         }
 
         public CadFigure GetTargetFigure()
@@ -750,16 +837,61 @@ namespace Plotter
                 return;
             }
 
-            
+            FaceToDirection(dc, fig, Controller.LastDownPoint, (CadVector)dc.ViewDir);
         }
 
-        private void FaceToDirection(DrawContext dc, CadFigure fig, CadVector org, CadVector dir)
+        private void test005()
         {
-            CadVector faceNormal = (CadVector)CadUtil.RepresentativeNormal(fig.PointList);
+            CadFigure fig = GetTargetFig();
 
-            CadVector rv = CadMath.Normal(faceNormal, dir); //回転軸の向き
+            if (fig.PointCount < 3)
+            {
+                return;
+            }
 
+            CadVector v1 = fig.PointList[0] - fig.PointList[1];
+            CadVector v2 = fig.PointList[2] - fig.PointList[1];
 
+            double t = CadMath.AngleOfVector(v1, v2);
+
+            double a = CadMath.Rad2Deg(t);
+
+            Controller.InteractOut.println(string.Format("angle:{0}(deg)", a));
+        }
+
+        private void test006()
+        {
+            DrawContext dc = Controller.CurrentDC;
+
+            CadObjectDB db = Controller.DB;
+
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
+            int i;
+            for (i=0;i<idlist.Count;i++)
+            {
+                CadFigure fig = db.GetFigure(idlist[i]);
+
+                if (fig == null)
+                {
+                    continue;
+                }
+
+                int j;
+                for (j=0; j<fig.PointList.Count;j++)
+                {
+                    if (!fig.PointList[j].Selected)
+                    {
+                        continue;
+                    }
+
+                    CadVector p = fig.PointList[j];
+
+                    p.z = 0;
+
+                    fig.PointList[j] = p;
+                }
+            }
         }
 
         private CadFigure GetTargetFig()
@@ -796,6 +928,14 @@ namespace Plotter
             {
                 test004();
             }
+            else if (s == "@test005")
+            {
+                test005();
+            }
+            else if (s == "@test006")
+            {
+                test006();
+            }
             else
             {
                 s = s.Remove(0, 1);
@@ -831,6 +971,12 @@ namespace Plotter
             catch (Exception e)
             {
                 Controller.InteractOut.println("error: " + e.Message);
+            }
+
+            if (!DisableClear)
+            {
+                Controller.Clear(Controller.CurrentDC);
+                DisableClear = false;
             }
 
             Controller.DrawAll(Controller.CurrentDC);
