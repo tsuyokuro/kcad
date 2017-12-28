@@ -1084,6 +1084,44 @@ namespace Plotter
             return true;
         }
 
+        public static CadVector CrossSegHLine2D(CadVector p0, CadVector p1, double lineY )
+        {
+            CadVector cp = CadVector.InvalidValue;
+            CadVector sp;
+            CadVector ep;
+
+            if (p0.y < p1.y)
+            {
+                sp = p0;
+                ep = p1;
+            }
+            else
+            {
+                sp = p1;
+                ep = p0;
+            }
+
+            if (lineY < sp.y)
+            {
+                return cp;
+            }
+
+            if (lineY > ep.y)
+            {
+                return cp;
+            }
+
+            double dx = ep.x - sp.x;
+            double dy = ep.y - sp.y;
+
+            double a = dx / dy;
+
+            cp.x = a * (lineY - sp.y) + sp.x;
+            cp.y = lineY;
+
+            return cp;
+        }
+
         public static double Angle2D(CadVector v)
         {
             return Math.Atan2(v.y, v.x);

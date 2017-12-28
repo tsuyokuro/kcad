@@ -894,6 +894,27 @@ namespace Plotter
             }
         }
 
+        private void test007()
+        {
+            if (!(Controller.CurrentDC is DrawContextGDI))
+            {
+                return;
+            }
+
+            DrawContextGDI dc = (DrawContextGDI)Controller.CurrentDC;
+
+            BitmapData bitmapData = dc.LockBits();
+
+            CadVector p0 = CadVector.Create(120, 100, 0);
+            CadVector p1 = CadVector.Create(100, 200, 0);
+
+            BitmapUtil.BresenhamLine(bitmapData, p0, p1, 0xff00ffff);
+
+            dc.UnlockBits(bitmapData);
+
+            dc.Push();
+        }
+
         private CadFigure GetTargetFig()
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();
@@ -936,6 +957,11 @@ namespace Plotter
             {
                 test006();
             }
+            else if (s == "@test007")
+            {
+                test007();
+            }
+
             else
             {
                 s = s.Remove(0, 1);

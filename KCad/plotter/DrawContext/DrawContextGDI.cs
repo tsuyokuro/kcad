@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using OpenTK.Graphics;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Plotter
 {
@@ -11,6 +12,8 @@ namespace Plotter
         protected Graphics mGraphics = null;
 
         private Bitmap mImage = null;
+
+        public Rectangle Rect = default(Rectangle);
 
         public Graphics graphics
         {
@@ -53,6 +56,11 @@ namespace Plotter
 
             mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
             mGraphics = Graphics.FromImage(mImage);
+
+            Rect.X = 0;
+            Rect.Y = 0;
+            Rect.Width = (int)mViewWidth;
+            Rect.Height = (int)mViewHeight;
         }
 
         private void DisposeGraphics()
@@ -121,6 +129,30 @@ namespace Plotter
             wv /= WoldScale;
 
             return CadVector.Create(wv);
+        }
+
+        public BitmapData LockBits(ImageLockMode lockMode = ImageLockMode.ReadWrite)
+        {
+            if (mImage == null)
+            {
+                return null;
+            }
+
+            BitmapData bitmapData = mImage.LockBits(
+                    Rect,
+                    lockMode, mImage.PixelFormat);
+
+            return bitmapData;
+        }
+
+        public void UnlockBits(BitmapData bitmapData)
+        {
+            if (mImage == null)
+            {
+                return;
+            }
+
+            mImage.UnlockBits(bitmapData);
         }
 
         public override void Dispose()

@@ -3,10 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Newtonsoft.Json.Linq;
 
 namespace Plotter
 {
-    using Newtonsoft.Json.Linq;
     using static CadFigure;
 
     [Serializable]
