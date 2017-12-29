@@ -904,11 +904,18 @@ namespace Plotter
             DrawContextGDI dc = (DrawContextGDI)Controller.CurrentDC;
 
             BitmapData bitmapData = dc.LockBits();
+            
+            CadVector p0 = CadVector.Create(-100, -10, 0);
+            CadVector p1 = CadVector.Create(50, 50, 0);
 
-            CadVector p0 = CadVector.Create(120, 100, 0);
-            CadVector p1 = CadVector.Create(100, 200, 0);
+            CadSegment seg = CadUtil.Clipping2D(10, 10, 100, 100, p0, p1);
 
-            BitmapUtil.BresenhamLine(bitmapData, p0, p1, 0xff00ffff);
+            seg.dump(DebugOut.Std);
+
+            if (seg.Valid)
+            {
+                BitmapUtil.BresenhamLine(bitmapData, seg.P0, seg.P1, 0xff00ffff);
+            }
 
             dc.UnlockBits(bitmapData);
 

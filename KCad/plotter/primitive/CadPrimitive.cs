@@ -62,6 +62,19 @@ namespace Plotter
 
     public struct CadSegment
     {
+        public bool Valid
+        {
+            set
+            {
+                P0.Valid = value;
+            }
+
+            get
+            {
+                return P0.Valid;
+            }
+        }
+
         public CadVector P0;
         public CadVector P1;
 
@@ -69,6 +82,17 @@ namespace Plotter
         {
             P0 = a;
             P1 = b;
+        }
+
+        public void dump(DebugOut dout, string name = "FigureSegment")
+        {
+            dout.println(name + "{");
+            dout.Indent++;
+            dout.println("Valid:" + Valid.ToString());
+            P0.dump(dout, "P0");
+            P1.dump(dout, "P1");
+            dout.Indent--;
+            dout.println("}");
         }
     }
 

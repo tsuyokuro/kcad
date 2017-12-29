@@ -1086,7 +1086,7 @@ namespace Plotter
 
         public static CadVector CrossSegHLine2D(CadVector p0, CadVector p1, double lineY )
         {
-            CadVector cp = CadVector.InvalidValue;
+            CadVector cp = default(CadVector);
             CadVector sp;
             CadVector ep;
 
@@ -1103,11 +1103,13 @@ namespace Plotter
 
             if (lineY < sp.y)
             {
+                cp.Invalid = true;
                 return cp;
             }
 
             if (lineY > ep.y)
             {
+                cp.Invalid = true;
                 return cp;
             }
 
@@ -1120,6 +1122,180 @@ namespace Plotter
             cp.y = lineY;
 
             return cp;
+        }
+
+        public static CadVector CrossSegVLine2D(CadVector p0, CadVector p1, double lineX)
+        {
+            CadVector cp = default(CadVector);
+            CadVector sp;
+            CadVector ep;
+
+            if (p0.x < p1.x)
+            {
+                sp = p0;
+                ep = p1;
+            }
+            else
+            {
+                sp = p1;
+                ep = p0;
+            }
+
+            if (lineX < sp.x)
+            {
+                cp.Invalid = true;
+                return cp;
+            }
+
+            if (lineX > ep.x)
+            {
+                cp.Invalid = true;
+                return cp;
+            }
+
+            double dx = ep.x - sp.x;
+            double dy = ep.y - sp.y;
+
+            double a = dy / dx;
+
+            cp.x = lineX;
+            cp.y = a * (lineX - sp.x) + sp.y;
+
+            return cp;
+        }
+
+        /// <summary>
+        /// クリッピング
+        /// </summary>
+        /// <param name="ox">矩形の原点X</param>
+        /// <param name="oy">矩形の原点Y</param>
+        /// <param name="w">矩形の幅</param>
+        /// <param name="h">矩形の高さ</param>
+        /// <param name="p0">線分端点0</param>
+        /// <param name="p1">線分端点1</param>
+        /// <returns>クリップされた線分 Valid==falseの場合は線分の全てがクリップ外</returns>
+        /// 
+        public static CadSegment Clipping2D(
+            double ox, double oy,
+            double w, double h,
+            CadVector p0, CadVector p1)
+        {
+            CadSegment seg = new CadSegment(p0, p1);
+
+            double ex = ox + w - 1;
+            double ey = oy + h - 1;
+
+            // Clip X
+            if (p0.x < ox)
+            {
+                if (p1.x >= ox)
+                {
+                    p0 = CrossSegVLine2D(p0, p1, ox);
+                }
+                else
+                {
+                    seg.Valid = false;
+                    return seg;
+                }
+            }
+
+            if (p0.x > ex)
+            {
+                if (p1.x <= ex)
+                {
+                    p0 = CrossSegVLine2D(p0, p1, ex);
+                }
+                else
+                {
+                    seg.Valid = false;
+                    return seg;
+                }
+            }
+
+            if (p1.x < ox)
+            {
+                if (p0.x >= ox)
+                {
+                    p1 = CrossSegVLine2D(p0, p1, ox);
+                }
+                else
+                {
+                    seg.Valid = false;
+                    return seg;
+                }
+            }
+
+            if (p1.x > ex)
+            {
+                if (p0.x <= ex)
+                {
+                    p1 = CrossSegVLine2D(p0, p1, ex);
+                }
+                else
+                {
+                    seg.Valid = false;
+                    return seg;
+                }
+            }
+
+
+            // Clip Y
+            if (p0.y < oy)
+            {
+                if (p1.y >= oy)
+                {
+                    p0 = CrossSegHLine2D(p0, p1, oy);
+                }
+                else
+                {
+                    seg.Valid = false;
+                    return seg;
+                }
+            }
+
+            if (p0.y > ey)
+            {
+                if (p1.y <= ey)
+                {
+                    p0 = CrossSegHLine2D(p0, p1, ey);
+                }
+                else
+                {
+                    seg.Valid = false;
+                    return seg;
+                }
+            }
+
+            if (p1.y < oy)
+            {
+                if (p0.y >= oy)
+                {
+                    p1 = CrossSegHLine2D(p0, p1, oy);
+                }
+                else
+                {
+                    seg.Valid = false;
+                    return seg;
+                }
+            }
+
+            if (p1.y > ey)
+            {
+                if (p0.y <= ey)
+                {
+                    p1 = CrossSegHLine2D(p0, p1, ey);
+                }
+                else
+                {
+                    seg.Valid = false;
+                    return seg;
+                }
+            }
+
+            seg.P0 = p0;
+            seg.P1 = p1;
+
+            return seg;
         }
 
         public static double Angle2D(CadVector v)
