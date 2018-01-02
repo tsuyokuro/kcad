@@ -745,7 +745,7 @@ namespace Plotter
 
             CadObjectDB db = Controller.DB;
 
-            CadFigure fig = GetTargetFig();
+            CadFigure fig = GetTargetFigure();
 
             if (fig == null)
             {
@@ -780,7 +780,7 @@ namespace Plotter
 
         private void test001()
         {
-            CadFigure fig = GetTargetFig();
+            CadFigure fig = GetTargetFigure();
 
             if (fig == null) return;
 
@@ -830,7 +830,7 @@ namespace Plotter
 
             CadObjectDB db = Controller.DB;
 
-            CadFigure fig = GetTargetFig();
+            CadFigure fig = GetTargetFigure();
 
             if (fig == null)
             {
@@ -842,7 +842,7 @@ namespace Plotter
 
         private void test005()
         {
-            CadFigure fig = GetTargetFig();
+            CadFigure fig = GetTargetFigure();
 
             if (fig.PointCount < 3)
             {
@@ -905,10 +905,10 @@ namespace Plotter
 
             BitmapData bitmapData = dc.LockBits();
             
-            CadVector p0 = CadVector.Create(-100, -10, 0);
-            CadVector p1 = CadVector.Create(50, 50, 0);
+            CadVector p0 = CadVector.Create(50, 50, 0);
+            CadVector p1 = CadVector.Create(300, 150, 0);
 
-            CadSegment seg = CadUtil.Clipping2D(10, 10, 100, 100, p0, p1);
+            CadSegment seg = CadUtil.Clipping2D(10, 10, 210, 110, p0, p1);
 
             seg.dump(DebugOut.Std);
 
@@ -922,16 +922,23 @@ namespace Plotter
             dc.Push();
         }
 
-        private CadFigure GetTargetFig()
+        private void test008()
         {
-            List<uint> idlist = Controller.GetSelectedFigIDList();
+            var dc = Controller.CurrentDC;
 
-            if (idlist.Count == 0)
+            CadFigure fig = GetTargetFigure();
+
+            CadVector p0;
+            CadVector p1;
+
+
+            fig.ForEachSegment(seg =>
             {
-                return null;
-            }
 
-            return Controller.DB.GetFigure(idlist[0]);
+                return true;
+            });
+
+
         }
 
         private void SimpleCommand(string s)
@@ -978,6 +985,8 @@ namespace Plotter
                 Controller.debugCommand(Controller.CurrentDC, s);
 
                 Controller.CurrentDC.EndDraw();
+
+                Controller.CurrentDC.Push();
             }
         }
 

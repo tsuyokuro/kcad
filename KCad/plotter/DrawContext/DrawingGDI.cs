@@ -466,6 +466,18 @@ namespace Plotter
             CadVector pb = DC.CadPointToUnitPoint(b);
 
             DC.graphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
+
+
+            //BitmapData bd = DC.LockBits();
+
+            //CadSegment seg = CadUtil.Clipping2D(0, 0, DC.ViewWidth, DC.ViewHeight, pa, pb);
+            
+            //if (seg.Valid)
+            //{
+            //    BitmapUtil.BresenhamLine(bd, seg.P0, seg.P1, (uint)(DC.Pen(pen).Color.ToArgb()));
+            //}
+
+            //DC.UnlockBits(bd);
         }
 
         public override void DrawDot(int pen, CadVector p)

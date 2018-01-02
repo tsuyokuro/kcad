@@ -159,6 +159,7 @@ namespace Plotter
         public void EndDraw()
         {
             mDrawContext.EndDraw();
+            mDrawContext.Push();
         }
 
         public void SetController(PlotterController controller)

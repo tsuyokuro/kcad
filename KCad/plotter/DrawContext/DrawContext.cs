@@ -198,7 +198,6 @@ namespace Plotter
 
         public virtual void EndDraw()
         {
-            Push();
         }
 
         public void Push()

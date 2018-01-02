@@ -148,6 +148,7 @@ namespace Plotter
         public void EndDraw()
         {
             mDrawContext.EndDraw();
+            mDrawContext.Push();
         }
 
         public void OnPushDraw(DrawContext dc)

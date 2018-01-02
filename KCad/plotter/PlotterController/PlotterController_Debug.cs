@@ -452,7 +452,7 @@ namespace Plotter
         {
             CadDxfLoader loader = new CadDxfLoader();
 
-            loader.AsyncLoad(@"f:\work2\dino.dxf", 40, (state, percent, db)=>
+            loader.AsyncLoad(@"f:\work2\cblock.dxf", 1000, (state, percent, db)=>
             {
                 mDB = db;
 

@@ -249,4 +249,11 @@ namespace Plotter
             return CreateFromPointNormal(a, normal);
         }
     }
+
+    public class CadRegion2D
+    {
+        public double X;
+        public double Y;
+        public List<List<double>> Data = new List<List<double>>();
+    }
 }
