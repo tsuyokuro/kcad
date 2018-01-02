@@ -256,4 +256,25 @@ namespace Plotter
         public double Y;
         public List<List<double>> Data = new List<List<double>>();
     }
+
+    public struct MinMax2D
+    {
+        public double MinX;
+        public double MinY;
+        public double MaxX;
+        public double MaxY;
+
+        public MinMax2D(
+            double minx = Double.MaxValue,
+            double miny = Double.MaxValue,
+            double maxx = Double.MinValue,
+            double maxy = Double.MinValue
+            )
+        {
+            MinX = minx;
+            MinY = miny;
+            MaxX = maxx;
+            MaxY = maxy;
+        }
+    }
 }

@@ -931,14 +931,65 @@ namespace Plotter
             CadVector p0;
             CadVector p1;
 
+            MinMax2D mm = FigureMinMaxScrn(dc, fig);
+        }
+
+        public static MinMax2D FigureMinMaxScrn(DrawContext dc, CadFigure fig)
+        {
+            MinMax2D mm = new MinMax2D();
+            CadVector p0;
+            CadVector p1;
 
             fig.ForEachSegment(seg =>
             {
+                p0 = dc.CadPointToUnitPoint(seg.P0);
+                p1 = dc.CadPointToUnitPoint(seg.P1);
+
+                if (p0.x < mm.MinX)
+                {
+                    mm.MinX = p0.x;
+                }
+
+                if (p1.x < mm.MinX)
+                {
+                    mm.MinX = p1.x;
+                }
+
+                if (p0.x > mm.MaxX)
+                {
+                    mm.MaxX = p0.x;
+                }
+
+                if (p1.x > mm.MaxX)
+                {
+                    mm.MaxX = p1.x;
+                }
+
+
+                if (p0.y < mm.MinY)
+                {
+                    mm.MinY = p0.y;
+                }
+
+                if (p1.y < mm.MinY)
+                {
+                    mm.MinY = p1.y;
+                }
+
+                if (p0.y > mm.MaxY)
+                {
+                    mm.MaxY = p0.y;
+                }
+
+                if (p1.y > mm.MaxY)
+                {
+                    mm.MaxY = p1.y;
+                }
 
                 return true;
             });
 
-
+            return mm;
         }
 
         private void SimpleCommand(string s)
