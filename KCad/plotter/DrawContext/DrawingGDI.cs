@@ -1,4 +1,11 @@
-﻿using OpenTK;
+﻿/**
+ * GDI向け描画クラス
+ * 
+ */
+
+#define USE_LONG_TERM_LOCK_BITS // ある程度長い期間LockBitsし続ける
+
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,6 +32,10 @@ namespace Plotter
 
         public override void Draw(CadLayer layer, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
+            #if USE_LONG_TERM_LOCK_BITS
+                DC.LockBits();
+            #endif
+
             layer.ForEachFig(fig =>
             {
                 if (fig.Current)
@@ -36,10 +47,18 @@ namespace Plotter
                     fig.Draw(DC, pen);
                 }
             });
+
+            #if USE_LONG_TERM_LOCK_BITS
+                DC.UnlockBits();
+            #endif
         }
 
         public override void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
+            #if USE_LONG_TERM_LOCK_BITS
+                DC.LockBits();
+            #endif
+
             foreach (CadFigure fig in list)
             {
                 fig.ForEachFig(a =>
@@ -54,6 +73,10 @@ namespace Plotter
                     }
                 });
             }
+
+            #if USE_LONG_TERM_LOCK_BITS
+                DC.UnlockBits();
+            #endif
         }
 
         public override void DrawSelected(CadLayer layer)
@@ -64,7 +87,7 @@ namespace Plotter
             });
         }
 
-        #region "Draw base"
+#region "Draw base"
         public override void DrawAxis()
         {
             CadVector p0 = default(CadVector);
@@ -281,9 +304,7 @@ namespace Plotter
 
             Bitmap tgt = DC.Image;
 
-            BitmapData bitmapData = tgt.LockBits(
-                    new System.Drawing.Rectangle(0, 0, tgt.Width, tgt.Height),
-                    System.Drawing.Imaging.ImageLockMode.WriteOnly, tgt.PixelFormat);
+            BitmapData bitmapData = DC.LockBits();
 
             unsafe
             {
@@ -364,7 +385,9 @@ namespace Plotter
                 }
             }
 
-            tgt.UnlockBits(bitmapData);
+            DC.UnlockBits();
+
+            //tgt.UnlockBits(bitmapData);
         }
 
         public override void DrawPageFrame()
@@ -395,9 +418,9 @@ namespace Plotter
 
             DrawRectScrn(DrawTools.PEN_PAGE_FRAME, p0, p1);
         }
-        #endregion
+#endregion
 
-        #region "Draw marker"
+#region "Draw marker"
         public override void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHTLITE)
         {
             CadVector pp = DC.CadPointToUnitPoint(pt);
@@ -422,9 +445,9 @@ namespace Plotter
         {
             DrawCross(pen, p, 10);
         }
-        #endregion
+#endregion
 
-        #region "Draw cursor"
+#region "Draw cursor"
 
         public override void DrawCursor(CadVector pt)
         {
@@ -437,9 +460,9 @@ namespace Plotter
             DrawLineScrn(pen, pp.x - size, pp.y, pp.x + size, pp.y);
             DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
         }
-        #endregion
+#endregion
 
-        #region "draw primitive"
+#region "draw primitive"
         public override void DrawRect(int pen, CadVector p0, CadVector p1)
         {
             CadVector pp0 = DC.CadPointToUnitPoint(p0);
@@ -455,7 +478,7 @@ namespace Plotter
             DrawLineScrn(pen, a.x - size, a.y + 0, a.x + size, a.y + 0);
             DrawLineScrn(pen, a.x + 0, a.y + size, a.x + 0, a.y - size);
         }
-        #endregion
+#endregion
 
         public override void DrawLine(int pen, CadVector a, CadVector b)
         {
@@ -465,19 +488,21 @@ namespace Plotter
             CadVector pa = DC.CadPointToUnitPoint(a);
             CadVector pb = DC.CadPointToUnitPoint(b);
 
-            DC.graphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
+           BitmapData bd = DC.GetLockedBits();
 
+            if (bd == null)
+            {
+                DC.graphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
+            }
+            else
+            {
+                CadSegment seg = CadUtil.Clipping2D(0, 0, DC.ViewWidth, DC.ViewHeight, pa, pb);
 
-            //BitmapData bd = DC.LockBits();
-
-            //CadSegment seg = CadUtil.Clipping2D(0, 0, DC.ViewWidth, DC.ViewHeight, pa, pb);
-            
-            //if (seg.Valid)
-            //{
-            //    BitmapUtil.BresenhamLine(bd, seg.P0, seg.P1, (uint)(DC.Pen(pen).Color.ToArgb()));
-            //}
-
-            //DC.UnlockBits(bd);
+                if (seg.Valid)
+                {
+                    BitmapUtil.BresenhamLine(bd, seg.P0, seg.P1, (uint)(DC.Pen(pen).Color.ToArgb()));
+                }
+            }
         }
 
         public override void DrawDot(int pen, CadVector p)
@@ -544,18 +569,25 @@ namespace Plotter
 
             angle = CadMath.Rad2Deg(angle);
 
+            BitmapData bd = DC.GetLockedBits();
+            if (bd != null)
+            {
+                DC.UnlockBits();
+            }
 
             DC.graphics.TranslateTransform((int)a.x, (int)a.y);
 
             DC.graphics.RotateTransform((float)angle);
 
-
-
             DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), 0, 0);
 
-
-
             DC.graphics.ResetTransform();
+
+
+            if (bd != null)
+            {
+                DC.LockBits();
+            }
         }
 
         public override CadVector MeasureText(int font, string s)

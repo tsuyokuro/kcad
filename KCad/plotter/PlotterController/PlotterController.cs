@@ -469,6 +469,9 @@ namespace Plotter
             DrawGrid(dc);
             dc.Drawing.DrawPageFrame();
 
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             foreach (CadLayer layer in mDB.LayerList)
             {
                 if (layer.Visible)
@@ -483,6 +486,9 @@ namespace Plotter
                     dc.Drawing.Draw(layer, pen);
                 }
             }
+
+            sw.Stop();
+            DebugOut.StdPrintLn(sw.ElapsedMilliseconds.ToString() + " milli sec");
 
             dc.Drawing.Draw(TempFigureList, DrawTools.PEN_TEST_FIGURE);
 

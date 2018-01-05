@@ -5,6 +5,7 @@ using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -917,7 +918,7 @@ namespace Plotter
                 BitmapUtil.BresenhamLine(bitmapData, seg.P0, seg.P1, 0xff00ffff);
             }
 
-            dc.UnlockBits(bitmapData);
+            dc.UnlockBits();
 
             dc.Push();
         }
@@ -992,6 +993,44 @@ namespace Plotter
             return mm;
         }
 
+        private void test009()
+        {
+            DrawContext dc = Controller.CurrentDC;
+
+            CadObjectDB db = Controller.DB;
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            int i =0;
+            int layerCnt = db.LayerList.Count;
+
+            for (;i<layerCnt;i++)
+            {
+                CadLayer layer = db.LayerList[i];
+
+                int j = 0;
+                int figCnt = layer.FigureList.Count;
+
+                for (;j<figCnt;j++)
+                {
+                    CadFigure fig = layer.FigureList[j];
+
+                    int k = 0;
+                    int pcnt = fig.PointList.Count;
+
+                    for (;k<pcnt;k++)
+                    {
+                        CadVector p = fig.PointList[k];
+                        CadVector sp = dc.CadPointToUnitPoint(p);
+                    }
+                }
+            }
+
+            sw.Stop();
+            DebugOut.StdPrintLn(sw.ElapsedMilliseconds.ToString() + " milli sec");
+        }
+
         private void SimpleCommand(string s)
         {
             if (s == "@clear" || s == "@cls")
@@ -1025,6 +1064,14 @@ namespace Plotter
             else if (s == "@test007")
             {
                 test007();
+            }
+            else if (s == "@test008")
+            {
+                test008();
+            }
+            else if (s == "@test009")
+            {
+                test009();
             }
 
             else

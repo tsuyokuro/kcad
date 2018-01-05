@@ -167,6 +167,12 @@ namespace Plotter
                     if (!uva.CoordEqualsThreshold(uvb))
                     {
                         normal = CadMath.CrossProduct(va, vb);
+
+                        if (normal.IsZero())
+                        {
+                            return;
+                        }
+
                         normal = normal.UnitVector();
 
                     }

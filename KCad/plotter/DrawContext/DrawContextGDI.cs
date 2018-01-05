@@ -7,11 +7,11 @@ namespace Plotter
 {
     public class DrawContextGDI : DrawContext
     {
-        private int GraphicsRef = 0;
-
         protected Graphics mGraphics = null;
 
         private Bitmap mImage = null;
+
+        private BitmapData LockedBitmapData = null;
 
         public Rectangle Rect = default(Rectangle);
 
@@ -131,28 +131,44 @@ namespace Plotter
             return CadVector.Create(wv);
         }
 
-        public BitmapData LockBits(ImageLockMode lockMode = ImageLockMode.ReadWrite)
+        public BitmapData GetLockedBits()
+        {
+            return LockedBitmapData;
+        }
+
+        public BitmapData LockBits()
         {
             if (mImage == null)
             {
                 return null;
             }
 
-            BitmapData bitmapData = mImage.LockBits(
-                    Rect,
-                    lockMode, mImage.PixelFormat);
+            if (LockedBitmapData != null)
+            {
+                return LockedBitmapData;
+            }
 
-            return bitmapData;
+            LockedBitmapData = mImage.LockBits(
+                    Rect,
+                    ImageLockMode.ReadWrite, mImage.PixelFormat);
+
+            return LockedBitmapData;
         }
 
-        public void UnlockBits(BitmapData bitmapData)
+        public void UnlockBits()
         {
             if (mImage == null)
             {
                 return;
             }
 
-            mImage.UnlockBits(bitmapData);
+            if (LockedBitmapData == null)
+            {
+                return;
+            }
+
+            mImage.UnlockBits(LockedBitmapData);
+            LockedBitmapData = null;
         }
 
         public override void Dispose()
