@@ -1074,6 +1074,13 @@ namespace Plotter
             return true;
         }
 
+        /// <summary>
+        /// 線分と水平線との交点を求める
+        /// </summary>
+        /// <param name="p0">線分の端点</param>
+        /// <param name="p1">線分の端点</param>
+        /// <param name="lineY">水平線のY座標</param>
+        /// <returns>交点 交点が存在しない場合は、Invalid==true</returns>
         public static CadVector CrossSegHLine2D(CadVector p0, CadVector p1, double lineY )
         {
             CadVector cp = default(CadVector);
@@ -1114,6 +1121,13 @@ namespace Plotter
             return cp;
         }
 
+        /// <summary>
+        /// 線分と垂直線の交点を求める
+        /// </summary>
+        /// <param name="p0">線分の端点</param>
+        /// <param name="p1">線分の端点</param>
+        /// <param name="lineX">垂直線のX座標</param>
+        /// <returns>交点 交点が存在しない場合は、Invalid==true</returns>
         public static CadVector CrossSegVLine2D(CadVector p0, CadVector p1, double lineX)
         {
             CadVector cp = default(CadVector);
@@ -1288,11 +1302,21 @@ namespace Plotter
             return seg;
         }
 
+        /// <summary>
+        /// ベクトルの水平線に対する角度を求める(ラジアン)
+        /// </summary>
+        /// <param name="v">ベクトル</param>
+        /// <returns>水平線に対する角度(ラジアン)</returns>
         public static double Angle2D(CadVector v)
         {
             return Math.Atan2(v.y, v.x);
         }
 
+        /// <summary>
+        /// 浮動小数点数を文字列に変換
+        /// </summary>
+        /// <param name="v">値</param>
+        /// <returns>当プログラムでの標準的な変換方法で変換された文字列</returns>
         public static string ValToString(double v)
         {
             return v.ToString("f2");
