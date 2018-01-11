@@ -3,7 +3,7 @@
  * 
  */
 
-#define USE_LONG_TERM_LOCK_BITS // ある程度長い期間LockBitsし続ける
+//#define USE_LONG_TERM_LOCK_BITS // ある程度長い期間LockBitsし続ける
 
 using OpenTK;
 using System;

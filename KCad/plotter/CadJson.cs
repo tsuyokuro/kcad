@@ -16,6 +16,7 @@ namespace Plotter
             VER_1_0_0_1 = 0x01000001,
         }
 
+        public const VersionCode CurrentVersion = VersionCode.VER_1_0_0_1;
 
         // public static uint VersionCode1_0 = 0x00010000;
 
@@ -430,6 +431,113 @@ namespace Plotter
             }
 
             return v;
+        }
+
+        public static JObject FigListToJsonForClipboard(List<CadFigure> figList, VersionCode version = CurrentVersion)
+        {
+            JArray ja = new JArray();
+
+
+            foreach (CadFigure fig in figList)
+            {
+                ja.Add(FigToJsonForClipboard(fig, version));
+            }
+
+            JObject jo = new JObject();
+
+            jo.Add("fig_list", ja);
+
+            return jo;
+        }
+
+        public static JObject FigToJsonForClipboard(CadFigure fig, VersionCode version = CurrentVersion)
+        {
+            JObject jo = new JObject();
+
+            jo.Add("id", fig.ID);
+            jo.Add("type", (byte)fig.Type);
+            jo.Add("closed", fig.IsLoop);
+            jo.Add("locked", fig.Locked);
+            jo.Add("normal", VectorToJson(fig.Normal, version));
+
+            JArray ja = new JArray();
+
+            fig.PointList.ForEach(v =>
+            {
+                ja.Add(VectorToJson(v, version));
+            });
+
+            jo.Add("point_list", ja);
+
+            JArray jchildArray = new JArray();
+
+            if (fig.ChildList != null)
+            {
+                foreach (CadFigure child in fig.ChildList)
+                {
+                    JObject jchild = FigToJsonForClipboard(child, version);
+
+                    jchildArray.Add(jchild);
+                }
+            }
+
+            jo.Add("child_list", jchildArray);
+
+            return jo;
+        }
+
+        public static List<CadFigure> FigListFromJsonForClipboard(JObject jo, VersionCode version = CurrentVersion)
+        {
+            List<CadFigure> figList = new List<CadFigure>();
+
+            JArray ja =(JArray)jo["fig_list"];
+
+            foreach (JObject jfig in ja)
+            {
+                figList.Add(
+                    FigFromJsonForClipboard(jfig, version));
+            }
+
+            return figList;
+        }
+
+        public static CadFigure FigFromJsonForClipboard(JObject jo, VersionCode version = CurrentVersion)
+        {
+            CadFigure fig = new CadFigure();
+
+            fig.ID = (uint)jo["id"];
+            fig.Type = (CadFigure.Types)(byte)jo["type"];
+            fig.IsLoop = (bool)jo["closed"];
+            fig.Locked = (bool)jo["locked"];
+
+            fig.Normal = VectorFromJson((JObject)jo["normal"], version);
+
+            List<CadVector> list = new List<CadVector>();
+
+            JArray ja = (JArray)jo["point_list"];
+
+            if (ja != null)
+            {
+                foreach (JObject jv in ja)
+                {
+                    list.Add(VectorFromJson(jv, version));
+                }
+            }
+
+            fig.SetPointList(list);
+
+            JArray jchildArray = (JArray)jo["child_list"];
+
+            if (jchildArray != null)
+            {
+                foreach (JObject jchild in jchildArray)
+                {
+                    CadFigure child = FigFromJsonForClipboard(jchild, version);
+                    fig.AddChild(child);
+                }
+            }
+
+            return fig;
         }
     }
 }

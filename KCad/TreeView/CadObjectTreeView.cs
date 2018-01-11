@@ -219,6 +219,36 @@ namespace KCad
             InvalidateVisual();
         }
 
+        public void SetVPos(int pos)
+        {
+            Scroll.ScrollToVerticalOffset(pos * mItemHeight);
+        }
+
+        public int Find(Func<ICadObjectTreeItem, bool> comp)
+        {
+            int idx = -1;
+            int cnt = 0;
+
+            mRoot.ForEach((item) =>
+            {
+                if (!ShowRoot && item == mRoot)
+                {
+                    return true;
+                }
+
+                if (comp(item))
+                {
+                    idx = cnt;
+                    return false;
+                }
+
+                cnt++;
+                return true;
+            });
+
+            return idx;
+        }
+
         protected void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             InvalidateVisual();

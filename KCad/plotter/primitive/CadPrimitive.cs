@@ -227,7 +227,7 @@ namespace Plotter
         public double d;        // d = a x + b y + c z = 平面の法線ベクトルと平面が通るある点との内積
 
 
-        public Plane(CadVector normal,  double d)
+        public Plane(CadVector normal, double d)
         {
             Normal = normal;
             this.d = d;
@@ -264,17 +264,148 @@ namespace Plotter
         public double MaxX;
         public double MaxY;
 
-        public MinMax2D(
+        public static MinMax2D Create(
             double minx = Double.MaxValue,
             double miny = Double.MaxValue,
             double maxx = Double.MinValue,
             double maxy = Double.MinValue
             )
         {
-            MinX = minx;
-            MinY = miny;
-            MaxX = maxx;
-            MaxY = maxy;
+            MinMax2D mm = default(MinMax2D);
+
+            mm.MinX = minx;
+            mm.MinY = miny;
+            mm.MaxX = maxx;
+            mm.MaxY = maxy;
+
+            return mm;
+        }
+
+        public void CheckMin(CadVector p)
+        {
+            MinX = Math.Min(MinX, p.x);
+            MinY = Math.Min(MinY, p.y);
+        }
+
+        public void CheckMax(CadVector p)
+        {
+            MaxX = Math.Max(MaxX, p.x);
+            MaxY = Math.Max(MaxY, p.y);
+        }
+
+        public void Check(CadVector p)
+        {
+            CheckMin(p);
+            CheckMax(p);
+        }
+
+        public void CheckMin(MinMax3D mm)
+        {
+            MinX = Math.Min(MinX, mm.MinX);
+            MinY = Math.Min(MinY, mm.MinY);
+        }
+
+        public void CheckMax(MinMax3D mm)
+        {
+            MaxX = Math.Max(MaxX, mm.MaxX);
+            MaxY = Math.Max(MaxY, mm.MaxY);
+        }
+
+        public void Check(MinMax3D mm)
+        {
+            CheckMin(mm);
+            CheckMax(mm);
+        }
+
+        public CadVector GetMinAsVector()
+        {
+            return CadVector.Create(MinX, MinY, 0);
+        }
+
+        public CadVector GetMaxAsVector()
+        {
+            return CadVector.Create(MaxX, MaxY, 0);
+        }
+    }
+
+    public struct MinMax3D
+    {
+        public double MinX;
+        public double MinY;
+        public double MinZ;
+        public double MaxX;
+        public double MaxY;
+        public double MaxZ;
+
+        public static MinMax3D Create(
+            double minx = Double.MaxValue,
+            double miny = Double.MaxValue,
+            double minz = Double.MaxValue,
+            double maxx = Double.MinValue,
+            double maxy = Double.MinValue,
+            double maxz = Double.MinValue
+            )
+        {
+            MinMax3D mm = default(MinMax3D);
+
+            mm.MinX = minx;
+            mm.MinY = miny;
+            mm.MinZ = minz;
+            mm.MaxX = maxx;
+            mm.MaxY = maxy;
+            mm.MaxZ = maxz;
+
+            return mm;
+        }
+
+        public void CheckMin(CadVector p)
+        {
+            MinX = Math.Min(MinX, p.x);
+            MinY = Math.Min(MinY, p.y);
+            MinZ = Math.Min(MinZ, p.z);
+        }
+
+        public void CheckMax(CadVector p)
+        {
+            MaxX = Math.Max(MaxX, p.x);
+            MaxY = Math.Max(MaxY, p.y);
+            MaxZ = Math.Max(MaxZ, p.z);
+        }
+
+        public void Check(CadVector p)
+        {
+            CheckMin(p);
+            CheckMax(p);
+        }
+
+        public void CheckMin(MinMax3D mm)
+        {
+            MinX = Math.Min(MinX, mm.MinX);
+            MinY = Math.Min(MinY, mm.MinY);
+            MinZ = Math.Min(MinZ, mm.MinZ);
+        }
+
+        public void CheckMax(MinMax3D mm)
+        {
+            MaxX = Math.Max(MaxX, mm.MaxX);
+            MaxY = Math.Max(MaxY, mm.MaxY);
+            MaxZ = Math.Max(MaxZ, mm.MaxZ);
+        }
+
+        public void Check(MinMax3D mm)
+        {
+            CheckMin(mm);
+            CheckMax(mm);
+        }
+
+        public CadVector GetMinAsVector()
+        {
+            return CadVector.Create(MinX, MinY, MinZ);
+        }
+
+        public CadVector GetMaxAsVector()
+        {
+            return CadVector.Create(MaxX, MaxY, MaxZ);
         }
     }
 }

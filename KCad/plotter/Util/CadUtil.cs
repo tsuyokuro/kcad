@@ -750,6 +750,60 @@ namespace Plotter
             return rect;
         }
 
+        public static MinMax3D GetFigureMinMax(CadFigure fig)
+        {
+            MinMax3D mm = MinMax3D.Create();
+
+            CadRect fr = fig.GetContainsRect();
+
+            mm.Check(fr.p0);
+            mm.Check(fr.p1);
+
+            return mm;
+        }
+
+        public static MinMax3D GetFigureMinMaxIncludeChild(CadFigure fig)
+        {
+            MinMax3D mm = MinMax3D.Create();
+
+            if (fig.PointCount > 0)
+            {
+                CadRect fr = fig.GetContainsRect();
+
+                mm.Check(fr.p0);
+                mm.Check(fr.p1);
+            }
+
+            if (fig.ChildList != null)
+            {
+                foreach (CadFigure child in fig.ChildList)
+                {
+                    MinMax3D cmm = GetFigureMinMaxIncludeChild(child);
+                    mm.Check(cmm);
+                }
+            }
+
+            return mm;
+        }
+
+        public static CadRect GetContainsRectIncludeChild(List<CadFigure> figList)
+        {
+            CadRect r = default(CadRect);
+
+            MinMax3D mm = MinMax3D.Create();
+
+            foreach (CadFigure fig in figList)
+            {
+                MinMax3D tmm = GetFigureMinMaxIncludeChild(fig);
+                mm.Check(tmm);
+            }
+
+            r.p0 = mm.GetMinAsVector();
+            r.p1 = mm.GetMaxAsVector();
+
+            return r;
+        }
+
         public static CadRect GetContainsRect(List<CadFigure> list)
         {
             CadRect rect = default(CadRect);

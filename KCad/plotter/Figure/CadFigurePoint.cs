@@ -93,7 +93,13 @@ namespace Plotter
 
             private void drawSelected_Point(CadFigure fig, DrawContext dc, int pen)
             {
-                if (fig.PointList[0].Selected) dc.Drawing.DrawSelectedPoint(fig.PointList[0]);
+                if (fig.PointList.Count > 0)
+                {
+                    if (fig.PointList[0].Selected)
+                    {
+                        dc.Drawing.DrawSelectedPoint(fig.PointList[0]);
+                    }
+                }
             }
 
             public override void StartCreate(CadFigure fig, DrawContext dc)

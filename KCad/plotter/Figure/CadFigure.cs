@@ -369,6 +369,34 @@ namespace Plotter
             return false;
         }
 
+        public bool HasSelectedPointInclueChild()
+        {
+            int i;
+            for (i = 0; i < mPointList.Count; i++)
+            {
+                if (mPointList[i].Selected)
+                {
+                    return true;
+                }
+            }
+
+            if (ChildList == null)
+            {
+                return false;
+            }
+
+            for (i=0; i<ChildList.Count; i++)
+            {
+                CadFigure c = ChildList[i];
+                if (c.HasSelectedPointInclueChild())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public CadVector GetPointAt(int index)
         {
             return mPointList[index];

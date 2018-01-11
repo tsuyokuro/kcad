@@ -322,9 +322,40 @@ namespace Plotter
                 mCadObjectTreeView.Redraw();
             }
         }
-    #endregion
 
-    #region Notify
+        public void SetTreeViewPos(int index)
+        {
+            if (mCadObjectTreeView == null)
+            {
+                return;
+            }
+
+            mCadObjectTreeView.SetVPos(index);
+        }
+
+        public int FindTreeViewItem(uint id)
+        {
+            int idx = mCadObjectTreeView.Find((item) =>
+            {
+                if (item is CadFigTreeItem)
+                {
+                    CadFigTreeItem figItem = (CadFigTreeItem)item;
+
+                    if (figItem.Fig.ID == id)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+
+            return idx;
+        }
+
+        #endregion
+
+        #region Notify
         public void NotifyDataChanged(bool redraw)
         {
             mDataChanged(this, redraw);
@@ -469,8 +500,8 @@ namespace Plotter
             DrawGrid(dc);
             dc.Drawing.DrawPageFrame();
 
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
 
             foreach (CadLayer layer in mDB.LayerList)
             {
@@ -487,8 +518,8 @@ namespace Plotter
                 }
             }
 
-            sw.Stop();
-            DebugOut.StdPrintLn(sw.ElapsedMilliseconds.ToString() + " milli sec");
+            //sw.Stop();
+            //DebugOut.StdPrintLn(sw.ElapsedMilliseconds.ToString() + " milli sec");
 
             dc.Drawing.Draw(TempFigureList, DrawTools.PEN_TEST_FIGURE);
 
@@ -785,9 +816,28 @@ namespace Plotter
 
         public void Paste()
         {
-            PasteFigure();
+            PasteFigures();
         }
 
+        private List<CadFigure> GetSelectedFigureList()
+        {
+            List<CadFigure> figList = new List<CadFigure>();
+
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                layer.ForEachFig(fig =>
+                {
+                    if (fig.HasSelectedPointInclueChild())
+                    {
+                        figList.Add(fig);
+                    }
+                });
+            }
+
+            return figList;
+        }
+
+        /*
         public void CopyFigures()
         {
             List<uint> figIdList = GetSelectedFigIDList();
@@ -806,7 +856,9 @@ namespace Plotter
             // Serializable機構が使われて、複製されたCadFigureのlistがClipboardに格納される
             Clipboard.SetData("List.CadFiguer", figList);
         }
+        */
 
+        /*
         public void PasteFigure()
         {
             if (Clipboard.ContainsData("List.CadFiguer"))
@@ -841,10 +893,91 @@ namespace Plotter
                 mHistoryManager.foward(opeRoot);
             }
         }
+        */
 
-    #endregion
+        public void CopyFigures()
+        {
+            var temp = GetSelectedFigureList();
 
-    #region "File access"
+            var figList = new List<CadFigure>();
+
+            temp.ForEach(fig =>
+            {
+                if (fig.Parent == null)
+                {
+                    figList.Add(fig);
+                }
+            });
+
+            if (figList.Count == 0)
+            {
+                return;
+            }
+
+            JObject jo = CadJson.FigListToJsonForClipboard(figList);
+
+            string s = jo.ToString();
+
+            Clipboard.SetData("List.CadFiguer", s);
+            //Clipboard.SetText(s);
+        }
+
+        public void PasteFigures()
+        {
+            if (!Clipboard.ContainsData("List.CadFiguer"))
+            {
+                return;
+            }
+
+            CadVector pp = LastDownPoint;
+                                
+            Log.d("paste");
+
+            string s = (string)Clipboard.GetData("List.CadFiguer");
+
+            JObject jo = JObject.Parse(s);
+
+            List<CadFigure> figList = CadJson.FigListFromJsonForClipboard(jo);
+
+            CadRect cr = CadUtil.GetContainsRectIncludeChild(figList);
+
+            CadVector d = pp - cr.p0;
+
+            //d.z = 0;
+
+            CadOpeList opeRoot = CadOpe.CreateListOpe();
+
+            foreach (CadFigure fig in figList)
+            {
+                PasteFigure(fig, d);
+                CurrentLayer.AddFigure(fig);    // 子ObjectはLayerに追加しない
+
+                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, fig.ID);
+                opeRoot.OpeList.Add(ope);
+            }
+
+            mHistoryManager.foward(opeRoot);
+
+            UpdateTreeView(true);
+        }
+
+        private void PasteFigure(CadFigure fig, CadVector d)
+        {
+            fig.MoveAllPoints(d);
+            mDB.AddFigure(fig);
+
+            if (fig.ChildList != null)
+            {
+                foreach (CadFigure child in fig.ChildList)
+                {
+                    PasteFigure(child, d);
+                }
+            }
+        }
+
+        #endregion
+
+        #region "File access"
         public void SaveToJsonFile(String fname)
         {
             StreamWriter writer = new StreamWriter(fname);

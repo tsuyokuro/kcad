@@ -16,6 +16,10 @@ def area():
 def find(range):
     SE.Find(range)
 
+#[AC] findFigId(id)
+def findFigId(id):
+    SE.FindFigureById(id)
+
 #[AC] layerList()
 def layerList():
     SE.LayerList()

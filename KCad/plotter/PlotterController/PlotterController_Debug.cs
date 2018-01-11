@@ -653,7 +653,7 @@ namespace Plotter
             }
             else if (s == "paste")
             {
-                PasteFigure();
+                PasteFigures();
             }
         }
         public void dump(DebugOut dst)

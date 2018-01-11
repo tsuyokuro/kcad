@@ -138,6 +138,20 @@ namespace Plotter
             }
         }
 
+        public void FindFigureById(uint id)
+        {
+            int idx = Controller.FindTreeViewItem(id);
+
+            if (idx == -1)
+            {
+                Controller.InteractOut.println(
+                    String.Format("ID:{0} is not found", id));
+                return;
+            }
+
+            Controller.SetTreeViewPos(idx);
+        }
+
         public void SelectFigure(uint id)
         {
             CadFigure fig = Controller.DB.GetFigure(id);
@@ -937,7 +951,7 @@ namespace Plotter
 
         public static MinMax2D FigureMinMaxScrn(DrawContext dc, CadFigure fig)
         {
-            MinMax2D mm = new MinMax2D();
+            MinMax2D mm = MinMax2D.Create();
             CadVector p0;
             CadVector p1;
 
@@ -1031,6 +1045,11 @@ namespace Plotter
             DebugOut.StdPrintLn(sw.ElapsedMilliseconds.ToString() + " milli sec");
         }
 
+        private void test010()
+        {
+            MinMax2D mm = MinMax2D.Create();
+        }
+
         private void SimpleCommand(string s)
         {
             if (s == "@clear" || s == "@cls")
@@ -1072,6 +1091,10 @@ namespace Plotter
             else if (s == "@test009")
             {
                 test009();
+            }
+            else if (s == "@test010")
+            {
+                test010();
             }
 
             else
