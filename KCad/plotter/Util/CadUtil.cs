@@ -754,10 +754,11 @@ namespace Plotter
         {
             MinMax3D mm = MinMax3D.Create();
 
-            CadRect fr = fig.GetContainsRect();
-
-            mm.Check(fr.p0);
-            mm.Check(fr.p1);
+            int i = 0;
+            for (;i<fig.PointCount; i++)
+            {
+                mm.Check(fig.PointList[i]);
+            }
 
             return mm;
         }
@@ -766,30 +767,16 @@ namespace Plotter
         {
             MinMax3D mm = MinMax3D.Create();
 
-            if (fig.PointCount > 0)
+            fig.ForEachFig(item =>
             {
-                CadRect fr = fig.GetContainsRect();
-
-                mm.Check(fr.p0);
-                mm.Check(fr.p1);
-            }
-
-            if (fig.ChildList != null)
-            {
-                foreach (CadFigure child in fig.ChildList)
-                {
-                    MinMax3D cmm = GetFigureMinMaxIncludeChild(child);
-                    mm.Check(cmm);
-                }
-            }
+                mm.Check(GetFigureMinMax(item));
+            });
 
             return mm;
         }
 
-        public static CadRect GetContainsRectIncludeChild(List<CadFigure> figList)
+        public static MinMax3D GetFigureMinMaxIncludeChild(List<CadFigure> figList)
         {
-            CadRect r = default(CadRect);
-
             MinMax3D mm = MinMax3D.Create();
 
             foreach (CadFigure fig in figList)
@@ -798,58 +785,7 @@ namespace Plotter
                 mm.Check(tmm);
             }
 
-            r.p0 = mm.GetMinAsVector();
-            r.p1 = mm.GetMaxAsVector();
-
-            return r;
-        }
-
-        public static CadRect GetContainsRect(List<CadFigure> list)
-        {
-            CadRect rect = default(CadRect);
-            CadRect fr;
-
-            double minx = CadConst.MaxValue;
-            double miny = CadConst.MaxValue;
-            double minz = CadConst.MaxValue;
-
-            double maxx = CadConst.MinValue;
-            double maxy = CadConst.MinValue;
-            double maxz = CadConst.MinValue;
-
-            foreach (CadFigure fig in list)
-            {
-                fr = fig.GetContainsRect();
-
-                minx = Math.Min(minx, fr.p0.x);
-                miny = Math.Min(miny, fr.p0.y);
-                minz = Math.Min(minz, fr.p0.z);
-
-                maxx = Math.Max(maxx, fr.p0.x);
-                maxy = Math.Max(maxy, fr.p0.y);
-                maxz = Math.Max(maxz, fr.p0.z);
-
-                minx = Math.Min(minx, fr.p1.x);
-                miny = Math.Min(miny, fr.p1.y);
-                minz = Math.Min(minz, fr.p1.z);
-
-                maxx = Math.Max(maxx, fr.p1.x);
-                maxy = Math.Max(maxy, fr.p1.y);
-                maxz = Math.Max(maxz, fr.p1.z);
-            }
-
-            rect.p0 = default(CadVector);
-            rect.p1 = default(CadVector);
-
-            rect.p0.x = minx;
-            rect.p0.y = miny;
-            rect.p0.z = minz;
-
-            rect.p1.x = maxx;
-            rect.p1.y = maxy;
-            rect.p1.z = maxz;
-
-            return rect;
+            return mm;
         }
 
         public static CadRect GetContainsRectScrn(DrawContext dc, List<CadFigure> list)

@@ -939,9 +939,9 @@ namespace Plotter
 
             List<CadFigure> figList = CadJson.FigListFromJsonForClipboard(jo);
 
-            CadRect cr = CadUtil.GetContainsRectIncludeChild(figList);
+            MinMax3D mm3d = CadUtil.GetFigureMinMaxIncludeChild(figList);
 
-            CadVector d = pp - cr.p0;
+            CadVector d = pp - mm3d.GetMinAsVector();
 
             //d.z = 0;
 
