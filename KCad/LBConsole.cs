@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace KCad
 {
     public class LBConsole
     {
-        private int mMaxLine = 100;
+        private int mMaxLine = 200;
 
         public int MaxLine
         {
@@ -70,10 +71,43 @@ namespace KCad
             }
         }
 
+        private object ExitFrames(object obj)
+        {
+            ((DispatcherFrame)obj).Continue = false;
+            return null;
+        }
+
+        private void DoEvents()
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+            var callback = new DispatcherOperationCallback(ExitFrames);
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, callback, frame);
+            Dispatcher.PushFrame(frame);
+        }
+
         public void PrintLn(string s)
         {
             Print(s);
 
+            NewLine();
+        }
+
+        public void Print(string s)
+        {
+            string[] lines = s.Split('\n');
+
+            int i = 0;
+            for (;i<lines.Length-1;i++)
+            {
+                AppendString(lines[i]);
+                NewLine();
+            }
+
+            AppendString(lines[i]);
+        }
+
+        private void NewLine()
+        {
             while (mListBox.Items.Count > mMaxLine)
             {
                 mListBox.Items.RemoveAt(0);
@@ -83,9 +117,10 @@ namespace KCad
             mListBox.Items.Add(line);
 
             ScrollToLast();
+            DoEvents();
         }
 
-        public void Print(string s)
+        private void AppendString(string s)
         {
             int idx = mListBox.Items.Count - 1;
 
@@ -102,8 +137,12 @@ namespace KCad
             }
 
             line.SetText(line.GetText() + s);
+        }
 
-            ScrollToLast();
+        public void Printf(string format, params object[] args)
+        {
+            string s = String.Format(format, args);
+            Print(s);
         }
 
         public List<string> GetSelectedStrings()

@@ -660,6 +660,8 @@ namespace Plotter
 
         private void MouseMove(CadMouse pointer, DrawContext dc, double x, double y)
         {
+            //DebugOut.Std.printf("({0},{1})\n", x, y);
+
             if ((Control.MouseButtons & MouseButtons.Middle) != 0)
             {
                 MDrag(pointer, dc, x, y);

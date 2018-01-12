@@ -30,34 +30,77 @@ namespace Plotter
     public class DebugOut
     {
         public delegate void PrintFunc(string s);
+        public delegate void FormatPrintFunc(string format, params object[] args);
 
-
-        public static DebugOut inst = new DebugOut();
+        public static DebugOut StdInstance = new DebugOut();
 
         public static DebugOut Std {
             get
             {
-                inst.reset();
-                inst.DelegatePrint = StdPrint;
-                inst.DelegatePrintLn = StdPrintLn;
-                return inst;
+                return StdInstance;
             }
         }
 
+        public static PrintFunc sStdPrintLn = Console.WriteLine;
+
+        public static PrintFunc sStdPrint = Console.Write;
+
+        public static FormatPrintFunc sStdPrintf = Console.Write;
+
+        public static PrintFunc StdPrintLn
+        {
+            get
+            {
+                return sStdPrintLn;
+            }
+            set
+            {
+                sStdPrintLn = value;
+                Std.DelegatePrintLn = value;
+            }
+        }
+
+        public static PrintFunc StdPrint
+        {
+            get
+            {
+                return sStdPrint;
+            }
+
+            set
+            {
+                sStdPrint = value;
+                Std.DelegatePrint = value;
+            }
+        }
+
+        public static FormatPrintFunc StdPrintf
+        {
+            get
+            {
+                return sStdPrintf;
+            }
+
+            set
+            {
+                sStdPrintf = value;
+                Std.DelegatePrintf = value;
+            }
+        }
+
+        public ulong PutCount = 0;
 
         protected int mIndent = 0;
         protected int IndentUnit = 2;
 
         protected String space = "";
 
-        public static PrintFunc StdPrintLn = Console.WriteLine;
-
-        public static PrintFunc StdPrint = Console.Write;
-
-
         public PrintFunc DelegatePrint = StdPrint;
 
         public PrintFunc DelegatePrintLn = StdPrintLn;
+
+        public FormatPrintFunc DelegatePrintf = StdPrintf;
+
 
         public virtual int Indent
         {
@@ -87,30 +130,20 @@ namespace Plotter
 
         public virtual void print(String s)
         {
+            PutCount++;
             DelegatePrint(s);
         }
 
         public virtual void println(String s)
         {
+            PutCount++;
             DelegatePrintLn(space + s);
         }
-    }
 
-    public class DebugOutVS : DebugOut
-    {
-        public override void printIndent()
+        public virtual void printf(String format, params object[] args)
         {
-            Debug.Write(space);
-        }
-
-        public override void print(String s)
-        {
-            Debug.Write(s);
-        }
-
-        public override void println(String s)
-        {
-            Debug.WriteLine(space + s);
+            PutCount++;
+            DelegatePrintf(space + format, args);
         }
     }
 }

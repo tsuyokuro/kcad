@@ -33,10 +33,12 @@ namespace KCad
 
             mInteractionOut.println = mLBConsole.PrintLn;
             mInteractionOut.print = mLBConsole.Print;
+            mInteractionOut.printf = mLBConsole.Printf;
             mInteractionOut.clear = mLBConsole.Clear;
 
             DebugOut.StdPrint = mLBConsole.Print;
             DebugOut.StdPrintLn = mLBConsole.PrintLn;
+            DebugOut.StdPrintf = mLBConsole.Printf;
 
             ViewModel = new PlotterViewModel(this, viewContainer);
 

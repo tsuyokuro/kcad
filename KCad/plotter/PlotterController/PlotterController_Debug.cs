@@ -587,8 +587,8 @@ namespace Plotter
 
             else if (s == "dump")
             {
-                DebugOut dst = new DebugOut();
-                dump(dst);
+                //DebugOut dst = new DebugOut();
+                dump(DebugOut.Std);
             }
 
             else if (s == "dump figs")

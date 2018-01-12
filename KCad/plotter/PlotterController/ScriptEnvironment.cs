@@ -1050,6 +1050,28 @@ namespace Plotter
             MinMax2D mm = MinMax2D.Create();
         }
 
+        private void formatTest(string format, params object[] args)
+        {
+            string s = String.Format(format, args);
+        }
+
+        private void test011()
+        {
+            //formatTest("{0},{1}", 10, 20);
+
+            Controller.InteractOut.printf("{0},{1}\n", 10, 20);
+            Controller.InteractOut.print("test");
+            Controller.InteractOut.println("_test");
+            Controller.InteractOut.println("abc\ndef");
+            Controller.InteractOut.println("end");
+
+            DebugOut.Std.printf("DebugOut {0}\n", 10);
+            DebugOut.Std.Indent++;
+            DebugOut.Std.printf("t1 {0}\n", 10);
+            DebugOut.Std.printf("t2 {0}\n", 20);
+            DebugOut.Std.reset();
+        }
+
         private void SimpleCommand(string s)
         {
             if (s == "@clear" || s == "@cls")
@@ -1095,6 +1117,10 @@ namespace Plotter
             else if (s == "@test010")
             {
                 test010();
+            }
+            else if (s == "@test011")
+            {
+                test011();
             }
 
             else
