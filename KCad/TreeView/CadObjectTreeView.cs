@@ -157,9 +157,9 @@ namespace KCad
 
         protected Brush mBackground = Brushes.White;
 
-        protected Brush mCheckedForeground = Brushes.Black;
+        protected Brush mCheckedForeground = Brushes.White;
 
-        protected Brush mCheckedBackground = new SolidColorBrush(Color.FromRgb(120,160,0));
+        protected Brush mCheckedBackground = new SolidColorBrush(Color.FromRgb(0x22,0x8B,0x22));
 
 
         protected double mItemHeight = 20.0;
