@@ -162,6 +162,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AutoCompleteTextBox.cs" />
+    <Compile Include="CadConsole.cs" />
     <Compile Include="plotter\Util\BitmapUtil.cs" />
     <Compile Include="TreeView\CadObjectTreeView.cs" />
     <Compile Include="ftgl\FontWrapper.cs" />
