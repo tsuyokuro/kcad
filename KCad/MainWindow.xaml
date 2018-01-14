@@ -467,22 +467,13 @@
                         Style="{StaticResource CustomScrollViewerStyle}"
                         VerticalScrollBarVisibility = "Auto">
 
-                        <ListBox
-                            x:Name="listMessage"
-                            ScrollViewer.CanContentScroll="False"
+                        <local:CadConsoleView
+                            x:Name="MyConsole"
                             Foreground="{StaticResource MsgTextColor}"
                             Background="{StaticResource MsgBGColor}"
-                            ItemContainerStyle="{StaticResource MsgListBoxItem}"
-                            BorderThickness="0"
-                            Padding="8,0,0,0"
-                            >
-                            <!-- Wheel が効かなくなってしまうのでListBox内部のScrollViewerを除去する -->
-                            <ListBox.Template>
-                                <ControlTemplate>
-                                    <ItemsPresenter/>
-                                </ControlTemplate>
-                            </ListBox.Template>
-                        </ListBox>
+                            SelectedBackground="{StaticResource MsgSelectedBGColor}"
+                            SelectedForeground="{StaticResource MsgTextColor}"
+                            />
 
                     </ScrollViewer>
                     <Grid Grid.Row="1" Height="auto">

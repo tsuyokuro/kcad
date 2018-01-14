@@ -38,15 +38,19 @@ namespace KCad
         protected Brush mSelectedBackground = new SolidColorBrush(Color.FromRgb(0x22, 0x8B, 0x22));
 
 
-        protected double mItemHeight = 18.0;
+        protected double mItemHeight = 14.0;
 
-        protected double mTextSize = 14.0;
+        protected double mTextSize = 10.0;
 
         protected double mIndentSize = 8.0;
 
         protected int mMaxLine = 200;
 
         protected int mTopIndex = 0;
+
+        protected double mTextLeftMargin = 4.0;
+
+        protected bool mIsLoaded = false;
 
         public Brush Background
         {
@@ -109,6 +113,19 @@ namespace KCad
             }
         }
 
+        public double TextLeftMargin
+        {
+            get
+            {
+                return mTextLeftMargin;
+            }
+            set
+            {
+                mTextLeftMargin = value;
+                UpdateView();
+            }
+        }
+
         public double ItemHeight
         {
             get
@@ -143,13 +160,13 @@ namespace KCad
         #endregion
 
         #region Event
-        public event EventHandler CheckChanged;
+        public event EventHandler SelectionChanged;
 
-        protected virtual void OnCheckChanged(EventArgs e)
+        protected virtual void OnSelectionChanged(EventArgs e)
         {
-            if (CheckChanged != null)
+            if (SelectionChanged != null)
             {
-                CheckChanged(this, e);
+                SelectionChanged(this, e);
             }
         }
         #endregion
@@ -170,6 +187,8 @@ namespace KCad
 
         private void CadConsoleView_Loaded(object sender, RoutedEventArgs e)
         {
+            mIsLoaded = true;
+
             FrameworkElement parent = (FrameworkElement)Parent;
 
             if (parent is ScrollViewer)
@@ -209,7 +228,7 @@ namespace KCad
 
             UpdateView();
 
-            OnCheckChanged(EventArgs.Empty);
+            OnSelectionChanged(EventArgs.Empty);
         }
 
         private void CleanSelection()
@@ -299,6 +318,13 @@ namespace KCad
             Print(s);
         }
 
+        public void Clear()
+        {
+            mList.Clear();
+            RecalcSize();
+            UpdateView();
+        }
+
         public List<string> GetSelectedStrings()
         {
             List<string> lines = new List<string>();
@@ -313,6 +339,18 @@ namespace KCad
             }
 
             return lines;
+        }
+
+        public string GetStringAll()
+        {
+            string s = "";
+
+            foreach (ListItem line in mList)
+            {
+                s += line.Data + "\n";
+            }
+
+            return s;
         }
 
         protected override void OnRender(DrawingContext dc)
@@ -374,6 +412,7 @@ namespace KCad
 
                 tp = p;
 
+                tp.X = mTextLeftMargin;
                 tp.Y += textOffset;
 
                 dc.DrawText(ft, tp);
@@ -436,7 +475,10 @@ namespace KCad
 
         private void UpdateView()
         {
-            InvalidateVisual();
+            if (mIsLoaded)
+            {
+                InvalidateVisual();
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ namespace KCad
 
         private bool KeyHandled = false;
 
-        private LBConsole mLBConsole;
+        //private LBConsole mLBConsole;
 
         public MainWindow()
         {
@@ -29,16 +29,16 @@ namespace KCad
                 App.GetCurrent().InputThread.OnLineArrived = DebugCommand;
             }
 
-            mLBConsole = new LBConsole(listMessage, 100);
+            //mLBConsole = new LBConsole(MyConsole, 100);
 
-            mInteractionOut.println = mLBConsole.PrintLn;
-            mInteractionOut.print = mLBConsole.Print;
-            mInteractionOut.printf = mLBConsole.Printf;
-            mInteractionOut.clear = mLBConsole.Clear;
+            mInteractionOut.println = MyConsole.PrintLn;
+            mInteractionOut.print = MyConsole.Print;
+            mInteractionOut.printf = MyConsole.Printf;
+            mInteractionOut.clear = MyConsole.Clear;
 
-            DebugOut.StdPrint = mLBConsole.Print;
-            DebugOut.StdPrintLn = mLBConsole.PrintLn;
-            DebugOut.StdPrintf = mLBConsole.Printf;
+            DebugOut.StdPrint = MyConsole.Print;
+            DebugOut.StdPrintLn = MyConsole.PrintLn;
+            DebugOut.StdPrintf = MyConsole.Printf;
 
             ViewModel = new PlotterViewModel(this, viewContainer);
 
@@ -76,12 +76,12 @@ namespace KCad
 
             ToolBar1.DataContext = ViewModel;
 
-            listMessage.SelectionChanged += ListMessage_SelectionChanged;
+            MyConsole.SelectionChanged += MyConsole_SelectionChanged;
 
             Loaded += MainWindow_Loaded;
             Closed += MainWindow_Closed;
 
-            listMessage.KeyUp += ListMessage_KeyUp;
+            MyConsole.KeyUp += ListMessage_KeyUp;
         }
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
@@ -92,14 +92,14 @@ namespace KCad
         {
             if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.C)
             {
-                string copyString = mLBConsole.GetStringAll();
+                string copyString = MyConsole.GetStringAll();
 
                 Clipboard.SetDataObject(copyString, true);
                 KeyHandled = true;
             }
             else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.X)
             {
-                mLBConsole.Clear();
+                MyConsole.Clear();
             }
         }
 
@@ -123,9 +123,9 @@ namespace KCad
             ViewModel.DebugCommand(s);
         }
 
-        private void ListMessage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void MyConsole_SelectionChanged(object sender, EventArgs e)
         {
-            List<string> lines = mLBConsole.GetSelectedStrings();
+            List<string> lines = MyConsole.GetSelectedStrings();
             ViewModel.MessageSelected(lines);
         }
 
@@ -179,7 +179,7 @@ namespace KCad
                 return;
             }
 
-            if (!textCommand.IsFocused && !listMessage.IsFocused)
+            if (!textCommand.IsFocused && !MyConsole.IsFocused)
             {
                e.Handled = ViewModel.OnKeyUp(sender, e);
             }

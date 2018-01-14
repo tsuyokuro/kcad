@@ -797,6 +797,20 @@ namespace Plotter
             }
         }
 
+        public delegate bool DelegateForEachPoint(CadVector p);
+
+        public void ForEachPoint(DelegateForEachPoint dg)
+        {
+            int cnt = SegmentCount;
+            for (int i = 0; i < cnt; i++)
+            {
+                if (!dg(GetPointAt(i)))
+                {
+                    break;
+                }
+            }
+        }
+
         #endregion
     }
 }

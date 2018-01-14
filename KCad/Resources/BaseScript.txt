@@ -10,7 +10,7 @@ def rect(w, h):
 
 #[AC] area()
 def area():
-    SE.Area()
+    return SE.Area()
 
 #[AC] find(range)
 def find(range):

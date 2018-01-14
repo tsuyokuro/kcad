@@ -22,7 +22,7 @@
 
     <SolidColorBrush x:Key="MsgBGColor" Color="#FF252525" />
     <SolidColorBrush x:Key="MsgSelectedBGColor" Color="#FF303030" />
-    <SolidColorBrush x:Key="MsgTextColor" Color="#FF80C0C0" />
+    <SolidColorBrush x:Key="MsgTextColor" Color="#FFDDDDDD" />
 
 
 </ResourceDictionary>

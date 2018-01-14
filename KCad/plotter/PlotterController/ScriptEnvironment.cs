@@ -538,10 +538,12 @@ namespace Plotter
                 );
         }
 
-        public void Area()
+        public double Area()
         {
             double area = Controller.Area();
             Controller.InteractOut.println("Area: " + (area / 100).ToString() + " (㎠)");
+
+            return area;
         }
 
         public CadVector Centroid()
