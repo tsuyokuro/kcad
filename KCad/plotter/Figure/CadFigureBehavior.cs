@@ -16,7 +16,6 @@ namespace Plotter
             public abstract States GetState(CadFigure fig);
             public abstract void AddPointInCreating(CadFigure fig, DrawContext dc, CadVector p);
             public abstract void AddPoint(CadFigure fig, CadVector p);
-            public abstract void SetPointAt(CadFigure fig, int index, CadVector pt);
             public abstract void RemoveSelected(CadFigure fig);
             public abstract void Draw(CadFigure fig, DrawContext dc, int pen);
             public abstract void DrawSeg(CadFigure fig, DrawContext dc, int pen, int idxA, int idxB);
@@ -42,7 +41,7 @@ namespace Plotter
                         continue;
                     }
 
-                    if (i < fig.PointList.Count)
+                    if (i < fig.mPointList.Count)
                     {
                         fig.mPointList[i] = op + delta;
                     }
@@ -56,17 +55,27 @@ namespace Plotter
 
             public virtual CadRect GetContainsRect(CadFigure fig)
             {
-                return CadUtil.GetContainsRect(fig.PointList);
+                return CadUtil.GetContainsRect(fig.mPointList);
             }
 
             public virtual CadRect GetContainsRectScrn(CadFigure fig, DrawContext dc)
             {
-                return CadUtil.GetContainsRectScrn(dc, fig.PointList);
+                return CadUtil.GetContainsRectScrn(dc, fig.mPointList);
             }
 
             public virtual List<CadVector> GetPoints(CadFigure fig, int curveSplitNum)
             {
-                return fig.PointList;
+                return fig.mPointList;
+            }
+
+            public virtual CadVector GetPointAt(CadFigure fig, int idx)
+            {
+                return fig.mPointList[idx];
+            }
+
+            public virtual void SetPointAt(CadFigure fig, int index, CadVector pt)
+            {
+                fig.mPointList[index] = pt;
             }
 
             public virtual void StartEdit(CadFigure fig)

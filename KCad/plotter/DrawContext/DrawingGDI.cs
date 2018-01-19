@@ -87,7 +87,7 @@ namespace Plotter
             });
         }
 
-#region "Draw base"
+        #region "Draw base"
         public override void DrawAxis()
         {
             CadVector p0 = default(CadVector);
@@ -418,14 +418,16 @@ namespace Plotter
 
             DrawRectScrn(DrawTools.PEN_PAGE_FRAME, p0, p1);
         }
-#endregion
+        #endregion
 
-#region "Draw marker"
+        #region "Draw marker"
         public override void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHTLITE)
         {
             CadVector pp = DC.CadPointToUnitPoint(pt);
 
-            DrawCircleScrn(pen, pp, 3);
+            //DrawCircleScrn(pen, pp, 3);
+
+            DrawCrossScrn(pen, pp, 4);
         }
 
         public override void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT)
@@ -445,9 +447,7 @@ namespace Plotter
         {
             DrawCross(pen, p, 10);
         }
-#endregion
-
-#region "Draw cursor"
+        #endregion
 
         public override void DrawCursor(CadVector pt)
         {
@@ -460,9 +460,7 @@ namespace Plotter
             DrawLineScrn(pen, pp.x - size, pp.y, pp.x + size, pp.y);
             DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
         }
-#endregion
 
-#region "draw primitive"
         public override void DrawRect(int pen, CadVector p0, CadVector p1)
         {
             CadVector pp0 = DC.CadPointToUnitPoint(p0);
@@ -478,7 +476,12 @@ namespace Plotter
             DrawLineScrn(pen, a.x - size, a.y + 0, a.x + size, a.y + 0);
             DrawLineScrn(pen, a.x + 0, a.y + size, a.x + 0, a.y - size);
         }
-#endregion
+
+        public override void DrawCrossScrn(int pen, CadVector p, double size)
+        {
+            DrawLineScrn(pen, p.x - size, p.y + 0, p.x + size, p.y + 0);
+            DrawLineScrn(pen, p.x + 0, p.y + size, p.x + 0, p.y - size);
+        }
 
         public override void DrawLine(int pen, CadVector a, CadVector b)
         {

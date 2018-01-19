@@ -164,13 +164,13 @@ namespace KCad
 
         protected double mItemHeight = 20.0;
 
-        protected double mTextSize = 14.0;
+        protected double mTextSize = 16.0;
 
         protected double mIndentSize = 8.0;
 
         public CadObjectTreeView()
         {
-            mFontFamily = new FontFamily("Arial");
+            mFontFamily = new FontFamily("ＭＳ ゴシック");
             mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
 
             Loaded += CadObjectTree_Loaded;

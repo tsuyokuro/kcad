@@ -399,7 +399,12 @@ namespace Plotter
 
         public CadVector GetPointAt(int index)
         {
-            return mPointList[index];
+            return  Behavior.GetPointAt(this, index);
+        }
+
+        public void SetPointAt(int index, CadVector pt)
+        {
+            Behavior.SetPointAt(this, index, pt);
         }
 
         public void SelectPointAt(int index, bool sel)
@@ -687,11 +692,6 @@ namespace Plotter
             Behavior.RemoveSelected(this);
         }
 
-        public void SetPointAt(int index, CadVector pt)
-        {
-            Behavior.SetPointAt(this, index, pt);
-        }
-
         public void Draw(DrawContext dc, int pen)
         {
             Behavior.Draw(this, dc, pen);
@@ -766,10 +766,7 @@ namespace Plotter
             }
         }
 
-
-        public delegate bool DelegateForEachFigureSegment(FigureSegment seg);
-
-        public void ForEachFigureSegment(DelegateForEachFigureSegment dg)
+        public void ForEachFigureSegment(Func<FigureSegment, bool> dg)
         {
             int cnt = SegmentCount;
             for (int i=0; i<cnt; i++)
@@ -783,9 +780,7 @@ namespace Plotter
             }
         }
 
-        public delegate bool DelegateForEachSegment(CadSegment seg);
-
-        public void ForEachSegment(DelegateForEachSegment dg)
+        public void ForEachSegment(Func<CadSegment, bool> dg)
         {
             int cnt = SegmentCount;
             for (int i = 0; i < cnt; i++)
@@ -797,9 +792,16 @@ namespace Plotter
             }
         }
 
-        public delegate bool DelegateForEachPoint(CadVector p);
+        public void ForEachPoint(Action<CadVector> dg)
+        {
+            int cnt = SegmentCount;
+            for (int i = 0; i < cnt; i++)
+            {
+                dg(GetPointAt(i));
+            }
+        }
 
-        public void ForEachPoint(DelegateForEachPoint dg)
+        public void ForEachPointB(Func<CadVector, bool> dg)
         {
             int cnt = SegmentCount;
             for (int i = 0; i < cnt; i++)
