@@ -188,6 +188,11 @@ namespace Plotter
             return p;
         }
 
+        public static CadVector Create(CadVector v)
+        {
+            return v;
+        }
+
         public static CadVector CreateInvalid()
         {
             CadVector p = default(CadVector);

@@ -365,7 +365,7 @@ namespace Plotter
 
                 CadVector prevNormal = fig.Normal;
 
-                CadVector normal = CadVector.Create(CadUtil.RepresentativeNormal(fig.PointList));
+                CadVector normal = CadUtil.RepresentativeNormal(fig.PointList);
 
                 if (CadMath.InnerProduct(prevNormal, normal) < 0)
                 {

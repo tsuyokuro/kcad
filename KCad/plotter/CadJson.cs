@@ -191,6 +191,7 @@ namespace Plotter
             jo.Add("closed", fig.IsLoop);
             jo.Add("locked", fig.Locked);
             jo.Add("normal", VectorToJson(fig.Normal, version));
+            jo.Add("thickness", fig.Thickness);
 
             JArray ja = new JArray();
 
@@ -383,7 +384,9 @@ namespace Plotter
 
             fig.Normal = VectorFromJson((JObject)jo["normal"], version);
 
-            List<CadVector> list = new List<CadVector>();
+            fig.SetThickness((double)jo["thickness"]);
+
+            List <CadVector> list = new List<CadVector>();
 
             JArray ja = (JArray)jo["point_list"];
 

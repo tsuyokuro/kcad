@@ -59,6 +59,21 @@ namespace Plotter
 
         public CadVector Normal;
 
+        private double mThickness = 0;
+
+        public double Thickness
+        {
+            get
+            {
+                return mThickness;
+            }
+
+            private set
+            {
+                mThickness = value;
+            }
+        }
+
         public List<CadVector> PointList
         {
             get
@@ -746,6 +761,19 @@ namespace Plotter
         {
 
         }
+
+        public void SetThickness(double t)
+        {
+            Thickness = t;
+
+            if (!Normal.IsZero())
+            {
+                return;
+            }
+
+            Normal = CadUtil.RepresentativeNormal(mPointList);
+        }
+
 
         public CadSegment GetSegmentAt(int n)
         {

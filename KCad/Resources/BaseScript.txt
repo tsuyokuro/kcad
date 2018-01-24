@@ -130,6 +130,10 @@ def swapXZ(ax, az):
 def swapYZ(ax, az):
     SE.SwapYZ(ay, az)
 
+#[AC] setThickness(t)
+def setThickness(t):
+    SE.SetThickness(t)
+
 #globals
 x=0
 y=0

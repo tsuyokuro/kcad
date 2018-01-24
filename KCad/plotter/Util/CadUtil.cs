@@ -318,11 +318,11 @@ namespace Plotter
 
 
         // 法線の代表値を求める
-        public static Vector3d RepresentativeNormal(List<CadVector> points)
+        public static CadVector RepresentativeNormal(List<CadVector> points)
         {
             if (points.Count < 3)
             {
-                return Vector3d.Zero;
+                return CadVector.Zero;
             }
 
             int idx = FindMaxDistantPointIndex(points[0], points);
@@ -342,8 +342,9 @@ namespace Plotter
 
             CadVector normal = CadMath.Normal(points[idx], points[idxA], points[idxB]);
 
-            return normal.vector;
+            return normal;
         }
+
 
         // 図形は凸である
         public static bool IsConvex(List<CadVector> points)

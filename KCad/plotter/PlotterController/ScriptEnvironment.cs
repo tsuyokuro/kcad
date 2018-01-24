@@ -774,7 +774,7 @@ namespace Plotter
 
         private void FaceToDirection(DrawContext dc, CadFigure fig, CadVector org, CadVector dir)
         {
-            CadVector faceNormal = (CadVector)CadUtil.RepresentativeNormal(fig.PointList);
+            CadVector faceNormal = CadUtil.RepresentativeNormal(fig.PointList);
 
             CadVector rv = CadMath.Normal(faceNormal, dir); //回転軸の向き
 
@@ -829,6 +829,12 @@ namespace Plotter
                     fig.SetPointAt(j, rv);
                 }
             }
+        }
+
+        public void SetThickness(double t)
+        {
+            CadFigure fig = GetTargetFigure();
+            fig.SetThickness(t);
         }
 
         public CadFigure GetTargetFigure()
