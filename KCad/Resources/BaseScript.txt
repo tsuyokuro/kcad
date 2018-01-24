@@ -122,6 +122,13 @@ def setZero(flg):
 def faceTo(dir):
     SE.FaceToDirection(dir)
 
+#[AC] swapXZ(ax, az)
+def swapXZ(ax, az):
+    SE.SwapXZ(ax, az)
+
+#[AC] swapYZ(ay, az)
+def swapYZ(ax, az):
+    SE.SwapYZ(ay, az)
 
 #globals
 x=0

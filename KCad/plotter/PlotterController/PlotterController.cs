@@ -651,6 +651,23 @@ namespace Plotter
             return idList;
         }
 
+        public List<CadFigure> GetSelectedFigList()
+        {
+            List<CadFigure> list = new List<CadFigure>();
+
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                layer.ForEachFig(fig =>
+                {
+                    if (fig.HasSelectedPoint())
+                    {
+                        list.Add(fig);
+                    }
+                });
+            }
+            return list;
+        }
+
         public void StartEdit()
         {
             EditIdList = GetSelectedFigIDList();

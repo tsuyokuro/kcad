@@ -783,6 +783,54 @@ namespace Plotter
             CadUtil.RotateFigure(fig, org, rv, t);
         }
 
+        public void SwapXZ(double ax, double az)
+        {
+            var figlist = Controller.GetSelectedFigList();
+
+            int i = 0;
+            int j = 0;
+
+            for (;i<figlist.Count;i++)
+            {
+                CadFigure fig = figlist[i];
+
+                for (j=0;j < fig.PointCount; j++)
+                {
+                    CadVector v = fig.GetPointAt(j);
+                    CadVector rv = v;
+
+                    rv.x = az * v.z;
+                    rv.z = ax * v.x;
+
+                    fig.SetPointAt(j, rv);
+                }
+            }
+        }
+
+        public void SwapYZ(double ay, double az)
+        {
+            var figlist = Controller.GetSelectedFigList();
+
+            int j = 0;
+            int i = 0;
+
+            for (; i < figlist.Count; i++)
+            {
+                CadFigure fig = figlist[i];
+
+                for (j=0;j < fig.PointCount; j++)
+                {
+                    CadVector v = fig.GetPointAt(j);
+                    CadVector rv = v;
+
+                    rv.y = az * v.z;
+                    rv.z = ay * v.y;
+
+                    fig.SetPointAt(j, rv);
+                }
+            }
+        }
+
         public CadFigure GetTargetFigure()
         {
             List<uint> idlist = Controller.GetSelectedFigIDList();
