@@ -161,13 +161,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AutoCompleteTextBox.cs" />
-    <Compile Include="CadConsole.cs" />
+    <Compile Include="Controls\AutoCompleteTextBox.cs" />
+    <Compile Include="Controls\CadConsole.cs" />
     <Compile Include="plotter\Util\BitmapUtil.cs" />
     <Compile Include="TreeView\CadObjectTreeView.cs" />
     <Compile Include="ftgl\FontWrapper.cs" />
     <Compile Include="ftgl\FtglAPI.cs" />
-    <Compile Include="LBConsole.cs" />
+    <Compile Include="Controls\LBConsole.cs" />
     <Compile Include="MySplashWindow.xaml.cs">
       <DependentUpon>MySplashWindow.xaml</DependentUpon>
     </Compile>
