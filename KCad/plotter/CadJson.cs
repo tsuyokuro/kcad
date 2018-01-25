@@ -384,7 +384,7 @@ namespace Plotter
 
             fig.Normal = VectorFromJson((JObject)jo["normal"], version);
 
-            fig.SetThickness((double)jo["thickness"]);
+            fig.SetThickness(jo.GetDouble("thickness", 0));
 
             List <CadVector> list = new List<CadVector>();
 
@@ -542,5 +542,21 @@ namespace Plotter
 
             return fig;
         }
+    }
+
+    public static class JsonExtends
+    {
+        public static double GetDouble(this JObject jo, string key, double defaultValue)
+        {
+            JToken jt = jo[key];
+
+            if (jt == null)
+            {
+                return defaultValue;
+            }
+
+            return (double)jt;
+        }
+
     }
 }

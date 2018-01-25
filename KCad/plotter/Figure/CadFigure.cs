@@ -759,7 +759,7 @@ namespace Plotter
 
         public void RecalcNormal()
         {
-
+            Behavior.RecalcNormal(this);
         }
 
         public void SetThickness(double t)

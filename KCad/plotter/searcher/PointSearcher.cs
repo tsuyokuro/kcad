@@ -119,17 +119,6 @@ namespace Plotter
             {
                 CheckFigure(dc, layer, fig);
             });
-
-
-            /*
-            int n = layer.FigureList.Count-1;
-
-            for (int i = n; i >= 0; i--)
-            {
-                CadFigure fig = layer.FigureList[i];
-                CheckFigure(dc, layer, fig);
-            }
-            */
         }
 
         public void Check(DrawContext dc, CadVector pt)
@@ -181,21 +170,11 @@ namespace Plotter
             double nx = (ppt - ciy.CrossPoint).Norm(); // Cursor Y軸からの距離
             double ny = (ppt - cix.CrossPoint).Norm(); // Cursor X軸からの距離
 
-            //DebugOut.Std.println(nx.ToString());
-            //DebugOut.Std.println(ny.ToString());
-
             if (nx <= mRange)
             {
                 if (nx < xmatch.DistanceX || (nx == xmatch.DistanceX && ny < xmatch.DistanceY))
                 {
-                    xmatch.IsValid = true;
-                    xmatch.Layer = layer;
-                    xmatch.Figure = fig;
-                    xmatch.PointIndex = ptIdx;
-                    xmatch.Point = pt;
-                    xmatch.PointScrn = ppt;
-                    xmatch.DistanceX = nx;
-                    xmatch.DistanceY = ny;
+                    xmatch = getMarkPoint();
                 }
             }
 
@@ -203,14 +182,7 @@ namespace Plotter
             {
                 if (ny < ymatch.DistanceY || (ny == ymatch.DistanceY && nx < ymatch.DistanceX))
                 {
-                    ymatch.IsValid = true;
-                    ymatch.Layer = layer;
-                    ymatch.Figure = fig;
-                    ymatch.PointIndex = ptIdx;
-                    ymatch.Point = pt;
-                    ymatch.PointScrn = ppt;
-                    ymatch.DistanceX = nx;
-                    ymatch.DistanceY = ny;
+                    ymatch = getMarkPoint();
                 }
             }
 
@@ -236,6 +208,22 @@ namespace Plotter
                         XYMatchList.Add(xymatch);
                     }
                 }
+            }
+
+            MarkPoint getMarkPoint()
+            {
+                MarkPoint mp = default(MarkPoint);
+
+                mp.IsValid = true;
+                mp.Layer = layer;
+                mp.Figure = fig;
+                mp.PointIndex = ptIdx;
+                mp.Point = pt;
+                mp.PointScrn = ppt;
+                mp.DistanceX = nx;
+                mp.DistanceY = ny;
+
+                return mp;
             }
         }
 
