@@ -4,9 +4,9 @@ import math
 def putMsg(s):
     SE.PutMsg(s)
 
-#[AC] rect(w, h)
-def rect(w, h):
-    SE.Rect(w, h)
+#[AC] rect(10, 10, "xy")
+def rect(w, h, p):
+    SE.Rect(w, h, p)
 
 #[AC] area()
 def area():
@@ -127,7 +127,7 @@ def swapXZ(ax, az):
     SE.SwapXZ(ax, az)
 
 #[AC] swapYZ(ay, az)
-def swapYZ(ax, az):
+def swapYZ(ay, az):
     SE.SwapYZ(ay, az)
 
 #[AC] setThickness(t)

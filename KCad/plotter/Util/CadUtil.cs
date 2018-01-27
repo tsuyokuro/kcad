@@ -23,11 +23,76 @@ namespace Plotter
 
     public class CadUtil
     {
-        // 三角形の面積 3D対応
-        public static double TriangleArea(IReadOnlyList<CadVector> triangle)
+        /**
+         * 法線を求める
+         * 
+         *           list[2]
+         *          / 
+         *         /
+         * list[0]/_________list[1]
+         * 
+         */
+        public static CadVector Normal(CadFigure fig)
         {
-            CadVector v1 = triangle[0] - triangle[1];
-            CadVector v2 = triangle[2] - triangle[1];
+            if (fig.PointCount < 3)
+            {
+                return CadVector.Zero;
+            }
+
+            return CadMath.Normal(fig.GetPointAt(0), fig.GetPointAt(1), fig.GetPointAt(2));
+
+            /*
+            CadVector v0 = fig.GetPointAt(0);
+
+            CadVector va = fig.GetPointAt(1) - v0;
+            CadVector vb = fig.GetPointAt(2) - v0;
+
+            CadVector normal = CadMath.CrossProduct(va, vb);
+
+            if (normal.IsZero())
+            {
+                return normal;
+            }
+
+            normal = normal.UnitVector();
+
+            return normal;
+            */
+        }
+
+        public static void RotateFigure(CadFigure fig, CadVector org, CadVector axis, double t)
+        {
+            CadQuaternion q = CadQuaternion.RotateQuaternion(axis, t);
+            CadQuaternion r = q.Conjugate(); ;
+
+            CadQuaternion qp;
+
+            int n = fig.PointList.Count;
+
+            for (int i = 0; i < n; i++)
+            {
+                CadVector p = fig.PointList[i];
+
+                p -= org;
+
+                qp = CadQuaternion.FromPoint(p);
+
+                qp = r * qp;
+                qp = qp * q;
+
+                p = qp.ToPoint();
+
+                p += org;
+
+                fig.SetPointAt(i, p);
+            }
+        }
+
+        // 三角形の面積 3D対応
+        public static double TriangleArea(CadFigure fig)
+        {
+            CadVector v1 = fig.GetPointAt(0) - fig.GetPointAt(1);
+            CadVector v2 = fig.GetPointAt(2) - fig.GetPointAt(1);
 
             CadVector cp = CadMath.CrossProduct(v1, v2);
 
@@ -37,13 +102,18 @@ namespace Plotter
         }
 
         // 三角形の重心を求める
-        public static CadVector TriangleCentroid(IReadOnlyList<CadVector> triangle)
+        public static CadVector TriangleCentroid(CadFigure fig)
         {
             CadVector gp = default(CadVector);
 
-            gp.x = (triangle[0].x + triangle[1].x + triangle[2].x) / 3.0;
-            gp.y = (triangle[0].y + triangle[1].y + triangle[2].y) / 3.0;
-            gp.z = (triangle[0].z + triangle[1].z + triangle[2].z) / 3.0;
+            CadVector p0 = fig.GetPointAt(0);
+            CadVector p1 = fig.GetPointAt(1);
+            CadVector p2 = fig.GetPointAt(2);
+
+
+            gp.x = (p0.x + p1.x + p2.x) / 3.0;
+            gp.y = (p0.y + p1.y + p2.y) / 3.0;
+            gp.z = (p0.z + p1.z + p2.z) / 3.0;
 
             return gp;
         }
@@ -57,13 +127,13 @@ namespace Plotter
 
             int i = 1;
 
-            c0.Area= TriangleArea(triangles[0].PointList);
-            c0.Point = TriangleCentroid(triangles[0].PointList);
+            c0.Area= TriangleArea(triangles[0]);
+            c0.Point = TriangleCentroid(triangles[0]);
 
             for (; i < triangles.Count; i++)
             {
-                c1.Area = TriangleArea(triangles[i].PointList);
-                c1.Point = TriangleCentroid(triangles[i].PointList);
+                c1.Area = TriangleArea(triangles[i]);
+                c1.Point = TriangleCentroid(triangles[i]);
 
                 ct = MergeCentroid(c0, c1);
 
@@ -124,7 +194,7 @@ namespace Plotter
                 return 0;
             }
 
-            List<CadVector> list = fig.PointList;
+            //List<CadVector> list = fig.PointList;
 
             CadVector p0;
             CadVector p1;
@@ -135,8 +205,8 @@ namespace Plotter
 
             for (int i = 0; i < cnt - 1; i++)
             {
-                p0 = list[i];
-                p1 = list[i + 1];
+                p0 = fig.GetPointAt(i);
+                p1 = fig.GetPointAt(i + 1);
 
                 pd = p1 - p0;
 
@@ -237,16 +307,21 @@ namespace Plotter
         }
 
         // 点が三角形内にあるか 2D版
-        public static bool IsPointInTriangle2D(CadVector p, IReadOnlyList<CadVector> triangle)
+        public static bool IsPointInTriangle2D(CadVector p, CadFigure fig)
         {
-            if (triangle.Count < 3)
+            if (fig.PointCount < 3)
             {
                 return false;
             }
 
-            double c1 = CadMath.CrossProduct2D(p, triangle[0], triangle[1]);
-            double c2 = CadMath.CrossProduct2D(p, triangle[1], triangle[2]);
-            double c3 = CadMath.CrossProduct2D(p, triangle[2], triangle[0]);
+            CadVector p0 = fig.GetPointAt(0);
+            CadVector p1 = fig.GetPointAt(1);
+            CadVector p2 = fig.GetPointAt(2);
+
+
+            double c1 = CadMath.CrossProduct2D(p, p0, p1);
+            double c2 = CadMath.CrossProduct2D(p, p1, p2);
+            double c3 = CadMath.CrossProduct2D(p, p2, p0);
 
 
             // When all corossProduct result's sign are same, Point is in triangle
@@ -259,16 +334,20 @@ namespace Plotter
         }
 
         // 点が三角形内にあるか
-        public static bool IsPointInTriangle(CadVector p, IReadOnlyList<CadVector> triangle)
+        public static bool IsPointInTriangle(CadVector p, CadFigure fig)
         {
-            if (triangle.Count < 3)
+            if (fig.PointCount < 3)
             {
                 return false;
             }
 
-            CadVector c1 = CadMath.CrossProduct(p, triangle[0], triangle[1]);
-            CadVector c2 = CadMath.CrossProduct(p, triangle[1], triangle[2]);
-            CadVector c3 = CadMath.CrossProduct(p, triangle[2], triangle[0]);
+            CadVector p0 = fig.GetPointAt(0);
+            CadVector p1 = fig.GetPointAt(1);
+            CadVector p2 = fig.GetPointAt(2);
+
+            CadVector c1 = CadMath.CrossProduct(p, p0, p1);
+            CadVector c2 = CadMath.CrossProduct(p, p1, p2);
+            CadVector c3 = CadMath.CrossProduct(p, p2, p0);
 
             double ip12 = CadMath.InnerProduct(c1, c2);
             double ip13 = CadMath.InnerProduct(c1, c3);
@@ -312,7 +391,7 @@ namespace Plotter
 
         public static void SetNormal(CadFigure fig)
         {
-            CadVector nv = CadMath.Normal(fig.PointList);
+            CadVector nv = CadUtil.Normal(fig);
             fig.Normal = nv;
         }
 
@@ -1321,34 +1400,6 @@ namespace Plotter
         public static string ValToString(double v)
         {
             return v.ToString("f2");
-        }
-
-        public static void RotateFigure(CadFigure fig, CadVector org, CadVector axis, double t)
-        {
-            CadQuaternion q = CadQuaternion.RotateQuaternion(axis, t);
-            CadQuaternion r = q.Conjugate(); ;
-
-            CadQuaternion qp;
-
-            int n = fig.PointList.Count;
-
-            for (int i = 0; i < n; i++)
-            {
-                CadVector p = fig.PointList[i];
-
-                p -= org;
-
-                qp = CadQuaternion.FromPoint(p);
-
-                qp = r * qp;
-                qp = qp * q;
-
-                p = qp.ToPoint();
-
-                p += org;
-
-                fig.SetPointAt(i, p);
-            }
         }
 
         public static void Dump(DebugOut dout, Vector4d v, string prefix)

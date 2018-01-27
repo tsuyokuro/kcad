@@ -240,7 +240,7 @@ namespace Plotter
 
                     if (isLoop)
                     {
-                        fig.Normal = CadMath.Normal(fig.PointList);
+                        fig.Normal = CadUtil.Normal(fig);
                     }
 
                     ope = CadOpe.CreateSetCloseOpe(CurrentLayer.ID, id, isLoop);

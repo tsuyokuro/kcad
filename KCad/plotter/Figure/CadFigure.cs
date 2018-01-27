@@ -822,7 +822,7 @@ namespace Plotter
 
         public void ForEachPoint(Action<CadVector> dg)
         {
-            int cnt = SegmentCount;
+            int cnt = PointCount;
             for (int i = 0; i < cnt; i++)
             {
                 dg(GetPointAt(i));
@@ -831,10 +831,31 @@ namespace Plotter
 
         public void ForEachPointB(Func<CadVector, bool> dg)
         {
-            int cnt = SegmentCount;
+            int cnt = PointCount;
             for (int i = 0; i < cnt; i++)
             {
                 if (!dg(GetPointAt(i)))
+                {
+                    break;
+                }
+            }
+        }
+
+        public void ForEachPoint(Action<CadVector, int> dg)
+        {
+            int cnt = PointCount;
+            for (int i = 0; i < cnt; i++)
+            {
+                dg(GetPointAt(i), i);
+            }
+        }
+
+        public void ForEachPointB(Func<CadVector, int, bool> dg)
+        {
+            int cnt = PointCount;
+            for (int i = 0; i < cnt; i++)
+            {
+                if (!dg(GetPointAt(i), i))
                 {
                     break;
                 }

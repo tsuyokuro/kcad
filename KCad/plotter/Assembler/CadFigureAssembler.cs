@@ -298,7 +298,7 @@ namespace Plotter
                     continue;
                 }
 
-                fig.Normal = CadMath.Normal(fig.PointList);
+                fig.Normal = CadUtil.Normal(fig);
             }
 
             return res;

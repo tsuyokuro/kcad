@@ -30,13 +30,14 @@ namespace Plotter.Tests
             p3.y = 10;
             p3.z = 0;
 
-            List<CadVector> pl = new List<CadVector>();
 
-            pl.Add(p1);
-            pl.Add(p2);
-            pl.Add(p3);
+            CadFigure fig = new CadFigure(CadFigure.Types.POLY_LINES);
 
-            double area = CadUtil.TriangleArea(pl);
+            fig.AddPoint(p1);
+            fig.AddPoint(p2);
+            fig.AddPoint(p3);
+
+            double area = CadUtil.TriangleArea(fig);
 
             Assert.IsTrue(area == 50.0);
 

@@ -46,7 +46,7 @@ namespace Plotter
 
             DebugOut dout = new DebugOut();
 
-            bool ret = CadUtil.IsPointInTriangle(pt, fig.PointList);
+            bool ret = CadUtil.IsPointInTriangle(pt, fig);
 
             dout.println("ret=" + ret);
         }

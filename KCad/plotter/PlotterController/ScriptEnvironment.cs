@@ -414,7 +414,7 @@ namespace Plotter
             Controller.CurrentLayer.AddFigure(fig);
         }
 
-        public void Rect(double w, double h)
+        public void Rect(double w, double h, string plane)
         {
             CadVector p0 = default(CadVector);
 
@@ -426,20 +426,46 @@ namespace Plotter
 
             fig.AddPoint(p0);
 
-            p1.x = p0.x + w;
-            p1.y = p0.y;
-            p1.z = p0.z;
-            fig.AddPoint(p1);
+            if (plane == "xy")
+            {
+                p1 = p0;
 
-            p1.x = p0.x + w;
-            p1.y = p0.y + h;
-            p1.z = p0.z;
-            fig.AddPoint(p1);
+                p1.x = p0.x + w;
+                fig.AddPoint(p1);
 
-            p1.x = p0.x;
-            p1.y = p0.y + h;
-            p1.z = p0.z;
-            fig.AddPoint(p1);
+                p1.y = p0.y + h;
+                fig.AddPoint(p1);
+
+                p1.x = p0.x;
+                fig.AddPoint(p1);
+            }
+            else if (plane == "xz")
+            {
+                p1.x = p0.x + w;
+                fig.AddPoint(p1);
+
+                p1.z = p0.z - h;
+                fig.AddPoint(p1);
+
+                p1.x = p0.x;
+                fig.AddPoint(p1);
+            }
+            else if (plane == "zy")
+            {
+                p1.z = p0.z + w;
+                fig.AddPoint(p1);
+
+                p1.y = p0.y + h;
+                fig.AddPoint(p1);
+
+                p1.z = p0.z;
+                fig.AddPoint(p1);
+            }
+            else
+            {
+                Controller.InteractOut.println("error! \"xy\" or \"xz\" or \"zy\"");
+                return;
+            }
 
             fig.IsLoop = true;
 
@@ -447,7 +473,9 @@ namespace Plotter
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
+
             Controller.CurrentLayer.AddFigure(fig);
+
             Controller.UpdateTreeView(true);
         }
 
@@ -804,6 +832,11 @@ namespace Plotter
 
                     fig.SetPointAt(j, rv);
                 }
+
+                CadVector nv = fig.Normal;
+
+                fig.Normal.x = az * nv.z;
+                fig.Normal.z = ax * nv.x;
             }
         }
 
@@ -828,6 +861,11 @@ namespace Plotter
 
                     fig.SetPointAt(j, rv);
                 }
+
+                CadVector nv = fig.Normal;
+
+                fig.Normal.y = az * nv.z;
+                fig.Normal.z = ay * nv.y;
             }
         }
 

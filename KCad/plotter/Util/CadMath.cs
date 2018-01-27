@@ -70,7 +70,12 @@ namespace Plotter
         /**
          * 法線を求める
          * 
-         */ 
+         *      v2
+         *     / 
+         *    /
+         * v0/_________v1
+         *
+         */
         public static CadVector Normal(CadVector v0, CadVector v1, CadVector v2)
         {
             CadVector va = v1 - v0;
@@ -94,44 +99,11 @@ namespace Plotter
          *       vb
          *      / 
          *     /
-         * v0 /_________va
+         * 0 /_________va
          * 
          */
         public static CadVector Normal(CadVector va, CadVector vb)
         {
-            CadVector normal = CadMath.CrossProduct(va, vb);
-
-            if (normal.IsZero())
-            {
-                return normal;
-            }
-
-            normal = normal.UnitVector();
-
-            return normal;
-        }
-
-        /**
-         * 法線を求める
-         * 
-         *           list[2]
-         *          / 
-         *         /
-         * list[0]/_________list[1]
-         * 
-         */
-        public static CadVector Normal(List<CadVector> pointList)
-        {
-            if (pointList.Count < 3)
-            {
-                return CadVector.Zero;
-            }
-
-            CadVector v0 = pointList[0];
-
-            CadVector va = pointList[1] - pointList[0];
-            CadVector vb = pointList[2] - pointList[0];
-
             CadVector normal = CadMath.CrossProduct(va, vb);
 
             if (normal.IsZero())

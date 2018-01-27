@@ -97,7 +97,7 @@ namespace Plotter
 
             if (normal.IsZero())
             {
-                normal = CadMath.Normal(pointList);
+                normal = CadMath.Normal(pointList[0], pointList[1], pointList[2]);
             }
 
             bool normalValid = !normal.IsZero();

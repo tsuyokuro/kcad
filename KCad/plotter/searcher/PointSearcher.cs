@@ -136,6 +136,12 @@ namespace Plotter
 
         public void CheckFigure(DrawContext dc, CadLayer layer, CadFigure fig)
         {
+            fig.ForEachPoint((pt, idx) =>
+            {
+                CheckFigPoint(dc, pt, layer, fig, idx);
+            });
+
+            /*
             IReadOnlyList<CadVector> pointList = fig.PointList;
 
             if (pointList == null)
@@ -150,6 +156,7 @@ namespace Plotter
                 idx++;
                 CheckFigPoint(dc, pt, layer, fig, idx);
             }
+            */
         }
 
         private void CheckFigPoint(DrawContext dc, CadVector pt, CadLayer layer, CadFigure fig, int ptIdx)
