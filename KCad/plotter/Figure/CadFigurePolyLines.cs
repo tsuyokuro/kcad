@@ -54,13 +54,16 @@ namespace Plotter
 
             public override void Draw(CadFigure fig, DrawContext dc, int pen)
             {
-                if (fig.IsLoop && CadUtil.IsConvex(fig.PointList))
+                bool drawed = false;
+
+                if (fig.IsLoop)
                 {
-                    dc.Drawing.DrawFace(pen, GetPoints(fig, 32), fig.Normal, true);
+                    drawed = DrawFaces(fig, dc, pen);
                 }
-                else
+
+                if (!drawed)
                 {
-                    drawLines(fig, dc, pen);
+                    DrawLines(fig, dc, pen);
                 }
             }
 
@@ -77,23 +80,137 @@ namespace Plotter
                 dc.Drawing.DrawLine(pen, a, b);
             }
 
-            protected void drawLines(CadFigure fig, DrawContext dc, int pen)
+            protected bool DrawFaces(CadFigure fig, DrawContext dc, int pen)
             {
-                IReadOnlyList<CadVector> pl = fig.PointList;
+                List<CadVector> vl1;
+                int srcCnt = fig.mPointList.Count;
 
-                if (pl.Count <= 0)
+                if (srcCnt < 2)
+                {
+                    return false;
+                }
+
+                if (fig.Thickness == 0)
+                {
+                     vl1 = GetPointsPart(fig, 0, srcCnt, 32);
+
+                    if (CadUtil.IsConvex(vl1))
+                    {
+                        dc.Drawing.DrawFace(pen, vl1, fig.Normal, true);
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                srcCnt /= 2;
+
+                vl1 = GetPointsPart(fig, 0, srcCnt, 32);
+                List<CadVector> vl2 = GetPointsPart(fig, srcCnt, srcCnt, 32);
+
+                if (CadUtil.IsConvex(vl1))
+                {
+                    dc.Drawing.DrawFace(pen, vl1, fig.Normal, true);
+                    dc.Drawing.DrawFace(pen, vl2, fig.Normal, true);
+                }
+                else
+                {
+                    return false;
+                }
+
+                List<CadVector> sd = new List<CadVector>();
+
+                sd.Add(CadVector.Zero);
+                sd.Add(CadVector.Zero);
+                sd.Add(CadVector.Zero);
+                sd.Add(CadVector.Zero);
+
+                int i = 0;
+
+                CadVector n;
+                int cnt = vl1.Count;
+
+                for (; i<cnt-1; i++)
+                {
+                    sd[0] = vl1[i];
+                    sd[1] = vl1[i + 1];
+                    sd[2] = vl2[i + 1];
+                    sd[3] = vl2[i];
+
+                    n = CadMath.Normal(sd[0], sd[1], sd[2]);
+                    dc.Drawing.DrawFace(pen, sd, n, true);
+                }
+
+                sd[0] = vl1[cnt-1];
+                sd[1] = vl1[0];
+                sd[2] = vl2[0];
+                sd[3] = vl2[cnt-1];
+
+                n = CadMath.Normal(sd[0], sd[1], sd[2]);
+                dc.Drawing.DrawFace(pen, sd, n, true);
+
+                return true;
+            }
+
+            protected void DrawLines(CadFigure fig, DrawContext dc, int pen)
+            {
+                int cnt = fig.mPointList.Count;
+
+                if (fig.Thickness != 0)
+                {
+                    cnt /= 2;
+                }
+
+                drawLinesPart(fig, dc, 0, cnt, pen);
+
+                if (fig.Thickness == 0)
                 {
                     return;
                 }
 
+                drawLinesPart(fig, dc, cnt, cnt, pen);
+
+                int i = 0;
+                int ti = i + cnt;
+
+                for (;i<cnt;i++, ti++)
+                {
+                    CadVector a = fig.mPointList[i];
+                    CadVector b = fig.mPointList[ti];
+
+                    if (a.Type == CadVector.Types.HANDLE)
+                    {
+                        continue;
+                    }
+
+                    dc.Drawing.DrawLine(pen, a, b);
+                }
+            }
+
+            protected void drawLinesPart(CadFigure fig, DrawContext dc, int start, int cnt, int pen)
+            {
+                IReadOnlyList<CadVector> pl = fig.PointList;
+
+                if (cnt <= 0)
+                {
+                    return;
+                }
+
+                if (fig.Normal.IsZero())
+                {
+                    fig.Normal = CadUtil.RepresentativeNormal(fig.PointList);
+                }
+
+                //CadVector tv = (fig.Normal * -1) * fig.Thickness;
+
                 CadVector a;
                 CadVector b;
 
-                int i = 0;
+                int i = start;
                 a = pl[i];
 
                 // If the count of point is 1, draw + mark.  
-                if (pl.Count == 1)
+                if (cnt == 1)
                 {
                     dc.Drawing.DrawCross(pen, a, 2);
                     if (a.Selected)
@@ -104,9 +221,11 @@ namespace Plotter
                     return;
                 }
 
+                int end = start + cnt - 1;
+
                 for (; true;)
                 {
-                    if (i + 3 < pl.Count)
+                    if (i + 3 <= end)
                     {
                         if (pl[i + 1].Type == CadVector.Types.HANDLE &&
                             pl[i + 2].Type == CadVector.Types.HANDLE)
@@ -130,7 +249,7 @@ namespace Plotter
                         }
                     }
 
-                    if (i + 2 < pl.Count)
+                    if (i + 2 <= end)
                     {
                         if (pl[i + 1].Type == CadVector.Types.HANDLE &&
                                                 pl[i + 2].Type == CadVector.Types.STD)
@@ -144,11 +263,18 @@ namespace Plotter
                         }
                     }
 
-                    if (i + 1 < pl.Count)
+                    if (i + 1 <= end)
                     {
                         b = pl[i + 1];
                         dc.Drawing.DrawLine(pen, a, b);
 
+                        /*
+                        if (fig.Thickness != 0)
+                        {
+                            dc.Drawing.DrawLine(pen, a + tv, b + tv);
+                            dc.Drawing.DrawLine(pen, a, a + tv);
+                        }
+                        */
                         a = b;
                         i++;
 
@@ -160,27 +286,41 @@ namespace Plotter
 
                 if (fig.IsLoop)
                 {
-                    b = pl[0];
+                    b = pl[start];
                     dc.Drawing.DrawLine(pen, a, b);
+
+                    /*
+                    if (fig.Thickness != 0)
+                    {
+                        dc.Drawing.DrawLine(pen, a + tv, b + tv);
+                        dc.Drawing.DrawLine(pen, a, a + tv);
+                    }
+                    */
                 }
             }
 
             public override List<CadVector> GetPoints(CadFigure fig, int curveSplitNum)
             {
+                return GetPointsPart(fig, 0, fig.mPointList.Count, curveSplitNum);
+            }
+
+            private List<CadVector> GetPointsPart(CadFigure fig, int start, int cnt, int curveSplitNum)
+            {
                 List<CadVector> ret = new List<CadVector>();
 
                 IReadOnlyList<CadVector> pl = fig.PointList;
 
-                if (pl.Count <= 0)
+                if (cnt <= 0)
                 {
                     return ret;
                 }
 
-                int i = 0;
+                int i = start;
+                int end = start + cnt - 1;
 
-                for (; i < pl.Count;)
+                for (; i <= end;)
                 {
-                    if (i + 3 < pl.Count)
+                    if (i + 3 <= end)
                     {
                         if (pl[i + 1].Type == CadVector.Types.HANDLE &&
                             pl[i + 2].Type == CadVector.Types.HANDLE)
@@ -200,7 +340,7 @@ namespace Plotter
                         }
                     }
 
-                    if (i + 2 < pl.Count)
+                    if (i + 2 <= end)
                     {
                         if (pl[i + 1].Type == CadVector.Types.HANDLE &&
                                                 pl[i + 2].Type == CadVector.Types.STD)

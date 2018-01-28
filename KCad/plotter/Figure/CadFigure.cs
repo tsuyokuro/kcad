@@ -424,9 +424,7 @@ namespace Plotter
 
         public void SelectPointAt(int index, bool sel)
         {
-            CadVector p = mPointList[index];
-            p.Selected = sel;
-            mPointList[index] = p;
+            Behavior.SelectPointAt(this, index, sel);
         }
 
         public void ClearSelectFlags()
@@ -764,14 +762,34 @@ namespace Plotter
 
         public void SetThickness(double t)
         {
+            double prevThick = Thickness;
+
             Thickness = t;
 
-            if (!Normal.IsZero())
+            if (Normal.IsZero())
             {
+                Normal = CadUtil.RepresentativeNormal(mPointList);
+            }
+
+            if (Thickness == 0 && prevThick !=0)
+            {
+                int cnt = mPointList.Count / 2;
+
+                mPointList.RemoveRange(cnt, cnt);
                 return;
             }
 
-            Normal = CadUtil.RepresentativeNormal(mPointList);
+            if (Thickness != 0 && prevThick == 0)
+            {
+                CadVector d = Normal * Thickness;
+                int cnt = mPointList.Count;
+
+                for (int i=0; i<cnt; i++)
+                {
+                    CadVector v = mPointList[i] + d;
+                    mPointList.Add(v);
+                }
+            }
         }
 
 

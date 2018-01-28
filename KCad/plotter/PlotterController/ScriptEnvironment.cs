@@ -872,6 +872,10 @@ namespace Plotter
         public void SetThickness(double t)
         {
             CadFigure fig = GetTargetFigure();
+
+            CadOpe ope = CadOpe.CreateSetThickOpe(Controller.CurrentLayer.ID, fig.ID, fig.Thickness, t);
+            Controller.HistoryManager.foward(ope);
+
             fig.SetThickness(t);
         }
 

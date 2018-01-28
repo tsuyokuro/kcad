@@ -47,6 +47,12 @@ namespace Plotter
             return ope;
         }
 
+        public static CadOpe CreateSetThickOpe(uint layerID, uint figureID, double oldThick, double newThick)
+        {
+            CadOpe ope = new CadOpeSetThickness(layerID, figureID, oldThick, newThick);
+            return ope;
+        }
+
         public static CadOpe CreateAddFigureOpe(uint layerID, uint figureID)
         {
             CadOpe ope = new CadOpeAddFigure(layerID, figureID);
@@ -272,6 +278,31 @@ namespace Plotter
         {
             CadFigure fig = db.GetFigure(FigureID);
             fig.IsLoop = Close;
+        }
+    }
+
+    public class CadOpeSetThickness : CadOpeFigureBase
+    {
+        double NewThick = 0;
+        double OldThick = 0;
+
+        public CadOpeSetThickness(uint layerID, uint figureID, double oldThick, double newThick)
+            : base(layerID, figureID)
+        {
+            OldThick = oldThick;
+            NewThick = newThick;
+        }
+
+        public override void Undo(CadObjectDB db)
+        {
+            CadFigure fig = db.GetFigure(FigureID);
+            fig.SetThickness(OldThick);
+        }
+
+        public override void Redo(CadObjectDB db)
+        {
+            CadFigure fig = db.GetFigure(FigureID);
+            fig.SetThickness(NewThick);
         }
     }
 

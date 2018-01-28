@@ -78,6 +78,13 @@ namespace Plotter
                 fig.mPointList[index] = pt;
             }
 
+            public virtual void SelectPointAt(CadFigure fig, int index, bool sel)
+            {
+                CadVector p = fig.mPointList[index];
+                p.Selected = sel;
+                fig.mPointList[index] = p;
+            }
+
             public virtual void StartEdit(CadFigure fig)
             {
 
