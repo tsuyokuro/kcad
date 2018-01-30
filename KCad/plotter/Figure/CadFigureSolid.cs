@@ -191,7 +191,7 @@ namespace Plotter
 
             protected void drawLinesPart(CadFigure fig, DrawContext dc, int start, int cnt, int pen)
             {
-                IReadOnlyList<CadVector> pl = fig.PointList;
+                IReadOnlyList<CadVector> pl = fig.PointList.VList;
 
                 if (cnt <= 0)
                 {
@@ -310,7 +310,7 @@ namespace Plotter
             {
                 List<CadVector> ret = new List<CadVector>();
 
-                IReadOnlyList<CadVector> pl = fig.PointList;
+                IReadOnlyList<CadVector> pl = fig.PointList.VList;
 
                 if (cnt <= 0)
                 {

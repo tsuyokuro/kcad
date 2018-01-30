@@ -14,9 +14,10 @@ namespace Plotter
             NULL = 0,
             VER_1_0_0_0 = 0x01000000,
             VER_1_0_0_1 = 0x01000001,
+            VER_1_0_0_2 = 0x01000002,
         }
 
-        public const VersionCode CurrentVersion = VersionCode.VER_1_0_0_1;
+        public const VersionCode CurrentVersion = VersionCode.VER_1_0_0_2;
 
         // public static uint VersionCode1_0 = 0x00010000;
 
@@ -30,6 +31,10 @@ namespace Plotter
             else if (sv == "1.0.0.1")
             {
                 return VersionCode.VER_1_0_0_1;
+            }
+            else if (sv == "1.0.0.2")
+            {
+                return VersionCode.VER_1_0_0_2;
             }
 
             return VersionCode.NULL;
@@ -193,16 +198,42 @@ namespace Plotter
             jo.Add("normal", VectorToJson(fig.Normal, version));
             jo.Add("thickness", fig.Thickness);
 
+            JObject jvl = VectorListToJson(fig.PointList, version);
+
+            jo.Add("vlist", jvl);
+
+            return jo;
+        }
+
+        public static JObject VectorListToJson(VectorList vl, VersionCode version)
+        {
+            JObject jvl = new JObject();
+
             JArray ja = new JArray();
 
-            fig.PointList.ForEach(v =>
+            vl.VList.ForEach(v =>
             {
                 ja.Add(VectorToJson(v, version));
             });
 
-            jo.Add("point_list", ja);
+            jvl.Add("point_list", ja);
 
-            return jo;
+            JArray ja0 = new JArray();
+
+            vl.CList.ForEach(il =>
+            {
+                JArray ja1 = new JArray();
+                il.ForEach(i =>
+                {
+                    ja1.Add(i);
+                });
+
+                ja0.Add(ja1);
+            });
+
+            jvl.Add("cont_list", ja0);
+
+            return jvl;
         }
 
         public static JObject VectorToJson(CadVector v, VersionCode version)
@@ -386,22 +417,61 @@ namespace Plotter
 
             fig.SetThickness(jo.GetDouble("thickness", 0));
 
-            List <CadVector> list = new List<CadVector>();
+            VectorList vl = VectorListFromJson(jo, version);
 
-            JArray ja = (JArray)jo["point_list"];
+            fig.SetPointList(vl);
+
+            return fig;
+        }
+
+        public static VectorList VectorListFromJson( JObject jo, VersionCode version)
+        {
+            VectorList vl = new VectorList();
+
+            if (version <= VersionCode.VER_1_0_0_1)
+            {
+                JArray jpl = (JArray)jo["point_list"];
+
+                if (jpl != null)
+                {
+                    foreach (JObject jv in jpl)
+                    {
+                        vl.VList.Add(VectorFromJson(jv, version));
+                    }
+                }
+
+                return vl;
+            }
+
+            JObject jvl = (JObject)jo["vlist"];
+
+            JArray ja = (JArray)jvl["point_list"];
 
             if (ja != null)
             {
                 foreach (JObject jv in ja)
                 {
-                    list.Add(VectorFromJson(jv, version));
+                    vl.VList.Add(VectorFromJson(jv, version));
                 }
             }
 
-            fig.SetPointList(list);
+            ja = (JArray)jvl["cont_list"];
 
-            return fig;
+            if (ja != null)
+            {
+                foreach (JArray ja2 in ja)
+                {
+                    int i = vl.NewCont();
+                    foreach (JObject ji in ja2)
+                    {
+                        vl.AddToCont(i, (int)ji);
+                    }
+                }
+            }
+
+            return vl;
         }
+
 
         public static CadVector VectorFromJson(JObject jo, VersionCode version)
         {
@@ -421,7 +491,7 @@ namespace Plotter
                 v.y = (double)jo["y"];
                 v.z = (double)jo["z"];
             }
-            else if (version == VersionCode.VER_1_0_0_1)
+            else if (version >= VersionCode.VER_1_0_0_1)
             {
                 JArray va = (JArray)jo["v"];
 
@@ -515,19 +585,9 @@ namespace Plotter
 
             fig.Normal = VectorFromJson((JObject)jo["normal"], version);
 
-            List<CadVector> list = new List<CadVector>();
+            VectorList vl = VectorListFromJson(jo, version);
 
-            JArray ja = (JArray)jo["point_list"];
-
-            if (ja != null)
-            {
-                foreach (JObject jv in ja)
-                {
-                    list.Add(VectorFromJson(jv, version));
-                }
-            }
-
-            fig.SetPointList(list);
+            fig.SetPointList(vl);
 
             JArray jchildArray = (JArray)jo["child_list"];
 

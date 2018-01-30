@@ -75,7 +75,7 @@ namespace Plotter
             }
         }
 
-        public List<CadVector> PointList
+        public VectorList PointList
         {
             get
             {
@@ -91,7 +91,7 @@ namespace Plotter
             }
         }
 
-        public IReadOnlyList<CadVector> StoreList
+        public VectorList StoreList
         {
             get
             {
@@ -111,9 +111,9 @@ namespace Plotter
 
         #endregion
 
-        private List<CadVector> mPointList = new List<CadVector>();
+        private VectorList mPointList = new VectorList();
 
-        private List<CadVector> mStoreList = null;
+        private VectorList mStoreList = null;
 
 
         #region Group management
@@ -296,7 +296,7 @@ namespace Plotter
             mPointList.AddRange(fig.mPointList);
         }
 
-        public void AddPoints(IReadOnlyList<CadVector> points, int sp, int num)
+        public void AddPoints(List<CadVector> points, int sp, int num)
         {
             for (int i = 0; i < num; i++)
             {
@@ -305,12 +305,21 @@ namespace Plotter
             }
         }
 
-        public void AddPoints(IReadOnlyList<CadVector> points, int sp)
+        public void AddPoints(VectorList points, int sp, int num)
+        {
+            for (int i = 0; i < num; i++)
+            {
+                CadVector p = points[i + sp];
+                AddPoint(p);
+            }
+        }
+
+        public void AddPoints(VectorList points, int sp)
         {
             AddPoints(points, sp, points.Count - sp);
         }
 
-        public void AddPoints(IReadOnlyList<CadVector> points)
+        public void AddPoints(VectorList points)
         {
             foreach (CadVector p in points)
             {
@@ -318,7 +327,7 @@ namespace Plotter
             }
         }
 
-        public void AddPointsReverse(IReadOnlyList<CadVector> points)
+        public void AddPointsReverse(VectorList points)
         {
             int cnt = points.Count;
             int i = cnt - 1;
@@ -329,7 +338,7 @@ namespace Plotter
             }
         }
 
-        public void AddPointsReverse(IReadOnlyList<CadVector> points, int sp)
+        public void AddPointsReverse(VectorList points, int sp)
         {
             int cnt = points.Count;
             int i = cnt - 1 - sp;
@@ -458,7 +467,7 @@ namespace Plotter
                 return;
             }
 
-            mStoreList = new List<CadVector>();
+            mStoreList = new VectorList();
             mPointList.ForEach(a => mStoreList.Add(a));
         }
 
@@ -489,10 +498,12 @@ namespace Plotter
             mStoreList = null;
         }
 
+        /*
         public List<CadVector> GetPointListCopy()
         {
             return new List<CadVector>(mPointList);
         }
+        */
 
         public int FindPoint(CadVector t)
         {
@@ -510,12 +521,14 @@ namespace Plotter
             return -1;
         }
 
+        /*
         public void ReversePointList()
         {
             if (Locked) return;
 
             mPointList.Reverse();
         }
+        */
 
         public void AddChild(CadFigure fig)
         {
@@ -601,7 +614,7 @@ namespace Plotter
             mChildList.AddRange(fig.mChildList);
         }
 
-        public void SetPointList(List<CadVector> list)
+        public void SetPointList(VectorList list)
         {
             mPointList = list;
         }

@@ -397,14 +397,14 @@ namespace Plotter
 
 
         // 法線の代表値を求める
-        public static CadVector RepresentativeNormal(List<CadVector> points)
+        public static CadVector RepresentativeNormal(VectorList points)
         {
             if (points.Count < 3)
             {
                 return CadVector.Zero;
             }
 
-            int idx = FindMaxDistantPointIndex(points[0], points);
+            int idx = FindMaxDistantPointIndex(points[0], points.VList);
 
             int idxA = idx - 1;
             int idxB = idx + 1;

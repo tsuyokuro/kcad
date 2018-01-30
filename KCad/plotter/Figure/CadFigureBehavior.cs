@@ -50,22 +50,22 @@ namespace Plotter
 
             public virtual void MoveAllPoints(CadFigure fig, CadVector delta)
             {
-                CadUtil.MovePoints(fig.mPointList, delta);
+                CadUtil.MovePoints(fig.mPointList.VList, delta);
             }
 
             public virtual CadRect GetContainsRect(CadFigure fig)
             {
-                return CadUtil.GetContainsRect(fig.mPointList);
+                return CadUtil.GetContainsRect(fig.mPointList.VList);
             }
 
             public virtual CadRect GetContainsRectScrn(CadFigure fig, DrawContext dc)
             {
-                return CadUtil.GetContainsRectScrn(dc, fig.mPointList);
+                return CadUtil.GetContainsRectScrn(dc, fig.mPointList.VList);
             }
 
             public virtual List<CadVector> GetPoints(CadFigure fig, int curveSplitNum)
             {
-                return fig.mPointList;
+                return fig.mPointList.VList;
             }
 
             public virtual CadVector GetPointAt(CadFigure fig, int idx)

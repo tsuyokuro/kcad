@@ -48,9 +48,6 @@ def addPoint():
 def addLayer(name):
     SE.AddLayer(name)
 
-#[AC] reverse()
-def reverse():
-    SE.ReverseOrder()
 
 #[AC] move(x, y, z)
 def move(x, y, z):

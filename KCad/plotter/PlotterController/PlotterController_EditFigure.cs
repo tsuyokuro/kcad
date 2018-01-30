@@ -295,10 +295,12 @@ namespace Plotter
                         }
                     }
 
+                    /*
                     if (selnum == num)
                     {
                         fig.PointList.Reverse();
                     }
+                    */
                 }
             }
 

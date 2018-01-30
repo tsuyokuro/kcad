@@ -51,34 +51,6 @@ namespace Plotter
             dout.println("ret=" + ret);
         }
 
-        private void test_getPoints()
-        {
-            TempFigureList.Clear();
-
-            if (mSelList.List.Count == 0)
-            {
-                return;
-            }
-
-            SelectItem si = mSelList.List[0];
-
-            CadFigure fig = si.Figure;
-
-            IReadOnlyList<CadVector> list = fig.GetPoints(64);
-
-            CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
-
-            tfig.AddPoints(list);
-
-            TempFigureList.Add(tfig);
-
-            List<CadFigure> tl = TriangleSplitter.Split(tfig);
-
-            tl.ForEach(a => TempFigureList.Add(a));
-
-            NotifyDataChanged(true);
-        }
-
         private void test_crossPoint()
         {
             TempFigureList.Clear();
@@ -524,11 +496,6 @@ namespace Plotter
             else if (s == "test centroid")
             {
                 test_getCentroid();
-            }
-
-            else if (s == "test getPoints")
-            {
-                test_getPoints();
             }
 
             else if (s == "test cross")

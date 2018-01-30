@@ -484,23 +484,6 @@ namespace Plotter
             Controller.AddLayer(name);
         }
 
-        public void ReverseOrder()
-        {
-            List<uint> idlist = Controller.GetSelectedFigIDList();
-
-            foreach (uint id in idlist)
-            {
-                CadFigure fig = Controller.DB.GetFigure(id);
-
-                if (fig == null)
-                {
-                    continue;
-                }
-
-                fig.PointList.Reverse();
-            }
-        }
-
         public void Move(double x, double y, double z)
         {
             CadVector delta = CadVector.Create(x, y, z);
