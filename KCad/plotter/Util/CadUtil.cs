@@ -194,8 +194,6 @@ namespace Plotter
                 return 0;
             }
 
-            //List<CadVector> list = fig.PointList;
-
             CadVector p0;
             CadVector p1;
 
@@ -246,7 +244,7 @@ namespace Plotter
         }
 
         public static void BezierPoints(
-            CadVector p0, CadVector p1, CadVector p2, int s, List<CadVector> ret)
+            CadVector p0, CadVector p1, CadVector p2, int s, VectorList ret)
         {
             double t = 0;
             double d = 1.0 / (double)s;
@@ -276,7 +274,7 @@ namespace Plotter
         }
 
         public static void BezierPoints(
-            CadVector p0, CadVector p1, CadVector p2, CadVector p3, int s, List<CadVector> ret)
+            CadVector p0, CadVector p1, CadVector p2, CadVector p3, int s, VectorList ret)
         {
             double t = 0;
             double d = 1.0 / (double)s;
@@ -363,7 +361,7 @@ namespace Plotter
         }
 
         // 指定された座標から最も遠いPointのIndexを求める
-        public static int FindMaxDistantPointIndex(CadVector p0, IReadOnlyList<CadVector> points)
+        public static int FindMaxDistantPointIndex(CadVector p0, VectorList points)
         {
             int ret = -1;
             int i;
@@ -404,7 +402,7 @@ namespace Plotter
                 return CadVector.Zero;
             }
 
-            int idx = FindMaxDistantPointIndex(points[0], points.VList);
+            int idx = FindMaxDistantPointIndex(points[0], points);
 
             int idxA = idx - 1;
             int idxB = idx + 1;
@@ -426,7 +424,7 @@ namespace Plotter
 
 
         // 図形は凸である
-        public static bool IsConvex(List<CadVector> points)
+        public static bool IsConvex(VectorList points)
         {
             int p = 0;
             int cnt = points.Count;
@@ -784,7 +782,7 @@ namespace Plotter
             return Math.Sqrt((dx * dx) + (dy * dy));
         }
 
-        public static void MovePoints(List<CadVector> list, CadVector delta)
+        public static void MovePoints(VectorList list, CadVector delta)
         {
             for (int i = 0; i < list.Count; i++)
             {
@@ -793,7 +791,7 @@ namespace Plotter
             }
         }
 
-        public static CadRect GetContainsRect(IReadOnlyList<CadVector> list)
+        public static CadRect GetContainsRect(VectorList list)
         {
             CadRect rect = default(CadRect);
 
@@ -905,7 +903,7 @@ namespace Plotter
             return rect;
         }
 
-        public static CadRect GetContainsRectScrn(DrawContext dc, List<CadVector> list)
+        public static CadRect GetContainsRectScrn(DrawContext dc, VectorList list)
         {
             CadRect rect = default(CadRect);
 

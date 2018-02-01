@@ -50,6 +50,10 @@ namespace Plotter
             {
                 return "1.0.0.1";
             }
+            else if (version == VersionCode.VER_1_0_0_2)
+            {
+                return "1.0.0.2";
+            }
 
             return "0";
         }
@@ -59,7 +63,7 @@ namespace Plotter
         {
             JObject root = new JObject();
 
-            VersionCode version = VersionCode.VER_1_0_0_1;
+            VersionCode version = CurrentVersion;
 
             root.Add("DataType", "CadObjectDB");
             root.Add("version", ToVersionString(version));
@@ -211,27 +215,12 @@ namespace Plotter
 
             JArray ja = new JArray();
 
-            vl.VList.ForEach(v =>
+            vl.ForEach(v =>
             {
                 ja.Add(VectorToJson(v, version));
             });
 
             jvl.Add("point_list", ja);
-
-            JArray ja0 = new JArray();
-
-            vl.CList.ForEach(il =>
-            {
-                JArray ja1 = new JArray();
-                il.ForEach(i =>
-                {
-                    ja1.Add(i);
-                });
-
-                ja0.Add(ja1);
-            });
-
-            jvl.Add("cont_list", ja0);
 
             return jvl;
         }
@@ -249,7 +238,7 @@ namespace Plotter
                 jo.Add("y", v.y);
                 jo.Add("z", v.z);
             }
-            else if (version == VersionCode.VER_1_0_0_1)
+            else if (version >= VersionCode.VER_1_0_0_1)
             {
                 JArray va = new JArray();
 
@@ -436,7 +425,7 @@ namespace Plotter
                 {
                     foreach (JObject jv in jpl)
                     {
-                        vl.VList.Add(VectorFromJson(jv, version));
+                        vl.Add(VectorFromJson(jv, version));
                     }
                 }
 
@@ -451,21 +440,7 @@ namespace Plotter
             {
                 foreach (JObject jv in ja)
                 {
-                    vl.VList.Add(VectorFromJson(jv, version));
-                }
-            }
-
-            ja = (JArray)jvl["cont_list"];
-
-            if (ja != null)
-            {
-                foreach (JArray ja2 in ja)
-                {
-                    int i = vl.NewCont();
-                    foreach (JObject ji in ja2)
-                    {
-                        vl.AddToCont(i, (int)ji);
-                    }
+                    vl.Add(VectorFromJson(jv, version));
                 }
             }
 

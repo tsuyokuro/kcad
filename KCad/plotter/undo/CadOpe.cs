@@ -192,7 +192,7 @@ namespace Plotter
     {
         private int InsertNum;
 
-        private List<CadVector> mPointList = null;
+        private VectorList mPointList = null;
 
         public CadOpeInsertPoints(
             uint layerID,
@@ -219,7 +219,7 @@ namespace Plotter
 
             if (mPointList == null)
             {
-                mPointList = new List<CadVector>();
+                mPointList = new VectorList();
             }
 
             mPointList.Clear();

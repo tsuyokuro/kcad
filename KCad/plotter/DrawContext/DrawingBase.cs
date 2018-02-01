@@ -69,12 +69,12 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawFace(int pen, List<CadVector> pointList)
+        public virtual void DrawFace(int pen, VectorList pointList)
         {
             DrawFace(pen, pointList, default(CadVector), true);
         }
 
-        public virtual void DrawFace(int pen, List<CadVector> pointList, CadVector normal, bool drawOutline)
+        public virtual void DrawFace(int pen, VectorList pointList, CadVector normal, bool drawOutline)
         {
         }
 

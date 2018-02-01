@@ -6,10 +6,22 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
+    public struct PointSpec
+    {
+        public int ContIndex;
+        public int Index;
+
+        public PointSpec(int cidx, int idx)
+        {
+            ContIndex = cidx;
+            Index = idx;
+        }
+    }
+
+
     public class VectorList
     {
-        public List<CadVector> VList = new List<CadVector>();
-        public List<List<int>> CList = new List<List<int>>();
+        private List<CadVector> VList = null;
 
         public int Count
         {
@@ -32,17 +44,14 @@ namespace Plotter
             }
         }
 
-        public CadVector this [ int contIdx, int pIdx ]
+        public VectorList()
         {
-            get
-            {
-                return VList[CList[contIdx][pIdx]];
-            }
+            VList = new List<CadVector>();
+        }
 
-            set
-            {
-                VList[CList[contIdx][pIdx]] = value;
-            }
+        public VectorList(VectorList src)
+        {
+            VList = new List<CadVector>(src.VList);
         }
 
         public void ForEach(Action<CadVector> d)
@@ -62,23 +71,6 @@ namespace Plotter
         public void Add(CadVector v)
         {
             VList.Add(v);
-        }
-
-        public int NewCont()
-        {
-            CList.Add(new List<int>());
-            return CList.Count - 1;
-        }
-
-        public int AddCont(List<int> cont)
-        {
-            CList.Add(cont);
-            return CList.Count - 1;
-        }
-
-        public void AddToCont(int contIdx, int pointIdx)
-        {
-            CList[contIdx].Add(pointIdx);
         }
 
         public void RemoveAt(int i)
@@ -111,9 +103,9 @@ namespace Plotter
             VList.RemoveRange(s, cnt);
         }
 
-        public void InsertRange(int index, IEnumerable<CadVector> collection)
+        public void InsertRange(int index, VectorList vlist)
         {
-            VList.InsertRange(index, collection);
+            VList.InsertRange(index, vlist.VList);
         }
     }
 }

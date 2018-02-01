@@ -296,15 +296,6 @@ namespace Plotter
             mPointList.AddRange(fig.mPointList);
         }
 
-        public void AddPoints(List<CadVector> points, int sp, int num)
-        {
-            for (int i = 0; i < num; i++)
-            {
-                CadVector p = points[i + sp];
-                AddPoint(p);
-            }
-        }
-
         public void AddPoints(VectorList points, int sp, int num)
         {
             for (int i = 0; i < num; i++)
@@ -375,7 +366,7 @@ namespace Plotter
             mPointList.RemoveRange(index, count);
         }
 
-        public void InsertPointsRange(int index, IEnumerable<CadVector> collection)
+        public void InsertPointsRange(int index, VectorList collection)
         {
             mPointList.InsertRange(index, collection);
         }
@@ -497,13 +488,6 @@ namespace Plotter
             mStoreList.ForEach(a => mPointList.Add(a));
             mStoreList = null;
         }
-
-        /*
-        public List<CadVector> GetPointListCopy()
-        {
-            return new List<CadVector>(mPointList);
-        }
-        */
 
         public int FindPoint(CadVector t)
         {
@@ -759,7 +743,7 @@ namespace Plotter
             return Behavior.GetContainsRectScrn(this, dc);
         }
 
-        public List<CadVector> GetPoints(int curveSplitNum)
+        public VectorList GetPoints(int curveSplitNum)
         {
             return Behavior.GetPoints(this, curveSplitNum);
         }

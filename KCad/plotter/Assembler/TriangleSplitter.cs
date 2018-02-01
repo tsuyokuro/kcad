@@ -17,9 +17,9 @@ namespace Plotter
 
             CadFigure triangle;
 
-            IReadOnlyList<CadVector> orgList = fig.GetPoints(64);
+            VectorList orgList = fig.GetPoints(64);
 
-            List<CadVector> pointList = new List<CadVector>(orgList);
+            VectorList pointList = new VectorList(orgList);
 
             i1 = CadUtil.FindMaxDistantPointIndex(p0, pointList);
 
@@ -93,7 +93,7 @@ namespace Plotter
             return triangles;
         }
 
-        private static CadFigure GetTriangleWithCenterPoint(IReadOnlyList<CadVector> pointList, int cpIndex)
+        private static CadFigure GetTriangleWithCenterPoint(VectorList pointList, int cpIndex)
         {
             int i1 = cpIndex;
             int endi = pointList.Count - 1;
@@ -119,7 +119,7 @@ namespace Plotter
             return triangle;
         }
 
-        private static bool ListContainsPointInTriangle(IReadOnlyList<CadVector> check, CadFigure triangle)
+        private static bool ListContainsPointInTriangle(VectorList check, CadFigure triangle)
         {
             var tps = triangle.PointList;
 

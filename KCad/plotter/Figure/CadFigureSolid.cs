@@ -84,7 +84,7 @@ namespace Plotter
 
             protected bool DrawFaces(CadFigure fig, DrawContext dc, int pen)
             {
-                List<CadVector> vl1;
+                VectorList vl1;
                 int srcCnt = fig.mPointList.Count;
 
                 if (srcCnt < 2)
@@ -108,7 +108,7 @@ namespace Plotter
                 srcCnt /= 2;
 
                 vl1 = GetPointsPart(fig, 0, srcCnt, 32);
-                List<CadVector> vl2 = GetPointsPart(fig, srcCnt, srcCnt, 32);
+                VectorList vl2 = GetPointsPart(fig, srcCnt, srcCnt, 32);
 
                 if (CadUtil.IsConvex(vl1))
                 {
@@ -120,7 +120,7 @@ namespace Plotter
                     return false;
                 }
 
-                List<CadVector> sd = new List<CadVector>();
+                VectorList sd = new VectorList();
 
                 sd.Add(CadVector.Zero);
                 sd.Add(CadVector.Zero);
@@ -191,7 +191,7 @@ namespace Plotter
 
             protected void drawLinesPart(CadFigure fig, DrawContext dc, int start, int cnt, int pen)
             {
-                IReadOnlyList<CadVector> pl = fig.PointList.VList;
+                VectorList pl = fig.PointList;
 
                 if (cnt <= 0)
                 {
@@ -301,16 +301,16 @@ namespace Plotter
                 }
             }
 
-            public override List<CadVector> GetPoints(CadFigure fig, int curveSplitNum)
+            public override VectorList GetPoints(CadFigure fig, int curveSplitNum)
             {
                 return GetPointsPart(fig, 0, fig.mPointList.Count, curveSplitNum);
             }
 
-            private List<CadVector> GetPointsPart(CadFigure fig, int start, int cnt, int curveSplitNum)
+            private VectorList GetPointsPart(CadFigure fig, int start, int cnt, int curveSplitNum)
             {
-                List<CadVector> ret = new List<CadVector>();
+                VectorList ret = new VectorList();
 
-                IReadOnlyList<CadVector> pl = fig.PointList.VList;
+                VectorList pl = fig.PointList;
 
                 if (cnt <= 0)
                 {

@@ -296,7 +296,7 @@ namespace Plotter
                     mPointSearcher.SetIgnoreList(mSelList.List);
                     mSegSearcher.SetIgnoreList(mSelList.List);
 
-                    mRulerSet.Set(fig.PointList.VList, mp.PointIndex, cp);
+                    mRulerSet.Set(fig.PointList, mp.PointIndex, cp);
 
                     SetCurrentFigure(fig);
                 }
@@ -719,7 +719,7 @@ namespace Plotter
 
                 if (MeasureFigure != null)
                 {
-                    mPointSearcher.Check(dc, MeasureFigure.PointList.VList);
+                    mPointSearcher.Check(dc, MeasureFigure.PointList);
                 }
 
                 // Search point

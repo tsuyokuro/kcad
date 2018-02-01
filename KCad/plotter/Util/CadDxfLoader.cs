@@ -60,7 +60,7 @@ namespace Plotter
 
             int code;
 
-            List<CadVector> pointList = new List<CadVector>();
+            VectorList pointList = new VectorList();
 
             while (!reader.EndOfStream)
             {
@@ -118,7 +118,7 @@ namespace Plotter
             return db;
         }
 
-        private void AddFace(CadObjectDB db, List<CadVector> plist)
+        private void AddFace(CadObjectDB db, VectorList plist)
         {
             if (plist.Count == 0)
             {

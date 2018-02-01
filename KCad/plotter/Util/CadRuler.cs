@@ -73,7 +73,7 @@ namespace Plotter
         private int MatchIndex = -1;
 
         public void Set(
-                        IReadOnlyList<CadVector> list,
+                        VectorList list,
                         int pointIndex,
                         CadVector cp)
         {

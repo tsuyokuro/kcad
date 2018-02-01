@@ -38,9 +38,9 @@ namespace Plotter
 
         void DrawDot(int pen, CadVector p);
 
-        void DrawFace(int pen, List<CadVector> pointList);
+        void DrawFace(int pen, VectorList pointList);
 
-        void DrawFace(int pen, List<CadVector> pointList, CadVector normal, bool drawOutline);
+        void DrawFace(int pen, VectorList pointList, CadVector normal, bool drawOutline);
 
         void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb);
 

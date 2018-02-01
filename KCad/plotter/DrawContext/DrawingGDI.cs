@@ -528,7 +528,7 @@ namespace Plotter
             }
         }
 
-        public override void DrawFace(int pen, List<CadVector> pointList, CadVector Normal, bool drawOutline)
+        public override void DrawFace(int pen, VectorList pointList, CadVector Normal, bool drawOutline)
         {
             int cnt = pointList.Count;
             if (cnt == 0)

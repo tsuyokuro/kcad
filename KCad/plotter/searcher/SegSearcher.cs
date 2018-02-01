@@ -241,69 +241,6 @@ namespace Plotter
             }
         }
 
-
-        //private void CheckSegs(DrawContext dc, CadLayer layer, CadFigure fig)
-        //{
-        //    IReadOnlyList<CadVector> pl = fig.PointList;
-
-        //    int num = pl.Count;
-
-        //    if (num < 2)
-        //    {
-        //        return;
-        //    }
-
-        //    CadVector a;
-        //    CadVector b;
-
-        //    int idx = 0;
-        //    a = pl[idx];
-
-        //    int ia = 0;
-        //    int ib = 0;
-
-        //    while (idx < num - 1)
-        //    {
-        //        ib = idx + 1;
-
-        //        b = pl[ib];
-
-        //        /*
-        //        if (b.Type == CadVector.Types.HANDLE)
-        //        {
-        //            idx++;
-        //            continue;
-        //        }
-
-        //        if (a.Type == CadVector.Types.BREAK)
-        //        {
-        //            idx++;
-        //            continue;
-        //        }
-        //        */
-
-        //        if (IsIgnoreSeg(fig.ID, idx))
-        //        {
-        //            idx++;
-        //            continue;
-        //        }
-
-        //        CheckSeg(dc, layer, fig, ia, ib, a, b);
-
-        //        a = b;
-
-        //        ia = ib;
-
-        //        idx++;
-        //    }
-
-        //    if (fig.IsLoop)
-        //    {
-        //        b = pl[0];
-        //        CheckSeg(dc, layer, fig, pl.Count - 1, 0, a, b);
-        //    }
-        //}
-
         private void CheckSegs(DrawContext dc, CadLayer layer, CadFigure fig)
         {
             fig.ForEachFigureSegment(fseg =>
