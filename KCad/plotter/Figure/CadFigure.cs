@@ -22,7 +22,6 @@ namespace Plotter
             POINT,
             GROUP,
             DIMENTION_LINE,
-            SOLID,
             MAX,
         }
 

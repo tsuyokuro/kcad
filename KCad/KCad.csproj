@@ -171,7 +171,6 @@
     </ApplicationDefinition>
     <Compile Include="Controls\AutoCompleteTextBox.cs" />
     <Compile Include="Controls\CadConsole.cs" />
-    <Compile Include="plotter\Figure\CadFigureSolid.cs" />
     <Compile Include="plotter\Figure\VectorList.cs" />
     <Compile Include="plotter\Util\BitmapUtil.cs" />
     <Compile Include="TreeView\CadObjectTreeView.cs" />
