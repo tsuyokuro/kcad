@@ -31,7 +31,7 @@ namespace Plotter.Tests
             p3.z = 0;
 
 
-            CadFigure fig = new CadFigure(CadFigure.Types.POLY_LINES);
+            CadFigure fig = CadFigure.Create(CadFigure.Types.POLY_LINES);
 
             fig.AddPoint(p1);
             fig.AddPoint(p2);

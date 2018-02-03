@@ -82,7 +82,7 @@ namespace Plotter
 
             if (pointList.Count == 3)
             {
-                triangle = new CadFigure(CadFigure.Types.POLY_LINES);
+                triangle = CadFigure.Create(CadFigure.Types.POLY_LINES);
 
                 triangle.AddPoints(pointList,0,3);
                 triangle.IsLoop = true;
@@ -104,7 +104,7 @@ namespace Plotter
             if (i0 < 0) { i0 = endi; }
             if (i2 > endi) { i2 = 0; }
 
-            var triangle = new CadFigure(CadFigure.Types.POLY_LINES);
+            var triangle = CadFigure.Create(CadFigure.Types.POLY_LINES);
 
             CadVector tp0 = pointList[i0];
             CadVector tp1 = pointList[i1];

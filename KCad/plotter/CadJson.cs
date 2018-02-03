@@ -395,10 +395,12 @@ namespace Plotter
 
         public static CadFigure FigFromJson(JObject jo, VersionCode version)
         {
-            CadFigure fig = new CadFigure();
+            CadFigure.Types type = (CadFigure.Types)(byte)jo["type"];
+
+            CadFigure fig = CadFigure.Create(type);
 
             fig.ID = (uint)jo["id"];
-            fig.Type = (CadFigure.Types)(byte)jo["type"];
+            //fig.Type = (CadFigure.Types)(byte)jo["type"];
             fig.IsLoop = (bool)jo["closed"];
             fig.Locked = (bool)jo["locked"];
 
@@ -546,10 +548,12 @@ namespace Plotter
 
         public static CadFigure FigFromJsonForClipboard(JObject jo, VersionCode version = CurrentVersion)
         {
-            CadFigure fig = new CadFigure();
+            CadFigure.Types type = (CadFigure.Types)(byte)jo["type"];
+
+            CadFigure fig = CadFigure.Create(type);
 
             fig.ID = (uint)jo["id"];
-            fig.Type = (CadFigure.Types)(byte)jo["type"];
+            //fig.Type = (CadFigure.Types)(byte)jo["type"];
             fig.IsLoop = (bool)jo["closed"];
             fig.Locked = (bool)jo["locked"];
 

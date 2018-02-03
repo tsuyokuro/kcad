@@ -431,7 +431,7 @@ namespace Plotter
         {
             State = States.MEASURING;
             MeasureMode = mode;
-            MeasureFigure = new CadFigure(CadFigure.Types.POLY_LINES);
+            MeasureFigure = CadFigure.Create(CadFigure.Types.POLY_LINES);
         }
 
         public void EndMeasure()

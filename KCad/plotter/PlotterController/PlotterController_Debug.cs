@@ -73,7 +73,7 @@ namespace Plotter
 
             if (ret.IsCross)
             {
-                CadFigure figx = new CadFigure(CadFigure.Types.POLY_LINES);
+                CadFigure figx = CadFigure.Create(CadFigure.Types.POLY_LINES);
 
                 figx.AddPoint(pt);
                 figx.AddPoint(ret.CrossPoint);
@@ -279,7 +279,7 @@ namespace Plotter
                 cent.SplitList.ForEach(a => TempFigureList.Add(a));
             }
 
-            CadFigure centfig = new CadFigure(CadFigure.Types.POLY_LINES);
+            CadFigure centfig = CadFigure.Create(CadFigure.Types.POLY_LINES);
 
             centfig.AddPoint(cent.Point);
 
@@ -307,7 +307,7 @@ namespace Plotter
             CadQuaternion q = CadQuaternion.RotateQuaternion(axis, rad);
             CadQuaternion r = q.Conjugate();
 
-            CadFigure tfig = new CadFigure(CadFigure.Types.POLY_LINES);
+            CadFigure tfig = CadFigure.Create(CadFigure.Types.POLY_LINES);
 
             CadVector tp = default(CadVector);
 

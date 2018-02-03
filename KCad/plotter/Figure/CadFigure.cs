@@ -39,7 +39,7 @@ namespace Plotter
         #region  "public properties"
         public uint ID { get; set; }
 
-        private Types mType;
+        protected Types mType;
 
         public Types Type {
             get
@@ -47,7 +47,7 @@ namespace Plotter
                 return mType;
             }
 
-            set
+            protected set
             {
                 mType = value;
                 SetBehavior(mType);
@@ -58,7 +58,7 @@ namespace Plotter
 
         public CadVector Normal;
 
-        private double mThickness = 0;
+        protected double mThickness = 0;
 
         public double Thickness
         {
@@ -67,7 +67,7 @@ namespace Plotter
                 return mThickness;
             }
 
-            private set
+            protected set
             {
                 mThickness = value;
             }
@@ -109,13 +109,13 @@ namespace Plotter
 
         #endregion
 
-        private VectorList mPointList = new VectorList();
+        protected VectorList mPointList = new VectorList();
 
-        private VectorList mStoreList = null;
+        protected VectorList mStoreList = null;
 
 
         #region Group management
-        private CadFigure mParent = null;
+        protected CadFigure mParent = null;
 
         public CadFigure Parent
         {
@@ -124,7 +124,7 @@ namespace Plotter
         }
 
 
-        private List<CadFigure> mChildList = new List<CadFigure>();
+        protected List<CadFigure> mChildList = new List<CadFigure>();
 
         public List<CadFigure> ChildList
         {
@@ -226,25 +226,35 @@ namespace Plotter
 
         #endregion
 
-        private CadFigureBehavior Behavior = null;
+        protected CadFigureBehavior Behavior = null;
 
-        private static CadFigureBehavior[] BehaviorTbl = null;
+        protected static CadFigureBehavior[] BehaviorTbl = null;
 
-        public CadFigure()
+        private CadFigure()
         {
             ID = 0;
             IsLoop = false;
             Type = Types.NONE;
         }
 
-        public CadFigure(Types type)
+        private CadFigure(Types type)
         {
             ID = 0;
             IsLoop = false;
             Type = type;
         }
 
-        private void SetBehavior(Types type)
+        public static CadFigure Create()
+        {
+            return new CadFigure();
+        }
+
+        public static CadFigure Create(Types type)
+        {
+            return new CadFigure(type);
+        }
+
+        protected void SetBehavior(Types type)
         {
             if (type > Types.NONE && type < Types.MAX)
             {
@@ -252,7 +262,7 @@ namespace Plotter
             }
         }
 
-        private static CadFigureBehavior NewBehavior(Types type)
+        protected static CadFigureBehavior NewBehavior(Types type)
         {
             switch (type)
             {

@@ -178,7 +178,7 @@ namespace Plotter
 
         public CadFigure NewFigure(CadFigure.Types type)
         {
-            CadFigure fig = new CadFigure(type);
+            CadFigure fig = CadFigure.Create(type);
 
             AddFigure(fig);
             return fig;
