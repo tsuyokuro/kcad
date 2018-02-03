@@ -7,7 +7,6 @@ namespace Plotter
 {
     public partial class CadFigure
     {
-        [Serializable]
         public class CadFigureSolid : CadFigureBehavior
         {
             List<List<int>> OrderList = new List<List<int>>();

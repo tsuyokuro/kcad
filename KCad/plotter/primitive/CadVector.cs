@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 namespace Plotter
 {
-    [Serializable]
     public struct CadVector : IEquatable<CadVector>
     {
         public enum Types : byte

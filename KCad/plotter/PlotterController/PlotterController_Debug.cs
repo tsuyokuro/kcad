@@ -589,39 +589,6 @@ namespace Plotter
                 dout.Indent--;
                 dout.println("}");
             }
-
-            else if (s == "Save")
-            {
-                IFormatter formatter = new BinaryFormatter();
-                Stream stream = new FileStream("f:\\work\\test.kcd", FileMode.Create, FileAccess.Write, FileShare.None);
-
-                formatter.Serialize(stream, mDB);
-
-                stream.Close();
-            }
-            else if (s == "load")
-            {
-                IFormatter formatter = new BinaryFormatter();
-
-                Stream stream = new FileStream("f:\\work\\test.kcd", FileMode.Open, FileAccess.Read, FileShare.Read);
-
-                CadObjectDB db = (CadObjectDB)formatter.Deserialize(stream);
-
-                stream.Close();
-
-                DebugOut dout = new DebugOut();
-                db.dump(dout);
-
-                mDB = db;
-            }
-            else if (s == "copy")
-            {
-                CopyFigures();
-            }
-            else if (s == "paste")
-            {
-                PasteFigures();
-            }
         }
         public void dump(DebugOut dst)
         {

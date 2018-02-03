@@ -136,10 +136,12 @@ namespace Plotter
 
         public void CheckFigure(DrawContext dc, CadLayer layer, CadFigure fig)
         {
-            fig.ForEachPoint((pt, idx) =>
+            fig.ForEachPoint(action);
+
+            void action(CadVector v, int idx)
             {
-                CheckFigPoint(dc, pt, layer, fig, idx);
-            });
+                CheckFigPoint(dc, v, layer, fig, idx);
+            }
         }
 
         private void CheckFigPoint(DrawContext dc, CadVector pt, CadLayer layer, CadFigure fig, int ptIdx)

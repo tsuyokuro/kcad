@@ -6,7 +6,6 @@ namespace Plotter
 {
     public partial class CadFigure
     {
-        [Serializable]
         public abstract class CadFigureBehavior
         {
             public CadFigureBehavior()
@@ -145,6 +144,11 @@ namespace Plotter
                 }
 
                 return cnt;
+            }
+
+            public virtual int GetPointCount(CadFigure fig)
+            {
+                return fig.mPointList.Count;
             }
         }
 

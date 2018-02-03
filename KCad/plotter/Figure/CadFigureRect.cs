@@ -5,7 +5,6 @@ namespace Plotter
 {
     public partial class CadFigure
     {
-        [Serializable]
         public class CadFigureRect : CadFigurePolyLines
         {
             public override States GetState(CadFigure fig)

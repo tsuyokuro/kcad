@@ -856,64 +856,6 @@ namespace Plotter
             return figList;
         }
 
-        /*
-        public void CopyFigures()
-        {
-            List<uint> figIdList = GetSelectedFigIDList();
-
-            var figList = new List<CadFigure>();
-
-            figIdList.ForEach(id =>
-            {
-                CadFigure fig = mDB.GetFigure(id);
-                if (fig != null)
-                {
-                    figList.Add(fig);
-                }
-            });
-
-            // Serializable機構が使われて、複製されたCadFigureのlistがClipboardに格納される
-            Clipboard.SetData("List.CadFiguer", figList);
-        }
-        */
-
-        /*
-        public void PasteFigure()
-        {
-            if (Clipboard.ContainsData("List.CadFiguer"))
-            {
-                CadVector pp = default(CadVector);
-
-                pp = LastDownPoint;
-
-                Log.d("paste");
-                List<CadFigure> list = (List<CadFigure>)Clipboard.GetData("List.CadFiguer");
-
-                CadRect cr = CadUtil.GetContainsRect(list);
-
-                CadVector d = pp - cr.p0;
-
-                d.z = 0;
-
-                CadOpeList opeRoot = CadOpe.CreateListOpe();
-
-                foreach (CadFigure fig in list)
-                {
-                    fig.MoveAllPoints(d);
-                    mDB.AddFigure(fig); // IDが設定しなおされる
-                    CurrentLayer.AddFigure(fig);
-
-                    CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, fig.ID);
-                    opeRoot.OpeList.Add(ope);
-
-                    fig.Select();
-                }
-
-                mHistoryManager.foward(opeRoot);
-            }
-        }
-        */
-
         public void CopyFigures()
         {
             var temp = GetSelectedFigureList();

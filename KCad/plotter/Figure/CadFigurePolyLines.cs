@@ -7,7 +7,6 @@ namespace Plotter
 {
     public partial class CadFigure
     {
-        [Serializable]
         public class CadFigurePolyLines : CadFigureBehavior
         {
             public override States GetState(CadFigure fig)
@@ -90,101 +89,21 @@ namespace Plotter
                     return false;
                 }
 
-                if (fig.Thickness == 0)
-                {
-                     vl1 = GetPointsPart(fig, 0, srcCnt, 32);
-
-                    if (CadUtil.IsConvex(vl1))
-                    {
-                        dc.Drawing.DrawFace(pen, vl1, fig.Normal, true);
-                        return true;
-                    }
-
-                    return false;
-                }
-
-                srcCnt /= 2;
-
                 vl1 = GetPointsPart(fig, 0, srcCnt, 32);
-                VectorList vl2 = GetPointsPart(fig, srcCnt, srcCnt, 32);
 
                 if (CadUtil.IsConvex(vl1))
                 {
                     dc.Drawing.DrawFace(pen, vl1, fig.Normal, true);
-                    dc.Drawing.DrawFace(pen, vl2, fig.Normal, true);
-                }
-                else
-                {
-                    return false;
+                    return true;
                 }
 
-                VectorList sd = new VectorList();
-
-                sd.Add(CadVector.Zero);
-                sd.Add(CadVector.Zero);
-                sd.Add(CadVector.Zero);
-                sd.Add(CadVector.Zero);
-
-                int i = 0;
-
-                CadVector n;
-                int cnt = vl1.Count;
-
-                for (; i<cnt-1; i++)
-                {
-                    sd[0] = vl1[i];
-                    sd[1] = vl1[i + 1];
-                    sd[2] = vl2[i + 1];
-                    sd[3] = vl2[i];
-
-                    n = CadMath.Normal(sd[0], sd[1], sd[2]);
-                    dc.Drawing.DrawFace(pen, sd, n, true);
-                }
-
-                sd[0] = vl1[cnt-1];
-                sd[1] = vl1[0];
-                sd[2] = vl2[0];
-                sd[3] = vl2[cnt-1];
-
-                n = CadMath.Normal(sd[0], sd[1], sd[2]);
-                dc.Drawing.DrawFace(pen, sd, n, true);
-
-                return true;
+                return false;
             }
 
             protected void DrawLines(CadFigure fig, DrawContext dc, int pen)
             {
                 int cnt = fig.mPointList.Count;
-
-                if (fig.Thickness != 0)
-                {
-                    cnt /= 2;
-                }
-
                 drawLinesPart(fig, dc, 0, cnt, pen);
-
-                if (fig.Thickness == 0)
-                {
-                    return;
-                }
-
-                drawLinesPart(fig, dc, cnt, cnt, pen);
-
-                int i = 0;
-                int ti = i + cnt;
-
-                for (;i<cnt;i++, ti++)
-                {
-                    CadVector a = fig.mPointList[i];
-                    CadVector b = fig.mPointList[ti];
-
-                    if (a.Type == CadVector.Types.HANDLE)
-                    {
-                        continue;
-                    }
-
-                    dc.Drawing.DrawLine(pen, a, b);
-                }
             }
 
             protected void drawLinesPart(CadFigure fig, DrawContext dc, int start, int cnt, int pen)

@@ -18,7 +18,6 @@ namespace Plotter
         // 
         //
 
-        [Serializable]
         public class CadFigureDimLine : CadFigureBehavior
         {
             public override States GetState(CadFigure fig)

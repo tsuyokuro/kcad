@@ -3,7 +3,6 @@ using System.Diagnostics;
 
 namespace Plotter
 {
-    [Serializable]
     public class IdProvider
     {
         private uint mCounter = 0;

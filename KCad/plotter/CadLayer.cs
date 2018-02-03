@@ -6,7 +6,6 @@ namespace Plotter
     using System;
     using System.Linq;
 
-    [Serializable]
     public class CadLayer
     {
         private uint mId = 0;

@@ -508,14 +508,9 @@ namespace Plotter
             jo.Add("locked", fig.Locked);
             jo.Add("normal", VectorToJson(fig.Normal, version));
 
-            JArray ja = new JArray();
+            JObject jvl = VectorListToJson(fig.PointList, version);
 
-            fig.PointList.ForEach(v =>
-            {
-                ja.Add(VectorToJson(v, version));
-            });
-
-            jo.Add("point_list", ja);
+            jo.Add("vlist", jvl);
 
             JArray jchildArray = new JArray();
 

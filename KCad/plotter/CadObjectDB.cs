@@ -10,7 +10,6 @@ namespace Plotter
         public int Index;
     }
 
-    [Serializable]
     public class CadObjectDB
     {
         public const uint Version = 0x00010000;

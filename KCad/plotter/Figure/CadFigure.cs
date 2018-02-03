@@ -9,7 +9,6 @@ namespace Plotter
 {
     using static CadFigure;
 
-    [Serializable]
     public partial class CadFigure
     {
         #region Enums
@@ -87,7 +86,7 @@ namespace Plotter
         {
             get
             {
-                return mPointList.Count;
+                return Behavior.GetPointCount(this);
             }
         }
 
@@ -760,36 +759,8 @@ namespace Plotter
 
         public void SetThickness(double t)
         {
-            double prevThick = Thickness;
-
             Thickness = t;
-
-            if (Normal.IsZero())
-            {
-                Normal = CadUtil.RepresentativeNormal(mPointList);
-            }
-
-            if (Thickness == 0 && prevThick !=0)
-            {
-                int cnt = mPointList.Count / 2;
-
-                mPointList.RemoveRange(cnt, cnt);
-                return;
-            }
-
-            if (Thickness != 0 && prevThick == 0)
-            {
-                CadVector d = Normal * Thickness;
-                int cnt = mPointList.Count;
-
-                for (int i=0; i<cnt; i++)
-                {
-                    CadVector v = mPointList[i] + d;
-                    mPointList.Add(v);
-                }
-            }
         }
-
 
         public CadSegment GetSegmentAt(int n)
         {
