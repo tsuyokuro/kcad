@@ -279,9 +279,7 @@
     <Compile Include="plotter\Figure\CadFigureBehavior.cs" />
     <Compile Include="plotter\Assembler\CadFigureBonder.cs" />
     <Compile Include="plotter\Figure\CadFigureCircle.cs" />
-    <Compile Include="plotter\Figure\CadFigureLine.cs" />
     <Compile Include="plotter\Figure\CadFigurePolyLines.cs" />
-    <Compile Include="plotter\Figure\CadFigureRect.cs" />
     <Compile Include="plotter\CadLayer.cs" />
     <Compile Include="plotter\Util\Quaternion.cs" />
     <Compile Include="plotter\Gridding.cs" />

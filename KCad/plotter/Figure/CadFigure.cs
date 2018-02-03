@@ -25,7 +25,7 @@ namespace Plotter
             MAX,
         }
 
-        public enum States : byte
+        public enum CreateStates : byte
         {
             NONE,
             NOT_ENOUGH,
@@ -50,7 +50,6 @@ namespace Plotter
             protected set
             {
                 mType = value;
-                SetBehavior(mType);
             }
         }
 
@@ -81,11 +80,11 @@ namespace Plotter
             }
         }
 
-        public int PointCount
+        public virtual int PointCount
         {
             get
             {
-                return Behavior.GetPointCount(this);
+                return PointList.Count;
             }
         }
 
@@ -134,7 +133,7 @@ namespace Plotter
             }
         }
 
-        public bool IsEmpty
+        public virtual bool IsEmpty
         {
             get
             {
@@ -148,7 +147,7 @@ namespace Plotter
         /// </summary>
         /// <param name="d"></param>
         /// <returns>true:列挙を継続</returns>
-        public bool ForEachFig(ForEachDelegate<CadFigure> d)
+        public virtual bool ForEachFig(ForEachDelegate<CadFigure> d)
         {
             int i;
 
@@ -175,7 +174,7 @@ namespace Plotter
         /// </summary>
         /// <param name="d"></param>
         /// <returns>true:列挙を継続</returns>
-        public bool ForEachNode(ForEachDelegate<CadFigure> d)
+        public virtual bool ForEachNode(ForEachDelegate<CadFigure> d)
         {
             int i;
             for (i = 0; i < mChildList.Count; i++)
@@ -197,7 +196,7 @@ namespace Plotter
         /// </summary>
         /// <param name="d"></param>
         /// <returns>true:列挙を継続</returns>
-        public void ForEachFig(Action<CadFigure> d)
+        public virtual void ForEachFig(Action<CadFigure> d)
         {
             d(this);
 
@@ -214,7 +213,7 @@ namespace Plotter
         /// </summary>
         /// <param name="d"></param>
         /// <returns>true:列挙を継続</returns>
-        public void ForEachNode(Action<CadFigure> d)
+        public virtual void ForEachNode(Action<CadFigure> d)
         {
             int i;
             for (i = 0; i < mChildList.Count; i++)
@@ -226,23 +225,23 @@ namespace Plotter
 
         #endregion
 
-        protected CadFigureBehavior Behavior = null;
+        //protected static CadFigureBehavior[] BehaviorTbl = null;
 
-        protected static CadFigureBehavior[] BehaviorTbl = null;
-
-        private CadFigure()
+        protected CadFigure()
         {
             ID = 0;
             IsLoop = false;
             Type = Types.NONE;
         }
 
-        private CadFigure(Types type)
+        /*
+        protected CadFigure(Types type)
         {
             ID = 0;
             IsLoop = false;
             Type = type;
         }
+        */
 
         public static CadFigure Create()
         {
@@ -251,9 +250,51 @@ namespace Plotter
 
         public static CadFigure Create(Types type)
         {
-            return new CadFigure(type);
+            CadFigure fig = null;
+
+            switch (type)
+            {
+                case Types.LINE:
+                    fig = new CadFigurePolyLines(new LineCreateBehavior());
+                    break;
+
+                case Types.RECT:
+                    fig = new CadFigurePolyLines(new RectCreateBehavior());
+                    break;
+
+                case Types.POLY_LINES:
+                    fig = new CadFigurePolyLines(new PolyLinesCreateBehavior());
+                    break;
+
+                case Types.CIRCLE:
+                    fig = new CadFigureCircle();
+                    break;
+
+                case Types.POINT:
+                    fig = new CadFigurePoint();
+                    break;
+
+                case Types.GROUP:
+                    fig = new CadFigure();
+                    fig.Type = Types.GROUP;
+                    break;
+
+                case Types.DIMENTION_LINE:
+                    fig = new CadFigureDimLine();
+                    break;
+                default:
+                    break;
+            }
+
+            if (fig != null)
+            {
+                fig.Type = type;
+            }
+
+            return fig;
         }
 
+        /*
         protected void SetBehavior(Types type)
         {
             if (type > Types.NONE && type < Types.MAX)
@@ -261,25 +302,27 @@ namespace Plotter
                 Behavior = NewBehavior(type);
             }
         }
+        */
 
+        /*
         protected static CadFigureBehavior NewBehavior(Types type)
         {
             switch (type)
             {
                 case Types.LINE:
-                    return new CadFigureLine();
+                    return new CadFigureLineBehabior();
 
                 case Types.RECT:
                     return new CadFigureRect();
 
                 case Types.POLY_LINES:
-                    return new CadFigurePolyLines();
+                    return new CadFigurePolyLinesBehavior();
 
                 case Types.CIRCLE:
-                    return new CadFigureCircle();
+                    return new CadFigureCircleBehavior();
 
                 case Types.POINT:
-                    return new CadFigurePoint();
+                    return new CadFigurePointBehavior();
 
                 case Types.GROUP:
                     return new CadNopBehavior();
@@ -291,20 +334,21 @@ namespace Plotter
                     return null;
             }
         }
+        */
 
-        public void ClearPoints()
+        public virtual void ClearPoints()
         {
             mPointList.Clear();
         }
 
-        public void CopyPoints(CadFigure fig)
+        public virtual void CopyPoints(CadFigure fig)
         {
             if (Locked) return;
             mPointList.Clear();
             mPointList.AddRange(fig.mPointList);
         }
 
-        public void AddPoints(VectorList points, int sp, int num)
+        public virtual void AddPoints(VectorList points, int sp, int num)
         {
             for (int i = 0; i < num; i++)
             {
@@ -313,12 +357,12 @@ namespace Plotter
             }
         }
 
-        public void AddPoints(VectorList points, int sp)
+        public virtual void AddPoints(VectorList points, int sp)
         {
             AddPoints(points, sp, points.Count - sp);
         }
 
-        public void AddPoints(VectorList points)
+        public virtual void AddPoints(VectorList points)
         {
             foreach (CadVector p in points)
             {
@@ -326,7 +370,7 @@ namespace Plotter
             }
         }
 
-        public void AddPointsReverse(VectorList points)
+        public virtual void AddPointsReverse(VectorList points)
         {
             int cnt = points.Count;
             int i = cnt - 1;
@@ -337,7 +381,7 @@ namespace Plotter
             }
         }
 
-        public void AddPointsReverse(VectorList points, int sp)
+        public virtual void AddPointsReverse(VectorList points, int sp)
         {
             int cnt = points.Count;
             int i = cnt - 1 - sp;
@@ -348,7 +392,7 @@ namespace Plotter
             }
         }
 
-        public void InsertPointAt(int index, CadVector pt)
+        public virtual void InsertPointAt(int index, CadVector pt)
         {
             if (index >= mPointList.Count)
             {
@@ -359,7 +403,7 @@ namespace Plotter
             mPointList.Insert(index, pt);
         }
 
-        public void RemovePointAt(int index)
+        public virtual void RemovePointAt(int index)
         {
             if (mPointList == null)
             {
@@ -369,17 +413,17 @@ namespace Plotter
             mPointList.RemoveAt(index);
         }
 
-        public void RemovePointsRange(int index, int count)
+        public virtual void RemovePointsRange(int index, int count)
         {
             mPointList.RemoveRange(index, count);
         }
 
-        public void InsertPointsRange(int index, VectorList collection)
+        public virtual void InsertPointsRange(int index, VectorList collection)
         {
             mPointList.InsertRange(index, collection);
         }
 
-        public bool HasSelectedPoint()
+        public virtual bool HasSelectedPoint()
         {
             int i;
             for (i=0; i<mPointList.Count; i++)
@@ -393,7 +437,7 @@ namespace Plotter
             return false;
         }
 
-        public bool HasSelectedPointInclueChild()
+        public virtual bool HasSelectedPointInclueChild()
         {
             int i;
             for (i = 0; i < mPointList.Count; i++)
@@ -421,22 +465,24 @@ namespace Plotter
             return false;
         }
 
-        public CadVector GetPointAt(int index)
+        public virtual CadVector GetPointAt(int idx)
         {
-            return  Behavior.GetPointAt(this, index);
+            return mPointList[idx];
         }
 
-        public void SetPointAt(int index, CadVector pt)
+        public virtual void SetPointAt(int index, CadVector pt)
         {
-            Behavior.SetPointAt(this, index, pt);
+            mPointList[index] = pt;
         }
 
-        public void SelectPointAt(int index, bool sel)
+        public virtual void SelectPointAt(int index, bool sel)
         {
-            Behavior.SelectPointAt(this, index, sel);
+            CadVector p = mPointList[index];
+            p.Selected = sel;
+            mPointList[index] = p;
         }
 
-        public void ClearSelectFlags()
+        public virtual void ClearSelectFlags()
         {
             int i;
             for (i = 0; i < mPointList.Count; i++)
@@ -445,7 +491,7 @@ namespace Plotter
             }
         }
 
-        public void Select()
+        public virtual void Select()
         {
             // Set select flag to all points
             int i;
@@ -455,11 +501,9 @@ namespace Plotter
             }
         }
 
-        public void StartEdit()
+        public virtual void StartEdit()
         {
             if (Locked) return;
-
-            Behavior.StartEdit(this);
 
             if (mStoreList != null)
             {
@@ -470,22 +514,19 @@ namespace Plotter
             mPointList.ForEach(a => mStoreList.Add(a));
         }
 
-        public DiffData EndEdit()
+        public virtual DiffData EndEdit()
         {
             if (Locked) return null;
 
-            Behavior.EndEdit(this);
 
             DiffData diff = DiffData.create(this);
             mStoreList = null;
             return diff;
         }
 
-        public void CancelEdit()
+        public virtual void CancelEdit()
         {
             if (Locked) return;
-
-            Behavior.CancelEdit(this);
 
             if (mStoreList == null)
             {
@@ -497,7 +538,7 @@ namespace Plotter
             mStoreList = null;
         }
 
-        public int FindPoint(CadVector t)
+        public virtual int FindPoint(CadVector t)
         {
             int i = 0;
             foreach (CadVector p in mPointList)
@@ -522,7 +563,7 @@ namespace Plotter
         }
         */
 
-        public void AddChild(CadFigure fig)
+        public virtual void AddChild(CadFigure fig)
         {
             if (Locked) return;
 
@@ -530,7 +571,7 @@ namespace Plotter
             fig.SetParent(this);
         }
 
-        public void ReleaseAllChildlen()
+        public virtual void ReleaseAllChildlen()
         {
             if (Locked) return;
 
@@ -590,7 +631,7 @@ namespace Plotter
         }
         #endregion
 
-        public void CopyFrom(CadFigure fig)
+        public virtual void CopyFrom(CadFigure fig)
         {
             Type = fig.Type;
             IsLoop = fig.IsLoop;
@@ -606,7 +647,7 @@ namespace Plotter
             mChildList.AddRange(fig.mChildList);
         }
 
-        public void SetPointList(VectorList list)
+        public virtual void SetPointList(VectorList list)
         {
             mPointList = list;
         }
@@ -627,7 +668,7 @@ namespace Plotter
             dout.println("ID=" + ID.ToString());
             dout.println("LayerID=" + LayerID.ToString());
             dout.println("Type=" + Type.ToString());
-            dout.println("State=" + State.ToString());
+            dout.println("State=" + CreateState.ToString());
 
             dout.println("PointList [");
             dout.Indent++;
@@ -657,21 +698,22 @@ namespace Plotter
         #endregion
 
         #region "Behavior"
-        public virtual States State
+        public virtual CreateStates CreateState
         {
             get
             {
-                States st = Behavior.GetState(this);
-                return st;
+                return CreateStates.NONE;
             }
         }
 
+        /*
         public System.Type GetBehaviorType()
         {
             return Behavior.GetType();
         }
+        */
 
-        public void MoveSelectedPoints(DrawContext dc, CadVector delta)
+        public virtual void MoveSelectedPoints(DrawContext dc, CadVector delta)
         {
             if (Locked) return;
             Log.d("moveSelectedPoints" + 
@@ -679,7 +721,8 @@ namespace Plotter
                 " dy=" + delta.y.ToString() +
                 " dz=" + delta.z.ToString()
                 );
-            Behavior.MoveSelectedPoint(this, dc, delta);
+
+            Util.MoveSelectedPoint(this, dc, delta);
 
             mChildList.ForEach(c =>
             {
@@ -687,110 +730,110 @@ namespace Plotter
             });
         }
 
-        public void MoveAllPoints(CadVector delta)
+        public virtual void MoveAllPoints(CadVector delta)
         {
             if (Locked) return;
 
-            Behavior.MoveAllPoints(this, delta);
+            Util.MoveAllPoints(this, delta);
         }
 
-        public void AddPoint(CadVector p)
+        public virtual void AddPoint(CadVector p)
         {
-            Behavior.AddPoint(this, p);
+            mPointList.Add(p);
         }
 
-        public void AddPointInCreating(DrawContext dc, CadVector p)
+        public virtual void AddPointInCreating(DrawContext dc, CadVector p)
         {
-            Behavior.AddPointInCreating(this, dc, p);
+            mPointList.Add(p);
         }
 
-        public void RemoveSelected()
+        public virtual void RemoveSelected()
         {
             if (Locked) return;
 
-            Behavior.RemoveSelected(this);
+            mPointList.RemoveAll(a => a.Selected);
+
+            if (PointCount < 2)
+            {
+                mPointList.Clear();
+            }
         }
 
-        public void Draw(DrawContext dc, int pen)
+        public virtual void Draw(DrawContext dc, int pen)
         {
-            Behavior.Draw(this, dc, pen);
         }
 
-        public void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
+        public virtual void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
         {
-            Behavior.DrawSeg(this, dc, pen, idxA, idxB);
         }
 
-        public void DrawSelected(DrawContext dc, int pen)
+        public virtual void DrawSelected(DrawContext dc, int pen)
         {
-            Behavior.DrawSelected(this, dc, pen);
         }
 
-        public void DrawTemp(DrawContext dc, CadVector tp, int pen)
+        public virtual void DrawTemp(DrawContext dc, CadVector tp, int pen)
         {
-            Behavior.DrawTemp(this, dc, tp, pen);
         }
 
-        public void StartCreate(DrawContext dc)
+        public virtual void StartCreate(DrawContext dc)
         {
-            Behavior.StartCreate(this, dc);
         }
 
-        public Types EndCreate(DrawContext dc)
+        public virtual Types EndCreate(DrawContext dc)
         {
-            return Behavior.EndCreate(this, dc);
+            return Type;
         }
 
-        public CadRect GetContainsRect()
+        public virtual CadRect GetContainsRect()
         {
-            return Behavior.GetContainsRect(this);
+            return Util.GetContainsRect(this);
         }
 
-        public CadRect GetContainsRectScrn(DrawContext dc)
+        public virtual CadRect GetContainsRectScrn(DrawContext dc)
         {
-            return Behavior.GetContainsRectScrn(this, dc);
+            return Util.GetContainsRectScrn(this, dc);
         }
 
-        public VectorList GetPoints(int curveSplitNum)
+        public virtual VectorList GetPoints(int curveSplitNum)
         {
-            return Behavior.GetPoints(this, curveSplitNum);
+            return Util.GetPoints(this, curveSplitNum);
         }
 
-        public Centroid GetCentroid()
+        public virtual Centroid GetCentroid()
         {
-            return Behavior.GetCentroid(this);
+            return default(Centroid);
         }
 
-        public void RecalcNormal()
+        public virtual void RecalcNormal()
         {
-            Behavior.RecalcNormal(this);
+
         }
 
-        public void SetThickness(double t)
+        public virtual void SetThickness(double t)
         {
             Thickness = t;
         }
 
-        public CadSegment GetSegmentAt(int n)
+        public virtual CadSegment GetSegmentAt(int n)
         {
-            return Behavior.GetSegmentAt(this, n);
+            return Util.GetSegmentAt(this, n);
         }
 
-        public FigureSegment GetFigSegmentAt(int n)
+        public virtual FigureSegment GetFigSegmentAt(int n)
         {
-            return Behavior.GetFigSegmentAt(this, n);
+            return Util.GetFigSegmentAt(this, n);
         }
 
 
-        public int SegmentCount
+        public virtual int SegmentCount
         {
             get
             {
-                return Behavior.SegmentCount(this);
+                return Util.SegmentCount(this);
             }
         }
 
-        public void ForEachFigureSegment(Func<FigureSegment, bool> dg)
+        public virtual void ForEachFigureSegment(Func<FigureSegment, bool> dg)
         {
             int cnt = SegmentCount;
             for (int i=0; i<cnt; i++)
@@ -804,7 +847,7 @@ namespace Plotter
             }
         }
 
-        public void ForEachSegment(Func<CadSegment, bool> dg)
+        public virtual void ForEachSegment(Func<CadSegment, bool> dg)
         {
             int cnt = SegmentCount;
             for (int i = 0; i < cnt; i++)
@@ -816,7 +859,7 @@ namespace Plotter
             }
         }
 
-        public void ForEachPoint(Action<CadVector> dg)
+        public virtual void ForEachPoint(Action<CadVector> dg)
         {
             int cnt = PointCount;
             for (int i = 0; i < cnt; i++)
@@ -825,7 +868,7 @@ namespace Plotter
             }
         }
 
-        public void ForEachPointB(Func<CadVector, bool> dg)
+        public virtual void ForEachPointB(Func<CadVector, bool> dg)
         {
             int cnt = PointCount;
             for (int i = 0; i < cnt; i++)
@@ -837,7 +880,7 @@ namespace Plotter
             }
         }
 
-        public void ForEachPoint(Action<CadVector, int> dg)
+        public virtual void ForEachPoint(Action<CadVector, int> dg)
         {
             int cnt = PointCount;
             for (int i = 0; i < cnt; i++)
@@ -846,7 +889,7 @@ namespace Plotter
             }
         }
 
-        public void ForEachPointB(Func<CadVector, int, bool> dg)
+        public virtual void ForEachPointB(Func<CadVector, int, bool> dg)
         {
             int cnt = PointCount;
             for (int i = 0; i < cnt; i++)

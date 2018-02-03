@@ -931,9 +931,9 @@ namespace Plotter
         {
             CreatingFigure.AddPointInCreating(dc, p);
 
-            CadFigure.States state = CreatingFigure.State;
+            CadFigure.CreateStates state = CreatingFigure.CreateState;
 
-            if (state == CadFigure.States.FULL)
+            if (state == CadFigure.CreateStates.FULL)
             {
                 CreatingFigure.EndCreate(dc);
 
@@ -943,13 +943,13 @@ namespace Plotter
 
                 NextState();
             }
-            else if (state == CadFigure.States.ENOUGH)
+            else if (state == CadFigure.CreateStates.ENOUGH)
             {
                 CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
                 mHistoryManager.foward(ope);
                 CurrentLayer.AddFigure(CreatingFigure);
             }
-            else if (state == CadFigure.States.CONTINUE)
+            else if (state == CadFigure.CreateStates.CONTINUE)
             {
                 CadOpe ope = CadOpe.CreateAddPointOpe(
                     CurrentLayer.ID,
