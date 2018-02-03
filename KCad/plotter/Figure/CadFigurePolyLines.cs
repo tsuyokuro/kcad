@@ -201,15 +201,10 @@ namespace Plotter
                     fig.Normal = CadUtil.RepresentativeNormal(fig.PointList);
                 }
 
-                //CadVector tv = (fig.Normal * -1) * fig.Thickness;
-
                 CadVector a;
-                CadVector b;
 
-                int i = start;
-                a = pl[i];
+                a = pl[start];
 
-                // If the count of point is 1, draw + mark.  
                 if (cnt == 1)
                 {
                     dc.Drawing.DrawCross(pen, a, 2);
@@ -221,81 +216,16 @@ namespace Plotter
                     return;
                 }
 
-                int end = start + cnt - 1;
-
-                for (; true;)
+                pl.ForEachExpandPoints(start+1, cnt-1, 8, action);
+                void action(CadVector v)
                 {
-                    if (i + 3 <= end)
-                    {
-                        if (pl[i + 1].Type == CadVector.Types.HANDLE &&
-                            pl[i + 2].Type == CadVector.Types.HANDLE)
-                        {
-                            dc.Drawing.DrawBezier(pen,
-                                pl[i], pl[i + 1], pl[i + 2], pl[i + 3]);
-
-                            i += 3;
-                            a = pl[i];
-                            continue;
-                        }
-                        else if (pl[i + 1].Type == CadVector.Types.HANDLE &&
-                            pl[i + 2].Type == CadVector.Types.STD)
-                        {
-                            dc.Drawing.DrawBezier(pen,
-                                pl[i], pl[i + 1], pl[i + 2]);
-
-                            i += 2;
-                            a = pl[i];
-                            continue;
-                        }
-                    }
-
-                    if (i + 2 <= end)
-                    {
-                        if (pl[i + 1].Type == CadVector.Types.HANDLE &&
-                                                pl[i + 2].Type == CadVector.Types.STD)
-                        {
-                            dc.Drawing.DrawBezier(pen,
-                                pl[i], pl[i + 1], pl[i + 2]);
-
-                            i += 2;
-                            a = pl[i];
-                            continue;
-                        }
-                    }
-
-                    if (i + 1 <= end)
-                    {
-                        b = pl[i + 1];
-                        dc.Drawing.DrawLine(pen, a, b);
-
-                        /*
-                        if (fig.Thickness != 0)
-                        {
-                            dc.Drawing.DrawLine(pen, a + tv, b + tv);
-                            dc.Drawing.DrawLine(pen, a, a + tv);
-                        }
-                        */
-                        a = b;
-                        i++;
-
-                        continue;
-                    }
-
-                    break;
+                    dc.Drawing.DrawLine(pen, a, v);
+                    a = v;
                 }
 
                 if (fig.IsLoop)
                 {
-                    b = pl[start];
-                    dc.Drawing.DrawLine(pen, a, b);
-
-                    /*
-                    if (fig.Thickness != 0)
-                    {
-                        dc.Drawing.DrawLine(pen, a + tv, b + tv);
-                        dc.Drawing.DrawLine(pen, a, a + tv);
-                    }
-                    */
+                    dc.Drawing.DrawLine(pen, a, pl[start]);
                 }
             }
 
@@ -306,57 +236,7 @@ namespace Plotter
 
             private VectorList GetPointsPart(CadFigure fig, int start, int cnt, int curveSplitNum)
             {
-                VectorList ret = new VectorList();
-
-                VectorList pl = fig.PointList;
-
-                if (cnt <= 0)
-                {
-                    return ret;
-                }
-
-                int i = start;
-                int end = start + cnt - 1;
-
-                for (; i <= end;)
-                {
-                    if (i + 3 <= end)
-                    {
-                        if (pl[i + 1].Type == CadVector.Types.HANDLE &&
-                            pl[i + 2].Type == CadVector.Types.HANDLE)
-                        {
-                            CadUtil.BezierPoints(pl[i], pl[i + 1], pl[i + 2], pl[i + 3], curveSplitNum, ret);
-
-                            i += 4;
-                            continue;
-                        }
-                        else if (pl[i + 1].Type == CadVector.Types.HANDLE &&
-                            pl[i + 2].Type == CadVector.Types.STD)
-                        {
-                            CadUtil.BezierPoints(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, ret);
-
-                            i += 3;
-                            continue;
-                        }
-                    }
-
-                    if (i + 2 <= end)
-                    {
-                        if (pl[i + 1].Type == CadVector.Types.HANDLE &&
-                                                pl[i + 2].Type == CadVector.Types.STD)
-                        {
-                            CadUtil.BezierPoints(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, ret);
-
-                            i += 3;
-                            continue;
-                        }
-                    }
-
-                    ret.Add(pl[i]);
-                    i++;
-                }
-
-                return ret;
+                return fig.mPointList.GetExpandList(start, cnt, curveSplitNum);
             }
 
             private void drawSelected_Lines(CadFigure fig, DrawContext dc, int pen)

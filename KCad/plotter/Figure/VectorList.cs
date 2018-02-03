@@ -49,6 +49,11 @@ namespace Plotter
             VList = new List<CadVector>();
         }
 
+        public VectorList(int capa)
+        {
+            VList = new List<CadVector>(capa);
+        }
+
         public VectorList(VectorList src)
         {
             VList = new List<CadVector>(src.VList);
@@ -106,6 +111,76 @@ namespace Plotter
         public void InsertRange(int index, VectorList vlist)
         {
             VList.InsertRange(index, vlist.VList);
+        }
+
+        public VectorList GetExpandList(int start, int cnt, int curveSplitNum)
+        {
+            VectorList ret = new VectorList(curveSplitNum * ((cnt+1) / 2));
+
+            ForEachExpandPoints(start, cnt, curveSplitNum, action);
+
+            void action(CadVector v)
+            {
+                ret.Add(v);
+            }
+
+            return ret;
+        }
+
+        public void ForEachExpandPoints(int curveSplitNum, Action<CadVector> action)
+        {
+            ForEachExpandPoints(0, VList.Count, curveSplitNum, action);
+        }
+
+        public void ForEachExpandPoints(int start, int cnt, int curveSplitNum, Action<CadVector> action)
+        {
+            List<CadVector> pl = VList;
+
+            if (cnt <= 0)
+            {
+                return;
+            }
+
+            int i = start;
+            int end = start + cnt - 1;
+
+            for (; i <= end;)
+            {
+                if (i + 3 <= end)
+                {
+                    if (pl[i + 1].Type == CadVector.Types.HANDLE &&
+                        pl[i + 2].Type == CadVector.Types.HANDLE)
+                    {
+                        CadUtil.ForEachBezierPoints(pl[i], pl[i + 1], pl[i + 2], pl[i + 3], curveSplitNum, action);
+
+                        i += 4;
+                        continue;
+                    }
+                    else if (pl[i + 1].Type == CadVector.Types.HANDLE &&
+                        pl[i + 2].Type == CadVector.Types.STD)
+                    {
+                        CadUtil.ForEachBezierPoints(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, action);
+
+                        i += 3;
+                        continue;
+                    }
+                }
+
+                if (i + 2 <= end)
+                {
+                    if (pl[i + 1].Type == CadVector.Types.HANDLE &&
+                                            pl[i + 2].Type == CadVector.Types.STD)
+                    {
+                        CadUtil.ForEachBezierPoints(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, action);
+
+                        i += 3;
+                        continue;
+                    }
+                }
+
+                action(pl[i]);
+                i++;
+            }
         }
     }
 }
