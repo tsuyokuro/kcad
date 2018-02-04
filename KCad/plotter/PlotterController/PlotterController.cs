@@ -259,7 +259,7 @@ namespace Plotter
         }
         #endregion
 
-        private List<CadFigure> TempFigureList = new List<CadFigure>();
+        public List<CadFigure> TempFigureList = new List<CadFigure>();
 
         DrawContext mCurrentDC;
 

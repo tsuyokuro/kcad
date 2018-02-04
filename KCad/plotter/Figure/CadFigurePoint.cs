@@ -114,9 +114,8 @@ namespace Plotter
             // NOP
         }
 
-        public override Types EndCreate(DrawContext dc)
+        public override void EndCreate(DrawContext dc)
         {
-            return Type;
         }
 
         public override void MoveSelectedPoints(DrawContext dc, CadVector delta)

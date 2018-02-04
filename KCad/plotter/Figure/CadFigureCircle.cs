@@ -133,18 +133,18 @@ namespace Plotter
             // NOP
         }
 
-        public override Types EndCreate(DrawContext dc)
+        public override void EndCreate(DrawContext dc)
         {
             if (PointCount < 2)
             {
-                return Types.NONE;
+                return;
             }
 
             CadVector b = getRP(dc, mPointList[0], mPointList[1], true);
 
             AddPoint(b);
 
-            return Type;
+            return;
         }
 
         public override void MoveSelectedPoints(DrawContext dc, CadVector delta)

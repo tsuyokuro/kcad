@@ -1153,6 +1153,20 @@ namespace Plotter
             DebugOut.Std.reset();
         }
 
+        private void test012()
+        {
+            CadFigure fig = GetTargetFigure();
+
+            if (fig == null)
+            {
+                return;
+            }
+
+            List<CadFigure> triangles = TriangleSplitter.Split(fig);
+
+            Controller.TempFigureList.AddRange(triangles);
+        }
+
         private void SimpleCommand(string s)
         {
             if (s == "@clear" || s == "@cls")
@@ -1202,6 +1216,10 @@ namespace Plotter
             else if (s == "@test011")
             {
                 test011();
+            }
+            else if (s == "@test012")
+            {
+                test012();
             }
 
             else

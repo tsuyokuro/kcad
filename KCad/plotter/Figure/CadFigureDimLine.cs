@@ -125,19 +125,17 @@ namespace Plotter
         {
         }
 
-        public override CadFigure.Types EndCreate(DrawContext dc)
+        public override void EndCreate(DrawContext dc)
         {
             if (PointList.Count < 3)
             {
-                return Types.NONE;
+                return;
             }
 
             CadSegment seg = CadUtil.PerpendicularSeg(PointList[0], PointList[1], PointList[2]);
 
             PointList[2] = PointList[2].SetVector(seg.P1.vector);
             PointList.Add(seg.P0);
-
-            return Type;
         }
 
         public override void MoveSelectedPoints(DrawContext dc, CadVector delta)

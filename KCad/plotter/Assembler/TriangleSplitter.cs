@@ -17,9 +17,11 @@ namespace Plotter
 
             CadFigure triangle;
 
-            VectorList orgList = fig.GetPoints(64);
+            //VectorList orgList = fig.GetPoints(64);
 
-            VectorList pointList = new VectorList(orgList);
+            //VectorList pointList = new VectorList(orgList);
+
+            VectorList pointList = fig.GetPoints(64);
 
             i1 = CadUtil.FindMaxDistantPointIndex(p0, pointList);
 

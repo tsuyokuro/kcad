@@ -779,9 +779,8 @@ namespace Plotter
         {
         }
 
-        public virtual Types EndCreate(DrawContext dc)
+        public virtual void EndCreate(DrawContext dc)
         {
-            return Type;
         }
 
         public virtual CadRect GetContainsRect()
