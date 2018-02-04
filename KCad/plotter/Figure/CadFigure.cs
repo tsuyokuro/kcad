@@ -39,18 +39,9 @@ namespace Plotter
         #region  "public properties"
         public uint ID { get; set; }
 
-        protected Types mType;
-
         public Types Type {
-            get
-            {
-                return mType;
-            }
-
-            protected set
-            {
-                mType = value;
-            }
+            get;
+            protected set;
         }
 
         public bool IsLoop { get; set; }
@@ -61,15 +52,8 @@ namespace Plotter
 
         public double Thickness
         {
-            get
-            {
-                return mThickness;
-            }
-
-            protected set
-            {
-                mThickness = value;
-            }
+            get;
+            protected set;
         }
 
         public VectorList PointList
@@ -224,24 +208,12 @@ namespace Plotter
         }
 
         #endregion
-
-        //protected static CadFigureBehavior[] BehaviorTbl = null;
-
         protected CadFigure()
         {
             ID = 0;
             IsLoop = false;
             Type = Types.NONE;
         }
-
-        /*
-        protected CadFigure(Types type)
-        {
-            ID = 0;
-            IsLoop = false;
-            Type = type;
-        }
-        */
 
         public static CadFigure Create()
         {
@@ -282,6 +254,7 @@ namespace Plotter
                 case Types.DIMENTION_LINE:
                     fig = new CadFigureDimLine();
                     break;
+
                 default:
                     break;
             }
@@ -293,48 +266,6 @@ namespace Plotter
 
             return fig;
         }
-
-        /*
-        protected void SetBehavior(Types type)
-        {
-            if (type > Types.NONE && type < Types.MAX)
-            {
-                Behavior = NewBehavior(type);
-            }
-        }
-        */
-
-        /*
-        protected static CadFigureBehavior NewBehavior(Types type)
-        {
-            switch (type)
-            {
-                case Types.LINE:
-                    return new CadFigureLineBehabior();
-
-                case Types.RECT:
-                    return new CadFigureRect();
-
-                case Types.POLY_LINES:
-                    return new CadFigurePolyLinesBehavior();
-
-                case Types.CIRCLE:
-                    return new CadFigureCircleBehavior();
-
-                case Types.POINT:
-                    return new CadFigurePointBehavior();
-
-                case Types.GROUP:
-                    return new CadNopBehavior();
-
-                case Types.DIMENTION_LINE:
-                    return new CadFigureDimLine();
-
-                default:
-                    return null;
-            }
-        }
-        */
 
         public virtual void ClearPoints()
         {
@@ -554,15 +485,6 @@ namespace Plotter
             return -1;
         }
 
-        /*
-        public void ReversePointList()
-        {
-            if (Locked) return;
-
-            mPointList.Reverse();
-        }
-        */
-
         public virtual void AddChild(CadFigure fig)
         {
             if (Locked) return;
@@ -583,7 +505,7 @@ namespace Plotter
             mChildList.Clear();
         }
 
-        #region "Group"
+        #region Group
         public void SelectWithGroup()
         {
             CadFigure root = GetGroupRoot();
@@ -697,7 +619,6 @@ namespace Plotter
 
         #endregion
 
-        #region "Behavior"
         public virtual CreateStates CreateState
         {
             get
@@ -706,21 +627,15 @@ namespace Plotter
             }
         }
 
-        /*
-        public System.Type GetBehaviorType()
-        {
-            return Behavior.GetType();
-        }
-        */
-
         public virtual void MoveSelectedPoints(DrawContext dc, CadVector delta)
         {
             if (Locked) return;
-            Log.d("moveSelectedPoints" + 
-                " dx=" + delta.x.ToString() +
-                " dy=" + delta.y.ToString() +
-                " dz=" + delta.z.ToString()
-                );
+
+            //Log.d("moveSelectedPoints" + 
+            //    " dx=" + delta.x.ToString() +
+            //    " dy=" + delta.y.ToString() +
+            //    " dz=" + delta.z.ToString()
+            //    );
 
             Util.MoveSelectedPoint(this, dc, delta);
 
@@ -805,7 +720,7 @@ namespace Plotter
 
         public virtual void RecalcNormal()
         {
-
+            Normal = Util.CalcNormal(this);
         }
 
         public virtual void SetThickness(double t)
@@ -900,6 +815,24 @@ namespace Plotter
             }
         }
 
-        #endregion
-    }
+        public virtual void ForEachThicknessPoint(Action<CadVector, int> dg)
+        {
+            if (Thickness == 0)
+            {
+                return;
+            }
+
+            int cnt = mPointList.Count;
+
+            CadVector t = Normal * Thickness;
+
+            for (int i = 0; i < cnt; i++)
+            {
+                CadVector v = mPointList[i] + t;
+
+                dg(v, i);
+            }
+        }
+
+    } // End of class CadFigure
 }

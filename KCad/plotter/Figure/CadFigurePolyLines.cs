@@ -102,7 +102,7 @@ namespace Plotter
 
         protected bool DrawFaces(DrawContext dc, int pen)
         {
-            VectorList vl1;
+            VectorList vl;
             int srcCnt = mPointList.Count;
 
             if (srcCnt < 2)
@@ -110,15 +110,69 @@ namespace Plotter
                 return false;
             }
 
-            vl1 = GetPointsPart(0, srcCnt, 32);
+            vl = GetPointsPart(0, srcCnt, 32);
 
-            if (CadUtil.IsConvex(vl1))
+            if (!CadUtil.IsConvex(vl))
             {
-                dc.Drawing.DrawFace(pen, vl1, Normal, true);
+                return false;
+            }
+
+            dc.Drawing.DrawFace(pen, vl, Normal, true);
+
+            if (Thickness == 0)
+            {
                 return true;
             }
 
-            return false;
+            if (Normal.IsZero())
+            {
+                Normal = CadUtil.RepresentativeNormal(mPointList);
+            }
+
+            CadVector tv = Normal * Thickness;
+
+            VectorList vl2 = new VectorList(vl);
+
+            for (int i=0; i< vl2.Count; i++)
+            {
+                vl2[i] += tv;
+            }
+
+            dc.Drawing.DrawFace(pen, vl2, Normal, true);
+
+            VectorList side = new VectorList(4);
+
+            side.Add(default(CadVector));
+            side.Add(default(CadVector));
+            side.Add(default(CadVector));
+            side.Add(default(CadVector));
+
+            CadVector n;
+
+            for (int i = 0; i < vl.Count-1; i++)
+            {
+                side[0] = vl[i];
+                side[1] = vl[i+1];
+                side[2] = vl2[i+1];
+                side[3] = vl2[i];
+
+                n = CadMath.Normal(side[2],side[0],side[1]);
+
+                dc.Drawing.DrawFace(pen, side, n, true);
+            }
+
+            int e = vl.Count - 1;
+
+            side[0] = vl[e];
+            side[1] = vl[0];
+            side[2] = vl2[0];
+            side[3] = vl2[e];
+
+            n = CadMath.Normal(side[2], side[0], side[1]);
+
+            dc.Drawing.DrawFace(pen, side, n, true);
+
+            return true;
         }
 
         protected void DrawLines(DrawContext dc, int pen)
@@ -141,6 +195,8 @@ namespace Plotter
                 Normal = CadUtil.RepresentativeNormal(PointList);
             }
 
+            CadVector tv = Normal * Thickness;
+
             CadVector a;
 
             a = pl[start];
@@ -160,12 +216,16 @@ namespace Plotter
             void action(CadVector v)
             {
                 dc.Drawing.DrawLine(pen, a, v);
+                dc.Drawing.DrawLine(pen, a+tv, v+tv);
+                dc.Drawing.DrawLine(pen, a, a+tv);
                 a = v;
             }
 
             if (IsLoop)
             {
                 dc.Drawing.DrawLine(pen, a, pl[start]);
+                dc.Drawing.DrawLine(pen, a+tv, pl[start]+tv);
+                dc.Drawing.DrawLine(pen, a, a + tv);
             }
         }
 

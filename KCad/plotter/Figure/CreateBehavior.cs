@@ -118,8 +118,6 @@ namespace Plotter
 
             public override CreateStates GetCreateState(CadFigure fig)
             {
-                DebugOut.Std.print("RectCreateBehavior#GetCreateState");
-
                 if (fig.PointList.Count < 1)
                 {
                     return CreateStates.NOT_ENOUGH;

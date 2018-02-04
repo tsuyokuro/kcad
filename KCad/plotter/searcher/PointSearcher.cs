@@ -138,6 +138,8 @@ namespace Plotter
         {
             fig.ForEachPoint(action);
 
+            fig.ForEachThicknessPoint(action);
+
             void action(CadVector v, int idx)
             {
                 CheckFigPoint(dc, v, layer, fig, idx);

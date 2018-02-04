@@ -111,6 +111,11 @@ namespace Plotter
 
                 return cnt;
             }
+
+            public static CadVector CalcNormal(CadFigure fig)
+            {
+                return CadUtil.RepresentativeNormal(fig.mPointList);
+            }
         }
     }
 }
