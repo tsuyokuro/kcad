@@ -75,7 +75,7 @@ namespace Plotter
             base.MouseDown += mouseDown;
             base.MouseUp += mouseUp;
 
-            base.MouseWheel += new System.Windows.Forms.MouseEventHandler(mouseWheel);
+            base.MouseWheel += mouseWheel;
 
             // Context menue for creating polyline
             {

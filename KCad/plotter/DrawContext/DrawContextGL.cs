@@ -274,6 +274,21 @@ namespace Plotter
 
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 
+            //double aspect = mViewWidth / mViewHeight;
+
+            //mProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
+            //                                FovY,
+            //                                aspect,
+            //                                ProjectionNear,
+            //                                ProjectionFar
+            //                                );
+            //mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
+
+            RecalcMatrix();
+        }
+
+        private void RecalcMatrix()
+        {
             double aspect = mViewWidth / mViewHeight;
 
             mProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
@@ -284,6 +299,7 @@ namespace Plotter
                                             );
             mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
         }
+
 
         public void RotateEyePoint(Vector2 prev, Vector2 current)
         {
@@ -340,6 +356,17 @@ namespace Plotter
             mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
 
             RecalcViewDirFromCameraDirection();
+        }
+
+        public void MoveForwardEyePoint(double d)
+        {
+            Eye += ViewDir * d;
+            ProjectionNear -= d;
+
+            mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
+            mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
+
+            RecalcMatrix();
         }
 
         public override void Dispose()

@@ -60,6 +60,7 @@ namespace Plotter
             MouseMove += OnMouseMove;
             MouseDown += OnMouseDown;
             MouseUp += OnMouseUp;
+            MouseWheel += OnMouseWheel;
 
             mDrawContext.OnPush = OnPushDraw;
 
@@ -83,6 +84,15 @@ namespace Plotter
             {
                 mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
 
+            }
+        }
+
+        private void OnMouseWheel(object sender, MouseEventArgs e)
+        {
+            if (CadKeyboard.IsCtrlKeyDown())
+            {
+                mDrawContext.MoveForwardEyePoint(e.Delta * 0.01);
+                RedrawAll();
             }
         }
 
