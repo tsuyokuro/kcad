@@ -824,7 +824,7 @@ namespace Plotter
 
             int cnt = mPointList.Count;
 
-            CadVector t = Normal * Thickness;
+            CadVector t = (Normal * -1.0) * Thickness;
 
             for (int i = 0; i < cnt; i++)
             {

@@ -131,6 +131,8 @@ namespace Plotter
 
             CadVector tv = Normal * Thickness;
 
+            tv *= -1;
+
             VectorList vl2 = new VectorList(vl);
 
             for (int i=0; i< vl2.Count; i++)
@@ -138,7 +140,7 @@ namespace Plotter
                 vl2[i] += tv;
             }
 
-            dc.Drawing.DrawFace(pen, vl2, Normal, true);
+            dc.Drawing.DrawFace(pen, vl2, (Normal * -1), true);
 
             VectorList side = new VectorList(4);
 
@@ -163,10 +165,10 @@ namespace Plotter
 
             int e = vl.Count - 1;
 
-            side[0] = vl[e];
-            side[1] = vl[0];
-            side[2] = vl2[0];
-            side[3] = vl2[e];
+            side[3] = vl[e];
+            side[2] = vl[0];
+            side[1] = vl2[0];
+            side[0] = vl2[e];
 
             n = CadMath.Normal(side[2], side[0], side[1]);
 
