@@ -48,12 +48,10 @@ namespace Plotter
 
         public CadVector Normal;
 
-        protected double mThickness = 0;
-
         public double Thickness
         {
             get;
-            protected set;
+            set;
         }
 
         public VectorList PointList
@@ -559,6 +557,7 @@ namespace Plotter
             IsLoop = fig.IsLoop;
             Locked = fig.Locked;
             Normal = fig.Normal;
+            Thickness = fig.Thickness;
 
             mPointList.Clear();
             mPointList.AddRange(fig.mPointList);
@@ -721,11 +720,6 @@ namespace Plotter
         public virtual void RecalcNormal()
         {
             Normal = Util.CalcNormal(this);
-        }
-
-        public virtual void SetThickness(double t)
-        {
-            Thickness = t;
         }
 
         public virtual CadSegment GetSegmentAt(int n)

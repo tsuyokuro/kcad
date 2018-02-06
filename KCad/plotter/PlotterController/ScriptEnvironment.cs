@@ -859,7 +859,7 @@ namespace Plotter
             CadOpe ope = CadOpe.CreateSetThickOpe(Controller.CurrentLayer.ID, fig.ID, fig.Thickness, t);
             Controller.HistoryManager.foward(ope);
 
-            fig.SetThickness(t);
+            fig.Thickness = t;
         }
 
         public CadFigure GetTargetFigure()

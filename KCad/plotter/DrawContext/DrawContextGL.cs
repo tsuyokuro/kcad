@@ -297,6 +297,7 @@ namespace Plotter
                                             ProjectionNear,
                                             ProjectionFar
                                             );
+
             mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
         }
 

@@ -406,7 +406,7 @@ namespace Plotter
 
             fig.Normal = VectorFromJson((JObject)jo["normal"], version);
 
-            fig.SetThickness(jo.GetDouble("thickness", 0));
+            fig.Thickness = jo.GetDouble("thickness", 0);
 
             VectorList vl = VectorListFromJson(jo, version);
 
@@ -509,6 +509,7 @@ namespace Plotter
             jo.Add("closed", fig.IsLoop);
             jo.Add("locked", fig.Locked);
             jo.Add("normal", VectorToJson(fig.Normal, version));
+            jo.Add("thickness", fig.Thickness);
 
             JObject jvl = VectorListToJson(fig.PointList, version);
 
@@ -558,6 +559,7 @@ namespace Plotter
             fig.Locked = (bool)jo["locked"];
 
             fig.Normal = VectorFromJson((JObject)jo["normal"], version);
+            fig.Thickness = jo.GetDouble("thickness", 0);
 
             VectorList vl = VectorListFromJson(jo, version);
 

@@ -296,13 +296,13 @@ namespace Plotter
         public override void Undo(CadObjectDB db)
         {
             CadFigure fig = db.GetFigure(FigureID);
-            fig.SetThickness(OldThick);
+            fig.Thickness = OldThick;
         }
 
         public override void Redo(CadObjectDB db)
         {
             CadFigure fig = db.GetFigure(FigureID);
-            fig.SetThickness(NewThick);
+            fig.Thickness = NewThick;
         }
     }
 
