@@ -875,7 +875,7 @@ namespace Plotter
                 return;
             }
 
-            JObject jo = CadJson.FigListToJsonForClipboard(figList);
+            JObject jo = CadJson.ToJson.FigListToJsonForClipboard(figList);
 
             string s = jo.ToString();
 
@@ -898,7 +898,7 @@ namespace Plotter
 
             JObject jo = JObject.Parse(s);
 
-            List<CadFigure> figList = CadJson.FigListFromJsonForClipboard(jo);
+            List<CadFigure> figList = CadJson.FromJson.FigListFromJsonForClipboard(jo);
 
             MinMax3D mm3d = CadUtil.GetFigureMinMaxIncludeChild(figList);
 
@@ -943,7 +943,7 @@ namespace Plotter
         {
             StreamWriter writer = new StreamWriter(fname);
 
-            JObject jo = CadJson.DbToJson(mDB);
+            JObject jo = CadJson.ToJson.DbToJson(mDB);
 
             //writer.Write(jo.ToString(Newtonsoft.Json.Formatting.None));
             writer.Write(jo.ToString());
@@ -960,7 +960,7 @@ namespace Plotter
 
             JObject jo = JObject.Parse(js);
 
-            CadObjectDB db = CadJson.DbFromJson(jo);
+            CadObjectDB db = CadJson.FromJson.DbFromJson(jo);
 
             mDB = db;
 
