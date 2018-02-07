@@ -12,29 +12,36 @@ namespace Plotter
         public enum VersionCode
         {
             NULL = 0,
-            VER_1_0_0_0 = 0x01000000,
-            VER_1_0_0_1 = 0x01000001,
-            VER_1_0_0_2 = 0x01000002,
+            VER_1_0_0_0 = 0x01_00_00_00,
+            VER_1_0_0_1 = 0x01_00_00_01,
+            VER_1_0_0_2 = 0x01_00_00_02,
         }
 
         public const VersionCode CurrentVersion = VersionCode.VER_1_0_0_2;
 
-        // public static uint VersionCode1_0 = 0x00010000;
+        private static Dictionary<string, VersionCode> VersionStrToCodeMap =
+            new Dictionary<String, VersionCode>()
+            {
+                { "1.0", VersionCode.VER_1_0_0_0 },
+                { "1.0.0.1", VersionCode.VER_1_0_0_1 },
+                { "1.0.0.2", VersionCode.VER_1_0_0_2 },
+            };
+
+        private static Dictionary<VersionCode, string> VersionCodeToStrMap =
+            new Dictionary<VersionCode, string>()
+            {
+                { VersionCode.VER_1_0_0_0, "1.0" },
+                { VersionCode.VER_1_0_0_1, "1.0.0.1" },
+                { VersionCode.VER_1_0_0_2, "1.0.0.2" },
+            };
 
 
         public static VersionCode ToVersionCode(string sv)
         {
-            if (sv == "1.0")
+            VersionCode ret;
+            if (VersionStrToCodeMap.TryGetValue(sv, out ret))
             {
-                return VersionCode.VER_1_0_0_0;
-            }
-            else if (sv == "1.0.0.1")
-            {
-                return VersionCode.VER_1_0_0_1;
-            }
-            else if (sv == "1.0.0.2")
-            {
-                return VersionCode.VER_1_0_0_2;
+                return ret;
             }
 
             return VersionCode.NULL;
@@ -42,20 +49,19 @@ namespace Plotter
 
         public static string ToVersionString(VersionCode version)
         {
-            if (version == VersionCode.VER_1_0_0_0)
+            string ret;
+            if (VersionCodeToStrMap.TryGetValue(version, out ret))
             {
-                return "1.0";
-            }
-            else if (version == VersionCode.VER_1_0_0_1)
-            {
-                return "1.0.0.1";
-            }
-            else if (version == VersionCode.VER_1_0_0_2)
-            {
-                return "1.0.0.2";
+                return ret;
             }
 
             return "0";
+        }
+
+        public static class COMMON
+        {
+            public const string ID = "id";
+            public const string NAME = "name";
         }
 
         public static class DB
@@ -80,14 +86,6 @@ namespace Plotter
             public const string FIG_ID_LIST = "fig_id_list";
         }
 
-
-
-        public static class COMMON
-        {
-            public const string ID = "id";
-            public const string NAME = "name";
-        }
-
         public static class FIG
         {
             public const string TYPE = "type";
@@ -105,8 +103,12 @@ namespace Plotter
             public const string TYPE = "type";
             public const string POINT_LIST = "point_list";
             public const string FLAGS = "flags";
+
+            // VER_1_0_0_1以上用
             public const string V = "v";
 
+            // VER_1_0_0_1未満用
+            // VER_1_0_0_1から v: [10,20,30] のように配列で保存
             public const string X = "x";
             public const string Y = "y";
             public const string Z = "z";
