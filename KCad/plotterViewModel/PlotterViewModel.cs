@@ -277,6 +277,29 @@ namespace Plotter
         }
         #endregion
 
+        #region 表示設定
+
+        private bool mDrawFaceOutline = true;
+        public bool DrawFaceOutline
+        {
+            set
+            {
+                mDrawFaceOutline = value;
+                mPlotterView.DrawContext.DrawFaceOutline = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawFaceOutline)));
+
+                DrawAll();
+            }
+
+            get
+            {
+                return mDrawFaceOutline;
+            }
+        }
+
+        #endregion
+
+
         ListBox mLayerListView;
 
         public ListBox LayerListView
@@ -377,6 +400,8 @@ namespace Plotter
             }
 
             mPlotterView = view;
+            mPlotterView.DrawContext.DrawFaceOutline = mDrawFaceOutline;
+
             mPlotterView.SetController(mController);
 
             mController.CurrentDC = view.DrawContext;

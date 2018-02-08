@@ -74,6 +74,8 @@ namespace KCad
 
             SnapMenu.DataContext = ViewModel;
 
+            DrawOptionMenu.DataContext = ViewModel;
+
             ToolBar1.DataContext = ViewModel;
 
             MyConsole.SelectionChanged += MyConsole_SelectionChanged;

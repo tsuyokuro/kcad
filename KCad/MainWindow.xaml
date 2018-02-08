@@ -147,6 +147,9 @@
                 <MenuItem Tag="grid_settings" Header="Grid Settings" Click="MenuItem_Click"/>
                 <MenuItem Tag="snap_settings" Header="Snap Settings" Click="MenuItem_Click"/>
             </MenuItem>
+            <MenuItem x:Name="DrawOptionMenu" Header="Draw">
+                <MenuItem Header="Draw face outline" IsCheckable="True" IsChecked="{Binding DrawFaceOutline}"/>
+            </MenuItem>
         </Menu>
 
         <StackPanel

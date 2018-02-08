@@ -140,6 +140,9 @@ namespace Plotter
 
         public DrawTools Tools = new DrawTools();
 
+        public bool DrawFaceOutline = true;
+
+
         protected IDrawing mDrawing;
 
         public IDrawing Drawing

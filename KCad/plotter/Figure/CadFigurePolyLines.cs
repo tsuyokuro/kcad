@@ -117,7 +117,10 @@ namespace Plotter
                 return false;
             }
 
-            dc.Drawing.DrawFace(pen, vl, Normal, true);
+            bool outline = dc.DrawFaceOutline;
+
+
+            dc.Drawing.DrawFace(pen, vl, Normal, outline);
 
             if (Thickness == 0)
             {
@@ -140,7 +143,7 @@ namespace Plotter
                 vl2[i] += tv;
             }
 
-            dc.Drawing.DrawFace(pen, vl2, (Normal * -1), true);
+            dc.Drawing.DrawFace(pen, vl2, (Normal * -1), outline);
 
             VectorList side = new VectorList(4);
 
@@ -160,7 +163,7 @@ namespace Plotter
 
                 n = CadMath.Normal(side[2],side[0],side[1]);
 
-                dc.Drawing.DrawFace(pen, side, n, true);
+                dc.Drawing.DrawFace(pen, side, n, outline);
             }
 
             int e = vl.Count - 1;
@@ -172,7 +175,7 @@ namespace Plotter
 
             n = CadMath.Normal(side[2], side[0], side[1]);
 
-            dc.Drawing.DrawFace(pen, side, n, true);
+            dc.Drawing.DrawFace(pen, side, n, outline);
 
             return true;
         }
