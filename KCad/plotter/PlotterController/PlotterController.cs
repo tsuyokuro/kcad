@@ -922,16 +922,16 @@ namespace Plotter
             UpdateTreeView(true);
         }
 
-        private void PasteFigure(CadFigure fig, CadVector d)
+        private void PasteFigure(CadFigure fig, CadVector delta)
         {
-            fig.MoveAllPoints(d);
+            fig.MoveAllPoints(CurrentDC, delta);
             mDB.AddFigure(fig);
 
             if (fig.ChildList != null)
             {
                 foreach (CadFigure child in fig.ChildList)
                 {
-                    PasteFigure(child, d);
+                    PasteFigure(child, delta);
                 }
             }
         }

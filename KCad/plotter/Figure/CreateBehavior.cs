@@ -58,7 +58,7 @@ namespace Plotter
                 }
                 else if (fig.PointList.Count > 2)
                 {
-                    return CreateStates.CONTINUE;
+                    return CreateStates.WAIT_NEXT_POINT;
                 }
 
                 return CreateStates.NONE;

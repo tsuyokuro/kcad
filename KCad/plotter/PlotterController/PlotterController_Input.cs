@@ -949,7 +949,7 @@ namespace Plotter
                 mHistoryManager.foward(ope);
                 CurrentLayer.AddFigure(CreatingFigure);
             }
-            else if (state == CadFigure.CreateStates.CONTINUE)
+            else if (state == CadFigure.CreateStates.WAIT_NEXT_POINT)
             {
                 CadOpe ope = CadOpe.CreateAddPointOpe(
                     CurrentLayer.ID,

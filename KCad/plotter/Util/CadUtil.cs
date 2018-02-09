@@ -1044,8 +1044,10 @@ namespace Plotter
 
             double de = CadMath.InnerProduct(normal, e);
 
-            if (0.0 == de)
+            if (de > CadMath.R0Min && de < CadMath.R0Max)
             {
+                //DebugOut.Std.println("CrossPlane is parallel");
+
                 // 平面と直線は平行
                 cp.Valid = false;
                 return cp;

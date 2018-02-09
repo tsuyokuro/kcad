@@ -428,5 +428,10 @@ namespace Plotter
         {
             return (int)Type ^ (int)x ^ (int)y ^ (int)z ^ (int)Flag;
         }
+
+        public string SimpleString()
+        {
+            return x.ToString() + "," + y.ToString() + "," + z.ToString();
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace Plotter
             NOT_ENOUGH,
             ENOUGH,
             WAIT_LAST_POINT,
-            CONTINUE,
+            WAIT_NEXT_POINT,
             FULL,
         }
         #endregion
@@ -644,11 +644,11 @@ namespace Plotter
             });
         }
 
-        public virtual void MoveAllPoints(CadVector delta)
+        public virtual void MoveAllPoints(DrawContext dc, CadVector delta)
         {
             if (Locked) return;
 
-            Util.MoveAllPoints(this, delta);
+            Util.MoveAllPoints(this, dc, delta);
         }
 
         public virtual void AddPoint(CadVector p)
@@ -753,6 +753,20 @@ namespace Plotter
                     break;
                 }
             }
+        }
+
+        public virtual bool IsSelectedAll()
+        {
+            int i;
+            for (i=0; i<mPointList.Count; i++)
+            {
+                if (!mPointList[i].Selected)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public virtual void ForEachSegment(Func<CadSegment, bool> dg)

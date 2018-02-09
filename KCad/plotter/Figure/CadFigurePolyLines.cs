@@ -48,6 +48,77 @@ namespace Plotter
         }
         #endregion
 
+        #region Point Move
+        public override void MoveSelectedPoints(DrawContext dc, CadVector delta)
+        {
+            //base.MoveSelectedPoints(dc, delta);
+
+            if (Locked) return;
+
+            CadVector d;
+
+
+            if (!IsSelectedAll())
+            {
+                CadVector vdir = (CadVector)dc.ViewDir;
+
+                CadVector a = delta;
+                CadVector b = delta + vdir;
+
+                d = CadUtil.CrossPlane(a, b, StoreList[0], Normal);
+
+                if (!d.Valid)
+                {
+                    CadVector nvNormal = CadMath.Normal(Normal, vdir);
+
+                    double ip = CadMath.InnerProduct(nvNormal, delta);
+
+                    d = nvNormal * ip;
+
+                    //DebugOut.Std.println("nvNormal:" + nvNormal.SimpleString());
+                    //DebugOut.Std.println("para d:" + d.SimpleString());
+                }
+
+                //DebugOut.Std.println("vdir:" + vdir.SimpleString());
+                //DebugOut.Std.println("n:" + Normal.SimpleString());
+                //DebugOut.Std.println("delta:" + delta.SimpleString());
+                //DebugOut.Std.println("a:" + a.SimpleString());
+                //DebugOut.Std.println("b:" + b.SimpleString());
+                //DebugOut.Std.println("d:" + d.SimpleString());
+            }
+            else
+            {
+                d = delta;
+            }
+
+            Util.MoveSelectedPoint(this, dc, d);
+
+            mChildList.ForEach(c =>
+            {
+                c.MoveSelectedPoints(dc, delta);
+            });
+
+
+            /*
+            if (Locked) return;
+            
+            Util.MoveSelectedPoint(this, dc, delta);
+
+            mChildList.ForEach(c =>
+            {
+                c.MoveSelectedPoints(dc, delta);
+            });
+            */
+        }
+
+        public override void MoveAllPoints(DrawContext dc, CadVector delta)
+        {
+            if (Locked) return;
+
+            Util.MoveAllPoints(this, dc, delta);
+        }
+        #endregion
+
 
         public override int PointCount
         {
