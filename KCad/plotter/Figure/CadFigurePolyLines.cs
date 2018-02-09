@@ -91,7 +91,7 @@ namespace Plotter
                 d = delta;
             }
 
-            logger.Debug("d=" + d.SimpleString());
+            Log.d("MoveSelectedPoints d=" + d.SimpleString());
 
             Util.MoveSelectedPoint(this, dc, d);
 

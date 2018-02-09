@@ -11,9 +11,6 @@ namespace Plotter
 
     public partial class CadFigure
     {
-        protected static readonly log4net.ILog logger =
-            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         #region Enums
         public enum Types : byte
         {
