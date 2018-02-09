@@ -33,7 +33,6 @@ namespace Plotter
 
             if (fig == null)
             {
-                Log.e("ERROR DiffData." + nameof(undo) + " fig is null");
                 return;
             }
             
@@ -69,7 +68,6 @@ namespace Plotter
 
             if (fig == null)
             {
-                Log.e("ERROR DiffData." + nameof(redo) + " fig is null");
                 return;
             }
 

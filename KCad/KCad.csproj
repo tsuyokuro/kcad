@@ -296,7 +296,6 @@
     <Compile Include="plotter\undo\DiffData.cs" />
     <Compile Include="plotter\DrawContext\DrawContext.cs" />
     <Compile Include="plotter\undo\HistoryManager.cs" />
-    <Compile Include="plotter\Log.cs" />
     <Compile Include="plotter\Util\CadConst.cs" />
     <Compile Include="plotter\Util\FlexBlockingQueue.cs" />
     <Compile Include="plotter\Util\MessageHandler.cs" />

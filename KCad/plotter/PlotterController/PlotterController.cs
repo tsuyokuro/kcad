@@ -892,8 +892,6 @@ namespace Plotter
 
             CadVector pp = LastDownPoint;
                                 
-            Log.d("paste");
-
             string s = (string)Clipboard.GetData("List.CadFiguer");
 
             JObject jo = JObject.Parse(s);

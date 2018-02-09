@@ -77,7 +77,7 @@ namespace Plotter
             }
             catch (InvalidOperationException e)
             {
-                Log.e("HistoryManager undo {0:s}", e.ToString());
+
             }
         }
 
@@ -99,7 +99,6 @@ namespace Plotter
             }
             catch (InvalidOperationException e)
             {
-                Log.e("HistoryManager redo {0:s}", e.ToString());
             }
         }
 

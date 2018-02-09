@@ -421,7 +421,6 @@ namespace Plotter
 
                     if (fig == null)
                     {
-                        Log.e("CadObjectDB#GroupInfoFromJson() invalid ID=" + id);
                         continue;
                     }
 
