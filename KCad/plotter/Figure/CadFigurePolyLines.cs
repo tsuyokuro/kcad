@@ -91,6 +91,8 @@ namespace Plotter
                 d = delta;
             }
 
+            logger.Debug("d=" + d.SimpleString());
+
             Util.MoveSelectedPoint(this, dc, d);
 
             mChildList.ForEach(c =>
