@@ -188,6 +188,11 @@ namespace Plotter
                 return;
             }
 
+            if (fig.PointCount < 3)
+            {
+                return;
+            }
+
             CadVector c = fig.GetPointAt(0);
             CadVector a = fig.GetPointAt(1);
             CadVector b = fig.GetPointAt(2);

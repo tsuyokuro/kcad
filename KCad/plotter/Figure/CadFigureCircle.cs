@@ -72,7 +72,8 @@ namespace Plotter
 
         public override void Draw(DrawContext dc, int pen)
         {
-            drawCircle(dc, pen);
+            //drawCircle(dc, pen);
+            drawDisk(dc, pen);
         }
 
         public override void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
@@ -95,8 +96,12 @@ namespace Plotter
             CadVector cp = PointList[0];
             CadVector b = getRP(dc, cp, tp, true);
 
+            CircleExpander.ForEachSegs(cp, tp, b, 32, action);
+            void action(CadVector p0, CadVector p1)
+            {
+                dc.Drawing.DrawLine(pen, p0, p1);
+            }
 
-            dc.Drawing.DrawCircle(pen, cp, tp, b);
 
             dc.Drawing.DrawLine(pen, cp, tp);
             dc.Drawing.DrawLine(pen, cp, b);
@@ -116,16 +121,105 @@ namespace Plotter
                 return;
             }
 
-            dc.Drawing.DrawCircle(pen, PointList[0], PointList[1], PointList[2]);
-            //dc.Drawing.DrawLine(pen, PointList[0], PointList[1]);
-            //dc.Drawing.DrawLine(pen, PointList[0], PointList[2]);
+            CadVector normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
+
+            CadVector tv = (normal * -1) * Thickness;
+
+
+            CircleExpander.ForEachSegs(PointList[0], PointList[1], PointList[2], 32, action);
+            void action(CadVector p0, CadVector p1)
+            {
+                dc.Drawing.DrawLine(pen, p0, p1);
+                
+                if (Thickness != 0)
+                {
+                    dc.Drawing.DrawLine(pen, p0+tv, p1+tv);
+                    dc.Drawing.DrawLine(pen, p0, p0 + tv);
+                }
+            }
+        }
+
+        private void drawDisk(DrawContext dc, int pen)
+        {
+            if (PointList.Count == 0)
+            {
+                return;
+            }
+
+            if (PointList.Count < 3)
+            {
+                dc.Drawing.DrawCross(pen, PointList[0], 2);
+                if (PointList[0].Selected) dc.Drawing.DrawSelectedPoint(PointList[0]);
+                return;
+            }
+
+            bool outline = dc.DrawFaceOutline;
+
+            VectorList vl = CircleExpander.GetExpandList(PointList[0], PointList[1], PointList[2], 32);
+
+            CadVector normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
+
+            dc.Drawing.DrawFace(pen, vl, normal, outline);
+
+            if (Thickness == 0)
+            {
+                return;
+            }
+
+            VectorList vl2 = new VectorList(vl.Count);
+
+            CadVector tv = (normal * -1) * Thickness;
+
+            for (int i=0; i<vl.Count; i++)
+            {
+                vl2.Add(vl[i] + tv);
+            }
+
+            dc.Drawing.DrawFace(pen, vl2, normal * -1, dc.DrawFaceOutline);
+
+            VectorList side = new VectorList(4);
+
+            side.Add(default(CadVector));
+            side.Add(default(CadVector));
+            side.Add(default(CadVector));
+            side.Add(default(CadVector));
+
+            CadVector n;
+
+            for (int i = 0; i < vl.Count - 1; i++)
+            {
+                side[0] = vl[i];
+                side[1] = vl[i + 1];
+                side[2] = vl2[i + 1];
+                side[3] = vl2[i];
+
+                n = CadMath.Normal(side[2], side[0], side[1]);
+
+                dc.Drawing.DrawFace(pen, side, n, outline);
+            }
+
+            int e = vl.Count - 1;
+
+            side[3] = vl[e];
+            side[2] = vl[0];
+            side[1] = vl2[0];
+            side[0] = vl2[e];
+
+            n = CadMath.Normal(side[1], side[0], side[2]);
+
+            dc.Drawing.DrawFace(pen, side, n, outline);
         }
 
         private void drawSelected_Circle(DrawContext dc, int pen)
         {
-            if (PointList[0].Selected) dc.Drawing.DrawSelectedPoint(PointList[0]);
-            if (PointList[1].Selected) dc.Drawing.DrawSelectedPoint(PointList[1]);
-            if (PointList[2].Selected) dc.Drawing.DrawSelectedPoint(PointList[2]);
+            for (int i=0; i<PointList.Count; i++)
+            {
+                if (PointList[i].Selected)
+                {
+                    dc.Drawing.DrawSelectedPoint(PointList[i]);
+                }
+
+            }
         }
 
         public override void StartCreate(DrawContext dc)

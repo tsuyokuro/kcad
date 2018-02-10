@@ -78,9 +78,11 @@ namespace Plotter
         {
         }
 
+        /*
         public virtual void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb)
         {
         }
+        */
 
         public virtual void DrawText(int font, int brush, CadVector a, string s)
         {
@@ -159,66 +161,6 @@ namespace Plotter
                 DrawLine(pen, a.p0, a.p4);
             }
         }
-
-        public virtual void DrawBezier(
-            int pen,
-            CadVector p0, CadVector p1, CadVector p2)
-        {
-            double t = 0;
-            double d = 1.0 / 64;
-
-            t = d;
-
-            int n = 3;
-
-            CadVector t0 = p0;
-            CadVector t1 = p0;
-
-            while (t <= 1.0)
-            {
-                t1 = default(CadVector);
-                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
-                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
-                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
-
-                DrawLine(pen, t0, t1);
-
-                t0 = t1;
-
-                t += d;
-            }
-        }
-
-        public virtual void DrawBezier(
-            int pen,
-            CadVector p0, CadVector p1, CadVector p2, CadVector p3)
-        {
-            double t = 0;
-            double d = 1.0 / 64;
-
-            t = d;
-
-            int n = 4;
-
-            CadVector t0 = p0;
-            CadVector t1 = p0;
-
-            while (t <= 1.0)
-            {
-                t1 = default(CadVector);
-                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
-                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
-                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
-                t1 += p3 * CadMath.BernsteinBasisF(n - 1, 3, t);
-
-                DrawLine(pen, t0, t1);
-
-                t0 = t1;
-
-                t += d;
-            }
-        }
-
 
         public virtual void DrawCursorScrn(CadVector pp)
         {

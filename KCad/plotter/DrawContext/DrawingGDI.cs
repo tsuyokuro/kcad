@@ -791,6 +791,7 @@ namespace Plotter
             DrawText(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, p1, "z");
         }
 
+        /*
         public override void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb)
         {
             CadVector va = pa - cp;
@@ -845,5 +846,6 @@ namespace Plotter
 
             DrawLine(pen, tp1, pa);
         }
+        */
     }
 }

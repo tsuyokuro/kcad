@@ -42,7 +42,7 @@ namespace Plotter
 
         void DrawFace(int pen, VectorList pointList, CadVector normal, bool drawOutline);
 
-        void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb);
+        //void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb);
 
         void DrawText(int font, int brush, CadVector a, string s);
 
@@ -51,15 +51,6 @@ namespace Plotter
         CadVector MeasureText(int font, string s);
 
         void DrawArrow(int pen, CadVector pt0, CadVector pt1, ArrowTypes type, ArrowPos pos, double len, double width);
-
-        void DrawBezier(
-            int pen,
-            CadVector p0, CadVector p1, CadVector p2);
-
-        void DrawBezier(
-            int pen,
-            CadVector p0, CadVector p1, CadVector p2, CadVector p3);
-
 
         void DrawCursorScrn(CadVector pp);
 

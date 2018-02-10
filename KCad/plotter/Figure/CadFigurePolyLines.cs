@@ -286,20 +286,27 @@ namespace Plotter
                 return;
             }
 
-            PolyLineExpander.ForEachExpandPoints(mPointList, start + 1, cnt - 1, 8, action);
+            PolyLineExpander.ForEachPoints(mPointList, start + 1, cnt - 1, 8, action);
             void action(CadVector v)
             {
                 dc.Drawing.DrawLine(pen, a, v);
-                dc.Drawing.DrawLine(pen, a+tv, v+tv);
-                dc.Drawing.DrawLine(pen, a, a+tv);
+
+                if (Thickness != 0)
+                {
+                    dc.Drawing.DrawLine(pen, a + tv, v + tv);
+                    dc.Drawing.DrawLine(pen, a, a + tv);
+                }
                 a = v;
             }
 
             if (IsLoop)
             {
                 dc.Drawing.DrawLine(pen, a, pl[start]);
-                dc.Drawing.DrawLine(pen, a+tv, pl[start]+tv);
-                dc.Drawing.DrawLine(pen, a, a + tv);
+                if (Thickness != 0)
+                {
+                    dc.Drawing.DrawLine(pen, a + tv, pl[start] + tv);
+                    dc.Drawing.DrawLine(pen, a, a + tv);
+                }
             }
         }
 

@@ -340,6 +340,7 @@ namespace Plotter
             DrawLine(pen, pz0, pz1);
         }
 
+        /*
         public override void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb)
         {
             CadVector va = pa - cp;
@@ -381,5 +382,6 @@ namespace Plotter
 
             DrawLine(pen, tp1, pa);
         }
+        */
     }
 }
