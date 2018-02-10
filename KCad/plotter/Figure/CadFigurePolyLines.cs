@@ -255,13 +255,9 @@ namespace Plotter
 
         protected void DrawLines(DrawContext dc, int pen)
         {
+            VectorList pl = mPointList;
+            int start = 0;
             int cnt = mPointList.Count;
-            DrawLinesPart(dc, 0, cnt, pen);
-        }
-
-        protected void DrawLinesPart(DrawContext dc, int start, int cnt, int pen)
-        {
-            VectorList pl = PointList;
 
             if (cnt <= 0)
             {
@@ -290,7 +286,7 @@ namespace Plotter
                 return;
             }
 
-            pl.ForEachExpandPoints(start + 1, cnt - 1, 8, action);
+            PolyLineExpander.ForEachExpandPoints(mPointList, start + 1, cnt - 1, 8, action);
             void action(CadVector v)
             {
                 dc.Drawing.DrawLine(pen, a, v);
@@ -314,7 +310,7 @@ namespace Plotter
 
         private VectorList GetPointsPart(int start, int cnt, int curveSplitNum)
         {
-            return mPointList.GetExpandList(start, cnt, curveSplitNum);
+            return PolyLineExpander.GetExpandList(mPointList, start, cnt, curveSplitNum);
         }
 
         private void drawSelected_Lines(DrawContext dc, int pen)
