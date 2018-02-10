@@ -767,6 +767,8 @@ namespace Plotter
         {
             CadOpeList opeList = new CadOpeList();
 
+            int removeCnt = 0;
+
             foreach (CadLayer layer in mDB.LayerList)
             {
                 IReadOnlyList<CadFigure> list = layer.FigureList;
@@ -783,8 +785,15 @@ namespace Plotter
                         opeList.OpeList.Add(ope);
 
                         layer.RemoveFigureByIndex(i);
+
+                        removeCnt++;
                     }
                 }
+            }
+
+            if (removeCnt > 0)
+            {
+                UpdateTreeView(true);
             }
 
             return opeList;
@@ -825,9 +834,9 @@ namespace Plotter
             UpdateTreeView(true);
         }
 
-    #endregion
+        #endregion
 
-    #region "Copy and paste"
+        #region "Copy and paste"
         public void Copy()
         {
             CopyFigures();
