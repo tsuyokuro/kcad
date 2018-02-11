@@ -302,15 +302,21 @@ namespace Plotter
 
             len = d.Norm();
 
-
             CadVector sv = dc.Drawing.MeasureText(FontID, s);
-
             double sl = sv.Norm();
 
-            double a = ((len - sl) / 2) / len;
+            CadVector sp;
 
-
-            CadVector sp = (d * a) + p0;
+            if (len > CadMath.R0Max)
+            {
+                double a = ((len - sl) / 2) / len;
+                sp = (d * a) + p0;
+            }
+            else
+            {
+                sp = p0;
+                d = CadVector.UnitX;
+            }
 
             dc.Drawing.DrawTextScrn(FontID, BrushID, sp, d.UnitVector(), s);
         }
