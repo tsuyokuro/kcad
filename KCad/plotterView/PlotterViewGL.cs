@@ -92,6 +92,31 @@ namespace Plotter
             if (CadKeyboard.IsCtrlKeyDown())
             {
                 mDrawContext.MoveForwardEyePoint(e.Delta * 0.01);
+
+                /*
+                double t;
+
+                if (e.Delta > 0)
+                {
+                    t = e.Delta / e.Delta;
+                    mDrawContext.MoveForwardEyePoint(2*t);
+                }
+                else if (e.Delta < 0)
+                {
+                    t = e.Delta / e.Delta;
+                    mDrawContext.MoveForwardEyePoint(-2*t);
+                }
+                */
+
+                if (e.Delta > 0)
+                {
+                    mDrawContext.WoldScale *= (double)(e.Delta / e.Delta) * 1.2;
+                }
+                else if (e.Delta < 0)
+                {
+                    mDrawContext.WoldScale *= (double)(e.Delta / e.Delta) * 0.8;
+                }
+
                 RedrawAll();
             }
         }

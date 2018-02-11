@@ -67,7 +67,7 @@ namespace Plotter
             double a = 1.0;
 
             double ez = 1000.0;
-            double near = 500.0;
+            double near = 1.0;
             double far = 1500.0;
 
 
@@ -362,7 +362,7 @@ namespace Plotter
         public void MoveForwardEyePoint(double d)
         {
             Eye += ViewDir * d;
-            ProjectionNear -= d;
+            ProjectionNear += d;
 
             mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
             mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
