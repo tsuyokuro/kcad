@@ -58,7 +58,7 @@ namespace Plotter
             CadVector d;
 
 
-            if (!IsSelectedAll())
+            if (!IsSelectedAll() && mPointList.Count > 2)
             {
                 CadVector vdir = (CadVector)dc.ViewDir;
 

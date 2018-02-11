@@ -49,8 +49,8 @@ namespace Plotter
             LightSpecular = new Color4(0.2f, 0.2f, 0.2f, 1.0f);
             */
 
-            LightPosition = new Vector4(150.0f, 150f, 500.0f, 0.0f);
-            LightAmbient = new Color4(0.8f, 0.8f, 0.8f, 1.0f);
+            LightPosition = new Vector4(100.0f, 500f, 150.0f, 0.0f);
+            LightAmbient = new Color4(0.5f, 0.5f, 0.5f, 1.0f);
             LightDiffuse = new Color4(0.7f, 0.7f, 0.7f, 1.0f);
             LightSpecular = new Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
