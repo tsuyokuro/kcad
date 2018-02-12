@@ -149,6 +149,7 @@
             </MenuItem>
             <MenuItem x:Name="DrawOptionMenu" Header="Draw">
                 <MenuItem Header="Draw face outline" IsCheckable="True" IsChecked="{Binding DrawFaceOutline}"/>
+                <MenuItem Header="Fill face" IsCheckable="True" IsChecked="{Binding FillFace}"/>
             </MenuItem>
         </Menu>
 

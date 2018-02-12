@@ -297,6 +297,24 @@ namespace Plotter
             }
         }
 
+        private bool mFillFace = true;
+        public bool FillFace
+        {
+            set
+            {
+                mFillFace = value;
+                mPlotterView.DrawContext.FillFace = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillFace)));
+
+                DrawAll();
+            }
+
+            get
+            {
+                return mFillFace;
+            }
+        }
+
         #endregion
 
 
@@ -401,6 +419,7 @@ namespace Plotter
 
             mPlotterView = view;
             mPlotterView.DrawContext.DrawFaceOutline = mDrawFaceOutline;
+            mPlotterView.DrawContext.FillFace = mFillFace;
 
             mPlotterView.SetController(mController);
 

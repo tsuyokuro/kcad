@@ -142,6 +142,8 @@ namespace Plotter
 
         public bool DrawFaceOutline = true;
 
+        public bool FillFace = true;
+
 
         protected IDrawing mDrawing;
 

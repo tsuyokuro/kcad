@@ -68,7 +68,7 @@ namespace Plotter
 
             double ez = 1000.0;
             double near = 1.0;
-            double far = 1500.0;
+            double far = 15000.0;
 
 
             // FovY 視野角を指定

@@ -149,7 +149,7 @@ namespace Plotter
         {
             bool drawed = false;
 
-            if (IsLoop)
+            if (IsLoop && dc.FillFace)
             {
                 drawed = DrawFaces(dc, pen);
             }
@@ -270,6 +270,8 @@ namespace Plotter
             }
 
             CadVector tv = Normal * Thickness;
+
+            tv *= -1;
 
             CadVector a;
 

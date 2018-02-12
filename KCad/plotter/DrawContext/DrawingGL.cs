@@ -138,7 +138,7 @@ namespace Plotter
                 GL.Color4(glpen.Color);
                 GL.LineWidth(1.0f);
 
-                Vector3d t = DC.ViewDir * (-0.5f / DC.WoldScale);
+                Vector3d t = DC.ViewDir * (-1.0f / DC.WoldScale);
 
                 CadVector shift = (CadVector)t;
 
