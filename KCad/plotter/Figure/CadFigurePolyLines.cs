@@ -99,18 +99,6 @@ namespace Plotter
             {
                 c.MoveSelectedPoints(dc, delta);
             });
-
-
-            /*
-            if (Locked) return;
-            
-            Util.MoveSelectedPoint(this, dc, delta);
-
-            mChildList.ForEach(c =>
-            {
-                c.MoveSelectedPoints(dc, delta);
-            });
-            */
         }
 
         public override void MoveAllPoints(DrawContext dc, CadVector delta)
@@ -162,7 +150,7 @@ namespace Plotter
 
         public override void DrawSelected(DrawContext dc, int pen)
         {
-            drawSelected_Lines(dc, pen);
+            DrawSelectedLines(dc, pen);
         }
 
         public override void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
@@ -322,7 +310,7 @@ namespace Plotter
             return PolyLineExpander.GetExpandList(mPointList, start, cnt, curveSplitNum);
         }
 
-        private void drawSelected_Lines(DrawContext dc, int pen)
+        private void DrawSelectedLines(DrawContext dc, int pen)
         {
             int i;
             int num = PointList.Count;
@@ -413,15 +401,15 @@ namespace Plotter
 
             if (PointList.Count == 1)
             {
-                return getPointCentroid();
+                return GetPointCentroid();
             }
 
             if (PointList.Count < 3)
             {
-                return getSegCentroid();
+                return GetSegCentroid();
             }
 
-            return getPointListCentroid();
+            return GetPointListCentroid();
         }
 
         public override void RecalcNormal()
@@ -443,7 +431,7 @@ namespace Plotter
             Normal = normal;
         }
 
-        private Centroid getPointListCentroid()
+        private Centroid GetPointListCentroid()
         {
             Centroid ret = default(Centroid);
 
@@ -454,7 +442,7 @@ namespace Plotter
             return ret;
         }
 
-        private Centroid getPointCentroid()
+        private Centroid GetPointCentroid()
         {
             Centroid ret = default(Centroid);
 
@@ -467,7 +455,7 @@ namespace Plotter
             return ret;
         }
 
-        private Centroid getSegCentroid()
+        private Centroid GetSegCentroid()
         {
             Centroid ret = default(Centroid);
 

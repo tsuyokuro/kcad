@@ -334,11 +334,12 @@ namespace Plotter
 
         public virtual void RemovePointAt(int index)
         {
+            /*
             if (mPointList == null)
             {
                 return;
             }
-
+            */
             mPointList.RemoveAt(index);
         }
 
