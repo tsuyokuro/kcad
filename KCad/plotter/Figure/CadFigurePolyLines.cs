@@ -389,6 +389,9 @@ namespace Plotter
             DiffData diff = base.EndEdit();
             RecalcNormal();
 
+            //例外ハンドリングテスト用
+            //CadVector v = mPointList[100];
+
             return diff;
         }
 

@@ -188,5 +188,10 @@ namespace KCad
         }
         #endregion
 
+
+        public void EmergencySave(string path)
+        {
+            ViewModel.Save(path);
+        }
     }
 }

@@ -664,6 +664,11 @@ namespace Plotter
             }
         }
 
+        public void Save(string pathName)
+        {
+            SaveFile(pathName);
+        }
+
         public void GridSettings()
         {
             GridSettingsDialog dlg = new GridSettingsDialog();
