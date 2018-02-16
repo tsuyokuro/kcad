@@ -302,6 +302,15 @@ namespace Plotter
             return p1;
         }
 
+        public static CadVector operator -(CadVector p1)
+        {
+            p1.x *= -1;
+            p1.y *= -1;
+            p1.z *= -1;
+
+            return p1;
+        }
+
         public static CadVector operator +(CadVector p1, double d)
         {
             p1.x += d;

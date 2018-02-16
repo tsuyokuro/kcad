@@ -21,7 +21,7 @@ namespace Plotter
 
     public class VectorList
     {
-        public List<CadVector> VList = null;
+        private List<CadVector> VList = null;
 
         public int Count
         {

@@ -85,7 +85,7 @@ namespace Plotter
             int curveSplitNum,
             Action<CadVector> action)
         {
-            ForEachPoints(src, 0, src.VList.Count, curveSplitNum, action);
+            ForEachPoints(src, 0, src.Count, curveSplitNum, action);
         }
 
         public static void ForEachPoints(
@@ -94,7 +94,7 @@ namespace Plotter
             int curveSplitNum,
             Action<CadVector> action)
         {
-            List<CadVector> pl = src.VList;
+            VectorList pl = src;
 
             if (cnt <= 0)
             {

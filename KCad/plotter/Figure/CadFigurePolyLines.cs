@@ -183,6 +183,9 @@ namespace Plotter
 
             dc.Drawing.DrawFace(pen, vl, Normal, outline);
 
+            // Debug 法線表示
+            dc.Drawing.DrawArrow(pen, vl[0], vl[0] + Normal * 10, ArrowTypes.PLUS, ArrowPos.END, 4, 2);
+
             if (Thickness == 0)
             {
                 return true;
@@ -204,7 +207,7 @@ namespace Plotter
                 vl2[i] += tv;
             }
 
-            dc.Drawing.DrawFace(pen, vl2, (Normal * -1), outline);
+            dc.Drawing.DrawFace(pen, vl2, -Normal, outline);
 
             VectorList side = new VectorList(4);
 
