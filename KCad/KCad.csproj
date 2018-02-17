@@ -174,7 +174,7 @@
     </ApplicationDefinition>
     <Compile Include="Controls\AutoCompleteTextBox.cs" />
     <Compile Include="Controls\CadConsole.cs" />
-    <Compile Include="ExceptionDialog.xaml.cs">
+    <Compile Include="Dialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Log.cs" />
@@ -200,15 +200,15 @@
     <Compile Include="plotter\searcher\SpPointSearcher.cs" />
     <Compile Include="plotter\Util\CadDxfLoader.cs" />
     <Compile Include="plotter\Util\CadRuler.cs" />
-    <Compile Include="SnapSettingsDialog.xaml.cs">
+    <Compile Include="Dialogs\SnapSettingsDialog.xaml.cs">
       <DependentUpon>SnapSettingsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="TreeView\CadObjTreeItem.cs" />
-    <Page Include="ExceptionDialog.xaml">
+    <Page Include="Dialogs\ExceptionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GridSettingsDialog.xaml">
+    <Page Include="Dialogs\GridSettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -233,7 +233,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DebugInputThread.cs" />
-    <Compile Include="GridSettingsDialog.xaml.cs">
+    <Compile Include="Dialogs\GridSettingsDialog.xaml.cs">
       <DependentUpon>GridSettingsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
@@ -260,7 +260,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SnapSettingsDialog.xaml">
+    <Page Include="Dialogs\SnapSettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

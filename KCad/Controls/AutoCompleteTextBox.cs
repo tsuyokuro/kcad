@@ -59,19 +59,34 @@ namespace KCad
             }
         }
 
+        public Brush CandidateListBackground
+        {
+            get
+            {
+                return CandidateListBox.Background;
+            }
+            set
+            {
+                CandidateListBox.Background = value;
+            }
+        }
+
         public event TextEventHandler Determine;
+
+        public AutoCompleteTextBox()
+        {
+            CandidatePopup = new Popup();
+            CandidateListBox = new ListBox();
+
+            CandidatePopup.Child = CandidateListBox;
+        }
 
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
 
-            CandidatePopup = new Popup();
-            CandidateListBox = new ListBox();
-
-            CandidatePopup.Child = CandidateListBox;
-
-            CandidateListBox.Background = Brushes.Black;
-            CandidateListBox.Foreground = Brushes.White;
+            CandidateListBox.Background = this.Background;
+            CandidateListBox.Foreground = this.Foreground;
 
             CandidateListBox.MouseUp += CandidateListBox_MouseUp;
             CandidateListBox.PreviewKeyDown += CandidateListBox_PreviewKeyDown;
