@@ -109,6 +109,25 @@ namespace Plotter
             return CadVector.Create(x, y, z);
         }
 
+        public CadVector GetProjectionDir()
+        {
+            CadVector viewv = CadVector.Create(Controller.CurrentDC.ViewDir);
+            return -viewv;
+        }
+
+        public void PrintVector(CadVector v)
+        {
+            var sb = new StringBuilder();
+
+            sb.Append(CadUtil.ValToString(v.x));
+            sb.Append(", ");
+            sb.Append(CadUtil.ValToString(v.y));
+            sb.Append(", ");
+            sb.Append(CadUtil.ValToString(v.z));
+
+            Controller.InteractOut.println(sb.ToString());
+        }
+
         public void Find(double range)
         {
             CadVector org = Controller.LastDownPoint;
@@ -729,7 +748,14 @@ namespace Plotter
         {
             CadVector faceNormal = CadUtil.RepresentativeNormal(fig.PointList);
 
-            CadVector rv = CadMath.Normal(faceNormal, dir); //回転軸の向き
+            //   | 回転軸
+            //   |
+            //   |
+            //   | --------->向けたい方向
+            //   /
+            //  /
+            // 法線
+            CadVector rv = CadMath.Normal(faceNormal, dir);
 
             double t = CadMath.AngleOfVector(faceNormal, dir);
 

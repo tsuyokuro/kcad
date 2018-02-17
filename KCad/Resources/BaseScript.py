@@ -127,6 +127,14 @@ def swapYZ(ay, az):
 def setThickness(t):
     SE.SetThickness(t)
 
+#[AC] projDir()
+def projDir():
+    return SE.GetProjectionDir()
+
+#[AC] printVector(v)
+def printVector(v):
+    SE.PrintVector(v)
+
 #globals
 x=0
 y=0
