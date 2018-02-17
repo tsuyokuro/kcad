@@ -362,7 +362,6 @@ namespace Plotter
         public void MoveForwardEyePoint(double d)
         {
             Eye += ViewDir * d;
-            ProjectionNear += d;
 
             mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
             mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
