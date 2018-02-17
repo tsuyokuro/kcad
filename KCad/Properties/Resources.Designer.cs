@@ -61,50 +61,12 @@ namespace KCad.Properties {
         }
         
         /// <summary>
-        ///   import math
-        ///
-        ///def putMsg(s):
-        ///    SE.PutMsg(s)
-        ///
-        ///def rect(w, h):
-        ///    SE.Rect(w, h)
-        ///
-        ///def area():
-        ///    SE.Area()
-        ///
-        ///def find(range):
-        ///    SE.Find(range)
-        ///
-        ///def layerList():
-        ///    SE.LayerList()
-        ///
-        ///def lastDown():
-        ///    SE.ShowLastDownPoint()
-        ///
-        ///def distance():
-        ///    SE.Distance()
-        ///
-        ///def group():
-        ///    SE.Group()
-        ///
-        ///def ungroup():
-        ///    SE.Ungroup()
-        ///
-        ///def addPoint():
-        ///    SE.AddPoint()
-        ///
-        ///def addLayer(name):
-        ///    SE.AddLayer(name)
-        ///
-        ///def reverse():
-        ///    SE.ReverseOrder()
-        ///
-        ///def move(x, y, z):
-        ///    SE.Move(x,  [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        ///   型 System.Byte[] のローカライズされたリソースを検索します。
         /// </summary>
-        public static string BaseScript {
+        public static byte[] BaseScript {
             get {
-                return ResourceManager.GetString("BaseScript", resourceCulture);
+                object obj = ResourceManager.GetObject("BaseScript", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         

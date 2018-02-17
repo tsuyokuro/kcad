@@ -111,10 +111,6 @@ def cursorAngleY(d):
 def toBmp(bw, bh, argb=0xffffffff, linew=1, fname=""):
     SE.CreateBitmap(bw, bh, argb, linew, fname)
 
-#[AC] setZero(flgZ)
-def setZero(flg):
-    SE.SetZero(flg)
-
 #[AC] faceTo(munitVZ)
 def faceTo(dir):
     SE.FaceToDirection(dir)
@@ -151,8 +147,4 @@ unitVZ = SE.CreateVector(0,0,1)
 munitVX = SE.CreateVector(-1,0,0)
 munitVY = SE.CreateVector(0,-1,0)
 munitVZ = SE.CreateVector(0,0,-1)
-
-flgX = 4
-flgY = 2
-flgZ = 1
 

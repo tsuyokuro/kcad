@@ -52,7 +52,7 @@ namespace Plotter
 
         private void InitScriptingEngine()
         {
-            string script = Resources.BaseScript;
+            string script = System.Text.Encoding.GetEncoding("Shift_JIS").GetString(Resources.BaseScript);
 
             Engine = IronPython.Hosting.Python.CreateEngine();
             Scope = Engine.CreateScope();
@@ -707,64 +707,6 @@ namespace Plotter
             }
 
             tdc.Dispose();
-        }
-
-        public void SetZero(uint flag)
-        {
-            Controller.StartEdit();
-
-            TransSelectedPoints((p) =>
-            {
-                if ((flag & 4)!=0)
-                {
-                    p.x = 0;
-                }
-                if ((flag & 2) != 0)
-                {
-                    p.y = 0;
-                }
-                if ((flag & 1) != 0)
-                {
-                    p.z = 0;
-                }
-
-                return p;
-            });
-
-            Controller.EndEdit();
-
-            Controller.UpdateTreeView(false);
-        }
-
-        public void TransSelectedPoints(Func<CadVector, CadVector> dele)
-        {
-            DrawContext dc = Controller.CurrentDC;
-
-            CadObjectDB db = Controller.DB;
-
-            List<uint> idlist = Controller.GetSelectedFigIDList();
-
-            int i;
-            for (i = 0; i < idlist.Count; i++)
-            {
-                CadFigure fig = db.GetFigure(idlist[i]);
-
-                if (fig == null)
-                {
-                    continue;
-                }
-
-                int j;
-                for (j = 0; j < fig.PointList.Count; j++)
-                {
-                    if (!fig.PointList[j].Selected)
-                    {
-                        continue;
-                    }
-
-                    fig.PointList[j] = dele(fig.PointList[j]);
-                }
-            }
         }
 
         public void FaceToDirection(CadVector dir)
