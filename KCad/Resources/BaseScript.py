@@ -147,11 +147,19 @@ ratio=0.5
 
 range = 4
 
+#[AC] point0
 point0 = SE.CreateVector(0,0,0)
+
+#[AC] unitVX
+#[AC] unitVY
+#[AC] unitVZ
 unitVX = SE.CreateVector(1,0,0)
 unitVY = SE.CreateVector(0,1,0)
 unitVZ = SE.CreateVector(0,0,1)
 
+#[AC] munitVX
+#[AC] munitVY
+#[AC] munitVZ
 munitVX = SE.CreateVector(-1,0,0)
 munitVY = SE.CreateVector(0,-1,0)
 munitVZ = SE.CreateVector(0,0,-1)

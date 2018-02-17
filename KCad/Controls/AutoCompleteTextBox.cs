@@ -11,7 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows;
-
+using System.Text.RegularExpressions;
 
 namespace KCad
 {
@@ -137,6 +137,8 @@ namespace KCad
 
             ea.Text = Text;
 
+            History.Add(Text);
+
             Determine(this, ea);
         }
 
@@ -144,7 +146,7 @@ namespace KCad
         {
             base.OnTextChanged(e);
 
-            if (Comp(Text))
+            if (Check())
             {
                 CandidatePopup.PlacementTarget = this;
                 CandidatePopup.IsOpen = true;
@@ -216,13 +218,29 @@ namespace KCad
 
             ListBoxItem item = (ListBoxItem)(CandidateListBox.SelectedItem);
 
-            Text = (string)(item.Content);
+            string s = (string)(item.Content);
+
+            string currentText = Text;
+
+            currentText = currentText.Remove(mReplacePos, mReplaceLen);
+            currentText = currentText.Insert(mReplacePos, s);
+
+            Text = currentText;
 
             return true;
         }
 
-        private bool Comp(string currentText)
+        Regex WordPtn = new Regex("[a-zA-Z_0-9]+");
+
+        int mReplacePos = -1;
+
+        int mReplaceLen = 0;
+
+        private bool Check()
         {
+            string currentText = Text;
+            int cpos = CaretIndex;
+
             if (string.IsNullOrEmpty(currentText))
             {
                 return false;
@@ -233,6 +251,26 @@ namespace KCad
                 return false;
             }
 
+            string s = null;
+
+            MatchCollection mc = WordPtn.Matches(currentText);
+            
+            foreach(Match m in mc)
+            {
+                if (cpos >= m.Index && cpos <= m.Index + m.Length)
+                {
+                    mReplacePos = m.Index;
+                    mReplaceLen = m.Length;
+                    s = m.Value;
+
+                    break;
+                }
+            }
+
+            if (s == null)
+            {
+                s = currentText;
+            }
 
             CandidateListBox.Items.Clear();
 
@@ -240,7 +278,7 @@ namespace KCad
             {
                 string text = str as String;
 
-                if (text.Contains(currentText))
+                if (text.Contains(s))
                 {
                     ListBoxItem item = new ListBoxItem();
 

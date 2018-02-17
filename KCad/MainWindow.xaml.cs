@@ -158,7 +158,6 @@ namespace KCad
             if (s.Length > 0)
             {
                 ViewModel.TextCommand(s);
-                textCommand.History.Add(s);
                 viewContainer.Focus();
             }
         }

@@ -46,8 +46,7 @@ namespace Plotter
             InitScriptingEngine();
         }
 
-
-        Regex FuncPtn = new Regex(@"def[ \t]+(\w+\(.*\))\:");
+        //Regex FuncPtn = new Regex(@"def[ \t]+(\w+\(.*\))\:");
         Regex AutoCompPtn = new Regex(@"#\[AC\][ \t]*(.+)\r\n");
 
         private void InitScriptingEngine()
