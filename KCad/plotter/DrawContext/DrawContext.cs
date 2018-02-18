@@ -137,13 +137,7 @@ namespace Plotter
         public double DeviceScaleX = 1.0;
         public double DeviceScaleY = -1.0;
 
-
         public DrawTools Tools = new DrawTools();
-
-        public bool DrawFaceOutline = true;
-
-        public bool FillFace = true;
-
 
         protected IDrawing mDrawing;
 

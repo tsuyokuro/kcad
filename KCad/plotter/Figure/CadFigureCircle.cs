@@ -153,7 +153,7 @@ namespace Plotter
                 return;
             }
 
-            bool outline = dc.DrawFaceOutline;
+            bool outline = SettingsHolder.Settings.DrawFaceOutline;
 
             VectorList vl = CircleExpander.GetExpandList(PointList[0], PointList[1], PointList[2], 32);
 
@@ -175,7 +175,7 @@ namespace Plotter
                 vl2.Add(vl[i] + tv);
             }
 
-            dc.Drawing.DrawFace(pen, vl2, normal * -1, dc.DrawFaceOutline);
+            dc.Drawing.DrawFace(pen, vl2, normal * -1, SettingsHolder.Settings.DrawFaceOutline);
 
             VectorList side = new VectorList(4);
 

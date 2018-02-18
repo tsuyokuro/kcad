@@ -5,7 +5,12 @@ using System.Xml;
 
 namespace Plotter
 {
-    class PlotterSettings
+    public static class SettingsHolder
+    {
+        public static PlotterSettings Settings = new PlotterSettings();
+    }
+
+    public class PlotterSettings
     {
         public bool SnapToPoint = true;
 
@@ -20,6 +25,12 @@ namespace Plotter
         public double PointSnapRange = 6;
 
         public double LineSnapRange = 8;
+
+
+        public bool DrawFaceOutline = true;
+
+        public bool FillFace = true;
+
 
         public PlotterSettings()
         {
@@ -81,6 +92,14 @@ namespace Plotter
             item.SetAttribute("range", LineSnapRange.ToString());
             root.AppendChild(item);
 
+            item = document.CreateElement("DrawFaceOutline");
+            item.SetAttribute("enable", DrawFaceOutline.ToString());
+            root.AppendChild(item);
+
+            item = document.CreateElement("FillFace");
+            item.SetAttribute("enable", FillFace.ToString());
+            root.AppendChild(item);
+
             try
             {
                 document.Save(fileName);
@@ -138,18 +157,17 @@ namespace Plotter
                 {
                     LineSnapRange = GetAttributeDouble(item, "range", 8);
                 }
+                else if (item.Name == "DrawFaceOutline")
+                {
+                    DrawFaceOutline = GetAttributeBool(item, "enable", DrawFaceOutline);
+                }
+                else if (item.Name == "FillFace")
+                {
+                    FillFace = GetAttributeBool(item, "enable", FillFace);
+                }
             }
 
             return true;
-        }
-
-        public void Set(PlotterSettings settings)
-        {
-            GridSize = settings.GridSize;
-
-            PointSnapRange = settings.PointSnapRange;
-
-            LineSnapRange = settings.LineSnapRange; ;
         }
 
         private double GetAttributeDouble(XmlElement item, string name, double defaultValue)

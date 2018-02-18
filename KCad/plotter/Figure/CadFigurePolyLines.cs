@@ -137,7 +137,7 @@ namespace Plotter
         {
             bool drawed = false;
 
-            if (IsLoop && dc.FillFace)
+            if (IsLoop && SettingsHolder.Settings.FillFace)
             {
                 drawed = DrawFaces(dc, pen);
             }
@@ -178,7 +178,7 @@ namespace Plotter
                 return false;
             }
 
-            bool outline = dc.DrawFaceOutline;
+            bool outline = SettingsHolder.Settings.DrawFaceOutline;
 
 
             dc.Drawing.DrawFace(pen, vl, Normal, outline);

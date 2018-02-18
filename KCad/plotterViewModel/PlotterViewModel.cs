@@ -238,13 +238,13 @@ namespace Plotter
         {
             set
             {
-                mController.SnapToPoint = value;
+                SettingsHolder.Settings.SnapToPoint = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
             }
 
             get
             {
-                return mController.SnapToPoint;
+                return SettingsHolder.Settings.SnapToPoint;
             }
         }
 
@@ -252,13 +252,13 @@ namespace Plotter
         {
             set
             {
-                mController.SnapToSegment = value;
+                SettingsHolder.Settings.SnapToSegment = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
             }
 
             get
             {
-                return mController.SnapToSegment;
+                return SettingsHolder.Settings.SnapToSegment;
             }
         }
 
@@ -266,26 +266,24 @@ namespace Plotter
         {
             set
             {
-                mController.SnapToLine = value;
+                SettingsHolder.Settings.SnapToLine = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
             }
 
             get
             {
-                return mController.SnapToLine;
+                return SettingsHolder.Settings.SnapToLine;
             }
         }
         #endregion
 
         #region 表示設定
 
-        private bool mDrawFaceOutline = true;
         public bool DrawFaceOutline
         {
             set
             {
-                mDrawFaceOutline = value;
-                mPlotterView.DrawContext.DrawFaceOutline = value;
+                SettingsHolder.Settings.DrawFaceOutline = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawFaceOutline)));
 
                 DrawAll();
@@ -293,17 +291,15 @@ namespace Plotter
 
             get
             {
-                return mDrawFaceOutline;
+                return SettingsHolder.Settings.DrawFaceOutline;
             }
         }
 
-        private bool mFillFace = true;
         public bool FillFace
         {
             set
             {
-                mFillFace = value;
-                mPlotterView.DrawContext.FillFace = value;
+                SettingsHolder.Settings.FillFace = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillFace)));
 
                 DrawAll();
@@ -311,7 +307,7 @@ namespace Plotter
 
             get
             {
-                return mFillFace;
+                return SettingsHolder.Settings.FillFace;
             }
         }
 
@@ -418,8 +414,6 @@ namespace Plotter
             }
 
             mPlotterView = view;
-            mPlotterView.DrawContext.DrawFaceOutline = mDrawFaceOutline;
-            mPlotterView.DrawContext.FillFace = mFillFace;
 
             mPlotterView.SetController(mController);
 
@@ -1164,14 +1158,18 @@ namespace Plotter
 
         public void LoadSettings()
         {
-            PlotterSettings settings = new PlotterSettings();
+            PlotterSettings settings = SettingsHolder.Settings;
+
+            //PlotterSettings settings = new PlotterSettings();
 
             settings.Load();
 
-            SnapToPoint = settings.SnapToPoint;
-            SnapToSegment = settings.SnapToSegment;
-            SnapToLine = settings.SnapToLine;
-            SnapToGrid = settings.SnapToGrid;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawFaceOutline)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillFace)));
 
             mController.Grid.GridSize = settings.GridSize;
 
@@ -1182,12 +1180,7 @@ namespace Plotter
 
         public void SaveSettings()
         {
-            PlotterSettings settings = new PlotterSettings();
-
-            settings.SnapToPoint = SnapToPoint;
-            settings.SnapToSegment = SnapToSegment;
-            settings.SnapToLine = SnapToLine;
-            settings.SnapToGrid = SnapToGrid;
+            PlotterSettings settings = SettingsHolder.Settings;
 
             settings.GridSize = mController.Grid.GridSize;
 

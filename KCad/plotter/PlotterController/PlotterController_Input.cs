@@ -89,6 +89,7 @@ namespace Plotter
             }
         }
 
+        /*
         private bool mSnapToPoint = true;
 
         public bool SnapToPoint
@@ -123,7 +124,7 @@ namespace Plotter
         {
             get; set;
         } = true;
-
+        */
         private void InitHid()
         {
             Mouse.LButtonDown = LButtonDown;
@@ -702,7 +703,7 @@ namespace Plotter
 
             HighlightPointList.Clear();
 
-            if (SnapToPoint)
+            if (SettingsHolder.Settings.SnapToPoint)
             {
                 mPointSearcher.CleanMatches();
                 mPointSearcher.SetRangePixel(dc, PointSnapRange);
@@ -777,7 +778,7 @@ namespace Plotter
                 }
             }
 
-            if (mSnapToSegment)
+            if (SettingsHolder.Settings.SnapToSegment)
             {
                 // Search segment
                 mSegSearcher.Clean();
@@ -842,7 +843,7 @@ namespace Plotter
             }
             #endregion
 
-            if (SnapToLine)
+            if (SettingsHolder.Settings.SnapToLine)
             {
                 RulerInfo ri = mRulerSet.Capture(dc, cp, LineSnapRange);
 
