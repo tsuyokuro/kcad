@@ -224,13 +224,13 @@ namespace Plotter
         {
             set
             {
-                mController.SnapToGrid = value;
+                SettingsHolder.Settings.SnapToGrid = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
             }
 
             get
             {
-                return mController.SnapToGrid;
+                return SettingsHolder.Settings.SnapToGrid;
             }
         }
 

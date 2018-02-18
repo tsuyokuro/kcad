@@ -184,7 +184,7 @@ namespace Plotter
             dc.Drawing.DrawFace(pen, vl, Normal, outline);
 
             // Debug 法線表示
-            dc.Drawing.DrawArrow(pen, vl[0], vl[0] + Normal * 10, ArrowTypes.PLUS, ArrowPos.END, 4, 2);
+            //dc.Drawing.DrawArrow(pen, vl[0], vl[0] + Normal * 10, ArrowTypes.PLUS, ArrowPos.END, 4, 2);
 
             if (Thickness == 0)
             {

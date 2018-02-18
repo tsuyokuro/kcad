@@ -28,8 +28,6 @@ namespace Plotter
         public CadVector XMatchW = default(CadVector);
         public CadVector YMatchW = default(CadVector);
 
-        public bool Enable = false;
-
         public Gridding()
         {
             GridSize = CadVector.Create(10, 10, 10);
@@ -58,12 +56,6 @@ namespace Plotter
 
         public void Check(DrawContext dc, CadVector up)
         {
-            if (!Enable)
-            {
-                Clear();
-                return;
-            }
-
             CadVector scr = CalcGridSizeU(dc, GridSize);
 
             CadVector t = default(CadVector);

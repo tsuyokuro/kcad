@@ -533,7 +533,7 @@ namespace Plotter
 
         public void DrawGrid(DrawContext dc)
         {
-            if (mGridding.Enable)
+            if (SettingsHolder.Settings.SnapToGrid)
             {
                 dc.Drawing.DrawGrid(mGridding);
             }

@@ -68,6 +68,7 @@ namespace Plotter
 
         private List<HighlightPointListItem> HighlightPointList = new List<HighlightPointListItem>();
 
+        /*
         public bool SnapToGrid
         {
             set
@@ -80,7 +81,7 @@ namespace Plotter
                 return mGridding.Enable;
             }
         }
-
+        */
         public Gridding Grid
         {
             get
@@ -387,7 +388,7 @@ namespace Plotter
 
                 #region Gridding
 
-                if (mGridding.Enable)
+                if (SettingsHolder.Settings.SnapToGrid)
                 {
                     CadVector p = pixp;
 
@@ -826,20 +827,23 @@ namespace Plotter
             #region Gridding
             if (!segmatch)
             {
-                mGridding.Clear();
-                mGridding.Check(dc, pixp);
-
-                if (!xmatch && mGridding.XMatchU.Valid)
+                if (SettingsHolder.Settings.SnapToGrid)
                 {
-                    mSnapPointScrn.x = mGridding.XMatchU.x;
-                }
+                    mGridding.Clear();
+                    mGridding.Check(dc, pixp);
 
-                if (!ymatch && mGridding.YMatchU.Valid)
-                {
-                    mSnapPointScrn.y = mGridding.YMatchU.y;
-                }
+                    if (!xmatch && mGridding.XMatchU.Valid)
+                    {
+                        mSnapPointScrn.x = mGridding.XMatchU.x;
+                    }
 
-                mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
+                    if (!ymatch && mGridding.YMatchU.Valid)
+                    {
+                        mSnapPointScrn.y = mGridding.YMatchU.y;
+                    }
+
+                    mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
+                }
             }
             #endregion
 
