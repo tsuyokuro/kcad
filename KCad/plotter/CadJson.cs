@@ -657,19 +657,4 @@ namespace Plotter
         }
     }
 
-    public static class JsonExtends
-    {
-        public static double GetDouble(this JObject jo, string key, double defaultValue)
-        {
-            JToken jt = jo[key];
-
-            if (jt == null)
-            {
-                return defaultValue;
-            }
-
-            return (double)jt;
-        }
-
-    }
 }
