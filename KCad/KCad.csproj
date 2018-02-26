@@ -122,6 +122,10 @@
     <Reference Include="Microsoft.Scripting.Metadata, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Scripting.Metadata.dll</HintPath>
     </Reference>
+    <Reference Include="MyCollections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\MyCollections\bin\Release\MyCollections.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\Json90r1\Bin\Net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -179,7 +183,7 @@
     </Compile>
     <Compile Include="Log.cs" />
     <Compile Include="plotter\Figure\CadFigureUtil.cs" />
-    <Compile Include="plotter\Figure\VectorList.cs" />
+    <Compile Include="plotter\primitive\CollectionTypes.cs" />
     <Compile Include="plotter\Figure\VLExpander.cs" />
     <Compile Include="plotter\JsonExtends.cs" />
     <Compile Include="plotter\Util\BitmapUtil.cs" />
