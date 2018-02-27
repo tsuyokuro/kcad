@@ -122,10 +122,6 @@
     <Reference Include="Microsoft.Scripting.Metadata, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Scripting.Metadata.dll</HintPath>
     </Reference>
-    <Reference Include="MyCollections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\MyCollections\bin\Release\MyCollections.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\Json90r1\Bin\Net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -396,6 +392,12 @@
     <Resource Include="ResDict\Images\SnapToLine.png" />
     <Resource Include="ResDict\Images\SnapToPoint.png" />
     <Resource Include="ResDict\Images\SnapToSeg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyCollections\MyCollections.csproj">
+      <Project>{22789ae7-5f41-49f5-830e-9fac20e4847f}</Project>
+      <Name>MyCollections</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

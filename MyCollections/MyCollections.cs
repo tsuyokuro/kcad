@@ -13,24 +13,26 @@ namespace MyCollections
 
         public AutoArray()
         {
-
+            Init(8);
         }
 
         public AutoArray(int capa)
         {
-            Capacity = capa;
-
-            Tbl = new T[Capacity];
-
-            Count = 0;
+            Init(capa);
         }
 
         public AutoArray(AutoArray<T> src)
         {
-            Tbl = new T[src.Count];
-            Capacity = src.Count;
-
+            Init(src.Count);
             Array.Copy(src.Tbl, Tbl, src.Count);
+            Count = src.Count;
+        }
+
+        protected void Init(int capa)
+        {
+            Capacity = capa;
+            Tbl = new T[Capacity];
+            Count = 0;
         }
 
         public int Add(T v)
@@ -154,6 +156,20 @@ namespace MyCollections
             Array.Copy(src.Tbl, 0, Tbl, idx, src.Count);
 
             Count += src.Count;
+        }
+
+        public T Find(Predicate<T> match)
+        {
+            int i = Count - 1;
+            for (; i >= 0; i--)
+            {
+                if (match(Tbl[i]))
+                {
+                    return Tbl[i];
+                }
+            }
+
+            return default(T);
         }
     }
 
