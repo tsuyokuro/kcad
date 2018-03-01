@@ -172,40 +172,4 @@ namespace MyCollections
             return default(T);
         }
     }
-
-    public class IDObjects<T>
-    {
-        AutoArray<T> Storage;
-
-        AutoArray<int> IDList;
-
-        public IDObjects(AutoArray<T> storage)
-        {
-            Storage = storage;
-            int capa = storage.Capacity / 2;
-            IDList = new AutoArray<int>(capa);
-        }
-
-        public T this[int idx]
-        {
-            get
-            {
-                return Storage.Ref(IDList[idx]);
-            }
-            set
-            {
-                Storage.Ref(IDList[idx]) = value;
-            }
-        }
-
-        public void Add(T v)
-        {
-            IDList.Add(Storage.Add(v));
-        }
-
-        public ref T Ref(int idx)
-        {
-            return ref Storage.Ref(IDList[idx]);
-        }
-    }
 }
