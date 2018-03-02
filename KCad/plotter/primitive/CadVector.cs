@@ -12,7 +12,6 @@ namespace Plotter
         public enum Types : byte
         {
             STD = 0,
-            BREAK = 1,
             HANDLE = 2,
         }
 
@@ -318,6 +317,16 @@ namespace Plotter
             p1.z += d;
 
             return p1;
+        }
+
+        public static bool operator == (CadVector p1, CadVector p2)
+        {
+            return p1.x == p2.x & p1.y == p2.y & p1.z == p2.z;
+        }
+
+        public static bool operator != (CadVector p1, CadVector p2)
+        {
+            return p1.x != p2.x | p1.y != p2.y | p1.z != p2.z;
         }
 
         public static explicit operator Vector3d (CadVector p)

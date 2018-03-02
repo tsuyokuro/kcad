@@ -44,19 +44,16 @@ namespace Plotter
 
         public override void AddPointInCreating(DrawContext dc, CadVector p)
         {
-            p.Type = CadVector.Types.BREAK;
             mPointList.Add(p);
         }
 
         public override void AddPoint(CadVector p)
         {
-            p.Type = CadVector.Types.BREAK;
             mPointList.Add(p);
         }
 
         public override void SetPointAt(int index, CadVector pt)
         {
-            pt.Type = CadVector.Types.BREAK;
             mPointList[index] = pt;
         }
 

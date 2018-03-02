@@ -87,7 +87,7 @@ namespace HalfEdgeNS
             for (int i=0; i< cnt; i++ )
             {
                 ref CadVector rv = ref VertexStore.Ref(i);
-                if (v.VectorEquals(rv))
+                if (v == rv)
                 {
                     return i;
                 }
@@ -144,24 +144,6 @@ namespace HalfEdgeNS
 
 namespace TestApp01
 {
-    public struct Vector
-    {
-        public double x;
-        public double y;
-        public double z;
-
-        public static Vector Create(double x, double y, double z)
-        {
-            var ret = default(Vector);
-
-            ret.x = x;
-            ret.y = y;
-            ret.z = z;
-
-            return ret;
-        }
-    }
-
     public class Dummy
     {
         public int ID;
@@ -233,12 +215,34 @@ namespace TestApp01
             }
         }
 
+        static void Test003()
+        {
+            var v1 = CadVector.Create(10, 5, 0);
+            var v2 = CadVector.Create(10, 5, 0);
+
+            v2.Selected = true; ;
+
+            if (v1 == v2)
+            {
+                Console.WriteLine("v1 == v2");
+            }
+
+            v1 = CadVector.Create(10, 5, 0);
+            v2 = CadVector.Create(10, 5, 1);
+
+            if (v1 != v2)
+            {
+                Console.WriteLine("v1 != v2");
+            }
+
+        }
 
 
         static void Main(string[] args)
         {
             //Test001();
-            Test002();
+            //Test002();
+            Test003();
             Console.ReadLine();
         }
     }

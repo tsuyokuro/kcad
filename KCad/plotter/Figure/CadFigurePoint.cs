@@ -32,7 +32,6 @@ namespace Plotter
 
         public override void AddPointInCreating(DrawContext dc, CadVector p)
         {
-            p.Type = CadVector.Types.BREAK;
             mPointList.Add(p);
         }
 
@@ -43,7 +42,6 @@ namespace Plotter
                 return;
             }
 
-            p.Type = CadVector.Types.BREAK;
             mPointList.Add(p);
         }
 
@@ -54,7 +52,6 @@ namespace Plotter
                 return;
             }
 
-            pt.Type = CadVector.Types.BREAK;
             mPointList[index] = pt;
         }
 
