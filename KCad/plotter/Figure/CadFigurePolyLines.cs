@@ -327,14 +327,14 @@ namespace Plotter
                 dc.Drawing.DrawSelectedPoint(p);
 
 
-                if (p.Type == CadVector.Types.HANDLE)
+                if (p.IsHandle)
                 {
                     int idx = i + 1;
 
                     if (idx < PointCount)
                     {
                         CadVector np = GetPointAt(idx);
-                        if (np.Type != CadVector.Types.HANDLE)
+                        if (!np.IsHandle)
                         {
                             dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
                             dc.Drawing.DrawSelectedPoint(np);
@@ -346,7 +346,7 @@ namespace Plotter
                     if (idx >= 0)
                     {
                         CadVector np = GetPointAt(idx);
-                        if (np.Type != CadVector.Types.HANDLE)
+                        if (!np.IsHandle)
                         {
                             dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
                             dc.Drawing.DrawSelectedPoint(np);
@@ -360,7 +360,7 @@ namespace Plotter
                     if (idx < PointCount)
                     {
                         CadVector np = GetPointAt(idx);
-                        if (np.Type == CadVector.Types.HANDLE)
+                        if (np.IsHandle)
                         {
                             dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
                             dc.Drawing.DrawSelectedPoint(np);
@@ -372,7 +372,7 @@ namespace Plotter
                     if (idx >= 0)
                     {
                         CadVector np = GetPointAt(idx);
-                        if (np.Type == CadVector.Types.HANDLE)
+                        if (np.IsHandle)
                         {
                             dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
                             dc.Drawing.DrawSelectedPoint(np);

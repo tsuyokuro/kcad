@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Plotter
@@ -295,7 +296,6 @@ namespace Plotter
             {
                 var jo = new JObject();
 
-                jo.Add(VECTOR.TYPE, (byte)v.Type);
                 jo.Add(VECTOR.FLAGS, v.Flag);
 
                 if (version == VersionCode.VER_1_0_0_0)
@@ -584,8 +584,35 @@ namespace Plotter
                     return v;
                 }
 
-                v.Type = (CadVector.Types)(byte)jo[VECTOR.TYPE];
                 v.Flag = (byte)jo[VECTOR.FLAGS];
+
+                #region for old type
+                /*
+                 * 古いCadVectorは、下記のTypeを持っていたが
+                 * 廃止した
+                 * 
+                 * public enum Types : byte
+                 * {
+                 *     STD = 0,
+                 *     BREAK = 1,
+                 *     HANDLE = 2,
+                 * }
+                 * 
+                 * TypeがHANDLEの場合は、Handle flagをONにする
+                 * 
+                 */
+
+                JToken jt;
+                if (jo.TryGetValue(VECTOR.TYPE, out jt))
+                {
+                    byte type = (byte)jt;
+
+                    if (type == 2)
+                    {
+                        v.IsHandle = true;
+                    }
+                }
+                #endregion
 
                 if (version == VersionCode.VER_1_0_0_0)
                 {

@@ -234,8 +234,8 @@ namespace Plotter
             hp2 = hp2 / 3;
             hp2 = hp2 + b;
 
-            hp1.Type = CadVector.Types.HANDLE;
-            hp2.Type = CadVector.Types.HANDLE;
+            hp1.IsHandle = true;
+            hp2.IsHandle = true;
 
             fig.InsertPointAt(idx1 + 1, hp1);
             fig.InsertPointAt(idx1 + 2, hp2);

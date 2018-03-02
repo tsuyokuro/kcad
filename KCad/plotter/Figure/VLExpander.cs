@@ -108,16 +108,15 @@ namespace Plotter
             {
                 if (i + 3 <= end)
                 {
-                    if (pl[i + 1].Type == CadVector.Types.HANDLE &&
-                        pl[i + 2].Type == CadVector.Types.HANDLE)
+                    if (pl[i + 1].IsHandle &&
+                        pl[i + 2].IsHandle)
                     {
                         CadUtil.ForEachBezierPoints(pl[i], pl[i + 1], pl[i + 2], pl[i + 3], curveSplitNum, action);
 
                         i += 4;
                         continue;
                     }
-                    else if (pl[i + 1].Type == CadVector.Types.HANDLE &&
-                        pl[i + 2].Type == CadVector.Types.STD)
+                    else if (pl[i + 1].IsHandle && !pl[i + 2].IsHandle)
                     {
                         CadUtil.ForEachBezierPoints(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, action);
 
@@ -128,8 +127,7 @@ namespace Plotter
 
                 if (i + 2 <= end)
                 {
-                    if (pl[i + 1].Type == CadVector.Types.HANDLE &&
-                                            pl[i + 2].Type == CadVector.Types.STD)
+                    if (pl[i + 1].IsHandle && !pl[i + 2].IsHandle)
                     {
                         CadUtil.ForEachBezierPoints(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, action);
 

@@ -9,19 +9,13 @@ namespace Plotter
 {
     public struct CadVector : IEquatable<CadVector>
     {
-        public enum Types : byte
-        {
-            STD = 0,
-            HANDLE = 2,
-        }
-
         private static class Flags
         {
             public static byte INVALID = 0x80;
             public static byte SELECTED = 0x01;
+            public static byte HANDLE = 0x02;
         }
 
-        public Types Type { get; set; }
         public byte Flag;
 
         public double x
@@ -78,6 +72,20 @@ namespace Plotter
             }
         }
 
+        public bool IsHandle
+        {
+            get
+            {
+                return (Flag & Flags.HANDLE) != 0;
+            }
+
+            set
+            {
+                Flag = value ? (byte)(Flag | Flags.HANDLE) : (byte)(Flag & ~Flags.HANDLE);
+            }
+        }
+
+
         public bool Valid
         {
             set
@@ -122,14 +130,13 @@ namespace Plotter
         public static CadVector MaxValue = CadVector.Create(CadConst.MaxValue);
         public static CadVector MinValue = CadVector.Create(CadConst.MinValue);
 
-        public CadVector(double x, double y, double z, Types type = Types.STD)
+        public CadVector(double x, double y, double z)
         {
             vector.X = x;
             vector.Y = y;
             vector.Z = z;
 
             this.Flag = 0;
-            this.Type = type;
         }
 
         public static CadVector Create(double v)
@@ -142,13 +149,12 @@ namespace Plotter
             return Create(x, y, 0);
         }
 
-        public static CadVector Create(double x, double y, double z, Types type = Types.STD)
+        public static CadVector Create(double x, double y, double z)
         {
             CadVector v = default(CadVector);
             v.Set(x, y, z);
 
             v.Flag = 0;
-            v.Type = type;
 
             return v;
         }
@@ -159,7 +165,6 @@ namespace Plotter
             v.Set(0, 0, 0);
 
             v.Flag = 0;
-            v.Type = Types.STD;
 
             return v;
         }
@@ -170,7 +175,6 @@ namespace Plotter
             p.Set(v.X, v.Y, v.Z);
 
             p.Flag = 0;
-            p.Type = Types.STD;
 
             return p;
         }
@@ -181,7 +185,6 @@ namespace Plotter
             p.Set(v.X, v.Y, v.Z);
 
             p.Flag = 0;
-            p.Type = Types.STD;
 
             return p;
         }
@@ -198,10 +201,9 @@ namespace Plotter
             return p;
         }
 
-        public CadVector(double x, double y, double z, Types type = Types.STD, byte flag = 0)
+        public CadVector(double x, double y, double z, byte flag)
         {
             vector = new Vector3d(x, y, z);
-            Type = type;
             Flag = flag;
         }
 
@@ -253,7 +255,7 @@ namespace Plotter
 
         public bool DataEquals(CadVector p)
         {
-            return VectorEquals(p) && (Type == p.Type);
+            return VectorEquals(p);
         }
 
         public static CadVector operator +(CadVector p1, CadVector p2)
@@ -429,7 +431,6 @@ namespace Plotter
         {
             dout.println(prefix + "{");
             dout.Indent++;
-            dout.println("Type:" + Type.ToString());
             dout.println("x:" + x.ToString());
             dout.println("y:" + y.ToString());
             dout.println("z:" + z.ToString());
@@ -439,12 +440,12 @@ namespace Plotter
 
         public bool Equals(CadVector v)
         {
-            return x == v.x & y == v.y & z == v.z & Type == v.Type & Flag == v.Flag;
+            return x == v.x & y == v.y & z == v.z & Flag == v.Flag;
         }
 
         public override int GetHashCode()
         {
-            return (int)Type ^ (int)x ^ (int)y ^ (int)z ^ (int)Flag;
+            return (int)x ^ (int)y ^ (int)z ^ (int)Flag;
         }
 
         public string SimpleString()

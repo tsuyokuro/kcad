@@ -134,6 +134,8 @@ namespace MyCollections
 
             Array.Copy(Tbl, idx, Tbl, idx + 1, Count - idx);
 
+            Count++;
+
             Tbl[idx] = val;
         }
 

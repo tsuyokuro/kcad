@@ -363,8 +363,8 @@ namespace Plotter
 
             bool handle = false;
 
-            handle |= fig.GetPointAt(seg.PtIndexA).Type == CadVector.Types.HANDLE;
-            handle |= fig.GetPointAt(seg.PtIndexB).Type == CadVector.Types.HANDLE;
+            handle |= fig.GetPointAt(seg.PtIndexA).IsHandle;
+            handle |= fig.GetPointAt(seg.PtIndexB).IsHandle;
 
             if (handle)
             {
