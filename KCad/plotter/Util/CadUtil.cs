@@ -715,7 +715,7 @@ namespace Plotter
         {
             CrossInfo ret = default(CrossInfo);
 
-            if (a.VectorEquals(b))
+            if (a.Equals(b))
             {
                 return ret;
             }

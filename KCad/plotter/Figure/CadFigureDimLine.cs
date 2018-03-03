@@ -170,8 +170,8 @@ namespace Plotter
                 CadVector nv3 = StoreList[3] + vd;
                 CadVector nv2 = StoreList[2] + vd;
 
-                if (nv3.CoordEqualsThreshold(StoreList[0], 0.001) ||
-                    nv2.CoordEqualsThreshold(StoreList[1], 0.001))
+                if (nv3.EqualsThreshold(StoreList[0], 0.001) ||
+                    nv2.EqualsThreshold(StoreList[1], 0.001))
                 {
                     return;
                 }
@@ -207,7 +207,7 @@ namespace Plotter
                     cp1 = CadUtil.CrossPlane(v1 + delta, v1, planeNormal);
                 }
 
-                if (cp0.CoordEqualsThreshold(cp1, 0.001))
+                if (cp0.EqualsThreshold(cp1, 0.001))
                 {
                     return;
                 }

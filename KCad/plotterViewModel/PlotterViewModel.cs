@@ -75,7 +75,7 @@ namespace Plotter
         {
             set
             {
-                if (!String.IsNullOrEmpty(mStrCursorPos) && mCursorPos.VectorEquals(value))
+                if (!String.IsNullOrEmpty(mStrCursorPos) && mCursorPos.Equals(value))
                 {
                     return;
                 }
@@ -100,7 +100,7 @@ namespace Plotter
         {
             set
             {
-                if (!String.IsNullOrEmpty(mStrCursorPos2) && mCursorPos2.VectorEquals(value))
+                if (!String.IsNullOrEmpty(mStrCursorPos2) && mCursorPos2.Equals(value))
                 {
                     return;
                 }

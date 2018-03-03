@@ -9,12 +9,11 @@ namespace Plotter
 {
     public struct CadVector : IEquatable<CadVector>
     {
-        private static class Flags
-        {
-            public static byte INVALID = 0x80;
-            public static byte SELECTED = 0x01;
-            public static byte HANDLE = 0x02;
-        }
+        public static byte INVALID = 0x80;
+        public static byte SELECTED = 0x01;
+        public static byte HANDLE = 0x02;
+
+        private static byte TYPE_MASK = (byte)(INVALID | HANDLE);
 
         public byte Flag;
 
@@ -63,12 +62,12 @@ namespace Plotter
         {
             get
             {
-                return (Flag & Flags.SELECTED) != 0;
+                return (Flag & SELECTED) != 0;
             }
 
             set
             {
-                Flag = value ? (byte)(Flag | Flags.SELECTED) : (byte)(Flag & ~Flags.SELECTED);
+                Flag = value ? (byte)(Flag | SELECTED) : (byte)(Flag & ~SELECTED);
             }
         }
 
@@ -76,12 +75,12 @@ namespace Plotter
         {
             get
             {
-                return (Flag & Flags.HANDLE) != 0;
+                return (Flag & HANDLE) != 0;
             }
 
             set
             {
-                Flag = value ? (byte)(Flag | Flags.HANDLE) : (byte)(Flag & ~Flags.HANDLE);
+                Flag = value ? (byte)(Flag | HANDLE) : (byte)(Flag & ~HANDLE);
             }
         }
 
@@ -103,19 +102,12 @@ namespace Plotter
         {
             set
             {
-                if (value)
-                {
-                    Flag = (byte)(Flag | Flags.INVALID);
-                }
-                else
-                {
-                    Flag = (byte)(Flag & ~Flags.INVALID);
-                }
+                Flag = value ? (byte)(Flag | INVALID) : (byte)(Flag & ~INVALID);
             }
 
             get
             {
-                return (Flag & Flags.INVALID) != 0;
+                return (Flag & INVALID) != 0;
             }
         }
 
@@ -239,12 +231,13 @@ namespace Plotter
             z = p.z;
         }
 
-        public bool VectorEquals(CadVector p)
+        #region 同値判定
+        public bool DataEquals(CadVector p)
         {
-            return (x == p.x && y == p.y && z == p.z);
+            return Equals(p) && ((Flag & TYPE_MASK) == (p.Flag & TYPE_MASK));
         }
 
-        public bool CoordEqualsThreshold(CadVector p, double m = 0.000001)
+        public bool EqualsThreshold(CadVector p, double m = 0.000001)
         {
             return (
                 x > p.x - m && x < p.x + m &&
@@ -253,11 +246,24 @@ namespace Plotter
                 );
         }
 
-        public bool DataEquals(CadVector p)
+        public bool Equals(CadVector v)
         {
-            return VectorEquals(p);
+            return x == v.x & y == v.y & z == v.z;
         }
 
+        public static bool operator ==(CadVector p1, CadVector p2)
+        {
+            return p1.x == p2.x & p1.y == p2.y & p1.z == p2.z;
+        }
+
+        public static bool operator !=(CadVector p1, CadVector p2)
+        {
+            return p1.x != p2.x | p1.y != p2.y | p1.z != p2.z;
+        }
+        #endregion
+
+
+        #region 二項演算子
         public static CadVector operator +(CadVector p1, CadVector p2)
         {
             p1.x += p2.x;
@@ -302,7 +308,9 @@ namespace Plotter
 
             return p1;
         }
+        #endregion
 
+        #region 単項演算子
         public static CadVector operator -(CadVector p1)
         {
             p1.x *= -1;
@@ -320,17 +328,9 @@ namespace Plotter
 
             return p1;
         }
+        #endregion
 
-        public static bool operator == (CadVector p1, CadVector p2)
-        {
-            return p1.x == p2.x & p1.y == p2.y & p1.z == p2.z;
-        }
-
-        public static bool operator != (CadVector p1, CadVector p2)
-        {
-            return p1.x != p2.x | p1.y != p2.y | p1.z != p2.z;
-        }
-
+        #region Cast operator
         public static explicit operator Vector3d (CadVector p)
         {
             return new Vector3d(p.vector);
@@ -363,6 +363,7 @@ namespace Plotter
                 1.0f
                 );
         }
+        #endregion
 
         /// <summary>
         /// 二点の成分から最小の成分でVectorを作成
@@ -436,11 +437,6 @@ namespace Plotter
             dout.println("z:" + z.ToString());
             dout.Indent--;
             dout.println("}");
-        }
-
-        public bool Equals(CadVector v)
-        {
-            return x == v.x & y == v.y & z == v.z & Flag == v.Flag;
         }
 
         public override int GetHashCode()
