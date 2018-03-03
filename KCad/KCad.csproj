@@ -177,6 +177,7 @@
     <Compile Include="Dialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="plotter\Figure\CadFigureUtil.cs" />
     <Compile Include="plotter\primitive\CollectionTypes.cs" />

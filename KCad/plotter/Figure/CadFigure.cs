@@ -54,7 +54,7 @@ namespace Plotter
             set;
         }
 
-        public VectorList PointList
+        public virtual VectorList PointList
         {
             get
             {
