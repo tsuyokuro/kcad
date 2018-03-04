@@ -22,6 +22,7 @@ namespace Plotter
             POINT,
             GROUP,
             DIMENTION_LINE,
+            MESH,
             MAX,
         }
 

@@ -49,6 +49,12 @@ namespace HalfEdgeNS
             FaceStore = new AutoArray<HeFace>(vectorList.Capacity);
         }
 
+        public void Clear()
+        {
+            VertexStore.Clear();
+            FaceStore.Clear();
+        }
+
         public void SetHalfEdgePair(HalfEdge he)
         {
             // すべてのFaceを巡回する
