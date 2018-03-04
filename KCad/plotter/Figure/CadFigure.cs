@@ -254,6 +254,10 @@ namespace Plotter
                     fig = new CadFigureDimLine();
                     break;
 
+                case Types.MESH:
+                    fig = new CadFigureMesh();
+                    break;
+
                 default:
                     break;
             }

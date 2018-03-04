@@ -1134,6 +1134,27 @@ namespace Plotter
             Controller.TempFigureList.AddRange(triangles);
         }
 
+        private void testMesh()
+        {
+            CadFigure fig = GetTargetFigure();
+
+            if (fig == null)
+            {
+                return;
+            }
+
+            if (fig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return;
+            }
+
+            CadFigureMesh mesh = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            mesh.CreateModel(fig);
+
+            Controller.CurrentLayer.AddFigure(mesh);
+        }
+
         private void SimpleCommand(string s)
         {
             if (s == "@clear" || s == "@cls")
@@ -1191,6 +1212,10 @@ namespace Plotter
             else if (s == "@test012")
             {
                 test012();
+            }
+            else if (s == "@testMesh")
+            {
+                testMesh();
             }
 
             else
