@@ -1140,6 +1140,10 @@ namespace Plotter
             {
                 Controller.InteractOut.clear();
             }
+            else if (s == "@clearTemp")
+            {
+                Controller.TempFigureList.Clear();
+            }
             else if (s == "@test001")
             {
                 test001();

@@ -36,8 +36,8 @@ namespace Plotter
             CadVector tp1 = triangle.PointList[1];
             CadVector tp2 = triangle.PointList[2];
 
-            double dir = CadMath.CrossProduct2D(tp1, tp0, tp2);
-            double currentDir = 0;
+            CadVector dir = CadMath.Normal(tp1, tp0, tp2);
+            CadVector currentDir = CadVector.Zero;
 
             while (pointList.Count > 3)
             {
@@ -56,10 +56,13 @@ namespace Plotter
                 tp1 = triangle.PointList[1];
                 tp2 = triangle.PointList[2];
 
-                currentDir = CadMath.CrossProduct2D(tp1, tp0, tp2);
+                currentDir = CadMath.Normal(tp1, tp0, tp2);
 
                 bool hasIn = ListContainsPointInTriangle(pointList, triangle);
-                if (!hasIn && (Math.Sign(dir) == Math.Sign(currentDir)))
+
+                double scala = CadMath.InnerProduct(dir, currentDir);
+
+                if (!hasIn && (scala > 0))
                 {
                     triangles.Add(triangle);
                     pointList.RemoveAt(i1);
