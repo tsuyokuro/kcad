@@ -1136,23 +1136,49 @@ namespace Plotter
 
         private void testMesh()
         {
-            CadFigure fig = GetTargetFigure();
+            var figlist = Controller.GetSelectedFigList();
 
-            if (fig == null)
+            CadOpeList opeRoot = new CadOpeList();
+
+            CadOpe ope;
+
+            for (int i = 0; i < figlist.Count; i++)
             {
-                return;
+                CadFigure fig = figlist[i];
+
+                if (fig == null)
+                {
+                    continue;
+                }
+
+                if (fig.Type != CadFigure.Types.POLY_LINES)
+                {
+                    continue;
+                }
+
+                CadFigureMesh mesh = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+                mesh.CreateModel(fig);
+
+
+                ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, mesh.ID);
+                opeRoot.Add(ope);
+
+                Controller.CurrentLayer.AddFigure(mesh);
+
+
+                ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, fig.ID);
+                opeRoot.Add(ope);
+
+                Controller.CurrentLayer.RemoveFigureByID(fig.ID);
             }
 
-            if (fig.Type != CadFigure.Types.POLY_LINES)
+            if (opeRoot.OpeList.Count > 0)
             {
-                return;
+                Controller.HistoryManager.foward(opeRoot);
             }
 
-            CadFigureMesh mesh = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
-
-            mesh.CreateModel(fig);
-
-            Controller.CurrentLayer.AddFigure(mesh);
+            Controller.UpdateTreeView(true);
         }
 
         private void SimpleCommand(string s)

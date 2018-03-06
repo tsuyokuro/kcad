@@ -1,4 +1,5 @@
 ﻿using HalfEdgeNS;
+using MyCollections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace Plotter
     class CadFigureMesh : CadFigure
     {
         private HeModel mHeModel;
+
+        private AutoArray<int> mEdge;
 
         public override VectorList PointList
         {
@@ -32,6 +35,8 @@ namespace Plotter
             Type = Types.MESH;
 
             mHeModel = new HeModel(mPointList);
+
+            mEdge = new AutoArray<int>();
         }
 
         public void CreateModel(CadFigure fig)
@@ -41,7 +46,7 @@ namespace Plotter
                 return;
             }
 
-            List<CadFigure> figList = TriangleSplitter.Split(fig);
+            List<CadFigure> figList = TriangleSplitter.Split(fig, 16);
 
             mHeModel.Clear();
 

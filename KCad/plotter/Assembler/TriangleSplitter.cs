@@ -5,7 +5,7 @@ namespace Plotter
 {
     public class TriangleSplitter
     {
-        public static List<CadFigure> Split(CadFigure fig)
+        public static List<CadFigure> Split(CadFigure fig, int curveSplitNum = 32)
         {
             CadVector p0 = default(CadVector);
 
@@ -17,11 +17,7 @@ namespace Plotter
 
             CadFigure triangle;
 
-            //VectorList orgList = fig.GetPoints(64);
-
-            //VectorList pointList = new VectorList(orgList);
-
-            VectorList pointList = fig.GetPoints(64);
+            VectorList pointList = fig.GetPoints(curveSplitNum);
 
             i1 = CadUtil.FindMaxDistantPointIndex(p0, pointList);
 
