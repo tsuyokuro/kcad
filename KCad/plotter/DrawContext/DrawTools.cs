@@ -79,6 +79,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_MEASURE_FIGURE] = Color.OrangeRed;
             PenColorTbl[DrawTools.PEN_DIMENTION] = Color.PaleGreen;
             PenColorTbl[DrawTools.PEN_BLACK] = Color.Black;
+            PenColorTbl[DrawTools.PEN_MESH_LINE] = Color.FromArgb(0xFF, 0x88, 0x88, 0x88);
             PenColorTbl[DrawTools.PEN_TEST] = Color.FromArgb(0xFF, 0xBB, 0xCC, 0xDD);
 
 
@@ -117,8 +118,9 @@ namespace Plotter
         public const int PEN_MEASURE_FIGURE = 21;
         public const int PEN_DIMENTION = 22;
         public const int PEN_BLACK = 23;
-        public const int PEN_TEST = 24;
-        public const int PEN_TBL_SIZE = 25;
+        public const int PEN_MESH_LINE = 24;
+        public const int PEN_TEST = 25;
+        public const int PEN_TBL_SIZE = 26;
 
         public const int BRUSH_DEFAULT = 0;
         public const int BRUSH_BACKGROUND = 1;
@@ -234,6 +236,7 @@ namespace Plotter
             PenTbl[PEN_DEFAULT_FIGURE]      = new PenHolder(new Pen(Brushes.Black, 0));
             PenTbl[PEN_PALE_FIGURE]         = new PenHolder(new Pen(Brushes.Black, 0));
             PenTbl[PEN_DIMENTION]           = new PenHolder(new Pen(Brushes.Black, 0));
+            PenTbl[PEN_MESH_LINE]           = new PenHolder(new Pen(Brushes.LightGray, 0));
 
             BrushTbl[BRUSH_DEFAULT]         = new BrushHolder(new SolidBrush(Color.Black));
             BrushTbl[BRUSH_BACKGROUND]      = new BrushHolder(null);

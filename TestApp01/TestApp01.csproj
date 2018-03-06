@@ -54,10 +54,6 @@
       <Project>{783cad2c-1bf4-495a-817f-18fadfe16c44}</Project>
       <Name>KCad</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MyCollections\MyCollections.csproj">
-      <Project>{22789ae7-5f41-49f5-830e-9fac20e4847f}</Project>
-      <Name>MyCollections</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

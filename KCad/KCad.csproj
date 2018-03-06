@@ -177,6 +177,7 @@
     <Compile Include="Dialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MyCollections\AutoArray.cs" />
     <Compile Include="plotter\Figure\CadFigureMesh.cs" />
     <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
     <Compile Include="Log.cs" />
@@ -394,12 +395,6 @@
     <Resource Include="ResDict\Images\SnapToLine.png" />
     <Resource Include="ResDict\Images\SnapToPoint.png" />
     <Resource Include="ResDict\Images\SnapToSeg.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MyCollections\MyCollections.csproj">
-      <Project>{22789ae7-5f41-49f5-830e-9fac20e4847f}</Project>
-      <Name>MyCollections</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
