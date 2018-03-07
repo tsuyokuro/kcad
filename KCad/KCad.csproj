@@ -186,7 +186,7 @@
     <Compile Include="plotter\Figure\VLExpander.cs" />
     <Compile Include="plotter\JsonExtends.cs" />
     <Compile Include="plotter\Util\BitmapUtil.cs" />
-    <Compile Include="TreeView\CadObjectTreeView.cs" />
+    <Compile Include="Controls\TreeView\CadObjectTreeView.cs" />
     <Compile Include="ftgl\FontWrapper.cs" />
     <Compile Include="ftgl\FtglAPI.cs" />
     <Compile Include="Controls\LBConsole.cs" />
@@ -207,7 +207,7 @@
     <Compile Include="Dialogs\SnapSettingsDialog.xaml.cs">
       <DependentUpon>SnapSettingsDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TreeView\CadObjTreeItem.cs" />
+    <Compile Include="Controls\TreeView\CadObjTreeItem.cs" />
     <Page Include="Dialogs\ExceptionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
