@@ -42,8 +42,11 @@ namespace FTGL
 
 	public static class FtglAPI
 	{
-		//private const string nativeLibName = "ftgl.dll";
-        private const string nativeLibName = "ftgl_x64.dll";
+#if WIN64
+        private const string nativeLibName = "ftgl/ftgl_x64.dll";
+#else
+        private const string nativeLibName = "ftgl/ftgl.dll";
+#endif
 
         [DllImport(nativeLibName, EntryPoint = "ftglCreatePixmapFont", CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr CreatePixmapFont([In] [MarshalAs(UnmanagedType.LPStr)] string pathToTtf);
