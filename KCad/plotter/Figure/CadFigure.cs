@@ -130,7 +130,7 @@ namespace Plotter
         /// </summary>
         /// <param name="d"></param>
         /// <returns>true:列挙を継続</returns>
-        public virtual bool ForEachFig(ForEachDelegate<CadFigure> d)
+        public virtual bool ForEachFig(Func<CadFigure, bool> d)
         {
             int i;
 
@@ -157,7 +157,7 @@ namespace Plotter
         /// </summary>
         /// <param name="d"></param>
         /// <returns>true:列挙を継続</returns>
-        public virtual bool ForEachNode(ForEachDelegate<CadFigure> d)
+        public virtual bool ForEachNode(Func<CadFigure, bool> d)
         {
             int i;
             for (i = 0; i < mChildList.Count; i++)
@@ -784,6 +784,15 @@ namespace Plotter
                 {
                     break;
                 }
+            }
+        }
+
+        public virtual void ForEachSegment(Action<CadSegment> dg)
+        {
+            int cnt = SegmentCount;
+            for (int i = 0; i < cnt; i++)
+            {
+                dg(GetSegmentAt(i));
             }
         }
 

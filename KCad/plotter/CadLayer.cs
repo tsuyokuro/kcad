@@ -177,7 +177,7 @@ namespace Plotter
         /// Figureが子を持つ場合もフラットに列挙される
         /// </summary>
         /// <param name="d"></param>
-        public void ForEachFig(ForEachDelegate<CadFigure> d)
+        public void ForEachFig(Func<CadFigure, bool> d)
         {
             int i;
             for (i=0; i<mFigureList.Count; i++)
