@@ -850,7 +850,6 @@ namespace Plotter
             fig.ForEachFigureSegment(seg =>
             {
                 seg.dump(DebugOut.Std);
-                return true;
             });
         }
 
@@ -880,7 +879,7 @@ namespace Plotter
 
         private void test003()
         {
-            Controller.CurrentLayer.ForEachFig(fig =>
+            Controller.CurrentLayer.ForEachFigB(fig =>
             {
                 DebugOut.StdPrintLn("fig:" + fig.ID.ToString());
                 return true;

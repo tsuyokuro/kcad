@@ -73,19 +73,18 @@ namespace Plotter
             Fig = fig;
 
             int idx = 0;
-
-            Fig.PointList.ForEach(p =>
+            for (;idx<Fig.PointCount;idx++)
             {
                 CadPointTreeItem pi = new CadPointTreeItem(fig, idx);
                 Add(pi);
-                idx++;
-            });
+            }
 
-            Fig.ChildList.ForEach(c =>
+            Fig.ChildList.ForEach(action);
+            void action(CadFigure c)
             {
-                CadFigTreeItem pi = new CadFigTreeItem(c);
-                Add(pi);
-            });
+                CadFigTreeItem fi = new CadFigTreeItem(c);
+                Add(fi);
+            }
         }
 
         private void SelectAllPoints(bool sel)
@@ -95,10 +94,12 @@ namespace Plotter
                 return;
             }
 
-            Children.ForEach(c =>
+            Children.ForEach(action);
+
+            void action(ICadObjectTreeItem c)
             {
                 c.IsChecked = sel;
-            });
+            }
         }
 
         private bool HasSelectedPoint()

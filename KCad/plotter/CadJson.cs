@@ -182,26 +182,37 @@ namespace Plotter
 
                 jo.Add(COMMON.ID, fig.ID);
 
-                JArray ja = new JArray();
-
-                fig.ChildList.ForEach(c =>
-                {
-                    ja.Add(c.ID);
-                });
+                JArray ja = CreateChildIDList(fig);
 
                 jo.Add(FIG.CHILD_ID_LIST, ja);
 
                 return jo;
             }
 
+            public static JArray CreateChildIDList(CadFigure fig)
+            {
+                JArray ja = new JArray();
+
+                fig.ChildList.ForEach(action);
+
+                void action(CadFigure c)
+                {
+                    ja.Add(c.ID);
+                }
+
+                return ja;
+            }
+
             public static JArray LayerIdListToJson(List<CadLayer> list)
             {
                 JArray ja = new JArray();
 
-                list.ForEach(layer =>
+                list.ForEach(action);
+
+                void action(CadLayer item)
                 {
-                    ja.Add(layer.ID);
-                });
+                    ja.Add(item.ID);
+                }
 
                 return ja;
             }
@@ -282,10 +293,12 @@ namespace Plotter
 
                 JArray ja = new JArray();
 
-                vl.ForEach(v =>
+                vl.ForEach(action);
+
+                void action(CadVector v)
                 {
                     ja.Add(VectorToJson(v, version));
-                });
+                }
 
                 jvl.Add(VECTOR.POINT_LIST, ja);
 

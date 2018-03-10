@@ -906,10 +906,12 @@ namespace Plotter
         {
             MinMax3D mm = MinMax3D.Create();
 
-            fig.ForEachFig(item =>
+            fig.ForEachFig(update_min_max);
+
+            void update_min_max(CadFigure item)
             {
                 mm.Check(GetFigureMinMax(item));
-            });
+            }
 
             return mm;
         }
@@ -974,7 +976,9 @@ namespace Plotter
             double maxx = CadConst.MinValue;
             double maxy = CadConst.MinValue;
 
-            list.ForEach(p =>
+            list.ForEach(update_min_max);
+
+            void update_min_max(CadVector p)
             {
                 CadVector v = dc.CadPointToUnitPoint(p);
 
@@ -983,7 +987,7 @@ namespace Plotter
 
                 maxx = Math.Max(maxx, v.x);
                 maxy = Math.Max(maxy, v.y);
-            });
+            }
 
             rect.p0 = default(CadVector);
             rect.p1 = default(CadVector);

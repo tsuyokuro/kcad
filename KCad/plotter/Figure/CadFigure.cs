@@ -130,7 +130,7 @@ namespace Plotter
         /// </summary>
         /// <param name="d"></param>
         /// <returns>true:列挙を継続</returns>
-        public virtual bool ForEachFig(Func<CadFigure, bool> d)
+        public virtual bool ForEachFigB(Func<CadFigure, bool> d)
         {
             int i;
 
@@ -143,7 +143,7 @@ namespace Plotter
             {
                 CadFigure c = mChildList[i];
 
-                if (!c.ForEachFig(d))
+                if (!c.ForEachFigB(d))
                 {
                     return false;
                 }
@@ -157,14 +157,14 @@ namespace Plotter
         /// </summary>
         /// <param name="d"></param>
         /// <returns>true:列挙を継続</returns>
-        public virtual bool ForEachNode(Func<CadFigure, bool> d)
+        public virtual bool ForEachNodeB(Func<CadFigure, bool> d)
         {
             int i;
             for (i = 0; i < mChildList.Count; i++)
             {
                 CadFigure c = mChildList[i];
 
-                if (!c.ForEachFig(d))
+                if (!c.ForEachFigB(d))
                 {
                     return false;
                 }
@@ -747,7 +747,7 @@ namespace Plotter
             }
         }
 
-        public virtual void ForEachFigureSegment(Func<FigureSegment, bool> dg)
+        public virtual void ForEachFigureSegmentB(Func<FigureSegment, bool> dg)
         {
             int cnt = SegmentCount;
             for (int i=0; i<cnt; i++)
@@ -758,6 +758,16 @@ namespace Plotter
                 {
                     break;
                 }
+            }
+        }
+
+        public virtual void ForEachFigureSegment(Action<FigureSegment> dg)
+        {
+            int cnt = SegmentCount;
+            for (int i = 0; i < cnt; i++)
+            {
+                FigureSegment fseg = GetFigSegmentAt(i);
+                dg(fseg);
             }
         }
 

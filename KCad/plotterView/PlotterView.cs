@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define MOUSE_THREAD
+
+using System;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,8 +32,9 @@ namespace Plotter
 
         ContextMenuEx mCurrentContextMenu = null;
 
-
+#if MOUSE_THREAD
         MyMessageHandler mMessageHandler;
+#endif
 
         private DrawContextGDI mDrawContext = new DrawContextGDI();
 
@@ -55,7 +58,7 @@ namespace Plotter
         {
             get
             {
-                return (Control)this;
+                return this;
             }
         }
 
@@ -63,10 +66,10 @@ namespace Plotter
         {
             base.SizeChanged += onSizeChanged;
 
+#if MOUSE_THREAD
             mMessageHandler = new MyMessageHandler(this, 100);
-
             mMessageHandler.start();
-
+#endif
             mDrawContext.SetupTools(DrawTools.ToolsType.DARK);
 
             mDrawContext.OnPush = OnPushDraw;
@@ -159,13 +162,15 @@ namespace Plotter
             }
         }
 
-        private void mouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void mouseMove(object sender, MouseEventArgs e)
         {
+#if !MOUSE_THREAD
+
             // Mouse eventを直接処理
-            //mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
-            //RedrawAll();
+            mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
+            RedrawAll();
 
-
+#else
             // Mouse eventを別スレッドで処理
 
             // 未処理のEventは破棄
@@ -178,6 +183,7 @@ namespace Plotter
             msg.Arg2 = e.Y;
 
             mMessageHandler.SendMessage(msg, 1);
+#endif
         }
 
         private void mouseDown(Object sender, MouseEventArgs e)
@@ -300,12 +306,14 @@ namespace Plotter
 
             public void handleMouseMove(int x, int y)
             {
-                mPlotterView.Invoke(new Action(() =>
+                mPlotterView.Invoke(new Action(action));
+
+                void action()
                 {
                     mPlotterView.mController.Mouse.MouseMove(mPlotterView.mDrawContext, x, y);
 
                     mPlotterView.RedrawAll();
-                }));
+                }
             }
         }
     }
