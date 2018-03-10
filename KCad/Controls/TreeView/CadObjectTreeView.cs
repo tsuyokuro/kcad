@@ -16,9 +16,6 @@ using System.Windows.Threading;
 
 namespace KCad
 {
-    public delegate bool TreeWalker(ICadObjectTreeItem item);
-    public delegate bool TreeWalkerLv(ICadObjectTreeItem item, int level);
-
     public interface ICadObjectTreeItem
     {
         ICadObjectTreeItem Parent { get; set; }
@@ -32,8 +29,8 @@ namespace KCad
         int GetTotalCount();
         void Add(ICadObjectTreeItem item);
 
-        bool ForEach(TreeWalker walker);
-        bool ForEach(TreeWalkerLv walker, int level);
+        bool ForEach(Func<ICadObjectTreeItem, bool> walker);
+        bool ForEach(Func<ICadObjectTreeItem, int, bool> walkerLv, int level);
 
         ICadObjectTreeItem GetAt(int n);
     }
@@ -229,7 +226,9 @@ namespace KCad
             int idx = -1;
             int cnt = 0;
 
-            mRoot.ForEach((item) =>
+            mRoot.ForEach(match);
+
+            bool match(ICadObjectTreeItem item)
             {
                 if (!ShowRoot && item == mRoot)
                 {
@@ -244,7 +243,7 @@ namespace KCad
 
                 cnt++;
                 return true;
-            });
+            }
 
             return idx;
         }
@@ -316,7 +315,11 @@ namespace KCad
                 topLevel = 1;
             }
 
-            mRoot.ForEach((item, level) =>
+            //mRoot.ForEach((item, level) => { return draw(item, level); }, 0);
+
+            mRoot.ForEach(draw, 0);
+
+            bool draw(ICadObjectTreeItem item, int level)
             {
                 skip--;
                 if (skip >= 0)
@@ -355,7 +358,8 @@ namespace KCad
                 }
 
                 return false;
-            }, 0);
+            }
+
 
             if (p.Y < rangeY)
             {
