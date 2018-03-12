@@ -75,12 +75,10 @@ namespace Plotter
 
             minDist = CadConst.MaxValue;
 
-            layer.ForEachFigRev(action);
-
-            void action(CadFigure fig)
+            layer.ForEachFigRev(fig =>
             {
                 CheckFig(dc, layer, fig);
-            }
+            });
         }
 
         private void CheckSeg(DrawContext dc, CadLayer layer, FigureSegment fseg)
@@ -250,12 +248,11 @@ namespace Plotter
 
         private void CheckSegs(DrawContext dc, CadLayer layer, CadFigure fig)
         {
-            fig.ForEachFigureSegment(action);
-
-            void action(FigureSegment fseg)
+            fig.ForEachFigureSegment(fseg =>
             {
                 CheckSeg(dc, layer, fseg);
-            }
+                return true;
+            });
         }
 
         private void CheckFig(DrawContext dc, CadLayer layer, CadFigure fig)

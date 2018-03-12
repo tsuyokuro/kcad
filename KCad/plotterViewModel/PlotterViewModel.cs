@@ -1151,6 +1151,11 @@ namespace Plotter
             textBox.CandidateList = Controller.ScriptEnv.AutoCompleteList;
         }
 
+        public AutoCompleteFilterPredicate<object> ScriptFilter
+        {
+            get { return (str, obj) => (obj as string).Contains(str); }
+        }
+
         public void LoadSettings()
         {
             PlotterSettings settings = SettingsHolder.Settings;

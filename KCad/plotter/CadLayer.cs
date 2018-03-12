@@ -42,12 +42,7 @@ namespace Plotter
             set
             {
                 mLocked = value;
-                mFigureList.ForEach(action);
-
-                void action(CadFigure fig)
-                {
-                    fig.Locked = value;
-                }
+                mFigureList.ForEach(a => a.Locked = value);
             }
 
             get
@@ -57,6 +52,7 @@ namespace Plotter
         }
 
         private bool mVisible = true;
+
         public bool Visible
         {
             set
@@ -71,6 +67,9 @@ namespace Plotter
         }
 
         private List<CadFigure> mFigureList = new List<CadFigure>();
+
+
+
         public List<CadFigure> FigureList
         {
             get
@@ -78,6 +77,7 @@ namespace Plotter
                 return mFigureList;
             }
         }
+
 
         public CadLayer()
         {
@@ -177,14 +177,14 @@ namespace Plotter
         /// Figureが子を持つ場合もフラットに列挙される
         /// </summary>
         /// <param name="d"></param>
-        public void ForEachFigB(Func<CadFigure, bool> d)
+        public void ForEachFig(Func<CadFigure, bool> d)
         {
             int i;
             for (i=0; i<mFigureList.Count; i++)
             {
                 CadFigure fig = mFigureList[i];
 
-                if (!fig.ForEachFigB(d))
+                if (!fig.ForEachFig(d))
                 {
                     break;
                 }

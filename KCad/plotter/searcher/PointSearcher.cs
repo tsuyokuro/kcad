@@ -115,12 +115,10 @@ namespace Plotter
                 return;
             }
 
-            layer.ForEachFig(action);
-
-            void action(CadFigure fig)
+            layer.ForEachFig(fig =>
             {
                 CheckFigure(dc, layer, fig);
-            }
+            });
         }
 
         public void Check(DrawContext dc, CadVector pt)
