@@ -10,7 +10,7 @@ namespace Plotter
 
         private CadCursor TargetPoint;
         private double mRange;
-        private double minDist = 0;
+        private double mMinDist = 0;
 
         private List<MarkSeg> IgnoreSegList;
 
@@ -50,8 +50,10 @@ namespace Plotter
         {
             Search(dc, db, db.CurrentLayer);
 
-            foreach (CadLayer layer in db.LayerList)
+            for (int i=0; i<db.LayerList.Count; i++)
             {
+                CadLayer layer = db.LayerList[i];
+
                 if (layer.ID == db.CurrentLayerID)
                 {
                     continue;
@@ -73,12 +75,13 @@ namespace Plotter
                 return;
             }
 
-            minDist = CadConst.MaxValue;
+            mMinDist = CadConst.MaxValue;
 
-            layer.ForEachFigRev(fig =>
+            for (int i=layer.FigureList.Count-1; i>=0; i--)
             {
+                CadFigure fig = layer.FigureList[i];
                 CheckFig(dc, layer, fig);
-            });
+            }
         }
 
         private void CheckSeg(DrawContext dc, CadLayer layer, FigureSegment fseg)
@@ -119,8 +122,10 @@ namespace Plotter
             double mind = Double.MaxValue;
             CadVector[] vtbl = new CadVector[] { cx, cy };
 
-            foreach (CadVector v in vtbl)
+            for (int i=0; i<vtbl.Length; i++)
             {
+                CadVector v = vtbl[i];
+
                 if (!v.Valid)
                 {
                     continue;
@@ -150,7 +155,7 @@ namespace Plotter
                 return;
             }
 
-            if (dist < minDist)
+            if (dist < mMinDist)
             {
                 CadVector sv = b - a;
 
@@ -167,7 +172,7 @@ namespace Plotter
                 seg.CrossPointScrn = p;
                 seg.Distance = dist;
 
-                minDist = dist;
+                mMinDist = dist;
             }
         }
 
@@ -222,7 +227,7 @@ namespace Plotter
                 return;
             }
 
-            if (dist < minDist)
+            if (dist < mMinDist)
             {
                 CadVector tp = dc.UnitPointToCadPoint(TargetPoint.Pos);
                 r = CadUtil.SegNorm(a, c);
@@ -242,17 +247,17 @@ namespace Plotter
                 seg.Distance = dist;
 
 
-                minDist = dist;
+                mMinDist = dist;
             }
         }
 
         private void CheckSegs(DrawContext dc, CadLayer layer, CadFigure fig)
         {
-            fig.ForEachFigureSegment(fseg =>
+            for (int i=0;i < fig.SegmentCount; i++)
             {
-                CheckSeg(dc, layer, fseg);
-                return true;
-            });
+                FigureSegment seg = fig.GetFigSegmentAt(i);
+                CheckSeg(dc, layer, seg);
+            }
         }
 
         private void CheckFig(DrawContext dc, CadLayer layer, CadFigure fig)
@@ -280,8 +285,10 @@ namespace Plotter
                 return false;
             }
 
-            foreach (SelectItem item in IgnoreList)
+            for (int i=0; i<IgnoreList.Count; i++)
             {
+                SelectItem item = IgnoreList[i];
+
                 if (item.FigureID == figId && item.PointIndex == index)
                 {
                     return true;
@@ -298,8 +305,10 @@ namespace Plotter
                 return false;
             }
 
-            foreach (MarkSeg item in IgnoreSegList)
+            for (int i=0; i<IgnoreSegList.Count; i++)
             {
+                MarkSeg item = IgnoreSegList[i];
+
                 if (item.FigureID == figId && (item.PtIndexA == index || item.PtIndexB == index))
                 {
                     return true;
