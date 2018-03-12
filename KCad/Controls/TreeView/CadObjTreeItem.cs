@@ -76,7 +76,7 @@ namespace KCad
             return cnt;
         }
 
-        public bool ForEach(Func<ICadObjectTreeItem, bool> walker)
+        public bool ForEach(TreeWalker walker)
         {
             if (!walker(this))
             {
@@ -102,7 +102,7 @@ namespace KCad
             return true;
         }
 
-        public bool ForEach(Func<ICadObjectTreeItem, int, bool> walker, int level)
+        public bool ForEach(TreeWalkerLv walker, int level)
         {
             if (!walker(this, level))
             {
@@ -134,9 +134,7 @@ namespace KCad
 
             ICadObjectTreeItem ret = null;
 
-            ForEach(match);
-
-            bool match(ICadObjectTreeItem item)
+            ForEach(item =>
             {
                 if (n == i)
                 {
@@ -146,7 +144,7 @@ namespace KCad
 
                 i++;
                 return true;
-            }
+            });
 
             return ret;
         }
