@@ -92,8 +92,10 @@ namespace Plotter
                 Search(dc, db, db.CurrentLayer);
             }
 
-            foreach (CadLayer layer in db.LayerList)
+            for (int i=0; i<db.LayerList.Count; i++)
             {
+                CadLayer layer = db.LayerList[i];
+
                 if (layer.ID == db.CurrentLayerID)
                 {
                     continue;
@@ -115,10 +117,11 @@ namespace Plotter
                 return;
             }
 
-            layer.ForEachFig(fig =>
+            for (int i=0; i< layer.FigureList.Count; i++)
             {
+                CadFigure fig = layer.FigureList[i];
                 CheckFigure(dc, layer, fig);
-            });
+            }
         }
 
         public void Check(DrawContext dc, CadVector pt)
@@ -128,21 +131,29 @@ namespace Plotter
 
         public void Check(DrawContext dc, VectorList list)
         {
-            foreach(CadVector pt in list)
+            for (int i=0;i< list.Count; i++)
             {
-                Check(dc, pt);
+                Check(dc, list[i]);
             }
         }
 
         public void CheckFigure(DrawContext dc, CadLayer layer, CadFigure fig)
         {
-            fig.ForEachPoint(action);
-
-            fig.ForEachThicknessPoint(action);
-
-            void action(CadVector v, int idx)
+            for (int i=0;i < fig.PointCount; i++)
             {
-                CheckFigPoint(dc, v, layer, fig, idx);
+                CheckFigPoint(dc, fig.PointList[i], layer, fig, i);
+            }
+
+            if (fig.Thickness == 0)
+            {
+                return;
+            }
+
+            CadVector tv = fig.ThicknessV;
+
+            for (int i = 0; i < fig.PointCount; i++)
+            {
+                CheckFigPoint(dc, fig.PointList[i] + tv, layer, fig, i);
             }
         }
 
@@ -223,8 +234,10 @@ namespace Plotter
 
         private bool ContainsXYMatch(MarkPoint mp)
         {
-            foreach (MarkPoint lmp in XYMatchList)
+            for (int i=0; i<XYMatchList.Count; i++)
             {
+                MarkPoint lmp = XYMatchList[i];
+
                 if (mp.FigureID == lmp.FigureID && mp.PointIndex == lmp.PointIndex)
                 {
                     return true;
@@ -242,8 +255,10 @@ namespace Plotter
                 return false;
             }
 
-            foreach (SelectItem item in IgnoreList)
+            for (int i=0;i<IgnoreList.Count;i++)
             {
+                SelectItem item = IgnoreList[i];
+
                 if (item.FigureID == figId && item.PointIndex == index)
                 {
                     return true;

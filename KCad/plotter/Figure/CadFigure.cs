@@ -55,6 +55,19 @@ namespace Plotter
             set;
         }
 
+        public CadVector ThicknessV
+        {
+            get
+            {
+                if (Thickness == 0)
+                {
+                    return CadVector.Zero;
+                }
+
+                return (Normal * -1.0) * Thickness;
+            }
+        }
+
         public virtual VectorList PointList
         {
             get
