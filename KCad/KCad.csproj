@@ -318,12 +318,12 @@
     <Compile Include="plotter\Util\FlexBlockingQueue.cs" />
     <Compile Include="plotter\Util\MessageHandler.cs" />
     <Compile Include="plotter\Util\PlotterCommon.cs" />
-    <Compile Include="plotter\PlotterController\PlotterController.cs" />
-    <Compile Include="plotter\PlotterController\PlotterController_Debug.cs" />
-    <Compile Include="plotter\PlotterController\PlotterController_EditFigure.cs" />
-    <Compile Include="plotter\PlotterController\PlotterController_Input.cs" />
-    <Compile Include="plotter\PlotterController\ScriptEnvironment.cs" />
-    <Compile Include="plotter\PlotterController\PlotterController_ViewControl.cs" />
+    <Compile Include="plotter\Controller\PlotterController.cs" />
+    <Compile Include="plotter\Controller\PlotterController_Debug.cs" />
+    <Compile Include="plotter\Controller\PlotterController_EditFigure.cs" />
+    <Compile Include="plotter\Controller\PlotterController_Input.cs" />
+    <Compile Include="plotter\Controller\ScriptEnvironment.cs" />
+    <Compile Include="plotter\Controller\PlotterController_ViewControl.cs" />
     <Compile Include="plotter\searcher\PointSearcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
