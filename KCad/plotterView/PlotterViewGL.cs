@@ -49,6 +49,7 @@ namespace Plotter
         public static PlotterViewGL Create(GraphicsMode mode)
         {
             PlotterViewGL v = new PlotterViewGL(mode);
+            v.MakeCurrent();
             return v;
         }
 
@@ -63,8 +64,6 @@ namespace Plotter
             MouseWheel += OnMouseWheel;
 
             mDrawContext.OnPush = OnPushDraw;
-
-            //SwapBuffers();
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)
@@ -72,7 +71,7 @@ namespace Plotter
             DownButton = MouseButtons.None;
             mController.Mouse.MouseUp(mDrawContext, e.Button, e.X, e.Y);
 
-            RedrawAll();
+            Redraw();
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
@@ -100,7 +99,7 @@ namespace Plotter
                     mDrawContext.WoldScale *= (double)(e.Delta / e.Delta) * 0.8;
                 }
 
-                RedrawAll();
+                Redraw();
             }
         }
 
@@ -129,7 +128,7 @@ namespace Plotter
 
                 mDrawContext.RotateEyePoint(prev, current);
 
-                RedrawAll();
+                Redraw();
 
                 PrevMousePos = t;
             }
@@ -140,21 +139,19 @@ namespace Plotter
 
                 mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
 
-                RedrawAll();
+                Redraw();
             }
         }
 
-        public void RedrawAll()
+        public void Redraw()
         {
-            DrawContext dc = StartDraw();
-            mController.Clear(dc);
-            mController.DrawAll(dc);
-            EndDraw();
+            //MakeCurrent();
+            mController.Redraw(mController.CurrentDC);
         }
 
         private void OnPaint(object sender, PaintEventArgs e)
         {
-            //SwapBuffers();
+            // NOP
         }
 
         private void OnResize(object sender, EventArgs e)
@@ -163,21 +160,8 @@ namespace Plotter
 
             if (mController != null)
             {
-                RedrawAll();
+                Redraw();
             }
-        }
-
-        public DrawContext StartDraw()
-        {
-            MakeCurrent();
-            mDrawContext.StartDraw();
-            return mDrawContext;
-        }
-
-        public void EndDraw()
-        {
-            mDrawContext.EndDraw();
-            mDrawContext.Push();
         }
 
         public void SetController(PlotterController controller)

@@ -24,9 +24,5 @@ namespace Plotter
         }
 
         void SetController(PlotterController controller);
-
-        DrawContext StartDraw();
-
-        void EndDraw();
     }
 }

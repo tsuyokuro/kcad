@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define MOUSE_THREAD
+
+using System;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
@@ -135,20 +137,8 @@ namespace Plotter
                     firstSizeChange = false;
                 }
 
-                RedrawAll();
+                Redraw();
             }
-        }
-
-        public DrawContext StartDraw()
-        {
-            mDrawContext.StartDraw();
-            return mDrawContext;
-        }
-
-        public void EndDraw()
-        {
-            mDrawContext.EndDraw();
-            mDrawContext.Push();
         }
 
         public void OnPushDraw(DrawContext dc)
@@ -161,13 +151,8 @@ namespace Plotter
 
         private void mouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            // Mouse eventを直接処理
-            //mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
-            //RedrawAll();
-
-
+#if MOUSE_THREAD
             // Mouse eventを別スレッドで処理
-
             // 未処理のEventは破棄
             mMessageHandler.RemoveAll(MyMessageHandler.MOUSE_MOVE);
 
@@ -177,7 +162,30 @@ namespace Plotter
             msg.Arg1 = e.X;
             msg.Arg2 = e.Y;
 
-            mMessageHandler.SendMessage(msg, 1);
+            mMessageHandler.SendMessage(msg, 2);
+#else
+            // Mouse eventを直接処理
+            mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
+            Redraw();
+#endif
+        }
+
+        private void mouseWheel(object sender, MouseEventArgs e)
+        {
+#if MOUSE_THREAD
+            mMessageHandler.RemoveAll(MyMessageHandler.MOUSE_WHEEL);
+
+            MessageHandler.Message msg = mMessageHandler.ObtainMessage();
+
+            msg.What = MyMessageHandler.MOUSE_WHEEL;
+            msg.Obj = e;
+
+            mMessageHandler.SendMessage(msg, 2);
+#else
+            // 直接描画
+            mController.Mouse.MouseWheel(mDrawContext, e.X, e.Y, e.Delta);
+            Redraw();
+#endif
         }
 
         private void mouseDown(Object sender, MouseEventArgs e)
@@ -193,21 +201,14 @@ namespace Plotter
 
             mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
 
-            RedrawAll();
+            Redraw();
         }
 
         private void mouseUp(Object sender, MouseEventArgs e)
         {
             mController.Mouse.MouseUp(mDrawContext, e.Button, e.X, e.Y);
 
-            RedrawAll();
-        }
-
-        private void mouseWheel(object sender, MouseEventArgs e)
-        {
-            mController.Mouse.MouseWheel(mDrawContext, e.X, e.Y, e.Delta);
-
-            RedrawAll();
+            Redraw();
         }
 
         public void ShowContextMenu(PlotterController sender, PlotterController.StateInfo state, int x, int y)
@@ -244,21 +245,18 @@ namespace Plotter
             if (sender == mMnItemClosePolyLines)
             {
                 mController.CloseFigure();
-                RedrawAll();
+                Redraw();
             }
             else if (sender == mMnItemEndPolyLines || sender == mMnItemQuitRect)
             {
                 mController.EndCreateFigureState();
-                RedrawAll();
+                Redraw();
             }
         }
 
-        public void RedrawAll()
+        public void Redraw()
         {
-            DrawContext dc = StartDraw();
-            mController.Clear(dc);
-            mController.DrawAll(dc);
-            EndDraw();
+            mController.Redraw(mController.CurrentDC);
         }
 
         public void SetController(PlotterController controller)
@@ -279,6 +277,7 @@ namespace Plotter
         class MyMessageHandler : MessageHandler
         {
             public const int MOUSE_MOVE = 1;
+            public const int MOUSE_WHEEL = 2;
 
             private PlotterView mPlotterView; 
 
@@ -296,6 +295,11 @@ namespace Plotter
 
                     handleMouseMove(x, y);
                 }
+                else if (msg.What == MOUSE_WHEEL)
+                {
+                    MouseEventArgs e = (MouseEventArgs)msg.Obj;
+                    handleMouseWheel(e);
+                }
             }
 
             public void handleMouseMove(int x, int y)
@@ -303,8 +307,16 @@ namespace Plotter
                 mPlotterView.Invoke(new Action(() =>
                 {
                     mPlotterView.mController.Mouse.MouseMove(mPlotterView.mDrawContext, x, y);
+                    mPlotterView.Redraw();
+                }));
+            }
 
-                    mPlotterView.RedrawAll();
+            public void handleMouseWheel(MouseEventArgs e)
+            {
+                mPlotterView.Invoke(new Action(() =>
+                {
+                    mPlotterView.mController.Mouse.MouseWheel(mPlotterView.mDrawContext, e.X, e.Y, e.Delta);
+                    mPlotterView.Redraw();
                 }));
             }
         }

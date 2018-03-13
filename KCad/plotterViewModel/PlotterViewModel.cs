@@ -286,7 +286,7 @@ namespace Plotter
                 SettingsHolder.Settings.DrawFaceOutline = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawFaceOutline)));
 
-                DrawAll();
+                Redraw();
             }
 
             get
@@ -302,7 +302,7 @@ namespace Plotter
                 SettingsHolder.Settings.FillFace = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillFace)));
 
-                DrawAll();
+                Redraw();
             }
 
             get
@@ -437,7 +437,7 @@ namespace Plotter
 
         private void ObjectTreeView_CheckChanged(object sender, EventArgs e)
         {
-            DrawAll();
+            Redraw();
         }
 
         public void ViewFocus()
@@ -535,109 +535,109 @@ namespace Plotter
         public void Undo()
         {
             mController.Undo();
-            RedrawAll();
+            Redraw();
         }
 
         public void Redo()
         {
             mController.Redo();
-            RedrawAll();
+            Redraw();
         }
 
         public void Remove()
         {
             mController.Remove();
-            RedrawAll();
+            Redraw();
         }
 
         public void SeparateFigure()
         {
             mController.SeparateFigures();
-            RedrawAll();
+            Redraw();
         }
 
         public void BondFigure()
         {
             mController.BondFigures();
-            RedrawAll();
+            Redraw();
         }
 
         public void ToBezier()
         {
             mController.ToBezier();
-            RedrawAll();
+            Redraw();
         }
 
         public void CutSegment()
         {
             mController.CutSegment();
-            RedrawAll();
+            Redraw();
         }
 
         public void InsPoint()
         {
             mController.InsPointToLastSelectedSeg();
-            RedrawAll();
+            Redraw();
         }
 
         public void ToLoop()
         {
             mController.SetLoop(true);
-            RedrawAll();
+            Redraw();
         }
 
         public void ToUnloop()
         {
             mController.SetLoop(false);
-            RedrawAll();
+            Redraw();
         }
 
         public void FlipX()
         {
             mController.FlipX();
-            RedrawAll();
+            Redraw();
         }
 
         public void FlipY()
         {
             mController.FlipY();
-            RedrawAll();
+            Redraw();
         }
 
         public void FlipZ()
         {
             mController.FlipZ();
-            RedrawAll();
+            Redraw();
         }
 
         public void FlipNormal()
         {
             mController.FlipNormal();
-            RedrawAll();
+            Redraw();
         }
 
         public void ClearLayer()
         {
             mController.ClearLayer(0);
-            RedrawAll();
+            Redraw();
         }
 
         public void Copy()
         {
             mController.Copy();
-            RedrawAll();
+            Redraw();
         }
 
         public void Paste()
         {
             mController.Paste();
-            RedrawAll();
+            Redraw();
         }
 
         public void NewDocument()
         {
             mController.ClearAll();
-            RedrawAll();
+            Redraw();
         }
 
         public void Load()
@@ -677,7 +677,7 @@ namespace Plotter
             {
                 mController.Grid.GridSize = dlg.GridSize;
 
-                RedrawAll();
+                Redraw();
             }
         }
 
@@ -697,10 +697,11 @@ namespace Plotter
                 mController.PointSnapRange = dlg.PointSnapRange;
                 mController.LineSnapRange = dlg.LineSnapRange;
 
-                RedrawAll();
+                Redraw();
             }
         }
 
+        /*
         public void RedrawAll()
         {
             DrawContext dc = StartDraw();
@@ -708,41 +709,42 @@ namespace Plotter
             mController.DrawAll(dc);
             EndDraw();
         }
+        */
 
         public void AddLayer()
         {
             mController.AddLayer(null);
-            RedrawAll();
+            Redraw();
         }
 
         public void RemoveLayer()
         {
             mController.RemoveLayer(mController.CurrentLayer.ID);
-            RedrawAll();
+            Redraw();
         }
 
         public void AddCentroid()
         {
             mController.AddCentroid();
-            RedrawAll();
+            Redraw();
         }
 
         public void SelectAll()
         {
             mController.SelectAllInCurrentLayer();
-            RedrawAll();
+            Redraw();
         }
 
         public void Cancel()
         {
             mController.Cancel();
-            RedrawAll();
+            Redraw();
         }
 
         public void SearchNearestPoint()
         {
             mController.MoveCursorNearestPoint(mPlotterView.DrawContext);
-            RedrawAll();
+            Redraw();
         }
 
         #endregion
@@ -756,7 +758,7 @@ namespace Plotter
         {
             if (redraw)
             {
-                DrawAll();
+                Redraw();
             }
         }
 
@@ -832,7 +834,8 @@ namespace Plotter
         public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             LayerHolder lh = (LayerHolder)sender;
-            Draw(clearFlag:true);
+            //Draw(clearFlag:true);
+            Redraw();
         }
 
         public void LayerListSelectionChanged(object sender, SelectionChangedEventArgs args)
@@ -845,7 +848,7 @@ namespace Plotter
                 {
                     mController.setCurrentLayer(layer.ID);
 
-                    RedrawAll();
+                    Redraw();
                 }
             }
             else
@@ -935,12 +938,13 @@ namespace Plotter
         private void LoadFile(String fname)
         {
             mController.LoadFromJsonFile(fname);
-            RedrawAll();
+            Redraw();
         }
         #endregion
 
 
         #region helper
+        /*
         private DrawContext StartDraw()
         {
             return mPlotterView.StartDraw();
@@ -950,7 +954,9 @@ namespace Plotter
         {
             mPlotterView.EndDraw();
         }
+        */
 
+        /*
         private void Draw(bool clearFlag=true)
         {
             DrawContext dc = mPlotterView.StartDraw();
@@ -961,13 +967,18 @@ namespace Plotter
             mController.Draw(dc);
             mPlotterView.EndDraw();
         }
-
-        private void DrawAll()
+        */
+        private void Redraw()
         {
+            mController.Redraw(mController.CurrentDC);
+            //mController.CurrentDC.Push();
+
+            /*
             DrawContext dc = mPlotterView.StartDraw();
             mController.Clear(dc);
             mController.DrawAll(dc);
             mPlotterView.EndDraw();
+            */
         }
         #endregion
 
@@ -1018,14 +1029,14 @@ namespace Plotter
 
         public void DebugCommand(string s)
         {
-            DrawContext dc = StartDraw();
+            //DrawContext dc = StartDraw();
 
-            mController.Clear(dc);
+            //mController.Clear(dc);
 
-            mController.debugCommand(dc, s);
-
-            mController.DrawAll(dc);
-            EndDraw();
+            mController.debugCommand(mController.CurrentDC, s);
+            
+            //mController.DrawAll(dc);
+            //EndDraw();
         }
         #endregion
 
@@ -1048,13 +1059,13 @@ namespace Plotter
                 MeasureMode = PlotterController.MeasureModes.NONE;
                 mController.StartCreateFigure(mFigureType);
 
-                RedrawAll();
+                Redraw();
             }
             else if (prev != CadFigure.Types.NONE)
             {
                 mController.EndCreateFigure();
 
-                RedrawAll();
+                Redraw();
             }
 
             return true;
@@ -1082,7 +1093,7 @@ namespace Plotter
             else if (prev != PlotterController.MeasureModes.NONE)
             {
                 mController.EndMeasure();
-                RedrawAll();
+                Redraw();
             }
 
             return true;
@@ -1102,44 +1113,44 @@ namespace Plotter
                 case ViewModes.FRONT:
                     SetView(PlotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.UnitZ, Vector3d.Zero, Vector3d.UnitY);
-                    DrawAll();
+                    Redraw();
                     break;
 
                 case ViewModes.BACK:
                     SetView(PlotterView1);
                     mPlotterView.DrawContext.SetCamera(-Vector3d.UnitZ, Vector3d.Zero, Vector3d.UnitY);
-                    DrawAll();
+                    Redraw();
                     break;
 
                 case ViewModes.TOP:
                     SetView(PlotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.UnitY, Vector3d.Zero, -Vector3d.UnitZ);
-                    DrawAll();
+                    Redraw();
                     break;
 
                 case ViewModes.BOTTOM:
                     SetView(PlotterView1);
                     mPlotterView.DrawContext.SetCamera(-Vector3d.UnitY, Vector3d.Zero, Vector3d.UnitZ);
-                    DrawAll();
+                    Redraw();
                     break;
 
                 case ViewModes.RIGHT:
                     SetView(PlotterView1);
                     mPlotterView.DrawContext.SetCamera(Vector3d.UnitX, Vector3d.Zero, Vector3d.UnitY);
-                    DrawAll();
+                    Redraw();
                     break;
 
                 case ViewModes.LEFT:
                     SetView(PlotterView1);
                     mPlotterView.DrawContext.SetCamera(-Vector3d.UnitX, Vector3d.Zero, Vector3d.UnitY);
-                    DrawAll();
+                    Redraw();
                     break;
 
                 case ViewModes.FREE:
                     PlotterViewGL1.Size = PlotterView1.Size;
                     PlotterViewGL1.DrawContext.SetUnitPerMilli(PlotterView1.DrawContext.UnitPerMilli);
                     SetView(PlotterViewGL1);
-                    DrawAll();
+                    Redraw();
                     break;
             }
 
@@ -1195,7 +1206,7 @@ namespace Plotter
         {
             mController.ScriptEnv.MessageSelected(messages);
 
-            DrawAll();
+            Redraw();
         }
     }
 

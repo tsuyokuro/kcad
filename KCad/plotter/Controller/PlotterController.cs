@@ -477,6 +477,15 @@ namespace Plotter
     #endregion
 
     #region "Draw methods"
+        public void Redraw(DrawContext dc)
+        {
+            dc.StartDraw();
+            Clear(dc);
+            DrawAll(dc);
+            dc.EndDraw();
+            dc.Push();
+        }
+
         public void Clear(DrawContext dc)
         {
             if (dc == null) return;
