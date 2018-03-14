@@ -35,11 +35,14 @@ namespace Plotter
         public CadLayerTreeItem(CadLayer layer)
         {
             Layer = layer;
-            foreach (CadFigure fig in Layer.FigureList)
+
+            for (int i=0;i< Layer.FigureList.Count; i++)
             {
+                CadFigure fig = Layer.FigureList[i];
+
                 CadObjTreeItem item = new CadFigTreeItem(fig);
                 Add(item);
-            };
+            }
         }
     }
 
@@ -74,18 +77,19 @@ namespace Plotter
 
             int idx = 0;
 
-            Fig.PointList.ForEach(p =>
-            {
+            for (int i=0; i < Fig.PointList.Count; i++) {
+                CadVector p = Fig.PointList[i];
                 CadPointTreeItem pi = new CadPointTreeItem(fig, idx);
                 Add(pi);
                 idx++;
-            });
+            }
 
-            Fig.ChildList.ForEach(c =>
+            for (int i=0; i<Fig.ChildList.Count; i++)
             {
+                CadFigure c = Fig.ChildList[i];
                 CadFigTreeItem pi = new CadFigTreeItem(c);
                 Add(pi);
-            });
+            }
         }
 
         private void SelectAllPoints(bool sel)
@@ -95,10 +99,11 @@ namespace Plotter
                 return;
             }
 
-            Children.ForEach(c =>
+            for (int i=0; i<Children.Count; i++)
             {
+                CadObjTreeItem c = Children[i];
                 c.IsChecked = sel;
-            });
+            }
         }
 
         private bool HasSelectedPoint()

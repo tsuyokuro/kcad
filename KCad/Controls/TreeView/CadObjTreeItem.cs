@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace KCad
 {
-    public delegate bool TreeWalker(CadObjTreeItem item);
-    public delegate bool TreeWalkerLv(CadObjTreeItem item, int level);
-
     public abstract class CadObjTreeItem
     {
         public bool IsExpand
@@ -79,7 +76,7 @@ namespace KCad
             return cnt;
         }
 
-        public bool ForEach(TreeWalker walker)
+        public bool ForEach(Func<CadObjTreeItem, bool> walker)
         {
             if (!walker(this))
             {
@@ -105,7 +102,7 @@ namespace KCad
             return true;
         }
 
-        public bool ForEach(TreeWalkerLv walker, int level)
+        public bool ForEach(Func<CadObjTreeItem, int, bool> walker, int level)
         {
             if (!walker(this, level))
             {
