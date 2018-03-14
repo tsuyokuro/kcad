@@ -16,28 +16,6 @@ using System.Windows.Threading;
 
 namespace KCad
 {
-    public delegate bool TreeWalker(ICadObjectTreeItem item);
-    public delegate bool TreeWalkerLv(ICadObjectTreeItem item, int level);
-
-    public interface ICadObjectTreeItem
-    {
-        ICadObjectTreeItem Parent { get; set; }
-
-        bool IsExpand { get; set; }
-        bool IsChecked { get; set; }
-
-        string Text { get; }
-
-        List<ICadObjectTreeItem> Children { get; }
-        int GetTotalCount();
-        void Add(ICadObjectTreeItem item);
-
-        bool ForEach(TreeWalker walker);
-        bool ForEach(TreeWalkerLv walker, int level);
-
-        ICadObjectTreeItem GetAt(int n);
-    }
-
     public class CadObjectTreeView : FrameworkElement
     {
         static CadObjectTreeView()
@@ -136,9 +114,9 @@ namespace KCad
         } = false;
 
 
-        protected ICadObjectTreeItem mRoot;
+        protected CadObjTreeItem mRoot;
 
-        public ICadObjectTreeItem Root
+        public CadObjTreeItem Root
         {
             get { return mRoot; }
             set
@@ -204,7 +182,7 @@ namespace KCad
                 idx++;
             }
 
-            ICadObjectTreeItem item = mRoot.GetAt(idx);
+            CadObjTreeItem item = mRoot.GetAt(idx);
 
             if (item == null)
             {
@@ -224,7 +202,7 @@ namespace KCad
             Scroll.ScrollToVerticalOffset(pos * mItemHeight);
         }
 
-        public int Find(Func<ICadObjectTreeItem, bool> comp)
+        public int Find(Func<CadObjTreeItem, bool> comp)
         {
             int idx = -1;
             int cnt = 0;
@@ -376,7 +354,7 @@ namespace KCad
         }
 
 
-        public void AttachRoot(ICadObjectTreeItem root)
+        public void AttachRoot(CadObjTreeItem root)
         {
             mRoot = root;
 

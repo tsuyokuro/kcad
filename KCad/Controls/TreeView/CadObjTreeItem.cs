@@ -6,14 +6,17 @@ using System.Threading.Tasks;
 
 namespace KCad
 {
-    public abstract class CadObjTreeItem : ICadObjectTreeItem
+    public delegate bool TreeWalker(CadObjTreeItem item);
+    public delegate bool TreeWalkerLv(CadObjTreeItem item, int level);
+
+    public abstract class CadObjTreeItem
     {
         public bool IsExpand
         {
             get; set;
         }
 
-        public virtual ICadObjectTreeItem Parent
+        public virtual CadObjTreeItem Parent
         {
             get; set;
         }
@@ -38,9 +41,9 @@ namespace KCad
             }
         }
 
-        protected List<ICadObjectTreeItem> mChildren;
+        protected List<CadObjTreeItem> mChildren;
 
-        public List<ICadObjectTreeItem> Children
+        public List<CadObjTreeItem> Children
         {
             get
             {
@@ -48,11 +51,11 @@ namespace KCad
             }
         }
 
-        public virtual void Add(ICadObjectTreeItem item)
+        public virtual void Add(CadObjTreeItem item)
         {
             if (mChildren == null)
             {
-                mChildren = new List<ICadObjectTreeItem>();
+                mChildren = new List<CadObjTreeItem>();
             }
 
             item.Parent = this;
@@ -91,7 +94,7 @@ namespace KCad
             int i;
             for (i = 0; i < mChildren.Count; i++)
             {
-                ICadObjectTreeItem item = mChildren[i];
+                CadObjTreeItem item = mChildren[i];
 
                 if (!item.ForEach(walker))
                 {
@@ -117,7 +120,7 @@ namespace KCad
             int i;
             for (i = 0; i < mChildren.Count; i++)
             {
-                ICadObjectTreeItem item = mChildren[i];
+                CadObjTreeItem item = mChildren[i];
 
                 if (!item.ForEach(walker, level + 1))
                 {
@@ -128,11 +131,11 @@ namespace KCad
             return true;
         }
 
-        public ICadObjectTreeItem GetAt(int n)
+        public CadObjTreeItem GetAt(int n)
         {
             int i = 0;
 
-            ICadObjectTreeItem ret = null;
+            CadObjTreeItem ret = null;
 
             ForEach(item =>
             {

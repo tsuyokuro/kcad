@@ -37,7 +37,7 @@ namespace Plotter
             Layer = layer;
             foreach (CadFigure fig in Layer.FigureList)
             {
-                ICadObjectTreeItem item = new CadFigTreeItem(fig);
+                CadObjTreeItem item = new CadFigTreeItem(fig);
                 Add(item);
             };
         }
@@ -113,7 +113,7 @@ namespace Plotter
             int i;
             for (i=0; i<Children.Count;i++)
             {
-                ICadObjectTreeItem c = Children[i];
+                CadObjTreeItem c = Children[i];
 
                 if (c.IsChecked)
                 {
