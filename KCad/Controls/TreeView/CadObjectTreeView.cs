@@ -209,11 +209,6 @@ namespace KCad
 
             mRoot.ForEach((item) =>
             {
-                if (!ShowRoot && item == mRoot)
-                {
-                    return true;
-                }
-
                 if (comp(item))
                 {
                     idx = cnt;
@@ -223,6 +218,11 @@ namespace KCad
                 cnt++;
                 return true;
             });
+
+            if (!ShowRoot && idx>=0)
+            {
+                idx--;
+            }
 
             return idx;
         }

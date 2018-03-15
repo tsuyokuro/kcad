@@ -160,7 +160,7 @@ namespace Plotter
         {
             int idx = Controller.FindTreeViewItem(id);
 
-            if (idx == -1)
+            if (idx < 0)
             {
                 Controller.InteractOut.println(
                     String.Format("ID:{0} is not found", id));

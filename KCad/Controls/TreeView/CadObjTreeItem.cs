@@ -76,9 +76,9 @@ namespace KCad
             return cnt;
         }
 
-        public bool ForEach(Func<CadObjTreeItem, bool> walker)
+        public bool ForEach(Func<CadObjTreeItem, bool> func)
         {
-            if (!walker(this))
+            if (!func(this))
             {
                 return false;
             }
@@ -93,7 +93,7 @@ namespace KCad
             {
                 CadObjTreeItem item = mChildren[i];
 
-                if (!item.ForEach(walker))
+                if (!item.ForEach(func))
                 {
                     return false;
                 }
@@ -102,9 +102,9 @@ namespace KCad
             return true;
         }
 
-        public bool ForEach(Func<CadObjTreeItem, int, bool> walker, int level)
+        public bool ForEach(Func<CadObjTreeItem, int, bool> func, int level)
         {
-            if (!walker(this, level))
+            if (!func(this, level))
             {
                 return false;
             }
@@ -119,7 +119,7 @@ namespace KCad
             {
                 CadObjTreeItem item = mChildren[i];
 
-                if (!item.ForEach(walker, level + 1))
+                if (!item.ForEach(func, level + 1))
                 {
                     return false;
                 }
