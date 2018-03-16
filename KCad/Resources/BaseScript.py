@@ -135,6 +135,10 @@ def projDir():
 def printVector(v):
     SE.PrintVector(v)
 
+#[AC] toMesh()
+def toMesh():
+    SE.ToMesh()
+
 #globals
 x=0
 y=0

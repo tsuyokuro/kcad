@@ -180,6 +180,7 @@
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="MyCollections\AutoArray.cs" />
+    <Compile Include="plotter\Controller\ScriptEnvironment_test.cs" />
     <Compile Include="plotter\Figure\CadFigureMesh.cs" />
     <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
     <Compile Include="Log.cs" />

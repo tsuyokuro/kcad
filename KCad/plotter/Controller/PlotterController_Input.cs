@@ -60,7 +60,30 @@ namespace Plotter
 
         private Gridding mGridding = new Gridding();
 
-        private CadFigure CurrentFigure = null;
+        private CadFigure mCurrentFigure = null;
+
+        private CadFigure CurrentFigure
+        {
+            set
+            {
+                if (mCurrentFigure != null)
+                {
+                    mCurrentFigure.Current = false;
+                }
+
+                mCurrentFigure = value;
+
+                if (mCurrentFigure != null)
+                {
+                    mCurrentFigure.Current = true;
+                }
+            }
+
+            get
+            {
+                return mCurrentFigure;
+            }
+        }
 
         private int MatchIndex = 0;
 
@@ -68,20 +91,6 @@ namespace Plotter
 
         private List<HighlightPointListItem> HighlightPointList = new List<HighlightPointListItem>();
 
-        /*
-        public bool SnapToGrid
-        {
-            set
-            {
-                mGridding.Enable = value;
-            }
-
-            get
-            {
-                return mGridding.Enable;
-            }
-        }
-        */
         public Gridding Grid
         {
             get
@@ -90,42 +99,6 @@ namespace Plotter
             }
         }
 
-        /*
-        private bool mSnapToPoint = true;
-
-        public bool SnapToPoint
-        {
-            set
-            {
-                mSnapToPoint = value;
-            }
-
-            get
-            {
-                return mSnapToPoint;
-            }
-        }
-
-        private bool mSnapToSegment = true;
-
-        public bool SnapToSegment
-        {
-            set
-            {
-                mSnapToSegment = value;
-            }
-
-            get
-            {
-                return mSnapToSegment;
-            }
-        }
-
-        public bool SnapToLine
-        {
-            get; set;
-        } = true;
-        */
         private void InitHid()
         {
             Mouse.LButtonDown = LButtonDown;
@@ -194,6 +167,7 @@ namespace Plotter
         }
         #endregion
 
+        /*
         public void SetCurrentFigure(CadFigure fig)
         {
             if (CurrentFigure != null)
@@ -208,6 +182,7 @@ namespace Plotter
 
             CurrentFigure = fig;
         }
+        */
 
         /// <summary>
         /// 指定デバイス座標について範囲内かつ最も近い図形を選択
@@ -300,7 +275,7 @@ namespace Plotter
 
                     mRulerSet.Set(fig.PointList, mp.PointIndex, cp);
 
-                    SetCurrentFigure(fig);
+                    CurrentFigure = fig;
                 }
             }
             else
@@ -363,14 +338,13 @@ namespace Plotter
                     mSegSearcher.SetIgnoreList(mSelList.List);
                     mSegSearcher.SetIgnoreSeg(mSelectedSegs.List);
 
-                    SetCurrentFigure(fig);
+                    CurrentFigure = fig;
                 }
                 else
                 {
                     if (!CadKeyboard.IsCtrlKeyDown())
                     {
                         ClearSelection();
-                        SetCurrentFigure(null);
                     }
                 }
             }

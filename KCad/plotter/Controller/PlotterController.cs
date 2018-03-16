@@ -617,8 +617,10 @@ namespace Plotter
             }
         }
 
-        private void ClearSelection()
+        public void ClearSelection()
         {
+            CurrentFigure = null;
+
             mSelList.clear();
             mSelectedSegs.Clear();
 
@@ -1121,7 +1123,7 @@ namespace Plotter
                 fig.Select();
             }
 
-            SetCurrentFigure(fig);
+            CurrentFigure = fig;
         }
 
         public void ScaleSelectedFigure(CadVector org, double scale)
