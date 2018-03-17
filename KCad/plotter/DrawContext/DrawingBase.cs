@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using HalfEdgeNS;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,11 +79,35 @@ namespace Plotter
         {
         }
 
-        /*
-        public virtual void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb)
+        public virtual void DrawHarfEdgeModel(int pen, HeModel model)
         {
+            for (int i = 0; i < model.FaceStore.Count; i++)
+            {
+                HeFace f = model.FaceStore[i];
+
+                HalfEdge head = f.Head;
+
+                HalfEdge c = head;
+
+                CadVector v;
+
+                for (; ; )
+                {
+                    HalfEdge next = c.Next;
+
+                    DrawLine(pen,
+                        model.VertexStore.Ref(c.Vertex),
+                        model.VertexStore.Ref(next.Vertex));
+
+                    c = next;
+
+                    if (c == head)
+                    {
+                        break;
+                    }
+                }
+            }
         }
-        */
 
         public virtual void DrawText(int font, int brush, CadVector a, string s)
         {

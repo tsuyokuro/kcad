@@ -7,6 +7,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using FTGL;
 using System;
+using HalfEdgeNS;
 
 namespace Plotter
 {
@@ -78,7 +79,7 @@ namespace Plotter
         {
             GLPen glpen = DC.Pen(pen);
 
-            GL.Begin(PrimitiveType.Lines);
+            GL.Begin(PrimitiveType.LineStrip);
             GL.Color4(glpen.Color);
 
             a *= DC.WoldScale;
@@ -92,6 +93,8 @@ namespace Plotter
 
         public override void DrawFace(int pen, VectorList pointList, CadVector normal, bool drawOutline)
         {
+            //DebugOut.Std.println("GL DrawFace");
+
             CadVector p;
             GLPen glpen;
 
@@ -124,15 +127,13 @@ namespace Plotter
 
             GL.End();
 
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
 
             #region 輪郭
 
             if (drawOutline)
             {
-                // 輪郭は、光源設定を無効化
-                GL.Disable(EnableCap.Lighting);
-                GL.Disable(EnableCap.Light0);
-
                 glpen = DC.Pen(pen);
 
                 GL.Color4(glpen.Color);
@@ -158,6 +159,80 @@ namespace Plotter
                 GL.End();
             }
             #endregion
+        }
+
+        public override void DrawHarfEdgeModel(int pen, HeModel model)
+        {
+            GL.Enable(EnableCap.Lighting);
+            GL.Enable(EnableCap.Light0);
+
+            for (int i = 0; i < model.FaceStore.Count; i++)
+            {
+                HeFace f = model.FaceStore[i];
+
+                HalfEdge head = f.Head;
+
+                HalfEdge c = head;
+
+                CadVector v;
+
+                CadVector p0 = model.VertexStore.Ref(c.Vertex);
+                CadVector p1 = model.VertexStore.Ref(c.Next.Vertex);
+                CadVector p2 = model.VertexStore.Ref(c.Next.Next.Vertex);
+
+                CadVector normal = CadMath.Normal(p0, p1, p2);
+
+                GL.Begin(PrimitiveType.Polygon);
+                GL.Color4(0.8f, 0.8f, 0.8f, 1.0f);
+
+                GL.Vertex3((p0 * DC.WoldScale).vector);
+                GL.Vertex3((p1 * DC.WoldScale).vector);
+                GL.Vertex3((p2 * DC.WoldScale).vector);
+
+                GL.End();
+            }
+
+
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
+
+
+            GLPen glpen = DC.Pen(pen);
+
+            GL.Color4(glpen.Color);
+            GL.LineWidth(1.0f);
+
+            Vector3d t = DC.ViewDir * (-0.1f / DC.WoldScale);
+
+            CadVector shift = (CadVector)t;
+
+            for (int i = 0; i < model.FaceStore.Count; i++)
+            {
+                HeFace f = model.FaceStore[i];
+
+                HalfEdge head = f.Head;
+
+                HalfEdge c = head;
+
+                CadVector v;
+
+                CadVector p0 = model.VertexStore.Ref(c.Vertex);
+                CadVector p1 = model.VertexStore.Ref(c.Next.Vertex);
+                CadVector p2 = model.VertexStore.Ref(c.Next.Next.Vertex);
+
+                p0 = (p0 + shift) * DC.WoldScale;
+                p1 = (p1 + shift) * DC.WoldScale;
+                p2 = (p2 + shift) * DC.WoldScale;
+
+                GL.Begin(PrimitiveType.LineStrip);
+
+                GL.Vertex3(p0.vector);
+                GL.Vertex3(p1.vector);
+                GL.Vertex3(p2.vector);
+                GL.Vertex3(p0.vector);
+
+                GL.End();
+            }
         }
 
         public override void DrawAxis()

@@ -5,6 +5,7 @@
 
 //#define USE_LONG_TERM_LOCK_BITS // ある程度長い期間LockBitsし続ける
 
+using HalfEdgeNS;
 using OpenTK;
 using System;
 using System.Collections.Generic;
@@ -549,6 +550,11 @@ namespace Plotter
 
             p1 = pointList[0];
             DrawLine(pen, p0, p1);
+        }
+
+        public override void DrawHarfEdgeModel(int pen, HeModel model)
+        {
+            base.DrawHarfEdgeModel(pen, model);
         }
 
         public override void DrawText(int font, int brush, CadVector a, string s)

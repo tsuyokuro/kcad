@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HalfEdgeNS;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,7 +43,7 @@ namespace Plotter
 
         void DrawFace(int pen, VectorList pointList, CadVector normal, bool drawOutline);
 
-        //void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb);
+        void DrawHarfEdgeModel(int pen, HeModel model);
 
         void DrawText(int font, int brush, CadVector a, string s);
 

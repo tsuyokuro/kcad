@@ -276,7 +276,7 @@ namespace Plotter
                 return jo;
             }
 
-            public static JObject VectorListToJson(VectorList vl, VersionCode version)
+            public static JObject VectorListToJson(VectorList vl, VersionCode version = CurrentVersion)
             {
                 JObject jvl = new JObject();
 
@@ -292,7 +292,7 @@ namespace Plotter
                 return jvl;
             }
 
-            public static JObject VectorToJson(CadVector v, VersionCode version)
+            public static JObject VectorToJson(CadVector v, VersionCode version = CurrentVersion)
             {
                 var jo = new JObject();
 

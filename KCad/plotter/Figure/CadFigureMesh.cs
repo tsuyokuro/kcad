@@ -1,5 +1,6 @@
 ﻿using HalfEdgeNS;
 using MyCollections;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,7 +69,8 @@ namespace Plotter
 
         public override void Draw(DrawContext dc, int pen)
         {
-            DrawFaces(dc, DrawTools.PEN_MESH_LINE);
+            //DrawFaces(dc, DrawTools.PEN_MESH_LINE);
+            dc.Drawing.DrawHarfEdgeModel(DrawTools.PEN_MESH_LINE, mHeModel);
             DrawEdge(dc, pen);
         }
 
@@ -104,6 +106,11 @@ namespace Plotter
 
         private void DrawEdge(DrawContext dc, int pen)
         {
+            Vector3d t = dc.ViewDir * (-0.2f / dc.WoldScale);
+
+            CadVector shift = (CadVector)t;
+
+
             CadVector p0;
             CadVector p1;
 
@@ -112,12 +119,12 @@ namespace Plotter
                 p0 = mHeModel.VertexStore.Ref(mEdge[i]);
                 p1 = mHeModel.VertexStore.Ref(mEdge[i + 1]);
 
-                dc.Drawing.DrawLine(pen, p0, p1);
+                dc.Drawing.DrawLine(pen, p0 + shift, p1 + shift);
             }
 
             p0 = mHeModel.VertexStore.Ref(mEdge[mEdge.Count - 1]);
             p1 = mHeModel.VertexStore.Ref(mEdge[0]);
-            dc.Drawing.DrawLine(pen, p0, p1);
+            dc.Drawing.DrawLine(pen, p0 + shift, p1 + shift);
         }
 
         public override void DrawSelected(DrawContext dc, int pen)

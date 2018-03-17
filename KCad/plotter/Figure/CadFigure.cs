@@ -861,5 +861,10 @@ namespace Plotter
             }
         }
 
+        public virtual JObject VectorListToJson(CadJson.VersionCode version)
+        {
+            return CadJson.ToJson.VectorListToJson(PointList, version);
+        }
+
     } // End of class CadFigure
 }
