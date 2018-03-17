@@ -326,22 +326,22 @@ namespace Plotter
             return ret;
         }
 
-        public void dump(DebugOut o)
+        public void dump()
         {
-            o.println(nameof(MatrixMN) + "{");
-            o.Indent++;
+            DebugOut.println(nameof(MatrixMN) + "{");
+            DebugOut.Indent++;
 
             for (int r = 0; r < RN; r++)
             {
                 for (int c = 0; c < CN; c++)
                 {
-                    o.print(v[r, c].ToString() + ",");
+                    DebugOut.print(v[r, c].ToString() + ",");
                 }
-                o.println("");
+                DebugOut.println("");
             }
 
-            o.Indent--;
-            o.println("}");
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
     }
 }

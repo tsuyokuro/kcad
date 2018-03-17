@@ -27,7 +27,7 @@ namespace Plotter
 
             fig.ForEachFigureSegment(seg =>
             {
-                seg.dump(DebugOut.Std);
+                seg.dump();
                 return true;
             });
         }
@@ -53,14 +53,14 @@ namespace Plotter
                                 fig1.PointList[0], fig1.PointList[1]
                                 );
 
-            DebugOut.Std.println("CheckCrossSegSeg2D ret=" + ret.ToString());
+            DebugOut.println("CheckCrossSegSeg2D ret=" + ret.ToString());
         }
 
         private void test003()
         {
             Controller.CurrentLayer.ForEachFig(fig =>
             {
-                DebugOut.StdPrintLn("fig:" + fig.ID.ToString());
+                DebugOut.println("fig:" + fig.ID.ToString());
                 return true;
             });
         }
@@ -151,7 +151,7 @@ namespace Plotter
 
             CadSegment seg = CadUtil.Clipping2D(10, 10, 210, 110, p0, p1);
 
-            seg.dump(DebugOut.Std);
+            seg.dump();
 
             if (seg.Valid)
             {
@@ -268,7 +268,7 @@ namespace Plotter
             }
 
             sw.Stop();
-            DebugOut.StdPrintLn(sw.ElapsedMilliseconds.ToString() + " milli sec");
+            DebugOut.println(sw.ElapsedMilliseconds.ToString() + " milli sec");
         }
 
         private void test010()
@@ -291,11 +291,11 @@ namespace Plotter
             Controller.InteractOut.println("abc\ndef");
             Controller.InteractOut.println("end");
 
-            DebugOut.Std.printf("DebugOut {0}\n", 10);
-            DebugOut.Std.Indent++;
-            DebugOut.Std.printf("t1 {0}\n", 10);
-            DebugOut.Std.printf("t2 {0}\n", 20);
-            DebugOut.Std.reset();
+            DebugOut.printf("DebugOut {0}\n", 10);
+            DebugOut.Indent++;
+            DebugOut.printf("t1 {0}\n", 10);
+            DebugOut.printf("t2 {0}\n", 20);
+            DebugOut.reset();
         }
 
         private void test012()

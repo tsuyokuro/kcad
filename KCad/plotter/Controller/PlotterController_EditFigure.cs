@@ -213,7 +213,7 @@ namespace Plotter
 
             CadVector cp = (max - min) / 2f + min;
 
-            DebugOut.Std.println("GetSelectionCenter() sel pt cnt=" + selPointCnt.ToString());
+            DebugOut.println("GetSelectionCenter() sel pt cnt=" + selPointCnt.ToString());
 
             return cp;
         }

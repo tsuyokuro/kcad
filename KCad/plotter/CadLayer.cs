@@ -216,27 +216,27 @@ namespace Plotter
             }
         }
 
-        public void sdump(DebugOut dout)
+        public void sdump()
         {
-            dout.println(
+            DebugOut.println(
                 this.GetType().Name + 
                 "(" + this.GetHashCode().ToString() + ")" +
                 "ID=" + ID.ToString());
         }
 
-        public void dump(DebugOut dout)
+        public void dump()
         {
-            dout.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
-            dout.Indent++;
-            dout.println("ID=" + ID.ToString());
+            DebugOut.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
+            DebugOut.Indent++;
+            DebugOut.println("ID=" + ID.ToString());
 
             foreach (CadFigure fig in FigureList)
             {
-                fig.Dump(dout, "fig");
+                fig.Dump("fig");
             }
 
-            dout.Indent--;
-            dout.println("}");
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
     }
 }

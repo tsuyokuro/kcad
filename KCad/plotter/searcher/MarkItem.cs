@@ -61,12 +61,12 @@ namespace Plotter
             DistanceY = CadConst.MaxValue;
         }
 
-        public void dump(DebugOut dout)
+        public void dump()
         {
-            dout.println("MarkPoint {");
-            dout.println("FigureID:" + FigureID.ToString());
-            dout.println("PointIndex:" + PointIndex.ToString());
-            dout.println("}");
+            DebugOut.println("MarkPoint {");
+            DebugOut.println("FigureID:" + FigureID.ToString());
+            DebugOut.println("PointIndex:" + PointIndex.ToString());
+            DebugOut.println("}");
         }
     }
 
@@ -158,13 +158,13 @@ namespace Plotter
 
         public bool Valid { get { return FigureID != 0; } }
 
-        public void dump(DebugOut dout, string name= "MarkSeg")
+        public void dump(string name= "MarkSeg")
         {
-            dout.println(name + " {");
-            dout.Indent++;
-            FSegment.dump(dout, "FSegment");
-            dout.Indent--;
-            dout.println("}");
+            DebugOut.println(name + " {");
+            DebugOut.Indent++;
+            FSegment.dump("FSegment");
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
 
         public bool Update()

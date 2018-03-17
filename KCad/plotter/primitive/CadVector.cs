@@ -428,15 +428,15 @@ namespace Plotter
             return ret;
         }
 
-        public void dump(DebugOut dout, string prefix = nameof(CadVector))
+        public void dump(string prefix = nameof(CadVector))
         {
-            dout.println(prefix + "{");
-            dout.Indent++;
-            dout.println("x:" + x.ToString());
-            dout.println("y:" + y.ToString());
-            dout.println("z:" + z.ToString());
-            dout.Indent--;
-            dout.println("}");
+            DebugOut.println(prefix + "{");
+            DebugOut.Indent++;
+            DebugOut.println("x:" + x.ToString());
+            DebugOut.println("y:" + y.ToString());
+            DebugOut.println("z:" + z.ToString());
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
 
         public override int GetHashCode()

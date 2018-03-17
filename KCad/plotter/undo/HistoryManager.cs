@@ -102,19 +102,19 @@ namespace Plotter
             }
         }
 
-        public void dump(DebugOut dout)
+        public void dump()
         {
-            dout.println(this.GetType().Name);
-            dout.println("{");
-            dout.Indent++;
-            dout.println("UndoStack [");
-            dout.Indent++;
+            DebugOut.println(this.GetType().Name);
+            DebugOut.println("{");
+            DebugOut.Indent++;
+            DebugOut.println("UndoStack [");
+            DebugOut.Indent++;
 
 
 
-            dout.Indent--;
-            dout.Indent--;
-            dout.println("}");
+            DebugOut.Indent--;
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
     }
 }

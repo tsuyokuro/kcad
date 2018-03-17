@@ -48,7 +48,7 @@ namespace Plotter
 
             bool ret = CadUtil.IsPointInTriangle(pt, fig);
 
-            dout.println("ret=" + ret);
+            DebugOut.println("ret=" + ret);
         }
 
         private void test_crossPoint()
@@ -342,8 +342,6 @@ namespace Plotter
 
         private void test_matrix2()
         {
-            DebugOut o = new DebugOut();
-
             MatrixMN m1 = new MatrixMN(new double[,]
             {
                 { 11, 12, 13 },
@@ -360,9 +358,9 @@ namespace Plotter
 
             MatrixMN m3 = m1.Product(m2);
 
-            m1.dump(o);
-            m2.dump(o);
-            m3.dump(o);
+            m1.dump();
+            m2.dump();
+            m3.dump();
         }
 
         private void test()
@@ -416,8 +414,8 @@ namespace Plotter
 
             tp = tdc.CadPointToUnitPoint(p);
 
-            CadUtil.Dump(DebugOut.Std, p, "p");
-            CadUtil.Dump(DebugOut.Std, tp, "tp");
+            CadUtil.Dump((Vector4d)p, "p");
+            CadUtil.Dump((Vector4d)p, "tp");
         }
 
         private void LoadDxfTest()
@@ -530,70 +528,62 @@ namespace Plotter
 
             else if (s == "dump sels")
             {
-                DebugOut dout = new DebugOut();
-                mSelList.dump(dout);
+                mSelList.dump();
             }
 
             else if (s == "dump selsegs")
             {
-                DebugOut dout = new DebugOut();
-                mSelList.dump(dout);
+                mSelList.dump();
             }
 
             else if (s == "dump layer")
             {
-                DebugOut dout = new DebugOut();
-                CurrentLayer.dump(dout);
+                CurrentLayer.dump();
             }
 
             else if (s == "sdump layer")
             {
-                DebugOut dout = new DebugOut();
-                CurrentLayer.sdump(dout);
+                CurrentLayer.sdump();
             }
 
             else if (s == "dump")
             {
                 //DebugOut dst = new DebugOut();
-                dump(DebugOut.Std);
+                dump();
             }
 
             else if (s == "dump figs")
             {
-                DebugOut dout = new DebugOut();
-                mDB.dumpFigureMap(dout);
+                mDB.dumpFigureMap();
             }
 
             else if (s == "dump temp")
             {
-                DebugOut dout = new DebugOut();
-
-                dout.println("dump temp {");
-                dout.Indent++;
+                DebugOut.println("dump temp {");
+                DebugOut.Indent++;
                 foreach (CadFigure fig in TempFigureList)
                 {
-                    fig.Dump(dout, "temp fig");
+                    fig.Dump("temp fig");
                 }
-                dout.Indent--;
-                dout.println("}");
+                DebugOut.Indent--;
+                DebugOut.println("}");
             }
 
             else if (s == "dump snap")
             {
                 DebugOut dout = new DebugOut();
-                dout.println("Snap range {");
-                dout.Indent++;
-                dout.println("Point:" + PointSnapRange.ToString());
-                dout.println("Segment:" + LineSnapRange.ToString());
-                dout.println("Line:" + LineSnapRange.ToString());
-                dout.Indent--;
-                dout.println("}");
+                DebugOut.println("Snap range {");
+                DebugOut.Indent++;
+                DebugOut.println("Point:" + PointSnapRange.ToString());
+                DebugOut.println("Segment:" + LineSnapRange.ToString());
+                DebugOut.println("Line:" + LineSnapRange.ToString());
+                DebugOut.Indent--;
+                DebugOut.println("}");
             }
         }
-        public void dump(DebugOut dst)
+        public void dump()
         {
-            DebugOut dout = new DebugOut();
-            mDB.dump(dout);
+            mDB.dump();
         }
     }
 }

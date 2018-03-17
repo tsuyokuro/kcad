@@ -53,77 +53,18 @@ namespace Plotter
 
     public class DebugOut
     {
-        public static DebugOut StdInstance = new DebugOut();
+        public static ulong PutCount = 0;
 
-        public static DebugOut Std {
-            get
-            {
-                return StdInstance;
-            }
-        }
+        public static int mIndent = 0;
+        public static int IndentUnit = 2;
 
-        public static PrintFunc sStdPrintLn = Console.WriteLine;
+        public static String space = "";
 
-        public static PrintFunc sStdPrint = Console.Write;
+        public static PrintFunc PrintFunc = (s) => { };
+        public static PrintFunc PrintLnFunc = (s) => { };
+        public static FormatPrintFunc FormatPrintFunc = (s, args) => { };
 
-        public static FormatPrintFunc sStdPrintf = Console.Write;
-
-        public static PrintFunc StdPrintLn
-        {
-            get
-            {
-                return sStdPrintLn;
-            }
-            set
-            {
-                sStdPrintLn = value;
-                Std.DelegatePrintLn = value;
-            }
-        }
-
-        public static PrintFunc StdPrint
-        {
-            get
-            {
-                return sStdPrint;
-            }
-
-            set
-            {
-                sStdPrint = value;
-                Std.DelegatePrint = value;
-            }
-        }
-
-        public static FormatPrintFunc StdPrintf
-        {
-            get
-            {
-                return sStdPrintf;
-            }
-
-            set
-            {
-                sStdPrintf = value;
-                Std.DelegatePrintf = value;
-            }
-        }
-
-        public ulong PutCount = 0;
-
-        protected int mIndent = 0;
-        protected int IndentUnit = 2;
-
-        protected String space = "";
-
-        public PrintFunc DelegatePrint = StdPrint;
-
-        public PrintFunc DelegatePrintLn = StdPrintLn;
-
-        public FormatPrintFunc DelegatePrintf = StdPrintf;
-
-
-        public virtual int Indent
+        public static int Indent
         {
             set
             {
@@ -137,34 +78,34 @@ namespace Plotter
             }
         }
 
-        public void reset()
+        public static void reset()
         {
             mIndent = 0;
             IndentUnit = 2;
             space = "";
         }
 
-        public virtual void printIndent()
+        public static void printIndent()
         {
-            DelegatePrint(space);
+            print(space);
         }
 
-        public virtual void print(String s)
+        public static void print(String s)
         {
             PutCount++;
-            DelegatePrint(s);
+            PrintFunc(s);
         }
 
-        public virtual void println(String s)
+        public static void println(String s)
         {
             PutCount++;
-            DelegatePrintLn(space + s);
+            PrintLnFunc(space + s);
         }
 
-        public virtual void printf(String format, params object[] args)
+        public static void printf(String format, params object[] args)
         {
             PutCount++;
-            DelegatePrintf(space + format, args);
+            FormatPrintFunc(space + format, args);
         }
     }
 }

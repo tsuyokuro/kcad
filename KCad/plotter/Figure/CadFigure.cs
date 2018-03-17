@@ -593,46 +593,46 @@ namespace Plotter
         }
 
         #region "Dump" 
-        public void SimpleDump(DebugOut dout, string prefix = nameof(CadFigure))
+        public void SimpleDump(string prefix = nameof(CadFigure))
         {
-            dout.println(
+            DebugOut.println(
                 prefix +
                 "(" + this.GetHashCode().ToString() + ")" +
                 "ID=" + ID.ToString());
         }
 
-        public void Dump(DebugOut dout, string prefix = nameof(CadFigure))
+        public void Dump(string prefix = nameof(CadFigure))
         {
-            dout.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
-            dout.Indent++;
-            dout.println("ID=" + ID.ToString());
-            dout.println("LayerID=" + LayerID.ToString());
-            dout.println("Type=" + Type.ToString());
-            dout.println("State=" + CreateState.ToString());
+            DebugOut.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
+            DebugOut.Indent++;
+            DebugOut.println("ID=" + ID.ToString());
+            DebugOut.println("LayerID=" + LayerID.ToString());
+            DebugOut.println("Type=" + Type.ToString());
+            DebugOut.println("State=" + CreateState.ToString());
 
-            dout.println("PointList [");
-            dout.Indent++;
+            DebugOut.println("PointList [");
+            DebugOut.Indent++;
             foreach (CadVector point in PointList)
             {
-                point.dump(dout, "");
+                point.dump("");
             }
-            dout.Indent--;
-            dout.println("]");
+            DebugOut.Indent--;
+            DebugOut.println("]");
 
 
-            dout.println("ParentID=" + (mParent != null ? mParent.ID : 0));
+            DebugOut.println("ParentID=" + (mParent != null ? mParent.ID : 0));
 
-            dout.println("Child [");
-            dout.Indent++;
+            DebugOut.println("Child [");
+            DebugOut.Indent++;
             foreach (CadFigure fig in mChildList)
             {
-                dout.println("" + fig.ID);
+                DebugOut.println("" + fig.ID);
             }
-            dout.Indent--;
-            dout.println("]");
+            DebugOut.Indent--;
+            DebugOut.println("]");
 
-            dout.Indent--;
-            dout.println("}");
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
 
         #endregion

@@ -266,55 +266,55 @@ namespace Plotter
         }
 
         #region "For debug"
-        public void dump(DebugOut dout)
+        public void dump()
         {
-            dout.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
-            dout.Indent++;
+            DebugOut.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
+            DebugOut.Indent++;
 
             {
                 List<uint> ids = new List<uint>(mLayerIdMap.Keys);
 
-                dout.println("Layer map {");
-                dout.Indent++;
+                DebugOut.println("Layer map {");
+                DebugOut.Indent++;
                 foreach (uint id in ids)
                 {
                     CadLayer layer = mLayerIdMap[id];
-                    layer.sdump(dout);
+                    layer.sdump();
                 }
-                dout.Indent--;
-                dout.println("}");
+                DebugOut.Indent--;
+                DebugOut.println("}");
             }
 
             {
-                dout.println("Layer list {");
-                dout.Indent++;
+                DebugOut.println("Layer list {");
+                DebugOut.Indent++;
                 foreach (CadLayer layer in mLayerList)
                 {
-                    layer.sdump(dout);
+                    layer.sdump();
                 }
-                dout.Indent--;
-                dout.println("}");
+                DebugOut.Indent--;
+                DebugOut.println("}");
             }
 
-            dumpFigureMap(dout);
+            dumpFigureMap();
 
-            dout.Indent--;
-            dout.println("}");
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
 
-        public void dumpFigureMap(DebugOut dout)
+        public void dumpFigureMap()
         {
             List<uint> ids = new List<uint>(mFigureIdMap.Keys);
 
-            dout.println("Figure map {");
-            dout.Indent++;
+            DebugOut.println("Figure map {");
+            DebugOut.Indent++;
             foreach (uint id in ids)
             {
                 CadFigure fig = mFigureIdMap[id];
-                fig.Dump(dout, "fig");
+                fig.Dump("fig");
             }
-            dout.Indent--;
-            dout.println("}");
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
 
         #endregion

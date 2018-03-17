@@ -55,15 +55,15 @@ namespace Plotter
             PointIndex = src.PointIndex;
         }
 
-        public void dump(DebugOut dout)
+        public void dump()
         {
-            dout.println("SelectItem {");
-            dout.Indent++;
-            dout.println("LayerID:" + LayerID.ToString());
-            dout.println("FigureID:" + FigureID.ToString());
-            dout.println("PointIndex:" + PointIndex.ToString());
-            dout.Indent--;
-            dout.println("}");
+            DebugOut.println("SelectItem {");
+            DebugOut.Indent++;
+            DebugOut.println("LayerID:" + LayerID.ToString());
+            DebugOut.println("FigureID:" + FigureID.ToString());
+            DebugOut.println("PointIndex:" + PointIndex.ToString());
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
 
         public bool update()
@@ -190,16 +190,16 @@ namespace Plotter
             return selItem != null;
         }
 
-        public void dump(DebugOut dout)
+        public void dump()
         {
-            dout.println("SelectList {");
-            dout.Indent++;
+            DebugOut.println("SelectList {");
+            DebugOut.Indent++;
             foreach (SelectItem item in mList)
             {
-                item.dump(dout);
+                item.dump();
             }
-            dout.Indent--;
-            dout.println("}");
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
     }
 
@@ -259,16 +259,16 @@ namespace Plotter
             return selItem.FigureID != 0;
         }
 
-        public void dump(DebugOut dout)
+        public void dump()
         {
-            dout.println("SelectSegmentList {");
-            dout.Indent++;
+            DebugOut.println("SelectSegmentList {");
+            DebugOut.Indent++;
             foreach (MarkSeg ms in mList)
             {
-                ms.dump(dout);
+                ms.dump();
             }
-            dout.Indent--;
-            dout.println("}");
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
     }
 }

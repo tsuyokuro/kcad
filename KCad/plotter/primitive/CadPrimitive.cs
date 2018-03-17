@@ -84,15 +84,15 @@ namespace Plotter
             P1 = b;
         }
 
-        public void dump(DebugOut dout, string name = "FigureSegment")
+        public void dump(string name = "FigureSegment")
         {
-            dout.println(name + "{");
-            dout.Indent++;
-            dout.println("Valid:" + Valid.ToString());
-            P0.dump(dout, "P0");
-            P1.dump(dout, "P1");
-            dout.Indent--;
-            dout.println("}");
+            DebugOut.println(name + "{");
+            DebugOut.Indent++;
+            DebugOut.println("Valid:" + Valid.ToString());
+            P0.dump("P0");
+            P1.dump("P1");
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
     }
 
@@ -152,16 +152,16 @@ namespace Plotter
             Index1 = b;
         }
 
-        public void dump(DebugOut dout, string name = "FigureSegment")
+        public void dump(string name = "FigureSegment")
         {
-            dout.println(name + "{");
-            dout.Indent++;
-            dout.println("FigureID:" + Figure.ID.ToString());
-            dout.println("SegIndex:" + SegIndex.ToString());
-            dout.println("Index0:" + Index0.ToString());
-            dout.println("Index1:" + Index1.ToString());
-            dout.Indent--;
-            dout.println("}");
+            DebugOut.println(name + "{");
+            DebugOut.Indent++;
+            DebugOut.println("FigureID:" + Figure.ID.ToString());
+            DebugOut.println("SegIndex:" + SegIndex.ToString());
+            DebugOut.println("Index0:" + Index0.ToString());
+            DebugOut.println("Index1:" + Index1.ToString());
+            DebugOut.Indent--;
+            DebugOut.println("}");
 
         }
     }

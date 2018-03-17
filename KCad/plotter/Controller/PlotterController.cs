@@ -978,7 +978,16 @@ namespace Plotter
 
             JObject jo = JObject.Parse(js);
 
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
+
+
             CadObjectDB db = CadJson.FromJson.DbFromJson(jo);
+
+
+            //sw.Stop();
+            //DebugOut.println("Load time:" + sw.ElapsedMilliseconds.ToString());
+
 
             mDB = db;
 
@@ -986,9 +995,18 @@ namespace Plotter
 
             NotifyLayerInfo();
 
+
+            //sw.Reset();
+            //sw.Start();
+
+
             UpdateTreeView(true);
+
+
+            //sw.Stop();
+            //DebugOut.println("TreeView update time:" + sw.ElapsedMilliseconds.ToString());
         }
-    #endregion
+        #endregion
 
         public void ClearLayer(uint layerID)
         {

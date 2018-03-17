@@ -264,14 +264,14 @@ namespace Plotter
             RecalcViewDirFromCameraDirection();
         }
 
-        public virtual void dump(DebugOut dout, string prefix)
+        public virtual void dump(string prefix)
         {
-            ViewOrg.dump(dout, "ViewOrg");
+            ViewOrg.dump("ViewOrg");
 
-            dout.println("View Width=" + mViewWidth.ToString() + " Height=" + mViewHeight.ToString());
+            DebugOut.println("View Width=" + mViewWidth.ToString() + " Height=" + mViewHeight.ToString());
 
             CadVector t = CadVector.Create(mViewDir);
-            t.dump(dout, "ViewDir");
+            t.dump("ViewDir");
         }
 
         public abstract void Dispose();

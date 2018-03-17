@@ -36,9 +36,9 @@ namespace KCad
             mInteractionOut.printf = MyConsole.Printf;
             mInteractionOut.clear = MyConsole.Clear;
 
-            DebugOut.StdPrint = MyConsole.Print;
-            DebugOut.StdPrintLn = MyConsole.PrintLn;
-            DebugOut.StdPrintf = MyConsole.Printf;
+            DebugOut.PrintFunc = MyConsole.Print;
+            DebugOut.PrintLnFunc = MyConsole.PrintLn;
+            DebugOut.FormatPrintFunc = MyConsole.Printf;
 
             ItConsole.PrintFunc = MyConsole.Print;
             ItConsole.PrintLnFunc = MyConsole.PrintLn;

@@ -121,7 +121,7 @@ namespace Plotter
 
         public static Matrix4d ToMatrix4d(CadQuaternion q)
         {
-            DebugOut.Std.println("Matrix4#ToMatrix4d");
+            DebugOut.println("Matrix4#ToMatrix4d");
 
             Matrix4d m = default(Matrix4d);
 
