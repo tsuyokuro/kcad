@@ -26,11 +26,33 @@ namespace Plotter
 
     public delegate void VoidFunc();
 
+    public delegate void PrintFunc(string s);
+    public delegate void FormatPrintFunc(string format, params object[] args);
+
+    public class ItConsole
+    {
+        public static PrintFunc PrintFunc = (s)=>{};
+        public static PrintFunc PrintLnFunc = (s) => { };
+        public static FormatPrintFunc FormatPrintFunc = (s, args) => { };
+
+        public static void print(string s)
+        {
+            PrintFunc(s);
+        }
+
+        public static void println(string s)
+        {
+            PrintLnFunc(s);
+        }
+
+        public static void printf(string s, params object[] args)
+        {
+            FormatPrintFunc(s, args);
+        }
+    }
+
     public class DebugOut
     {
-        public delegate void PrintFunc(string s);
-        public delegate void FormatPrintFunc(string format, params object[] args);
-
         public static DebugOut StdInstance = new DebugOut();
 
         public static DebugOut Std {

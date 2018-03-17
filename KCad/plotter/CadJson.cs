@@ -16,9 +16,10 @@ namespace Plotter
             VER_1_0_0_0 = 0x01_00_00_00,
             VER_1_0_0_1 = 0x01_00_00_01,
             VER_1_0_0_2 = 0x01_00_00_02,
+            VER_1_0_0_3 = 0x01_00_00_03,
         }
 
-        public const VersionCode CurrentVersion = VersionCode.VER_1_0_0_2;
+        public const VersionCode CurrentVersion = VersionCode.VER_1_0_0_3;
 
         private static Dictionary<string, VersionCode> VersionStrToCodeMap =
             new Dictionary<String, VersionCode>()
@@ -26,6 +27,7 @@ namespace Plotter
                 { "1.0", VersionCode.VER_1_0_0_0 },
                 { "1.0.0.1", VersionCode.VER_1_0_0_1 },
                 { "1.0.0.2", VersionCode.VER_1_0_0_2 },
+                { "1.0.0.3", VersionCode.VER_1_0_0_3 },
             };
 
         private static Dictionary<VersionCode, string> VersionCodeToStrMap =
@@ -34,6 +36,7 @@ namespace Plotter
                 { VersionCode.VER_1_0_0_0, "1.0" },
                 { VersionCode.VER_1_0_0_1, "1.0.0.1" },
                 { VersionCode.VER_1_0_0_2, "1.0.0.2" },
+                { VersionCode.VER_1_0_0_3, "1.0.0.3" },
             };
 
 
@@ -97,6 +100,7 @@ namespace Plotter
             public const string NORMAL = "normal";
             public const string THICKNESSS = "thickness";
             public const string VECTOR_LIST = "vlist";
+            public const string VECTOR_DATA = "vdata";
         }
 
         public static class VECTOR
@@ -138,19 +142,19 @@ namespace Plotter
                 root.Add(DB.LAYER_ID_COUNTER, db.LayerIdProvider.Counter);
                 root.Add(DB.FIG_ID_COUNTER, db.FigIdProvider.Counter);
 
-                root.Add(DB.FIG_MAP, FigMapToJson(db.FigureMap, version));
-                root.Add(DB.LAYER_MAP, LayerMapToJson(db.LayerMap, version));
+                root.Add(DB.FIG_MAP, FigMapToJson(db.FigureMap));
+                root.Add(DB.LAYER_MAP, LayerMapToJson(db.LayerMap));
 
                 root.Add(DB.LAYER_ID_LIST, LayerIdListToJson(db.LayerList));
 
                 root.Add(DB.CURRENT_LAYER_ID, db.CurrentLayerID);
 
-                root.Add(DB.GROUP_INFO, GroupInfoToJson(db, version));
+                root.Add(DB.GROUP_INFO, GroupInfoToJson(db));
 
                 return root;
             }
 
-            public static JArray GroupInfoToJson(CadObjectDB db, VersionCode version)
+            public static JArray GroupInfoToJson(CadObjectDB db)
             {
                 JArray ja = new JArray();
 
@@ -158,7 +162,7 @@ namespace Plotter
 
                 foreach (CadFigure fig in db.FigureMap.Values)
                 {
-                    JObject jo = FigGroupInfoToJson(fig, version);
+                    JObject jo = FigGroupInfoToJson(fig);
 
                     if (jo == null)
                     {
@@ -171,7 +175,7 @@ namespace Plotter
                 return ja;
             }
 
-            public static JObject FigGroupInfoToJson(CadFigure fig, VersionCode version)
+            public static JObject FigGroupInfoToJson(CadFigure fig)
             {
                 if (fig.ChildList.Count == 0)
                 {
@@ -206,33 +210,33 @@ namespace Plotter
                 return ja;
             }
 
-            public static JArray FigMapToJson(Dictionary<uint, CadFigure> dic, VersionCode version)
+            public static JArray FigMapToJson(Dictionary<uint, CadFigure> dic)
             {
                 JArray ja = new JArray();
 
                 foreach (CadFigure fig in dic.Values)
                 {
-                    JObject jo = FigToJson(fig, version);
+                    JObject jo = FigToJson(fig);
                     ja.Add(jo);
                 }
 
                 return ja;
             }
 
-            public static JArray LayerMapToJson(Dictionary<uint, CadLayer> dic, VersionCode version)
+            public static JArray LayerMapToJson(Dictionary<uint, CadLayer> dic)
             {
                 JArray ja = new JArray();
 
                 foreach (CadLayer layer in dic.Values)
                 {
-                    JObject jo = LayerToJson(layer, version);
+                    JObject jo = LayerToJson(layer);
                     ja.Add(jo);
                 }
 
                 return ja;
             }
 
-            public static JObject LayerToJson(CadLayer layer, VersionCode version)
+            public static JObject LayerToJson(CadLayer layer)
             {
                 JObject jo = new JObject();
 
@@ -258,7 +262,7 @@ namespace Plotter
                 return jo;
             }
 
-            public static JObject FigToJson(CadFigure fig, VersionCode version)
+            public static JObject FigToJson(CadFigure fig)
             {
                 JObject jo = new JObject();
 
@@ -266,53 +270,65 @@ namespace Plotter
                 jo.Add(FIG.TYPE, (byte)fig.Type);
                 jo.Add(FIG.CLOSED, fig.IsLoop);
                 jo.Add(FIG.LOCKED, fig.Locked);
-                jo.Add(FIG.NORMAL, VectorToJson(fig.Normal, version));
+                jo.Add(FIG.NORMAL, VectorToJson(fig.Normal));
                 jo.Add(FIG.THICKNESSS, fig.Thickness);
 
-                JObject jvl = VectorListToJson(fig.PointList, version);
+                JObject jvl = fig.VectorDataToJson();
 
-                jo.Add(FIG.VECTOR_LIST, jvl);
+                jo.Add(FIG.VECTOR_DATA, jvl);
 
                 return jo;
             }
 
-            public static JObject VectorListToJson(VectorList vl, VersionCode version = CurrentVersion)
+            public static JObject FigToJsonForClipboard(CadFigure fig)
             {
-                JObject jvl = new JObject();
+                JObject jo = FigToJson(fig);
 
+
+                // Clip boardには子Figureも含めて保存します
+                // 参照だけでは、コピー後に参照先が修正されると、コピーした時点のデータと
+                // 異なってしまうため
+                JArray jchildArray = new JArray();
+
+                if (fig.ChildList != null)
+                {
+                    foreach (CadFigure child in fig.ChildList)
+                    {
+                        JObject jchild = FigToJsonForClipboard(child);
+
+                        jchildArray.Add(jchild);
+                    }
+                }
+
+                jo.Add(CLIPBOARD.CHILD_LIST, jchildArray);
+
+                return jo;
+            }
+
+            public static JArray VectorListToJson(VectorList vl)
+            {
                 JArray ja = new JArray();
 
                 vl.ForEach(v =>
                 {
-                    ja.Add(VectorToJson(v, version));
+                    ja.Add(VectorToJson(v));
                 });
 
-                jvl.Add(VECTOR.POINT_LIST, ja);
-
-                return jvl;
+                return ja;
             }
 
-            public static JObject VectorToJson(CadVector v, VersionCode version = CurrentVersion)
+            public static JObject VectorToJson(CadVector v)
             {
                 var jo = new JObject();
 
                 jo.Add(VECTOR.FLAGS, v.Flag);
 
-                if (version == VersionCode.VER_1_0_0_0)
-                {
-                    jo.Add(VECTOR.X, v.x);
-                    jo.Add(VECTOR.Y, v.y);
-                    jo.Add(VECTOR.Z, v.z);
-                }
-                else if (version >= VersionCode.VER_1_0_0_1)
-                {
-                    JArray va = new JArray();
+                JArray va = new JArray();
 
-                    va.Add(v.x);
-                    va.Add(v.y);
-                    va.Add(v.z);
-                    jo.Add(VECTOR.V, va);
-                }
+                va.Add(v.x);
+                va.Add(v.y);
+                va.Add(v.z);
+                jo.Add(VECTOR.V, va);
 
                 return jo;
             }
@@ -324,44 +340,12 @@ namespace Plotter
 
                 foreach (CadFigure fig in figList)
                 {
-                    ja.Add(FigToJsonForClipboard(fig, version));
+                    ja.Add(FigToJsonForClipboard(fig));
                 }
 
                 JObject jo = new JObject();
 
                 jo.Add(CLIPBOARD.FIG_LIST, ja);
-
-                return jo;
-            }
-
-            public static JObject FigToJsonForClipboard(CadFigure fig, VersionCode version = CurrentVersion)
-            {
-                JObject jo = new JObject();
-
-                jo.Add(COMMON.ID, fig.ID);
-                jo.Add(FIG.TYPE, (byte)fig.Type);
-                jo.Add(FIG.CLOSED, fig.IsLoop);
-                jo.Add(FIG.LOCKED, fig.Locked);
-                jo.Add(FIG.NORMAL, VectorToJson(fig.Normal, version));
-                jo.Add(FIG.THICKNESSS, fig.Thickness);
-
-                JObject jvl = VectorListToJson(fig.PointList, version);
-
-                jo.Add(FIG.VECTOR_LIST, jvl);
-
-                JArray jchildArray = new JArray();
-
-                if (fig.ChildList != null)
-                {
-                    foreach (CadFigure child in fig.ChildList)
-                    {
-                        JObject jchild = FigToJsonForClipboard(child, version);
-
-                        jchildArray.Add(jchild);
-                    }
-                }
-
-                jo.Add(CLIPBOARD.CHILD_LIST, jchildArray);
 
                 return jo;
             }
@@ -526,7 +510,6 @@ namespace Plotter
                 CadFigure fig = CadFigure.Create(type);
 
                 fig.ID = (uint)jo[COMMON.ID];
-                //fig.Type = (CadFigure.Types)(byte)jo[FIG.TYPE];
                 fig.IsLoop = (bool)jo[FIG.CLOSED];
                 fig.Locked = (bool)jo[FIG.LOCKED];
 
@@ -534,42 +517,66 @@ namespace Plotter
 
                 fig.Thickness = jo.GetDouble(FIG.THICKNESSS, 0);
 
-                VectorList vl = VectorListFromJson(jo, version);
-
-                fig.SetPointList(vl);
-
-                return fig;
-            }
-
-            public static VectorList VectorListFromJson(JObject jo, VersionCode version)
-            {
-                VectorList vl = new VectorList();
-
                 if (version <= VersionCode.VER_1_0_0_1)
                 {
                     JArray jpl = (JArray)jo[VECTOR.POINT_LIST];
 
-                    if (jpl != null)
-                    {
-                        foreach (JObject jv in jpl)
-                        {
-                            vl.Add(VectorFromJson(jv, version));
-                        }
-                    }
+                    JObject jtmp = new JObject();
 
-                    return vl;
+                    jtmp.Add(VECTOR.POINT_LIST, jpl);
+
+                    fig.VectorDataFromJson(jtmp, version);
+
+                    return fig;
                 }
 
-                JObject jvl = (JObject)jo[FIG.VECTOR_LIST];
 
-                JArray ja = (JArray)jvl[VECTOR.POINT_LIST];
+                string dataName;
 
-                if (ja != null)
+                if (version >= VersionCode.VER_1_0_0_3)
                 {
-                    foreach (JObject jv in ja)
+                    dataName = FIG.VECTOR_DATA;
+                }
+                else
+                {
+                    dataName = FIG.VECTOR_LIST;
+                }
+
+                JObject jvdata = (JObject)jo[dataName];
+
+                fig.VectorDataFromJson(jvdata, version);
+
+                return fig;
+            }
+
+            public static CadFigure FigFromJsonForClipboard(JObject jo, VersionCode version)
+            {
+                CadFigure fig = FigFromJson(jo, version);
+
+
+                // Clip boardには子Figureも含めて保存されているので
+                // 取り出します
+                JArray jchildArray = (JArray)jo[CLIPBOARD.CHILD_LIST];
+
+                if (jchildArray != null)
+                {
+                    foreach (JObject jchild in jchildArray)
                     {
-                        vl.Add(VectorFromJson(jv, version));
+                        CadFigure child = FigFromJsonForClipboard(jchild, version);
+                        fig.AddChild(child);
                     }
+                }
+
+                return fig;
+            }
+
+            public static VectorList VectorListFromJson(JArray jarray, VersionCode version)
+            {
+                VectorList vl = new VectorList();
+
+                foreach (JObject jv in jarray)
+                {
+                    vl.Add(VectorFromJson(jv, version));
                 }
 
                 return vl;
@@ -648,38 +655,6 @@ namespace Plotter
                 }
 
                 return figList;
-            }
-
-            public static CadFigure FigFromJsonForClipboard(JObject jo, VersionCode version = CurrentVersion)
-            {
-                CadFigure.Types type = (CadFigure.Types)(byte)jo[FIG.TYPE];
-
-                CadFigure fig = CadFigure.Create(type);
-
-                fig.ID = (uint)jo[COMMON.ID];
-                //fig.Type = (CadFigure.Types)(byte)jo[FIG.TYPE];
-                fig.IsLoop = (bool)jo[FIG.CLOSED];
-                fig.Locked = (bool)jo[FIG.LOCKED];
-
-                fig.Normal = VectorFromJson((JObject)jo[FIG.NORMAL], version);
-                fig.Thickness = jo.GetDouble(FIG.THICKNESSS, 0);
-
-                VectorList vl = VectorListFromJson(jo, version);
-
-                fig.SetPointList(vl);
-
-                JArray jchildArray = (JArray)jo[CLIPBOARD.CHILD_LIST];
-
-                if (jchildArray != null)
-                {
-                    foreach (JObject jchild in jchildArray)
-                    {
-                        CadFigure child = FigFromJsonForClipboard(jchild, version);
-                        fig.AddChild(child);
-                    }
-                }
-
-                return fig;
             }
         }
     }

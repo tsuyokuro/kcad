@@ -40,6 +40,10 @@ namespace KCad
             DebugOut.StdPrintLn = MyConsole.PrintLn;
             DebugOut.StdPrintf = MyConsole.Printf;
 
+            ItConsole.PrintFunc = MyConsole.Print;
+            ItConsole.PrintLnFunc = MyConsole.PrintLn;
+            ItConsole.FormatPrintFunc = MyConsole.Printf;
+
             ViewModel = new PlotterViewModel(this, viewContainer);
 
             viewContainer.Focusable = true;

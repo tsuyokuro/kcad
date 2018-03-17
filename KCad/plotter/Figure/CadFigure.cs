@@ -861,9 +861,22 @@ namespace Plotter
             }
         }
 
-        public virtual JObject VectorListToJson(CadJson.VersionCode version)
+        public virtual JObject VectorDataToJson()
         {
-            return CadJson.ToJson.VectorListToJson(PointList, version);
+            JArray pointArray = CadJson.ToJson.VectorListToJson(PointList);
+
+            JObject jvdata = new JObject();
+            jvdata.Add(CadJson.VECTOR.POINT_LIST, pointArray);
+
+            return jvdata;
+        }
+
+        public virtual void VectorDataFromJson(JObject jvdata, CadJson.VersionCode version)
+        {
+            JArray jarray = (JArray)jvdata[CadJson.VECTOR.POINT_LIST];
+
+            VectorList vl = CadJson.FromJson.VectorListFromJson(jarray, version);
+            mPointList = vl;
         }
 
     } // End of class CadFigure
