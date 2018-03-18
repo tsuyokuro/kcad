@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Plotter
@@ -968,8 +969,53 @@ namespace Plotter
             writer.Close();
         }
 
+        public async void LoadFromJsonFileAsync(String fname)
+        {
+            CadObjectDB db = await Task<CadObjectDB>.Run(() =>
+            {
+                return DBFromJsonFile(fname);
+            });
+
+            if (db == null)
+            {
+                return;
+            }
+
+            mDB = db;
+
+            mHistoryManager = new HistoryManager(mDB);
+
+            NotifyLayerInfo();
+
+            UpdateTreeView(true);
+
+            Redraw(CurrentDC);
+        }
+
         public void LoadFromJsonFile(String fname)
         {
+            CadObjectDB db = DBFromJsonFile(fname);
+
+            if (db == null)
+            {
+                return;
+            }
+
+            mDB = db;
+
+            mHistoryManager = new HistoryManager(mDB);
+
+            NotifyLayerInfo();
+
+            UpdateTreeView(true);
+
+            Redraw(CurrentDC);
+        }
+
+        public CadObjectDB DBFromJsonFile(string fname)
+        {
+            ItConsole.println("Loading file: " + fname);
+
             StreamReader reader = new StreamReader(fname);
 
             var js = reader.ReadToEnd();
@@ -978,33 +1024,18 @@ namespace Plotter
 
             JObject jo = JObject.Parse(js);
 
-            //Stopwatch sw = new Stopwatch();
-            //sw.Start();
+            string version = CadJson.FromJson.VersionStringFromJson(jo);
 
+            if (version == null)
+            {
+                ItConsole.println("Bat file format");
+                return null;
+            }
+
+            ItConsole.println("Format version: " + version);
 
             CadObjectDB db = CadJson.FromJson.DbFromJson(jo);
-
-
-            //sw.Stop();
-            //DebugOut.println("Load time:" + sw.ElapsedMilliseconds.ToString());
-
-
-            mDB = db;
-
-            mHistoryManager = new HistoryManager(mDB);
-
-            NotifyLayerInfo();
-
-
-            //sw.Reset();
-            //sw.Start();
-
-
-            UpdateTreeView(true);
-
-
-            //sw.Stop();
-            //DebugOut.println("TreeView update time:" + sw.ElapsedMilliseconds.ToString());
+            return db;
         }
         #endregion
 

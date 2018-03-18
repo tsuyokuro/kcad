@@ -33,6 +33,7 @@ namespace Plotter
         private static Dictionary<VersionCode, string> VersionCodeToStrMap =
             new Dictionary<VersionCode, string>()
             {
+                { VersionCode.NULL, null },
                 { VersionCode.VER_1_0_0_0, "1.0" },
                 { VersionCode.VER_1_0_0_1, "1.0.0.1" },
                 { VersionCode.VER_1_0_0_2, "1.0.0.2" },
@@ -59,7 +60,7 @@ namespace Plotter
                 return ret;
             }
 
-            return "0";
+            return null;
         }
 
         public static class COMMON
@@ -353,22 +354,40 @@ namespace Plotter
 
         public static class FromJson
         {
-            public static CadObjectDB DbFromJson(JObject jo)
+            public static VersionCode VersionCodeFromJson(JObject jo)
             {
-                CadObjectDB db = new CadObjectDB();
-
                 string sv;
-                
+
                 sv = (string)jo[DB.DATA_TYPE_KEY];
 
-                if (sv==null || sv != DB.DATA_TYPE_VAL)
+                if (sv == null || sv != DB.DATA_TYPE_VAL)
                 {
-                    return db;
+                    return VersionCode.NULL;
                 }
 
                 sv = (string)jo[DB.VERSION_KEY];
 
                 VersionCode version = ToVersionCode(sv);
+
+                return version;
+            }
+
+            public static string VersionStringFromJson(JObject jo)
+            {
+                VersionCode version = VersionCodeFromJson(jo);
+                return ToVersionString(version);
+            }
+
+            public static CadObjectDB DbFromJson(JObject jo)
+            {
+                CadObjectDB db = new CadObjectDB();
+
+                VersionCode version = VersionCodeFromJson(jo);
+
+                if (version == VersionCode.NULL)
+                {
+                    return db;
+                }
 
                 db.LayerIdProvider.Counter = (uint)jo[DB.LAYER_ID_COUNTER];
                 db.FigIdProvider.Counter = (uint)jo[DB.FIG_ID_COUNTER];

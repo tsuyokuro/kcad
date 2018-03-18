@@ -253,11 +253,37 @@ namespace KCad
 
         public void PrintLn(string s)
         {
-            Print(s);
-            NewLine();
+            if (Dispatcher.CheckAccess())
+            {
+                Print(s);
+                NewLine();
+            }
+            else
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    Print(s);
+                    NewLine();
+                }));
+            }
         }
 
         public void Print(string s)
+        {
+            if (Dispatcher.CheckAccess())
+            {
+                PrintString(s);
+            }
+            else
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    PrintString(s);
+                }));
+            }
+        }
+
+        private void PrintString(string s)
         {
             string[] lines = s.Split('\n');
 
@@ -269,7 +295,6 @@ namespace KCad
             }
 
             AppendString(lines[i]);
-
             UpdateView();
         }
 

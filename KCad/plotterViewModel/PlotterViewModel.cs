@@ -938,47 +938,15 @@ namespace Plotter
         private void LoadFile(String fname)
         {
             mController.LoadFromJsonFile(fname);
-            Redraw();
+            //mController.LoadFromJsonFileAsync(fname);
         }
         #endregion
 
 
         #region helper
-        /*
-        private DrawContext StartDraw()
-        {
-            return mPlotterView.StartDraw();
-        }
-
-        private void EndDraw()
-        {
-            mPlotterView.EndDraw();
-        }
-        */
-
-        /*
-        private void Draw(bool clearFlag=true)
-        {
-            DrawContext dc = mPlotterView.StartDraw();
-            if (clearFlag)
-            {
-                mController.Clear(dc);
-            }
-            mController.Draw(dc);
-            mPlotterView.EndDraw();
-        }
-        */
         private void Redraw()
         {
             mController.Redraw(mController.CurrentDC);
-            //mController.CurrentDC.Push();
-
-            /*
-            DrawContext dc = mPlotterView.StartDraw();
-            mController.Clear(dc);
-            mController.DrawAll(dc);
-            mPlotterView.EndDraw();
-            */
         }
         #endregion
 

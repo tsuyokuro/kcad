@@ -13,6 +13,8 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Plotter
@@ -359,6 +361,28 @@ namespace Plotter
             Controller.UpdateTreeView(true);
         }
 
+        private void test013()
+        {
+            ItConsole.println("test013 start");
+            test013sub();
+            ItConsole.println("test013 end");
+        }
+
+        private async void test013sub()
+        {
+            ItConsole.println("test013Sub start");
+
+            await Task.Run(()=>
+            {
+                ItConsole.println("Run");
+                Thread.Sleep(2000);
+                ItConsole.println("Run end");
+            });
+
+            ItConsole.println("test013Sub end");
+        }
+
+
         private void SimpleCommand(string s)
         {
             if (s == "@clear" || s == "@cls")
@@ -416,6 +440,10 @@ namespace Plotter
             else if (s == "@test012")
             {
                 test012();
+            }
+            else if (s == "@test013")
+            {
+                test013();
             }
             else if (s == "@testMesh")
             {
