@@ -1,5 +1,6 @@
 ﻿using HalfEdgeNS;
 using MyCollections;
+using Newtonsoft.Json.Linq;
 using Plotter;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace TestApp01
     {
         static void Test001()
         {
-            AutoArray<Dummy> vl = new AutoArray<Dummy>();
+            FlexArray<Dummy> vl = new FlexArray<Dummy>();
 
             vl.Add(new Dummy(1));
             vl.Add(new Dummy(2));
@@ -156,12 +157,78 @@ namespace TestApp01
         }
 
 
+        static void Test004()
+        {
+            HeModel model = new HeModel();
+            model.AddTriangle(
+                CadVector.Create(10, 5, 0),
+                CadVector.Create(15, 10, 0),
+                CadVector.Create(5, 15, 0)
+                );
+
+            model.AddTriangle(
+                CadVector.Create(15, 10, 0),
+                CadVector.Create(13, 30, 0),
+                CadVector.Create(5, 15, 0)
+                );
+
+
+            DumpHeModel(model);
+
+            JObject jo = HeUtil.HeModelToJson(model);
+
+
+            string s = jo.ToString();
+
+            Console.WriteLine("");
+            Console.Write(s);
+            Console.WriteLine("");
+
+            HeModel rmodel = HeUtil.HeModelFromJson(jo, CadJson.CurrentVersion);
+
+            DumpHeModel(rmodel);
+        }
+
+        static void DumpHeModel(HeModel model)
+        {
+            for (int i = 0; i < model.FaceStore.Count; i++)
+            {
+                HeFace f = model.FaceStore[i];
+
+                HalfEdge head = f.Head;
+
+                HalfEdge c = head;
+
+                CadVector v;
+
+                for (; ; )
+                {
+                    v = model.VertexStore.Ref(c.Vertex);
+                    Console.WriteLine("{0} - {1},{2},{3}", c.ID, v.x, v.y, v.z);
+
+                    HalfEdge pair = c.Pair;
+
+                    if (pair != null)
+                    {
+                        v = model.VertexStore.Ref(pair.Vertex);
+                        Console.WriteLine("  pair: {0} - {1},{2},{3}", pair.ID, v.x, v.y, v.z);
+                    }
+
+                    c = c.Next;
+
+                    if (c == head) break;
+                }
+            }
+        }
+
         static void Main(string[] args)
         {
             //Test001();
-            Test002();
-            Test002_01();
+            //Test002();
+            //Test002_01();
             //Test003();
+
+            Test004();
             Console.ReadLine();
         }
     }

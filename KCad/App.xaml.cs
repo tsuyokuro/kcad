@@ -1,6 +1,6 @@
 ﻿
 /**
- * TODO
+ * TODO Consoleの利用について
  * 
  * プロジェクト->KCadのプロパティー->アプリケーソンタブ
  * 出力の種類をコンソールアプリケーションにするとデバッグ実行時も
@@ -81,8 +81,8 @@ namespace KCad
 
         private void SaveData()
         {
-            KCad.MainWindow mw = (KCad.MainWindow)this.MainWindow;
-            mw.EmergencySave(@".\EmergencySave.txt");
+            //KCad.MainWindow mw = (KCad.MainWindow)this.MainWindow;
+            //mw.EmergencySave(@".\EmergencySave.txt");
         }
 
         private bool ShowExceptionDialg(string text)

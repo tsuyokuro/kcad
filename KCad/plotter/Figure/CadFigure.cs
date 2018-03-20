@@ -861,7 +861,7 @@ namespace Plotter
             }
         }
 
-        public virtual JObject VectorDataToJson()
+        public virtual JObject GeometricDataToJson()
         {
             JArray pointArray = CadJson.ToJson.VectorListToJson(PointList);
 
@@ -871,7 +871,7 @@ namespace Plotter
             return jvdata;
         }
 
-        public virtual void VectorDataFromJson(JObject jvdata, CadJson.VersionCode version)
+        public virtual void GeometricDataFromJson(JObject jvdata, CadJson.VersionCode version)
         {
             JArray jarray = (JArray)jvdata[CadJson.VECTOR.POINT_LIST];
 

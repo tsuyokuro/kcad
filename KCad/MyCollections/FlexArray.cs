@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MyCollections
 {
-    public class AutoArray<T>
+    public class FlexArray<T>
     {
         protected T[] Tbl;
 
@@ -11,17 +11,17 @@ namespace MyCollections
 
         public int Capacity;
 
-        public AutoArray()
+        public FlexArray()
         {
             Init(8);
         }
 
-        public AutoArray(int capa)
+        public FlexArray(int capa)
         {
             Init(capa);
         }
 
-        public AutoArray(AutoArray<T> src)
+        public FlexArray(FlexArray<T> src)
         {
             Init(src.Count);
             Array.Copy(src.Tbl, Tbl, src.Count);
@@ -109,7 +109,7 @@ namespace MyCollections
             }
         }
 
-        public void AddRange(AutoArray<T> src)
+        public void AddRange(FlexArray<T> src)
         {
             int cnt = Count + src.Count;
 
@@ -145,7 +145,7 @@ namespace MyCollections
             Count -= cnt;
         }
 
-        public void InsertRange(int idx, AutoArray<T> src)
+        public void InsertRange(int idx, FlexArray<T> src)
         {
             int cnt = Count + src.Count;
             if (cnt >= Tbl.Length)

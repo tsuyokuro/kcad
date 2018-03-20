@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyCollections;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -274,7 +275,7 @@ namespace Plotter
                 jo.Add(FIG.NORMAL, VectorToJson(fig.Normal));
                 jo.Add(FIG.THICKNESSS, fig.Thickness);
 
-                JObject jvl = fig.VectorDataToJson();
+                JObject jvl = fig.GeometricDataToJson();
 
                 jo.Add(FIG.VECTOR_DATA, jvl);
 
@@ -349,6 +350,30 @@ namespace Plotter
                 jo.Add(CLIPBOARD.FIG_LIST, ja);
 
                 return jo;
+            }
+
+            public static JArray IntArrayToJson(FlexArray<int> array)
+            {
+                JArray ja = new JArray();
+
+                for (int i=0;i<array.Count;i++)
+                {
+                    ja.Add(array[i]);
+                }
+
+                return ja;
+            }
+
+            public static JArray UintArrayToJson(FlexArray<uint> array)
+            {
+                JArray ja = new JArray();
+
+                for (int i = 0; i < array.Count; i++)
+                {
+                    ja.Add(array[i]);
+                }
+
+                return ja;
             }
         }
 
@@ -544,7 +569,7 @@ namespace Plotter
 
                     jtmp.Add(VECTOR.POINT_LIST, jpl);
 
-                    fig.VectorDataFromJson(jtmp, version);
+                    fig.GeometricDataFromJson(jtmp, version);
 
                     return fig;
                 }
@@ -563,7 +588,7 @@ namespace Plotter
 
                 JObject jvdata = (JObject)jo[dataName];
 
-                fig.VectorDataFromJson(jvdata, version);
+                fig.GeometricDataFromJson(jvdata, version);
 
                 return fig;
             }
@@ -674,6 +699,30 @@ namespace Plotter
                 }
 
                 return figList;
+            }
+
+            public static FlexArray<int> IntArrayFromJson(JArray ja)
+            {
+                FlexArray<int> list = new FlexArray<int>(ja.Count);
+                
+                for (int i = 0; i < ja.Count; i++)
+                {
+                    list.Add((int)ja[i]);
+                }
+
+                return list;
+            }
+
+            public static FlexArray<uint> UintArrayFromJson(JArray ja)
+            {
+                FlexArray<uint> list = new FlexArray<uint>(ja.Count);
+
+                for (int i = 0; i < ja.Count; i++)
+                {
+                    list.Add((uint)ja[i]);
+                }
+
+                return list;
             }
         }
     }

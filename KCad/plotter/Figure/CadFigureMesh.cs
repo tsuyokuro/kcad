@@ -1,5 +1,6 @@
 ﻿using HalfEdgeNS;
 using MyCollections;
+using Newtonsoft.Json.Linq;
 using OpenTK;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace Plotter
     {
         private HeModel mHeModel;
 
-        private AutoArray<int> mEdge;
+        private FlexArray<int> mEdge;
 
         public override VectorList PointList
         {
@@ -35,9 +36,11 @@ namespace Plotter
         {
             Type = Types.MESH;
 
-            mHeModel = new HeModel(mPointList);
+            mHeModel = new HeModel();
 
-            mEdge = new AutoArray<int>();
+            mPointList = mHeModel.VertexStore;
+
+            mEdge = new FlexArray<int>();
         }
 
         public void CreateModel(CadFigure fig)
@@ -147,6 +150,47 @@ namespace Plotter
             CadVector p = mPointList[index];
             p.Selected = sel;
             mPointList[index] = p;
+        }
+
+        public override JObject GeometricDataToJson()
+        {
+            JObject jvdata = new JObject();
+
+            JArray jedge = CadJson.ToJson.IntArrayToJson(mEdge);
+            
+            JObject jmodel = HeUtil.HeModelToJson(mHeModel);
+
+            jvdata.Add("edge", jedge);
+
+            jvdata.Add("model", jmodel);
+
+            return jvdata;
+        }
+
+        public override void GeometricDataFromJson(JObject jvdata, CadJson.VersionCode version)
+        {
+            JArray jedge = (JArray)jvdata["edge"];
+            JObject jmodel = (JObject)jvdata["model"];
+
+            HeModel model = HeUtil.HeModelFromJson(jmodel, version);
+
+            if (model == null)
+            {
+                return;
+            }
+
+            FlexArray<int> edge = CadJson.FromJson.IntArrayFromJson(jedge);
+
+            if (edge == null)
+            {
+                return;
+            }
+
+            mHeModel = model;
+
+            mPointList = mHeModel.VertexStore;
+
+            mEdge = edge;
         }
     }
 }

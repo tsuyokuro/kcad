@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
-    public class VectorList : AutoArray<CadVector>
+    public class VectorList : FlexArray<CadVector>
     {
         public VectorList() : base(8){ }
         public VectorList(int capa) : base(capa) { }
