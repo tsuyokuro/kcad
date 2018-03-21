@@ -14,9 +14,6 @@ namespace Plotter
         public enum VersionCode
         {
             NULL = 0,
-            VER_1_0_0_0 = 0x01_00_00_00,
-            VER_1_0_0_1 = 0x01_00_00_01,
-            VER_1_0_0_2 = 0x01_00_00_02,
             VER_1_0_0_3 = 0x01_00_00_03,
         }
 
@@ -25,9 +22,6 @@ namespace Plotter
         private static Dictionary<string, VersionCode> VersionStrToCodeMap =
             new Dictionary<String, VersionCode>()
             {
-                { "1.0", VersionCode.VER_1_0_0_0 },
-                { "1.0.0.1", VersionCode.VER_1_0_0_1 },
-                { "1.0.0.2", VersionCode.VER_1_0_0_2 },
                 { "1.0.0.3", VersionCode.VER_1_0_0_3 },
             };
 
@@ -35,9 +29,6 @@ namespace Plotter
             new Dictionary<VersionCode, string>()
             {
                 { VersionCode.NULL, null },
-                { VersionCode.VER_1_0_0_0, "1.0" },
-                { VersionCode.VER_1_0_0_1, "1.0.0.1" },
-                { VersionCode.VER_1_0_0_2, "1.0.0.2" },
                 { VersionCode.VER_1_0_0_3, "1.0.0.3" },
             };
 
@@ -101,7 +92,6 @@ namespace Plotter
             public const string CLOSED = "closed";
             public const string NORMAL = "normal";
             public const string THICKNESSS = "thickness";
-            public const string VECTOR_LIST = "vlist";
             public const string VECTOR_DATA = "vdata";
         }
 
@@ -110,15 +100,7 @@ namespace Plotter
             public const string TYPE = "type";
             public const string POINT_LIST = "point_list";
             public const string FLAGS = "flags";
-
-            // VER_1_0_0_1以上用
             public const string V = "v";
-
-            // VER_1_0_0_1未満用
-            // VER_1_0_0_1から v: [10,20,30] のように配列で保存
-            public const string X = "x";
-            public const string Y = "y";
-            public const string Z = "z";
         }
 
         public static class CLIPBOARD
@@ -126,9 +108,6 @@ namespace Plotter
             public const string FIG_LIST = "fig_list";
             public const string CHILD_LIST = "child_list";
         }
-
-
-
 
         public static class ToJson
         {
@@ -561,32 +540,7 @@ namespace Plotter
 
                 fig.Thickness = jo.GetDouble(FIG.THICKNESSS, 0);
 
-                if (version <= VersionCode.VER_1_0_0_1)
-                {
-                    JArray jpl = (JArray)jo[VECTOR.POINT_LIST];
-
-                    JObject jtmp = new JObject();
-
-                    jtmp.Add(VECTOR.POINT_LIST, jpl);
-
-                    fig.GeometricDataFromJson(jtmp, version);
-
-                    return fig;
-                }
-
-
-                string dataName;
-
-                if (version >= VersionCode.VER_1_0_0_3)
-                {
-                    dataName = FIG.VECTOR_DATA;
-                }
-                else
-                {
-                    dataName = FIG.VECTOR_LIST;
-                }
-
-                JObject jvdata = (JObject)jo[dataName];
+                JObject jvdata = (JObject)jo[FIG.VECTOR_DATA];
 
                 fig.GeometricDataFromJson(jvdata, version);
 
@@ -637,50 +591,14 @@ namespace Plotter
 
                 v.Flag = (byte)jo[VECTOR.FLAGS];
 
-                #region for old type
-                /*
-                 * 古いCadVectorは、下記のTypeを持っていたが
-                 * 廃止した
-                 * 
-                 * public enum Types : byte
-                 * {
-                 *     STD = 0,
-                 *     BREAK = 1,
-                 *     HANDLE = 2,
-                 * }
-                 * 
-                 * TypeがHANDLEの場合は、Handle flagをONにする
-                 * 
-                 */
+                JToken jtk = jo[VECTOR.V];
 
-                JToken jt;
-                if (jo.TryGetValue(VECTOR.TYPE, out jt))
+                JArray va = (JArray)jtk;
+                if (va.Count >= 3)
                 {
-                    byte type = (byte)jt;
-
-                    if (type == 2)
-                    {
-                        v.IsHandle = true;
-                    }
-                }
-                #endregion
-
-                if (version == VersionCode.VER_1_0_0_0)
-                {
-                    v.x = (double)jo[VECTOR.X];
-                    v.y = (double)jo[VECTOR.Y];
-                    v.z = (double)jo[VECTOR.Z];
-                }
-                else if (version >= VersionCode.VER_1_0_0_1)
-                {
-                    JArray va = (JArray)jo[VECTOR.V];
-
-                    if (va.Count >= 3)
-                    {
-                        v.x = (double)va[0];
-                        v.y = (double)va[1];
-                        v.z = (double)va[2];
-                    }
+                    v.x = (double)va[0];
+                    v.y = (double)va[1];
+                    v.z = (double)va[2];
                 }
 
                 return v;
