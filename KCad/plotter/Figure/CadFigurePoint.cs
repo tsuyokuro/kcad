@@ -132,10 +132,6 @@ namespace Plotter
 
             ret.Point = mPointList[0];
 
-            ret.SplitList = new List<CadFigure>();
-
-            ret.SplitList.Add(this);
-
             return ret;
         }
     }

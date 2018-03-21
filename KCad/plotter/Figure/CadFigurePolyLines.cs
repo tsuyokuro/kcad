@@ -455,9 +455,6 @@ namespace Plotter
             ret.Point = PointList[0];
             ret.Area = 0;
 
-            ret.SplitList = new List<CadFigure>();
-            ret.SplitList.Add(this);
-
             return ret;
         }
 
@@ -471,8 +468,6 @@ namespace Plotter
 
             ret.Point = PointList[0] + d;
             ret.Area = 0;
-            ret.SplitList = new List<CadFigure>();
-            ret.SplitList.Add(this);
 
             return ret;
         }

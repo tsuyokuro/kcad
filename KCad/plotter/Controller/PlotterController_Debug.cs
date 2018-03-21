@@ -259,35 +259,6 @@ namespace Plotter
             NotifyDataChanged(true);
         }
 
-        private void test_getCentroid()
-        {
-            TempFigureList.Clear();
-
-            if (mSelList.List.Count == 0)
-            {
-                return;
-            }
-
-            SelectItem si = mSelList.List[0];
-
-            CadFigure fig = si.Figure;
-
-            Centroid cent = fig.GetCentroid();
-
-            if (cent.SplitList != null)
-            {
-                cent.SplitList.ForEach(a => TempFigureList.Add(a));
-            }
-
-            CadFigure centfig = CadFigure.Create(CadFigure.Types.POLY_LINES);
-
-            centfig.AddPoint(cent.Point);
-
-            TempFigureList.Add(centfig);
-
-            NotifyDataChanged(true);
-        }
-
         private void test_quaternion()
         {
             TempFigureList.Clear();
@@ -489,11 +460,6 @@ namespace Plotter
             else if (s == "test matrix2")
             {
                 test_matrix2();
-            }
-
-            else if (s == "test centroid")
-            {
-                test_getCentroid();
             }
 
             else if (s == "test cross")

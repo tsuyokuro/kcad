@@ -336,8 +336,6 @@ namespace Plotter
 
             ret.Point = cp;
             ret.Area = r * r * Math.PI;
-            ret.SplitList = new List<CadFigure>();
-            ret.SplitList.Add(this);
 
             return ret;
         }

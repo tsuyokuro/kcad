@@ -18,7 +18,21 @@ namespace Plotter
         public bool IsInvalid;
         public double Area;
         public CadVector Point;
-        public List<CadFigure> SplitList;
+
+        // 三角形から作成
+        public static Centroid Create(CadVector p0, CadVector p1, CadVector p2)
+        {
+            Centroid ret = default;
+            ret.set(p0, p1, p2);
+            return ret;
+        }
+
+        // 三角形で設定
+        public void set(CadVector p0, CadVector p1, CadVector p2)
+        {
+            Area = CadUtil.TriangleArea(p0, p1, p2);
+            Point = CadUtil.TriangleCentroid(p0, p1, p2);
+        }
     }
 
     public class CadUtil
@@ -40,24 +54,6 @@ namespace Plotter
             }
 
             return CadMath.Normal(fig.GetPointAt(0), fig.GetPointAt(1), fig.GetPointAt(2));
-
-            /*
-            CadVector v0 = fig.GetPointAt(0);
-
-            CadVector va = fig.GetPointAt(1) - v0;
-            CadVector vb = fig.GetPointAt(2) - v0;
-
-            CadVector normal = CadMath.CrossProduct(va, vb);
-
-            if (normal.IsZero())
-            {
-                return normal;
-            }
-
-            normal = normal.UnitVector();
-
-            return normal;
-            */
         }
 
         public static void RotateFigure(CadFigure fig, CadVector org, CadVector axis, double t)
@@ -89,10 +85,10 @@ namespace Plotter
         }
 
         // 三角形の面積 3D対応
-        public static double TriangleArea(CadFigure fig)
+        public static double TriangleArea(CadVector p0, CadVector p1, CadVector p2)
         {
-            CadVector v1 = fig.GetPointAt(0) - fig.GetPointAt(1);
-            CadVector v2 = fig.GetPointAt(2) - fig.GetPointAt(1);
+            CadVector v1 = p0 - p1;
+            CadVector v2 = p2 - p1;
 
             CadVector cp = CadMath.CrossProduct(v1, v2);
 
@@ -101,21 +97,37 @@ namespace Plotter
             return area;
         }
 
+        // 三角形の面積 3D対応
+        public static double TriangleArea(CadFigure fig)
+        {
+            return TriangleArea(
+                fig.GetPointAt(0),
+                fig.GetPointAt(1),
+                fig.GetPointAt(2)
+                );
+        }
+
+
         // 三角形の重心を求める
-        public static CadVector TriangleCentroid(CadFigure fig)
+        public static CadVector TriangleCentroid(CadVector p0, CadVector p1, CadVector p2)
         {
             CadVector gp = default(CadVector);
-
-            CadVector p0 = fig.GetPointAt(0);
-            CadVector p1 = fig.GetPointAt(1);
-            CadVector p2 = fig.GetPointAt(2);
-
 
             gp.x = (p0.x + p1.x + p2.x) / 3.0;
             gp.y = (p0.y + p1.y + p2.y) / 3.0;
             gp.z = (p0.z + p1.z + p2.z) / 3.0;
 
             return gp;
+        }
+
+        // 三角形の重心を求める
+        public static CadVector TriangleCentroid(CadFigure fig)
+        {
+            return TriangleCentroid(
+                fig.GetPointAt(0),
+                fig.GetPointAt(1),
+                fig.GetPointAt(2)
+                );
         }
 
         // 三角形群の重心を求める
@@ -140,16 +152,14 @@ namespace Plotter
                 c0 = ct;
             }
 
-            c0.SplitList = triangles;
-
             return c0;
         }
 
 
         // 二つの重心情報から重心を求める
-        public static Centroid MergeCentroid(Centroid c0, Centroid c1, bool mergeSplitList = false)
+        public static Centroid MergeCentroid(Centroid c0, Centroid c1)
         {
-            CadVector gpt = default(CadVector);
+            CadVector gpt = default;
 
             double ratio = c1.Area / (c0.Area + c1.Area);
 
@@ -157,25 +167,10 @@ namespace Plotter
             gpt.y = (c1.Point.y - c0.Point.y) * ratio + c0.Point.y;
             gpt.z = (c1.Point.z - c0.Point.z) * ratio + c0.Point.z;
 
-            Centroid ret = default(Centroid); ;
+            Centroid ret = default;
 
             ret.Area = c0.Area + c1.Area;
             ret.Point = gpt;
-
-            if (mergeSplitList)
-            {
-                ret.SplitList = new List<CadFigure>();
-
-                if (c0.SplitList != null)
-                {
-                    ret.SplitList.AddRange(c0.SplitList);
-                }
-
-                if (c1.SplitList != null)
-                {
-                    ret.SplitList.AddRange(c1.SplitList);
-                }
-            }
 
             return ret;
         }

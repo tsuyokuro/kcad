@@ -152,6 +152,35 @@ namespace Plotter
             mPointList[index] = p;
         }
 
+        public override Centroid GetCentroid()
+        {
+            Centroid cent = default;
+            Centroid ct = default;
+
+            for (int i = 0; i < mHeModel.FaceStore.Count; i++)
+            {
+                HeFace f = mHeModel.FaceStore[i];
+
+                HalfEdge head = f.Head;
+
+                HalfEdge he = head;
+
+                int i0 = he.Vertex;
+                int i1 = he.Next.Vertex;
+                int i2 = he.Next.Next.Vertex;
+
+                ct.set(
+                    mHeModel.VertexStore[i0],
+                    mHeModel.VertexStore[i1],
+                    mHeModel.VertexStore[i2]
+                    );
+
+                cent = CadUtil.MergeCentroid(cent, ct);
+            }
+
+            return cent;
+        }
+
         public override JObject GeometricDataToJson()
         {
             JObject jvdata = new JObject();

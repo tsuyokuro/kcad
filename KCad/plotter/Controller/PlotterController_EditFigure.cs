@@ -414,7 +414,7 @@ namespace Plotter
                     continue;
                 }
 
-                cent = CadUtil.MergeCentroid(cent, t, false);
+                cent = CadUtil.MergeCentroid(cent, t);
             }
 
             return cent;
@@ -471,7 +471,7 @@ namespace Plotter
                     continue;
                 }
 
-                cent = CadUtil.MergeCentroid(cent, t, false);
+                cent = CadUtil.MergeCentroid(cent, t);
             }
 
             if (cent.IsInvalid)
