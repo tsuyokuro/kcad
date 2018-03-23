@@ -11,6 +11,8 @@ namespace Plotter
         #region Create behavior
         protected CreateBehavior mCreateBehavior;
 
+        protected bool RestrictionByNormal = false;
+
         public override CreateStates CreateState
         {
             get
@@ -58,7 +60,7 @@ namespace Plotter
             CadVector d;
 
 
-            if (!IsSelectedAll() && mPointList.Count > 2)
+            if (!IsSelectedAll() && mPointList.Count > 2 && RestrictionByNormal)
             {
                 CadVector vdir = (CadVector)dc.ViewDir;
 
@@ -74,24 +76,12 @@ namespace Plotter
                     double ip = CadMath.InnerProduct(nvNormal, delta);
 
                     d = nvNormal * ip;
-
-                    //DebugOut.Std.println("nvNormal:" + nvNormal.SimpleString());
-                    //DebugOut.Std.println("para d:" + d.SimpleString());
                 }
-
-                //DebugOut.Std.println("vdir:" + vdir.SimpleString());
-                //DebugOut.Std.println("n:" + Normal.SimpleString());
-                //DebugOut.Std.println("delta:" + delta.SimpleString());
-                //DebugOut.Std.println("a:" + a.SimpleString());
-                //DebugOut.Std.println("b:" + b.SimpleString());
-                //DebugOut.Std.println("d:" + d.SimpleString());
             }
             else
             {
                 d = delta;
             }
-
-            Log.d("MoveSelectedPoints d=" + d.SimpleString());
 
             Util.MoveSelectedPoint(this, dc, d);
 

@@ -185,6 +185,11 @@ namespace Plotter
                 GL.Begin(PrimitiveType.Polygon);
                 GL.Color4(0.8f, 0.8f, 0.8f, 1.0f);
 
+                if (!normal.Invalid)
+                {
+                    GL.Normal3(normal.vector);
+                }
+
                 GL.Vertex3((p0 * DC.WoldScale).vector);
                 GL.Vertex3((p1 * DC.WoldScale).vector);
                 GL.Vertex3((p2 * DC.WoldScale).vector);

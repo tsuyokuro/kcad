@@ -85,6 +85,7 @@ namespace Plotter
 
             if (normal.IsZero())
             {
+                normal.Invalid = true;
                 return normal;
             }
 
