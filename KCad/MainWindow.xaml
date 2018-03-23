@@ -509,6 +509,9 @@
                             BorderBrush="{StaticResource BoarderColor}"
                             Foreground="{StaticResource TextColor}"
                             Background="{StaticResource BGColor}"
+                            CandidateListBackground ="{StaticResource BGColor}"
+                            CandidateListForeground ="{StaticResource TextColor}"
+                            CandidateListBorder ="Aqua"
                             />
 
                     </Grid>    

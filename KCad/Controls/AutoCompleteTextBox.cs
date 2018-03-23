@@ -71,6 +71,31 @@ namespace KCad
             }
         }
 
+        public Brush CandidateListForeground
+        {
+            get
+            {
+                return CandidateListBox.Foreground;
+            }
+            set
+            {
+                CandidateListBox.Foreground = value;
+            }
+        }
+
+        public Brush CandidateListBorder
+        {
+            get
+            {
+                return CandidateListBox.BorderBrush;
+            }
+            set
+            {
+                CandidateListBox.BorderBrush = value;
+            }
+        }
+
+
         public event TextEventHandler Determine;
 
         public AutoCompleteTextBox()
@@ -84,9 +109,6 @@ namespace KCad
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-
-            CandidateListBox.Background = this.Background;
-            CandidateListBox.Foreground = this.Foreground;
 
             CandidateListBox.MouseUp += CandidateListBox_MouseUp;
             CandidateListBox.PreviewKeyDown += CandidateListBox_PreviewKeyDown;
