@@ -382,6 +382,13 @@ namespace Plotter
             ItConsole.println("test013Sub end");
         }
 
+        private void testInvert()
+        {
+            CadFigure fig = GetTargetFigure();
+
+            fig.InvertDir();
+        }
+
 
         private void SimpleCommand(string s)
         {
@@ -448,6 +455,10 @@ namespace Plotter
             else if (s == "@testMesh")
             {
                 testMesh();
+            }
+            else if (s == "@testInvert")
+            {
+                testInvert();
             }
 
             else

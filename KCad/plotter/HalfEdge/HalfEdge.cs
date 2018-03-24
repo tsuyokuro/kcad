@@ -244,6 +244,36 @@ namespace HalfEdgeNS
                     if (c == head) break;
                 }
             }
+
+            NormalStore = newNormalStore;
+        }
+
+        public void InvertAllFace()
+        {
+            int i;
+            for (i = 0; i < FaceStore.Count; i++)
+            {
+                HeFace face = FaceStore[i];
+
+                HalfEdge head = FaceStore[i].Head;
+                HalfEdge c = head;
+
+                for (; ; )
+                {
+                    HalfEdge next = c.Next;
+
+                    c.Next = c.Prev;
+                    c.Prev = next;
+
+                    c = next;
+                    if (c == head) break;
+                }
+            }
+
+            for (i = 0; i<NormalStore.Count; i++)
+            {
+                NormalStore[i] = -NormalStore[i];
+            }
         }
     }
 

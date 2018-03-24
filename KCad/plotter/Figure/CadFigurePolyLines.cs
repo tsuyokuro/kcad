@@ -151,6 +151,12 @@ namespace Plotter
             dc.Drawing.DrawLine(pen, a, b);
         }
 
+        public override void InvertDir()
+        {
+            mPointList.Reverse();
+            Normal = -Normal;
+        }
+
         protected bool DrawFaces(DrawContext dc, int pen)
         {
             VectorList vl;

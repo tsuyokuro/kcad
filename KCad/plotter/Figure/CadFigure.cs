@@ -861,6 +861,10 @@ namespace Plotter
             }
         }
 
+        public virtual void InvertDir()
+        {
+        }
+
         public virtual JObject GeometricDataToJson()
         {
             JArray pointArray = CadJson.ToJson.VectorListToJson(PointList);

@@ -489,4 +489,26 @@ namespace Plotter
             fig.Normal = NewNormal;
         }
     }
+
+    public class CadOpeInvertDir : CadOpe
+    {
+        private uint FigureID;
+
+        public CadOpeInvertDir(uint figID)
+        {
+            FigureID = figID;
+        }
+
+        public override void Redo(CadObjectDB db)
+        {
+            CadFigure fig = db.GetFigure(FigureID);
+            fig.InvertDir();
+        }
+
+        public override void Undo(CadObjectDB db)
+        {
+            CadFigure fig = db.GetFigure(FigureID);
+            fig.InvertDir();
+        }
+    }
 }

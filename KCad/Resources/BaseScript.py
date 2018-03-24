@@ -139,6 +139,10 @@ def printVector(v):
 def toMesh():
     SE.ToMesh()
 
+#[AC] invertDir()
+def invertDir():
+    SE.InvertDir()
+
 #globals
 x=0
 y=0

@@ -23,6 +23,11 @@ namespace Plotter
             }
         }
 
+        public override void InvertDir()
+        {
+            Normal = -Normal;
+        }
+
         private CreateStates GetCreateState()
         {
             if (PointList.Count < 1)

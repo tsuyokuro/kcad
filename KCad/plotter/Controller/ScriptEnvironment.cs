@@ -878,6 +878,24 @@ namespace Plotter
             Controller.UpdateTreeView(true);
         }
 
+        public void InvertDir()
+        {
+            List<CadFigure> figList = Controller.GetSelectedFigList();
+
+            CadOpeList opeRoot = new CadOpeList();
+            CadOpeInvertDir ope;
+
+            for ( int i=0; i< figList.Count; i++ )
+            {
+                CadFigure fig = figList[i];
+                fig.InvertDir();
+
+                ope = new CadOpeInvertDir(fig.ID);
+                opeRoot.Add(ope);
+            }
+
+            Controller.HistoryManager.foward(opeRoot);
+        }
 
         public CadFigure GetTargetFigure()
         {

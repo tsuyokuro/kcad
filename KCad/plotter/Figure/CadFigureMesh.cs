@@ -181,6 +181,12 @@ namespace Plotter
             return cent;
         }
 
+        public override void InvertDir()
+        {
+            mHeModel.InvertAllFace();
+            mEdge.Reverse();
+        }
+
         public override JObject GeometricDataToJson()
         {
             JObject jvdata = new JObject();

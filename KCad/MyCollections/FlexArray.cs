@@ -5,7 +5,7 @@ namespace MyCollections
 {
     public class FlexArray<T>
     {
-        protected T[] Tbl;
+        protected T[] Data;
 
         public int Count = 0;
 
@@ -24,26 +24,26 @@ namespace MyCollections
         public FlexArray(FlexArray<T> src)
         {
             Init(src.Count);
-            Array.Copy(src.Tbl, Tbl, src.Count);
+            Array.Copy(src.Data, Data, src.Count);
             Count = src.Count;
         }
 
         protected void Init(int capa)
         {
             Capacity = capa;
-            Tbl = new T[Capacity];
+            Data = new T[Capacity];
             Count = 0;
         }
 
         public int Add(T v)
         {
-            if (Count >= Tbl.Length)
+            if (Count >= Data.Length)
             {
-                Capacity = Tbl.Length * 2;
-                Array.Resize<T>(ref Tbl, Capacity);
+                Capacity = Data.Length * 2;
+                Array.Resize<T>(ref Data, Capacity);
             }
 
-            Tbl[Count] = v;
+            Data[Count] = v;
             Count++;
 
             return Count - 1;
@@ -58,22 +58,22 @@ namespace MyCollections
         {
             get
             {
-                return Tbl[idx];
+                return Data[idx];
             }
             set
             {
-                Tbl[idx] = value;
+                Data[idx] = value;
             }
         }
 
         public ref T Ref(int idx)
         {
-            return ref Tbl[idx];
+            return ref Data[idx];
         }
 
         public void RemoveAt(int idx)
         {
-            Array.Copy(Tbl, idx + 1, Tbl, idx, Count - (idx + 1));
+            Array.Copy(Data, idx + 1, Data, idx, Count - (idx + 1));
             Count--;
         }
 
@@ -81,7 +81,7 @@ namespace MyCollections
         {
             for (int i = 0; i < Count; i++)
             {
-                d(Tbl[i]);
+                d(Data[i]);
             }
         }
 
@@ -91,7 +91,7 @@ namespace MyCollections
 
             for (; i < Count; i++)
             {
-                yield return Tbl[i];
+                yield return Data[i];
             }
 
             yield break;
@@ -102,7 +102,7 @@ namespace MyCollections
             int i = Count - 1;
             for (; i >= 0; i--)
             {
-                if (match(Tbl[i]))
+                if (match(Data[i]))
                 {
                     RemoveAt(i);
                 }
@@ -113,49 +113,49 @@ namespace MyCollections
         {
             int cnt = Count + src.Count;
 
-            if (cnt >= Tbl.Length)
+            if (cnt >= Data.Length)
             {
                 Capacity = cnt * 3 / 2;
-                Array.Resize<T>(ref Tbl, Capacity);
+                Array.Resize<T>(ref Data, Capacity);
             }
 
-            Array.Copy(src.Tbl, 0, Tbl, Count, src.Count);
+            Array.Copy(src.Data, 0, Data, Count, src.Count);
 
             Count += src.Count;
         }
 
         public void Insert(int idx, T val)
         {
-            if (Count >= Tbl.Length)
+            if (Count >= Data.Length)
             {
-                Capacity = Tbl.Length * 2;
-                Array.Resize<T>(ref Tbl, Capacity);
+                Capacity = Data.Length * 2;
+                Array.Resize<T>(ref Data, Capacity);
             }
 
-            Array.Copy(Tbl, idx, Tbl, idx + 1, Count - idx);
+            Array.Copy(Data, idx, Data, idx + 1, Count - idx);
 
             Count++;
 
-            Tbl[idx] = val;
+            Data[idx] = val;
         }
 
         public void RemoveRange(int s, int cnt)
         {
-            Array.Copy(Tbl, s + cnt, Tbl, s, Count - (s + cnt));
+            Array.Copy(Data, s + cnt, Data, s, Count - (s + cnt));
             Count -= cnt;
         }
 
         public void InsertRange(int idx, FlexArray<T> src)
         {
             int cnt = Count + src.Count;
-            if (cnt >= Tbl.Length)
+            if (cnt >= Data.Length)
             {
                 Capacity = cnt * 3 / 2;
-                Array.Resize<T>(ref Tbl, Capacity);
+                Array.Resize<T>(ref Data, Capacity);
             }
 
-            Array.Copy(Tbl, idx, Tbl, idx + src.Count, Count - idx);
-            Array.Copy(src.Tbl, 0, Tbl, idx, src.Count);
+            Array.Copy(Data, idx, Data, idx + src.Count, Count - idx);
+            Array.Copy(src.Data, 0, Data, idx, src.Count);
 
             Count += src.Count;
         }
@@ -165,13 +165,26 @@ namespace MyCollections
             int i = Count - 1;
             for (; i >= 0; i--)
             {
-                if (match(Tbl[i]))
+                if (match(Data[i]))
                 {
-                    return Tbl[i];
+                    return Data[i];
                 }
             }
 
             return default(T);
+        }
+
+        public void Reverse()
+        {
+            int i = 0;
+            int j = Count-1;
+            for (;i<j; i++, j--)
+            {
+                T work = Data[i];
+
+                Data[i] = Data[j];
+                Data[j] = work;
+            }
         }
     }
 }

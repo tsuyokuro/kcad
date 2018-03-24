@@ -85,6 +85,11 @@ namespace Plotter
             // NOP
         }
 
+        public override void InvertDir()
+        {
+            // NOP
+        }
+
         private void drawPoint(DrawContext dc, int pen)
         {
             if (PointList.Count == 0)
