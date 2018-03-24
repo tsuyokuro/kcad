@@ -1,4 +1,5 @@
 ﻿//#define OPEN_TK_NEXT
+#define DRAW_NORMAL
 
 using System.Collections.Generic;
 
@@ -180,14 +181,13 @@ namespace Plotter
                 CadVector p1 = model.VertexStore.Ref(c.Next.Vertex);
                 CadVector p2 = model.VertexStore.Ref(c.Next.Next.Vertex);
 
-                CadVector normal = CadMath.Normal(p0, p1, p2);
-
                 GL.Begin(PrimitiveType.Polygon);
                 GL.Color4(0.8f, 0.8f, 0.8f, 1.0f);
 
-                if (!normal.Invalid)
+                if (f.Normal != HeModel.INVALID_INDEX)
                 {
-                    GL.Normal3(normal.vector);
+                    CadVector nv = model.NormalStore[f.Normal];
+                    GL.Normal3(nv.vector);
                 }
 
                 GL.Vertex3((p0 * DC.WoldScale).vector);
@@ -195,6 +195,29 @@ namespace Plotter
                 GL.Vertex3((p2 * DC.WoldScale).vector);
 
                 GL.End();
+
+#if DRAW_NORMAL
+                #region Draw Normal デバッグ用
+                if (f.Normal != HeModel.INVALID_INDEX)
+                {
+                    CadVector nv = model.NormalStore[f.Normal];
+                    CadVector np0 = p0;
+                    CadVector np1 = p0 + (nv * 15);
+
+                    GL.Disable(EnableCap.Lighting);
+                    GL.Disable(EnableCap.Light0);
+
+                    DrawArrow(pen, np0, np1, ArrowTypes.CROSS, ArrowPos.END, 3, 3);
+
+                    GL.Enable(EnableCap.Lighting);
+                    GL.Enable(EnableCap.Light0);
+                }
+                else
+                {
+                    DebugOut.println("Invalid Index Normal");
+                }
+                #endregion
+#endif
             }
 
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Plotter
 {
@@ -64,6 +65,8 @@ namespace Plotter
         public static PrintFunc PrintLnFunc = (s) => { };
         public static FormatPrintFunc FormatPrintFunc = (s, args) => { };
 
+        public static Mutex Lock = new Mutex();
+
         public static int Indent
         {
             set
@@ -80,9 +83,21 @@ namespace Plotter
 
         public static void reset()
         {
+            Begin();
             mIndent = 0;
             IndentUnit = 2;
             space = "";
+            End();
+        }
+
+        public static void Begin()
+        {
+            Lock.WaitOne();
+        }
+
+        public static void End()
+        {
+            Lock.ReleaseMutex();
         }
 
         public static void printIndent()
@@ -92,20 +107,26 @@ namespace Plotter
 
         public static void print(String s)
         {
+            Begin();
             PutCount++;
             PrintFunc(s);
+            End();
         }
 
         public static void println(String s)
         {
+            Begin();
             PutCount++;
             PrintLnFunc(space + s);
+            End();
         }
 
         public static void printf(String format, params object[] args)
         {
+            Begin();
             PutCount++;
             FormatPrintFunc(space + format, args);
+            End();
         }
     }
 }

@@ -642,6 +642,30 @@ namespace Plotter
 
                 return list;
             }
+
+            public static int GetIntValue(JObject jo, string name, int naValue)
+            {
+                JToken jv;
+
+                if (jo.TryGetValue(name, out jv))
+                {
+                    return (int)jv;
+                }
+
+                return naValue;
+            }
+
+            public static uint GetUintValue(JObject jo, string name, uint naValue)
+            {
+                JToken jv;
+
+                if (jo.TryGetValue(name, out jv))
+                {
+                    return (uint)jv;
+                }
+
+                return naValue;
+            }
         }
     }
 

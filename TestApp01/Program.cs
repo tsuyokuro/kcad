@@ -193,18 +193,31 @@ namespace TestApp01
         {
             for (int i = 0; i < model.FaceStore.Count; i++)
             {
+                CadVector v;
+                CadVector n;
+
                 HeFace f = model.FaceStore[i];
+
+                n = model.NormalStore.Ref(f.Normal);
+
+
+                Console.WriteLine("face Normal {0} - {1},{2},{3}", f.Normal, n.x, n.y, n.z);
+
 
                 HalfEdge head = f.Head;
 
                 HalfEdge c = head;
 
-                CadVector v;
 
                 for (; ; )
                 {
                     v = model.VertexStore.Ref(c.Vertex);
-                    Console.WriteLine("{0} - {1},{2},{3}", c.ID, v.x, v.y, v.z);
+                    n = model.NormalStore.Ref(c.Normal);
+                    Console.WriteLine("{0} - {1},{2},{3} Normal:{4} - {5},{6},{7}",
+                        c.ID,
+                        v.x, v.y, v.z,
+                        c.Normal,
+                        n.x, n.y, n.z);
 
                     HalfEdge pair = c.Pair;
 

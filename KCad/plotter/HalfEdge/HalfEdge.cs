@@ -10,6 +10,8 @@ namespace HalfEdgeNS
     {
         public HalfEdge Head; // HalfEdge link listの先頭
 
+        public int Normal = HeModel.INVALID_INDEX;
+
         public HeFace(HalfEdge he)
         {
             Head = he;
@@ -24,8 +26,9 @@ namespace HalfEdgeNS
 
         public HalfEdge Next;
         public HalfEdge Prev;
-        public int Vertex = -1;
-        public int Face = -1;
+        public int Vertex = HeModel.INVALID_INDEX;
+        public int Face = HeModel.INVALID_INDEX;
+        public int Normal = HeModel.INVALID_INDEX;
 
         public HalfEdge(int vertex)
         {
@@ -39,27 +42,33 @@ namespace HalfEdgeNS
 
     public class HeModel
     {
+        public const int INVALID_INDEX = -1;
+
         public IdProvider HeIdProvider = new IdProvider();
 
         public VectorList VertexStore;
         public FlexArray<HeFace> FaceStore;
+        public VectorList NormalStore;
 
         public HeModel()
         {
             VertexStore = new VectorList(8);
             FaceStore = new FlexArray<HeFace>(6);
+            NormalStore = new VectorList(8);
         }
 
         public HeModel(VectorList vectorList)
         {
             VertexStore = vectorList;
-            FaceStore = new FlexArray<HeFace>(vectorList.Capacity);
+            FaceStore = new FlexArray<HeFace>(vectorList.Count);
+            NormalStore = new VectorList(vectorList.Count);
         }
 
         public void Clear()
         {
             VertexStore.Clear();
             FaceStore.Clear();
+            NormalStore.Clear();
         }
 
         public void SetHalfEdgePair(HalfEdge he)
@@ -145,7 +154,23 @@ namespace HalfEdgeNS
             he1.Prev = he0;
             he2.Next = he0;
             he2.Prev = he1;
+
+            // 法線の設定
+            CadVector normal = CadMath.Normal(VertexStore[v0], VertexStore[v1], VertexStore[v2]);
+            int normalIndex = INVALID_INDEX;
+
+            if (!normal.Invalid)
+            {
+                normalIndex = NormalStore.Add(normal);
+            }
+
+            he0.Normal = normalIndex;
+            he1.Normal = normalIndex;
+            he2.Normal = normalIndex;
+
+            // Faceの設定
             HeFace face = new HeFace(he0);
+            face.Normal = normalIndex;
 
             int faceIndex = FaceStore.Add(face);
 
@@ -153,6 +178,7 @@ namespace HalfEdgeNS
             he1.Face = faceIndex;
             he2.Face = faceIndex;
 
+            // Pairの設定
             SetHalfEdgePair(he0);
             SetHalfEdgePair(he1);
             SetHalfEdgePair(he2);
@@ -186,6 +212,39 @@ namespace HalfEdgeNS
 
             return list;
         }
+
+        public void RecreateNormals()
+        {
+            VectorList newNormalStore = new VectorList(VertexStore.Count);
+
+            int i;
+            for (i = 0; i < FaceStore.Count; i++)
+            {
+                HeFace face = FaceStore[i];
+
+                HalfEdge head = FaceStore[i].Head;
+                HalfEdge c = head;
+
+                CadVector n = CadMath.Normal(
+                    VertexStore[c.Vertex],
+                    VertexStore[c.Next.Vertex],
+                    VertexStore[c.Next.Next.Vertex]
+                    );
+
+                int nidx = newNormalStore.Add(n);
+
+                face.Normal = nidx;
+
+                for (; ; )
+                {
+                    c.Normal = nidx;
+
+                    c = c.Next;
+
+                    if (c == head) break;
+                }
+            }
+        }
     }
 
     public class HeUtil
@@ -196,6 +255,9 @@ namespace HalfEdgeNS
 
             JArray jvs = CadJson.ToJson.VectorListToJson(model.VertexStore);
             jmodel.Add("vertex_store", jvs);
+
+            JArray jns = CadJson.ToJson.VectorListToJson(model.NormalStore);
+            jmodel.Add("normal_store", jns);
 
             jmodel.Add("half_edge_id_cnt", model.HeIdProvider.Counter);
 
@@ -234,6 +296,7 @@ namespace HalfEdgeNS
             JObject jface = new JObject();
 
             jface.Add("head_he_id", face.Head.ID);
+            jface.Add("normal_idx", face.Normal);
 
             return jface;
         }
@@ -248,6 +311,7 @@ namespace HalfEdgeNS
             jhe.Add("prev_id", he.Prev != null ? he.Prev.ID : 0);
             jhe.Add("vertex_idx", he.Vertex);
             jhe.Add("face_idx", he.Face);
+            jhe.Add("normal_idx", he.Normal);
 
             return jhe;
         }
@@ -275,8 +339,17 @@ namespace HalfEdgeNS
             JArray ja = (JArray)jmodel["vertex_store"];
 
             VectorList vlist = CadJson.FromJson.VectorListFromJson(ja, version);
-
             model.VertexStore = vlist;
+
+            bool normalExist = false;
+            ja = (JArray)jmodel["normal_store"];
+
+            if (ja != null)
+            {
+                normalExist = true;
+                VectorList nlist = CadJson.FromJson.VectorListFromJson(ja, version);
+                model.NormalStore = nlist;
+            }
 
             model.HeIdProvider.Counter = (uint)jmodel["half_edge_id_cnt"];
 
@@ -291,6 +364,11 @@ namespace HalfEdgeNS
             {
                 HeFace face = HeFaceFromJson(jo, heDic);
                 model.FaceStore.Add(face);
+            }
+
+            if (!normalExist)
+            {
+                model.RecreateNormals();
             }
 
             return model;
@@ -322,6 +400,7 @@ namespace HalfEdgeNS
             he.mHalfEdge.ID = he.id;
             he.mHalfEdge.Vertex = (int)jo["vertex_idx"];
             he.mHalfEdge.Face = (int)jo["face_idx"];
+            he.mHalfEdge.Normal = CadJson.FromJson.GetIntValue(jo, "normal_idx", -1);
 
             return he;
         }
@@ -345,6 +424,8 @@ namespace HalfEdgeNS
             HalfEdge he = dic[he_id].mHalfEdge;
 
             HeFace face = new HeFace(he);
+
+            face.Normal = CadJson.FromJson.GetIntValue(jo, "normal_idx", -1);
 
             return face;
         }

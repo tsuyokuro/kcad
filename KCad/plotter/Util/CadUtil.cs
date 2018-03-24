@@ -1462,6 +1462,8 @@ namespace Plotter
 
         public static void Dump(Vector4d v, string prefix)
         {
+            DebugOut.Begin();
+
             DebugOut.print(prefix);
             DebugOut.println("{");
             DebugOut.Indent++;
@@ -1471,6 +1473,8 @@ namespace Plotter
             DebugOut.println("w:" + v.W.ToString());
             DebugOut.Indent--;
             DebugOut.println("}");
+
+            DebugOut.End();
         }
 
         public static void Dump(UMatrix4 m, string prefix)
