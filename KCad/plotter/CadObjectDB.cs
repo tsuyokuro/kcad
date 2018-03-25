@@ -320,35 +320,35 @@ namespace Plotter
         #endregion
     }
 
-    public static class DUtil
-    {
-        public static Dictionary<uint, T> ListToDict<T>(List<T> list)
-        {
-            Dictionary<uint, T> dict = new Dictionary<uint, T>();
+    //public static class DUtil
+    //{
+    //    public static Dictionary<uint, T> ListToDict<T>(List<T> list)
+    //    {
+    //        Dictionary<uint, T> dict = new Dictionary<uint, T>();
 
-            foreach (T item in list)
-            {
-                dynamic d = item;
-                dict.Add(d.ID, item);
-            }
+    //        foreach (T item in list)
+    //        {
+    //            dynamic d = item;
+    //            dict.Add(d.ID, item);
+    //        }
 
-            return dict;
-        }
+    //        return dict;
+    //    }
 
-        public static List<T> IdListToObjList<T>(List<uint> list, Dictionary<uint, T> dict)
-        {
-            var objList = new List<T>();
+    //    public static List<T> IdListToObjList<T>(List<uint> list, Dictionary<uint, T> dict)
+    //    {
+    //        var objList = new List<T>();
 
-            foreach (uint id in list)
-            {
-                T obj = dict[id];
+    //        foreach (uint id in list)
+    //        {
+    //            T obj = dict[id];
 
-                if (obj == null) continue;
+    //            if (obj == null) continue;
 
-                objList.Add(obj);
-            }
+    //            objList.Add(obj);
+    //        }
 
-            return objList;
-        }
-    }
+    //        return objList;
+    //    }
+    //}
 }

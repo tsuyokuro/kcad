@@ -25,13 +25,25 @@ namespace TestApp01
     {
         static void Test001()
         {
-            FlexArray<Dummy> vl = new FlexArray<Dummy>();
+            FlexArray<Dummy> vl = new FlexArray<Dummy>(2);
 
             vl.Add(new Dummy(1));
             vl.Add(new Dummy(2));
             vl.Add(new Dummy(3));
 
             Dummy retv = vl.Find(v => { return v.ID == 100; });
+
+
+            List<Dummy> list = new List<Dummy>();
+
+            list.AddRange(vl);
+
+            vl.AddRange(list);
+
+            foreach (Dummy dummy in vl)
+            {
+                Console.WriteLine("dummy id={0}", dummy.ID);
+            }
         }
 
         static void Test002()
@@ -236,12 +248,11 @@ namespace TestApp01
 
         static void Main(string[] args)
         {
-            //Test001();
+            Test001();
             //Test002();
             //Test002_01();
             //Test003();
-
-            Test004();
+            //Test004();
             Console.ReadLine();
         }
     }

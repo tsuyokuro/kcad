@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace MyCollections
 {
-    public class FlexArray<T>
+    public class FlexArray<T> : IEnumerable<T>
     {
         protected T[] Data;
 
@@ -124,6 +125,33 @@ namespace MyCollections
             Count += src.Count;
         }
 
+        // List空のコピーは少し最適化
+        public void AddRange(List<T> src)
+        {
+            int cnt = Count + src.Count;
+
+            if (cnt >= Data.Length)
+            {
+                Capacity = cnt * 3 / 2;
+                Array.Resize<T>(ref Data, Capacity);
+            }
+
+            for (int i=0; i<src.Count; i++)
+            {
+                Data[Count + i] = src[i];
+            }
+
+            Count += src.Count;
+        }
+
+        public void AddRange(IEnumerable<T> src)
+        {
+            foreach (T v in src)
+            {
+                Add(v);
+            }
+        }
+
         public void Insert(int idx, T val)
         {
             if (Count >= Data.Length)
@@ -185,6 +213,18 @@ namespace MyCollections
                 Data[i] = Data[j];
                 Data[j] = work;
             }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            int i = 0;
+
+            for (; i < Count; i++)
+            {
+                yield return Data[i];
+            }
+
+            yield break;
         }
     }
 }
