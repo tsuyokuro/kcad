@@ -7,7 +7,7 @@ using MyCollections;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Plotter
+namespace Plotter.Serializer
 {
     public static class CadJson
     {

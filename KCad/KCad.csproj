@@ -196,7 +196,8 @@
     <Compile Include="plotter\Figure\CadFigureUtil.cs" />
     <Compile Include="plotter\primitive\CollectionTypes.cs" />
     <Compile Include="plotter\Figure\VLExpander.cs" />
-    <Compile Include="plotter\JsonExtends.cs" />
+    <Compile Include="plotter\Serializer\CadMessagePack.cs" />
+    <Compile Include="plotter\Serializer\JsonExtends.cs" />
     <Compile Include="plotter\Util\BitmapUtil.cs" />
     <Compile Include="Controls\TreeView\CadObjectTreeView.cs" />
     <Compile Include="ftgl\FontWrapper.cs" />
@@ -209,7 +210,7 @@
     <Compile Include="plotter\DrawContext\DrawContextPrinter.cs" />
     <Compile Include="plotter\DrawContext\IDrawing.cs" />
     <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
-    <Compile Include="plotter\CadJson.cs" />
+    <Compile Include="plotter\Serializer\CadJson.cs" />
     <Compile Include="plotter\PlotterSettings.cs" />
     <Compile Include="plotter\primitive\CadPrimitive.cs" />
     <Compile Include="plotter\searcher\MarkItem.cs" />

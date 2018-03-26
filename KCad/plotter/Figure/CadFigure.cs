@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Plotter
 {
+    using Plotter.Serializer;
     using static CadFigure;
 
     public partial class CadFigure
