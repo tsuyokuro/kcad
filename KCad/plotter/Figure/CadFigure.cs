@@ -128,6 +128,11 @@ namespace Plotter
             {
                 return mChildList;
             }
+
+            set
+            {
+                mChildList = value;
+            }
         }
 
         public virtual bool IsEmpty
@@ -884,5 +889,26 @@ namespace Plotter
             mPointList = vl;
         }
 
+
+        public virtual MpGeometricData GetMpGeometricData()
+        {
+            MpPolylineGeometricData g = new MpPolylineGeometricData();
+            g.PointList = MpUtil.VectortListToMp(PointList);
+            return g;
+        }
+
+        public virtual void GeometricDataFromMp(MpGeometricData geo)
+        {
+            if (!(geo is MpPolylineGeometricData))
+            {
+                return;
+            }
+
+            MpPolylineGeometricData g = (MpPolylineGeometricData)geo;
+
+            mPointList = MpUtil.MpToVectortList(g.PointList);
+        }
+
+            
     } // End of class CadFigure
 }
