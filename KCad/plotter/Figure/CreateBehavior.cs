@@ -6,57 +6,124 @@ namespace Plotter
 {
     public partial class CadFigure
     {
-        public abstract class CreateBehavior
+        public abstract class Creator
         {
-            public abstract void AddPointInCreating(CadFigure fig, DrawContext dc, CadVector p);
-            public abstract void StartCreate(CadFigure fig, DrawContext dc);
-            public abstract void EndCreate(CadFigure fig, DrawContext dc);
-            public abstract void DrawTemp(CadFigure fig, DrawContext dc, CadVector tp, int pen);
-            public abstract CreateStates GetCreateState(CadFigure fig);
-        }
-
-        public class PolyLinesCreateBehavior : CreateBehavior
-        {
-            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadVector p)
+            public virtual CadFigure Figure
             {
-                fig.mPointList.Add(p);
+                get;
+                set;
+            } = null;
+
+
+            public virtual void AddPointInCreating(DrawContext dc, CadVector p)
+            {
+                Figure.AddPointInCreating(dc, p);
             }
 
-            public override void DrawTemp(CadFigure fig, DrawContext dc, CadVector tp, int pen)
+            public virtual void DrawTemp(DrawContext dc, CadVector tp, int pen)
             {
-                if (fig.PointCount == 0)
+                Figure.DrawTemp(dc, tp, pen);
+            }
+
+            public virtual void EndCreate(DrawContext dc)
+            {
+                Figure.EndCreate(dc);
+            }
+
+            public virtual void StartCreate(DrawContext dc)
+            {
+                Figure.StartCreate(dc);
+            }
+
+            public abstract CreateStates GetCreateState();
+
+            public static Creator Get(CadFigure fig)
+            {
+                CadFigure.Types type = fig.Type;
+
+                Creator creator = null;
+
+                switch (type)
+                {
+                    case Types.LINE:
+                        creator = new LineCreator(fig);
+                        break;
+
+                    case Types.RECT:
+                        creator = new RectCreator(fig);
+                        break;
+
+                    case Types.POLY_LINES:
+                        creator = new PolyLinesCreator(fig);
+                        break;
+
+                    case Types.CIRCLE:
+                        creator = new CircleCreator(fig);
+                        break;
+
+                    case Types.POINT:
+                        creator = new PointCreator(fig);
+                        break;
+
+                    case Types.DIMENTION_LINE:
+                        creator = new DimLineCreator(fig);
+                        break;
+
+                    default:
+                        break;
+                }
+
+                return creator;
+            }
+        }
+
+        public class PolyLinesCreator : Creator
+        {
+            public PolyLinesCreator(CadFigure fig)
+            {
+                Figure = fig;
+            }
+
+            public override void AddPointInCreating(DrawContext dc, CadVector p)
+            {
+                Figure.mPointList.Add(p);
+            }
+
+            public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+            {
+                if (Figure.PointCount == 0)
                 {
                     return;
                 }
 
-                CadVector lastPt = fig.PointList[fig.PointCount - 1];
+                CadVector lastPt = Figure.PointList[Figure.PointCount - 1];
 
                 dc.Drawing.DrawLine(pen, lastPt, tp);
             }
 
-            public override void EndCreate(CadFigure fig, DrawContext dc)
+            public override void EndCreate(DrawContext dc)
             {
-                if (fig.PointList.Count > 2)
+                if (Figure.PointList.Count > 2)
                 {
                     //Vector3d normal = CadUtil.RepresentativeNormal(fig.PointList);
                     //double t = Vector3d.Dot(normal, dc.ViewDir);
 
-                    fig.Normal = CadVector.Create(dc.ViewDir);
-                    fig.Normal *= -1;
+                    Figure.Normal = CadVector.Create(dc.ViewDir);
+                    Figure.Normal *= -1;
                 }
             }
 
-            public override CreateStates GetCreateState(CadFigure fig)
+            public override CreateStates GetCreateState()
             {
-                if (fig.PointList.Count < 2)
+                if (Figure.PointList.Count < 2)
                 {
                     return CreateStates.NOT_ENOUGH;
                 }
-                else if (fig.PointList.Count == 2)
+                else if (Figure.PointList.Count == 2)
                 {
                     return CreateStates.ENOUGH;
                 }
-                else if (fig.PointList.Count > 2)
+                else if (Figure.PointList.Count > 2)
                 {
                     return CreateStates.WAIT_NEXT_POINT;
                 }
@@ -64,25 +131,30 @@ namespace Plotter
                 return CreateStates.NONE;
             }
 
-            public override void StartCreate(CadFigure fig, DrawContext dc)
+            public override void StartCreate(DrawContext dc)
             {
                 // NOP
             }
         }
 
-        public class RectCreateBehavior : CreateBehavior
+        public class RectCreator : Creator
         {
-            public override void AddPointInCreating(CadFigure fig, DrawContext dc, CadVector p)
+            public RectCreator(CadFigure fig)
             {
-                if (fig.mPointList.Count == 0)
+                Figure = fig;
+            }
+
+            public override void AddPointInCreating(DrawContext dc, CadVector p)
+            {
+                if (Figure.mPointList.Count == 0)
                 {
-                    fig.mPointList.Add(p);
+                    Figure.mPointList.Add(p);
                 }
                 else
                 {
                     // 左回りになるように設定
 
-                    CadVector pp0 = dc.CadPointToUnitPoint(fig.PointList[0]);
+                    CadVector pp0 = dc.CadPointToUnitPoint(Figure.PointList[0]);
                     CadVector pp2 = dc.CadPointToUnitPoint(p);
 
                     CadVector pp1 = pp0;
@@ -91,70 +163,136 @@ namespace Plotter
                     CadVector pp3 = pp0;
                     pp3.x = pp2.x;
 
-                    fig.mPointList.Add(dc.UnitPointToCadPoint(pp1));
-                    fig.mPointList.Add(dc.UnitPointToCadPoint(pp2));
-                    fig.mPointList.Add(dc.UnitPointToCadPoint(pp3));
+                    Figure.mPointList.Add(dc.UnitPointToCadPoint(pp1));
+                    Figure.mPointList.Add(dc.UnitPointToCadPoint(pp2));
+                    Figure.mPointList.Add(dc.UnitPointToCadPoint(pp3));
 
-                    fig.IsLoop = true;
+                    Figure.IsLoop = true;
                 }
             }
 
-            public override void DrawTemp(CadFigure fig, DrawContext dc, CadVector tp, int pen)
+            public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
             {
-                if (fig.PointList.Count <= 0)
+                if (Figure.PointList.Count <= 0)
                 {
                     return;
                 }
 
-                dc.Drawing.DrawRect(pen, fig.PointList[0], tp);
+                dc.Drawing.DrawRect(pen, Figure.PointList[0], tp);
             }
 
-            public override void EndCreate(CadFigure fig, DrawContext dc)
+            public override void EndCreate(DrawContext dc)
             {
-                fig.Normal = CadVector.Create(dc.ViewDir);
-                fig.Normal *= -1;
-                fig.Type = Types.POLY_LINES;
+                Figure.Normal = CadVector.Create(dc.ViewDir);
+                Figure.Normal *= -1;
+                Figure.Type = Types.POLY_LINES;
             }
 
-            public override CreateStates GetCreateState(CadFigure fig)
-            {
-                if (fig.PointList.Count < 1)
-                {
-                    return CreateStates.NOT_ENOUGH;
-                }
-                else if (fig.PointList.Count < 4)
-                {
-                    return CreateStates.WAIT_LAST_POINT;
-                }
-
-                return CreateStates.FULL;
-            }
-
-            public override void StartCreate(CadFigure fig, DrawContext dc)
+            public override void StartCreate(DrawContext dc)
             {
                 // NOP
             }
-        }
 
-        public class LineCreateBehavior : PolyLinesCreateBehavior
-        {
-            public override CreateStates GetCreateState(CadFigure fig)
+            public override CreateStates GetCreateState()
             {
-                if (fig.PointList.Count < 1)
+                if (Figure.PointList.Count < 1)
                 {
                     return CreateStates.NOT_ENOUGH;
                 }
-                else if (fig.PointList.Count < 2)
+                else if (Figure.PointList.Count < 4)
                 {
                     return CreateStates.WAIT_LAST_POINT;
                 }
 
                 return CreateStates.FULL;
             }
+        }
 
-            public override void EndCreate(CadFigure fig, DrawContext dc)
+        public class LineCreator : PolyLinesCreator
+        {
+            public LineCreator(CadFigure fig) : base(fig)
             {
-                fig.Type = Types.POLY_LINES;
+            }
+
+            public override void EndCreate(DrawContext dc)
+            {
+                Figure.Type = Types.POLY_LINES;
+            }
+
+            public override CreateStates GetCreateState()
+            {
+                if (Figure.PointList.Count < 1)
+                {
+                    return CreateStates.NOT_ENOUGH;
+                }
+                else if (Figure.PointList.Count < 2)
+                {
+                    return CreateStates.WAIT_LAST_POINT;
+                }
+
+                return CreateStates.FULL;
+            }
+        }
+
+        public class CircleCreator : Creator
+        {
+            public CircleCreator(CadFigure fig)
+            {
+                Figure = fig;
+            }
+
+            public override CreateStates GetCreateState()
+            {
+                if (Figure.PointList.Count < 1)
+                {
+                    return CreateStates.NOT_ENOUGH;
+                }
+                else if (Figure.PointList.Count < 2)
+                {
+                    return CreateStates.WAIT_LAST_POINT;
+                }
+
+                return CreateStates.FULL;
+            }
+        }
+
+        public class DimLineCreator : Creator
+        {
+            public DimLineCreator(CadFigure fig)
+            {
+                Figure = fig;
+            }
+
+            public override CreateStates GetCreateState()
+            {
+                if (Figure.PointList.Count < 2)
+                {
+                    return CreateStates.NOT_ENOUGH;
+                }
+                else if (Figure.PointList.Count < 3)
+                {
+                    return CreateStates.WAIT_LAST_POINT;
+                }
+
+                return CreateStates.FULL;
+            }
+        }
+
+        public class PointCreator : Creator
+        {
+            public PointCreator(CadFigure fig)
+            {
+                Figure = fig;
+            }
+
+            public override CreateStates GetCreateState()
+            {
+                if (Figure.PointList.Count < 1)
+                {
+                    return CreateStates.NOT_ENOUGH;
+                }
+
+                return CreateStates.FULL;
             }
         }
     }

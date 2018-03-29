@@ -245,15 +245,15 @@ namespace Plotter
             switch (type)
             {
                 case Types.LINE:
-                    fig = new CadFigurePolyLines(new LineCreateBehavior());
+                    fig = new CadFigurePolyLines();
                     break;
 
                 case Types.RECT:
-                    fig = new CadFigurePolyLines(new RectCreateBehavior());
+                    fig = new CadFigurePolyLines();
                     break;
 
                 case Types.POLY_LINES:
-                    fig = new CadFigurePolyLines(new PolyLinesCreateBehavior());
+                    fig = new CadFigurePolyLines();
                     break;
 
                 case Types.CIRCLE:

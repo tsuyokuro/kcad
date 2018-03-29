@@ -436,10 +436,13 @@ namespace Plotter
                     {
                         LastDownPoint = mSnapPoint;
 
-                        CreatingFigure = mDB.NewFigure(CreatingFigType);
+                        CadFigure fig = mDB.NewFigure(CreatingFigType);
+
+                        FigureCreator = CadFigure.Creator.Get(fig);
+
                         State = States.CREATING;
 
-                        CreatingFigure.StartCreate(dc);
+                        FigureCreator.StartCreate(dc);
 
 
                         CadVector p = dc.UnitPointToCadPoint(mSnapPointScrn);
@@ -483,11 +486,11 @@ namespace Plotter
 
         private void PutMeasure()
         {
-            double d = CadUtil.AroundLength(MeasureFigure);
+            double d = CadUtil.AroundLength(MeasureFigureCreator.Figure);
 
             d = Math.Round(d, 4);
 
-            int cnt = MeasureFigure.PointCount;
+            int cnt = MeasureFigureCreator.Figure.PointCount;
 
             if (d >= 10.0)
             {
@@ -685,17 +688,17 @@ namespace Plotter
 
                 mPointSearcher.SetTargetPoint(CrossCursor);
 
-                if (CreatingFigure != null)
+                if (FigureCreator != null)
                 {
-                    if (CreatingFigure.PointCount == 1)
+                    if (FigureCreator.Figure.PointCount == 1)
                     {
-                        mPointSearcher.Check(dc, CreatingFigure.GetPointAt(0));
+                        mPointSearcher.Check(dc, FigureCreator.Figure.GetPointAt(0));
                     }
                 }
 
-                if (MeasureFigure != null)
+                if (MeasureFigureCreator != null)
                 {
-                    mPointSearcher.Check(dc, MeasureFigure.PointList);
+                    mPointSearcher.Check(dc, MeasureFigureCreator.Figure.PointList);
                 }
 
                 // Search point
@@ -880,18 +883,18 @@ namespace Plotter
                     break;
 
                 case States.CREATING:
-                    if (CreatingFigure != null)
+                    if (FigureCreator != null)
                     {
                         CadVector p = dc.UnitPointToCadPoint(mSnapPointScrn);
-                        CreatingFigure.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
+                        FigureCreator.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
                     }
                     break;
 
                 case States.MEASURING:
-                    if (MeasureFigure != null)
+                    if (MeasureFigureCreator != null)
                     {
                         CadVector p = dc.UnitPointToCadPoint(mSnapPointScrn);
-                        MeasureFigure.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
+                        MeasureFigureCreator.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
                     }
                     break;
             }
@@ -908,32 +911,32 @@ namespace Plotter
 
         private void SetPointInCreating(DrawContext dc, CadVector p)
         {
-            CreatingFigure.AddPointInCreating(dc, p);
+            FigureCreator.AddPointInCreating(dc, p);
 
-            CadFigure.CreateStates state = CreatingFigure.CreateState;
+            CadFigure.CreateStates state = FigureCreator.GetCreateState();
 
             if (state == CadFigure.CreateStates.FULL)
             {
-                CreatingFigure.EndCreate(dc);
+                FigureCreator.EndCreate(dc);
 
-                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
+                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, FigureCreator.Figure.ID);
                 mHistoryManager.foward(ope);
-                CurrentLayer.AddFigure(CreatingFigure);
+                CurrentLayer.AddFigure(FigureCreator.Figure);
 
                 NextState();
             }
             else if (state == CadFigure.CreateStates.ENOUGH)
             {
-                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, CreatingFigure.ID);
+                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, FigureCreator.Figure.ID);
                 mHistoryManager.foward(ope);
-                CurrentLayer.AddFigure(CreatingFigure);
+                CurrentLayer.AddFigure(FigureCreator.Figure);
             }
             else if (state == CadFigure.CreateStates.WAIT_NEXT_POINT)
             {
                 CadOpe ope = CadOpe.CreateAddPointOpe(
                     CurrentLayer.ID,
-                    CreatingFigure.ID,
-                    CreatingFigure.PointCount - 1,
+                    FigureCreator.Figure.ID,
+                    FigureCreator.Figure.PointCount - 1,
                     ref p
                     );
 
@@ -943,7 +946,7 @@ namespace Plotter
 
         private void SetPointInMeasuring(DrawContext dc, CadVector p)
         {
-            MeasureFigure.AddPointInCreating(dc, p);
+            MeasureFigureCreator.AddPointInCreating(dc, p);
         }
 
         public void MoveCursorNearestPoint(DrawContext dc)

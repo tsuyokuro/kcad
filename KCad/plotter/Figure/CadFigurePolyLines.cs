@@ -8,47 +8,29 @@ namespace Plotter
 {
     public class CadFigurePolyLines : CadFigure
     {
-        #region Create behavior
-        protected CreateBehavior mCreateBehavior;
-
         protected bool RestrictionByNormal = false;
 
-        public override CreateStates CreateState
-        {
-            get
-            {
-                CreateStates st = mCreateBehavior.GetCreateState(this);
-                return st;
-            }
-        }
-
-        public CadFigurePolyLines(CreateBehavior createBehavior)
+        public CadFigurePolyLines()
         {
             Type = Types.POLY_LINES;
-            mCreateBehavior = createBehavior;
         }
-
 
         public override void StartCreate(DrawContext dc)
         {
-            mCreateBehavior.StartCreate(this, dc);
         }
 
         public override void EndCreate(DrawContext dc)
         {
-            mCreateBehavior.EndCreate(this, dc);
         }
 
         public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
         {
-            mCreateBehavior.DrawTemp(this, dc, tp, pen);
         }
 
         public override void AddPointInCreating(DrawContext dc, CadVector p)
         {
-            mCreateBehavior.AddPointInCreating(this, dc, p);
         }
-        #endregion
+
 
         #region Point Move
         public override void MoveSelectedPoints(DrawContext dc, CadVector delta)

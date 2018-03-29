@@ -70,9 +70,9 @@ namespace Plotter
                 CreatingFigureType = pc.CreatingFigType;
                 CreatingFigurePointCnt = 0;
 
-                if (pc.CreatingFigure != null)
+                if (pc.FigureCreator != null)
                 {
-                    CreatingFigurePointCnt = pc.CreatingFigure.PointCount;
+                    CreatingFigurePointCnt = pc.FigureCreator.Figure.PointCount;
                 }
 
                 MeasureMode = pc.MeasureMode;
@@ -163,14 +163,12 @@ namespace Plotter
             }
         }
 
-        private CadFigure MeasureFigure = null;
+        //private CadFigure MeasureFigure = null;
+        //private CadFigure CreatingFigure = null;
 
-        private CadFigure CreatingFigure
-        {
-            set;
-            get;
+        private CadFigure.Creator FigureCreator = null;
+        private CadFigure.Creator MeasureFigureCreator = null;
 
-        } = null;
 
         private HistoryManager mHistoryManager = null;
 
@@ -407,10 +405,10 @@ namespace Plotter
 
             State = States.SELECT;
 
-            if (CreatingFigure != null)
+            if (FigureCreator != null)
             {
-                CreatingFigure.EndCreate(CurrentDC);
-                CreatingFigure = null;
+                FigureCreator.EndCreate(CurrentDC);
+                FigureCreator = null;
             }
 
             UpdateTreeView(true);
@@ -420,10 +418,10 @@ namespace Plotter
 
         public void EndCreateFigureState()
         {
-            if (CreatingFigure != null)
+            if (FigureCreator != null)
             {
-                CreatingFigure.EndCreate(CurrentDC);
-                CreatingFigure = null;
+                FigureCreator.EndCreate(CurrentDC);
+                FigureCreator = null;
             }
 
             NextState();
@@ -433,23 +431,26 @@ namespace Plotter
         {
             State = States.MEASURING;
             MeasureMode = mode;
-            MeasureFigure = CadFigure.Create(CadFigure.Types.POLY_LINES);
+            MeasureFigureCreator =
+                CadFigure.Creator.Get(
+                    CadFigure.Create(CadFigure.Types.POLY_LINES)
+                    );
         }
 
         public void EndMeasure()
         {
             State = States.SELECT;
             MeasureMode = MeasureModes.NONE;
-            MeasureFigure = null;
+            MeasureFigureCreator = null;
         }
 
         public void CloseFigure()
         {
-            CreatingFigure.IsLoop = true;
+            FigureCreator.Figure.IsLoop = true;
 
-            CreatingFigure.EndCreate(CurrentDC);
+            FigureCreator.EndCreate(CurrentDC);
 
-            CadOpe ope = CadOpe.CreateSetCloseOpe(CurrentLayer.ID, CreatingFigure.ID, true);
+            CadOpe ope = CadOpe.CreateSetCloseOpe(CurrentLayer.ID, FigureCreator.Figure.ID, true);
             mHistoryManager.foward(ope);
 
             NextState();
@@ -536,9 +537,9 @@ namespace Plotter
 
             dc.Drawing.Draw(TempFigureList, DrawTools.PEN_TEST_FIGURE);
 
-            if (MeasureFigure != null)
+            if (MeasureFigureCreator != null)
             {
-                MeasureFigure.Draw(dc, DrawTools.PEN_MEASURE_FIGURE);
+                MeasureFigureCreator.Figure.Draw(dc, DrawTools.PEN_MEASURE_FIGURE);
             }
         }
 
@@ -605,13 +606,12 @@ namespace Plotter
             {
                 if (ContinueCreate)
                 {
-                    CadFigure.Types type = CreatingFigure.Type;
-                    CreatingFigure = null;
-                    StartCreateFigure(type);
+                    FigureCreator = null;
+                    StartCreateFigure(CreatingFigType);
                 }
                 else
                 {
-                    CreatingFigure = null;
+                    FigureCreator = null;
                     CreatingFigType = CadFigure.Types.NONE;
                     State = States.SELECT;
                     NotifyStateChange();
@@ -1139,7 +1139,7 @@ namespace Plotter
             {
                 State = States.SELECT;
                 MeasureMode = MeasureModes.NONE;
-                MeasureFigure = null;
+                MeasureFigureCreator = null;
 
                 NotifyStateChange();
             }

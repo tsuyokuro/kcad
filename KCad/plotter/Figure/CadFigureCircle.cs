@@ -6,15 +6,6 @@ namespace Plotter
 {
     public class CadFigureCircle : CadFigure
     {
-        public override CreateStates CreateState
-        {
-            get
-            {
-                CreateStates st = GetCreateState();
-                return st;
-            }
-        }
-
         public override int SegmentCount
         {
             get
@@ -26,20 +17,6 @@ namespace Plotter
         public override void InvertDir()
         {
             Normal = -Normal;
-        }
-
-        private CreateStates GetCreateState()
-        {
-            if (PointList.Count < 1)
-            {
-                return CreateStates.NOT_ENOUGH;
-            }
-            else if (PointList.Count < 2)
-            {
-                return CreateStates.WAIT_LAST_POINT;
-            }
-
-            return CreateStates.FULL;
         }
 
         public CadFigureCircle()

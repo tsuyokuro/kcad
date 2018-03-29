@@ -6,25 +6,6 @@ namespace Plotter
 {
     public class CadFigurePoint : CadFigure
     {
-        public override CreateStates CreateState
-        {
-            get
-            {
-                return GetCreateState();
-            }
-        }
-
-
-        private CreateStates GetCreateState()
-        {
-            if (PointList.Count < 1)
-            {
-                return CreateStates.NOT_ENOUGH;
-            }
-
-            return CreateStates.FULL;
-        }
-
         public CadFigurePoint()
         {
             Type = Types.POINT;

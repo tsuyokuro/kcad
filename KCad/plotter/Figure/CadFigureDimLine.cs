@@ -18,28 +18,6 @@ namespace Plotter
         private const double ARROW_LEN = 2;
         private const double ARROW_W = 1;
 
-        public override CreateStates CreateState
-        {
-            get
-            {
-                return GetCreateState();
-            }
-        }
-
-        private CreateStates GetCreateState()
-        {
-            if (PointList.Count < 2)
-            {
-                return CreateStates.NOT_ENOUGH;
-            }
-            else if (PointList.Count < 3)
-            {
-                return CreateStates.WAIT_LAST_POINT;
-            }
-
-            return CreateStates.FULL;
-        }
-
         public CadFigureDimLine()
         {
             Type = Types.DIMENTION_LINE;
