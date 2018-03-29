@@ -306,7 +306,7 @@
     <Compile Include="plotter\DrawContext\DrawTools.cs" />
     <Compile Include="plotter\Figure\CadFigure.cs" />
     <Compile Include="plotter\Assembler\CadFigureAssembler.cs" />
-    <Compile Include="plotter\Figure\CreateBehavior.cs" />
+    <Compile Include="plotter\Figure\Creator.cs" />
     <Compile Include="plotter\Assembler\CadFigureBonder.cs" />
     <Compile Include="plotter\Figure\CadFigureCircle.cs" />
     <Compile Include="plotter\Figure\CadFigurePolyLines.cs" />

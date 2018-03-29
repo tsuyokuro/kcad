@@ -8,6 +8,16 @@ namespace Plotter
     {
         public abstract class Creator
         {
+            public enum State : byte
+            {
+                NONE,
+                NOT_ENOUGH,
+                ENOUGH,
+                WAIT_LAST_POINT,
+                WAIT_NEXT_POINT,
+                FULL,
+            }
+
             public virtual CadFigure Figure
             {
                 get;
@@ -35,7 +45,7 @@ namespace Plotter
                 Figure.StartCreate(dc);
             }
 
-            public abstract CreateStates GetCreateState();
+            public abstract State GetCreateState();
 
             public static Creator Get(CadFigure fig)
             {
@@ -113,22 +123,22 @@ namespace Plotter
                 }
             }
 
-            public override CreateStates GetCreateState()
+            public override State GetCreateState()
             {
                 if (Figure.PointList.Count < 2)
                 {
-                    return CreateStates.NOT_ENOUGH;
+                    return State.NOT_ENOUGH;
                 }
                 else if (Figure.PointList.Count == 2)
                 {
-                    return CreateStates.ENOUGH;
+                    return State.ENOUGH;
                 }
                 else if (Figure.PointList.Count > 2)
                 {
-                    return CreateStates.WAIT_NEXT_POINT;
+                    return State.WAIT_NEXT_POINT;
                 }
 
-                return CreateStates.NONE;
+                return State.NONE;
             }
 
             public override void StartCreate(DrawContext dc)
@@ -193,18 +203,18 @@ namespace Plotter
                 // NOP
             }
 
-            public override CreateStates GetCreateState()
+            public override State GetCreateState()
             {
                 if (Figure.PointList.Count < 1)
                 {
-                    return CreateStates.NOT_ENOUGH;
+                    return State.NOT_ENOUGH;
                 }
                 else if (Figure.PointList.Count < 4)
                 {
-                    return CreateStates.WAIT_LAST_POINT;
+                    return State.WAIT_LAST_POINT;
                 }
 
-                return CreateStates.FULL;
+                return State.FULL;
             }
         }
 
@@ -219,18 +229,18 @@ namespace Plotter
                 Figure.Type = Types.POLY_LINES;
             }
 
-            public override CreateStates GetCreateState()
+            public override State GetCreateState()
             {
                 if (Figure.PointList.Count < 1)
                 {
-                    return CreateStates.NOT_ENOUGH;
+                    return State.NOT_ENOUGH;
                 }
                 else if (Figure.PointList.Count < 2)
                 {
-                    return CreateStates.WAIT_LAST_POINT;
+                    return State.WAIT_LAST_POINT;
                 }
 
-                return CreateStates.FULL;
+                return State.FULL;
             }
         }
 
@@ -241,18 +251,18 @@ namespace Plotter
                 Figure = fig;
             }
 
-            public override CreateStates GetCreateState()
+            public override State GetCreateState()
             {
                 if (Figure.PointList.Count < 1)
                 {
-                    return CreateStates.NOT_ENOUGH;
+                    return State.NOT_ENOUGH;
                 }
                 else if (Figure.PointList.Count < 2)
                 {
-                    return CreateStates.WAIT_LAST_POINT;
+                    return State.WAIT_LAST_POINT;
                 }
 
-                return CreateStates.FULL;
+                return State.FULL;
             }
         }
 
@@ -263,18 +273,18 @@ namespace Plotter
                 Figure = fig;
             }
 
-            public override CreateStates GetCreateState()
+            public override State GetCreateState()
             {
                 if (Figure.PointList.Count < 2)
                 {
-                    return CreateStates.NOT_ENOUGH;
+                    return State.NOT_ENOUGH;
                 }
                 else if (Figure.PointList.Count < 3)
                 {
-                    return CreateStates.WAIT_LAST_POINT;
+                    return State.WAIT_LAST_POINT;
                 }
 
-                return CreateStates.FULL;
+                return State.FULL;
             }
         }
 
@@ -285,14 +295,14 @@ namespace Plotter
                 Figure = fig;
             }
 
-            public override CreateStates GetCreateState()
+            public override State GetCreateState()
             {
                 if (Figure.PointList.Count < 1)
                 {
-                    return CreateStates.NOT_ENOUGH;
+                    return State.NOT_ENOUGH;
                 }
 
-                return CreateStates.FULL;
+                return State.FULL;
             }
         }
     }

@@ -26,16 +26,6 @@ namespace Plotter
             MESH,
             MAX,
         }
-
-        public enum CreateStates : byte
-        {
-            NONE,
-            NOT_ENOUGH,
-            ENOUGH,
-            WAIT_LAST_POINT,
-            WAIT_NEXT_POINT,
-            FULL,
-        }
         #endregion
 
         #region  "public properties"
@@ -614,7 +604,6 @@ namespace Plotter
             DebugOut.println("ID=" + ID.ToString());
             DebugOut.println("LayerID=" + LayerID.ToString());
             DebugOut.println("Type=" + Type.ToString());
-            DebugOut.println("State=" + CreateState.ToString());
 
             DebugOut.println("PointList [");
             DebugOut.Indent++;
@@ -642,14 +631,6 @@ namespace Plotter
         }
 
         #endregion
-
-        public virtual CreateStates CreateState
-        {
-            get
-            {
-                return CreateStates.NONE;
-            }
-        }
 
         public virtual void MoveSelectedPoints(DrawContext dc, CadVector delta)
         {
