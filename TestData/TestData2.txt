@@ -1,0 +1,152 @@
+{
+  "DataType": "CadObjectDB",
+  "version": "1.0.0.3",
+  "layer_id_counter": 1,
+  "fig_id_counter": 3,
+  "fig_map": [
+    {
+      "id": 1,
+      "type": 3,
+      "closed": true,
+      "locked": false,
+      "normal": {
+        "flags": 0,
+        "v": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "thickness": 0.0,
+      "vdata": {
+        "point_list": [
+          {
+            "flags": 0,
+            "v": [
+              -38.75,
+              13.25,
+              0.0
+            ]
+          },
+          {
+            "flags": 0,
+            "v": [
+              -38.75,
+              2.75,
+              0.0
+            ]
+          },
+          {
+            "flags": 0,
+            "v": [
+              -24.5,
+              2.75,
+              0.0
+            ]
+          },
+          {
+            "flags": 0,
+            "v": [
+              -24.5,
+              13.25,
+              0.0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "type": 3,
+      "closed": true,
+      "locked": false,
+      "normal": {
+        "flags": 0,
+        "v": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "thickness": 0.0,
+      "vdata": {
+        "point_list": [
+          {
+            "flags": 0,
+            "v": [
+              -14.5,
+              13.25,
+              0.0
+            ]
+          },
+          {
+            "flags": 0,
+            "v": [
+              -14.5,
+              2.75,
+              0.0
+            ]
+          },
+          {
+            "flags": 0,
+            "v": [
+              -0.5,
+              2.75,
+              0.0
+            ]
+          },
+          {
+            "flags": 0,
+            "v": [
+              -0.5,
+              13.25,
+              0.0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "type": 6,
+      "closed": false,
+      "locked": false,
+      "normal": {
+        "flags": 0,
+        "v": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "thickness": 0.0,
+      "vdata": {
+        "point_list": []
+      }
+    }
+  ],
+  "layer_map": [
+    {
+      "id": 1,
+      "name": "layer1",
+      "visible": true,
+      "locked": false,
+      "fig_id_list": [
+        3
+      ]
+    }
+  ],
+  "layer_id_list": [
+    1
+  ],
+  "current_layer_id": 1,
+  "group_info": [
+    {
+      "id": 3,
+      "child_id_list": [
+        1,
+        2
+      ]
+    }
+  ]
+}

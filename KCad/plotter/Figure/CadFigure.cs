@@ -871,7 +871,7 @@ namespace Plotter
         }
 
 
-        public virtual MpGeometricData GetMpGeometricData()
+        public virtual MpGeometricData GeometricDataToMp()
         {
             MpPolylineGeometricData g = new MpPolylineGeometricData();
             g.PointList = MpUtil.VectortListToMp(PointList);
@@ -887,7 +887,7 @@ namespace Plotter
 
             MpPolylineGeometricData g = (MpPolylineGeometricData)geo;
 
-            mPointList = MpUtil.MpToVectortList(g.PointList);
+            mPointList = MpUtil.VectortListFromMp(g.PointList);
         }
 
             

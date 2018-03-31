@@ -226,5 +226,14 @@ namespace MyCollections
 
             yield break;
         }
+
+        public List<T> ToList()
+        {
+            List<T> list = new List<T>();
+
+            list.AddRange(this);
+
+            return list;
+        }
     }
 }

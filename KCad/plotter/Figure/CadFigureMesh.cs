@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
-    class CadFigureMesh : CadFigure
+    public class CadFigureMesh : CadFigure
     {
-        private HeModel mHeModel;
+        public HeModel mHeModel;
 
-        private FlexArray<int> mEdge;
+        public FlexArray<int> mEdge;
 
         public override VectorList PointList
         {
@@ -227,6 +227,32 @@ namespace Plotter
             mPointList = mHeModel.VertexStore;
 
             mEdge = edge;
+        }
+
+
+        public override MpGeometricData GeometricDataToMp()
+        {
+            MpMeshGeometricData mpGeo = new MpMeshGeometricData();
+            mpGeo.HeModel = MpHeModel.Create(mHeModel);
+            mpGeo.Edge = mEdge.ToList();
+
+            return mpGeo;
+        }
+
+        public override void GeometricDataFromMp(MpGeometricData mpGeo)
+        {
+            if (!(mpGeo is MpMeshGeometricData))
+            {
+                return;
+            }
+
+            MpMeshGeometricData meshGeo = (MpMeshGeometricData)mpGeo;
+
+            mHeModel = meshGeo.HeModel.Restore();
+            mEdge = new FlexArray<int>();
+            mEdge.AddRange(meshGeo.Edge);
+
+            mPointList = mHeModel.VertexStore;
         }
     }
 }
