@@ -18,6 +18,15 @@ namespace TestApp02
     {
         static CadLayer getTestData_Layer(string fname)
         {
+            CadObjectDB db = getTestData(fname);
+
+            CadLayer layer = db.CurrentLayer;
+
+            return layer;
+        }
+
+        static CadObjectDB getTestData(string fname)
+        {
             StreamReader reader = new StreamReader(fname);
 
             var js = reader.ReadToEnd();
@@ -28,10 +37,9 @@ namespace TestApp02
 
             CadObjectDB db = CadJson.FromJson.DbFromJson(jo);
 
-            CadLayer layer = db.CurrentLayer;
-
-            return layer;
+            return db;
         }
+
 
         public const int TestCant = 10000;
 
@@ -174,16 +182,43 @@ namespace TestApp02
             MpFigure rmpFig = MessagePackSerializer.Deserialize<MpFigure>(bfig);
 
             CadFigure rfig = rmpFig.Restore();
+
+            string s =CadFigure.Util.DumpString(rfig, "");
+
+            Console.Write(s);
         }
+
+        static void test005()
+        {
+            CadObjectDB db = getTestData(@"..\..\..\TestData\TestData2.txt");
+
+            MpCadObjectDB mpDB = MpCadObjectDB.Create(db);
+
+            byte[] bin_db = MessagePackSerializer.Serialize(mpDB);
+
+            MpCadObjectDB rmpDB = MessagePackSerializer.Deserialize<MpCadObjectDB>(bin_db);
+
+
+            CadObjectDB rdb = rmpDB.Restore();
+
+            rdb.dump();
+        }
+
 
         static void Main(string[] args)
         {
+            DebugOut.PrintFunc = Console.Write;
+            DebugOut.PrintLnFunc = Console.WriteLine;
+            DebugOut.FormatPrintFunc = Console.Write;
+
             //test002();
             //test001();
 
             //test003();
 
-            test004();
+            //test004();
+
+            test005();
 
             Console.ReadLine();
         }

@@ -44,6 +44,145 @@ namespace Plotter.Serializer
     }
 
     [MessagePackObject]
+    public class MpCadObjectDB
+    {
+        [Key("layer_id_count")]
+        public uint LayerIdCount;
+
+        [Key("figure_id_count")]
+        public uint FigureIdCount;
+
+        [Key("fig_list")]
+        public List<MpFigure> FigureList;
+
+        [Key("layer_list")]
+        public List<MpLayer> LayerList;
+
+        [Key("layer_id")]
+        public uint CurrentLayerID;
+
+        public static MpCadObjectDB Create(CadObjectDB db)
+        {
+            MpCadObjectDB ret = new MpCadObjectDB();
+
+            ret.LayerIdCount = db.LayerIdProvider.Counter;
+            ret.FigureIdCount = db.FigIdProvider.Counter;
+
+            ret.FigureList = MpUtil.FigureMapToMp(db.FigureMap);
+
+            ret.LayerList = MpUtil.LayerListToMp(db.LayerList);
+
+            ret.CurrentLayerID = db.CurrentLayerID;
+
+            return ret;
+        }
+
+        public CadObjectDB Restore()
+        {
+            CadObjectDB ret = new CadObjectDB();
+
+            ret.LayerIdProvider.Counter = LayerIdCount;
+            ret.FigIdProvider.Counter = FigureIdCount;
+
+            // Figure map
+            List<CadFigure> figList = MpUtil.FigureListFromMp(FigureList);
+
+            var dic = new Dictionary<uint, CadFigure>();
+
+            for (int i=0; i<figList.Count; i++)
+            {
+                CadFigure fig = figList[i];
+
+                dic.Add(fig.ID, fig);
+                FigureList[i].TempFigure = fig;
+            }
+
+            ret.FigureMap = dic;
+
+
+            // Child list
+            for (int i = 0; i < figList.Count; i++)
+            {
+                MpFigure mpfig = FigureList[i];
+                SetFigChild(mpfig, dic);
+            }
+
+
+            // Layer map
+            ret.LayerList = MpUtil.LayerListFromMp(LayerList, dic);
+
+            ret.LayerMap = new Dictionary<uint, CadLayer>();
+
+            for (int i=0; i< ret.LayerList.Count; i++)
+            {
+                CadLayer layer = ret.LayerList[i];
+
+                ret.LayerMap.Add(layer.ID, layer);
+            }
+
+            ret.CurrentLayerID = CurrentLayerID;
+
+            return ret;
+        }
+
+        private void SetFigChild(MpFigure mpfig, Dictionary<uint, CadFigure> dic)
+        {
+            for (int i=0; i<mpfig.ChildIdList.Count; i++)
+            {
+                uint id = mpfig.ChildIdList[i];
+
+                mpfig.TempFigure.ChildList.Add(dic[id]);
+            }
+        }
+
+    }
+
+    [MessagePackObject]
+    public class MpLayer
+    {
+        [Key("id")]
+        public uint ID;
+
+        [Key("visible")]
+        public bool Visible;
+
+        [Key("lock")]
+        public bool Locked;
+
+        [Key("fig_id_list")]
+        public List<uint> FigureIdList;
+
+        public static MpLayer Create(CadLayer layer)
+        {
+            MpLayer ret = new MpLayer();
+
+            ret.ID = layer.ID;
+            ret.Visible = layer.Visible;
+            ret.Locked = layer.Locked;
+
+            ret.FigureIdList = MpUtil.FigureListToIdList(layer.FigureList);
+
+            return ret;
+        }
+
+        public CadLayer Restore(Dictionary<uint, CadFigure> dic)
+        {
+            CadLayer ret = new CadLayer();
+            ret.ID = ID;
+            ret.Visible = Visible;
+            ret.Locked = Locked;
+            ret.FigureList = new List<CadFigure>();
+
+            for (int i=0; i<FigureIdList.Count; i++)
+            {
+                ret.FigureList.Add(dic[FigureIdList[i]]);
+            }
+
+            return ret;
+        }
+    }
+
+    [MessagePackObject]
     public class MpFigure
     {
         [Key("id")]
@@ -64,26 +203,31 @@ namespace Plotter.Serializer
         [Key("thick")]
         public double Tickness;
 
-        [Key("children")]
+        [Key("child_list")]
         public List<MpFigure> ChildList;
 
-        [Key("child_ids")]
+        [Key("child_id_list")]
         public List<uint> ChildIdList;
 
         [Key("geo")]
         public MpGeometricData GeoData;
 
+        [IgnoreMember]
+        public CadFigure TempFigure = null;
+
         public static MpFigure Create(CadFigure fig, bool withChild = false)
         {
             MpFigure ret = new MpFigure();
 
+            ret.StoreCommon(fig);
+
             if (withChild)
             {
-                ret.StoreWithChildList(fig);
+                ret.StoreChildList(fig);
             }
             else
             {
-                ret.StoreWithChildIdList(fig);
+                ret.StoreChildIdList(fig);
             }
             return ret;
         }
@@ -99,15 +243,13 @@ namespace Plotter.Serializer
 
             GeoData = fig.GeometricDataToMp();
         }
-        public void StoreWithChildIdList(CadFigure fig)
+        public void StoreChildIdList(CadFigure fig)
         {
-            StoreCommon(fig);
             ChildIdList = MpUtil.FigureListToIdList(fig.ChildList);
         }
 
-        public void StoreWithChildList(CadFigure fig)
+        public void StoreChildList(CadFigure fig)
         {
-            StoreCommon(fig);
             ChildList = MpUtil.FigureListToMp(fig.ChildList);
         }
 
@@ -378,12 +520,48 @@ namespace Plotter.Serializer
             return ret;
         }
 
+        public static List<MpFigure> FigureMapToMp(
+            Dictionary<uint, CadFigure> figMap, bool withChild = false)
+        {
+            List<MpFigure> ret = new List<MpFigure>();
+            foreach (CadFigure fig in figMap.Values)
+            {
+                ret.Add(MpFigure.Create(fig, withChild));
+            }
+
+            return ret;
+        }
+
         public static List<MpHeFace> HeFaceListToMp(FlexArray<HeFace> list)
         {
             List<MpHeFace> ret = new List<MpHeFace>();
             for (int i = 0; i < list.Count; i++)
             {
                 ret.Add(MpHeFace.Create(list[i]));
+            }
+
+            return ret;
+        }
+
+
+        public static List<MpLayer> LayerListToMp(List<CadLayer> src)
+        {
+            List<MpLayer> ret = new List<MpLayer>();
+            for (int i = 0; i < src.Count; i++)
+            {
+                ret.Add(MpLayer.Create(src[i]));
+            }
+
+            return ret;
+        }
+
+        public static List<CadLayer> LayerListFromMp(
+            List<MpLayer> src, Dictionary<uint, CadFigure> dic)
+        {
+            List<CadLayer> ret = new List<CadLayer>();
+            for (int i = 0; i < src.Count; i++)
+            {
+                ret.Add(src[i].Restore(dic));
             }
 
             return ret;

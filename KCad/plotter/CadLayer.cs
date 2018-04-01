@@ -76,6 +76,10 @@ namespace Plotter
             {
                 return mFigureList;
             }
+            set
+            {
+                mFigureList = value;
+            }
         }
 
 

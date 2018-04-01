@@ -1,4 +1,5 @@
 ﻿using KCad;
+using MessagePack;
 using Newtonsoft.Json.Linq;
 using Plotter.Serializer;
 using System;
@@ -958,7 +959,7 @@ namespace Plotter
 
         #endregion
 
-        #region "File access"
+        #region "Json file access"
         public void SaveToJsonFile(String fname)
         {
             StreamWriter writer = new StreamWriter(fname);
@@ -1037,6 +1038,48 @@ namespace Plotter
 
             CadObjectDB db = CadJson.FromJson.DbFromJson(jo);
             return db;
+        }
+        #endregion
+
+        #region "MessagePack file access"
+        public void SaveToMsgPackFile(String fname)
+        {
+
+            MpCadObjectDB mpdb = MpCadObjectDB.Create(DB);
+
+            byte[] bin_db = MessagePackSerializer.Serialize(mpdb);
+
+            FileStream fs = new FileStream(fname, FileMode.Create, FileAccess.Write);
+            fs.Write(bin_db, 0, bin_db.Length);
+            fs.Close();
+        }
+
+        public void LoadFromMsgPackFile(String fname)
+        {
+            FileStream fs = new FileStream(fname, FileMode.Open, FileAccess.Read);
+
+            byte[] bin = new byte[fs.Length];
+
+            fs.Read(bin, 0, bin.Length);
+
+            fs.Close();
+
+            MpCadObjectDB mpdb = MessagePackSerializer.Deserialize<MpCadObjectDB>(bin);
+
+            if (mpdb == null)
+            {
+                return;
+            }
+
+            mDB = mpdb.Restore();
+
+            mHistoryManager = new HistoryManager(mDB);
+
+            NotifyLayerInfo();
+
+            UpdateTreeView(true);
+
+            Redraw(CurrentDC);
         }
         #endregion
 

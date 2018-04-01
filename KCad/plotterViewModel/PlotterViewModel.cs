@@ -932,13 +932,27 @@ namespace Plotter
         #region File
         private void SaveFile(String fname)
         {
-            mController.SaveToJsonFile(fname);
+            if (fname.EndsWith(".txt"))
+            {
+                mController.SaveToJsonFile(fname);
+            }
+            else
+            {
+                mController.SaveToMsgPackFile(fname);
+            }
         }
 
         private void LoadFile(String fname)
         {
-            mController.LoadFromJsonFile(fname);
-            //mController.LoadFromJsonFileAsync(fname);
+            if (fname.EndsWith(".txt"))
+            {
+                mController.LoadFromJsonFile(fname);
+                //mController.LoadFromJsonFileAsync(fname);
+            }
+            else
+            {
+                mController.LoadFromMsgPackFile(fname);
+            }
         }
         #endregion
 

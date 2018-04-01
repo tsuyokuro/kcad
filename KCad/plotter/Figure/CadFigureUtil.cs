@@ -116,6 +116,34 @@ namespace Plotter
             {
                 return CadUtil.RepresentativeNormal(fig.mPointList);
             }
+
+            public static string DumpString(CadFigure fig, string margin)
+            {
+                string s="";
+
+                s += margin + "ID:" + fig.ID.ToString() + "\n";
+                s += margin + "Point:[\n";
+                for (int i=0; i<fig.PointList.Count; i++)
+                {
+                    CadVector v = fig.PointList[i];
+                    s += margin + "  " + string.Format("{0},{1},{2}\n", v.x, v.y, v.z);
+                }
+                s += margin + "]\n";
+
+                s += margin + "Children:[\n";
+                if (fig.ChildList != null)
+                {
+                    for (int i = 0; i < fig.ChildList.Count; i++)
+                    {
+                        CadFigure c = fig.ChildList[i];
+                        s += DumpString(c, margin + "  ");
+                    }
+                }
+
+                s += margin + "]\n";
+
+                return s;
+            }
         }
     }
 }
