@@ -132,6 +132,7 @@ namespace Plotter.Serializer
                 uint id = mpfig.ChildIdList[i];
 
                 mpfig.TempFigure.ChildList.Add(dic[id]);
+                dic[id].Parent = mpfig.TempFigure;
             }
         }
 
@@ -266,6 +267,12 @@ namespace Plotter.Serializer
             if (ChildList != null)
             {
                 fig.ChildList = MpUtil.FigureListFromMp(ChildList);
+
+                for (int i=0; i< fig.ChildList.Count; i++)
+                {
+                    CadFigure c = fig.ChildList[i];
+                    c.Parent = fig;
+                }
             }
 
             fig.GeometricDataFromMp(GeoData);

@@ -231,11 +231,27 @@ namespace Plotter
             );
         }
 
+        public List<CadFigure> GetRootFigList(List<CadFigure> srcList)
+        {
+            HashSet<CadFigure> set = new HashSet<CadFigure>();
+
+            foreach (CadFigure fig in srcList)
+            {
+                set.Add(CadFigure.Util.GetRootFig(fig));
+            }
+
+            List<CadFigure> ret = new List<CadFigure>();
+
+            ret.AddRange(set);
+
+            return ret;
+        }
+
         public void Group()
         {
-            List<uint> idlist = Controller.GetSelectedFigIDList();
+            List<CadFigure> list = GetRootFigList(Controller.GetSelectedFigList());
 
-            if (idlist.Count < 2)
+            if (list.Count < 2)
             {
                 Controller.InteractOut.println(
                     global::KCad.Properties.Resources.error_select_2_or_more
@@ -250,23 +266,16 @@ namespace Plotter
 
             CadOpe ope;
 
-            foreach (uint id in idlist)
+            foreach (CadFigure fig in list)
             {
-                CadFigure fig = Controller.DB.GetFigure(id);
-
-                if (fig == null)
-                {
-                    continue;
-                }
-
-                int idx = Controller.CurrentLayer.GetFigureIndex(id);
+                int idx = Controller.CurrentLayer.GetFigureIndex(fig.ID);
 
                 if (idx < 0)
                 {
                     continue;
                 }
 
-                ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, id);
+                ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, fig.ID);
 
                 opeRoot.Add(ope);
 

@@ -117,6 +117,19 @@ namespace Plotter
                 return CadUtil.RepresentativeNormal(fig.mPointList);
             }
 
+            public static CadFigure GetRootFig(CadFigure src)
+            {
+                while (true)
+                {
+                    if (src.Parent == null)
+                    {
+                        return src;
+                    }
+
+                    src = src.Parent;
+                }
+            }
+
             public static string DumpString(CadFigure fig, string margin)
             {
                 string s="";
