@@ -41,7 +41,7 @@ namespace TestApp02
         }
 
 
-        public const int TestCant = 10000;
+        public const int TestCant = 5000;
 
         static void test001()
         {
@@ -52,6 +52,7 @@ namespace TestApp02
 
 
             byte[] bfig = null;
+            bfig = MessagePackSerializer.Serialize(mpFig);
 
             Stopwatch sw = new Stopwatch();
 
@@ -71,6 +72,7 @@ namespace TestApp02
             //Console.WriteLine(js);
 
             MpFigure rmpFig = null;
+            rmpFig = MessagePackSerializer.Deserialize<MpFigure>(bfig);
 
             sw.Start();
 
@@ -204,6 +206,23 @@ namespace TestApp02
             rdb.dump();
         }
 
+        static void test006()
+        {
+            CadObjectDB db = getTestData(@"..\..\..\TestData\TestData2.txt");
+
+            MpCadFile mpFile = MpCadFile.Create(db);
+
+            mpFile.FileType = "KCad beta";
+
+            byte[] bin_data = MessagePackSerializer.Serialize(mpFile);
+
+            MpCadFile rmpFile = MessagePackSerializer.Deserialize<MpCadFile>(bin_data);
+
+
+            CadObjectDB rdb = rmpFile.GetDB();
+
+            rdb.dump();
+        }
 
         static void Main(string[] args)
         {
@@ -218,7 +237,9 @@ namespace TestApp02
 
             //test004();
 
-            test005();
+            //test005();
+
+            test006();
 
             Console.ReadLine();
         }

@@ -1044,13 +1044,12 @@ namespace Plotter
         #region "MessagePack file access"
         public void SaveToMsgPackFile(String fname)
         {
+            MpCadFile file = MpCadFile.Create(DB);
 
-            MpCadObjectDB mpdb = MpCadObjectDB.Create(DB);
-
-            byte[] bin_db = MessagePackSerializer.Serialize(mpdb);
+            byte[] bin_data = MessagePackSerializer.Serialize(file);
 
             FileStream fs = new FileStream(fname, FileMode.Create, FileAccess.Write);
-            fs.Write(bin_db, 0, bin_db.Length);
+            fs.Write(bin_data, 0, bin_data.Length);
             fs.Close();
         }
 
@@ -1064,14 +1063,14 @@ namespace Plotter
 
             fs.Close();
 
-            MpCadObjectDB mpdb = MessagePackSerializer.Deserialize<MpCadObjectDB>(bin);
+            MpCadFile file = MessagePackSerializer.Deserialize<MpCadFile>(bin);
 
-            if (mpdb == null)
+            if (file == null)
             {
                 return;
             }
 
-            mDB = mpdb.Restore();
+            mDB = file.GetDB();
 
             mHistoryManager = new HistoryManager(mDB);
 

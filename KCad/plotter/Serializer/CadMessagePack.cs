@@ -44,6 +44,42 @@ namespace Plotter.Serializer
     }
 
     [MessagePackObject]
+    public class MpCadFile
+    {
+        [Key("type")]
+        public string FileType = "KCAD";
+
+        [Key("version")]
+        public string Version = "1.0.0.0";
+
+        [Key("db")]
+        public MpCadObjectDB MpDB;
+
+        [IgnoreMember]
+        CadObjectDB DB = null;
+
+        public static MpCadFile Create(CadObjectDB db)
+        {
+            MpCadFile ret = new MpCadFile();
+
+            ret.MpDB = MpCadObjectDB.Create(db);
+
+            return ret;
+        }
+
+        public CadObjectDB GetDB()
+        {
+            if (DB == null)
+            {
+                DB = MpDB.Restore();
+            }
+
+            return DB;
+        }
+    }
+
+
+    [MessagePackObject]
     public class MpCadObjectDB
     {
         [Key("layer_id_count")]
