@@ -201,7 +201,7 @@ namespace Plotter
             }
         }
 
-        private List<uint> EditIdList = new List<uint>();
+        private List<CadFigure> EditIdList = new List<CadFigure>();
 
 
         public bool ContinueCreate { set; get; } = false;
@@ -684,11 +684,10 @@ namespace Plotter
 
         public void StartEdit()
         {
-            EditIdList = GetSelectedFigIDList();
+            EditIdList = GetSelectedFigList();
 
-            foreach (uint id in EditIdList)
+            foreach (CadFigure fig in EditIdList)
             {
-                CadFigure fig = mDB.GetFigure(id);
                 if (fig != null)
                 {
                     fig.StartEdit();
@@ -700,11 +699,8 @@ namespace Plotter
         {
             DiffDataList ddl = new DiffDataList();
 
-            List<uint> figIDList = EditIdList;
-
-            foreach (uint id in figIDList)
+            foreach (CadFigure fig in EditIdList)
             {
-                CadFigure fig = mDB.GetFigure(id);
                 if (fig != null)
                 {
                     DiffData dd = fig.EndEdit();
@@ -736,11 +732,8 @@ namespace Plotter
 
         public void CancelEdit()
         {
-            EditIdList = GetSelectedFigIDList();
-
-            foreach (uint id in EditIdList)
+            foreach (CadFigure fig in EditIdList)
             {
-                CadFigure fig = mDB.GetFigure(id);
                 if (fig != null)
                 {
                     fig.CancelEdit();

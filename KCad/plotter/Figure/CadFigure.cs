@@ -455,7 +455,7 @@ namespace Plotter
             }
 
             mStoreList = new VectorList();
-            mPointList.ForEach(a => mStoreList.Add(a));
+            mStoreList.AddRange(mPointList);
         }
 
         public virtual DiffData EndEdit()
