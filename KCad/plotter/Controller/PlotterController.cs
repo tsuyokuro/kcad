@@ -1021,7 +1021,7 @@ namespace Plotter
             List<CadFigure> figList = MpUtil.FigureListFromMp(mpfigList);
 
 
-
+            // Pase figures in fig list
             CadVector pp = LastDownPoint;
 
             MinMax3D mm3d = CadUtil.GetFigureMinMaxIncludeChild(figList);

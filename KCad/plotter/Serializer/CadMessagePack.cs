@@ -225,25 +225,25 @@ namespace Plotter.Serializer
         [Key("id")]
         public uint ID;
 
-        [Key("type")]
+        [Key("typ")]    // Type
         public byte Type;
 
-        [Key("lock")]
+        [Key("lck")]    // Lock
         public bool Locked;
 
-        [Key("loop")]
+        [Key("lop")]    // loop
         public bool IsLoop;
 
-        [Key("n")]
+        [Key("nrm")]    // Normal
         public MpVector Normal;
 
-        [Key("thick")]
+        [Key("tck")]    // Tickness
         public double Tickness;
 
-        [Key("child_list")]
+        [Key("cl")]     // Child list
         public List<MpFigure> ChildList;
 
-        [Key("child_id_list")]
+        [Key("cil")]    // Child id list
         public List<uint> ChildIdList;
 
         [Key("geo")]
