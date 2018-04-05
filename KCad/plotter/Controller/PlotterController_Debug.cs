@@ -44,8 +44,6 @@ namespace Plotter
 
             CadVector pt = LastDownPoint;
 
-            DebugOut dout = new DebugOut();
-
             bool ret = CadUtil.IsPointInTriangle(pt, fig);
 
             DebugOut.println("ret=" + ret);
@@ -537,7 +535,6 @@ namespace Plotter
 
             else if (s == "dump snap")
             {
-                DebugOut dout = new DebugOut();
                 DebugOut.println("Snap range {");
                 DebugOut.Indent++;
                 DebugOut.println("Point:" + PointSnapRange.ToString());

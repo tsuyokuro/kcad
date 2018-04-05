@@ -1,4 +1,7 @@
-﻿using KCad;
+﻿//#define USE_DIFF
+//#define COPY_AS_JSON
+
+using KCad;
 using MessagePack;
 using Newtonsoft.Json.Linq;
 using Plotter.Serializer;
@@ -682,9 +685,15 @@ namespace Plotter
             return list;
         }
 
+        private CadOpeFigureSSList mSSList;
+
         public void StartEdit()
         {
             EditIdList = GetSelectedFigList();
+
+            mSSList = new CadOpeFigureSSList();
+
+            mSSList.Start(EditIdList);
 
             foreach (CadFigure fig in EditIdList)
             {
@@ -697,13 +706,43 @@ namespace Plotter
 
         public void EndEdit()
         {
+#if USE_DIFF
+            EndEditWithDiff();
+            return;
+#else
+            mSSList.End(DB);
+            mHistoryManager.foward(mSSList);
+
+            mSSList = null;
+
+            foreach (CadFigure fig in EditIdList)
+            {
+                if (fig != null)
+                {
+                    fig.EndEdit();
+                }
+            }
+
+            UpdateSelectItemPoints();
+
+            NotifySelectList();
+#endif
+        }
+
+        // もう使わない
+        // MessagePackSerializerによるUndo/Redoに不具合があった場合
+        // USE_DIFFを有効にして検証する
+        // 
+#if USE_DIFF
+        private void EndEditWithDiff()
+        {
             DiffDataList ddl = new DiffDataList();
 
             foreach (CadFigure fig in EditIdList)
             {
                 if (fig != null)
                 {
-                    DiffData dd = fig.EndEdit();
+                    DiffData dd = fig.EndEditWithDiff();
 
                     if (dd != null)
                     {
@@ -729,6 +768,7 @@ namespace Plotter
 
             NotifySelectList();
         }
+#endif
 
         public void CancelEdit()
         {
@@ -843,17 +883,6 @@ namespace Plotter
 
         #endregion
 
-        #region "Copy and paste"
-        public void Copy()
-        {
-            CopyFigures();
-        }
-
-        public void Paste()
-        {
-            PasteFigures();
-        }
-
         private List<CadFigure> GetSelectedFigureList()
         {
             List<CadFigure> figList = new List<CadFigure>();
@@ -872,7 +901,20 @@ namespace Plotter
             return figList;
         }
 
-        public void CopyFigures()
+        #region "Copy and paste"
+
+#if COPY_AS_JSON
+        public void Copy()
+        {
+            CopyFiguresAsJson();
+        }
+
+        public void Paste()
+        {
+            PasteFiguresAsJson();
+        }
+
+        public void CopyFiguresAsJson()
         {
             var temp = GetSelectedFigureList();
 
@@ -895,11 +937,11 @@ namespace Plotter
 
             string s = jo.ToString();
 
-            Clipboard.SetData("List.CadFiguer", s);
+            Clipboard.SetData(CadClipBoard.TypeNameJson, s);
             //Clipboard.SetText(s);
         }
 
-        public void PasteFigures()
+        public void PasteFiguresAsJson()
         {
             if (!Clipboard.ContainsData("List.CadFiguer"))
             {
@@ -908,7 +950,7 @@ namespace Plotter
 
             CadVector pp = LastDownPoint;
                                 
-            string s = (string)Clipboard.GetData("List.CadFiguer");
+            string s = (string)Clipboard.GetData(CadClipBoard.TypeNameJson);
 
             JObject jo = JObject.Parse(s);
 
@@ -936,6 +978,73 @@ namespace Plotter
             UpdateTreeView(true);
         }
 
+#else // Not defined COPY_AS_JSON
+
+        public void Copy()
+        {
+            CopyFiguresAsBin();
+        }
+
+        public void Paste()
+        {
+            PasteFiguresAsBin();
+        }
+
+        public void CopyFiguresAsBin()
+        {
+            var temp = GetSelectedFigureList();
+
+            var figList = CadFigure.Util.GetRootFigList(temp);
+
+            if (figList.Count == 0)
+            {
+                return;
+            }
+
+            List<MpFigure> mpfigList = MpUtil.FigureListToMp(figList, true);
+
+            byte[] bin = MessagePackSerializer.Serialize(mpfigList);
+
+            Clipboard.SetData(CadClipBoard.TypeNameBin, bin);
+        }
+
+        public void PasteFiguresAsBin()
+        {
+            if (!Clipboard.ContainsData(CadClipBoard.TypeNameBin))
+            {
+                return;
+            }
+            byte[] bin = (byte[])Clipboard.GetData(CadClipBoard.TypeNameBin);
+
+            List<MpFigure> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure>>(bin);
+
+            List<CadFigure> figList = MpUtil.FigureListFromMp(mpfigList);
+
+
+
+            CadVector pp = LastDownPoint;
+
+            MinMax3D mm3d = CadUtil.GetFigureMinMaxIncludeChild(figList);
+
+            CadVector d = pp - mm3d.GetMinAsVector();
+
+            CadOpeList opeRoot = CadOpe.CreateListOpe();
+
+            foreach (CadFigure fig in figList)
+            {
+                PasteFigure(fig, d);
+                CurrentLayer.AddFigure(fig);    // 子ObjectはLayerに追加しない
+
+                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, fig.ID);
+                opeRoot.OpeList.Add(ope);
+            }
+
+            mHistoryManager.foward(opeRoot);
+
+            UpdateTreeView(true);
+        }
+#endif
+
         private void PasteFigure(CadFigure fig, CadVector delta)
         {
             fig.MoveAllPoints(CurrentDC, delta);
@@ -950,9 +1059,9 @@ namespace Plotter
             }
         }
 
-        #endregion
+#endregion
 
-        #region "Json file access"
+#region "Json file access"
         public void SaveToJsonFile(String fname)
         {
             StreamWriter writer = new StreamWriter(fname);
@@ -1032,9 +1141,9 @@ namespace Plotter
             CadObjectDB db = CadJson.FromJson.DbFromJson(jo);
             return db;
         }
-        #endregion
+#endregion
 
-        #region "MessagePack file access"
+#region "MessagePack file access"
         public void SaveToMsgPackFile(String fname)
         {
             MpCadFile file = MpCadFile.Create(DB);
@@ -1073,7 +1182,7 @@ namespace Plotter
 
             Redraw(CurrentDC);
         }
-        #endregion
+#endregion
 
         public void ClearLayer(uint layerID)
         {

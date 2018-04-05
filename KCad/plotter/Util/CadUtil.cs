@@ -1489,17 +1489,5 @@ namespace Plotter
             DebugOut.Indent--;
             DebugOut.println("}");
         }
-
-        public static void Dump(DebugOut dout, CadVector v, string prefix)
-        {
-            DebugOut.print(prefix);
-            DebugOut.println("{");
-            DebugOut.Indent++;
-            DebugOut.println("x:" + v.x.ToString());
-            DebugOut.println("y:" + v.y.ToString());
-            DebugOut.println("z:" + v.z.ToString());
-            DebugOut.Indent--;
-            DebugOut.println("}");
-        }
     }
 }

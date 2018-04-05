@@ -52,7 +52,13 @@ namespace Plotter
         }
     }
 
-    public class DebugOut
+    public static class CadClipBoard
+    {
+        public const string TypeNameJson = "List.CadFiguer.Json";
+        public const string TypeNameBin = "List.CadFiguer.bin";
+    }
+
+    public static class DebugOut
     {
         public static ulong PutCount = 0;
 

@@ -157,6 +157,22 @@ namespace Plotter
 
                 return s;
             }
+
+            public static List<CadFigure> GetRootFigList(List<CadFigure> srcList)
+            {
+                HashSet<CadFigure> set = new HashSet<CadFigure>();
+
+                foreach (CadFigure fig in srcList)
+                {
+                    set.Add(CadFigure.Util.GetRootFig(fig));
+                }
+
+                List<CadFigure> ret = new List<CadFigure>();
+
+                ret.AddRange(set);
+
+                return ret;
+            }
         }
     }
 }

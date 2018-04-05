@@ -458,7 +458,7 @@ namespace Plotter
             mStoreList.AddRange(mPointList);
         }
 
-        public virtual DiffData EndEdit()
+        public virtual DiffData EndEditWithDiff()
         {
             if (Locked) return null;
 
@@ -466,6 +466,15 @@ namespace Plotter
             DiffData diff = DiffData.create(this);
             mStoreList = null;
             return diff;
+        }
+
+        public virtual void EndEdit()
+        {
+            if (mStoreList != null)
+            {
+                mStoreList.Clear();
+                mStoreList = null;
+            }
         }
 
         public virtual void CancelEdit()

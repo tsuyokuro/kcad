@@ -290,10 +290,8 @@ namespace Plotter.Serializer
             ChildList = MpUtil.FigureListToMp(fig.ChildList);
         }
 
-        public CadFigure Restore()
+        public void RestoreTo(CadFigure fig)
         {
-            CadFigure fig = CadFigure.Create((CadFigure.Types)Type);
-
             fig.ID = ID;
             fig.Locked = Locked;
             fig.IsLoop = IsLoop;
@@ -304,7 +302,7 @@ namespace Plotter.Serializer
             {
                 fig.ChildList = MpUtil.FigureListFromMp(ChildList);
 
-                for (int i=0; i< fig.ChildList.Count; i++)
+                for (int i = 0; i < fig.ChildList.Count; i++)
                 {
                     CadFigure c = fig.ChildList[i];
                     c.Parent = fig;
@@ -312,6 +310,13 @@ namespace Plotter.Serializer
             }
 
             fig.GeometricDataFromMp(GeoData);
+        }
+
+        public CadFigure Restore()
+        {
+            CadFigure fig = CadFigure.Create((CadFigure.Types)Type);
+
+            RestoreTo(fig);
 
             return fig;
         }

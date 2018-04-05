@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MessagePack;
+using Plotter.Serializer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -102,6 +104,110 @@ namespace Plotter
         public override void Redo(CadObjectDB db)
         {
             Diffs.redo(db);
+        }
+    }
+
+    public class CadOpeFigureSS : CadOpe
+    {
+        public byte[] Before;
+        public byte[] After;
+
+        public uint FigureID = 0;
+
+        public CadOpeFigureSS()
+        {
+
+        }
+
+        public void Start(CadFigure fig)
+        {
+            MpFigure mpfig = MpFigure.Create(fig);
+            Before = LZ4MessagePackSerializer.Serialize(mpfig);
+
+            FigureID = fig.ID;
+        }
+
+        public void End(CadFigure fig)
+        {
+            MpFigure mpfig = MpFigure.Create(fig);
+            After = LZ4MessagePackSerializer.Serialize(mpfig);
+        }
+
+        public override void Undo(CadObjectDB db)
+        {
+            MpFigure mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure>(Before);
+
+            CadFigure fig = db.GetFigure(mpfig.ID);
+
+            mpfig.RestoreTo(fig);
+
+            SetChildren(fig, mpfig.ChildIdList, db);
+        }
+
+        public override void Redo(CadObjectDB db)
+        {
+            MpFigure mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure>(After);
+
+            CadFigure fig = db.GetFigure(mpfig.ID);
+
+            mpfig.RestoreTo(fig);
+
+            SetChildren(fig, mpfig.ChildIdList, db);
+        }
+
+        private void SetChildren(CadFigure fig, List<uint> idList, CadObjectDB db)
+        {
+            for (int i=0; i<idList.Count; i++)
+            {
+                fig.AddChild(db.GetFigure(idList[i]));
+            }
+        }
+    }
+
+    public class CadOpeFigureSSList : CadOpe
+    {
+        public List<CadOpeFigureSS> SSList = new List<CadOpeFigureSS>();
+
+        public CadOpeFigureSSList()
+        {
+
+        }
+
+        public void Start(List<CadFigure> figList)
+        {
+            for (int i=0; i<figList.Count; i++)
+            {
+                CadOpeFigureSS ss = new CadOpeFigureSS();
+
+                ss.Start(figList[i]);
+
+                SSList.Add(ss);
+            }
+        }
+
+        public void End(CadObjectDB db)
+        {
+            for (int i = 0; i<SSList.Count; i++)
+            {
+                CadOpeFigureSS ss = SSList[i];
+                ss.End(db.GetFigure(ss.FigureID));
+            }
+        }
+
+        public override void Undo(CadObjectDB db)
+        {
+            for (int i=0; i< SSList.Count; i++)
+            {
+                SSList[i].Undo(db);
+            }
+        }
+
+        public override void Redo(CadObjectDB db)
+        {
+            for (int i = 0; i < SSList.Count; i++)
+            {
+                SSList[i].Redo(db);
+            }
         }
     }
 
