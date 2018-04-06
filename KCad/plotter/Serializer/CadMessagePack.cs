@@ -3,6 +3,7 @@ using MessagePack;
 using MyCollections;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,24 +44,66 @@ namespace Plotter.Serializer
         }
     }
 
-    [MessagePackObject]
     public class MpCadFile
     {
-        [Key("type")]
-        public string FileType = "KCAD";
+        private static byte[] Sign;
+        private static byte[] CurrentVersion = { 1, 0, 0, 0 };
 
-        [Key("version")]
-        public string Version = "1.0.0.0";
+        static MpCadFile()
+        {
+            Sign = Encoding.ASCII.GetBytes("KCAD_BIN");
+        }
 
+        public static byte[] Load(string fname)
+        {
+            FileStream fs = new FileStream(fname, FileMode.Open, FileAccess.Read);
+
+            byte[] sig = new byte[Sign.Length];
+
+            fs.Read(sig,0, Sign.Length);
+
+            if (!Sign.SequenceEqual<byte>(sig))
+            {
+                fs.Close();
+                return null;
+            }
+
+            fs.Read(CurrentVersion, 0, CurrentVersion.Length);
+
+            byte[] data = new byte[fs.Length - Sign.Length - CurrentVersion.Length];
+
+            fs.Read(data, 0, data.Length);
+
+            fs.Close();
+
+            return data;
+        }
+
+        public static void Save(string fname, byte[] data)
+        {
+            FileStream fs = new FileStream(fname, FileMode.Create, FileAccess.Write);
+
+            fs.Write(Sign, 0, Sign.Length);
+            fs.Write(CurrentVersion, 0, CurrentVersion.Length);
+            fs.Write(data, 0, data.Length);
+
+            fs.Close();
+        }
+    }
+
+
+    [MessagePackObject]
+    public class MpCadData
+    {
         [Key("db")]
         public MpCadObjectDB MpDB;
 
         [IgnoreMember]
         CadObjectDB DB = null;
 
-        public static MpCadFile Create(CadObjectDB db)
+        public static MpCadData Create(CadObjectDB db)
         {
-            MpCadFile ret = new MpCadFile();
+            MpCadData ret = new MpCadData();
 
             ret.MpDB = MpCadObjectDB.Create(db);
 
@@ -82,19 +125,19 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpCadObjectDB
     {
-        [Key("layer_id_count")]
+        [Key("layerIdC")]
         public uint LayerIdCount;
 
-        [Key("figure_id_count")]
+        [Key("figIdC")]
         public uint FigureIdCount;
 
-        [Key("fig_list")]
+        [Key("figL")]
         public List<MpFigure> FigureList;
 
-        [Key("layer_list")]
+        [Key("layerL")]
         public List<MpLayer> LayerList;
 
-        [Key("layer_id")]
+        [Key("layerID")]
         public uint CurrentLayerID;
 
         public static MpCadObjectDB Create(CadObjectDB db)
@@ -180,13 +223,13 @@ namespace Plotter.Serializer
         [Key("id")]
         public uint ID;
 
-        [Key("visible")]
+        [Key("vis")]
         public bool Visible;
 
-        [Key("lock")]
+        [Key("lck")]
         public bool Locked;
 
-        [Key("fig_id_list")]
+        [Key("figIL")]
         public List<uint> FigureIdList;
 
         public static MpLayer Create(CadLayer layer)
@@ -225,25 +268,25 @@ namespace Plotter.Serializer
         [Key("id")]
         public uint ID;
 
-        [Key("typ")]    // Type
+        [Key("typ")]
         public byte Type;
 
-        [Key("lck")]    // Lock
+        [Key("lck")]
         public bool Locked;
 
-        [Key("lop")]    // loop
+        [Key("lop")]
         public bool IsLoop;
 
-        [Key("nrm")]    // Normal
+        [Key("nrm")]
         public MpVector Normal;
 
-        [Key("tck")]    // Tickness
+        [Key("tck")]
         public double Tickness;
 
-        [Key("cl")]     // Child list
+        [Key("cL")]
         public List<MpFigure> ChildList;
 
-        [Key("cil")]    // Child id list
+        [Key("cIL")]
         public List<uint> ChildIdList;
 
         [Key("geo")]
@@ -322,16 +365,16 @@ namespace Plotter.Serializer
         }
     }
 
-    [MessagePack.Union(0, typeof(MpPolylineGeometricData))]
+    [MessagePack.Union(0, typeof(MpSimpleGeometricData))]
     [MessagePack.Union(1, typeof(MpMeshGeometricData))]
     public interface MpGeometricData
     {
     }
 
     [MessagePackObject]
-    public class MpPolylineGeometricData : MpGeometricData
+    public class MpSimpleGeometricData : MpGeometricData
     {
-        [Key("point_list")]
+        [Key("ptL")]
         public List<MpVector> PointList;
     }
 
@@ -339,7 +382,7 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpMeshGeometricData : MpGeometricData
     {
-        [Key("he_model")]
+        [Key("heModel")]
         public MpHeModel HeModel;
 
         [Key("edge")]
@@ -349,20 +392,20 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpHeModel
     {
-        [Key("vertex_store")]
+        [Key("vStr")]
         public List<MpVector> VertexStore;
 
-        [Key("normal_store")]
+        [Key("nStr")]
         public List<MpVector> NormalStore;
 
-        [Key("face_store")]
+        [Key("fStr")]
         public List<MpHeFace> FaceStore;
 
 
-        [Key("id_count")]
+        [Key("idC")]
         public uint HeIdCount;
 
-        [Key("he_list")]
+        [Key("heL")]
         public List<MpHalfEdge> HalfEdgeList;
 
         public static MpHeModel Create(HeModel model)
@@ -427,7 +470,7 @@ namespace Plotter.Serializer
     {
         [Key("head")]
         public uint HeadID;
-        [Key("normal")]
+        [Key("nrm")]
         public int Normal = HeModel.INVALID_INDEX;
 
         public static MpHeFace Create(HeFace face)
@@ -463,7 +506,7 @@ namespace Plotter.Serializer
         [Key("face")]
         public int Face;
 
-        [Key("normal")]
+        [Key("nrm")]
         public int Normal;
 
         // Links
