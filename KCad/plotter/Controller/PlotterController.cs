@@ -1006,6 +1006,10 @@ namespace Plotter
             byte[] bin = MessagePackSerializer.Serialize(mpfigList);
 
             Clipboard.SetData(CadClipBoard.TypeNameBin, bin);
+
+            // For debug
+            string js = MessagePackSerializer.ToJson(bin);
+            Clipboard.SetText(js);
         }
 
         public void PasteFiguresAsBin()

@@ -401,12 +401,15 @@ namespace Plotter.Serializer
         [Key("fStr")]
         public List<MpHeFace> FaceStore;
 
-
-        [Key("idC")]
-        public uint HeIdCount;
-
         [Key("heL")]
         public List<MpHalfEdge> HalfEdgeList;
+
+        [Key("heIdC")]
+        public uint HeIdCount;
+
+        [Key("fcIdC")]
+        public uint FaceIdCount;
+
 
         public static MpHeModel Create(HeModel model)
         {
@@ -419,6 +422,8 @@ namespace Plotter.Serializer
             ret.FaceStore = MpUtil.HeFaceListToMp(model.FaceStore);
 
             ret.HeIdCount = model.HeIdProvider.Counter;
+
+            ret.FaceIdCount = model.FaceIdProvider.Counter;
 
             List<HalfEdge> heList = model.GetHalfEdgeList();
 
@@ -461,6 +466,8 @@ namespace Plotter.Serializer
 
             ret.HeIdProvider.Counter = HeIdCount;
 
+            ret.FaceIdProvider.Counter = FaceIdCount;
+
             return ret;
         }
     }
@@ -468,14 +475,19 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpHeFace
     {
+        [Key("ID")]
+        public uint ID;
+
         [Key("head")]
         public uint HeadID;
+
         [Key("nrm")]
         public int Normal = HeModel.INVALID_INDEX;
 
         public static MpHeFace Create(HeFace face)
         {
             MpHeFace ret = new MpHeFace();
+            ret.ID = face.ID;
             ret.HeadID = face.Head.ID;
             ret.Normal = face.Normal;
 
@@ -487,6 +499,8 @@ namespace Plotter.Serializer
             HalfEdge he = dic[HeadID];
 
             HeFace ret = new HeFace(he);
+
+            ret.ID = ID;
 
             ret.Normal = Normal;
 

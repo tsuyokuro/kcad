@@ -86,7 +86,7 @@ namespace Plotter
             BrushColorTbl = new Color[DrawTools.BRUSH_TBL_SIZE];
 
             BrushColorTbl[DrawTools.BRUSH_DEFAULT] = Color.FromArgb(255, 255, 255);
-            BrushColorTbl[DrawTools.BRUSH_BACKGROUND] = Color.FromArgb(0x1e, 0x1e, 0x1e);
+            BrushColorTbl[DrawTools.BRUSH_BACKGROUND] = Color.FromArgb(0x8, 0x8, 0x8);
             BrushColorTbl[DrawTools.BRUSH_TEXT] = Color.White;
             BrushColorTbl[DrawTools.BRUSH_TRANSPARENT] = Color.FromArgb(0,0,0,0);
         }

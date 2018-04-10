@@ -9,6 +9,7 @@
         
         mc:Ignorable="d"
         Title="KCad" Height="732" Width="1177.667"
+        Background="Black"
         >
     <!--<WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"

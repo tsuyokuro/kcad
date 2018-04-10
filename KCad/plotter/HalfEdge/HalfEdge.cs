@@ -3,12 +3,15 @@ using MyCollections;
 using Newtonsoft.Json.Linq;
 using Plotter;
 using Plotter.Serializer;
+using System;
 using System.Collections.Generic;
 
 namespace HalfEdgeNS
 {
     public class HeFace
     {
+        public uint ID;
+
         public HalfEdge Head; // HalfEdge link listの先頭
 
         public int Normal = HeModel.INVALID_INDEX;
@@ -46,6 +49,8 @@ namespace HalfEdgeNS
         public const int INVALID_INDEX = -1;
 
         public IdProvider HeIdProvider = new IdProvider();
+
+        public IdProvider FaceIdProvider = new IdProvider();
 
         public VectorList VertexStore;
         public FlexArray<HeFace> FaceStore;
@@ -140,6 +145,12 @@ namespace HalfEdgeNS
             return he;
         }
 
+        public HeFace CreateFace(HalfEdge head)
+        {
+            HeFace face = new HeFace(head);
+            face.ID = FaceIdProvider.getNew();
+            return face;
+        }
 
         // 三角形の追加
         // 左右回り方を統一して追加するようにする
@@ -170,7 +181,7 @@ namespace HalfEdgeNS
             he2.Normal = normalIndex;
 
             // Faceの設定
-            HeFace face = new HeFace(he0);
+            HeFace face = CreateFace(he0);
             face.Normal = normalIndex;
 
             int faceIndex = FaceStore.Add(face);
@@ -276,6 +287,318 @@ namespace HalfEdgeNS
                 NormalStore[i] = -NormalStore[i];
             }
         }
+
+        // 頂点番号に関連づいたFaceを削除
+        public void RemoveVertexRelationFace(int vindex)
+        {
+            int[] indexMap = new int[FaceStore.Count];
+
+            var rmFaceList = FindFaceAll(vindex);
+
+            for (int i=0; i<rmFaceList.Count; i++)
+            {
+                int rmFace = rmFaceList[i];
+
+                RemoveFaceLink(rmFace);
+                indexMap[rmFace] = -1;
+            }
+
+            int p = 0;
+
+            for (int i=0; i<FaceStore.Count; i++)
+            {
+                if (indexMap[i] == -1)
+                {
+
+                }
+                else
+                {
+                    indexMap[i] = p;
+                    p++;
+                }
+            }
+
+            for (int i = 0; i < FaceStore.Count; i++)
+            {
+                HalfEdge head = FaceStore[i].Head;
+                HalfEdge c = head;
+
+                for (; ; )
+                {
+                    c.Face = indexMap[c.Face];
+
+                    c = c.Next;
+                    if (c == head) break;
+                }
+            }
+
+            for (int i = indexMap.Length-1; i >= 0; i--)
+            {
+                if (indexMap[i] == -1)
+                {
+                    FaceStore.RemoveAt(i);
+                }
+            }
+        }
+
+        public void RemoveVertexs(List<int> idxList)
+        {
+            int[] indexMap = new int[VertexStore.Count];
+
+            for (int i=0; i<idxList.Count; i++)
+            {
+                indexMap[idxList[i]] = -1;
+            }
+
+            int r = 0;
+
+            for (int i = 0; i < VertexStore.Count; i++)
+            {
+                if (indexMap[i] != -1)
+                {
+                    indexMap[i] = r;
+                    r++;
+                }
+            }
+
+            ForEachHalfEdge(he =>
+            {
+                he.Vertex = indexMap[he.Vertex];
+                if (he.Vertex == -1)
+                {
+                    DebugOut.println("HeModel.RemoveVertexs error. he.Vertex == -1");
+                }
+            });
+
+            for (int i=VertexStore.Count-1; i>=0; i--)
+            {
+                if (indexMap[i] == -1)
+                {
+                    VertexStore.RemoveAt(i);
+                }
+            }
+        }
+
+        private void RemoveFaceLink(int idx)
+        {
+            HeFace face = FaceStore[idx];
+
+            HalfEdge head = face.Head;
+            HalfEdge c = head;
+
+            for (; ; )
+            {
+                if (c.Pair != null)
+                {
+                    c.Pair.Pair = null;
+                }
+
+                c = c.Next;
+                if (c == head) break;
+            }
+        }
+
+        public HalfEdge FindHalfEdge(int vertexIndex)
+        {
+            int i;
+            for (i = 0; i < FaceStore.Count; i++)
+            {
+                HeFace face = FaceStore[i];
+
+                HalfEdge head = face.Head;
+                HalfEdge c = head;
+
+                for (; ; )
+                {
+                    if (c.Vertex == vertexIndex)
+                    {
+                        return c;
+                    }
+
+                    c = c.Next;
+                    if (c == head) break;
+                }
+            }
+
+            return null;
+        }
+
+        public List<int> FindFaceAll(int vertexIndex)
+        {
+            var faceList = new List<int>();
+
+            int i;
+            for (i = 0; i < FaceStore.Count; i++)
+            {
+                HalfEdge head = FaceStore[i].Head;
+                HalfEdge c = head;
+
+                for (; ; )
+                {
+                    if (c.Vertex == vertexIndex)
+                    {
+                        faceList.Add(i);
+                        break;
+                    }
+
+                    c = c.Next;
+                    if (c == head) break;
+                }
+            }
+
+            return faceList;
+        }
+
+        public FlexArray<int> GetOuterEdge()
+        {
+            // TODO 全てのHalfEdgeをチェックしているので遅い
+            // HalfEdgeのリンクをたどる方式にいづれ変更する必要がある
+
+
+            // Pairを持たないHalfEdgeのリストを作成
+            List<HalfEdge> heList = new List<HalfEdge>();
+            
+            ForEachHalfEdge(he => {
+                if (he.Pair == null)
+                {
+                    heList.Add(he);
+                }
+            });
+
+            FlexArray<int> ret = new FlexArray<int>();
+
+            if (heList.Count == 1)
+            {
+                ret.Add(heList[0].Vertex);
+                return ret;
+            }
+
+            if (heList.Count == 0)
+            {
+                return null;
+            }
+
+            int s = FindMaxDistantHalfEdge(CadVector.Zero, heList);
+
+            if (s == -1)
+            {
+                DebugOut.println("HeModel.GetOuterEdge not found start HalfEdge");
+                return ret;
+            }
+
+
+            int t = s;
+            HalfEdge whe = heList[t];
+
+            int vi = whe.Vertex;
+
+            heList.RemoveAt(t);
+
+            while (true)
+            {
+                ret.Add(vi);
+                vi = whe.Next.Vertex;
+
+                t = FindHalfEdge(vi, heList);
+
+                if (t == -1)
+                {
+                    break;
+                }
+
+                whe = heList[t];
+                heList.RemoveAt(t);
+            }
+
+            return ret;
+        }
+
+        public int FindHalfEdge(int idx, List<HalfEdge> list)
+        {
+            for (int i=0; i<list.Count; i++)
+            {
+                if (list[i].Vertex == idx)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        // 指定された座標から最も遠いHalfEdgeを求める
+        public int FindMaxDistantHalfEdge(CadVector p0, List<HalfEdge> heList)
+        {
+            CadVector t;
+
+            double maxd = 0;
+
+            int ret = -1;
+
+            for (int i=0; i<heList.Count; i++)
+            {
+                int vi = heList[i].Vertex;
+
+                if (vi == -1)
+                {
+                    continue;
+                }
+
+                CadVector fp = VertexStore[vi];
+
+                t = fp - p0;
+                double d = t.Norm();
+
+                if (d > maxd)
+                {
+                    maxd = d;
+                    ret = i;
+                }
+            }
+
+            return ret;
+        }
+
+
+        public void ForEachHalfEdge(Func<HalfEdge, bool> func)
+        {
+            int i;
+            for (i = 0; i < FaceStore.Count; i++)
+            {
+                HalfEdge head = FaceStore[i].Head;
+                HalfEdge c = head;
+
+                for (; ; )
+                {
+                    if (!func(c))
+                    {
+                        return;
+                    }
+
+                    c = c.Next;
+                    if (c == head) break;
+                }
+            }
+        }
+
+        public void ForEachHalfEdge(Action<HalfEdge> action)
+        {
+            int i;
+            for (i = 0; i < FaceStore.Count; i++)
+            {
+                HalfEdge head = FaceStore[i].Head;
+                HalfEdge c = head;
+
+                for (; ; )
+                {
+                    action(c);
+
+                    c = c.Next;
+                    if (c == head) break;
+                }
+            }
+        }
+
     }
 
     public class HeUtil
@@ -291,6 +614,8 @@ namespace HalfEdgeNS
             jmodel.Add("normal_store", jns);
 
             jmodel.Add("half_edge_id_cnt", model.HeIdProvider.Counter);
+
+            jmodel.Add("face_id_cnt", model.FaceIdProvider.Counter);
 
             List<HalfEdge> heList = model.GetHalfEdgeList();
 
@@ -326,6 +651,7 @@ namespace HalfEdgeNS
         {
             JObject jface = new JObject();
 
+            jface.Add("id", face.ID);
             jface.Add("head_he_id", face.Head.ID);
             jface.Add("normal_idx", face.Normal);
 
@@ -383,6 +709,9 @@ namespace HalfEdgeNS
             }
 
             model.HeIdProvider.Counter = (uint)jmodel["half_edge_id_cnt"];
+
+            model.FaceIdProvider.Counter = (uint)jmodel["face_id_cnt"];
+
 
             ja = (JArray)jmodel["half_edge_list"];
             TempHalfEdgeDic heDic = CreateDictionary(ja);
@@ -455,6 +784,8 @@ namespace HalfEdgeNS
             HalfEdge he = dic[he_id].mHalfEdge;
 
             HeFace face = new HeFace(he);
+
+            face.ID = (uint)jo["id"];
 
             face.Normal = CadJson.FromJson.GetIntValue(jo, "normal_idx", -1);
 
