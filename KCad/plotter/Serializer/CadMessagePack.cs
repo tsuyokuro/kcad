@@ -11,6 +11,26 @@ using System.Threading.Tasks;
 namespace Plotter.Serializer
 {
     [MessagePackObject]
+    public class MpDummy
+    {
+        [Key("value")]
+        int value = 0;
+    }
+
+    public class MpInitializer
+    {
+        public static void Init()
+        {
+            MpDummy v = new MpDummy();
+
+            byte[] b = MessagePackSerializer.Serialize(v);
+
+            v = MessagePackSerializer.Deserialize<MpDummy>(b);
+        }
+    }
+
+
+    [MessagePackObject]
     public struct MpVector
     {
         [Key(0)]
@@ -255,7 +275,7 @@ namespace Plotter.Serializer
 
             for (int i=0; i<FigureIdList.Count; i++)
             {
-                ret.FigureList.Add(dic[FigureIdList[i]]);
+                ret.AddFigure(dic[FigureIdList[i]]);
             }
 
             return ret;

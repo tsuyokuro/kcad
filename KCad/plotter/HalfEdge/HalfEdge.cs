@@ -467,15 +467,9 @@ namespace HalfEdgeNS
 
             FlexArray<int> ret = new FlexArray<int>();
 
-            if (heList.Count == 1)
+            if (heList.Count <= 1)
             {
-                ret.Add(heList[0].Vertex);
                 return ret;
-            }
-
-            if (heList.Count == 0)
-            {
-                return null;
             }
 
             int s = FindMaxDistantHalfEdge(CadVector.Zero, heList);

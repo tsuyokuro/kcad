@@ -13,6 +13,7 @@
 //#define USE_CONSOLE
 
 
+using Plotter.Serializer;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -45,6 +46,10 @@ namespace KCad
             currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             System.Windows.Forms.Application.ThreadException += Application_ThreadException;
+
+            // MessagePack for C# は、初回の実行が遅いので、起動時にダミーを実行して
+            // 紛れさせる
+            MpInitializer.Init();
         }
 
         private void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)

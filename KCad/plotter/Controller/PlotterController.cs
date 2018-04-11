@@ -204,7 +204,7 @@ namespace Plotter
             }
         }
 
-        private List<CadFigure> EditIdList = new List<CadFigure>();
+        private List<CadFigure> EditFigList = new List<CadFigure>();
 
 
         public bool ContinueCreate { set; get; } = false;
@@ -689,13 +689,13 @@ namespace Plotter
 
         public void StartEdit()
         {
-            EditIdList = GetSelectedFigList();
+            EditFigList = GetSelectedFigList();
 
             mSSList = new CadOpeFigureSSList();
 
-            mSSList.Start(EditIdList);
+            mSSList.Start(EditFigList);
 
-            foreach (CadFigure fig in EditIdList)
+            foreach (CadFigure fig in EditFigList)
             {
                 if (fig != null)
                 {
@@ -710,12 +710,7 @@ namespace Plotter
             EndEditWithDiff();
             return;
 #else
-            mSSList.End(DB);
-            mHistoryManager.foward(mSSList);
-
-            mSSList = null;
-
-            foreach (CadFigure fig in EditIdList)
+            foreach (CadFigure fig in EditFigList)
             {
                 if (fig != null)
                 {
@@ -724,6 +719,19 @@ namespace Plotter
             }
 
             UpdateSelectItemPoints();
+
+            CadOpeList root = new CadOpeList();
+
+            CadOpeList rmOpeList = RemoveInvalidFigure();
+
+            mSSList.End(DB);
+            root.Add(mSSList);
+            root.Add(rmOpeList);
+
+            mHistoryManager.foward(root);
+
+
+            mSSList = null;
 
             NotifySelectList();
 #endif
@@ -772,7 +780,7 @@ namespace Plotter
 
         public void CancelEdit()
         {
-            foreach (CadFigure fig in EditIdList)
+            foreach (CadFigure fig in EditFigList)
             {
                 if (fig != null)
                 {
@@ -826,7 +834,7 @@ namespace Plotter
                 {
                     CadFigure fig = list[i];
 
-                    if (fig.IsEmpty)
+                    if (fig.IsGarbage())
                     {
                         CadOpe ope = CadOpe.CreateRemoveFigureOpe(layer, fig.ID);
                         opeList.OpeList.Add(ope);
@@ -871,10 +879,9 @@ namespace Plotter
 
         private void RemoveSelectedPoints()
         {
-            List<uint> figIDList = GetSelectedFigIDList();
-            foreach (uint id in figIDList)
+            List<CadFigure> figList = GetSelectedFigList();
+            foreach (CadFigure fig in figList)
             {
-                CadFigure fig = mDB.GetFigure(id);
                 fig.RemoveSelected();
             }
 

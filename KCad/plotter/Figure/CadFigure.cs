@@ -125,15 +125,6 @@ namespace Plotter
             }
         }
 
-        public virtual bool IsEmpty
-        {
-            get
-            {
-                return mPointList.Count == 0 && mChildList.Count == 0;
-            }
-        }
-
-
         /// <summary>
         /// 自分とその下にあるFigureを全て列挙(中止可能版)
         /// </summary>
@@ -859,6 +850,16 @@ namespace Plotter
 
         public virtual void InvertDir()
         {
+        }
+
+        public virtual bool IsGarbage()
+        {
+            if (mPointList.Count == 0 && mChildList.Count == 0)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public virtual JObject GeometricDataToJson()

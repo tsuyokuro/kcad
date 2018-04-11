@@ -110,7 +110,7 @@ namespace Plotter
 
         private void DrawEdge(DrawContext dc, int pen)
         {
-            if (mEdge == null || mEdge.Count == 0)
+            if (mEdge.Count == 0)
             {
                 return;
             }
@@ -260,46 +260,6 @@ namespace Plotter
             mPointList = mHeModel.VertexStore;
         }
 
-        /*
-        public override void RemoveSelected()
-        {
-            if (Locked) return;
-
-            int[] idxMap = new int[mPointList.Count];
-
-            int p = 0;
-
-            for (int i=0; i < mPointList.Count; i++)
-            {
-                if (mPointList[i].Selected)
-                {
-                    idxMap[i] = -1;
-                }
-                else
-                {
-                    idxMap[i] = p;
-                    p++;
-                }
-            }
-
-
-            for (int i = mEdge.Count-1; i >= 0; i--)
-            {
-                int vi = mEdge[i];
-
-                if (idxMap[vi]==-1)
-                {
-                    mEdge.RemoveAt(i);
-                }
-                else
-                {
-                    mEdge[i] = idxMap[vi];
-                }
-            }
-
-            mPointList.RemoveAll( a => a.Selected);
-        }
-        */
         public override void RemoveSelected()
         {
             List<int> removeList = new List<int>();
@@ -312,6 +272,14 @@ namespace Plotter
                     removeList.Add(i);
                 }
             }
+
+            if (mHeModel.FaceStore.Count == 0)
+            {
+                mHeModel.Clear();
+                mEdge.Clear();
+                return;
+            }
+
 
             mHeModel.RemoveVertexs(removeList);
 
