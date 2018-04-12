@@ -854,12 +854,32 @@ namespace Plotter
 
         public virtual bool IsGarbage()
         {
-            if (mPointList.Count == 0 && mChildList.Count == 0)
+            if (mPointList.Count > 0)
             {
-                return true;
+                return false;
             }
 
-            return false;
+            if (mChildList.Count > 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public void RemoveGarbageChildren()
+        {
+            for (int i = mChildList.Count - 1; i >= 0; i--)
+            {
+                CadFigure fig = mChildList[i];
+
+                fig.RemoveGarbageChildren();
+
+                if (fig.IsGarbage())
+                {
+                    mChildList.RemoveAt(i);
+                }
+            }
         }
 
         public virtual JObject GeometricDataToJson()

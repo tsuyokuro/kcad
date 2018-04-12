@@ -371,6 +371,10 @@ namespace Plotter.Serializer
                     c.Parent = fig;
                 }
             }
+            else
+            {
+                fig.ChildList.Clear();
+            }
 
             fig.GeometricDataFromMp(GeoData);
         }

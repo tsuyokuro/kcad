@@ -672,16 +672,26 @@ namespace Plotter
         {
             List<CadFigure> list = new List<CadFigure>();
 
+            HashSet<CadFigure> fset = new HashSet<CadFigure>(); 
+
+
             foreach (CadLayer layer in mDB.LayerList)
             {
                 layer.ForEachFig(fig =>
                 {
                     if (fig.HasSelectedPoint())
                     {
-                        list.Add(fig);
+                        fset.Add(fig);
+                        if (fig.Parent != null)
+                        {
+                            fset.Add(fig.Parent);
+                        }
                     }
                 });
             }
+
+            list.AddRange(fset);
+
             return list;
         }
 
@@ -724,9 +734,10 @@ namespace Plotter
 
             CadOpeList rmOpeList = RemoveInvalidFigure();
 
+            root.Add(rmOpeList);
+
             mSSList.End(DB);
             root.Add(mSSList);
-            root.Add(rmOpeList);
 
             mHistoryManager.foward(root);
 
@@ -883,6 +894,11 @@ namespace Plotter
             foreach (CadFigure fig in figList)
             {
                 fig.RemoveSelected();
+            }
+
+            foreach (CadFigure fig in figList)
+            {
+                fig.RemoveGarbageChildren();
             }
 
             UpdateTreeView(true);
