@@ -5,7 +5,7 @@ using Plotter;
 using System;
 using System.Collections.Generic;
 
-namespace Plotter
+namespace CadDataTypes
 {
     public struct CadVector : IEquatable<CadVector>
     {

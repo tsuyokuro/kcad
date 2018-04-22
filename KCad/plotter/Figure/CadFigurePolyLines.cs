@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using static Plotter.CadFigure;
+using CadDataTypes;
 
 namespace Plotter
 {

@@ -3,6 +3,7 @@
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using CadDataTypes;
 
 namespace Plotter
 {

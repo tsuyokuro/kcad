@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using System;
 using System.Collections.Generic;
+using CadDataTypes;
 
 namespace Plotter
 {

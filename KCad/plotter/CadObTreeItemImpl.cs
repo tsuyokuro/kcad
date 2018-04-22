@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static KCad.CadObjectTreeView;
+using CadDataTypes;
 
 namespace Plotter
 {

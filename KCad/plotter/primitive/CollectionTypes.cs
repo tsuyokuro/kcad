@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Plotter
+namespace CadDataTypes
 {
     public class VectorList : FlexArray<CadVector>
     {

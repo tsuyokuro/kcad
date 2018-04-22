@@ -12,6 +12,7 @@ using KCad;
 using System.Drawing.Printing;
 using System.Collections;
 using static System.Drawing.Printing.PrinterSettings;
+using CadDataTypes;
 
 namespace Plotter
 {

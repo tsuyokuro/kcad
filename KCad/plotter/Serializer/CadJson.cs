@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MyCollections;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using CadDataTypes;
 
 namespace Plotter.Serializer
 {

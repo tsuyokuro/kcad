@@ -9,6 +9,7 @@ using OpenTK.Graphics.OpenGL;
 using FTGL;
 using System;
 using HalfEdgeNS;
+using CadDataTypes;
 
 namespace Plotter
 {
