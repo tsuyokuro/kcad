@@ -188,7 +188,7 @@ namespace TestApp01
 
             DumpHeModel(model);
 
-            JObject jo = HeUtil.HeModelToJson(model);
+            JObject jo = HeJson.HeModelToJson(model);
 
 
             string s = jo.ToString();
@@ -197,7 +197,7 @@ namespace TestApp01
             Console.Write(s);
             Console.WriteLine("");
 
-            HeModel rmodel = HeUtil.HeModelFromJson(jo, CadJson.CurrentVersion);
+            HeModel rmodel = HeJson.HeModelFromJson(jo, CadJson.CurrentVersion);
 
             DumpHeModel(rmodel);
         }

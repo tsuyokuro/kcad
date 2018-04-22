@@ -63,6 +63,8 @@ namespace Plotter
 
         public PlotterView()
         {
+            this.DoubleBuffered = false;
+
             base.SizeChanged += onSizeChanged;
 
             mMessageHandler = new MyMessageHandler(this, 100);

@@ -199,7 +199,7 @@ namespace Plotter
 
             JArray jedge = CadJson.ToJson.IntArrayToJson(mEdge);
 
-            JObject jmodel = HeUtil.HeModelToJson(mHeModel);
+            JObject jmodel = HeJson.HeModelToJson(mHeModel);
 
             jvdata.Add("edge", jedge);
 
@@ -213,7 +213,7 @@ namespace Plotter
             JArray jedge = (JArray)jvdata["edge"];
             JObject jmodel = (JObject)jvdata["model"];
 
-            HeModel model = HeUtil.HeModelFromJson(jmodel, version);
+            HeModel model = HeJson.HeModelFromJson(jmodel, version);
 
             if (model == null)
             {
