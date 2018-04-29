@@ -1,8 +1,0 @@
-F:\vsprj\KCad8\CadDataTypes\bin\Debug\CadDataTypes.dll
-F:\vsprj\KCad8\CadDataTypes\bin\Debug\CadDataTypes.pdb
-F:\vsprj\KCad8\CadDataTypes\obj\Debug\CadDataTypes.csproj.CoreCompileInputs.cache
-F:\vsprj\KCad8\CadDataTypes\obj\Debug\CadDataTypes.dll
-F:\vsprj\KCad8\CadDataTypes\obj\Debug\CadDataTypes.pdb
-F:\vsprj\KCad8\CadDataTypes\bin\Debug\OpenTK.dll
-F:\vsprj\KCad8\CadDataTypes\bin\Debug\OpenTK.xml
-F:\vsprj\KCad8\CadDataTypes\obj\Debug\CadDataTypes.csproj.CopyComplete
