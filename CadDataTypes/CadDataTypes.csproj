@@ -43,7 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CadDataTypes.cs" />
+    <Compile Include="CadDataTypes\CadDataTypes.cs" />
+    <Compile Include="CadDataTypes\CadVector.cs" />
     <Compile Include="FlexArray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

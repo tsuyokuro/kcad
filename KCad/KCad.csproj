@@ -195,7 +195,6 @@
     <Compile Include="Log.cs" />
     <Compile Include="plotter\Figure\CadFigureUtil.cs" />
     <Compile Include="plotter\HalfEdge\HeJson.cs" />
-    <Compile Include="plotter\primitive\CollectionTypes.cs" />
     <Compile Include="plotter\Figure\VLExpander.cs" />
     <Compile Include="plotter\Serializer\CadMessagePack.cs" />
     <Compile Include="plotter\Serializer\JsonExtends.cs" />
@@ -320,7 +319,6 @@
     <Compile Include="plotter\HID\CadMouse.cs" />
     <Compile Include="plotter\CadObjectDB.cs" />
     <Compile Include="plotter\undo\CadOpe.cs" />
-    <Compile Include="plotter\primitive\CadVector.cs" />
     <Compile Include="plotter\CadSelection.cs" />
     <Compile Include="plotter\Util\CadUtil.cs" />
     <Compile Include="plotter\undo\DiffData.cs" />
