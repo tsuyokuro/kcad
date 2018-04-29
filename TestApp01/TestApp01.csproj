@@ -61,6 +61,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CadDataTypes\CadDataTypes.csproj">
+      <Project>{dbbdf7f8-d9ea-4b9f-8948-3772fe0f0d3e}</Project>
+      <Name>CadDataTypes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KCad\KCad.csproj">
       <Project>{783cad2c-1bf4-495a-817f-18fadfe16c44}</Project>
       <Name>KCad</Name>

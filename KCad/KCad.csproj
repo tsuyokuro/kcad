@@ -419,6 +419,12 @@
   <ItemGroup>
     <Analyzer Include="..\packages\MessagePackAnalyzer.1.6.0\analyzers\dotnet\cs\MessagePackAnalyzer.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CadDataTypes\CadDataTypes.csproj">
+      <Project>{dbbdf7f8-d9ea-4b9f-8948-3772fe0f0d3e}</Project>
+      <Name>CadDataTypes</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

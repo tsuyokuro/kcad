@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CadDataTypes;
+using System;
 using System.Diagnostics;
 using System.Threading;
 
@@ -133,6 +134,20 @@ namespace Plotter
             PutCount++;
             FormatPrintFunc(space + format, args);
             End();
+        }
+    }
+
+    static class CadVectorExtensions
+    {
+        public static void dump(this CadVector v, string prefix = nameof(CadVector))
+        {
+            DebugOut.println(prefix + "{");
+            DebugOut.Indent++;
+            DebugOut.println("x:" + v.x.ToString());
+            DebugOut.println("y:" + v.y.ToString());
+            DebugOut.println("z:" + v.z.ToString());
+            DebugOut.Indent--;
+            DebugOut.println("}");
         }
     }
 }
