@@ -189,7 +189,6 @@
     <Compile Include="Dialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MyCollections\FlexArray.cs" />
     <Compile Include="plotter\Controller\ScriptEnvironment_test.cs" />
     <Compile Include="plotter\Figure\CadFigureMesh.cs" />
     <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
