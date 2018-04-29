@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp02", "TestApp02\Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadDataTypes", "CadDataTypes\CadDataTypes.csproj", "{DBBDF7F8-D9EA-4B9F-8948-3772FE0F0D3E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoLibWrapper", "GeoLibWrapper\GeoLibWrapper.vcxproj", "{F2C011B3-B823-419C-B4C5-D23022E9A706}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,16 @@ Global
 		{DBBDF7F8-D9EA-4B9F-8948-3772FE0F0D3E}.Release|x64.Build.0 = Release|Any CPU
 		{DBBDF7F8-D9EA-4B9F-8948-3772FE0F0D3E}.Release|x86.ActiveCfg = Release|Any CPU
 		{DBBDF7F8-D9EA-4B9F-8948-3772FE0F0D3E}.Release|x86.Build.0 = Release|Any CPU
+		{F2C011B3-B823-419C-B4C5-D23022E9A706}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{F2C011B3-B823-419C-B4C5-D23022E9A706}.Debug|x64.ActiveCfg = Debug|x64
+		{F2C011B3-B823-419C-B4C5-D23022E9A706}.Debug|x64.Build.0 = Debug|x64
+		{F2C011B3-B823-419C-B4C5-D23022E9A706}.Debug|x86.ActiveCfg = Debug|Win32
+		{F2C011B3-B823-419C-B4C5-D23022E9A706}.Debug|x86.Build.0 = Debug|Win32
+		{F2C011B3-B823-419C-B4C5-D23022E9A706}.Release|Any CPU.ActiveCfg = Release|Win32
+		{F2C011B3-B823-419C-B4C5-D23022E9A706}.Release|x64.ActiveCfg = Release|x64
+		{F2C011B3-B823-419C-B4C5-D23022E9A706}.Release|x64.Build.0 = Release|x64
+		{F2C011B3-B823-419C-B4C5-D23022E9A706}.Release|x86.ActiveCfg = Release|Win32
+		{F2C011B3-B823-419C-B4C5-D23022E9A706}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
