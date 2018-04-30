@@ -30,9 +30,14 @@ namespace HalfEdgeNS
         public HalfEdge Pair;
 
         public HalfEdge Next;
+
         public HalfEdge Prev;
+
         public int Vertex = HeModel.INVALID_INDEX;
+
+        // FaceのIndex(IDではない)
         public int Face = HeModel.INVALID_INDEX;
+
         public int Normal = HeModel.INVALID_INDEX;
 
         public HalfEdge(int vertex)
@@ -64,18 +69,65 @@ namespace HalfEdgeNS
             NormalStore = new VectorList(8);
         }
 
-        public HeModel(VectorList vectorList)
-        {
-            VertexStore = vectorList;
-            FaceStore = new FlexArray<HeFace>(vectorList.Count);
-            NormalStore = new VectorList(vectorList.Count);
-        }
-
         public void Clear()
         {
             VertexStore.Clear();
             FaceStore.Clear();
             NormalStore.Clear();
+        }
+
+        public static HeModel Create(CadMesh src)
+        {
+            HeModel m = new HeModel();
+
+            m.VertexStore = src.VertexStore;
+
+            for (int fi=0; fi<src.FaceStore.Count; fi++)
+            {
+                CadFace f = src.FaceStore[fi];
+
+                int vi = f.VList[0];
+                HalfEdge head = m.CreateHalfEdge(vi);
+                HalfEdge current_he = head;
+
+                HeFace face = m.CreateFace(head);
+                int faceIndex = m.FaceStore.Add(face);
+
+                current_he.Face = faceIndex;
+
+                HalfEdge next_he;
+
+                for (int pi=1; pi<f.VList.Count; pi++)
+                {
+                    vi = f.VList[pi];
+                    next_he = m.CreateHalfEdge(vi);
+
+                    current_he.Next = next_he;
+                    next_he.Prev = current_he;
+
+                    next_he.Face = faceIndex;
+
+                    current_he = next_he;
+                }
+
+                head.Prev = current_he;
+                current_he.Next = head;
+
+
+                HalfEdge c = head;
+
+                for (; ; )
+                {
+                    m.SetHalfEdgePair(c);
+
+                    c = c.Next;
+                    if (c == head) break;
+                }
+            }
+
+            m.RecreateNormals();
+
+            return m;
         }
 
         public void SetHalfEdgePair(HalfEdge he)

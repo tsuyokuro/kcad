@@ -202,6 +202,27 @@ namespace TestApp01
             DumpHeModel(rmodel);
         }
 
+        static void Test005()
+        {
+            CadMesh cm = new CadMesh();
+            cm.VertexStore = new VectorList();
+
+            cm.VertexStore.Add(CadVector.Create(10, 5, 0));
+            cm.VertexStore.Add(CadVector.Create(15, 10, 0));
+            cm.VertexStore.Add(CadVector.Create(13, 30, 0));
+            cm.VertexStore.Add(CadVector.Create(5, 15, 0));
+
+            cm.FaceStore = new FlexArray<CadFace>();
+
+            cm.FaceStore.Add( new CadFace(0, 1, 3));
+            cm.FaceStore.Add( new CadFace(1, 2, 3));
+
+            HeModel hem = HeModel.Create(cm);
+
+            DumpHeModel(hem);
+
+        }
+
         static void DumpHeModel(HeModel model)
         {
             for (int i = 0; i < model.FaceStore.Count; i++)
@@ -249,11 +270,13 @@ namespace TestApp01
 
         static void Main(string[] args)
         {
-            Test001();
+            //Test001();
             //Test002();
             //Test002_01();
             //Test003();
             //Test004();
+
+            Test005();
             Console.ReadLine();
         }
     }

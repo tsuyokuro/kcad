@@ -17,6 +17,15 @@ namespace CadDataTypes
         {
             VList = new FlexArray<int>(3);
         }
+
+        public CadFace(params int[] args)
+        {
+            VList = new FlexArray<int>(args.Length);
+            for (int i=0; i< args.Length; i++)
+            {
+                VList.Add(args[i]);
+            }
+        }
     }
 
     public class CadMesh
