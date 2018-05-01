@@ -17,6 +17,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CadDataTypes;
+using LibiglWrapper;
+using HalfEdgeNS;
 
 namespace Plotter
 {
@@ -383,6 +385,26 @@ namespace Plotter
             ItConsole.println("test013Sub end");
         }
 
+        private void testLoadOff()
+        {
+            string fname = @"F:\TestFiles\bunny.off";
+
+            CadMesh cm = IglW.ReadOFF(fname);
+
+            HeModel hem = HeModelCreator.Create(cm);
+
+            for (int i=0; i< hem.VertexStore.Count; i++)
+            {
+                hem.VertexStore[i] *= 500.0;
+            }
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            Controller.CurrentLayer.AddFigure(fig);
+        }
+
         private void testInvert()
         {
             CadFigure fig = GetTargetFigure();
@@ -452,6 +474,10 @@ namespace Plotter
             else if (s == "@test013")
             {
                 test013();
+            }
+            else if (s == "@testLoadOff")
+            {
+                testLoadOff();
             }
             else if (s == "@testMesh")
             {

@@ -45,6 +45,12 @@ namespace Plotter
             mEdge = new FlexArray<int>();
         }
 
+        public void SetMesh(HeModel mesh)
+        {
+            mHeModel = mesh;
+            mPointList = mHeModel.VertexStore;
+        }
+
         public void CreateModel(CadFigure fig)
         {
             if (!(fig is CadFigurePolyLines))

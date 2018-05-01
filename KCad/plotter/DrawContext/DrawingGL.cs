@@ -1,5 +1,5 @@
 ﻿//#define OPEN_TK_NEXT
-#define DRAW_NORMAL
+//#define DEBUG_DRAW_NORMAL
 
 using System.Collections.Generic;
 
@@ -197,7 +197,7 @@ namespace Plotter
 
                 GL.End();
 
-#if DRAW_NORMAL
+#if DEBUG_DRAW_NORMAL
                 #region Draw Normal デバッグ用
                 if (f.Normal != HeModel.INVALID_INDEX)
                 {
