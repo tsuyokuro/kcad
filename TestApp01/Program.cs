@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CadDataTypes;
+using LibiglWrapper;
+using System.Diagnostics;
 
 namespace TestApp01
 {
@@ -47,6 +49,7 @@ namespace TestApp01
             }
         }
 
+        /*
         static void Test002()
         {
             // 左回り
@@ -146,6 +149,32 @@ namespace TestApp01
                 if (c == head) break;
             }
         }
+        */
+
+        static void Test002()
+        {
+            // 左回り
+
+            HeModelBuilder mb = new HeModelBuilder();
+
+            mb.Start();
+
+            mb.AddTriangle(
+                CadVector.Create(10, 5, 0),
+                CadVector.Create(15, 10, 0),
+                CadVector.Create(5, 15, 0)
+                );
+
+            mb.AddTriangle(
+                CadVector.Create(15, 10, 0),
+                CadVector.Create(13, 30, 0),
+                CadVector.Create(5, 15, 0)
+                );
+
+            HeModel model = mb.Get();
+
+            DumpHeModel(model);
+        }
 
         static void Test003()
         {
@@ -172,19 +201,23 @@ namespace TestApp01
 
         static void Test004()
         {
-            HeModel model = new HeModel();
-            model.AddTriangle(
+            HeModelBuilder mb = new HeModelBuilder();
+
+            mb.Start();
+
+            mb.AddTriangle(
                 CadVector.Create(10, 5, 0),
                 CadVector.Create(15, 10, 0),
                 CadVector.Create(5, 15, 0)
                 );
 
-            model.AddTriangle(
+            mb.AddTriangle(
                 CadVector.Create(15, 10, 0),
                 CadVector.Create(13, 30, 0),
                 CadVector.Create(5, 15, 0)
                 );
 
+            HeModel model = mb.Get();
 
             DumpHeModel(model);
 
@@ -217,10 +250,30 @@ namespace TestApp01
             cm.FaceStore.Add( new CadFace(0, 1, 3));
             cm.FaceStore.Add( new CadFace(1, 2, 3));
 
-            HeModel hem = HeModel.Create(cm);
+            HeModel hem = HeModelCreator.Create(cm);
 
             DumpHeModel(hem);
 
+        }
+
+        static void Test006()
+        {
+            string fname = @"F:\TestFiles\bunny.off";
+            //string fname = @"F:\TestFiles\cube.off";
+            
+
+            CadMesh cm = IglW.ReadOFF(fname);
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            HeModel hem = HeModelCreator.Create(cm);
+
+            sw.Stop();
+
+            DumpHeModel(hem);
+
+            Console.WriteLine("HalfEdge creation time: " + sw.ElapsedMilliseconds.ToString());
         }
 
         static void DumpHeModel(HeModel model)
@@ -271,12 +324,13 @@ namespace TestApp01
         static void Main(string[] args)
         {
             //Test001();
-            //Test002();
-            //Test002_01();
+            Test002();
             //Test003();
             //Test004();
 
             Test005();
+            //Test006();
+
             Console.ReadLine();
         }
     }

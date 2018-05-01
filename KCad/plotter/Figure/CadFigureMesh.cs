@@ -64,11 +64,14 @@ namespace Plotter
 
             List<CadFigure> figList = TriangleSplitter.Split(fig, 16);
 
+            HeModelBuilder mb = new HeModelBuilder();
+
+            mb.Start(mHeModel);
 
             for (int i = 0; i < figList.Count; i++)
             {
                 CadFigure t = figList[i];
-                mHeModel.AddTriangle(t.PointList[0], t.PointList[1], t.PointList[2]);
+                mb.AddTriangle(t.PointList[0], t.PointList[1], t.PointList[2]);
             }
         }
 

@@ -76,119 +76,10 @@ namespace HalfEdgeNS
             NormalStore.Clear();
         }
 
-        public static HeModel Create(CadMesh src)
-        {
-            HeModel m = new HeModel();
-
-            m.VertexStore = src.VertexStore;
-
-            for (int fi=0; fi<src.FaceStore.Count; fi++)
-            {
-                CadFace f = src.FaceStore[fi];
-
-                int vi = f.VList[0];
-                HalfEdge head = m.CreateHalfEdge(vi);
-                HalfEdge current_he = head;
-
-                HeFace face = m.CreateFace(head);
-                int faceIndex = m.FaceStore.Add(face);
-
-                current_he.Face = faceIndex;
-
-                HalfEdge next_he;
-
-                for (int pi=1; pi<f.VList.Count; pi++)
-                {
-                    vi = f.VList[pi];
-                    next_he = m.CreateHalfEdge(vi);
-
-                    current_he.Next = next_he;
-                    next_he.Prev = current_he;
-
-                    next_he.Face = faceIndex;
-
-                    current_he = next_he;
-                }
-
-                head.Prev = current_he;
-                current_he.Next = head;
-
-
-                HalfEdge c = head;
-
-                for (; ; )
-                {
-                    m.SetHalfEdgePair(c);
-
-                    c = c.Next;
-                    if (c == head) break;
-                }
-            }
-
-            m.RecreateNormals();
-
-            return m;
-        }
-
-        public void SetHalfEdgePair(HalfEdge he)
-        {
-            // すべてのFaceを巡回する
-            int i;
-            for (i = 0; i < FaceStore.Count; i++)
-            {
-                // Faceに含まれるHalfEdgeを巡回する
-                HalfEdge c = FaceStore[i].Head;
-
-                for (; ; )
-                {
-                    if (he.Vertex == c.Next.Vertex &&
-                        he.Next.Vertex == c.Vertex)
-                    {
-                        //  両方の端点が共通だったらpairに登録する
-                        he.Pair = c;
-                        c.Pair = he;
-                        return;
-                    }
-
-                    c = c.Next;
-
-                    if (c == FaceStore[i].Head) break;
-                }
-            }
-        }
-
-        // 同じ座標がなければ追加してIndexを返す
-        // 同じ座標があれば、そのIndexを返す
-        public int AddVertexWithoutSame(CadVector v)
-        {
-            int cnt = VertexStore.Count;
-            for (int i = 0; i < cnt; i++)
-            {
-                ref CadVector rv = ref VertexStore.Ref(i);
-                if (v.Equals(rv))
-                {
-                    return i;
-                }
-            }
-
-            return VertexStore.Add(v);
-        }
-
         // 単純に頂点を追加
         public int AddVertex(CadVector v)
         {
             return VertexStore.Add(v);
-        }
-
-        // 三角形の追加
-        // 左右回り方を統一して追加するようにする
-        public void AddTriangle(CadVector v0, CadVector v1, CadVector v2)
-        {
-            AddTriangle(
-                AddVertexWithoutSame(v0),
-                AddVertexWithoutSame(v1),
-                AddVertexWithoutSame(v2)
-                );
         }
 
         public HalfEdge CreateHalfEdge(int vindex)
@@ -203,50 +94,6 @@ namespace HalfEdgeNS
             HeFace face = new HeFace(head);
             face.ID = FaceIdProvider.getNew();
             return face;
-        }
-
-        // 三角形の追加
-        // 左右回り方を統一して追加するようにする
-        public void AddTriangle(int v0, int v1, int v2)
-        {
-            HalfEdge he0 = CreateHalfEdge(v0);
-            HalfEdge he1 = CreateHalfEdge(v1);
-            HalfEdge he2 = CreateHalfEdge(v2);
-
-            he0.Next = he1;
-            he0.Prev = he2;
-            he1.Next = he2;
-            he1.Prev = he0;
-            he2.Next = he0;
-            he2.Prev = he1;
-
-            // 法線の設定
-            CadVector normal = CadMath.Normal(VertexStore[v0], VertexStore[v1], VertexStore[v2]);
-            int normalIndex = INVALID_INDEX;
-
-            if (!normal.Invalid)
-            {
-                normalIndex = NormalStore.Add(normal);
-            }
-
-            he0.Normal = normalIndex;
-            he1.Normal = normalIndex;
-            he2.Normal = normalIndex;
-
-            // Faceの設定
-            HeFace face = CreateFace(he0);
-            face.Normal = normalIndex;
-
-            int faceIndex = FaceStore.Add(face);
-
-            he0.Face = faceIndex;
-            he1.Face = faceIndex;
-            he2.Face = faceIndex;
-
-            // Pairの設定
-            SetHalfEdgePair(he0);
-            SetHalfEdgePair(he1);
-            SetHalfEdgePair(he2);
         }
 
         public List<HalfEdge> GetHalfEdgeList()
@@ -619,6 +466,224 @@ namespace HalfEdgeNS
                 }
             }
         }
+    }
 
+    public class HeConnector
+    {
+        public static uint GetHeKey(HalfEdge he)
+        {
+            return ((uint)he.Next.Vertex) << 16 | (uint)he.Vertex;
+        }
+
+        public static uint GetPairHeKey(HalfEdge he)
+        {
+            return ((uint)he.Vertex) << 16 | (uint)he.Next.Vertex;
+        }
+
+        public static uint GetHeKey(int next_v, int v)
+        {
+            return ((uint)next_v) << 16 | (uint)v;
+        }
+
+        public static void SetHalfEdgePair(HalfEdge he, Dictionary<uint, HalfEdge> map)
+        {
+            uint pair_key = GetPairHeKey(he);
+
+            HalfEdge pair;
+
+            if (!map.TryGetValue(pair_key, out pair))
+            {
+                return;
+            }
+
+            he.Pair = pair;
+            pair.Pair = he;
+        }
+    }
+
+
+    public class HeModelCreator
+    {
+        public static HeModel Create(CadMesh src)
+        {
+            HeModel m = new HeModel();
+
+            m.VertexStore = src.VertexStore;
+
+            Dictionary<uint, HalfEdge> map = new Dictionary<uint, HalfEdge>();
+
+            for (int fi = 0; fi < src.FaceStore.Count; fi++)
+            {
+                CadFace f = src.FaceStore[fi];
+
+                int vi = f.VList[0];
+                HalfEdge head = m.CreateHalfEdge(vi);
+                HalfEdge current_he = head;
+
+                HeFace face = m.CreateFace(head);
+                int faceIndex = m.FaceStore.Add(face);
+
+                current_he.Face = faceIndex;
+
+                HalfEdge next_he;
+
+                for (int pi = 1; pi < f.VList.Count; pi++)
+                {
+                    vi = f.VList[pi];
+                    next_he = m.CreateHalfEdge(vi);
+
+                    current_he.Next = next_he;
+                    next_he.Prev = current_he;
+
+                    next_he.Face = faceIndex;
+
+                    current_he = next_he;
+                }
+
+                head.Prev = current_he;
+                current_he.Next = head;
+
+
+                HalfEdge c = head;
+
+                for (; ; )
+                {
+                    HeConnector.SetHalfEdgePair(c, map);
+
+                    map[HeConnector.GetHeKey(c)] = c;
+
+                    c = c.Next;
+                    if (c == head) break;
+                }
+            }
+
+            m.RecreateNormals();
+
+            return m;
+        }
+
+    }
+
+
+    public class HeModelBuilder : HeModelCreator
+    {
+        public Dictionary<uint, HalfEdge> HeMap = new Dictionary<uint, HalfEdge>();
+
+        public HeModel mHeModel;
+
+        public void Start()
+        {
+            mHeModel = new HeModel();
+        }
+
+        public void Start(HeModel model)
+        {
+            mHeModel = model;
+            SetupMap(HeMap, mHeModel);
+        }
+
+        public void SetupMap(Dictionary<uint, HalfEdge> map, HeModel hem)
+        {
+            for (int i = 0; i < hem.FaceStore.Count; i++)
+            {
+                HalfEdge head = hem.FaceStore[i].Head;
+                HalfEdge c = head;
+
+                for (; ; )
+                {
+                    map[HeConnector.GetHeKey(c)] = c;
+
+                    c = c.Next;
+                    if (c == head) break;
+                }
+            }
+        }
+
+        public HeModel Get()
+        {
+            return mHeModel;
+        }
+
+
+        // 三角形の追加
+        // 左右回り方を統一して追加するようにする
+        public void AddTriangle(CadVector v0, CadVector v1, CadVector v2)
+        {
+            AddTriangle(
+                AddVertexWithoutSame(v0),
+                AddVertexWithoutSame(v1),
+                AddVertexWithoutSame(v2)
+                );
+        }
+
+        // 三角形の追加
+        // 左右回り方を統一して追加するようにする
+        public void AddTriangle(int v0, int v1, int v2)
+        {
+            HalfEdge he0 = mHeModel.CreateHalfEdge(v0);
+            HalfEdge he1 = mHeModel.CreateHalfEdge(v1);
+            HalfEdge he2 = mHeModel.CreateHalfEdge(v2);
+
+            he0.Next = he1;
+            he0.Prev = he2;
+            he1.Next = he2;
+            he1.Prev = he0;
+            he2.Next = he0;
+            he2.Prev = he1;
+
+            // 法線の設定
+            CadVector normal = CadMath.Normal(
+                mHeModel.VertexStore[v0],
+                mHeModel.VertexStore[v1],
+                mHeModel.VertexStore[v2]);
+
+            int normalIndex = HeModel.INVALID_INDEX;
+
+            if (!normal.Invalid)
+            {
+                normalIndex = mHeModel.NormalStore.Add(normal);
+            }
+
+            he0.Normal = normalIndex;
+            he1.Normal = normalIndex;
+            he2.Normal = normalIndex;
+
+            // Faceの設定
+            HeFace face = mHeModel.CreateFace(he0);
+            face.Normal = normalIndex;
+
+            int faceIndex = mHeModel.FaceStore.Add(face);
+
+            he0.Face = faceIndex;
+            he1.Face = faceIndex;
+            he2.Face = faceIndex;
+
+            // Pairの設定
+            HeConnector.SetHalfEdgePair(he0, HeMap);
+            HeMap[HeConnector.GetHeKey(he0)] = he0;
+
+            HeConnector.SetHalfEdgePair(he1, HeMap);
+            HeMap[HeConnector.GetHeKey(he1)] = he1;
+
+            HeConnector.SetHalfEdgePair(he2, HeMap);
+            HeMap[HeConnector.GetHeKey(he2)] = he2;
+        }
+
+        // 同じ座標がなければ追加してIndexを返す
+        // 同じ座標があれば、そのIndexを返す
+        public int AddVertexWithoutSame(CadVector v)
+        {
+            int cnt = mHeModel.VertexStore.Count;
+            for (int i = 0; i < cnt; i++)
+            {
+                ref CadVector rv = ref mHeModel.VertexStore.Ref(i);
+                if (v.Equals(rv))
+                {
+                    return i;
+                }
+            }
+
+            return mHeModel.VertexStore.Add(v);
+        }
     }
 }

@@ -248,9 +248,14 @@ namespace CadDataTypes
             return x == v.x & y == v.y & z == v.z;
         }
 
+        private const double HASH_COEFFICIENT = 10000.0;
+
         public override int GetHashCode()
         {
-            return (int)x ^ (int)y ^ (int)z;
+            return
+                ((int)(x * HASH_COEFFICIENT)) ^
+                ((int)(y * HASH_COEFFICIENT) << 2) ^
+                ((int)(z * HASH_COEFFICIENT) >> 2);
         }
 
         public override bool Equals(object obj)

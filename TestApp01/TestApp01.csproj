@@ -122,6 +122,10 @@
       <Project>{dbbdf7f8-d9ea-4b9f-8948-3772fe0f0d3e}</Project>
       <Name>CadDataTypes</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GeoLibWrapper\GeoLibWrapper.vcxproj">
+      <Project>{f2c011b3-b823-419c-b4c5-d23022e9a706}</Project>
+      <Name>GeoLibWrapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KCad\KCad.csproj">
       <Project>{783cad2c-1bf4-495a-817f-18fadfe16c44}</Project>
       <Name>KCad</Name>
