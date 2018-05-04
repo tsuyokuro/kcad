@@ -1,14 +1,25 @@
 #pragma once
 
+#include <carve/csg.hpp>
+#include <carve/input.hpp>
+
+
+#include "cad_data_types.h"
+
 using namespace CadDataTypes;
 
-namespace CarveW
+namespace CarveWapper
 {
-	ref class CarveW
+	public ref class CarveW
 	{
 	public:
 		CarveW();
-		CadMesh ^ CrateCylinder(int slices, double rad, double height);
+		static CadMesh^ CrateCylinder(int slices, double rad, double height);
+		static CadMesh^ CrateRectangular(double sizeX, double sizeY, double sizeZ);
+		static CadMesh^ AMinusB(CadMesh^ a, CadMesh^ b);
+
+		static CadMesh^ ToCadMesh(carve::poly::Polyhedron * pmesh);
+		static carve::poly::Polyhedron* ToPolyhedron(CadMesh^ cadMesh);
 	};
 }
 

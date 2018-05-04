@@ -76,12 +76,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -95,6 +100,7 @@
       <AdditionalIncludeDirectories>F:\libigl\libigl\include;F:\libigl\libigl\external\eigen;F:\libigl\libigl\external\triangle;F:\libigl\libigl\external\tetgen;F:\carve\carve\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
+      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>carve.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -124,6 +130,7 @@
       <AdditionalIncludeDirectories>F:\libigl\libigl\include;F:\libigl\libigl\external\eigen;F:\libigl\libigl\external\triangle;F:\libigl\libigl\external\tetgen;F:\carve\carve\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
+      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>carve.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -150,6 +157,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cad_data_types.h" />
     <ClInclude Include="CarveFuncs.h" />
     <ClInclude Include="CarveW.h" />
     <ClInclude Include="geometry.hpp" />
@@ -179,6 +187,11 @@
   <ItemGroup>
     <ProjectReference Include="..\CadDataTypes\CadDataTypes.csproj">
       <Project>{dbbdf7f8-d9ea-4b9f-8948-3772fe0f0d3e}</Project>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

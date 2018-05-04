@@ -19,6 +19,7 @@ using System.Windows.Forms;
 using CadDataTypes;
 using LibiglWrapper;
 using HalfEdgeNS;
+using CarveWapper;
 
 namespace Plotter
 {
@@ -391,12 +392,87 @@ namespace Plotter
 
             CadMesh cm = IglW.ReadOFF(fname);
 
-            HeModel hem = HeModelCreator.Create(cm);
+            HeModel hem = HeModelConverter.ToHeModel(cm);
 
             for (int i=0; i< hem.VertexStore.Count; i++)
             {
                 hem.VertexStore[i] *= 500.0;
             }
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            Controller.CurrentLayer.AddFigure(fig);
+        }
+
+        private void testCreateCylinder()
+        {
+            CadMesh cm = CarveW.CrateCylinder(32, 8, 80);
+
+            HeModel hem = HeModelConverter.ToHeModel(cm);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            Controller.CurrentLayer.AddFigure(fig);
+        }
+
+        private void testCreateRectangular()
+        {
+            CadMesh cm = CarveW.CrateRectangular(10, 10, 30);
+
+            HeModel hem = HeModelConverter.ToHeModel(cm);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            Controller.CurrentLayer.AddFigure(fig);
+        }
+
+        private void testAminusB()
+        {
+            List<CadFigure> figList = Controller.GetSelectedFigList();
+
+            if (figList.Count < 2)
+            {
+                return;
+            }
+
+            if (figList[0].Type != CadFigure.Types.MESH)
+            {
+                return;
+            }
+
+            if (figList[1].Type != CadFigure.Types.MESH)
+            {
+                return;
+            }
+
+            CadFigureMesh fig_a = (CadFigureMesh)figList[0];
+            CadFigureMesh fig_b = (CadFigureMesh)figList[1];
+
+            if (fig_a.Current)
+            {
+                CadFigureMesh t = fig_a;
+                fig_a = fig_b;
+                fig_b = t;
+            }
+
+            ItConsole.println("ID:" + fig_a.ID.ToString() + " - ID:" + fig_b.ID.ToString());
+
+            HeModel he_a = fig_a.mHeModel;
+            HeModel he_b = fig_b.mHeModel;
+
+            CadMesh a = HeModelConverter.ToCadMesh(he_a);
+            CadMesh b = HeModelConverter.ToCadMesh(he_b);
+
+            CadMesh c = CarveW.AMinusB(a, b);
+
+
+            HeModel hem = HeModelConverter.ToHeModel(c);
 
             CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
 
@@ -475,9 +551,25 @@ namespace Plotter
             {
                 test013();
             }
-            else if (s == "@testLoadOff")
+            else if (s == "@loadOff")
             {
                 testLoadOff();
+
+            }
+            else if (s == "@createCylinder")
+            {
+                testCreateCylinder();
+
+            }
+            else if (s == "@createRect")
+            {
+                testCreateRectangular();
+
+            }
+            else if (s == "@a-b")
+            {
+                testAminusB();
+
             }
             else if (s == "@testMesh")
             {

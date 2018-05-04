@@ -502,9 +502,9 @@ namespace HalfEdgeNS
     }
 
 
-    public class HeModelCreator
+    public class HeModelConverter
     {
-        public static HeModel Create(CadMesh src)
+        public static HeModel ToHeModel(CadMesh src)
         {
             HeModel m = new HeModel();
 
@@ -562,10 +562,50 @@ namespace HalfEdgeNS
             return m;
         }
 
+        public static CadMesh ToCadMesh(HeModel hem)
+        {
+            CadMesh cm = new CadMesh();
+
+            cm.VertexStore = new VectorList(hem.VertexStore);
+            cm.FaceStore = new FlexArray<CadFace>();
+
+            for (int i=0; i < hem.FaceStore.Count;i++)
+            {
+                CadFace cf = ToCadFace(hem.FaceStore[i]);
+                if (cf != null)
+                {
+                    cm.FaceStore.Add(cf);
+                }
+            }
+
+            return cm;
+        }
+
+        public static CadFace ToCadFace(HeFace hef)
+        {
+            CadFace ret = new CadFace();
+
+            HalfEdge head = hef.Head;
+            HalfEdge c = head;
+
+            while (c!=null)
+            {
+                ret.VList.Add(c.Vertex);
+
+                c = c.Next;
+
+                if (c == head)
+                {
+                    break;
+                }
+            }
+
+            return ret;
+        }
     }
 
 
-    public class HeModelBuilder : HeModelCreator
+    public class HeModelBuilder
     {
         public Dictionary<uint, HalfEdge> HeMap = new Dictionary<uint, HalfEdge>();
 

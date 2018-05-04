@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CadDataTypes;
 using LibiglWrapper;
+using CarveWapper;
 using System.Diagnostics;
 
 namespace TestApp01
@@ -250,7 +251,7 @@ namespace TestApp01
             cm.FaceStore.Add( new CadFace(0, 1, 3));
             cm.FaceStore.Add( new CadFace(1, 2, 3));
 
-            HeModel hem = HeModelCreator.Create(cm);
+            HeModel hem = HeModelConverter.ToHeModel(cm);
 
             DumpHeModel(hem);
 
@@ -267,13 +268,22 @@ namespace TestApp01
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            HeModel hem = HeModelCreator.Create(cm);
+            HeModel hem = HeModelConverter.ToHeModel(cm);
 
             sw.Stop();
 
             DumpHeModel(hem);
 
             Console.WriteLine("HalfEdge creation time: " + sw.ElapsedMilliseconds.ToString());
+        }
+
+        static void Test007()
+        {
+            CadMesh cm = CarveW.CrateCylinder(8, 20, 40);
+
+            HeModel hem = HeModelConverter.ToHeModel(cm);
+
+            DumpHeModel(hem);
         }
 
         static void DumpHeModel(HeModel model)
@@ -318,18 +328,22 @@ namespace TestApp01
 
                     if (c == head) break;
                 }
+
+                Console.WriteLine("\n");
             }
         }
 
         static void Main(string[] args)
         {
             //Test001();
-            Test002();
+            //Test002();
             //Test003();
             //Test004();
 
-            Test005();
+            //Test005();
             //Test006();
+
+            Test007();
 
             Console.ReadLine();
         }

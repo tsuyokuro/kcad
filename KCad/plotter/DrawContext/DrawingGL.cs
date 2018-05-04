@@ -178,10 +178,6 @@ namespace Plotter
 
                 CadVector v;
 
-                CadVector p0 = model.VertexStore.Ref(c.Vertex);
-                CadVector p1 = model.VertexStore.Ref(c.Next.Vertex);
-                CadVector p2 = model.VertexStore.Ref(c.Next.Next.Vertex);
-
                 GL.Begin(PrimitiveType.Polygon);
                 GL.Color4(0.8f, 0.8f, 0.8f, 1.0f);
 
@@ -191,9 +187,21 @@ namespace Plotter
                     GL.Normal3(nv.vector);
                 }
 
-                GL.Vertex3((p0 * DC.WoldScale).vector);
-                GL.Vertex3((p1 * DC.WoldScale).vector);
-                GL.Vertex3((p2 * DC.WoldScale).vector);
+                for (; ; )
+                {
+                    HalfEdge next = c.Next;
+
+                    CadVector p = model.VertexStore.Ref(c.Vertex);
+
+                    GL.Vertex3((p * DC.WoldScale).vector);
+
+                    c = next;
+
+                    if (c == head)
+                    {
+                        break;
+                    }
+                }
 
                 GL.End();
 
@@ -245,20 +253,25 @@ namespace Plotter
 
                 CadVector v;
 
-                CadVector p0 = model.VertexStore.Ref(c.Vertex);
-                CadVector p1 = model.VertexStore.Ref(c.Next.Vertex);
-                CadVector p2 = model.VertexStore.Ref(c.Next.Next.Vertex);
+                GL.Begin(PrimitiveType.LineLoop);
 
-                p0 = (p0 + shift) * DC.WoldScale;
-                p1 = (p1 + shift) * DC.WoldScale;
-                p2 = (p2 + shift) * DC.WoldScale;
+                for (; ; )
+                {
+                    HalfEdge next = c.Next;
 
-                GL.Begin(PrimitiveType.LineStrip);
+                    CadVector p = model.VertexStore.Ref(c.Vertex);
 
-                GL.Vertex3(p0.vector);
-                GL.Vertex3(p1.vector);
-                GL.Vertex3(p2.vector);
-                GL.Vertex3(p0.vector);
+                    p = (p + shift) * DC.WoldScale;
+
+                    GL.Vertex3(p.vector);
+
+                    c = next;
+
+                    if (c == head)
+                    {
+                        break;
+                    }
+                }
 
                 GL.End();
             }
