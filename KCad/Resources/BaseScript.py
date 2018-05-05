@@ -143,6 +143,15 @@ def toMesh():
 def invertDir():
     SE.InvertDir()
 
+#[AC] minus(idA, idB)
+def minus(a, b):
+    SE.AminusB(a, b)
+
+#[AC] dumpMesh(id)
+def dumpMesh(id):
+    SE.DumpMesh(id)
+
+
 #globals
 x=0
 y=0

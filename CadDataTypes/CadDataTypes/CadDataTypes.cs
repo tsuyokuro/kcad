@@ -26,11 +26,26 @@ namespace CadDataTypes
                 VList.Add(args[i]);
             }
         }
+
+        public CadFace(CadFace src)
+        {
+            VList = new FlexArray<int>(src.VList);
+        }
     }
 
     public class CadMesh
     {
         public VectorList VertexStore;
         public FlexArray<CadFace> FaceStore;
+
+        public CadMesh()
+        {
+        }
+
+        public CadMesh(int vs, int fs)
+        {
+            VertexStore = new VectorList(vs);
+            FaceStore = new FlexArray<CadFace>(fs);
+        }
     }
 }

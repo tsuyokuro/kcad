@@ -15,6 +15,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CadDataTypes;
+using HalfEdgeNS;
+using CarveWapper;
+using MeshUtilNS;
 
 namespace Plotter
 {
@@ -905,6 +908,80 @@ namespace Plotter
             }
 
             Controller.HistoryManager.foward(opeRoot);
+        }
+
+        private CadFigureMesh GetCadFigureMesh(uint id)
+        {
+            CadFigure fig = Controller.DB.GetFigure(id);
+            if (fig == null || fig.Type != CadFigure.Types.MESH) return null;
+
+            return (CadFigureMesh)fig;
+        }
+
+
+        public void AminusB(uint idA, uint idB)
+        {
+            CadFigureMesh figA = GetCadFigureMesh(idA);
+            CadFigureMesh figB = GetCadFigureMesh(idB);
+
+            if (figA==null || figB == null)
+            {
+                ItConsole.println("minus(idA, idB) error: invalid ID");
+                return;
+            }
+            HeModel he_a = figA.mHeModel;
+            HeModel he_b = figB.mHeModel;
+
+            CadMesh a = HeModelConverter.ToCadMesh(he_a);
+            CadMesh b = HeModelConverter.ToCadMesh(he_b);
+
+            CadMesh c = CarveW.AMinusB(a, b);
+
+            MeshUtil.SplitAllFace(c);
+
+
+            HeModel hem = HeModelConverter.ToHeModel(c);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            Controller.CurrentLayer.AddFigure(fig);
+
+            Controller.UpdateTreeView(true);
+        }
+
+        public void DumpMesh(uint id)
+        {
+            CadFigureMesh fig = GetCadFigureMesh(id);
+
+            if (fig == null)
+            {
+                ItConsole.println("dumpMesh(id) error: invalid ID");
+                return;
+            }
+
+            CadMesh cm = HeModelConverter.ToCadMesh(fig.mHeModel);
+
+            for (int i=0;i<cm.VertexStore.Count; i++)
+            {
+                CadVector v = cm.VertexStore[i];
+                ItConsole.printf("{0}:{1},{2},{3}\n", i, v.x, v.y, v.z);
+            }
+
+            for (int i = 0; i < cm.FaceStore.Count; i++)
+            {
+                CadFace f = cm.FaceStore[i];
+
+                string s = "";
+
+                for (int j=0; j<f.VList.Count; j++)
+                {
+                    s += f.VList[j].ToString() + ",";
+                }
+
+                ItConsole.println(s);
+            }
         }
 
         public CadFigure GetTargetFigure()
