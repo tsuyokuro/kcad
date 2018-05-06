@@ -13,6 +13,8 @@ namespace MeshMakerNS
         {
             CadMesh cm = CreateCube();
 
+            sv /= 2;
+
             for (int i=0;i<cm.VertexStore.Count; i++)
             {
                 cm.VertexStore.Ref(i) *= sv;
@@ -56,6 +58,58 @@ namespace MeshMakerNS
             cm.FaceStore.Add(new CadFace(4, 0, 3));
 
             return cm;
+        }
+
+        public static CadMesh CreateCylinder(CadVector pos, int slices, double r, double len)
+        {
+            CadMesh mesh = CreateCylinder(slices, r, len);
+
+            for (int i=0; i<mesh.VertexStore.Count; i++)
+            {
+                mesh.VertexStore.Ref(i) += pos;
+            }
+
+            return mesh;
+        }
+
+
+        public static CadMesh CreateCylinder(int slices, double r, double len)
+        {
+            CadMesh mesh = new CadMesh(slices * 2 + 2, slices * 3);
+
+            mesh.VertexStore.Add(CadVector.Create(0, 0, len / 2));
+            mesh.VertexStore.Add(CadVector.Create(0, 0, -len / 2));
+
+            for (int i = 0; i < slices; i++)
+            {
+                double a1 = i * Math.PI * 2.0 / slices;
+                double y = Math.Cos(a1) * r;
+                double x = Math.Sin(a1) * r;
+                mesh.VertexStore.Add(CadVector.Create(x, y, len / 2));
+                mesh.VertexStore.Add(CadVector.Create(x, y, -len / 2));
+            }
+
+            for (int i = 0; i < slices; i++)
+            {
+                mesh.FaceStore.Add(new CadFace(0,
+                             2 + ((i + 1) % slices) * 2,
+                             2 + i * 2));
+            }
+            for (int i = 0; i < slices; i++)
+            {
+                mesh.FaceStore.Add(new CadFace(2 + i * 2,
+                             2 + ((i + 1) % slices) * 2,
+                             3 + ((i + 1) % slices) * 2,
+                             3 + i * 2));
+            }
+            for (int i = 0; i < slices; i++)
+            {
+                mesh.FaceStore.Add(new CadFace(1,
+                             3 + i * 2,
+                             3 + ((i + 1) % slices) * 2));
+            }
+
+            return mesh;
         }
     }
 }

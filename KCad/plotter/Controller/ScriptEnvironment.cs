@@ -18,6 +18,7 @@ using CadDataTypes;
 using HalfEdgeNS;
 using CarveWapper;
 using MeshUtilNS;
+using MeshMakerNS;
 
 namespace Plotter
 {
@@ -504,9 +505,39 @@ namespace Plotter
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
-
             Controller.CurrentLayer.AddFigure(fig);
+            Controller.UpdateTreeView(true);
+        }
 
+        public void AddBox(double x, double y, double z)
+        {
+            CadMesh cm = MeshMaker.CreateBox(Controller.LastDownPoint, CadVector.Create(x, y, z));
+
+            HeModel hem = HeModelConverter.ToHeModel(cm);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+            Controller.UpdateTreeView(true);
+        }
+
+        public void AddCylinder(int slices, double r, double len)
+        {
+            CadMesh cm = MeshMaker.CreateCylinder(Controller.LastDownPoint, slices, r, len);
+
+            HeModel hem = HeModelConverter.ToHeModel(cm);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+            Controller.CurrentLayer.AddFigure(fig);
             Controller.UpdateTreeView(true);
         }
 

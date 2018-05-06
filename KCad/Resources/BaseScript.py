@@ -151,6 +151,13 @@ def minus(a, b):
 def dumpMesh(id):
     SE.DumpMesh(id)
 
+#[AC] addBox(40,40,20)
+def addBox(x, y, z):
+    SE.AddBox(x, y, z)
+
+#[AC] addCylinder(16, 10, 40)
+def addCylinder(slices, r, len):
+    SE.AddCylinder(slices, r, len)
 
 #globals
 x=0
