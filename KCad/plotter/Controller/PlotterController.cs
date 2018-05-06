@@ -1032,8 +1032,8 @@ namespace Plotter
             Clipboard.SetData(CadClipBoard.TypeNameBin, bin);
 
             // For debug
-            string js = MessagePackSerializer.ToJson(bin);
-            Clipboard.SetText(js);
+            //string js = MessagePackSerializer.ToJson(bin);
+            //Clipboard.SetText(js);
         }
 
         public void PasteFiguresAsBin()
