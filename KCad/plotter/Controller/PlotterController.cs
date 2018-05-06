@@ -438,7 +438,8 @@ namespace Plotter
             MeasureMode = mode;
             MeasureFigureCreator =
                 CadFigure.Creator.Get(
-                    CadFigure.Create(CadFigure.Types.POLY_LINES)
+                    CadFigure.Create(CadFigure.Types.POLY_LINES),
+                    CadFigure.Types.POLY_LINES
                     );
         }
 

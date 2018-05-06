@@ -439,7 +439,7 @@ namespace Plotter
 
                         CadFigure fig = mDB.NewFigure(CreatingFigType);
 
-                        FigureCreator = CadFigure.Creator.Get(fig);
+                        FigureCreator = CadFigure.Creator.Get(fig, CreatingFigType);
 
                         State = States.CREATING;
 

@@ -48,9 +48,9 @@ namespace Plotter
 
             public abstract State GetCreateState();
 
-            public static Creator Get(CadFigure fig)
+            public static Creator Get(CadFigure fig, CadFigure.Types createType)
             {
-                CadFigure.Types type = fig.Type;
+                CadFigure.Types type = createType;
 
                 Creator creator = null;
 
