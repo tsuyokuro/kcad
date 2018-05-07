@@ -81,6 +81,13 @@ namespace Plotter
             }
         }
 
+        public override void EndEdit()
+        {
+            base.EndEdit();
+            mHeModel.RecreateNormals();
+        }
+
+
         public override void Draw(DrawContext dc, int pen)
         {
             //DrawFaces(dc, DrawTools.PEN_MESH_LINE);

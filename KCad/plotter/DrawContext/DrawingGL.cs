@@ -1,5 +1,6 @@
 ﻿//#define OPEN_TK_NEXT
 //#define DEBUG_DRAW_NORMAL
+#define DRAW_HALF_EDGE_OUTLINE
 
 using System.Collections.Generic;
 
@@ -229,7 +230,7 @@ namespace Plotter
 #endif
             }
 
-
+#if DRAW_HALF_EDGE_OUTLINE
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Light0);
 
@@ -275,6 +276,7 @@ namespace Plotter
 
                 GL.End();
             }
+#endif
         }
 
         public override void DrawAxis()
