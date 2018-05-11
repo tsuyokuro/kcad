@@ -16,7 +16,12 @@ namespace Plotter
     {
         public HeModel mHeModel;
 
-        public FlexArray<int> mEdge;
+        public static double EDGE_THRESHOLD;
+
+        static CadFigureMesh()
+        {
+            EDGE_THRESHOLD = Math.Cos(CadMath.Deg2Rad(45));
+        }
 
         public override VectorList PointList
         {
@@ -41,8 +46,6 @@ namespace Plotter
             mHeModel = new HeModel();
 
             mPointList = mHeModel.VertexStore;
-
-            mEdge = new FlexArray<int>();
         }
 
         public void SetMesh(HeModel mesh)
@@ -58,14 +61,11 @@ namespace Plotter
                 return;
             }
 
-            mEdge.Clear();
             mHeModel.Clear();
 
             for (int i = 0; i < fig.PointCount; i++)
             {
                 int idx = mHeModel.AddVertex(fig.PointList[i]);
-
-                mEdge.Add(idx);
             }
 
             List<CadFigure> figList = TriangleSplitter.Split(fig, 16);
@@ -90,13 +90,21 @@ namespace Plotter
 
         public override void Draw(DrawContext dc, int pen)
         {
-            //DrawFaces(dc, DrawTools.PEN_MESH_LINE);
             dc.Drawing.DrawHarfEdgeModel(DrawTools.PEN_MESH_LINE, mHeModel);
             DrawEdge(dc, pen);
         }
 
-        private void DrawFaces(DrawContext dc, int pen)
+        private void DrawEdge(DrawContext dc, int pen)
         {
+            Vector3d t = dc.ViewDir * (-0.2f / dc.WoldScale);
+
+            CadVector shift = (CadVector)t;
+
+
+            CadVector p0;
+            CadVector p1;
+
+
             for (int i = 0; i < mHeModel.FaceStore.Count; i++)
             {
                 HeFace f = mHeModel.FaceStore[i];
@@ -105,15 +113,39 @@ namespace Plotter
 
                 HalfEdge c = head;
 
+                HalfEdge pair;
+
                 CadVector v;
 
                 for (; ; )
                 {
+                    bool draw = false;
+
+                    pair = c.Pair;
+
+                    if (pair == null)
+                    {
+                        draw = true;
+                    }
+                    else
+                    {
+                        double s = CadMath.InnerProduct(mHeModel.NormalStore[c.Normal], mHeModel.NormalStore[pair.Normal]);
+
+                        if ( Math.Abs(s) < EDGE_THRESHOLD)
+                        {
+                            draw = true;
+                        } 
+                    }
+
                     HalfEdge next = c.Next;
 
-                    dc.Drawing.DrawLine(pen,
-                        mHeModel.VertexStore.Ref(c.Vertex),
-                        mHeModel.VertexStore.Ref(next.Vertex));
+                    if (draw)
+                    {
+                        dc.Drawing.DrawLine(pen,
+                            mHeModel.VertexStore.Ref(c.Vertex) + shift,
+                            mHeModel.VertexStore.Ref(next.Vertex) + shift
+                            );
+                    }
 
                     c = next;
 
@@ -123,34 +155,6 @@ namespace Plotter
                     }
                 }
             }
-        }
-
-        private void DrawEdge(DrawContext dc, int pen)
-        {
-            if (mEdge.Count == 0)
-            {
-                return;
-            }
-
-            Vector3d t = dc.ViewDir * (-0.2f / dc.WoldScale);
-
-            CadVector shift = (CadVector)t;
-
-
-            CadVector p0;
-            CadVector p1;
-
-            for (int i = 0; i < mEdge.Count - 1; i++)
-            {
-                p0 = mHeModel.VertexStore.Ref(mEdge[i]);
-                p1 = mHeModel.VertexStore.Ref(mEdge[i + 1]);
-
-                dc.Drawing.DrawLine(pen, p0 + shift, p1 + shift);
-            }
-
-            p0 = mHeModel.VertexStore.Ref(mEdge[mEdge.Count - 1]);
-            p1 = mHeModel.VertexStore.Ref(mEdge[0]);
-            dc.Drawing.DrawLine(pen, p0 + shift, p1 + shift);
         }
 
         public override void DrawSelected(DrawContext dc, int pen)
@@ -207,18 +211,13 @@ namespace Plotter
         public override void InvertDir()
         {
             mHeModel.InvertAllFace();
-            mEdge.Reverse();
         }
 
         public override JObject GeometricDataToJson()
         {
             JObject jvdata = new JObject();
 
-            JArray jedge = CadJson.ToJson.IntArrayToJson(mEdge);
-
             JObject jmodel = HeJson.HeModelToJson(mHeModel);
-
-            jvdata.Add("edge", jedge);
 
             jvdata.Add("model", jmodel);
 
@@ -227,7 +226,6 @@ namespace Plotter
 
         public override void GeometricDataFromJson(JObject jvdata, CadJson.VersionCode version)
         {
-            JArray jedge = (JArray)jvdata["edge"];
             JObject jmodel = (JObject)jvdata["model"];
 
             HeModel model = HeJson.HeModelFromJson(jmodel, version);
@@ -237,18 +235,9 @@ namespace Plotter
                 return;
             }
 
-            FlexArray<int> edge = CadJson.FromJson.IntArrayFromJson(jedge);
-
-            if (edge == null)
-            {
-                return;
-            }
-
             mHeModel = model;
 
             mPointList = mHeModel.VertexStore;
-
-            mEdge = edge;
         }
 
 
@@ -256,7 +245,6 @@ namespace Plotter
         {
             MpMeshGeometricData mpGeo = new MpMeshGeometricData();
             mpGeo.HeModel = MpHeModel.Create(mHeModel);
-            mpGeo.Edge = mEdge.ToList();
 
             return mpGeo;
         }
@@ -271,8 +259,6 @@ namespace Plotter
             MpMeshGeometricData meshGeo = (MpMeshGeometricData)mpGeo;
 
             mHeModel = meshGeo.HeModel.Restore();
-            mEdge = new FlexArray<int>();
-            mEdge.AddRange(meshGeo.Edge);
 
             mPointList = mHeModel.VertexStore;
         }
@@ -293,14 +279,10 @@ namespace Plotter
             if (mHeModel.FaceStore.Count == 0)
             {
                 mHeModel.Clear();
-                mEdge.Clear();
                 return;
             }
 
-
             mHeModel.RemoveVertexs(removeList);
-
-            mEdge = mHeModel.GetOuterEdge();
         }
     }
 }

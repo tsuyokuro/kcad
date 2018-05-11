@@ -168,7 +168,7 @@ namespace Plotter
         {
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
-
+            
             for (int i = 0; i < model.FaceStore.Count; i++)
             {
                 HeFace f = model.FaceStore[i];
@@ -207,26 +207,38 @@ namespace Plotter
                 GL.End();
 
 #if DEBUG_DRAW_NORMAL
-                #region Draw Normal デバッグ用
-                if (f.Normal != HeModel.INVALID_INDEX)
+
+                c = head;
+
+                for (; ; )
                 {
-                    CadVector nv = model.NormalStore[f.Normal];
-                    CadVector np0 = p0;
-                    CadVector np1 = p0 + (nv * 15);
+                    HalfEdge next = c.Next;
 
-                    GL.Disable(EnableCap.Lighting);
-                    GL.Disable(EnableCap.Light0);
+                    CadVector p = model.VertexStore.Ref(c.Vertex);
 
-                    DrawArrow(pen, np0, np1, ArrowTypes.CROSS, ArrowPos.END, 3, 3);
+                    if (c.Normal != HeModel.INVALID_INDEX)
+                    {
+                        CadVector nv = model.NormalStore[c.Normal];
+                        CadVector np0 = p;
+                        CadVector np1 = p + (nv * 15);
 
-                    GL.Enable(EnableCap.Lighting);
-                    GL.Enable(EnableCap.Light0);
+                        GL.Disable(EnableCap.Lighting);
+                        GL.Disable(EnableCap.Light0);
+
+                        DrawArrow(pen, np0, np1, ArrowTypes.CROSS, ArrowPos.END, 3, 3);
+
+                        GL.Enable(EnableCap.Lighting);
+                        GL.Enable(EnableCap.Light0);
+                    }
+
+
+                    c = next;
+
+                    if (c == head)
+                    {
+                        break;
+                    }
                 }
-                else
-                {
-                    DebugOut.println("Invalid Index Normal");
-                }
-                #endregion
 #endif
             }
 
