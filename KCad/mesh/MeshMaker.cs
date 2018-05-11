@@ -11,9 +11,7 @@ namespace MeshMakerNS
     {
         public static CadMesh CreateBox(CadVector pos, CadVector sv)
         {
-            CadMesh cm = CreateCube();
-
-            sv /= 2;
+            CadMesh cm = CreateUnitCube();
 
             for (int i=0;i<cm.VertexStore.Count; i++)
             {
@@ -24,20 +22,20 @@ namespace MeshMakerNS
             return cm;
         }
 
-
-        public static CadMesh CreateCube()
+        // 単位立方体作成
+        public static CadMesh CreateUnitCube()
         {
             CadMesh cm = new CadMesh(8, 12);
 
-            cm.VertexStore.Add(CadVector.Create(+1.0, +1.0, +1.0));
-            cm.VertexStore.Add(CadVector.Create(-1.0, +1.0, +1.0));
-            cm.VertexStore.Add(CadVector.Create(-1.0, -1.0, +1.0));
-            cm.VertexStore.Add(CadVector.Create(+1.0, -1.0, +1.0));
+            cm.VertexStore.Add(CadVector.Create(+0.5, +0.5, +0.5));
+            cm.VertexStore.Add(CadVector.Create(-0.5, +0.5, +0.5));
+            cm.VertexStore.Add(CadVector.Create(-0.5, -0.5, +0.5));
+            cm.VertexStore.Add(CadVector.Create(+0.5, -0.5, +0.5));
 
-            cm.VertexStore.Add(CadVector.Create(+1.0, +1.0, -1.0));
-            cm.VertexStore.Add(CadVector.Create(-1.0, +1.0, -1.0));
-            cm.VertexStore.Add(CadVector.Create(-1.0, -1.0, -1.0));
-            cm.VertexStore.Add(CadVector.Create(+1.0, -1.0, -1.0));
+            cm.VertexStore.Add(CadVector.Create(+0.5, +0.5, -0.5));
+            cm.VertexStore.Add(CadVector.Create(-0.5, +0.5, -0.5));
+            cm.VertexStore.Add(CadVector.Create(-0.5, -0.5, -0.5));
+            cm.VertexStore.Add(CadVector.Create(+0.5, -0.5, -0.5));
 
             cm.FaceStore.Add(new CadFace(0, 1, 2));
             cm.FaceStore.Add(new CadFace(2, 3, 0));
