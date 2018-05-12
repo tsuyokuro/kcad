@@ -109,5 +109,158 @@ namespace MeshMakerNS
 
             return mesh;
         }
+
+        public static CadMesh CreateSphere(double r, int slices1, int slices2)
+        {
+            VectorList vl = new VectorList(slices2);
+
+            double d = Math.PI / slices2;
+
+
+            for (int i=0; i<slices2; i++)
+            {
+                double a = i * d;
+
+                double x = Math.Sin(a) * r;
+                double y = Math.Cos(a) * r;
+
+                vl.Add(CadVector.Create(x, y, 0));
+            }
+
+            vl.Add(CadVector.Create(0, -r, 0));
+
+
+            return CreateRotatingBody(slices1, vl);
+        }
+
+
+        // 回転体の作成
+        public static CadMesh CreateRotatingBody(int slices, VectorList vl)
+        {
+            if (vl.Count < 2)
+            {
+                return null;
+            }
+
+            CadMesh mesh = new CadMesh(vl.Count * slices, vl.Count * slices);
+
+            // 上下端が中心軸にあるなら共有
+            int s = 0;
+            int e = vl.Count;
+
+            int vc = vl.Count;
+
+            bool topCap = false;
+            bool bottomCap = false;
+
+            int ps = 0;
+
+            if (vl[0].x == 0)
+            {
+                mesh.VertexStore.Add(vl[0]);
+                s += 1;
+                topCap = true;
+                vc--;
+                ps++;
+            }
+
+            if (vl[vl.Count-1].x == 0)
+            {
+                mesh.VertexStore.Add(vl[vl.Count - 1]);
+                e -= 1;
+                bottomCap = true;
+                vc--;
+                ps++;
+            }
+
+            double d = Math.PI * 2.0 / slices;
+
+            for (int i = 0; i < slices; i++)
+            {
+                double a = i * d;
+
+                for (int vi=s; vi<e; vi++)
+                {
+                    CadVector v = vl[vi];
+                    CadVector vv = default(CadVector);
+
+                    vv.x = v.x * Math.Cos(a);
+                    vv.y = v.y;
+                    vv.z = v.x * Math.Sin(a);
+
+                    mesh.VertexStore.Add(vv);
+                }
+            }
+
+            CadFace f;
+
+            if (topCap)
+            {
+                for (int i = 0; i < slices; i++)
+                {
+                    f = new CadFace(0, ((i + 1) % slices) * vc + ps, i * vc + ps);
+                    mesh.FaceStore.Add(f);
+                }
+            }
+
+            if (bottomCap)
+            {
+                for (int i = 0; i < slices; i++)
+                {
+                    int bi = (vc - 1);
+
+                    f = new CadFace(1, (i * vc) + bi + ps, ((i + 1) % slices) * vc + bi + ps);
+                    mesh.FaceStore.Add(f);
+                }
+            }
+
+            // 四角形で作成
+            /*
+            for (int i = 0; i < slices; i++)
+            {
+                int nextSlice = ((i + 1) % slices) * vc + ps;
+
+                for (int vi = 0; vi < vc-1; vi++)
+                {
+                    f = new CadFace(
+                        (i * vc) + ps + vi,
+                        nextSlice + vi,
+                        nextSlice + vi + 1,
+                        (i * vc) + ps + vi + 1
+                        );
+
+                    mesh.FaceStore.Add(f);
+                }
+            }
+            */
+
+            // 三角形で作成
+            for (int i = 0; i < slices; i++)
+            {
+                int nextSlice = ((i + 1) % slices) * vc + ps;
+
+                for (int vi = 0; vi < vc - 1; vi++)
+                {
+                    f = new CadFace(
+                        (i * vc) + ps + vi,
+                        nextSlice + vi,
+                        (i * vc) + ps + vi + 1
+                        );
+
+                    mesh.FaceStore.Add(f);
+
+                    f = new CadFace(
+                       nextSlice + vi,
+                       nextSlice + vi + 1,
+                       (i * vc) + ps + vi + 1
+                       );
+
+                    mesh.FaceStore.Add(f);
+                }
+            }
+
+
+            return mesh;
+        }
     }
 }

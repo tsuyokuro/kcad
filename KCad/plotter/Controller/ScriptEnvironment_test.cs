@@ -28,39 +28,42 @@ namespace Plotter
     {
         private void test001()
         {
-            CadFigure fig = GetTargetFigure();
+            VectorList vl = new VectorList();
 
-            if (fig == null) return;
+            vl.Add(CadVector.Create(0, 20, 0));
+            vl.Add(CadVector.Create(15, 15, 0));
+            vl.Add(CadVector.Create(18, 0, 0));
+            vl.Add(CadVector.Create(15, -15, 0));
+            vl.Add(CadVector.Create(10, -20, 0));
 
-            fig.ForEachFigureSegment(seg =>
-            {
-                seg.dump();
-                return true;
-            });
+            CadMesh cm = MeshMaker.CreateRotatingBody(16, vl);
+
+            HeModel hem = HeModelConverter.ToHeModel(cm);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+            Controller.UpdateTreeView(true);
         }
 
         private void test002()
         {
-            List<uint> idlist = Controller.GetSelectedFigIDList();
+            CadMesh cm = MeshMaker.CreateSphere(20, 16, 16);
 
-            if (idlist.Count < 2)
-            {
-                return;
-            }
+            HeModel hem = HeModelConverter.ToHeModel(cm);
 
-            CadFigure fig0 = Controller.DB.GetFigure(idlist[0]);
-            CadFigure fig1 = Controller.DB.GetFigure(idlist[1]);
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
 
-            if (fig0.PointCount < 2) return;
-            if (fig1.PointCount < 2) return;
+            fig.SetMesh(hem);
 
-
-            bool ret = CadUtil.CheckCrossSegSeg2D(
-                                fig0.PointList[0], fig0.PointList[1],
-                                fig1.PointList[0], fig1.PointList[1]
-                                );
-
-            DebugOut.println("CheckCrossSegSeg2D ret=" + ret.ToString());
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+            Controller.UpdateTreeView(true);
         }
 
         private void test003()
