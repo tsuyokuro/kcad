@@ -1387,8 +1387,6 @@ namespace Plotter
         //
         public void RotateSelectedFigure(CadVector org, CadVector axisDir, double t)
         {
-            StartEdit();
-
             List<uint> idlist = GetSelectedFigIDList();
 
             foreach (uint id in idlist)
@@ -1402,8 +1400,6 @@ namespace Plotter
 
                 CadUtil.RotateFigure(fig, org, axisDir, t);
             }
-
-            EndEdit();
         }
 
         /// <summary>
