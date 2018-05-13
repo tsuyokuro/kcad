@@ -181,8 +181,8 @@ namespace Plotter
 
         public override Centroid GetCentroid()
         {
-            Centroid cent = default;
-            Centroid ct = default;
+            Centroid cent = default(Centroid);
+            Centroid ct = default(Centroid);
 
             for (int i = 0; i < mHeModel.FaceStore.Count; i++)
             {

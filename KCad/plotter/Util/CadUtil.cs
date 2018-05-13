@@ -23,7 +23,7 @@ namespace Plotter
         // 三角形から作成
         public static Centroid Create(CadVector p0, CadVector p1, CadVector p2)
         {
-            Centroid ret = default;
+            Centroid ret = default(Centroid);
             ret.set(p0, p1, p2);
             return ret;
         }
@@ -160,7 +160,7 @@ namespace Plotter
         // 二つの重心情報から重心を求める
         public static Centroid MergeCentroid(Centroid c0, Centroid c1)
         {
-            CadVector gpt = default;
+            CadVector gpt = default(CadVector);
 
             double ratio = c1.Area / (c0.Area + c1.Area);
 
@@ -168,7 +168,7 @@ namespace Plotter
             gpt.y = (c1.Point.y - c0.Point.y) * ratio + c0.Point.y;
             gpt.z = (c1.Point.z - c0.Point.z) * ratio + c0.Point.z;
 
-            Centroid ret = default;
+            Centroid ret = default(Centroid);
 
             ret.Area = c0.Area + c1.Area;
             ret.Point = gpt;
