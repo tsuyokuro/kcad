@@ -159,6 +159,10 @@ def addBox(x, y, z):
 def addCylinder(slices, r, len):
     SE.AddCylinder(slices, r, len)
 
+#[AC] addSphere(16, 20) # slices, r
+def addSphere(slices, r):
+    SE.AddSphere(slices, r)
+
 #globals
 x=0
 y=0

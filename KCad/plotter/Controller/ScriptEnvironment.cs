@@ -541,6 +541,22 @@ namespace Plotter
             Controller.UpdateTreeView(true);
         }
 
+        public void AddSphere(int slices, double r)
+        {
+            CadMesh cm = MeshMaker.CreateSphere(r, slices, slices);
+
+            HeModel hem = HeModelConverter.ToHeModel(cm);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+            Controller.UpdateTreeView(true);
+        }
+
         public void AddLayer(string name)
         {
             Controller.AddLayer(name);
