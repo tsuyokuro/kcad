@@ -506,6 +506,24 @@ namespace Plotter
         }
 
 
+        private void testLoadDxf()
+        {
+            CadDxfLoader loader = new CadDxfLoader();
+
+            CadMesh cm = loader.Load(@"F:\work\恐竜.DXF", 20.0);
+
+            HeModel hem = HeModelConverter.ToHeModel(cm);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            Controller.CurrentLayer.AddFigure(fig);
+
+            Controller.UpdateTreeView(true);
+        }
+
+
         private void SimpleCommand(string s)
         {
             if (s == "@clear" || s == "@cls")
@@ -599,6 +617,12 @@ namespace Plotter
             else if (s == "@createBox")
             {
                 testCreateBox();
+            }
+
+            else if (s == "@loadDxf")
+            {
+                testLoadDxf();
+
             }
 
             else

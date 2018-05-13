@@ -388,37 +388,11 @@ namespace Plotter
             CadUtil.Dump((Vector4d)p, "tp");
         }
 
-        private void LoadDxfTest()
-        {
-            CadDxfLoader loader = new CadDxfLoader();
-
-            loader.AsyncLoad(@"f:\work2\cblock.dxf", 1000, (state, percent, db)=>
-            {
-                mDB = db;
-
-                mHistoryManager = new HistoryManager(mDB);
-
-                NotifyDataChanged(true);
-
-                NotifyLayerInfo();
-
-                InteractOut.println("Complete! point=" + loader.TotalPointCount +
-                    " Face=" + loader.TotalFaceCount);
-            });
-
-            InteractOut.println("Loading ...");
-        }
-
         public void debugCommand(DrawContext dc, string s)
         {
             if (s == "test")
             {
                 test();
-            }
-
-            else if (s == "dxf")
-            {
-                LoadDxfTest();
             }
 
             else if (s == "mtest")

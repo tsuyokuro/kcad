@@ -263,11 +263,6 @@ namespace Plotter
                     break;
             }
 
-            //if (fig != null)
-            //{
-            //    fig.Type = type;
-            //}
-
             return fig;
         }
 

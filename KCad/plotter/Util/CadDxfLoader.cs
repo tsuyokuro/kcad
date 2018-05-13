@@ -17,13 +17,13 @@ namespace Plotter
             ERROR,
         }
 
-        public delegate void Progress(States state, int percent, CadObjectDB db);
+        public delegate void Progress(States state, int percent, CadMesh mesh);
 
         public async void AsyncLoad(string fname, double scale, Progress progress)
         {
-            CadObjectDB db = await Task.Run(() => Load(fname, scale));
+            CadMesh mesh = await Task.Run(() => Load(fname, scale));
 
-            progress(States.COMPLETE, 100, db);
+            progress(States.COMPLETE, 100, mesh);
         }
 
         private enum DxfState
@@ -36,17 +36,12 @@ namespace Plotter
 
         public int TotalFaceCount;
 
-        public CadObjectDB Load(string fname, double scale)
+        public CadMesh Load(string fname, double scale)
         {
             TotalPointCount = 0;
             TotalFaceCount = 0;
 
-            CadObjectDB db = new CadObjectDB();
-
-            CadLayer layer = db.NewLayer();
-            db.LayerList.Add(layer);
-
-            db.CurrentLayer = layer;
+            CadMesh mesh = new CadMesh(10,10);
 
             StreamReader reader = new StreamReader(fname);
 
@@ -82,7 +77,7 @@ namespace Plotter
 
                     if (pointList.Count > 0)
                     {
-                        AddFace(db, pointList);
+                        AddFace(mesh, pointList);
                         TotalFaceCount++;
 
                         pointList.Clear();
@@ -116,28 +111,27 @@ namespace Plotter
                 }
             }
 
-            return db;
+            return mesh;
         }
 
-        private void AddFace(CadObjectDB db, VectorList plist)
+        private void AddFace(CadMesh mesh, VectorList plist)
         {
             if (plist.Count == 0)
             {
                 return;
             }
 
-            CadFigure fig = db.NewFigure(CadFigure.Types.POLY_LINES);
+            int pidx;
 
-            foreach (CadVector v in plist)
+            CadFace f = new CadFace();
+
+            for (int i=0; i<plist.Count; i++)
             {
-                fig.AddPoint(v);
+                pidx = mesh.VertexStore.Add(plist[i]);
+                f.VList.Add(pidx);
             }
 
-            fig.IsLoop = true;
-
-            CadUtil.SetNormal(fig);
-
-            db.CurrentLayer.AddFigure(fig);
+            mesh.FaceStore.Add(f);
         }
     }
 }

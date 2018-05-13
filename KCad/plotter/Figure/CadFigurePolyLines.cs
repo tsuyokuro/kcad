@@ -109,12 +109,12 @@ namespace Plotter
         public override void Draw(DrawContext dc, int pen)
         {
             bool drawed = false;
-
+/*
             if (IsLoop && SettingsHolder.Settings.FillFace)
             {
                 drawed = DrawFaces(dc, pen);
             }
-
+*/
             if (!drawed)
             {
                 DrawLines(dc, pen);
