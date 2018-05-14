@@ -144,7 +144,7 @@ namespace KCad
 
         protected double mTextSize = 16.0;
 
-        protected double mIndentSize = 8.0;
+        protected double mIndentSize = 12.0;
 
         public CadObjectTreeView()
         {
@@ -174,7 +174,7 @@ namespace KCad
         protected void CadObjectTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Point p = e.GetPosition(this);
-
+            
             int idx = (int)(p.Y / mItemHeight);
 
             if (!ShowRoot)
@@ -189,10 +189,26 @@ namespace KCad
                 return;
             }
 
+            int level = item.GetLevel();
 
-            item.IsChecked = item.IsChecked == false;
-
-            OnCheckChanged(EventArgs.Empty);
+            if (item.Children != null)
+            {
+                if (p.X > (level) * mIndentSize)
+                {
+                    item.IsChecked = item.IsChecked == false;
+                    OnCheckChanged(EventArgs.Empty);
+                }
+                else
+                {
+                    item.IsExpand = item.IsExpand == false;
+                    RecalcSize();
+                }
+            }
+            else
+            {
+                item.IsChecked = item.IsChecked == false;
+                OnCheckChanged(EventArgs.Empty);
+            }
 
             InvalidateVisual();
         }
@@ -259,6 +275,8 @@ namespace KCad
             Point tp = default(Point);
             Rect rect = default(Rect);
 
+            Point mp = default(Point);
+
             long topNumber = (long)offset / (long)mItemHeight;
 
             if (!ShowRoot)
@@ -294,6 +312,9 @@ namespace KCad
                 topLevel = 1;
             }
 
+            FormattedText expand = GetText("+", mForeground);
+            FormattedText contract = GetText("-", mForeground);
+
             mRoot.ForEach((item, level) =>
             {
                 skip--;
@@ -317,11 +338,27 @@ namespace KCad
                     dc.DrawRectangle(mBackground, null, rect);
                 }
 
-                p.X = mIndentSize * (level - topLevel);
+                p.X = mIndentSize * (level - topLevel) + mIndentSize;
 
                 tp = p;
 
                 tp.Y += textOffset;
+
+                if (item.Children != null)
+                {
+                    mp = tp;
+                    mp.X -= mIndentSize;
+                    mp.X += 4;
+
+                    if (item.IsExpand)
+                    {
+                        dc.DrawText(contract, mp);
+                    }
+                    else
+                    {
+                        dc.DrawText(expand, mp);
+                    }
+                }
 
                 dc.DrawText(ft, tp);
 
@@ -358,8 +395,14 @@ namespace KCad
         {
             mRoot = root;
 
-            int tc = mRoot.GetTotalCount();
+            mRoot.IsExpand = true;
 
+            RecalcSize();
+        }
+
+        private void RecalcSize()
+        {
+            int tc = mRoot.GetTotalCount();
             Height = mItemHeight * (double)(tc + 2);
         }
 

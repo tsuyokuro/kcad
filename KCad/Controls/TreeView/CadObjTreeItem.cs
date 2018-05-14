@@ -40,6 +40,23 @@ namespace KCad
 
         protected List<CadObjTreeItem> mChildren;
 
+        public int GetLevel()
+        {
+            int i = 0;
+
+            CadObjTreeItem parent = Parent;
+
+
+            while (parent != null)
+            {
+                i++;
+                parent = parent.Parent;
+            }
+
+            return i;
+        }
+
+
         public List<CadObjTreeItem> Children
         {
             get
@@ -64,7 +81,7 @@ namespace KCad
         {
             int cnt = 1;
 
-            if (mChildren != null)
+            if (mChildren != null && IsExpand)
             {
                 for (int i = 0; i < mChildren.Count; i++)
                 {
@@ -81,6 +98,11 @@ namespace KCad
             if (!func(this))
             {
                 return false;
+            }
+
+            if (!IsExpand)
+            {
+                return true;
             }
 
             if (mChildren == null)
@@ -107,6 +129,11 @@ namespace KCad
             if (!func(this, level))
             {
                 return false;
+            }
+
+            if (!IsExpand)
+            {
+                return true;
             }
 
             if (mChildren == null)
