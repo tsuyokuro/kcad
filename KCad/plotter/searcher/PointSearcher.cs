@@ -145,15 +145,15 @@ namespace Plotter
                 CheckFigPoint(dc, fig.PointList[i], layer, fig, i);
             }
 
-            if (fig.Thickness != 0)
-            {
-                CadVector tv = fig.ThicknessV;
+            //if (fig.Thickness != 0)
+            //{
+            //    CadVector tv = fig.ThicknessV;
 
-                for (int i = 0; i < fig.PointCount; i++)
-                {
-                    CheckFigPoint(dc, fig.PointList[i] + tv, layer, fig, i);
-                }
-            }
+            //    for (int i = 0; i < fig.PointCount; i++)
+            //    {
+            //        CheckFigPoint(dc, fig.PointList[i] + tv, layer, fig, i);
+            //    }
+            //}
 
             if (fig.ChildList != null)
             {

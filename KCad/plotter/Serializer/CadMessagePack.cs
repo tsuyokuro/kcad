@@ -301,8 +301,8 @@ namespace Plotter.Serializer
         [Key("nrm")]
         public MpVector Normal;
 
-        [Key("tck")]
-        public double Tickness;
+        //[Key("tck")]
+        //public double Tickness;
 
         [Key("cL")]
         public List<MpFigure> ChildList;
@@ -340,7 +340,7 @@ namespace Plotter.Serializer
             Locked = fig.Locked;
             IsLoop = fig.IsLoop;
             Normal = MpVector.Create(fig.Normal);
-            Tickness = fig.Thickness;
+            //Tickness = fig.Thickness;
 
             GeoData = fig.GeometricDataToMp();
         }
@@ -360,7 +360,7 @@ namespace Plotter.Serializer
             fig.Locked = Locked;
             fig.IsLoop = IsLoop;
             fig.Normal = Normal.Restore();
-            fig.Thickness = Tickness;
+            //fig.Thickness = Tickness;
 
             if (ChildList != null)
             {

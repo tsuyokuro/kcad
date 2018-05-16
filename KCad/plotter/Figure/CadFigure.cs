@@ -41,6 +41,7 @@ namespace Plotter
 
         public CadVector Normal;
 
+        /*
         public double Thickness
         {
             get;
@@ -59,6 +60,7 @@ namespace Plotter
                 return (Normal * -1.0) * Thickness;
             }
         }
+        */
 
         public virtual VectorList PointList
         {
@@ -568,7 +570,7 @@ namespace Plotter
             IsLoop = fig.IsLoop;
             Locked = fig.Locked;
             Normal = fig.Normal;
-            Thickness = fig.Thickness;
+            //Thickness = fig.Thickness;
 
             mPointList.Clear();
             mPointList.AddRange(fig.mPointList);
@@ -825,24 +827,24 @@ namespace Plotter
             }
         }
 
-        public virtual void ForEachThicknessPoint(Action<CadVector, int> dg)
-        {
-            if (Thickness == 0)
-            {
-                return;
-            }
+        //public virtual void ForEachThicknessPoint(Action<CadVector, int> dg)
+        //{
+        //    if (Thickness == 0)
+        //    {
+        //        return;
+        //    }
 
-            int cnt = mPointList.Count;
+        //    int cnt = mPointList.Count;
 
-            CadVector t = (Normal * -1.0) * Thickness;
+        //    CadVector t = (Normal * -1.0) * Thickness;
 
-            for (int i = 0; i < cnt; i++)
-            {
-                CadVector v = mPointList[i] + t;
+        //    for (int i = 0; i < cnt; i++)
+        //    {
+        //        CadVector v = mPointList[i] + t;
 
-                dg(v, i);
-            }
-        }
+        //        dg(v, i);
+        //    }
+        //}
 
         public virtual void InvertDir()
         {

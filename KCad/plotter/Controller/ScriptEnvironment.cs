@@ -881,12 +881,12 @@ namespace Plotter
 
         public void SetThickness(double t)
         {
-            CadFigure fig = GetTargetFigure();
+            //CadFigure fig = GetTargetFigure();
 
-            CadOpe ope = CadOpe.CreateSetThickOpe(Controller.CurrentLayer.ID, fig.ID, fig.Thickness, t);
-            Controller.HistoryManager.foward(ope);
+            //CadOpe ope = CadOpe.CreateSetThickOpe(Controller.CurrentLayer.ID, fig.ID, fig.Thickness, t);
+            //Controller.HistoryManager.foward(ope);
 
-            fig.Thickness = t;
+            //fig.Thickness = t;
         }
 
         public void ToMesh()

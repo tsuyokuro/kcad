@@ -50,11 +50,11 @@ namespace Plotter
             return ope;
         }
 
-        public static CadOpe CreateSetThickOpe(uint layerID, uint figureID, double oldThick, double newThick)
-        {
-            CadOpe ope = new CadOpeSetThickness(layerID, figureID, oldThick, newThick);
-            return ope;
-        }
+        //public static CadOpe CreateSetThickOpe(uint layerID, uint figureID, double oldThick, double newThick)
+        //{
+        //    CadOpe ope = new CadOpeSetThickness(layerID, figureID, oldThick, newThick);
+        //    return ope;
+        //}
 
         public static CadOpe CreateAddFigureOpe(uint layerID, uint figureID)
         {
@@ -388,30 +388,30 @@ namespace Plotter
         }
     }
 
-    public class CadOpeSetThickness : CadOpeFigureBase
-    {
-        double NewThick = 0;
-        double OldThick = 0;
+    //public class CadOpeSetThickness : CadOpeFigureBase
+    //{
+    //    double NewThick = 0;
+    //    double OldThick = 0;
 
-        public CadOpeSetThickness(uint layerID, uint figureID, double oldThick, double newThick)
-            : base(layerID, figureID)
-        {
-            OldThick = oldThick;
-            NewThick = newThick;
-        }
+    //    public CadOpeSetThickness(uint layerID, uint figureID, double oldThick, double newThick)
+    //        : base(layerID, figureID)
+    //    {
+    //        OldThick = oldThick;
+    //        NewThick = newThick;
+    //    }
 
-        public override void Undo(CadObjectDB db)
-        {
-            CadFigure fig = db.GetFigure(FigureID);
-            fig.Thickness = OldThick;
-        }
+    //    public override void Undo(CadObjectDB db)
+    //    {
+    //        CadFigure fig = db.GetFigure(FigureID);
+    //        fig.Thickness = OldThick;
+    //    }
 
-        public override void Redo(CadObjectDB db)
-        {
-            CadFigure fig = db.GetFigure(FigureID);
-            fig.Thickness = NewThick;
-        }
-    }
+    //    public override void Redo(CadObjectDB db)
+    //    {
+    //        CadFigure fig = db.GetFigure(FigureID);
+    //        fig.Thickness = NewThick;
+    //    }
+    //}
 
     public class CadOpeAddFigure : CadOpeFigureBase
     {

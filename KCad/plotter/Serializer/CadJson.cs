@@ -253,7 +253,7 @@ namespace Plotter.Serializer
                 jo.Add(FIG.CLOSED, fig.IsLoop);
                 jo.Add(FIG.LOCKED, fig.Locked);
                 jo.Add(FIG.NORMAL, VectorToJson(fig.Normal));
-                jo.Add(FIG.THICKNESSS, fig.Thickness);
+                //jo.Add(FIG.THICKNESSS, fig.Thickness);
 
                 JObject jvl = fig.GeometricDataToJson();
 
@@ -539,7 +539,7 @@ namespace Plotter.Serializer
 
                 fig.Normal = VectorFromJson((JObject)jo[FIG.NORMAL], version);
 
-                fig.Thickness = jo.GetDouble(FIG.THICKNESSS, 0);
+                //fig.Thickness = jo.GetDouble(FIG.THICKNESSS, 0);
 
                 JObject jvdata = (JObject)jo[FIG.VECTOR_DATA];
 

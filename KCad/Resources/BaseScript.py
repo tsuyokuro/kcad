@@ -123,10 +123,6 @@ def swapXZ(ax, az):
 def swapYZ(ay, az):
     SE.SwapYZ(ay, az)
 
-#[AC] setThickness(t)
-def setThickness(t):
-    SE.SetThickness(t)
-
 #[AC] projDir()
 def projDir():
     return SE.GetProjectionDir()
