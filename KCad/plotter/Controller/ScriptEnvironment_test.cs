@@ -68,11 +68,26 @@ namespace Plotter
 
         private void test003()
         {
-            Controller.CurrentLayer.ForEachFig(fig =>
+            CadFigure tfig = GetTargetFigure();
+
+            if (tfig == null || tfig.Type != CadFigure.Types.POLY_LINES)
             {
-                DebugOut.println("fig:" + fig.ID.ToString());
-                return true;
-            });
+                return;
+            }
+
+
+            CadMesh cm = MeshMaker.CreateExtruded(tfig.GetPoints(16), CadVector.UnitZ * -20);
+
+            HeModel hem = HeModelConverter.ToHeModel(cm);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+            Controller.UpdateTreeView(true);
         }
 
         private void test004()

@@ -1,4 +1,6 @@
 ﻿using CadDataTypes;
+using MeshUtilNS;
+using Plotter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +11,12 @@ namespace MeshMakerNS
 {
     public class MeshMaker
     {
+        public enum FaceType
+        {
+            TRIANGLE,
+            QUADRANGLE,
+        }
+
         public static CadMesh CreateBox(CadVector pos, CadVector sv)
         {
             CadMesh cm = CreateUnitCube();
@@ -135,7 +143,7 @@ namespace MeshMakerNS
 
 
         // 回転体の作成
-        public static CadMesh CreateRotatingBody(int slices, VectorList vl)
+        public static CadMesh CreateRotatingBody(int slices, VectorList vl, FaceType facetype = FaceType.TRIANGLE)
         {
             if (vl.Count < 2)
             {
@@ -215,50 +223,136 @@ namespace MeshMakerNS
             }
 
             // 四角形で作成
-            /*
-            for (int i = 0; i < slices; i++)
+            if (facetype == FaceType.QUADRANGLE)
             {
-                int nextSlice = ((i + 1) % slices) * vc + ps;
-
-                for (int vi = 0; vi < vc-1; vi++)
+                for (int i = 0; i < slices; i++)
                 {
-                    f = new CadFace(
-                        (i * vc) + ps + vi,
-                        nextSlice + vi,
-                        nextSlice + vi + 1,
-                        (i * vc) + ps + vi + 1
-                        );
+                    int nextSlice = ((i + 1) % slices) * vc + ps;
 
-                    mesh.FaceStore.Add(f);
+                    for (int vi = 0; vi < vc - 1; vi++)
+                    {
+                        f = new CadFace(
+                            (i * vc) + ps + vi,
+                            nextSlice + vi,
+                            nextSlice + vi + 1,
+                            (i * vc) + ps + vi + 1
+                            );
+
+                        mesh.FaceStore.Add(f);
+                    }
                 }
             }
-            */
-
-            // 三角形で作成
-            for (int i = 0; i < slices; i++)
+            else
             {
-                int nextSlice = ((i + 1) % slices) * vc + ps;
-
-                for (int vi = 0; vi < vc - 1; vi++)
+                // 三角形で作成
+                for (int i = 0; i < slices; i++)
                 {
-                    f = new CadFace(
-                        (i * vc) + ps + vi,
-                        nextSlice + vi,
-                        (i * vc) + ps + vi + 1
-                        );
+                    int nextSlice = ((i + 1) % slices) * vc + ps;
 
-                    mesh.FaceStore.Add(f);
+                    for (int vi = 0; vi < vc - 1; vi++)
+                    {
+                        f = new CadFace(
+                            (i * vc) + ps + vi,
+                            nextSlice + vi,
+                            (i * vc) + ps + vi + 1
+                            );
 
-                    f = new CadFace(
-                       nextSlice + vi,
-                       nextSlice + vi + 1,
-                       (i * vc) + ps + vi + 1
-                       );
+                        mesh.FaceStore.Add(f);
 
-                    mesh.FaceStore.Add(f);
+                        f = new CadFace(
+                           nextSlice + vi,
+                           nextSlice + vi + 1,
+                           (i * vc) + ps + vi + 1
+                           );
+
+                        mesh.FaceStore.Add(f);
+                    }
                 }
+
             }
 
+            return mesh;
+        }
+
+        public static CadMesh CreateExtruded(VectorList src, CadVector dir)
+        {
+            if (src.Count < 3)
+            {
+                return null;
+            }
+
+            VectorList vl;
+
+            CadVector n = CadUtil.RepresentativeNormal(src);
+
+            bool rev = false;
+
+            if (CadMath.InnerProduct(n, dir) <= 0)
+            {
+                vl = new VectorList(src);
+                vl.Reverse();
+                rev = true;
+            }
+            else
+            {
+                vl = src;
+            }
+
+            int blk = vl.Count;
+
+            CadMesh mesh = new CadMesh(vl.Count * 2, vl.Count);
+
+            CadFace f;
+
+            f = new CadFace();
+
+            for (int i = 0; i<vl.Count; i++)
+            {
+                mesh.VertexStore.Add(vl[i]);
+                f.VList.Add(i);
+            }
+
+            mesh.FaceStore.Add(f);
+
+            for (int i = 0; i < blk; i++)
+            {
+                mesh.VertexStore.Add(vl[i] + dir);
+            }
+
+            f = new CadFace();
+
+            for (int i = blk-1; i >= 0; i--)
+            {
+                f.VList.Add(i + blk);                
+            }
+
+            mesh.FaceStore.Add(f);
+
+            for (int i = 0; i < blk; i++)
+            {
+                int j = (i+1) % blk;
+
+                f = new CadFace();
+
+                if (rev)
+                {
+                    f.VList.Add(i);
+                    f.VList.Add(i + blk);
+                    f.VList.Add(j + blk);
+                    f.VList.Add(j);
+                }
+                else
+                {
+                    f.VList.Add(i);
+                    f.VList.Add(j);
+                    f.VList.Add(j + blk);
+                    f.VList.Add(i + blk);
+                }
+
+                mesh.FaceStore.Add(f);
+            }
+
+            MeshUtil.SplitAllFace(mesh);
 
             return mesh;
         }
