@@ -879,14 +879,43 @@ namespace Plotter
             }
         }
 
-        public void SetThickness(double t)
+        //public void SetThickness(double t)
+        //{
+        //CadFigure fig = GetTargetFigure();
+
+        //CadOpe ope = CadOpe.CreateSetThickOpe(Controller.CurrentLayer.ID, fig.ID, fig.Thickness, t);
+        //Controller.HistoryManager.foward(ope);
+
+        //fig.Thickness = t;
+        //}
+
+        public void Extrude(uint id, CadVector v, double d)
         {
-            //CadFigure fig = GetTargetFigure();
+            CadFigure tfig = Controller.DB.GetFigure(id);
 
-            //CadOpe ope = CadOpe.CreateSetThickOpe(Controller.CurrentLayer.ID, fig.ID, fig.Thickness, t);
-            //Controller.HistoryManager.foward(ope);
+            if (tfig == null || tfig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return;
+            }
 
-            //fig.Thickness = t;
+            v = v.UnitVector();
+
+            v *= -d;
+
+            CadMesh cm = MeshMaker.CreateExtruded(tfig.GetPoints(16), v);
+
+            HeModel hem = HeModelConverter.ToHeModel(cm);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.RecalcNormal();
+
+            fig.SetMesh(hem);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+            Controller.UpdateTreeView(true);
         }
 
         public void ToMesh()
@@ -966,7 +995,7 @@ namespace Plotter
         }
 
 
-        public void AminusB(uint idA, uint idB)
+        public void AsubB(uint idA, uint idB)
         {
             CadFigureMesh figA = GetCadFigureMesh(idA);
             CadFigureMesh figB = GetCadFigureMesh(idB);
@@ -1029,6 +1058,11 @@ namespace Plotter
 
                 ItConsole.println(s);
             }
+        }
+
+        public void Test(CadVector v)
+        {
+        
         }
 
         public CadFigure GetTargetFigure()

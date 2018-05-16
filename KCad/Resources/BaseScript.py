@@ -139,9 +139,9 @@ def toMesh():
 def invertDir():
     SE.InvertDir()
 
-#[AC] minus(idA, idB)
-def minus(a, b):
-    SE.AminusB(a, b)
+#[AC] sub(idA, idB)
+def sub(a, b):
+    SE.AsubB(a, b)
 
 #[AC] dumpMesh(id)
 def dumpMesh(id):
@@ -158,6 +158,14 @@ def addCylinder(slices, r, len):
 #[AC] addSphere(16, 20) # slices, r
 def addSphere(slices, r):
     SE.AddSphere(slices, r)
+
+#[AC] extrude(id, unitVZ, 20)
+def extrude(id, v, d):
+    SE.Extrude(id, v, d)
+
+def test(v):
+    SE.Test(v)
+
 
 #globals
 x=0

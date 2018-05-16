@@ -274,7 +274,7 @@ namespace MeshMakerNS
             return mesh;
         }
 
-        public static CadMesh CreateExtruded(VectorList src, CadVector dir)
+        public static CadMesh CreateExtruded(VectorList src, CadVector dv)
         {
             if (src.Count < 3)
             {
@@ -287,7 +287,7 @@ namespace MeshMakerNS
 
             bool rev = false;
 
-            if (CadMath.InnerProduct(n, dir) <= 0)
+            if (CadMath.InnerProduct(n, dv) <= 0)
             {
                 vl = new VectorList(src);
                 vl.Reverse();
@@ -316,7 +316,7 @@ namespace MeshMakerNS
 
             for (int i = 0; i < blk; i++)
             {
-                mesh.VertexStore.Add(vl[i] + dir);
+                mesh.VertexStore.Add(vl[i] + dv);
             }
 
             f = new CadFace();
@@ -334,20 +334,10 @@ namespace MeshMakerNS
 
                 f = new CadFace();
 
-                if (rev)
-                {
-                    f.VList.Add(i);
-                    f.VList.Add(i + blk);
-                    f.VList.Add(j + blk);
-                    f.VList.Add(j);
-                }
-                else
-                {
-                    f.VList.Add(i);
-                    f.VList.Add(j);
-                    f.VList.Add(j + blk);
-                    f.VList.Add(i + blk);
-                }
+                f.VList.Add(i);
+                f.VList.Add(i + blk);
+                f.VList.Add(j + blk);
+                f.VList.Add(j);
 
                 mesh.FaceStore.Add(f);
             }
