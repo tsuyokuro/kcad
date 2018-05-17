@@ -49,6 +49,24 @@ namespace Plotter
 
     class CadFigTreeItem : CadObjTreeItem
     {
+        private static Dictionary<CadFigure.Types, string> FigTypeNames;
+
+        static CadFigTreeItem()
+        {
+            FigTypeNames = new Dictionary<CadFigure.Types, string>()
+            {
+                { CadFigure.Types.NONE, "NONE" },
+                { CadFigure.Types.LINE, "LINE" },
+                { CadFigure.Types.RECT, "RECT" },
+                { CadFigure.Types.POLY_LINES, "LINES" },
+                { CadFigure.Types.CIRCLE, "CIRCLE" },
+                { CadFigure.Types.POINT, "POINT" },
+                { CadFigure.Types.GROUP, "GROUP" },
+                { CadFigure.Types.DIMENTION_LINE, "DIM" },
+                { CadFigure.Types.MESH, "MESH" },
+            };
+        }
+
         public CadFigure Fig;
 
         public override bool IsChecked
@@ -68,7 +86,7 @@ namespace Plotter
         {
             get
             {
-                return "FIG:" + Fig.ID.ToString();
+                return FigTypeNames[Fig.Type] + " ["+ Fig.ID.ToString() + "]";
             }
         }
 

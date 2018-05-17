@@ -26,7 +26,11 @@ def layerList():
 
 #[AC] lastDown()
 def lastDown():
-    SE.ShowLastDownPoint()
+    return SE.GetLastDownPoint()
+
+#[AC] showVector(v)
+def showVector(v):
+    SE.ShowVector(v)
 
 #[AC] distance()
 def distance():
@@ -94,7 +98,7 @@ def execScript(fname):
 def scale(ratio):
     SE.Scale(ratio)
 
-#[AC] rotate(point0, unitVZ, 45)
+#[AC] rotate(lastDown(), unitVZ, 45)
 def rotate(p0, v, t):
     SE.Rotate(p0, v, t)
 

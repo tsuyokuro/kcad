@@ -298,7 +298,7 @@ namespace MeshMakerNS
                 vl = src;
             }
 
-            int blk = vl.Count;
+            int vlCnt = vl.Count;
 
             CadMesh mesh = new CadMesh(vl.Count * 2, vl.Count);
 
@@ -306,7 +306,7 @@ namespace MeshMakerNS
 
             f = new CadFace();
 
-            for (int i = 0; i<vl.Count; i++)
+            for (int i = 0; i < vlCnt; i++)
             {
                 mesh.VertexStore.Add(vl[i]);
                 f.VList.Add(i);
@@ -314,29 +314,29 @@ namespace MeshMakerNS
 
             mesh.FaceStore.Add(f);
 
-            for (int i = 0; i < blk; i++)
+            for (int i = 0; i < vlCnt; i++)
             {
                 mesh.VertexStore.Add(vl[i] + dv);
             }
 
             f = new CadFace();
 
-            for (int i = blk-1; i >= 0; i--)
+            for (int i = vlCnt-1; i >= 0; i--)
             {
-                f.VList.Add(i + blk);                
+                f.VList.Add(i + vlCnt);                
             }
 
             mesh.FaceStore.Add(f);
 
-            for (int i = 0; i < blk; i++)
+            for (int i = 0; i < vlCnt; i++)
             {
-                int j = (i+1) % blk;
+                int j = (i+1) % vlCnt;
 
                 f = new CadFace();
 
                 f.VList.Add(i);
-                f.VList.Add(i + blk);
-                f.VList.Add(j + blk);
+                f.VList.Add(i + vlCnt);
+                f.VList.Add(j + vlCnt);
                 f.VList.Add(j);
 
                 mesh.FaceStore.Add(f);

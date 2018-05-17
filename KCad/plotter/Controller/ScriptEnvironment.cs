@@ -225,13 +225,13 @@ namespace Plotter
             Controller.ScaleSelectedFigure(org, scale);
         }
 
-        public void ShowLastDownPoint()
+        public void ShowVector(CadVector v)
         {
             Controller.InteractOut.println(
                 "( " +
-                Controller.LastDownPoint.x.ToString() + ", " +
-                Controller.LastDownPoint.y.ToString() + ", " +
-                Controller.LastDownPoint.z.ToString() +
+                v.x.ToString() + ", " +
+                v.y.ToString() + ", " +
+                v.z.ToString() +
                 " )"
             );
         }
