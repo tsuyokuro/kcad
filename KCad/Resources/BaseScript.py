@@ -16,7 +16,7 @@ def area():
 def find(range):
     SE.Find(range)
 
-#[AC] findFigId(id)
+#[AC] findFigId(currentFig())
 def findFigId(id):
     SE.FindFigureById(id)
 
@@ -147,7 +147,7 @@ def invertDir():
 def sub(a, b):
     SE.AsubB(a, b)
 
-#[AC] dumpMesh(id)
+#[AC] dumpMesh(currentFig())
 def dumpMesh(id):
     SE.DumpMesh(id)
 
@@ -163,9 +163,13 @@ def addCylinder(slices, r, len):
 def addSphere(slices, r):
     SE.AddSphere(slices, r)
 
-#[AC] extrude(id, unitVZ, 20)
+#[AC] extrude(currentFig(), unitVZ, 20)
 def extrude(id, v, d):
     SE.Extrude(id, v, d)
+
+#[AC] currentFig()
+def currentFig():
+    return SE.GetCurrentFigureID()
 
 def test(v):
     SE.Test(v)

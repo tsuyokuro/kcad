@@ -63,7 +63,7 @@ namespace Plotter
 
         private CadFigure mCurrentFigure = null;
 
-        private CadFigure CurrentFigure
+        public CadFigure CurrentFigure
         {
             set
             {

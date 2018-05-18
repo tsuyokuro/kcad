@@ -86,7 +86,7 @@ namespace Plotter
         {
             get
             {
-                return FigTypeNames[Fig.Type] + " ["+ Fig.ID.ToString() + "]";
+                return FigTypeNames[Fig.Type] + " ID:"+ Fig.ID.ToString();
             }
         }
 

@@ -1006,7 +1006,7 @@ namespace Plotter
         #region Command handling
         public void TextCommand(string s)
         {
-            mController.ScriptEnv.command(s);
+            mController.ScriptEnv.commandAsync(s);
             CommandHistory.Add(s);
         }
 

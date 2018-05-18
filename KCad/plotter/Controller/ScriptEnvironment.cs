@@ -19,6 +19,7 @@ using HalfEdgeNS;
 using CarveWapper;
 using MeshUtilNS;
 using MeshMakerNS;
+using System.Threading.Tasks;
 
 namespace Plotter
 {
@@ -32,9 +33,9 @@ namespace Plotter
 
         private ScriptSource Source;
 
-        private bool DisableClear = false;
-
         private List<string> mAutoCompleteList = new List<string>();
+
+        private bool UpdateTreeViewFlag = false; 
 
         public List<string> AutoCompleteList
         {
@@ -305,7 +306,8 @@ namespace Plotter
                     global::KCad.Properties.Resources.notice_was_grouped
                 );
 
-            Controller.UpdateTreeView(true);
+            //Controller.UpdateTreeView(true);
+            UpdateTreeViewFlag = true;
         }
 
         public void Ungroup()
@@ -355,7 +357,7 @@ namespace Plotter
                 global::KCad.Properties.Resources.notice_was_ungrouped
                 );
 
-            Controller.UpdateTreeView(true);
+            UpdateTreeViewFlag = true;
         }
 
         public void Distance()
@@ -506,7 +508,7 @@ namespace Plotter
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            Controller.UpdateTreeView(true);
+            UpdateTreeViewFlag = true;
         }
 
         public void AddBox(double x, double y, double z)
@@ -522,7 +524,7 @@ namespace Plotter
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            Controller.UpdateTreeView(true);
+            UpdateTreeViewFlag = true;
         }
 
         public void AddCylinder(int slices, double r, double len)
@@ -538,7 +540,7 @@ namespace Plotter
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            Controller.UpdateTreeView(true);
+            UpdateTreeViewFlag = true;
         }
 
         public void AddSphere(int slices, double r)
@@ -554,7 +556,7 @@ namespace Plotter
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            Controller.UpdateTreeView(true);
+            UpdateTreeViewFlag = true;
         }
 
         public void AddLayer(string name)
@@ -766,15 +768,6 @@ namespace Plotter
                 fig.Draw(tdc, DrawTools.PEN_DEFAULT_FIGURE);
             }
 
-            //>>>> debug
-            if (dc is DrawContextGDI)
-            {
-                DisableClear = true;
-                ((DrawContextGDI)dc).graphics.DrawImage(tdc.Image, new System.Drawing.Point(0, 0));
-            }
-            dc.Push();
-            //<<<< debug
-
             if (fname.Length > 0)
             {
                 tdc.Image.Save(fname);
@@ -915,7 +908,7 @@ namespace Plotter
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            Controller.UpdateTreeView(true);
+            UpdateTreeViewFlag = true;
         }
 
         public void ToMesh()
@@ -964,7 +957,7 @@ namespace Plotter
 
             Controller.ClearSelection();
 
-            Controller.UpdateTreeView(true);
+            UpdateTreeViewFlag = true;
         }
 
         public void InvertDir()
@@ -1024,7 +1017,7 @@ namespace Plotter
 
             Controller.CurrentLayer.AddFigure(fig);
 
-            Controller.UpdateTreeView(true);
+            UpdateTreeViewFlag = true;
         }
 
         public void DumpMesh(uint id)
@@ -1060,6 +1053,19 @@ namespace Plotter
             }
         }
 
+        public uint GetCurrentFigureID()
+        {
+            CadFigure fig = Controller.CurrentFigure;
+
+            if (fig == null)
+            {
+                return 0;
+            }
+
+            return fig.ID;
+        }
+
+
         public void Test(CadVector v)
         {
         
@@ -1088,6 +1094,60 @@ namespace Plotter
                 return;
             }
 
+            Exception e = RunCommand(s);
+
+            if (e != null)
+            {
+                Controller.InteractOut.println("error: " + e.Message);
+            }
+
+            if (UpdateTreeViewFlag == true)
+            {
+                Controller.UpdateTreeView(true);
+                UpdateTreeViewFlag = false;
+            }
+
+            Controller.DrawAll(Controller.CurrentDC);
+            Controller.CurrentDC.Push();
+        }
+
+        public async void commandAsync(string s)
+        {
+            s = s.Trim();
+            Controller.InteractOut.println("> " + s);
+
+            if (s.StartsWith("@"))
+            {
+                SimpleCommand(s);
+                return;
+            }
+
+            Exception e = null;
+
+            await Task.Run( () =>
+            {
+                e = RunCommand(s);
+            });
+
+            if (e != null)
+            {
+                Controller.InteractOut.println("error: " + e.Message);
+            }
+
+            if (UpdateTreeViewFlag == true)
+            {
+                Controller.UpdateTreeView(true);
+                UpdateTreeViewFlag = false;
+            }
+
+            Controller.DrawAll(Controller.CurrentDC);
+            Controller.CurrentDC.Push();
+        }
+
+        public Exception RunCommand(string s)
+        {
+            UpdateTreeViewFlag = false;
+
             try
             {
                 dynamic ret = Engine.Execute(s, Scope);
@@ -1099,17 +1159,11 @@ namespace Plotter
             }
             catch (Exception e)
             {
-                Controller.InteractOut.println("error: " + e.Message);
+                return e;
             }
 
-            if (!DisableClear)
-            {
-                Controller.Clear(Controller.CurrentDC);
-                DisableClear = false;
-            }
-
-            Controller.DrawAll(Controller.CurrentDC);
-            Controller.CurrentDC.Push();
+            return null;
         }
+
     }
 }
