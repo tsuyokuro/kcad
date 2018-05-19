@@ -92,18 +92,7 @@ namespace Plotter
 
         private void test004()
         {
-            DrawContext dc = Controller.CurrentDC;
-
-            CadObjectDB db = Controller.DB;
-
-            CadFigure fig = GetTargetFigure();
-
-            if (fig == null)
-            {
-                return;
-            }
-
-            FaceToDirection(dc, fig, Controller.LastDownPoint, (CadVector)dc.ViewDir);
+            Controller.InteractOut.println("\x1b[33mTest1\x1b[00mテスト\x1b[36mTest3");
         }
 
         private void test005()

@@ -1154,7 +1154,7 @@ namespace Plotter
 
                 if (ret != null)
                 {
-                    Controller.InteractOut.println(ret.ToString());
+                    Controller.InteractOut.println("\x1b[36m" + ret.ToString());
                 }
             }
             catch (Exception e)

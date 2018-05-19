@@ -426,12 +426,10 @@ namespace KCad
 
                 if (item.IsSelected)
                 {
-                    ft = GetText(item.Data, mSelectedForeground);
                     dc.DrawRectangle(mSelectedBackground, null, rect);
                 }
                 else
                 {
-                    ft = GetText(item.Data, mForeground);
                     dc.DrawRectangle(mBackground, null, rect);
                 }
 
@@ -440,7 +438,7 @@ namespace KCad
                 tp.X = mTextLeftMargin;
                 tp.Y += textOffset;
 
-                dc.DrawText(ft, tp);
+                DrawText(dc, item, tp);
 
                 p.Y += mItemHeight;
             }
@@ -451,6 +449,100 @@ namespace KCad
                 dc.DrawRectangle(mBackground, null, sr);
             }
         }
+
+        protected void DrawText(DrawingContext dc, ListItem item, Point pt)
+        {
+            FormattedText ft;
+
+            string s = item.Data;
+
+            string[] ss = s.Split('\x1b');
+
+            Brush br;
+
+            if (item.IsSelected)
+            {
+                br = mSelectedForeground;
+            }
+            else
+            {
+                br = mForeground;
+            }
+
+            Brush cbr = br;
+
+            string ps;
+
+            for (int i=0; i<ss.Length; i++)
+            {
+                s = ss[i];
+
+                if (s.Length <= 0)
+                {
+                    continue;
+                }
+
+
+                if (i>0)
+                {
+                    if (s.StartsWith("["))
+                    {
+                        string c = s.Substring(1, 3);
+                        ps = s.Substring(4);
+
+                        if (c == "30m")
+                        {
+                            cbr = Brushes.Black;
+                        }
+                        else if (c == "31m")
+                        {
+                            cbr = Brushes.LightCoral;
+                        }
+                        else if (c == "32m")
+                        {
+                            cbr = Brushes.SpringGreen;
+                        }
+                        else if (c == "33m")
+                        {
+                            cbr = Brushes.Yellow;
+                        }
+                        else if (c == "34m")
+                        {
+                            cbr = Brushes.CornflowerBlue;
+                        }
+                        else if (c == "35m")
+                        {
+                            cbr = Brushes.MediumOrchid;
+                        }
+                        else if (c == "36m")
+                        {
+                            cbr = Brushes.Turquoise;
+                        }
+                        else if (c == "37m")
+                        {
+                            cbr = Brushes.White;
+                        }
+                        else if (c == "00m")
+                        {
+                            cbr = br;
+                        }
+                    }
+                    else
+                    {
+                        ps = s;
+                    }
+                }
+                else
+                {
+                    ps = s;
+                }
+
+                ft = GetText(ps, cbr);
+                dc.DrawText(ft, pt);
+                pt.X += ft.Width;
+            }
+        }
+
 
         protected FormattedText GetText(string s, Brush brush)
         {
