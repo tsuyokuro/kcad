@@ -64,6 +64,7 @@ namespace Plotter
                 { CadFigure.Types.GROUP, "GROUP" },
                 { CadFigure.Types.DIMENTION_LINE, "DIM" },
                 { CadFigure.Types.MESH, "MESH" },
+                { CadFigure.Types.NURBS_LINE, "NURBS" },
             };
         }
 

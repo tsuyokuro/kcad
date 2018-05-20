@@ -306,6 +306,15 @@ namespace CadDataTypes
             return p1;
         }
 
+        public static CadVector operator *(double f, CadVector p1)
+        {
+            p1.x *= f;
+            p1.y *= f;
+            p1.z *= f;
+
+            return p1;
+        }
+
         public static CadVector operator *(CadVector p1, CadVector p2)
         {
             p1.x *= p2.x;

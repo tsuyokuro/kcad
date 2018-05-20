@@ -25,6 +25,7 @@ namespace Plotter
             GROUP,
             DIMENTION_LINE,
             MESH,
+            NURBS_LINE,
             MAX,
         }
         #endregion
@@ -259,6 +260,10 @@ namespace Plotter
 
                 case Types.MESH:
                     fig = new CadFigureMesh();
+                    break;
+
+                case Types.NURBS_LINE:
+                    fig = new CadFigureNurbsLine();
                     break;
 
                 default:

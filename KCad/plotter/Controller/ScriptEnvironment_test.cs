@@ -527,6 +527,45 @@ namespace Plotter
             Controller.UpdateTreeView(true);
         }
 
+        private void testRB()
+        {
+            CadFigure fig = GetTargetFigure();
+
+            if (fig == null)
+            {
+                return;
+            }
+
+            CadMesh cm = MeshMaker.CreateRotatingBody(32, fig.PointList, MeshMaker.FaceType.QUADRANGLE);
+
+            HeModel hem = HeModelConverter.ToHeModel(cm);
+
+            CadFigureMesh meshFig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            meshFig.SetMesh(hem);
+
+            Controller.CurrentLayer.AddFigure(meshFig);
+
+            Controller.UpdateTreeView(true);
+        }
+
+        private void testNu()
+        {
+            CadFigure fig = GetTargetFigure();
+
+            if (fig == null)
+            {
+                return;
+            }
+
+            CadFigureNurbsLine nfig = (CadFigureNurbsLine)Controller.DB.NewFigure(CadFigure.Types.NURBS_LINE);
+
+            nfig.AddPoints(fig.PointList);
+
+            Controller.CurrentLayer.AddFigure(nfig);
+
+            Controller.UpdateTreeView(true);
+        }
 
         private void SimpleCommand(string s)
         {
@@ -609,6 +648,14 @@ namespace Plotter
             {
                 testAminusB();
 
+            }
+            else if (s == "@rb")
+            {
+                testRB();
+            }
+            else if (s == "@nu")
+            {
+                testNu();
             }
             else if (s == "@testMesh")
             {

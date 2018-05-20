@@ -190,6 +190,8 @@
     </ApplicationDefinition>
     <Compile Include="Controls\AutoCompleteTextBox.cs" />
     <Compile Include="Controls\CadConsole.cs" />
+    <Compile Include="BSpline\BSplineCurve.cs" />
+    <Compile Include="BSpline\NURBSCurve.cs" />
     <Compile Include="Dialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
@@ -197,6 +199,7 @@
     <Compile Include="mesh\MeshUtil.cs" />
     <Compile Include="plotter\Controller\ScriptEnvironment_test.cs" />
     <Compile Include="plotter\Figure\CadFigureMesh.cs" />
+    <Compile Include="plotter\Figure\CadFigureNurbsLine.cs" />
     <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="plotter\Figure\CadFigureUtil.cs" />
