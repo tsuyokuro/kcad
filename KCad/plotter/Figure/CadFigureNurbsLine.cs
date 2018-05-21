@@ -95,6 +95,8 @@ namespace Plotter
             }
 
             Nurbs.SetPoints(mPointList);
+            Nurbs.Closed = true;
+
 
             if (mNurbsLine == null)
             {

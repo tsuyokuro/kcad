@@ -2,13 +2,57 @@ using CadDataTypes;
 using System;
 
 namespace BSpline {
-	public class NURBSCurve : BSplineCurve
+	public class NURBSCurve
     {
-		double[] Weights;
+        // 閉包したカーブとするか。
+        public bool Closed;
 
-		public override void SetPoints(VectorList points)
+        // ラインの分割数。
+        public int DividedCount = 100;
+
+        // 任意の点。
+        protected VectorList Points;
+
+        // 次数。
+        protected int mDegree = 3;
+        public int Degree
         {
-			Points = Closed ? CreatePointsAsClosed(points) : points;
+            get
+            {
+                return mDegree;
+            }
+
+            set
+            {
+                mDegree = value;
+            }
+        }
+
+        // 端点を通るかどうか。
+        protected bool mPassOnEdge = false;
+        public virtual bool PassOnEdge
+        {
+            get
+            {
+                return mPassOnEdge;
+            }
+            set
+            {
+                mPassOnEdge = value;
+            }
+        }
+
+        // ノット。
+        protected double[] Knots;
+
+
+        double[] Weights;
+
+		public void SetPoints(VectorList points)
+        {
+            Points = points;
+
+            Points = Closed ? CreatePointsAsClosed(points) : points;
 
 			if (Knots == null || Points.Count + mDegree + 1 != Knots.Length)
             {
@@ -22,14 +66,14 @@ namespace BSpline {
         }
 
 		// 重みも考慮し、指定の位置の座標を取得。
-		protected override CadVector CalcuratePoint(double t)
+		protected CadVector CalcuratePoint(double t)
         {
             CadVector linePoint = CadVector.Zero;
 			double weight = 0f;
 
 			for (int i = 0; i < Points.Count; ++i)
             {
-				double bs = BSplineCurve.BSplineBasisFunc(i, mDegree, t, Knots);
+				double bs = BSpline.BSplineBasisFunc(i, mDegree, t, Knots);
 
                 linePoint += bs * Weights[i] * Points[i];
 
@@ -56,7 +100,7 @@ namespace BSpline {
 		}
 
         // 線を引く点を評価し返す。
-        public override void Evaluate(VectorList linePoints)
+        public void Evaluate(VectorList linePoints)
         {
             if (mDegree < 1)
             {
@@ -90,10 +134,49 @@ namespace BSpline {
             for (int p = 0; p <= DividedCount; ++p)
             {
                 double t = p * step + lowKnot;
-                if (t >= highKnot) t = highKnot - BSplineCurve.Epsilon;
+                if (t >= highKnot)
+                {
+                    t = highKnot - BSpline.Epsilon;
+                }
 
-                linePoints.Add(CalcuratePoint(t));
+                linePoints.Add( CalcuratePoint(t) );
             }
+        }
+
+        // ノットをリセット。
+        protected void ResetKnots()
+        {
+            if (Points == null)
+            {
+                Knots = null;
+                return;
+            }
+
+            Knots = new double[Points.Count + mDegree + 1];
+
+            float knot = 0;
+
+            for (int i = 0; i < Knots.Length; ++i)
+            {
+                Knots[i] = knot;
+                if (!mPassOnEdge || (i >= mDegree && i <= Knots.Length - mDegree - 2))
+                {
+                    ++knot;
+                }
+            }
+        }
+
+        // 最終の座標が始点と同じになるポイントの配列を作る。
+        protected VectorList CreatePointsAsClosed(VectorList points)
+        {
+            VectorList tmpPoints = new VectorList(points);
+
+            for (int i = 0; i < mDegree; ++i)
+            {
+                tmpPoints.Add(tmpPoints[i]);
+            }
+
+            return tmpPoints;
         }
     }
 }

@@ -190,7 +190,7 @@
     </ApplicationDefinition>
     <Compile Include="Controls\AutoCompleteTextBox.cs" />
     <Compile Include="Controls\CadConsole.cs" />
-    <Compile Include="BSpline\BSplineCurve.cs" />
+    <Compile Include="BSpline\BSpline.cs" />
     <Compile Include="BSpline\NURBSCurve.cs" />
     <Compile Include="Dialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
