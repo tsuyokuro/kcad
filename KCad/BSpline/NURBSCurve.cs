@@ -11,7 +11,10 @@ namespace BSpline {
         public int DividedCount = 100;
 
         // 任意の点。
-        protected VectorList Points;
+        protected VectorList Points = null;
+
+        private int PointCount = 0;
+
 
         // 次数。
         protected int mDegree = 3;
@@ -52,16 +55,21 @@ namespace BSpline {
         {
             Points = points;
 
-            Points = Closed ? CreatePointsAsClosed(points) : points;
+            PointCount = Points.Count;
 
-			if (Knots == null || Points.Count + mDegree + 1 != Knots.Length)
+            if (Closed)
             {
-                ResetKnots();
+                PointCount += mDegree;
             }
 
-            if (Weights == null || Weights.Length != Points.Count + (Closed ? mDegree : 0))
+			if (Knots == null || PointCount + mDegree + 1 != Knots.Length)
             {
-                ResetWeights();
+                ResetKnots(PointCount + mDegree + 1);
+            }
+
+            if (Weights == null || Weights.Length != PointCount)
+            {
+                ResetWeights(PointCount);
             }
         }
 
@@ -71,32 +79,16 @@ namespace BSpline {
             CadVector linePoint = CadVector.Zero;
 			double weight = 0f;
 
-			for (int i = 0; i < Points.Count; ++i)
+			for (int i = 0; i < PointCount; ++i)
             {
 				double bs = BSpline.BSplineBasisFunc(i, mDegree, t, Knots);
 
-                linePoint += bs * Weights[i] * Points[i];
+                linePoint += bs * Weights[i] * Points[i % Points.Count];
 
                 weight += bs * Weights[i];
 			}
 
 			return linePoint / weight;
-		}
-
-		// 重みのリセット。
-		void ResetWeights()
-        {
-			if (Points == null)
-            {
-                return;
-            }
-
-            Weights = new double[Points.Count + (Closed ? mDegree : 0)];
-
-			for (int i = 0; i < Weights.Length; ++i)
-            {
-				Weights[i] = 1f;
-			}
 		}
 
         // 線を引く点を評価し返す。
@@ -107,7 +99,7 @@ namespace BSpline {
                 return;
             }
 
-            if (Points == null || Points.Count < 2 || Points.Count < mDegree + 1)
+            if (Points == null || PointCount < 2 || PointCount < mDegree + 1)
             {
                 return;
             }
@@ -128,7 +120,7 @@ namespace BSpline {
             }
 
             double lowKnot = Knots[mDegree];
-            double highKnot = Knots[Points.Count];
+            double highKnot = Knots[PointCount];
             double step = (highKnot - lowKnot) / DividedCount;
 
             for (int p = 0; p <= DividedCount; ++p)
@@ -144,17 +136,11 @@ namespace BSpline {
         }
 
         // ノットをリセット。
-        protected void ResetKnots()
+        protected void ResetKnots(int cnt)
         {
-            if (Points == null)
-            {
-                Knots = null;
-                return;
-            }
+            Knots = new double[cnt];
 
-            Knots = new double[Points.Count + mDegree + 1];
-
-            float knot = 0;
+            double knot = 0;
 
             for (int i = 0; i < Knots.Length; ++i)
             {
@@ -166,17 +152,15 @@ namespace BSpline {
             }
         }
 
-        // 最終の座標が始点と同じになるポイントの配列を作る。
-        protected VectorList CreatePointsAsClosed(VectorList points)
+        // 重みのリセット。
+        void ResetWeights(int cnt)
         {
-            VectorList tmpPoints = new VectorList(points);
+            Weights = new double[cnt];
 
-            for (int i = 0; i < mDegree; ++i)
+            for (int i = 0; i < Weights.Length; ++i)
             {
-                tmpPoints.Add(tmpPoints[i]);
+                Weights[i] = 1f;
             }
-
-            return tmpPoints;
         }
     }
 }

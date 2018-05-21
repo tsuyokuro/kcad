@@ -94,8 +94,8 @@ namespace Plotter
                 c = n;
             }
 
-            Nurbs.SetPoints(mPointList);
             Nurbs.Closed = true;
+            Nurbs.SetPoints(mPointList);
 
 
             if (mNurbsLine == null)
