@@ -13,7 +13,7 @@ namespace BSpline {
         // 任意の点。
         protected VectorList Points = null;
 
-        private int PointCount = 0;
+        private int CtrlPointCount = 0;
 
 
         // 次数。
@@ -48,6 +48,10 @@ namespace BSpline {
         // ノット。
         protected double[] Knots;
 
+        public double mLowKnot = 0;
+        public double mHighKnot = 0;
+        public double mStep = 0;
+
 
         double[] Weights;
 
@@ -55,31 +59,31 @@ namespace BSpline {
         {
             Points = points;
 
-            PointCount = Points.Count;
+            CtrlPointCount = Points.Count;
 
             if (Closed)
             {
-                PointCount += mDegree;
+                CtrlPointCount += mDegree;
             }
 
-			if (Knots == null || PointCount + mDegree + 1 != Knots.Length)
+			if (Knots == null || CtrlPointCount + mDegree + 1 != Knots.Length)
             {
-                ResetKnots(PointCount + mDegree + 1);
+                ResetKnots(CtrlPointCount + mDegree + 1);
             }
 
-            if (Weights == null || Weights.Length != PointCount)
+            if (Weights == null || Weights.Length != CtrlPointCount)
             {
-                ResetWeights(PointCount);
+                ResetWeights(CtrlPointCount);
             }
         }
 
-		// 重みも考慮し、指定の位置の座標を取得。
-		protected CadVector CalcuratePoint(double t)
+        // 重みも考慮し、指定の位置の座標を取得。
+        protected CadVector CalcuratePoint(double t)
         {
             CadVector linePoint = CadVector.Zero;
 			double weight = 0f;
 
-			for (int i = 0; i < PointCount; ++i)
+			for (int i = 0; i < CtrlPointCount; ++i)
             {
 				double bs = BSpline.BSplineBasisFunc(i, mDegree, t, Knots);
 
@@ -91,6 +95,14 @@ namespace BSpline {
 			return linePoint / weight;
 		}
 
+        // Knotの値を変えたら呼び出す
+        public void RecalcSteppingParam()
+        {
+            mLowKnot = Knots[mDegree];
+            mHighKnot = Knots[CtrlPointCount];
+            mStep = (mHighKnot - mLowKnot) / DividedCount;
+        }
+
         // 線を引く点を評価し返す。
         public void Evaluate(VectorList linePoints)
         {
@@ -99,7 +111,7 @@ namespace BSpline {
                 return;
             }
 
-            if (Points == null || PointCount < 2 || PointCount < mDegree + 1)
+            if (Points == null || CtrlPointCount < 2 || CtrlPointCount < mDegree + 1)
             {
                 return;
             }
@@ -119,21 +131,38 @@ namespace BSpline {
                 return;
             }
 
-            double lowKnot = Knots[mDegree];
-            double highKnot = Knots[PointCount];
-            double step = (highKnot - lowKnot) / DividedCount;
+            //double lowKnot = Knots[mDegree];
+            //double highKnot = Knots[PointCount];
+            //double step = (highKnot - lowKnot) / DividedCount;
 
             for (int p = 0; p <= DividedCount; ++p)
             {
-                double t = p * step + lowKnot;
-                if (t >= highKnot)
+                double t = p * mStep + mLowKnot;
+                if (t >= mHighKnot)
                 {
-                    t = highKnot - BSpline.Epsilon;
+                    t = mHighKnot - BSpline.Epsilon;
                 }
 
                 linePoints.Add( CalcuratePoint(t) );
             }
         }
+
+        public int GetPointCount()
+        {
+            return DividedCount + 1;
+        }
+
+        public CadVector GetPoint(int i)
+        {
+            double t = i * mStep + mLowKnot;
+            if (t >= mHighKnot)
+            {
+                t = mHighKnot - BSpline.Epsilon;
+            }
+
+            return CalcuratePoint(t);
+        }
+
 
         // ノットをリセット。
         protected void ResetKnots(int cnt)
@@ -147,9 +176,11 @@ namespace BSpline {
                 Knots[i] = knot;
                 if (!mPassOnEdge || (i >= mDegree && i <= Knots.Length - mDegree - 2))
                 {
-                    ++knot;
+                    knot += 1.0;
                 }
             }
+
+            RecalcSteppingParam();
         }
 
         // 重みのリセット。

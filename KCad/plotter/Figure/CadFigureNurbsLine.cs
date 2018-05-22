@@ -97,7 +97,7 @@ namespace Plotter
             Nurbs.Closed = true;
             Nurbs.SetPoints(mPointList);
 
-
+            /*
             if (mNurbsLine == null)
             {
                 mNurbsLine = new VectorList(Nurbs.DividedCount + 1);
@@ -117,6 +117,18 @@ namespace Plotter
                 n = mNurbsLine[i];
                 dc.Drawing.DrawLine(pen, c, n);
 
+                c = n;
+            }
+            */
+
+            int cnt = Nurbs.GetPointCount();
+
+            c = Nurbs.GetPoint(0);
+
+            for (int i=1;i<cnt; i++)
+            {
+                n = Nurbs.GetPoint(i);
+                dc.Drawing.DrawLine(pen, c, n);
                 c = n;
             }
         }

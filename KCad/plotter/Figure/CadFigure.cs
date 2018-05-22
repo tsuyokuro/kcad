@@ -331,7 +331,7 @@ namespace Plotter
 
         public virtual void InsertPointAt(int index, CadVector pt)
         {
-            if (index >= mPointList.Count)
+            if (index >= mPointList.Count - 1)
             {
                 mPointList.Add(pt);
                 return;
@@ -342,12 +342,6 @@ namespace Plotter
 
         public virtual void RemovePointAt(int index)
         {
-            /*
-            if (mPointList == null)
-            {
-                return;
-            }
-            */
             mPointList.RemoveAt(index);
         }
 
