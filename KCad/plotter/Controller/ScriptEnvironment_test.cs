@@ -440,19 +440,6 @@ namespace Plotter
             Controller.CurrentLayer.AddFigure(fig);
         }
 
-        private void testCreateBox()
-        {
-            CadMesh cm = MeshMaker.CreateBox(CadVector.Zero, CadVector.Create(10,30,40));
-
-            HeModel hem = HeModelConverter.ToHeModel(cm);
-
-            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
-
-            fig.SetMesh(hem);
-
-            Controller.CurrentLayer.AddFigure(fig);
-        }
-
         private void testAminusB()
         {
             List<CadFigure> figList = Controller.GetSelectedFigList();
@@ -664,10 +651,6 @@ namespace Plotter
             else if (s == "@testInvert")
             {
                 testInvert();
-            }
-            else if (s == "@createBox")
-            {
-                testCreateBox();
             }
 
             else if (s == "@loadDxf")

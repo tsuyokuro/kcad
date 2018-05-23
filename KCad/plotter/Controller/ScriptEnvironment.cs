@@ -513,7 +513,9 @@ namespace Plotter
 
         public void AddBox(double x, double y, double z)
         {
-            CadMesh cm = MeshMaker.CreateBox(Controller.LastDownPoint, CadVector.Create(x, y, z));
+            CadMesh cm =
+                MeshMaker.CreateBox(
+                    Controller.LastDownPoint, CadVector.Create(x, y, z), MeshMaker.FaceType.TRIANGLE);
 
             HeModel hem = HeModelConverter.ToHeModel(cm);
 

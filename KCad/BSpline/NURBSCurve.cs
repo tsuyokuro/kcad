@@ -33,7 +33,7 @@ namespace BSpline {
 
         // 端点を通るかどうか。
         protected bool mPassOnEdge = false;
-        public virtual bool PassOnEdge
+        public bool PassOnEdge
         {
             get
             {
@@ -44,16 +44,26 @@ namespace BSpline {
                 mPassOnEdge = value;
             }
         }
+        
+        public int KnotCount
+        {
+            get
+            {
+                return CtrlPointCount + mDegree + 1;
+            }
+        }
 
         // ノット。
         protected double[] Knots;
 
+        // 重み
+        double[] Weights;
+
+        
         public double mLowKnot = 0;
         public double mHighKnot = 0;
         public double mStep = 0;
-
-
-        double[] Weights;
+        
 
 		public void SetPoints(VectorList points)
         {
@@ -66,9 +76,9 @@ namespace BSpline {
                 CtrlPointCount += mDegree;
             }
 
-			if (Knots == null || CtrlPointCount + mDegree + 1 != Knots.Length)
+			if (Knots == null || Knots.Length != KnotCount)
             {
-                ResetKnots(CtrlPointCount + mDegree + 1);
+                ResetKnots();
             }
 
             if (Weights == null || Weights.Length != CtrlPointCount)
@@ -100,7 +110,7 @@ namespace BSpline {
         {
             mLowKnot = Knots[mDegree];
             mHighKnot = Knots[CtrlPointCount];
-            mStep = (mHighKnot - mLowKnot) / DividedCount;
+            mStep = (mHighKnot - mLowKnot) / (double)DividedCount;
         }
 
         // 線を引く点を評価し返す。
@@ -165,17 +175,22 @@ namespace BSpline {
 
 
         // ノットをリセット。
-        protected void ResetKnots(int cnt)
+        protected void ResetKnots()
         {
-            Knots = new double[cnt];
+            Knots = new double[KnotCount];
 
             double knot = 0;
 
             for (int i = 0; i < Knots.Length; ++i)
             {
-                Knots[i] = knot;
-                if (!mPassOnEdge || (i >= mDegree && i <= Knots.Length - mDegree - 2))
+                // 端点を通る様にするには、両端の (次数+1) のKnotを同じ値にする
+                if (mPassOnEdge && (i < mDegree || i > (KnotCount - mDegree - 2)))
                 {
+                    Knots[i] = knot;
+                }
+                else
+                {
+                    Knots[i] = knot;
                     knot += 1.0;
                 }
             }

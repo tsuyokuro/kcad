@@ -94,7 +94,8 @@ namespace Plotter
                 c = n;
             }
 
-            Nurbs.Closed = true;
+            //Nurbs.Closed = true;
+            Nurbs.PassOnEdge = true;
             Nurbs.SetPoints(mPointList);
 
             /*
