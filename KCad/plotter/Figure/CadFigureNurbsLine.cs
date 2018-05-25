@@ -12,8 +12,6 @@ namespace Plotter
     {
         public NURBSCurve Nurbs = new NURBSCurve();
 
-        VectorList mNurbsLine;
-
         public CadFigureNurbsLine()
         {
             Type = Types.NURBS_LINE;
@@ -96,33 +94,27 @@ namespace Plotter
 
             //Nurbs.Closed = true;
             Nurbs.PassOnEdge = true;
-            Nurbs.SetPoints(mPointList);
+            Nurbs.SetCotrolPoints(mPointList);
 
-            /*
-            if (mNurbsLine == null)
-            {
-                mNurbsLine = new VectorList(Nurbs.DividedCount + 1);
-            }
+            VectorList vl = Nurbs.Evaluate();
 
-            Nurbs.Evaluate(mNurbsLine);
-
-            if (mNurbsLine.Count<2)
+            if (vl==null || vl.Count<2)
             {
                 return;
             }
 
-            c = mNurbsLine[0];
+            c = vl[0];
 
-            for (int i=1; i< mNurbsLine.Count; i++)
+            for (int i=1; i< vl.Count; i++)
             {
-                n = mNurbsLine[i];
+                n = vl[i];
                 dc.Drawing.DrawLine(pen, c, n);
 
                 c = n;
             }
-            */
 
-            int cnt = Nurbs.GetPointCount();
+           /*
+            int cnt = Nurbs.PointCount;
 
             c = Nurbs.GetPoint(0);
 
@@ -132,6 +124,7 @@ namespace Plotter
                 dc.Drawing.DrawLine(pen, c, n);
                 c = n;
             }
+            */
         }
 
         public override void InvertDir()

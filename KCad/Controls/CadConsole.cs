@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -175,6 +177,8 @@ namespace KCad
 
         protected List<ListItem> mList = new List<ListItem>();
 
+        public Dictionary<string, Brush> EscColor;
+
         public CadConsoleView()
         {
             mFontFamily = new FontFamily("メイリオ");
@@ -183,6 +187,37 @@ namespace KCad
             Loaded += CadConsoleView_Loaded;
 
             MouseDown += CadConsoleView_MouseDown;
+
+
+            EscColor = new Dictionary<string, Brush>()
+            {
+                {"30m", Brushes.Black},
+                {"31m", Brushes.LightCoral},
+                {"32m", Brushes.SpringGreen},
+                {"33m", Brushes.Yellow},
+                {"34m", Brushes.CornflowerBlue},
+                {"35m", Brushes.MediumOrchid},
+                {"36m", Brushes.Turquoise},
+                {"37m", Brushes.White},
+                {"00m", null},
+            };
+        }
+
+        public enum C : byte
+        {
+            BLACK = 0,
+            RED = 1,
+            GREEN = 2,
+            YELLOW = 3,
+            BLUE = 4,
+            MAGENTA = 5,
+            CYAN = 6,
+            WHITE = 7,
+        }
+
+        public string EC(C c)
+        {
+            return "\x1b[3" + ((int)c).ToString();
         }
 
         private void CadConsoleView_Loaded(object sender, RoutedEventArgs e)
@@ -372,6 +407,21 @@ namespace KCad
 
             foreach (ListItem line in mList)
             {
+                // エスケープシーケンスを取り除く
+                string ps = Regex.Replace(line.Data, "\x1b\\[[0-9]+m", "");
+                s += ps + "\n";
+            }
+
+            return s;
+        }
+
+        // エスケープシーケンスを取り除かない版
+        public string GetStringAllRaw()
+        {
+            string s = "";
+
+            foreach (ListItem line in mList)
+            {
                 s += line.Data + "\n";
             }
 
@@ -490,39 +540,9 @@ namespace KCad
                         string c = s.Substring(1, 3);
                         ps = s.Substring(4);
 
-                        if (c == "30m")
-                        {
-                            cbr = Brushes.Black;
-                        }
-                        else if (c == "31m")
-                        {
-                            cbr = Brushes.LightCoral;
-                        }
-                        else if (c == "32m")
-                        {
-                            cbr = Brushes.SpringGreen;
-                        }
-                        else if (c == "33m")
-                        {
-                            cbr = Brushes.Yellow;
-                        }
-                        else if (c == "34m")
-                        {
-                            cbr = Brushes.CornflowerBlue;
-                        }
-                        else if (c == "35m")
-                        {
-                            cbr = Brushes.MediumOrchid;
-                        }
-                        else if (c == "36m")
-                        {
-                            cbr = Brushes.Turquoise;
-                        }
-                        else if (c == "37m")
-                        {
-                            cbr = Brushes.White;
-                        }
-                        else if (c == "00m")
+                        cbr = EscColor[c];
+
+                        if (cbr == null)
                         {
                             cbr = br;
                         }

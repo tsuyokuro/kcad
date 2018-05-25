@@ -7,7 +7,10 @@ namespace BSpline
     {
         public static double Epsilon = 0.000001f;
 
-        // Bスプライン基底関数。
+        // Bスプライン基底関数
+        // i:制御点 P[i]
+        // degree: 次数
+        // t: Knotベクトル上を動く媒介変数
         public static double BSplineBasisFunc(int i, int degree, double t, double[] knots)
         {
             if (degree == 0)

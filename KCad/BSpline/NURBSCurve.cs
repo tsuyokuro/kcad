@@ -1,4 +1,5 @@
 using CadDataTypes;
+using Plotter;
 using System;
 
 namespace BSpline {
@@ -8,12 +9,16 @@ namespace BSpline {
         public bool Closed;
 
         // ラインの分割数。
-        public int DividedCount = 100;
+        public int DividedCount = 32;
 
-        // 任意の点。
-        protected VectorList Points = null;
+        // 制御店リスト
+        protected VectorList CtrlPoints = null;
 
+        // 制御点の個数
+        // Closedの場合は、 + 次数
         private int CtrlPointCount = 0;
+
+        private VectorList mLinePoints;
 
 
         // 次数。
@@ -53,6 +58,16 @@ namespace BSpline {
             }
         }
 
+        public int PointCount
+        {
+            get
+            {
+                return DividedCount + 1;
+            }
+        }
+
+
+
         // ノット。
         protected double[] Knots;
 
@@ -65,11 +80,11 @@ namespace BSpline {
         public double mStep = 0;
         
 
-		public void SetPoints(VectorList points)
+		public void SetCotrolPoints(VectorList points)
         {
-            Points = points;
+            CtrlPoints = points;
 
-            CtrlPointCount = Points.Count;
+            CtrlPointCount = CtrlPoints.Count;
 
             if (Closed)
             {
@@ -93,16 +108,23 @@ namespace BSpline {
             CadVector linePoint = CadVector.Zero;
 			double weight = 0f;
 
-			for (int i = 0; i < CtrlPointCount; ++i)
+            //DebugOut.println("{");
+
+
+            for (int i = 0; i < CtrlPointCount; ++i)
             {
 				double bs = BSpline.BSplineBasisFunc(i, mDegree, t, Knots);
 
-                linePoint += bs * Weights[i] * Points[i % Points.Count];
+                //DebugOut.println("bs:" + bs.ToString());
+
+                linePoint += bs * Weights[i] * CtrlPoints[i % CtrlPoints.Count];
 
                 weight += bs * Weights[i];
 			}
 
-			return linePoint / weight;
+            //DebugOut.println("}");
+
+            return linePoint / weight;
 		}
 
         // Knotの値を変えたら呼び出す
@@ -114,19 +136,22 @@ namespace BSpline {
         }
 
         // 線を引く点を評価し返す。
-        public void Evaluate(VectorList linePoints)
+        public VectorList Evaluate()
         {
-            if (mDegree < 1)
+            if (CtrlPoints == null || CtrlPointCount < 2 || CtrlPointCount < mDegree + 1)
             {
-                return;
+                return null;
             }
 
-            if (Points == null || CtrlPointCount < 2 || CtrlPointCount < mDegree + 1)
+            if (mLinePoints == null)
             {
-                return;
+                mLinePoints = new VectorList(PointCount);
             }
-
-            linePoints.Clear();
+            else
+            {
+                // 内部配列の再利用
+                mLinePoints.Clear();
+            }
 
             // 分割数のチェック
             if (DividedCount < 1)
@@ -137,13 +162,9 @@ namespace BSpline {
             // 1次の場合は直線で結ぶ
             if (mDegree == 1)
             {
-                linePoints.AddRange(Points);
-                return;
+                mLinePoints.AddRange(CtrlPoints);
+                return mLinePoints;
             }
-
-            //double lowKnot = Knots[mDegree];
-            //double highKnot = Knots[PointCount];
-            //double step = (highKnot - lowKnot) / DividedCount;
 
             for (int p = 0; p <= DividedCount; ++p)
             {
@@ -153,13 +174,10 @@ namespace BSpline {
                     t = mHighKnot - BSpline.Epsilon;
                 }
 
-                linePoints.Add( CalcuratePoint(t) );
+                mLinePoints.Add( CalcuratePoint(t) );
             }
-        }
 
-        public int GetPointCount()
-        {
-            return DividedCount + 1;
+            return mLinePoints;
         }
 
         public CadVector GetPoint(int i)

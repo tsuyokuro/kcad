@@ -56,6 +56,8 @@ namespace KCad
 
             PreviewKeyDown += OnPreviewKeyDown;
 
+            PreviewKeyUp += OnPreviewKeyUp;
+
             KeyDown += onKeyDown;
             KeyUp += onKeyUp;
 
@@ -86,15 +88,9 @@ namespace KCad
 
             Loaded += MainWindow_Loaded;
             Closed += MainWindow_Closed;
-
-            MyConsole.KeyUp += ListMessage_KeyUp;
         }
 
-        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-        }
-
-        private void ListMessage_KeyUp(object sender, KeyEventArgs e)
+        private void OnPreviewKeyUp(object sender, KeyEventArgs e)
         {
             if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.C)
             {
@@ -107,6 +103,10 @@ namespace KCad
             {
                 MyConsole.Clear();
             }
+        }
+
+        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
