@@ -3,6 +3,40 @@ using System;
 
 namespace BSpline
 {
+    public class BSplineUtil
+    {
+        public static VectorList CreateControlPoints(int ucnt, int vcnt, CadVector uunit, CadVector vunit)
+        {
+            VectorList vl = new VectorList(ucnt * vcnt);
+
+            CadVector ud = ((double)(ucnt-1) / 2.0) * uunit;
+            CadVector vd = ((double)(vcnt-1) / 2.0) * vunit;
+
+            CadVector p = CadVector.Zero;
+
+            p -= ud;
+            p -= vd;
+
+            CadVector lp = p;
+
+            for (int v = 0; v < vcnt; v++)
+            {
+                p = lp;
+
+                for (int u = 0; u < ucnt; u++)
+                {
+                    vl.Add(p);
+                    p += uunit;
+                }
+
+                lp += vunit;
+            }
+
+            return vl;
+        }
+    }
+
+
     public class BSpline
     {
         public static double Epsilon = 0.000001f;   // ‚Æ‚Ä‚à¬‚³‚¢’l

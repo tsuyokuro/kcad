@@ -96,6 +96,7 @@ namespace Plotter
             Nurbs.PassOnEdge = true;
             Nurbs.SetCotrolPoints(mPointList);
 
+            /*
             VectorList vl = Nurbs.Evaluate();
 
             if (vl==null || vl.Count<2)
@@ -112,8 +113,8 @@ namespace Plotter
 
                 c = n;
             }
+            */
 
-           /*
             int cnt = Nurbs.PointCount;
 
             c = Nurbs.GetPoint(0);
@@ -124,7 +125,6 @@ namespace Plotter
                 dc.Drawing.DrawLine(pen, c, n);
                 c = n;
             }
-            */
         }
 
         public override void InvertDir()

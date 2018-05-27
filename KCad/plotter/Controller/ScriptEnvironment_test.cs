@@ -21,6 +21,7 @@ using LibiglWrapper;
 using HalfEdgeNS;
 using CarveWapper;
 using MeshMakerNS;
+using BSpline;
 
 namespace Plotter
 {
@@ -554,6 +555,22 @@ namespace Plotter
             Controller.UpdateTreeView(true);
         }
 
+        private void testNus()
+        {
+            CadFigureNurbsSurface nfig = (CadFigureNurbsSurface)Controller.DB.NewFigure(CadFigure.Types.NURBS_SURFACE);
+
+            VectorList vl =BSplineUtil.CreateControlPoints(5, 5, CadVector.UnitX * 20.0, CadVector.UnitZ * 20.0);
+
+            nfig.Setup(5, 5, vl);
+
+            nfig.UCount = 5;
+            nfig.VCount = 5;
+
+            Controller.CurrentLayer.AddFigure(nfig);
+
+            Controller.UpdateTreeView(true);
+        }
+
         private void SimpleCommand(string s)
         {
             if (s == "@clear" || s == "@cls")
@@ -643,6 +660,10 @@ namespace Plotter
             else if (s == "@nu")
             {
                 testNu();
+            }
+            else if (s == "@nus")
+            {
+                testNus();
             }
             else if (s == "@testMesh")
             {

@@ -26,9 +26,44 @@ namespace Plotter
             DIMENTION_LINE,
             MESH,
             NURBS_LINE,
+            NURBS_SURFACE,
             MAX,
         }
         #endregion
+
+
+        private static Dictionary<CadFigure.Types, string> TypeNames;
+
+        static CadFigure()
+        {
+            TypeNames = new Dictionary<CadFigure.Types, string>()
+            {
+                { Types.NONE, "NONE" },
+                { Types.LINE, "LINE" },
+                { Types.RECT, "RECT" },
+                { Types.POLY_LINES, "LINES" },
+                { Types.CIRCLE, "CIRCLE" },
+                { Types.POINT, "POINT" },
+                { Types.GROUP, "GROUP" },
+                { Types.DIMENTION_LINE, "DIM" },
+                { Types.MESH, "MESH" },
+                { Types.NURBS_LINE, "NURBS" },
+                { Types.NURBS_SURFACE, "NURBS-SURFACE" },
+            };
+        }
+
+        public static string TypeName(Types type)
+        {
+            string s;
+
+            if (TypeNames.TryGetValue(type, out s))
+            {
+                return s;
+            }
+
+            return TypeNames[Types.NONE];
+        }
+
 
         #region  "public properties"
         public uint ID { get; set; }
@@ -41,27 +76,6 @@ namespace Plotter
         public bool IsLoop { get; set; }
 
         public CadVector Normal;
-
-        /*
-        public double Thickness
-        {
-            get;
-            set;
-        }
-
-        public CadVector ThicknessV
-        {
-            get
-            {
-                if (Thickness == 0)
-                {
-                    return CadVector.Zero;
-                }
-
-                return (Normal * -1.0) * Thickness;
-            }
-        }
-        */
 
         public virtual VectorList PointList
         {
@@ -264,6 +278,10 @@ namespace Plotter
 
                 case Types.NURBS_LINE:
                     fig = new CadFigureNurbsLine();
+                    break;
+
+                case Types.NURBS_SURFACE:
+                    fig = new CadFigureNurbsSurface();
                     break;
 
                 default:
@@ -825,25 +843,6 @@ namespace Plotter
                 }
             }
         }
-
-        //public virtual void ForEachThicknessPoint(Action<CadVector, int> dg)
-        //{
-        //    if (Thickness == 0)
-        //    {
-        //        return;
-        //    }
-
-        //    int cnt = mPointList.Count;
-
-        //    CadVector t = (Normal * -1.0) * Thickness;
-
-        //    for (int i = 0; i < cnt; i++)
-        //    {
-        //        CadVector v = mPointList[i] + t;
-
-        //        dg(v, i);
-        //    }
-        //}
 
         public virtual void InvertDir()
         {

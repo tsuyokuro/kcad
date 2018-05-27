@@ -200,6 +200,7 @@
     <Compile Include="plotter\Controller\ScriptEnvironment_test.cs" />
     <Compile Include="plotter\Figure\CadFigureMesh.cs" />
     <Compile Include="plotter\Figure\CadFigureNurbsLine.cs" />
+    <Compile Include="plotter\Figure\CadFigureNurbsSurface.cs" />
     <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="plotter\Figure\CadFigureUtil.cs" />
