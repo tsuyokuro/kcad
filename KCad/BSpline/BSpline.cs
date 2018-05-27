@@ -5,13 +5,17 @@ namespace BSpline
 {
     public class BSpline
     {
-        public static double Epsilon = 0.000001f;
+        public static double Epsilon = 0.000001f;   // とても小さい値
 
+        //
         // Bスプライン基底関数
-        // i:制御点 P[i]
+        //
+        // i:制御点番号 P[i]
         // degree: 次数
         // t: Knotベクトル上を動く媒介変数
-        public static double BSplineBasisFunc(int i, int degree, double t, double[] knots)
+        // knots[]: Knotベクトル
+        // 
+        public static double BasisFunc(int i, int degree, double t, double[] knots)
         {
             if (degree == 0)
             {
@@ -25,35 +29,35 @@ namespace BSpline
                 }
             }
 
-            double w1 = 0f;
-            double w2 = 0f;
-            double denominatorA = knots[i + degree] - knots[i];
-            double denominatorB = knots[i + degree + 1] - knots[i + 1];
+            double w1 = 0d;
+            double w2 = 0d;
+            double d1 = knots[i + degree] - knots[i];
+            double d2 = knots[i + degree + 1] - knots[i + 1];
 
-            if (denominatorA != 0f)
+            if (d1 != 0d)
             {
-                w1 = (t - knots[i]) / denominatorA;
+                w1 = (t - knots[i]) / d1;
             }
 
-            if (denominatorB != 0f)
+            if (d2 != 0d)
             {
-                w2 = (knots[i + degree + 1] - t) / denominatorB;
+                w2 = (knots[i + degree + 1] - t) / d2;
             }
 
-            double firstTerm = 0f;
-            double secondTerm = 0f;
+            double term1 = 0d;
+            double term2 = 0d;
 
-            if (w1 != 0f)
+            if (w1 != 0d)
             {
-                firstTerm = w1 * BSplineBasisFunc(i, degree - 1, t, knots);
+                term1 = w1 * BasisFunc(i, degree - 1, t, knots);
             }
 
-            if (w2 != 0f)
+            if (w2 != 0d)
             {
-                secondTerm = w2 * BSplineBasisFunc(i + 1, degree - 1, t, knots);
+                term2 = w2 * BasisFunc(i + 1, degree - 1, t, knots);
             }
 
-            return firstTerm + secondTerm;
+            return term1 + term2;
         }
 
         // 2次での一様なBスプライン基底関数。

@@ -113,7 +113,7 @@ namespace BSpline {
 
             for (int i = 0; i < CtrlPointCount; ++i)
             {
-				double bs = BSpline.BSplineBasisFunc(i, mDegree, t, Knots);
+				double bs = BSpline.BasisFunc(i, mDegree, t, Knots);
 
                 //DebugOut.println("bs:" + bs.ToString());
 
