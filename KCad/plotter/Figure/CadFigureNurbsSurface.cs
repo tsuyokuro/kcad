@@ -93,7 +93,7 @@ namespace Plotter
                 return;
             }
 
-            DrawControlPoints(dc, pen);
+            DrawControlPoints(dc, DrawTools.PEN_NURBS_CTRL_LINE);
 
             DrawSurfaces(dc, pen);
         }
