@@ -47,7 +47,7 @@ namespace Plotter
                 { Types.GROUP, "GROUP" },
                 { Types.DIMENTION_LINE, "DIM" },
                 { Types.MESH, "MESH" },
-                { Types.NURBS_LINE, "NURBS" },
+                { Types.NURBS_LINE, "NURBS-LINE" },
                 { Types.NURBS_SURFACE, "NURBS-SURFACE" },
             };
         }

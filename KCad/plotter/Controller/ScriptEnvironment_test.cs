@@ -559,12 +559,13 @@ namespace Plotter
         {
             CadFigureNurbsSurface nfig = (CadFigureNurbsSurface)Controller.DB.NewFigure(CadFigure.Types.NURBS_SURFACE);
 
-            VectorList vl =BSplineUtil.CreateControlPoints(5, 5, CadVector.UnitX * 20.0, CadVector.UnitZ * 20.0);
+            int ucnt = 7;
+            int vcnt = 5;
 
-            nfig.Setup(5, 5, vl);
 
-            nfig.UCount = 5;
-            nfig.VCount = 5;
+            VectorList vl =BSplineUtil.CreateControlPoints(ucnt, vcnt, CadVector.UnitX * 20.0, CadVector.UnitZ * 20.0);
+
+            nfig.Setup(ucnt, vcnt, vl, 32, 32);
 
             Controller.CurrentLayer.AddFigure(nfig);
 

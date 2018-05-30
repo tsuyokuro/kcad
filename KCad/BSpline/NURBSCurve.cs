@@ -114,7 +114,7 @@ namespace BSpline {
 
             for (int j=0; j<VWeightCnt; j++)
             {
-                for (int i = 0; i < VWeightCnt; i++)
+                for (int i = 0; i < UWeightCnt; i++)
                 {
                     Weights[i, j] = 1.0;
                 }
@@ -191,7 +191,7 @@ namespace BSpline {
         // ラインの分割数。
         public int DividedCount = 24;
 
-        // 制御店リスト
+        // 制御点リスト
         protected VectorList CtrlPoints = null;
 
         // 制御点の個数

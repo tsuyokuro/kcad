@@ -409,9 +409,6 @@ namespace Plotter.Serializer
     {
         [Key("heModel")]
         public MpHeModel HeModel;
-
-        //[Key("edge")]
-        //public List<int> Edge;
     }
 
     [MessagePackObject]

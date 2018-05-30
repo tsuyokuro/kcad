@@ -75,13 +75,13 @@ namespace Plotter
             mPointList.Add(p);
         }
 
-        public void Setup(int ucnt, int vcnt, VectorList vl)
+        public void Setup(int ucnt, int vcnt, VectorList vl, int uDivCnt, int vDivCnt)
         {
             UCount = ucnt;
             VCount = vcnt;
             mPointList = vl;
 
-            Nurbs = new NURBSSerface(3, UCount, VCount, 24, 24);
+            Nurbs = new NURBSSerface(3, UCount, VCount, uDivCnt, vDivCnt);
 
             NurbsPointList = new VectorList(Nurbs.UPointCnt * Nurbs.VPointCnt);
         }
@@ -96,6 +96,19 @@ namespace Plotter
             DrawControlPoints(dc, DrawTools.PEN_NURBS_CTRL_LINE);
 
             DrawSurfaces(dc, pen);
+        }
+
+        public override void DrawSelected(DrawContext dc, int pen)
+        {
+            for (int i=0; i<mPointList.Count; i++)
+            {
+                ref CadVector p0 = ref mPointList.Ref(i);
+
+                if (p0.Selected)
+                {
+                    dc.Drawing.DrawSelectedPoint(p0);
+                }
+            }
         }
 
         private void DrawControlPoints(DrawContext dc, int pen)
