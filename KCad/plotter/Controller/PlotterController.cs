@@ -495,14 +495,23 @@ namespace Plotter
             dc.Push();
         }
 
-        public void Clear(DrawContext dc)
+        public void Clear(DrawContext dc = null)
         {
-            if (dc == null) return;
+            if (dc == null)
+            {
+                dc = CurrentDC;
+            }
+
             dc.Drawing.Clear();
         }
 
-        public void DrawAll(DrawContext dc)
+        public void DrawAll(DrawContext dc = null)
         {
+            if (dc == null)
+            {
+                dc = CurrentDC;
+            }
+
             DrawCrossCursor(dc);
             Draw(dc);
             DrawSelectedItems(dc);
@@ -547,6 +556,11 @@ namespace Plotter
             {
                 MeasureFigureCreator.Figure.Draw(dc, DrawTools.PEN_MEASURE_FIGURE);
             }
+        }
+
+        public void PushCurrent()
+        {
+            CurrentDC.Push();
         }
 
         public void DrawGrid(DrawContext dc)

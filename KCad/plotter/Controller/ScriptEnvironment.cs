@@ -1142,8 +1142,9 @@ namespace Plotter
                 UpdateTreeViewFlag = false;
             }
 
-            Controller.DrawAll(Controller.CurrentDC);
-            Controller.CurrentDC.Push();
+            Controller.Clear();
+            Controller.DrawAll();
+            Controller.PushCurrent();
         }
 
         public Exception RunCommand(string s)

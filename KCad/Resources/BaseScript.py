@@ -4,8 +4,8 @@ import math
 def putMsg(s):
     SE.PutMsg(s)
 
-#[AC] rect(10, 10, "xy")
-def rect(w, h, p):
+#[AC] rect(w=10, h=10, p="xy")
+def rect(w=10, h=10, p="xy"):
     SE.Rect(w, h, p)
 
 #[AC] area()
@@ -53,8 +53,8 @@ def addLayer(name):
     SE.AddLayer(name)
 
 
-#[AC] move(x, y, z)
-def move(x, y, z):
+#[AC] move(x=0, y=0, z=0)
+def move(x=0, y=0, z=0):
     SE.Move(x, y, z)
 
 #[AC] segLen(len)
@@ -74,7 +74,7 @@ def getldp():
     pt = SE.GetLastDownPoint()
     return (pt.x, pt.y, pt.z)
 
-#[AC] moveCursor(x, y, z)
+#[AC] moveCursor(x=10, y=0, z=0)
 def moveCursor(x, y, z):
     SE.MoveCursor(x, y, z)
 
@@ -174,18 +174,6 @@ def currentFig():
 def test(v):
     SE.Test(v)
 
-
-#globals
-x=0
-y=0
-z=0
-
-w=10
-h=10
-
-ratio=0.5
-
-range = 4
 
 #[AC] point0
 point0 = SE.CreateVector(0,0,0)
