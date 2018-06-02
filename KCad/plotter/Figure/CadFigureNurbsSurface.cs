@@ -75,13 +75,17 @@ namespace Plotter
             mPointList.Add(p);
         }
 
-        public void Setup(int ucnt, int vcnt, VectorList vl, int uDivCnt, int vDivCnt)
+        public void Setup(
+            int ucnt, int vcnt,
+            VectorList vl,
+            int uDivCnt, int vDivCnt,
+            bool uclose=false, bool vclose=false)
         {
             UCount = ucnt;
             VCount = vcnt;
             mPointList = vl;
 
-            Nurbs = new NURBSSerface(3, UCount, VCount, uDivCnt, vDivCnt);
+            Nurbs = new NURBSSerface(3, UCount, VCount, uDivCnt, vDivCnt, uclose, vclose);
 
             NurbsPointList = new VectorList(Nurbs.UPointCnt * Nurbs.VPointCnt);
         }

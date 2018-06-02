@@ -2,18 +2,43 @@ using CadDataTypes;
 using Plotter;
 using System;
 
-namespace BSpline {
+namespace BSpline
+{
+    public class NURBSParam
+    {
+        // 次数
+        public int Degree = 3;
+
+        //閉じる
+        public bool Close = false;
+
+        // Control point の見かけ上の数
+        // Closeの場合は、実際の数 + Degreeに設定する
+        public int CtrlCnt = 5;
+
+    }
+
 
     public class NURBSSerface
     {
-        public int UDivCnt = 12;
-        public int VDivCnt = 12;
+        public bool UClose = false;
+        public bool VClose = false;
 
+        // Control point の見かけ上の数
+        // Closeの場合は、実際の数 + Degreeに設定する
         public int UCtrlCnt = 5;
         public int VCtrlCnt = 5;
 
+        // Control pointのリスト上での数
+        public int UCtrlTblCnt = 5;
+        public int VCtrlTblCnt = 5;
+
+        // 次数
         public int UDegree = 3;
         public int VDegree = 3;
+
+        public int UDivCnt = 12;
+        public int VDivCnt = 12;
 
         public VectorList CtrlPoints = null;
 
@@ -43,13 +68,32 @@ namespace BSpline {
         public double UStep = 0;
         public double VStep = 0;
 
-        public NURBSSerface(int deg, int uCtrlCnt, int vCtrlCnt, int uDivCnt, int vDivCnt)
+
+        public NURBSSerface(int deg,
+            int uCtrlCnt, int vCtrlCnt,
+            int uDivCnt, int vDivCnt,
+            bool uclose=false, bool vclose=false)
         {
             UDegree = deg;
             VDegree = deg;
 
+            UClose = uclose;
+            VClose = vclose;
+
+            UCtrlTblCnt = uCtrlCnt;
+            VCtrlTblCnt = vCtrlCnt;
+
             UCtrlCnt = uCtrlCnt;
+            if (UClose)
+            {
+                UCtrlCnt += UDegree;
+            }
+
             VCtrlCnt = vCtrlCnt;
+            if (VClose)
+            {
+                VCtrlCnt += VDegree;
+            }
 
             UDivCnt = uDivCnt;
             VDivCnt = vDivCnt;
@@ -69,8 +113,8 @@ namespace BSpline {
             RecalcSteppingParam();
         }
 
-        bool UPassOnEdge = true;
-        bool VPassOnEdge = true;
+        bool UPassOnEdge = false;
+        bool VPassOnEdge = false;
 
         public void ResetKnots()
         {
@@ -138,14 +182,21 @@ namespace BSpline {
 
             double weight = 0f;
 
-            for (int j = 0; j < VCtrlCnt; ++j)
+            int sp;
+
+            int vcnt = VCtrlCnt;
+            int ucnt = UCtrlCnt;
+
+            for (int j = 0; j < vcnt; ++j)
             {
-                for (int i=0; i< UCtrlCnt; ++i)
+                sp = UCtrlTblCnt * (j % VCtrlTblCnt);
+
+                for (int i = 0; i < ucnt; ++i)
                 {
                     double ubs = BSpline.BasisFunc(i, UDegree, u, UKnots);
                     double vbs = BSpline.BasisFunc(j, VDegree, v, VKnots);
 
-                    int cp = j * UCtrlCnt + i;
+                    int cp = sp + (i % UCtrlTblCnt);
 
                     pt += (ubs * vbs * Weights[i, j]) * CtrlPoints[cp];
 
