@@ -4,13 +4,15 @@ using System.Collections.Generic;
 using System.Drawing;
 using static Plotter.CadFigure;
 using CadDataTypes;
-using BSpline;
+using SplineCurve;
 
 namespace Plotter
 {
     public class CadFigureNurbsLine : CadFigure
     {
-        public NURBSCurve Nurbs = new NURBSCurve();
+        public NURBSLine Nurbs;
+
+        private VectorList NurbsPointList;
 
         public CadFigureNurbsLine()
         {
@@ -72,6 +74,14 @@ namespace Plotter
             mPointList.Add(p);
         }
 
+        public void Setup(int deg, int divCnt, bool edge = true, bool close=false)
+        {
+            Nurbs = new NURBSLine(deg, mPointList.Count, divCnt, edge, close);
+            Nurbs.CtrlPoints = mPointList;
+
+            NurbsPointList = new VectorList(Nurbs.OutCnt);
+        }
+
         public override void Draw(DrawContext dc, int pen)
         {
             if (PointList.Count < 2)
@@ -92,37 +102,22 @@ namespace Plotter
                 c = n;
             }
 
-            //Nurbs.Closed = true;
-            Nurbs.PassOnEdge = true;
-            Nurbs.SetCotrolPoints(mPointList);
+            NurbsPointList.Clear();
 
-            /*
-            VectorList vl = Nurbs.Evaluate();
+            Nurbs.Eval(NurbsPointList);
 
-            if (vl==null || vl.Count<2)
+            if (NurbsPointList.Count<2)
             {
                 return;
             }
 
-            c = vl[0];
+            c = NurbsPointList[0];
 
-            for (int i=1; i< vl.Count; i++)
+            for (int i=1; i< NurbsPointList.Count; i++)
             {
-                n = vl[i];
+                n = NurbsPointList[i];
                 dc.Drawing.DrawLine(pen, c, n);
 
-                c = n;
-            }
-            */
-
-            int cnt = Nurbs.PointCount;
-
-            c = Nurbs.GetPoint(0);
-
-            for (int i=1;i<cnt; i++)
-            {
-                n = Nurbs.GetPoint(i);
-                dc.Drawing.DrawLine(pen, c, n);
                 c = n;
             }
         }

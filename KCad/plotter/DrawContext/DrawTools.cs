@@ -81,7 +81,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_BLACK] = Color.Black;
             PenColorTbl[DrawTools.PEN_MESH_LINE] = Color.FromArgb(0xFF, 0x70, 0x70, 0x70);
             PenColorTbl[DrawTools.PEN_TEST] = Color.FromArgb(0xFF, 0xBB, 0xCC, 0xDD);
-            PenColorTbl[DrawTools.PEN_NURBS_CTRL_LINE] = Color.FromArgb(0xFF, 0x80, 0x80, 0xAA);
+            PenColorTbl[DrawTools.PEN_NURBS_CTRL_LINE] = Color.FromArgb(0xFF, 0x60, 0xC0, 0x60);
 
 
             BrushColorTbl = new Color[DrawTools.BRUSH_TBL_SIZE];

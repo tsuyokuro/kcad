@@ -1,9 +1,9 @@
 using CadDataTypes;
 using System;
 
-namespace BSpline
+namespace SplineCurve
 {
-    public class BSplineUtil
+    public class SplineUtil
     {
         public static VectorList CreateControlPoints(int ucnt, int vcnt, CadVector uunit, CadVector vunit)
         {
@@ -35,7 +35,6 @@ namespace BSpline
             return vl;
         }
     }
-
 
     public class BSpline
     {

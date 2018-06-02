@@ -188,10 +188,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SplineCurve\BSplineParam.cs" />
+    <Compile Include="SplineCurve\NURBSSerface.cs" />
     <Compile Include="Controls\AutoCompleteTextBox.cs" />
     <Compile Include="Controls\CadConsole.cs" />
-    <Compile Include="BSpline\BSpline.cs" />
-    <Compile Include="BSpline\NURBSCurve.cs" />
+    <Compile Include="SplineCurve\BSpline.cs" />
+    <Compile Include="SplineCurve\NURBSLine.cs" />
     <Compile Include="Dialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>

@@ -21,7 +21,7 @@ using LibiglWrapper;
 using HalfEdgeNS;
 using CarveWapper;
 using MeshMakerNS;
-using BSpline;
+using SplineCurve;
 
 namespace Plotter
 {
@@ -550,6 +550,8 @@ namespace Plotter
 
             nfig.AddPoints(fig.PointList);
 
+            nfig.Setup(3, 24, false, true);
+
             Controller.CurrentLayer.AddFigure(nfig);
 
             Controller.UpdateTreeView(true);
@@ -559,13 +561,12 @@ namespace Plotter
         {
             CadFigureNurbsSurface nfig = (CadFigureNurbsSurface)Controller.DB.NewFigure(CadFigure.Types.NURBS_SURFACE);
 
-            int ucnt = 5;
+            int ucnt = 8;
             int vcnt = 5;
 
+            VectorList vl =SplineUtil.CreateControlPoints(ucnt, vcnt, CadVector.UnitX * 20.0, CadVector.UnitZ * 20.0);
 
-            VectorList vl =BSplineUtil.CreateControlPoints(ucnt, vcnt, CadVector.UnitX * 20.0, CadVector.UnitZ * 20.0);
-
-            nfig.Setup(ucnt, vcnt, vl, 16, 16, false, true);
+            nfig.Setup(ucnt, vcnt, vl, 16, 16);
 
             Controller.CurrentLayer.AddFigure(nfig);
 

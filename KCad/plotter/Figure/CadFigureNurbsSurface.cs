@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using static Plotter.CadFigure;
 using CadDataTypes;
-using BSpline;
+using SplineCurve;
 
 namespace Plotter
 {
@@ -79,15 +79,16 @@ namespace Plotter
             int ucnt, int vcnt,
             VectorList vl,
             int uDivCnt, int vDivCnt,
+            bool uedge=true, bool vedge=true,
             bool uclose=false, bool vclose=false)
         {
             UCount = ucnt;
             VCount = vcnt;
             mPointList = vl;
 
-            Nurbs = new NURBSSerface(3, UCount, VCount, uDivCnt, vDivCnt, uclose, vclose);
+            Nurbs = new NURBSSerface(3, UCount, VCount, uDivCnt, vDivCnt, uedge, vedge, uclose, vclose);
 
-            NurbsPointList = new VectorList(Nurbs.UPointCnt * Nurbs.VPointCnt);
+            NurbsPointList = new VectorList(Nurbs.UOutCnt * Nurbs.VOutCnt);
         }
 
         public override void Draw(DrawContext dc, int pen)
@@ -161,8 +162,8 @@ namespace Plotter
             Nurbs.CtrlPoints = mPointList;
             Nurbs.Eval(NurbsPointList);
 
-            int ucnt = Nurbs.UPointCnt;
-            int vcnt = Nurbs.VPointCnt;
+            int ucnt = Nurbs.UOutCnt;
+            int vcnt = Nurbs.VOutCnt;
 
 
             CadVector p0;
