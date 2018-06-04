@@ -550,7 +550,7 @@ namespace Plotter
 
             nfig.AddPoints(fig.PointList);
 
-            nfig.Setup(3, 24, false, true);
+            nfig.Setup(3, 32, false, true);
 
             Controller.CurrentLayer.AddFigure(nfig);
 

@@ -18,6 +18,8 @@ namespace Plotter
 
         private VectorList NurbsPointList;
 
+        private bool NeedsEval = true;
+
         public CadFigureNurbsSurface()
         {
             Type = Types.NURBS_LINE;
@@ -43,6 +45,8 @@ namespace Plotter
         public override void MoveSelectedPoints(DrawContext dc, CadVector delta)
         {
             base.MoveSelectedPoints(dc, delta);
+
+            NeedsEval = true;
         }
 
         public override void MoveAllPoints(DrawContext dc, CadVector delta)
@@ -98,9 +102,9 @@ namespace Plotter
                 return;
             }
 
-            DrawControlPoints(dc, DrawTools.PEN_NURBS_CTRL_LINE);
-
             DrawSurfaces(dc, pen);
+
+            DrawControlPoints(dc, DrawTools.PEN_NURBS_CTRL_LINE);
         }
 
         public override void DrawSelected(DrawContext dc, int pen)
@@ -158,9 +162,13 @@ namespace Plotter
 
         private void DrawSurfaces(DrawContext dc, int pen)
         {
-            NurbsPointList.Clear();
-            Nurbs.CtrlPoints = mPointList;
-            Nurbs.Eval(NurbsPointList);
+            if (NeedsEval)
+            {
+                NurbsPointList.Clear();
+                Nurbs.CtrlPoints = mPointList;
+                Nurbs.Eval(NurbsPointList);
+                NeedsEval = false;
+            }
 
             int ucnt = Nurbs.UOutCnt;
             int vcnt = Nurbs.VOutCnt;

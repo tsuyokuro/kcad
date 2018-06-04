@@ -25,7 +25,10 @@ namespace SplineCurve
         public VectorList CtrlPoints = null;
 
         // Weight情報
-        public double[,] Weights;
+        public double[] Weights;
+
+        public int[] Order;
+
 
         BSplineParam UBSpline = new BSplineParam();
         BSplineParam VBSpline = new BSplineParam();
@@ -42,7 +45,28 @@ namespace SplineCurve
             get { return VBSpline.OutputCnt; }
         }
 
+        public NURBSSerface()
+        {
+        }
+
         public NURBSSerface(
+            int deg,
+            int uCtrlCnt, int vCtrlCnt,
+            int uDivCnt, int vDivCnt,
+            bool uedge, bool vedge,
+            bool uclose, bool vclose
+            )
+        {
+            Setup(
+                deg,
+                uCtrlCnt, vCtrlCnt,
+                uDivCnt, vDivCnt,
+                uedge, vedge,
+                uclose, vclose
+                );
+        }
+
+        public void Setup(
             int deg,
             int uCtrlCnt, int vCtrlCnt,
             int uDivCnt, int vDivCnt,
@@ -68,6 +92,8 @@ namespace SplineCurve
                 VCtrlCnt += deg;
             }
 
+            CreateOrder(UCtrlCnt, VCtrlCnt, UCtrlDataCnt, VCtrlDataCnt);
+
             UBSpline.Setup(deg, UCtrlCnt, uDivCnt, uedge);
             VBSpline.Setup(deg, VCtrlCnt, uDivCnt, vedge);
 
@@ -76,13 +102,26 @@ namespace SplineCurve
 
         public void ResetWeights()
         {
-            Weights = new double[UCtrlDataCnt, VCtrlDataCnt];
+            Weights = new double[UCtrlDataCnt*VCtrlDataCnt];
 
-            for (int j = 0; j < VCtrlDataCnt; j++)
+            for (int i = 0; i < Weights.Length; i++)
             {
-                for (int i = 0; i < UCtrlDataCnt; i++)
+                Weights[i] = 1.0;
+            }
+        }
+
+        private void CreateOrder(int ucnt, int vcnt, int udcnt, int vdcnt)
+        {
+            Order = new int[ucnt * vcnt];
+
+            for (int j = 0; j < vcnt; j++)
+            {
+                int ds = (j % vdcnt) * udcnt;
+                int s = j * ucnt;
+
+                for (int i = 0; i < UCtrlCnt; i++)
                 {
-                    Weights[i, j] = 1.0;
+                    Order[s + i] = ds + (i % udcnt);
                 }
             }
         }
@@ -98,31 +137,34 @@ namespace SplineCurve
             int vcnt = VCtrlCnt;
             int ucnt = UCtrlCnt;
 
-            int di;
-            int dj;
-
             for (int j = 0; j < vcnt; ++j)
             {
-                dj = j % VCtrlDataCnt;
-
-                sp = UCtrlDataCnt * dj;
+                sp = ucnt * j;
 
                 for (int i = 0; i < ucnt; ++i)
                 {
                     double ubs = UBSpline.BasisFunc(i, u);
                     double vbs = VBSpline.BasisFunc(j, v);
 
-                    di = i % UCtrlDataCnt;
+                    int cp = Order[sp + i];
 
-                    int cp = sp + di;
+                    pt += (ubs * vbs * Weights[cp]) * CtrlPoints[cp];
 
-                    pt += (ubs * vbs * Weights[di, dj]) * CtrlPoints[cp];
-
-                    weight += ubs * vbs * Weights[di, dj];
+                    weight += ubs * vbs * Weights[cp];
                 }
             }
 
             return pt / weight;
+        }
+
+        public double GetWeight(int u, int v)
+        {
+            return Weights[v * UCtrlDataCnt + u];
+        }
+
+        public void SetWeight(int u, int v, double val)
+        {
+            Weights[v * UCtrlDataCnt + u] = val;
         }
 
         public void Eval(VectorList vl)

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CadDataTypes;
+using SplineCurve;
 
 namespace Plotter.Serializer
 {
@@ -392,9 +393,12 @@ namespace Plotter.Serializer
 
     [MessagePack.Union(0, typeof(MpSimpleGeometricData))]
     [MessagePack.Union(1, typeof(MpMeshGeometricData))]
+    [MessagePack.Union(2, typeof(MpNurbsLineGeometricData))]
     public interface MpGeometricData
     {
     }
+
+    #region Geomeric data
 
     [MessagePackObject]
     public class MpSimpleGeometricData : MpGeometricData
@@ -410,6 +414,19 @@ namespace Plotter.Serializer
         [Key("heModel")]
         public MpHeModel HeModel;
     }
+
+    [MessagePackObject]
+    public class MpNurbsLineGeometricData : MpGeometricData
+    {
+        [Key("ptL")]
+        public List<MpVector> PointList;
+
+        [Key("Nurbs")]
+        public MpNurbsLine Nurbs;
+    }
+
+    #endregion
+
 
     [MessagePackObject]
     public class MpHeModel
@@ -589,6 +606,128 @@ namespace Plotter.Serializer
         }
     }
 
+    [MessagePackObject]
+    public class MpNurbsLine
+    {
+        [Key("Closed")]
+        public bool Closed;
+
+        [Key("PassEdge")]
+        public bool PassEdge;
+
+        [Key("DivCnt")]
+        public int DivCnt;
+
+        [Key("CtrlCnt")]
+        public int CtrlCnt;
+
+        [Key("CtrlDataCnt")]
+        public int CtrlDataCnt;
+
+        [Key("Weights")]
+        public double[] Weights;
+
+        [Key("Order")]
+        public int[] Order;
+
+        [Key("BSplineP")]
+        public MpBSplineParam BSplineP;
+
+        public static MpNurbsLine Create(NURBSLine src)
+        {
+            MpNurbsLine ret = new MpNurbsLine();
+
+            ret.Closed = src.Closed;
+            ret.PassEdge = src.PassEdge;
+            ret.CtrlCnt = src.CtrlCnt;
+            ret.CtrlDataCnt = src.CtrlDataCnt;
+            ret.Weights = MpUtil.ArrayClone<double>(src.Weights);
+            ret.Order = MpUtil.ArrayClone<int>(src.Order);
+
+            ret.BSplineP = MpBSplineParam.Create(src.BSplineP);
+
+            return ret;
+        }
+
+        public NURBSLine Restore()
+        {
+            NURBSLine nurbs = new NURBSLine();
+
+            nurbs.Closed = Closed;
+            nurbs.PassEdge = PassEdge;
+            nurbs.CtrlCnt = CtrlCnt;
+            nurbs.CtrlDataCnt = CtrlDataCnt;
+            nurbs.Weights = MpUtil.ArrayClone<double>(Weights);
+            nurbs.Order = MpUtil.ArrayClone<int>(Order);
+
+            nurbs.BSplineP = BSplineP.Restore();
+
+            return nurbs;
+        }
+    }
+
+    [MessagePackObject]
+    public class MpBSplineParam
+    {
+        [Key("Degree")]
+        public int Degree = 3;
+
+        [Key("DivCnt")]
+        public int DivCnt = 0;
+
+        [Key("OutputCnt")]
+        public int OutputCnt = 0;
+
+        [Key("KnotCnt")]
+        public int KnotCnt;
+
+        [Key("Knots")]
+        public double[] Knots;
+
+        [Key("CtrlCnt")]
+        public int CtrlCnt;
+
+        [Key("LowKnot")]
+        public double LowKnot = 0;
+
+        [Key("HightKnot")]
+        public double HighKnot = 0;
+
+        [Key("Step")]
+        public double Step = 0;
+
+        public static MpBSplineParam Create(BSplineParam src)
+        {
+            MpBSplineParam ret = new MpBSplineParam();
+
+            ret.Degree = src.Degree;
+            ret.DivCnt = src.DivCnt;
+            ret.OutputCnt = src.OutputCnt;
+            ret.KnotCnt = src.KnotCnt;
+            ret.Knots = MpUtil.ArrayClone<double>(src.Knots);
+            ret.LowKnot = src.LowKnot;
+            ret.HighKnot = src.HighKnot;
+            ret.Step = src.Step;
+
+            return ret;
+        }
+
+        public BSplineParam Restore()
+        {
+            BSplineParam bs = new BSplineParam();
+
+            bs.Degree = Degree;
+            bs.DivCnt = DivCnt;
+            bs.OutputCnt = OutputCnt;
+            bs.KnotCnt = KnotCnt;
+            bs.Knots = MpUtil.ArrayClone<double>(Knots);
+            bs.LowKnot = LowKnot;
+            bs.HighKnot = HighKnot;
+            bs.Step = Step;
+
+            return bs;
+        }
+    }
 
     public class MpUtil
     {
@@ -718,5 +857,14 @@ namespace Plotter.Serializer
 
             return ret;
         }
+
+        public static T[] ArrayClone<T>(T[] src)
+        {
+            T[] dst = new T[src.Length];
+
+            Array.Copy(src, dst, src.Length);
+
+            return dst;
+        } 
     }
 }

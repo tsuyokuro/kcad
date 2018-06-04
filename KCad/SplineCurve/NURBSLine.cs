@@ -11,33 +11,48 @@ namespace SplineCurve
         // 端点を通る
         public bool PassEdge;
 
-        // 分割数。
-        public int DividedCount = 24;
-
         // 制御点リスト
         public VectorList CtrlPoints = null;
 
         // Control point の見かけ上の数
         // Closeの場合は、実際の数 + Degreeに設定する
-        private int CtrlCnt = 0;
+        public int CtrlCnt = 0;
 
         // Control pointのリスト上での数
-        private int CtrlDataCnt;
+        public int CtrlDataCnt;
+
+        public int[] Order;
+
 
         // 出力されるPointの個数
         public int OutCnt
         {
             get
             {
-                return DividedCount + 1;
+                return BSplineP.OutputCnt;
             }
         }
 
-        BSplineParam BSplineP = new BSplineParam();
+        public BSplineParam BSplineP = new BSplineParam();
 
         public double[] Weights;
 
-        public NURBSLine(int deg,
+        public NURBSLine()
+        {
+        }
+
+        public NURBSLine(
+            int deg,
+            int ctrlCnt,
+            int divCnt,
+            bool edge,
+            bool close)
+        {
+            Setup(deg, ctrlCnt, divCnt, edge, close);
+        }
+
+        public void Setup(
+            int deg,
             int ctrlCnt,
             int divCnt,
             bool edge,
@@ -54,6 +69,14 @@ namespace SplineCurve
             {
                 CtrlCnt += deg;
             }
+
+            Order = new int[CtrlCnt];
+
+            for (int i=0; i< CtrlCnt; i++)
+            {
+                Order[i] = i % ctrlCnt;
+            }
+
 
             BSplineP.Setup(deg, CtrlCnt, divCnt, edge);
 
@@ -75,7 +98,7 @@ namespace SplineCurve
             {
 				bs = BSplineP.BasisFunc(i, t);
 
-                di = i % CtrlDataCnt;
+                di = Order[i];
 
                 linePoint += bs * Weights[di] * CtrlPoints[di];
 
@@ -85,10 +108,9 @@ namespace SplineCurve
             return linePoint / weight;
 		}
 
-        // 線を引く点を評価し返す。
         public void Eval(VectorList vl)
         {
-            for (int p = 0; p <= DividedCount; ++p)
+            for (int p = 0; p <= BSplineP.DivCnt; ++p)
             {
                 double t = p * BSplineP.Step + BSplineP.LowKnot;
                 if (t >= BSplineP.HighKnot)
@@ -100,7 +122,6 @@ namespace SplineCurve
             }
         }
 
-        // 重みのリセット。
         public void ResetWeights()
         {
             Weights = new double[CtrlDataCnt];
@@ -109,6 +130,16 @@ namespace SplineCurve
             {
                 Weights[i] = 1f;
             }
+        }
+
+        public double GetWeight(int u, int v)
+        {
+            return Weights[v * CtrlDataCnt + u];
+        }
+
+        public void SetWeight(int u, int v, double val)
+        {
+            Weights[v * CtrlDataCnt + u] = val;
         }
     }
 }

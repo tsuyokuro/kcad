@@ -5,6 +5,8 @@ using System.Drawing;
 using static Plotter.CadFigure;
 using CadDataTypes;
 using SplineCurve;
+using Plotter.Serializer;
+using Newtonsoft.Json.Linq;
 
 namespace Plotter
 {
@@ -144,6 +146,58 @@ namespace Plotter
         {
             base.EndEdit();
             RecalcNormal();
+        }
+
+        public override MpGeometricData GeometricDataToMp()
+        {
+            MpNurbsLineGeometricData geo = new MpNurbsLineGeometricData();
+            geo.PointList = MpUtil.VectortListToMp(PointList);
+            geo.Nurbs = MpNurbsLine.Create(Nurbs);
+            return geo;
+        }
+
+        public override void GeometricDataFromMp(MpGeometricData geo)
+        {
+            if (!(geo is MpNurbsLineGeometricData))
+            {
+                return;
+            }
+
+            MpNurbsLineGeometricData g = (MpNurbsLineGeometricData)geo;
+
+            mPointList = MpUtil.VectortListFromMp(g.PointList);
+
+            Nurbs = g.Nurbs.Restore();
+
+            Nurbs.CtrlPoints = mPointList;
+
+            NurbsPointList = new VectorList(Nurbs.OutCnt);
+        }
+
+
+        public override JObject GeometricDataToJson()
+        {
+            JArray pointArray = CadJson.ToJson.VectorListToJson(PointList);
+
+            JObject jvdata = new JObject();
+            jvdata.Add(CadJson.VECTOR.POINT_LIST, pointArray);
+            jvdata.Add("Nurbs", BSplineJson.NURBSLineToJson(Nurbs));
+
+            return jvdata;
+        }
+
+        public override void GeometricDataFromJson(JObject jvdata, CadJson.VersionCode version)
+        {
+            JArray jarray = (JArray)jvdata[CadJson.VECTOR.POINT_LIST];
+
+            VectorList vl = CadJson.FromJson.VectorListFromJson(jarray, version);
+            mPointList = vl;
+
+            Nurbs = BSplineJson.NURBSLineFromJson((JObject)jvdata["Nurbs"]);
+
+            Nurbs.CtrlPoints = mPointList;
+
+            NurbsPointList = new VectorList(Nurbs.OutCnt);
         }
     }
 }

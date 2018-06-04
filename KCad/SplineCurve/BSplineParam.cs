@@ -18,9 +18,7 @@ namespace SplineCurve
         // Knot数
         public int KnotCnt;
 
-        private double[] Knots;
-
-        private int CtrlCnt;
+        public double[] Knots;
 
         public double LowKnot = 0;
 
@@ -28,7 +26,7 @@ namespace SplineCurve
 
         public double Step = 0;
 
-        // i: Control point 番号
+        // i: Knot番号
         // t: 媒介変数
         public double BasisFunc(int i, double t)
         {
@@ -38,15 +36,15 @@ namespace SplineCurve
         public void Setup(int degree, int ctrlCnt, int divCnt, bool passOnEdge)
         {
             Degree = degree;
-            CtrlCnt = ctrlCnt;
-            KnotCnt = CtrlCnt + Degree + 1;
+            //CtrlCnt = ctrlCnt;
+            KnotCnt = ctrlCnt + Degree + 1;
             DivCnt = divCnt;
             OutputCnt = DivCnt + 1;
 
             ResetKnots(passOnEdge);
 
             LowKnot = Knots[Degree];
-            HighKnot = Knots[CtrlCnt];
+            HighKnot = Knots[ctrlCnt];
             Step = (HighKnot - LowKnot) / (double)DivCnt;
         }
 

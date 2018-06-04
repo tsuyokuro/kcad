@@ -188,6 +188,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SplineCurve\BSplineJson.cs" />
     <Compile Include="SplineCurve\BSplineParam.cs" />
     <Compile Include="SplineCurve\NURBSSerface.cs" />
     <Compile Include="Controls\AutoCompleteTextBox.cs" />

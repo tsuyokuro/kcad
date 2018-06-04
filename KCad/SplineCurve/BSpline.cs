@@ -40,14 +40,14 @@ namespace SplineCurve
     {
         public static double Epsilon = 0.000001f;   // とても小さい値
 
-        //
-        // Bスプライン基底関数
-        //
-        // i:制御点番号 P[i]
-        // degree: 次数
-        // t: Knotベクトル上を動く媒介変数
-        // knots[]: Knotベクトル
-        // 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="i">Knot番号</param>
+        /// <param name="degree">次数</param>
+        /// <param name="t">媒介変数</param>
+        /// <param name="knots">Knot配列</param>
+        /// <returns></returns>
         public static double BasisFunc(int i, int degree, double t, double[] knots)
         {
             if (degree == 0)
