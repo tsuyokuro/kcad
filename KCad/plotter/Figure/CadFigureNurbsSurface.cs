@@ -80,6 +80,7 @@ namespace Plotter
         }
 
         public void Setup(
+            int deg,
             int ucnt, int vcnt,
             VectorList vl,
             int uDivCnt, int vDivCnt,
@@ -90,7 +91,7 @@ namespace Plotter
             VCount = vcnt;
             mPointList = vl;
 
-            Nurbs = new NURBSSerface(3, UCount, VCount, uDivCnt, vDivCnt, uedge, vedge, uclose, vclose);
+            Nurbs = new NURBSSerface(deg, UCount, VCount, uDivCnt, vDivCnt, uedge, vedge, uclose, vclose);
 
             NurbsPointList = new VectorList(Nurbs.UOutCnt * Nurbs.VOutCnt);
         }

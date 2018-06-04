@@ -566,7 +566,7 @@ namespace Plotter
 
             VectorList vl =SplineUtil.CreateControlPoints(ucnt, vcnt, CadVector.UnitX * 20.0, CadVector.UnitZ * 20.0);
 
-            nfig.Setup(ucnt, vcnt, vl, 16, 16);
+            nfig.Setup(2, ucnt, vcnt, vl, 16, 16);
 
             Controller.CurrentLayer.AddFigure(nfig);
 
