@@ -45,8 +45,6 @@ namespace SplineCurve
         {
             JObject jn = new JObject();
 
-            jn.Add("Closed", n.Closed);
-            jn.Add("PassEdge", n.PassEdge);
             jn.Add("CtrlCnt", n.CtrlCnt);
             jn.Add("CtrlDataCnt", n.CtrlDataCnt);
             jn.Add("Weights", ToJArray<double>(n.Weights));
@@ -60,8 +58,6 @@ namespace SplineCurve
         public static NURBSLine NURBSLineFromJson(JObject jo)
         {
             NURBSLine n = new NURBSLine();
-            n.Closed = (bool)jo["Closed"];
-            n.PassEdge = (bool)jo["PassEdge"];
             n.CtrlCnt = (int)jo["CtrlCnt"];
             n.CtrlDataCnt = (int)jo["CtrlDataCnt"];
             n.Weights = DoubleArrayFromJArray((JArray)jo["Weights"]);
@@ -71,6 +67,44 @@ namespace SplineCurve
 
             return n;
         }
+
+        public static JObject NURBSSurfaceToJson(NURBSSurface n)
+        {
+            JObject jn = new JObject();
+
+            jn.Add("UCtrlCnt", n.UCtrlCnt);
+            jn.Add("VCtrlCnt", n.VCtrlCnt);
+
+            jn.Add("UCtrlDataCnt", n.UCtrlDataCnt);
+            jn.Add("VCtrlDataCnt", n.VCtrlDataCnt);
+
+            jn.Add("Weights", ToJArray<double>(n.Weights));
+            jn.Add("Order", ToJArray<int>(n.Order));
+
+            jn.Add("UBSpline", BSplineParamToJson(n.UBSpline));
+            jn.Add("VBSpline", BSplineParamToJson(n.VBSpline));
+
+            return jn;
+        }
+
+        public static NURBSSurface NURBSSurfaceFromJson(JObject jo)
+        {
+            NURBSSurface n = new NURBSSurface();
+            n.UCtrlCnt = (int)jo["UCtrlCnt"];
+            n.VCtrlCnt = (int)jo["VCtrlCnt"];
+
+            n.UCtrlDataCnt = (int)jo["UCtrlDataCnt"];
+            n.VCtrlDataCnt = (int)jo["VCtrlDataCnt"];
+
+            n.Weights = DoubleArrayFromJArray((JArray)jo["Weights"]);
+            n.Order = IntArrayFromJArray((JArray)jo["Order"]);
+
+            n.UBSpline = BSplineParamFromJson((JObject)jo["UBSpline"]);
+            n.VBSpline = BSplineParamFromJson((JObject)jo["VBSpline"]);
+
+            return n;
+        }
+
 
         public static JArray ToJArray<T>(T[] t)
         {

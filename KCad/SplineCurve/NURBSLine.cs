@@ -6,11 +6,6 @@ namespace SplineCurve
 {
     public class NURBSLine
     {
-        public bool Closed;
-
-        // 端点を通る
-        public bool PassEdge;
-
         // 制御点リスト
         public VectorList CtrlPoints = null;
 
@@ -58,14 +53,10 @@ namespace SplineCurve
             bool edge,
             bool close)
         {
-            Closed = close;
-
-            PassEdge = edge;
-
             CtrlDataCnt = ctrlCnt;
 
             CtrlCnt = ctrlCnt;
-            if (Closed)
+            if (close)
             {
                 CtrlCnt += deg;
             }
@@ -77,10 +68,9 @@ namespace SplineCurve
                 Order[i] = i % ctrlCnt;
             }
 
-
             BSplineP.Setup(deg, CtrlCnt, divCnt, edge);
 
-            ResetWeights();
+            SetDefaultWeights();
         }
 
         private CadVector CalcPoint(double t)
@@ -122,7 +112,7 @@ namespace SplineCurve
             }
         }
 
-        public void ResetWeights()
+        public void SetDefaultWeights()
         {
             Weights = new double[CtrlDataCnt];
 

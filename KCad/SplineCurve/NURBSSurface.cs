@@ -4,14 +4,8 @@ using System;
 
 namespace SplineCurve
 {
-    public class NURBSSerface
+    public class NURBSSurface
     {
-        public bool UClosed = false;
-        public bool VClosed = false;
-
-        public bool UPassEdge = false;
-        public bool VPassEdge = false;
-
         // Control point の見かけ上の数
         // Closeの場合は、実際の数 + Degreeに設定する
         public int UCtrlCnt = 5;
@@ -30,8 +24,8 @@ namespace SplineCurve
         public int[] Order;
 
 
-        BSplineParam UBSpline = new BSplineParam();
-        BSplineParam VBSpline = new BSplineParam();
+        public BSplineParam UBSpline = new BSplineParam();
+        public BSplineParam VBSpline = new BSplineParam();
 
         // U方向の出力されるPointの数
         public int UOutCnt
@@ -45,11 +39,11 @@ namespace SplineCurve
             get { return VBSpline.OutputCnt; }
         }
 
-        public NURBSSerface()
+        public NURBSSurface()
         {
         }
 
-        public NURBSSerface(
+        public NURBSSurface(
             int deg,
             int uCtrlCnt, int vCtrlCnt,
             int uDivCnt, int vDivCnt,
@@ -74,20 +68,17 @@ namespace SplineCurve
             bool uclose, bool vclose
             )
         {
-            UClosed = uclose;
-            VClosed = vclose;
-
             UCtrlDataCnt = uCtrlCnt;
             VCtrlDataCnt = vCtrlCnt;
 
             UCtrlCnt = uCtrlCnt;
-            if (UClosed)
+            if (uclose)
             {
                 UCtrlCnt += deg;
             }
 
             VCtrlCnt = vCtrlCnt;
-            if (VClosed)
+            if (vclose)
             {
                 VCtrlCnt += deg;
             }
@@ -97,10 +88,10 @@ namespace SplineCurve
             UBSpline.Setup(deg, UCtrlCnt, uDivCnt, uedge);
             VBSpline.Setup(deg, VCtrlCnt, uDivCnt, vedge);
 
-            ResetWeights();
+            SetDefaultWeights();
         }
 
-        public void ResetWeights()
+        public void SetDefaultWeights()
         {
             Weights = new double[UCtrlDataCnt*VCtrlDataCnt];
 

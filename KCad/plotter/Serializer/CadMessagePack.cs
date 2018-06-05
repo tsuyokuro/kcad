@@ -394,6 +394,7 @@ namespace Plotter.Serializer
     [MessagePack.Union(0, typeof(MpSimpleGeometricData))]
     [MessagePack.Union(1, typeof(MpMeshGeometricData))]
     [MessagePack.Union(2, typeof(MpNurbsLineGeometricData))]
+    [MessagePack.Union(3, typeof(MpNurbsSurfaceGeometricData))]
     public interface MpGeometricData
     {
     }
@@ -425,6 +426,15 @@ namespace Plotter.Serializer
         public MpNurbsLine Nurbs;
     }
 
+    [MessagePackObject]
+    public class MpNurbsSurfaceGeometricData : MpGeometricData
+    {
+        [Key("ptL")]
+        public List<MpVector> PointList;
+
+        [Key("Nurbs")]
+        public MpNurbsSurface Nurbs;
+    }
     #endregion
 
 
@@ -609,15 +619,6 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpNurbsLine
     {
-        [Key("Closed")]
-        public bool Closed;
-
-        [Key("PassEdge")]
-        public bool PassEdge;
-
-        [Key("DivCnt")]
-        public int DivCnt;
-
         [Key("CtrlCnt")]
         public int CtrlCnt;
 
@@ -637,8 +638,6 @@ namespace Plotter.Serializer
         {
             MpNurbsLine ret = new MpNurbsLine();
 
-            ret.Closed = src.Closed;
-            ret.PassEdge = src.PassEdge;
             ret.CtrlCnt = src.CtrlCnt;
             ret.CtrlDataCnt = src.CtrlDataCnt;
             ret.Weights = MpUtil.ArrayClone<double>(src.Weights);
@@ -653,8 +652,6 @@ namespace Plotter.Serializer
         {
             NURBSLine nurbs = new NURBSLine();
 
-            nurbs.Closed = Closed;
-            nurbs.PassEdge = PassEdge;
             nurbs.CtrlCnt = CtrlCnt;
             nurbs.CtrlDataCnt = CtrlDataCnt;
             nurbs.Weights = MpUtil.ArrayClone<double>(Weights);
@@ -665,6 +662,75 @@ namespace Plotter.Serializer
             return nurbs;
         }
     }
+
+    [MessagePackObject]
+    public class MpNurbsSurface
+    {
+        [Key("UCtrlCnt")]
+        public int UCtrlCnt;
+
+        [Key("VCtrlCnt")]
+        public int VCtrlCnt;
+
+        [Key("UCtrlDataCnt")]
+        public int UCtrlDataCnt;
+
+        [Key("VCtrlDataCnt")]
+        public int VCtrlDataCnt;
+
+        [Key("Weights")]
+        public double[] Weights;
+
+        [Key("Order")]
+        public int[] Order;
+
+        [Key("UBSpline")]
+        public MpBSplineParam UBSpline;
+
+        [Key("VBSpline")]
+        public MpBSplineParam VBSpline;
+
+        public static MpNurbsSurface Create(NURBSSurface src)
+        {
+            MpNurbsSurface ret = new MpNurbsSurface();
+
+            ret.UCtrlCnt = src.UCtrlCnt;
+            ret.VCtrlCnt = src.VCtrlCnt;
+
+            ret.UCtrlDataCnt = src.UCtrlDataCnt;
+            ret.VCtrlDataCnt = src.VCtrlDataCnt;
+
+
+            ret.Weights = MpUtil.ArrayClone<double>(src.Weights);
+            ret.Order = MpUtil.ArrayClone<int>(src.Order);
+
+            ret.UBSpline = MpBSplineParam.Create(src.UBSpline);
+            ret.VBSpline = MpBSplineParam.Create(src.VBSpline);
+
+            return ret;
+        }
+
+        public NURBSSurface Restore()
+        {
+            NURBSSurface nurbs = new NURBSSurface();
+
+            nurbs.UCtrlCnt = UCtrlCnt;
+            nurbs.VCtrlCnt = VCtrlCnt;
+
+            nurbs.UCtrlDataCnt = UCtrlDataCnt;
+            nurbs.VCtrlDataCnt = VCtrlDataCnt;
+
+
+            nurbs.Weights = MpUtil.ArrayClone<double>(Weights);
+            nurbs.Order = MpUtil.ArrayClone<int>(Order);
+
+            nurbs.UBSpline = UBSpline.Restore();
+            nurbs.VBSpline = VBSpline.Restore();
+
+            return nurbs;
+        }
+    }
+
 
     [MessagePackObject]
     public class MpBSplineParam
