@@ -41,19 +41,16 @@ namespace SplineCurve
             DivCnt = divCnt;
             OutputCnt = DivCnt + 1;
 
-            ResetKnots(passOnEdge);
+            CreateDefaultKnots(passOnEdge);
 
             LowKnot = Knots[Degree];
             HighKnot = Knots[ctrlCnt];
             Step = (HighKnot - LowKnot) / (double)DivCnt;
         }
 
-        public void ResetKnots(bool passOnEdge)
+        public void CreateDefaultKnots(bool passOnEdge)
         {
-            if (Knots == null || Knots.Length != KnotCnt)
-            {
-                Knots = new double[KnotCnt];
-            }
+            Knots = new double[KnotCnt];
 
             double x = 0.0;
 

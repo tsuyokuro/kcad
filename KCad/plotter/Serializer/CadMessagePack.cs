@@ -634,7 +634,7 @@ namespace Plotter.Serializer
         [Key("BSplineP")]
         public MpBSplineParam BSplineP;
 
-        public static MpNurbsLine Create(NURBSLine src)
+        public static MpNurbsLine Create(NurbsLine src)
         {
             MpNurbsLine ret = new MpNurbsLine();
 
@@ -648,9 +648,9 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        public NURBSLine Restore()
+        public NurbsLine Restore()
         {
-            NURBSLine nurbs = new NURBSLine();
+            NurbsLine nurbs = new NurbsLine();
 
             nurbs.CtrlCnt = CtrlCnt;
             nurbs.CtrlDataCnt = CtrlDataCnt;
@@ -690,7 +690,7 @@ namespace Plotter.Serializer
         [Key("VBSpline")]
         public MpBSplineParam VBSpline;
 
-        public static MpNurbsSurface Create(NURBSSurface src)
+        public static MpNurbsSurface Create(NurbsSurface src)
         {
             MpNurbsSurface ret = new MpNurbsSurface();
 
@@ -710,9 +710,9 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        public NURBSSurface Restore()
+        public NurbsSurface Restore()
         {
-            NURBSSurface nurbs = new NURBSSurface();
+            NurbsSurface nurbs = new NurbsSurface();
 
             nurbs.UCtrlCnt = UCtrlCnt;
             nurbs.VCtrlCnt = VCtrlCnt;

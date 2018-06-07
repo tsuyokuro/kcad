@@ -4,7 +4,7 @@ using System;
 
 namespace SplineCurve
 {
-    public class NURBSLine
+    public class NurbsLine
     {
         // êßå‰ì_ÉäÉXÉg
         public VectorList CtrlPoints = null;
@@ -32,11 +32,11 @@ namespace SplineCurve
 
         public double[] Weights;
 
-        public NURBSLine()
+        public NurbsLine()
         {
         }
 
-        public NURBSLine(
+        public NurbsLine(
             int deg,
             int ctrlCnt,
             int divCnt,

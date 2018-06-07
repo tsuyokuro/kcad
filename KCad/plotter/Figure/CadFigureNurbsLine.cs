@@ -12,7 +12,7 @@ namespace Plotter
 {
     public class CadFigureNurbsLine : CadFigure
     {
-        public NURBSLine Nurbs;
+        public NurbsLine Nurbs;
 
         private VectorList NurbsPointList;
 
@@ -78,7 +78,7 @@ namespace Plotter
 
         public void Setup(int deg, int divCnt, bool edge = true, bool close=false)
         {
-            Nurbs = new NURBSLine(deg, mPointList.Count, divCnt, edge, close);
+            Nurbs = new NurbsLine(deg, mPointList.Count, divCnt, edge, close);
             Nurbs.CtrlPoints = mPointList;
 
             NurbsPointList = new VectorList(Nurbs.OutCnt);

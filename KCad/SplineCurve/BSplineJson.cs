@@ -41,7 +41,7 @@ namespace SplineCurve
             return bs;
         }
 
-        public static JObject NURBSLineToJson(NURBSLine n)
+        public static JObject NURBSLineToJson(NurbsLine n)
         {
             JObject jn = new JObject();
 
@@ -55,9 +55,9 @@ namespace SplineCurve
             return jn;
         }
 
-        public static NURBSLine NURBSLineFromJson(JObject jo)
+        public static NurbsLine NURBSLineFromJson(JObject jo)
         {
-            NURBSLine n = new NURBSLine();
+            NurbsLine n = new NurbsLine();
             n.CtrlCnt = (int)jo["CtrlCnt"];
             n.CtrlDataCnt = (int)jo["CtrlDataCnt"];
             n.Weights = DoubleArrayFromJArray((JArray)jo["Weights"]);
@@ -68,7 +68,7 @@ namespace SplineCurve
             return n;
         }
 
-        public static JObject NURBSSurfaceToJson(NURBSSurface n)
+        public static JObject NURBSSurfaceToJson(NurbsSurface n)
         {
             JObject jn = new JObject();
 
@@ -87,9 +87,9 @@ namespace SplineCurve
             return jn;
         }
 
-        public static NURBSSurface NURBSSurfaceFromJson(JObject jo)
+        public static NurbsSurface NURBSSurfaceFromJson(JObject jo)
         {
-            NURBSSurface n = new NURBSSurface();
+            NurbsSurface n = new NurbsSurface();
             n.UCtrlCnt = (int)jo["UCtrlCnt"];
             n.VCtrlCnt = (int)jo["VCtrlCnt"];
 

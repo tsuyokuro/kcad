@@ -190,11 +190,10 @@
     </ApplicationDefinition>
     <Compile Include="SplineCurve\BSplineJson.cs" />
     <Compile Include="SplineCurve\BSplineParam.cs" />
-    <Compile Include="SplineCurve\NURBSSurface.cs" />
+    <Compile Include="SplineCurve\NurbsLine.cs" />
     <Compile Include="Controls\AutoCompleteTextBox.cs" />
     <Compile Include="Controls\CadConsole.cs" />
     <Compile Include="SplineCurve\BSpline.cs" />
-    <Compile Include="SplineCurve\NURBSLine.cs" />
     <Compile Include="Dialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
@@ -234,6 +233,7 @@
       <DependentUpon>SnapSettingsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TreeView\CadObjTreeItem.cs" />
+    <Compile Include="SplineCurve\NurbsSurface.cs" />
     <Page Include="Dialogs\ExceptionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

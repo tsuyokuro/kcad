@@ -4,14 +4,13 @@ using System;
 
 namespace SplineCurve
 {
-    public class NURBSSurface
+    public class NurbsSurface
     {
-        // Control point の見かけ上の数
-        // Closeの場合は、実際の数 + Degreeに設定する
+        // Control pointの数
         public int UCtrlCnt = 5;
         public int VCtrlCnt = 5;
 
-        // Control pointのリスト上での数
+        // Control pointのデータ数
         public int UCtrlDataCnt = 5;
         public int VCtrlDataCnt = 5;
 
@@ -39,11 +38,11 @@ namespace SplineCurve
             get { return VBSpline.OutputCnt; }
         }
 
-        public NURBSSurface()
+        public NurbsSurface()
         {
         }
 
-        public NURBSSurface(
+        public NurbsSurface(
             int deg,
             int uCtrlCnt, int vCtrlCnt,
             int uDivCnt, int vDivCnt,
@@ -83,7 +82,7 @@ namespace SplineCurve
                 VCtrlCnt += deg;
             }
 
-            CreateOrder(UCtrlCnt, VCtrlCnt, UCtrlDataCnt, VCtrlDataCnt);
+            CreateOrder(UCtrlCnt, VCtrlCnt, uCtrlCnt, vCtrlCnt);
 
             UBSpline.Setup(deg, UCtrlCnt, uDivCnt, uedge);
             VBSpline.Setup(deg, VCtrlCnt, uDivCnt, vedge);

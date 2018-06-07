@@ -12,7 +12,7 @@ namespace Plotter
 {
     public class CadFigureNurbsSurface : CadFigure
     {
-        public NURBSSurface Nurbs;
+        public NurbsSurface Nurbs;
 
         private VectorList NurbsPointList;
 
@@ -87,7 +87,7 @@ namespace Plotter
         {
             mPointList = vl;
 
-            Nurbs = new NURBSSurface(deg, ucnt, vcnt, uDivCnt, vDivCnt, uedge, vedge, uclose, vclose);
+            Nurbs = new NurbsSurface(deg, ucnt, vcnt, uDivCnt, vDivCnt, uedge, vedge, uclose, vclose);
 
             NurbsPointList = new VectorList(Nurbs.UOutCnt * Nurbs.VOutCnt);
         }
