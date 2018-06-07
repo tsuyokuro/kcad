@@ -28,7 +28,7 @@ namespace KCad
             public string Text;
         }
 
-        public delegate void TextEventHandler(object sender, TextEventArgs e);
+        //public delegate void TextEventHandler(object sender, TextEventArgs e);
 
         private Popup CandidatePopup;
         private ListBox CandidateListBox;
@@ -96,7 +96,7 @@ namespace KCad
         }
 
 
-        public event TextEventHandler Determine;
+        public event Action<object, TextEventArgs> Determine;
 
         public AutoCompleteTextBox()
         {
@@ -133,6 +133,10 @@ namespace KCad
             if (CandidatePopup.IsOpen)
             {
                 if (e.Key == Key.Down)
+                {
+                    CandidateListBox.Focus();
+                }
+                else if (e.Key == Key.Up)
                 {
                     CandidateListBox.Focus();
                 }

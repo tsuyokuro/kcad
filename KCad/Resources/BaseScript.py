@@ -147,19 +147,19 @@ def invertDir():
 def sub(a, b):
     SE.AsubB(a, b)
 
-#[AC] dumpMesh(currentFig())
+#[AC] dumpMesh(id=currentFig())
 def dumpMesh(id):
     SE.DumpMesh(id)
 
-#[AC] addBox(40,40,20)
+#[AC] addBox(x=40,y=40,z=20)
 def addBox(x, y, z):
     SE.AddBox(x, y, z)
 
-#[AC] addCylinder(16, 10, 40)
+#[AC] addCylinder(slices=16, r=10, len=40)
 def addCylinder(slices, r, len):
     SE.AddCylinder(slices, r, len)
 
-#[AC] addSphere(16, 20) # slices, r
+#[AC] addSphere(slices=16, r=20)
 def addSphere(slices, r):
     SE.AddSphere(slices, r)
 

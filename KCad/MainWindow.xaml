@@ -484,6 +484,7 @@
                             SelectedBackground="{StaticResource MsgSelectedBGColor}"
                             SelectedForeground="{StaticResource MsgTextColor}"
                             TextSize="12"
+                            VerticalAlignment="Top"
                             />
 
                     </ScrollViewer>
