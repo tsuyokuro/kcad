@@ -127,9 +127,12 @@ namespace KCad
 
         protected ScrollViewer Scroll;
 
-        protected FontFamily mFontFamily;
+        //protected FontFamily mFontFamily;
 
         protected Typeface mTypeface;
+
+        protected Typeface mPartsTypeface;
+
 
         protected Brush mForeground = Brushes.Black;
 
@@ -146,10 +149,20 @@ namespace KCad
 
         protected double mIndentSize = 12.0;
 
+        FormattedText mExpand;
+
+        FormattedText mContract;
+
         public CadObjectTreeView()
         {
-            mFontFamily = new FontFamily("ＭＳ ゴシック");
-            mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
+            FontFamily font;
+
+            //font = new FontFamily("ＭＳ ゴシック");
+            font = new FontFamily("Consolas");
+            mTypeface = new Typeface(font, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
+
+            font = new FontFamily("Marlett");   // WindowsのCloseボタン等の部品がFontになったもの
+            mPartsTypeface = new Typeface(font, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
 
             Loaded += CadObjectTree_Loaded;
             MouseDown += CadObjectTree_MouseDown;
@@ -168,6 +181,8 @@ namespace KCad
             {
                 Scroll.ScrollChanged += Scroll_ScrollChanged;
             }
+
+            CreateParts();
         }
 
 
@@ -312,9 +327,6 @@ namespace KCad
                 topLevel = 1;
             }
 
-            FormattedText expand = GetText("+", mForeground);
-            FormattedText contract = GetText("-", mForeground);
-
             mRoot.ForEach((item, level) =>
             {
                 skip--;
@@ -348,15 +360,15 @@ namespace KCad
                 {
                     mp = tp;
                     mp.X -= mIndentSize;
-                    mp.X += 4;
+                    //mp.X += 4;
 
                     if (item.IsExpand)
                     {
-                        dc.DrawText(contract, mp);
+                        dc.DrawText(mContract, mp);
                     }
                     else
                     {
-                        dc.DrawText(expand, mp);
+                        dc.DrawText(mExpand, mp);
                     }
                 }
 
@@ -390,6 +402,22 @@ namespace KCad
             return formattedText;
         }
 
+        protected FormattedText GetText(string s, Brush brush, Typeface typeFace)
+        {
+            FormattedText formattedText = new FormattedText(s,
+                                                      System.Globalization.CultureInfo.CurrentCulture,
+                                                      System.Windows.FlowDirection.LeftToRight,
+                                                      typeFace,
+                                                      mTextSize,
+                                                      brush);
+            return formattedText;
+        }
+
+        protected void CreateParts()
+        {
+            mExpand = GetText("4", mForeground, mPartsTypeface);
+            mContract = GetText("6", mForeground, mPartsTypeface);
+        }
 
         public void AttachRoot(CadObjTreeItem root)
         {

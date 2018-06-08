@@ -9,8 +9,7 @@ namespace SplineCurve
         // 制御点リスト
         public VectorList CtrlPoints = null;
 
-        // Control point の見かけ上の数
-        // Closeの場合は、実際の数 + Degreeに設定する
+        // Control point の数
         public int CtrlCnt = 0;
 
         // Control pointのリスト上での数
