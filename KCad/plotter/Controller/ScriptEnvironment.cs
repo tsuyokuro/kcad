@@ -800,6 +800,11 @@ namespace Plotter
 
         private void FaceToDirection(DrawContext dc, CadFigure fig, CadVector org, CadVector dir)
         {
+            if (fig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return;
+            }
+
             CadVector faceNormal = CadUtil.RepresentativeNormal(fig.PointList);
 
             //   | 回転軸
@@ -907,9 +912,20 @@ namespace Plotter
 
             fig.SetMesh(hem);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            CadOpeList root = CadOpe.CreateListOpe();
+            CadOpe ope;
+
+            ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            root.Add(ope);
+
+            ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, tfig.ID);
+            root.Add(ope);
+
+            Controller.HistoryManager.foward(root);
+
             Controller.CurrentLayer.AddFigure(fig);
+            Controller.CurrentLayer.RemoveFigureByID(tfig.ID);
+
             UpdateTreeViewFlag = true;
         }
 

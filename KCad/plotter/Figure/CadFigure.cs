@@ -762,6 +762,7 @@ namespace Plotter
             }
         }
 
+        /*
         public virtual void ForEachFigureSegment(Func<FigureSegment, bool> dg)
         {
             int cnt = SegmentCount;
@@ -775,6 +776,7 @@ namespace Plotter
                 }
             }
         }
+        */
 
         public virtual bool IsSelectedAll()
         {

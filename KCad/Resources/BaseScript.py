@@ -16,7 +16,7 @@ def area():
 def find(range):
     SE.Find(range)
 
-#[AC] findFigId(currentFig())
+#[AC] findFigId(id=currentFigID())
 def findFigId(id):
     SE.FindFigureById(id)
 
@@ -115,7 +115,7 @@ def cursorAngleY(d):
 def toBmp(bw, bh, argb=0xffffffff, linew=1, fname=""):
     SE.CreateBitmap(bw, bh, argb, linew, fname)
 
-#[AC] faceTo(munitVZ)
+#[AC] faceTo(dir=unitVZ)
 def faceTo(dir):
     SE.FaceToDirection(dir)
 
@@ -143,11 +143,11 @@ def toMesh():
 def invertDir():
     SE.InvertDir()
 
-#[AC] sub(idA, idB)
-def sub(a, b):
-    SE.AsubB(a, b)
+#[AC] sub(l_id=1, r_id=2)
+def sub(l_id, r_id):
+    SE.AsubB(l_id, r_id)
 
-#[AC] dumpMesh(id=currentFig())
+#[AC] dumpMesh(id=currentFigID())
 def dumpMesh(id):
     SE.DumpMesh(id)
 
@@ -163,14 +163,16 @@ def addCylinder(slices, r, len):
 def addSphere(slices, r):
     SE.AddSphere(slices, r)
 
-#[AC] extrude(currentFig(), unitVZ, 20)
-def extrude(id, v, d):
-    SE.Extrude(id, v, d)
+#âüÇµèoÇµ
+#[AC] extrude(id=currentFigID(), dir=unitVZ, d=20)
+def extrude(id, dir, d):
+    SE.Extrude(id, dir, d)
 
-#[AC] currentFig()
-def currentFig():
-    return SE.GetCurrentFigureID()
+#[AC] currentFigID()
+def currentFigID():
+    return SE.GetcurrentFigIDureID()
 
+#[AC] test(v=-unitVX)
 def test(v):
     SE.Test(v)
 
@@ -185,10 +187,4 @@ unitVX = SE.CreateVector(1,0,0)
 unitVY = SE.CreateVector(0,1,0)
 unitVZ = SE.CreateVector(0,0,1)
 
-#[AC] munitVX
-#[AC] munitVY
-#[AC] munitVZ
-munitVX = SE.CreateVector(-1,0,0)
-munitVY = SE.CreateVector(0,-1,0)
-munitVZ = SE.CreateVector(0,0,-1)
 
