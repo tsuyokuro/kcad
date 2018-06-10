@@ -18,6 +18,9 @@ namespace Plotter
 
         public static double EDGE_THRESHOLD;
 
+        private FlexArray<Index2> SegList = new FlexArray<Index2>();
+
+
         static CadFigureMesh()
         {
             EDGE_THRESHOLD = Math.Cos(CadMath.Deg2Rad(45));
@@ -52,6 +55,8 @@ namespace Plotter
         {
             mHeModel = mesh;
             mPointList = mHeModel.VertexStore;
+
+            UpdateSegList();
         }
 
         public void CreateModel(CadFigure fig)
@@ -87,6 +92,58 @@ namespace Plotter
             mHeModel.RecreateNormals();
         }
 
+        public override CadSegment GetSegmentAt(int n)
+        {
+            CadSegment seg = default(CadSegment);
+            seg.P0 = mPointList[SegList[n].Idx0];
+            seg.P1 = mPointList[SegList[n].Idx1];
+
+            return seg;
+        }
+
+        public override FigureSegment GetFigSegmentAt(int n)
+        {
+            FigureSegment seg = new FigureSegment(this, n, SegList[n].Idx0, SegList[n].Idx1);
+            return seg;
+        }
+
+        public override int SegmentCount
+        {
+            get
+            {
+                return SegList.Count;
+            }
+        }
+
+        private void UpdateSegList()
+        {
+            SegList.Clear();
+
+            for (int i = 0; i < mHeModel.FaceStore.Count; i++)
+            {
+                HeFace f = mHeModel.FaceStore[i];
+
+                HalfEdge head = f.Head;
+
+                HalfEdge c = head;
+
+                CadVector v;
+
+                for (; ; )
+                {
+                    HalfEdge next = c.Next;
+
+                    SegList.Add(new Index2(c.Vertex, next.Vertex));
+
+                    c = next;
+
+                    if (c == head)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
 
         public override void Draw(DrawContext dc, int pen)
         {

@@ -269,6 +269,7 @@ namespace Plotter
                 case CadFigure.Types.POLY_LINES:
                 case CadFigure.Types.RECT:
                 case CadFigure.Types.DIMENTION_LINE:
+                case CadFigure.Types.MESH:
                     CheckSegs(dc, layer, fig);
                     break;
                 case CadFigure.Types.CIRCLE:
