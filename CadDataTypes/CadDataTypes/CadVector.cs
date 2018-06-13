@@ -461,9 +461,9 @@ namespace CadDataTypes
             return ret;
         }
 
-        public string SimpleString()
+        public string CoordString()
         {
-            return x.ToString() + "," + y.ToString() + "," + z.ToString();
+            return x.ToString() + ", " + y.ToString() + ", " + z.ToString();
         }
     }
 }

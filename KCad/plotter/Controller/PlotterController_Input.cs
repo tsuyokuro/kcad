@@ -13,6 +13,9 @@ namespace Plotter
 {
     public partial class PlotterController
     {
+        public GideLineManager GideLines = new GideLineManager();
+
+
         public double PointSnapRange
         {
             set;
@@ -638,6 +641,24 @@ namespace Plotter
         {
         }
 
+        /*
+        public CadVector MoveVector = CadVector.UnitX;
+
+        public bool MoveOnLine = false;
+
+        private CadVector GetOnLinePoint(CadVector p)
+        {
+            CrossInfo ci = CadUtil.PerpendicularCrossLine(LastDownPoint, LastDownPoint + MoveVector, p);
+
+            if (ci.IsCross)
+            {
+                return ci.CrossPoint;
+            }
+
+            return p;
+        }
+        */
+
         private void MouseMove(CadMouse pointer, DrawContext dc, double x, double y)
         {
             //DebugOut.Std.printf("({0},{1})\n", x, y);
@@ -664,6 +685,16 @@ namespace Plotter
             CadVector cp = dc.UnitPointToCadPoint(pixp);
             CadVector tp = default(CadVector);
 
+            if (State == States.DRAGING_POINTS)
+            {
+                if (GideLines.Enabled)
+                {
+                    cp = GideLines.GetOnGideLine(LastDownPoint, cp);
+                    pixp = dc.CadPointToUnitPoint(cp);
+
+                    mOffsetScreen = CadVector.Zero;
+                }
+            }
 
             RubberBandScrnPoint1 = pixp;
 

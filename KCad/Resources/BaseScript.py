@@ -155,6 +155,10 @@ def dumpMesh(id):
 def addBox(x, y, z):
     SE.AddBox(x, y, z)
 
+#[AC] spf(x=w1x4, y=40, z=t1x4)
+def spf(x, y, z):
+    SE.AddBox(x, y, z)
+
 #[AC] addCylinder(slices=16, r=10, len=40)
 def addCylinder(slices, r, len):
     SE.AddCylinder(slices, r, len)
@@ -172,6 +176,29 @@ def extrude(id, dir, d):
 def currentFigID():
     return SE.GetcurrentFigIDureID()
 
+
+#[AC] setMoveGide(dir=unitVX)
+def setMoveGide(dir):
+    SE.SetMoveGide(dir)
+    SE.EnableMoveGide(True)
+
+#[AC] enableMoveGide()
+def enableMoveGide():
+    SE.EnableMoveGide(True)
+
+#[AC] disableMoveGide()
+def disableMoveGide():
+    SE.EnableMoveGide(False)
+
+
+#[AC] rotatev(v=unitVX, axis=unitVZ, deg=45.0)
+def rotatev(v, axis, deg):
+    return SE.RotateVector(v, axis, deg)
+
+#[AC] dumpv(v=unitVX)
+def dumpv(v):
+    return SE.DumpVector(v)
+
 #[AC] test(v=-unitVX)
 def test(v):
     SE.Test(v)
@@ -187,4 +214,5 @@ unitVX = SE.CreateVector(1,0,0)
 unitVY = SE.CreateVector(0,1,0)
 unitVZ = SE.CreateVector(0,0,1)
 
-
+w1x4 = 8.9
+t1x4 = 1.9

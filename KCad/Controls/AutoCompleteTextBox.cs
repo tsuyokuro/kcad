@@ -33,6 +33,7 @@ namespace KCad
         private Popup CandidatePopup;
         private ListBox CandidateListBox;
 
+        private bool DisableCandidateList = false;
 
         public IEnumerable CandidateList
         {
@@ -161,11 +162,13 @@ namespace KCad
                     if (e.Key == Key.Up)
                     {
                         string s = History.Rewind();
+                        DisableCandidateList = true;
                         Text = s;
                     }
                     else if (e.Key == Key.Down)
                     {
                         string s = History.Forward();
+                        DisableCandidateList = true;
                         Text = s;
                     }
                 }
@@ -189,6 +192,12 @@ namespace KCad
 
             if (Check())
             {
+                if (DisableCandidateList)
+                {
+                    DisableCandidateList = false;
+                    return;
+                }
+
                 CandidatePopup.PlacementTarget = this;
                 CandidatePopup.IsOpen = true;
             }

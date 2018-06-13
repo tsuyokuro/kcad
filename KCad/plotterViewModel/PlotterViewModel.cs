@@ -372,7 +372,7 @@ namespace Plotter
             }
         }
 
-        public TextCommandHistory CommandHistory = new TextCommandHistory();
+        //public TextCommandHistory CommandHistory = new TextCommandHistory();
 
         public PlotterViewModel(Window mainWindow, WindowsFormsHost viewHost)
         {
@@ -1007,7 +1007,6 @@ namespace Plotter
         public void TextCommand(string s)
         {
             mController.ScriptEnv.commandAsync(s);
-            CommandHistory.Add(s);
         }
 
         public void DebugCommand(string s)

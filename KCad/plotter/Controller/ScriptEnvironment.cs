@@ -1071,6 +1071,47 @@ namespace Plotter
             }
         }
 
+        public void SetMoveGide(CadVector dir)
+        {
+            Controller.GideLines.Clear();
+            Controller.GideLines.Add(dir);
+
+            CadVector v2 = RotateVector(dir, (CadVector)(Controller.CurrentDC.ViewDir), 90.0);
+            Controller.GideLines.Add(v2);
+        }
+
+        public void EnableMoveGide(bool enable)
+        {
+            Controller.GideLines.Enabled = enable;
+        }
+
+        public CadVector RotateVector(CadVector v, CadVector axis, double angle)
+        {
+            axis = axis.UnitVector();
+
+            double t = CadMath.Deg2Rad(angle);
+
+            CadQuaternion q = CadQuaternion.RotateQuaternion(axis, t);
+            CadQuaternion r = q.Conjugate(); ;
+
+            CadQuaternion qp;
+
+            qp = CadQuaternion.FromPoint(v);
+
+            qp = r * qp;
+            qp = qp * q;
+
+            CadVector rv = qp.ToPoint();
+
+            return rv;
+        }
+
+        public void DumpVector(CadVector v)
+        {
+            string s = v.CoordString();
+            Controller.InteractOut.println(s);
+        }
+
         public uint GetCurrentFigureID()
         {
             CadFigure fig = Controller.CurrentFigure;
