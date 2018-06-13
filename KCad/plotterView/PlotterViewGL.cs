@@ -4,6 +4,7 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Windows.Forms;
 using CadDataTypes;
+using Plotter.Controller;
 
 namespace Plotter
 {

@@ -12,7 +12,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using CadDataTypes;
 
-namespace Plotter
+namespace Plotter.Controller
 {
     public partial class PlotterController
     {

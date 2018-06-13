@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using CadDataTypes;
 
-namespace Plotter
+namespace Plotter.Controller
 {
 
     public delegate void StateChanged(PlotterController sender, PlotterController.StateInfo si);

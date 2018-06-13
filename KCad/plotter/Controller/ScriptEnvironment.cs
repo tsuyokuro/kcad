@@ -21,7 +21,7 @@ using MeshUtilNS;
 using MeshMakerNS;
 using System.Threading.Tasks;
 
-namespace Plotter
+namespace Plotter.Controller
 {
     public partial class ScriptEnvironment
     {
@@ -1124,6 +1124,10 @@ namespace Plotter
             return fig.ID;
         }
 
+        //public CadVector CollectPoint()
+        //{
+
+        //}
 
         public void Test(CadVector v)
         {

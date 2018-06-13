@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CadDataTypes;
 
-namespace Plotter
+namespace Plotter.Controller
 {
     public partial class PlotterController
     {

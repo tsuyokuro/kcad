@@ -23,7 +23,7 @@ using CarveWapper;
 using MeshMakerNS;
 using SplineCurve;
 
-namespace Plotter
+namespace Plotter.Controller
 {
     public partial class ScriptEnvironment
     {

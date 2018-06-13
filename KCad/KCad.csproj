@@ -189,6 +189,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="plotter\Controller\GideLineManager.cs" />
+    <Compile Include="plotter\Controller\ScriptInteraction.cs" />
     <Compile Include="SplineCurve\BSplineJson.cs" />
     <Compile Include="SplineCurve\BSplineParam.cs" />
     <Compile Include="SplineCurve\NurbsLine.cs" />

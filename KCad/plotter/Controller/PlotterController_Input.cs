@@ -9,12 +9,13 @@ using System.Windows.Input;
 using System.Windows.Forms;
 using CadDataTypes;
 
-namespace Plotter
+namespace Plotter.Controller
 {
     public partial class PlotterController
     {
         public GideLineManager GideLines = new GideLineManager();
 
+        public ScriptInteraction mScriptInteraction = new ScriptInteraction();
 
         public double PointSnapRange
         {

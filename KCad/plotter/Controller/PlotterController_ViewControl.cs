@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CadDataTypes;
 
-namespace Plotter
+namespace Plotter.Controller
 {
     public partial class PlotterController
     {

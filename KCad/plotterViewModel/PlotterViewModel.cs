@@ -13,6 +13,7 @@ using System.Drawing.Printing;
 using System.Collections;
 using static System.Drawing.Printing.PrinterSettings;
 using CadDataTypes;
+using Plotter.Controller;
 
 namespace Plotter
 {
@@ -815,13 +816,13 @@ namespace Plotter
             return -1;
         }
 
-        private void CursorPosChanged(PlotterController sender, CadVector pt, CursorType type)
+        private void CursorPosChanged(PlotterController sender, CadVector pt, Plotter.Controller.CursorType type)
         {
-            if (type == CursorType.TRACKING)
+            if (type == Plotter.Controller.CursorType.TRACKING)
             {
                 FreqChangedInfo.CursorPos = pt;
             }
-            else if (type == CursorType.LAST_DOWN)
+            else if (type == Plotter.Controller.CursorType.LAST_DOWN)
             {
                 FreqChangedInfo.CursorPos2 = pt;
             }
