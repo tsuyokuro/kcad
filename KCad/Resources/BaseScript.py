@@ -44,9 +44,9 @@ def group():
 def ungroup():
     SE.Ungroup()
 
-#[AC] addPoint()
-def addPoint():
-    SE.AddPoint()
+#[AC] addPoint(x=0, y=0, z=0)
+def addPoint(x, y, z):
+    SE.AddPoint(x, y, z)
 
 #[AC] addLayer(name)
 def addLayer(name):
@@ -177,10 +177,15 @@ def currentFigID():
     return SE.GetcurrentFigIDureID()
 
 
-#[AC] setMoveGide(dir=unitVX)
-def setMoveGide(dir):
-    SE.SetMoveGide(dir)
+#[AC] addMoveGide(dir=unitVX)
+def addMoveGide(dir):
+    SE.AddMoveGide(dir)
     SE.EnableMoveGide(True)
+
+#[AC] resetMoveGide()
+def clearMoveGide():
+    SE.ClearMoveGide()
+    SE.EnableMoveGide(False);
 
 #[AC] enableMoveGide()
 def enableMoveGide():
@@ -198,6 +203,15 @@ def rotatev(v, axis, deg):
 #[AC] dumpv(v=unitVX)
 def dumpv(v):
     return SE.DumpVector(v)
+
+#[AC] inputPoint()
+def inputPoint():
+    return SE.InputPoint()
+
+#[AC] inputUnitV()
+def inputUnitV():
+    return SE.InputUnitVector()
+
 
 #[AC] test(v=-unitVX)
 def test(v):

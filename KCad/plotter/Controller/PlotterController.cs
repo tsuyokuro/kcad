@@ -1307,6 +1307,12 @@ namespace Plotter.Controller
                 CursorLocked = false;
             }
 
+            if (mInteractCtrl.CurrentMode != InteractCtrl.Mode.NONE)
+            {
+                mInteractCtrl.Cancel();
+            }
+
+
             if (State == States.START_CREATE || State == States.CREATING)
             {
                 StartCreateFigure(CadFigure.Types.NONE);
@@ -1450,6 +1456,22 @@ namespace Plotter.Controller
 
             NotifyLayerInfo();
             UpdateTreeView(true);
+        }
+
+
+        public void print(string s)
+        {
+            InteractOut.print(s);
+        }
+
+        public void println(string s)
+        {
+            InteractOut.println(s);
+        }
+
+        public void printf(string format, params object[] args)
+        {
+            InteractOut.printf(format, args);
         }
     }
 }

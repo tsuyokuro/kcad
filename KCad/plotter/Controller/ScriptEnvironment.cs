@@ -20,6 +20,7 @@ using CarveWapper;
 using MeshUtilNS;
 using MeshMakerNS;
 using System.Threading.Tasks;
+using KCad;
 
 namespace Plotter.Controller
 {
@@ -438,6 +439,11 @@ namespace Plotter.Controller
 
             p.Set(x, y, z);
 
+            AddPoint(p);
+        }
+
+        public void AddPoint(CadVector p)
+        {
             CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POINT);
             fig.AddPoint(p);
 
@@ -1071,13 +1077,17 @@ namespace Plotter.Controller
             }
         }
 
-        public void SetMoveGide(CadVector dir)
+        public void AddMoveGide(CadVector dir)
         {
-            Controller.GideLines.Clear();
             Controller.GideLines.Add(dir);
 
-            CadVector v2 = RotateVector(dir, (CadVector)(Controller.CurrentDC.ViewDir), 90.0);
-            Controller.GideLines.Add(v2);
+            //CadVector v2 = RotateVector(dir, (CadVector)(Controller.CurrentDC.ViewDir), 90.0);
+            //Controller.GideLines.Add(v2);
+        }
+
+        public void ClearMoveGide()
+        {
+            Controller.GideLines.Clear();
         }
 
         public void EnableMoveGide(bool enable)
@@ -1124,10 +1134,76 @@ namespace Plotter.Controller
             return fig.ID;
         }
 
-        //public CadVector CollectPoint()
-        //{
+        public CadVector InputPoint()
+        {
+            InteractCtrl ctrl = Controller.mInteractCtrl;
 
-        //}
+            ctrl.Start(InteractCtrl.Mode.POINT);
+
+            Controller.println(AnsiEsc.AYellow + "Input point >>");
+
+            InteractCtrl.State ret = ctrl.WaitPoint();
+            ctrl.End();
+
+            if (ret != InteractCtrl.State.CONTINUE)
+            {
+                Controller.println("Cancel!");
+                return CadVector.InvalidValue;
+            }
+
+            CadVector p = ctrl.PointList[0];
+
+            Controller.println(p.CoordString());
+
+            return p;
+        }
+
+        public CadVector InputUnitVector()
+        {
+            InteractCtrl ctrl = Controller.mInteractCtrl;
+
+            ctrl.Start(InteractCtrl.Mode.LINE);
+
+            Controller.println(AnsiEsc.AYellow + "Input point 1 >>");
+
+            InteractCtrl.State ret;
+
+            ret = ctrl.WaitPoint();
+
+            if (ret != InteractCtrl.State.CONTINUE)
+            {
+                ctrl.End();
+                Controller.println("Cancel!");
+                return CadVector.InvalidValue;
+            }
+
+            CadVector p0 = ctrl.PointList[0];
+            Controller.println(p0.CoordString());
+
+            Controller.println(AnsiEsc.AYellow + "Input point 2 >>");
+
+            ret = ctrl.WaitPoint();
+
+            if (ret != InteractCtrl.State.CONTINUE)
+            {
+                ctrl.End();
+                Controller.println("Cancel!");
+                return CadVector.InvalidValue;
+            }
+
+            CadVector p1 = Controller.mInteractCtrl.PointList[1];
+
+            ctrl.End();
+
+
+            CadVector v = p1 - p0;
+
+            v = v.UnitVector();
+
+            Controller.println(v.CoordString());
+
+            return v;
+        }
 
         public void Test(CadVector v)
         {
@@ -1218,7 +1294,7 @@ namespace Plotter.Controller
 
                 if (ret != null)
                 {
-                    Controller.InteractOut.println("\x1b[36m" + ret.ToString());
+                    Controller.InteractOut.println(AnsiEsc.ABlue + ret.ToString());
                 }
             }
             catch (Exception e)

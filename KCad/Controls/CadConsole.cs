@@ -18,6 +18,80 @@ using System.Windows.Threading;
 
 namespace KCad
 {
+    public class AnsiEsc
+    {
+        public const string ESC = "\x1b[";
+
+        public const string BALCK = "30";
+        public const string RED = "31";
+        public const string GREEN = "32";
+        public const string YELLOW = "33";
+        public const string BLUE = "34";
+        public const string MAGENTA = "35";
+        public const string CYAN = "36";
+        public const string WHITE = "37";
+        public const string DEF_COLOR = "39";
+
+        public const string BBALCK = "90";
+        public const string BRED = "91";
+        public const string BGREEN = "92";
+        public const string BYELLOW = "93";
+        public const string BBLUE = "94";
+        public const string BMAGENTA = "95";
+        public const string BCYAN = "96";
+        public const string BWHITE = "97";
+
+
+        public const string ABalck = ESC + "30m";
+        public const string ARed = ESC + "31m";
+        public const string AGreen = ESC + "32m";
+        public const string AYellow = ESC + "33m";
+        public const string ABlue = ESC + "34m";
+        public const string AMagenta = ESC + "35m";
+        public const string ACyan = ESC + "36m";
+        public const string AWhite = ESC + "37m";
+        public const string DefColor = ESC + "39m";
+
+        public const string BBalck = ESC + "90m";
+        public const string BRed = ESC + "91m";
+        public const string BGreen = ESC + "92m";
+        public const string BYellow = ESC + "93m";
+        public const string BBlue = ESC + "94m";
+        public const string BMagenta = ESC + "95m";
+        public const string BCyan = ESC + "96m";
+        public const string BWhite = ESC + "97m";
+
+        public Dictionary<string, Brush> Palette;
+
+        public Brush DefaultColor = Brushes.LightGray;
+
+        public AnsiEsc()
+        {
+            Palette = new Dictionary<string, Brush>()
+            {
+                {"30m", Brushes.Black},
+                {"31m", Brushes.MediumVioletRed},
+                {"32m", Brushes.SeaGreen},
+                {"33m", Brushes.Goldenrod},
+                {"34m", Brushes.SteelBlue},
+                {"35m", Brushes.DarkMagenta},
+                {"36m", Brushes.DarkCyan},
+                {"37m", Brushes.LightGray},
+
+                {"39m", Brushes.LightGray},
+
+                {"90m", Brushes.Black},
+                {"91m", Brushes.LightCoral},
+                {"92m", Brushes.SpringGreen},
+                {"93m", Brushes.Yellow},
+                {"94m", Brushes.CornflowerBlue},
+                {"95m", Brushes.MediumOrchid},
+                {"96m", Brushes.Turquoise},
+                {"97m", Brushes.White},
+            };
+        }
+    }
+
     class CadConsoleView : FrameworkElement
     {
         public class ListItem
@@ -177,7 +251,7 @@ namespace KCad
 
         protected List<ListItem> mList = new List<ListItem>();
 
-        public Dictionary<string, Brush> EscColor;
+        AnsiEsc Esc = new AnsiEsc();
 
         public CadConsoleView()
         {
@@ -187,37 +261,6 @@ namespace KCad
             Loaded += CadConsoleView_Loaded;
 
             MouseDown += CadConsoleView_MouseDown;
-
-
-            EscColor = new Dictionary<string, Brush>()
-            {
-                {"30m", Brushes.Black},
-                {"31m", Brushes.LightCoral},
-                {"32m", Brushes.SpringGreen},
-                {"33m", Brushes.Yellow},
-                {"34m", Brushes.CornflowerBlue},
-                {"35m", Brushes.MediumOrchid},
-                {"36m", Brushes.Turquoise},
-                {"37m", Brushes.White},
-                {"00m", null},
-            };
-        }
-
-        public enum C : byte
-        {
-            BLACK = 0,
-            RED = 1,
-            GREEN = 2,
-            YELLOW = 3,
-            BLUE = 4,
-            MAGENTA = 5,
-            CYAN = 6,
-            WHITE = 7,
-        }
-
-        public string EC(C c)
-        {
-            return "\x1b[3" + ((int)c).ToString();
         }
 
         private void CadConsoleView_Loaded(object sender, RoutedEventArgs e)
@@ -237,6 +280,8 @@ namespace KCad
             }
 
             RecalcSize();
+
+            Esc.DefaultColor = mForeground;
         }
 
         private void CadConsoleView_MouseDown(object sender, MouseButtonEventArgs e)
@@ -516,7 +561,8 @@ namespace KCad
             }
             else
             {
-                br = mForeground;
+                //br = mForeground;
+                br = Esc.DefaultColor;
             }
 
             Brush cbr = br;
@@ -540,7 +586,7 @@ namespace KCad
                         string c = s.Substring(1, 3);
                         ps = s.Substring(4);
 
-                        cbr = EscColor[c];
+                        cbr = Esc.Palette[c];
 
                         if (cbr == null)
                         {

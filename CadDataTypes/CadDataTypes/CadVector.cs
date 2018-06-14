@@ -465,5 +465,10 @@ namespace CadDataTypes
         {
             return x.ToString() + ", " + y.ToString() + ", " + z.ToString();
         }
+
+        public override string ToString()
+        {
+            return CoordString();
+        }
     }
 }

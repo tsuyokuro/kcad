@@ -15,7 +15,7 @@ namespace Plotter.Controller
     {
         public GideLineManager GideLines = new GideLineManager();
 
-        public ScriptInteraction mScriptInteraction = new ScriptInteraction();
+        public InteractCtrl mInteractCtrl = new InteractCtrl();
 
         public double PointSnapRange
         {
@@ -421,6 +421,13 @@ namespace Plotter.Controller
 
             mOffsetScreen = pixp - mSnapPointScrn;
             //mOffsetWorld = cp - mSnapPoint;
+
+            if (mInteractCtrl.CurrentMode != InteractCtrl.Mode.NONE)
+            {
+                mInteractCtrl.Draw(dc, mSnapPoint);
+                mInteractCtrl.SetPoint(mSnapPoint);
+                return;
+            }
 
             switch (State)
             {
@@ -930,6 +937,11 @@ namespace Plotter.Controller
                         MeasureFigureCreator.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
                     }
                     break;
+            }
+
+            if (mInteractCtrl.CurrentMode != InteractCtrl.Mode.NONE)
+            {
+                mInteractCtrl.Draw(dc, mSnapPoint);
             }
         }
 
