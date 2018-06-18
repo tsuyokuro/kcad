@@ -895,7 +895,7 @@ namespace Plotter.Controller
         //fig.Thickness = t;
         //}
 
-        public void Extrude(uint id, CadVector v, double d)
+        public void Extrude(uint id, CadVector v, double d, int divide)
         {
             CadFigure tfig = Controller.DB.GetFigure(id);
 
@@ -908,7 +908,7 @@ namespace Plotter.Controller
 
             v *= -d;
 
-            CadMesh cm = MeshMaker.CreateExtruded(tfig.GetPoints(16), v);
+            CadMesh cm = MeshMaker.CreateExtruded(tfig.GetPoints(16), v, divide);
 
             HeModel hem = HeModelConverter.ToHeModel(cm);
 

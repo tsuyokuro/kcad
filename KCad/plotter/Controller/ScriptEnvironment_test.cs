@@ -415,32 +415,6 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
         }
 
-        private void testCreateCylinder()
-        {
-            CadMesh cm = CarveW.CrateCylinder(32, 8, 80);
-
-            HeModel hem = HeModelConverter.ToHeModel(cm);
-
-            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
-
-            fig.SetMesh(hem);
-
-            Controller.CurrentLayer.AddFigure(fig);
-        }
-
-        private void testCreateRectangular()
-        {
-            CadMesh cm = CarveW.CrateRectangular(10, 10, 30);
-
-            HeModel hem = HeModelConverter.ToHeModel(cm);
-
-            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
-
-            fig.SetMesh(hem);
-
-            Controller.CurrentLayer.AddFigure(fig);
-        }
-
         private void testAminusB()
         {
             List<CadFigure> figList = Controller.GetSelectedFigList();
@@ -638,16 +612,6 @@ namespace Plotter.Controller
             else if (s == "@loadOff")
             {
                 testLoadOff();
-
-            }
-            else if (s == "@createCylinder")
-            {
-                testCreateCylinder();
-
-            }
-            else if (s == "@createRect")
-            {
-                testCreateRectangular();
 
             }
             else if (s == "@a-b")

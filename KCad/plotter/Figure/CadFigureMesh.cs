@@ -23,7 +23,7 @@ namespace Plotter
 
         static CadFigureMesh()
         {
-            EDGE_THRESHOLD = Math.Cos(CadMath.Deg2Rad(45));
+            EDGE_THRESHOLD = Math.Cos(CadMath.Deg2Rad(15));
         }
 
         public override VectorList PointList

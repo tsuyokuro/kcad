@@ -42,10 +42,10 @@ namespace CadDataTypes
         {
         }
 
-        public CadMesh(int vs, int fs)
+        public CadMesh(int vertexCount, int faceCount)
         {
-            VertexStore = new VectorList(vs);
-            FaceStore = new FlexArray<CadFace>(fs);
+            VertexStore = new VectorList(vertexCount);
+            FaceStore = new FlexArray<CadFace>(faceCount);
         }
     }
 }

@@ -168,13 +168,13 @@ def addSphere(slices, r):
     SE.AddSphere(slices, r)
 
 #âüÇµèoÇµ
-#[AC] extrude(id=currentFigID(), dir=unitVZ, d=20)
-def extrude(id, dir, d):
-    SE.Extrude(id, dir, d)
+#[AC] extrude(id=currentFigID(), dir=unitVZ, d=20, div=0)
+def extrude(id, dir, d, div):
+    SE.Extrude(id, dir, d, div)
 
 #[AC] currentFigID()
 def currentFigID():
-    return SE.GetcurrentFigIDureID()
+    return SE.GetCurrentFigureID()
 
 
 #[AC] addMoveGide(dir=unitVX)

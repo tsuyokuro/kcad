@@ -277,15 +277,6 @@ namespace TestApp01
             Console.WriteLine("HalfEdge creation time: " + sw.ElapsedMilliseconds.ToString());
         }
 
-        static void Test007()
-        {
-            CadMesh cm = CarveW.CrateCylinder(8, 20, 40);
-
-            HeModel hem = HeModelConverter.ToHeModel(cm);
-
-            DumpHeModel(hem);
-        }
-
         static void DumpHeModel(HeModel model)
         {
             for (int i = 0; i < model.FaceStore.Count; i++)
@@ -343,7 +334,6 @@ namespace TestApp01
             //Test005();
             //Test006();
 
-            Test007();
 
             Console.ReadLine();
         }

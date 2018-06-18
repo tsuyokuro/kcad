@@ -291,12 +291,14 @@ namespace MeshMakerNS
             return mesh;
         }
 
-        public static CadMesh CreateExtruded(VectorList src, CadVector dv)
+        public static CadMesh CreateExtruded(VectorList src, CadVector dv, int div = 0)
         {
             if (src.Count < 3)
             {
                 return null;
             }
+
+            div += 1;
 
             VectorList vl;
 
@@ -321,42 +323,64 @@ namespace MeshMakerNS
 
             CadFace f;
 
+            CadVector dt = dv / div;
+
+            CadVector sv = CadVector.Zero;
+
+            // 頂点リスト作成
+            for (int i = 0; i < div + 1; i++)
+            {
+                for (int j = 0; j < vlCnt; j++)
+                {
+                    mesh.VertexStore.Add(vl[j] + sv);
+                }
+
+                sv += dt;
+            }
+
+
+            // 表面
             f = new CadFace();
 
             for (int i = 0; i < vlCnt; i++)
             {
-                mesh.VertexStore.Add(vl[i]);
                 f.VList.Add(i);
             }
 
             mesh.FaceStore.Add(f);
 
-            for (int i = 0; i < vlCnt; i++)
-            {
-                mesh.VertexStore.Add(vl[i] + dv);
-            }
 
+            // 裏面
             f = new CadFace();
 
-            for (int i = vlCnt-1; i >= 0; i--)
+            int si = (div + 1) * vlCnt -1;
+            int ei = si - (vlCnt-1);
+
+            for (int i = si; i >= ei; i--)
             {
-                f.VList.Add(i + vlCnt);                
+                f.VList.Add(i);                
             }
 
             mesh.FaceStore.Add(f);
 
-            for (int i = 0; i < vlCnt; i++)
+            // 側面
+            for (int k = 0; k < div; k++)
             {
-                int j = (i+1) % vlCnt;
+                int ti = vlCnt * k;
 
-                f = new CadFace();
+                for (int i = 0; i < vlCnt; i++)
+                {
+                    int j = (i + 1) % vlCnt;
 
-                f.VList.Add(i);
-                f.VList.Add(i + vlCnt);
-                f.VList.Add(j + vlCnt);
-                f.VList.Add(j);
+                    f = new CadFace();
 
-                mesh.FaceStore.Add(f);
+                    f.VList.Add(i + ti);
+                    f.VList.Add(i + ti + vlCnt);
+                    f.VList.Add(j + ti + vlCnt);
+                    f.VList.Add(j + ti);
+
+                    mesh.FaceStore.Add(f);
+                }
             }
 
             MeshUtil.SplitAllFace(mesh);

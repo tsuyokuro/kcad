@@ -51,6 +51,17 @@ namespace CarveWapper
 		return ToCadMesh(pc);
 	}
 
+	CadMesh^ CarveW::Union(CadMesh^ a, CadMesh^ b)
+	{
+		carve::poly::Polyhedron* pa = ToPolyhedron(a);
+		carve::poly::Polyhedron* pb = ToPolyhedron(b);
+
+		carve::poly::Polyhedron* pc =
+			carve::csg::CSG().compute(pa, pb, carve::csg::CSG::UNION);
+
+		return ToCadMesh(pc);
+	}
+
 	CadMesh^ CarveW::ToCadMesh(carve::poly::Polyhedron* pmesh)
 	{
 		CadMesh^ ret = gcnew CadMesh();

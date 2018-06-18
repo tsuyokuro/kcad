@@ -14,12 +14,15 @@ namespace CarveWapper
 	{
 	public:
 		CarveW();
-		static CadMesh^ CrateCylinder(int slices, double rad, double height);
-		static CadMesh^ CrateRectangular(double sizeX, double sizeY, double sizeZ);
 		static CadMesh^ AMinusB(CadMesh^ a, CadMesh^ b);
+		static CadMesh^ Union(CadMesh^ a, CadMesh^ b);
 
 		static CadMesh^ ToCadMesh(carve::poly::Polyhedron * pmesh);
 		static carve::poly::Polyhedron* ToPolyhedron(CadMesh^ cadMesh);
+
+		// –¢Žg—p
+		static CadMesh^ CrateCylinder(int slices, double rad, double height);
+		static CadMesh^ CrateRectangular(double sizeX, double sizeY, double sizeZ);
 	};
 }
 

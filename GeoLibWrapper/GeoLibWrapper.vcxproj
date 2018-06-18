@@ -158,7 +158,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cad_data_types.h" />
-    <ClInclude Include="CarveFuncs.h" />
     <ClInclude Include="CarveW.h" />
     <ClInclude Include="geometry.hpp" />
     <ClInclude Include="IglFuncs.h" />
@@ -167,7 +166,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="CarveFuncs.cpp" />
     <ClCompile Include="CarveW.cpp" />
     <ClCompile Include="geometry.cpp" />
     <ClCompile Include="IglFuncs.cpp">
