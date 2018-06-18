@@ -147,6 +147,14 @@ def invertDir():
 def sub(l_id, r_id):
     SE.AsubB(l_id, r_id)
 
+#[AC] union(id1=1, id2=2)
+def union(id1, id2):
+    SE.Union(id1, id2)
+
+#[AC] intersection(id1=1, id2=2)
+def intersection(id1, id2):
+    SE.Intersection(id1, id2)
+
 #[AC] dumpMesh(id=currentFigID())
 def dumpMesh(id):
     SE.DumpMesh(id)

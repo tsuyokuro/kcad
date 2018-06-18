@@ -1019,7 +1019,7 @@ namespace Plotter.Controller
 
             if (figA==null || figB == null)
             {
-                ItConsole.println("minus(idA, idB) error: invalid ID");
+                ItConsole.println("invalid ID");
                 return;
             }
             HeModel he_a = figA.mHeModel;
@@ -1029,6 +1029,70 @@ namespace Plotter.Controller
             CadMesh b = HeModelConverter.ToCadMesh(he_b);
 
             CadMesh c = CarveW.AMinusB(a, b);
+
+            MeshUtil.SplitAllFace(c);
+
+
+            HeModel hem = HeModelConverter.ToHeModel(c);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            Controller.CurrentLayer.AddFigure(fig);
+
+            UpdateTreeViewFlag = true;
+        }
+
+        public void Union(uint idA, uint idB)
+        {
+            CadFigureMesh figA = GetCadFigureMesh(idA);
+            CadFigureMesh figB = GetCadFigureMesh(idB);
+
+            if (figA == null || figB == null)
+            {
+                ItConsole.println("invalid ID");
+                return;
+            }
+            HeModel he_a = figA.mHeModel;
+            HeModel he_b = figB.mHeModel;
+
+            CadMesh a = HeModelConverter.ToCadMesh(he_a);
+            CadMesh b = HeModelConverter.ToCadMesh(he_b);
+
+            CadMesh c = CarveW.Union(a, b);
+
+            MeshUtil.SplitAllFace(c);
+
+
+            HeModel hem = HeModelConverter.ToHeModel(c);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            Controller.CurrentLayer.AddFigure(fig);
+
+            UpdateTreeViewFlag = true;
+        }
+
+        public void Intersection(uint idA, uint idB)
+        {
+            CadFigureMesh figA = GetCadFigureMesh(idA);
+            CadFigureMesh figB = GetCadFigureMesh(idB);
+
+            if (figA == null || figB == null)
+            {
+                ItConsole.println("invalid ID");
+                return;
+            }
+            HeModel he_a = figA.mHeModel;
+            HeModel he_b = figB.mHeModel;
+
+            CadMesh a = HeModelConverter.ToCadMesh(he_a);
+            CadMesh b = HeModelConverter.ToCadMesh(he_b);
+
+            CadMesh c = CarveW.Intersection(a, b);
 
             MeshUtil.SplitAllFace(c);
 

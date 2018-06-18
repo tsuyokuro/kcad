@@ -16,6 +16,7 @@ namespace CarveWapper
 		CarveW();
 		static CadMesh^ AMinusB(CadMesh^ a, CadMesh^ b);
 		static CadMesh^ Union(CadMesh^ a, CadMesh^ b);
+		static CadMesh^ Intersection(CadMesh^ a, CadMesh^ b);
 
 		static CadMesh^ ToCadMesh(carve::poly::Polyhedron * pmesh);
 		static carve::poly::Polyhedron* ToPolyhedron(CadMesh^ cadMesh);
