@@ -1039,6 +1039,9 @@ namespace Plotter.Controller
 
             fig.SetMesh(hem);
 
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+
             Controller.CurrentLayer.AddFigure(fig);
 
             UpdateTreeViewFlag = true;
@@ -1071,6 +1074,9 @@ namespace Plotter.Controller
 
             fig.SetMesh(hem);
 
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+
             Controller.CurrentLayer.AddFigure(fig);
 
             UpdateTreeViewFlag = true;
@@ -1102,6 +1108,9 @@ namespace Plotter.Controller
             CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
 
             fig.SetMesh(hem);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
 
