@@ -1,4 +1,9 @@
 import math
+import clr
+clr.AddReference('CadDataTypes')
+
+import CadDataTypes.CadVector as CadVector
+import CadDataTypes.VectorList as VectorList
 
 #[AC] putMsg(s)
 def putMsg(s):
@@ -163,7 +168,7 @@ def dumpMesh(id):
 def addBox(x, y, z):
     SE.AddBox(x, y, z)
 
-#[AC] spf(x=w1x4, y=40, z=t1x4)
+#[AC] spf(x=w_1x4, y=40, z=t_1x4)
 def spf(x, y, z):
     SE.AddBox(x, y, z)
 
@@ -236,5 +241,10 @@ unitVX = SE.CreateVector(1,0,0)
 unitVY = SE.CreateVector(0,1,0)
 unitVZ = SE.CreateVector(0,0,1)
 
-w1x4 = 8.9
-t1x4 = 1.9
+w_1x4 = 8.9
+t_1x4 = 1.9
+
+#test !!
+vv = CadVector.Create(1,1,1);
+vl = VectorList();
+vl.Add(vv);
