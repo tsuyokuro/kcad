@@ -157,6 +157,10 @@
                 <MenuItem Header="Draw face outline" IsCheckable="True" IsChecked="{Binding DrawFaceOutline}"/>
                 <MenuItem Header="Fill face" IsCheckable="True" IsChecked="{Binding FillFace}"/>
             </MenuItem>
+            <MenuItem Header="Script" >
+                <MenuItem Tag="show_editor" Header="Show editor" Click="MenuItem_Click"/>
+            </MenuItem>
+
         </Menu>
 
         <StackPanel

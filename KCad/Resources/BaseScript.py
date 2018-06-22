@@ -1,3 +1,4 @@
+import time
 import math
 import clr
 clr.AddReference('CadDataTypes')
@@ -12,6 +13,11 @@ def putMsg(s):
 #[AC] rect(w=10, h=10, p="xy")
 def rect(w=10, h=10, p="xy"):
     SE.Rect(w, h, p)
+
+#[AC] rectAt(p, w=10, h=10, p="xy")
+def rectAt(pv, w=10, h=10, p="xy"):
+    SE.RectAt(pv, w, h, p)
+
 
 #[AC] area()
 def area():

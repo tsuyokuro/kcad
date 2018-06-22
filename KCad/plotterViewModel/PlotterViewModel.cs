@@ -480,6 +480,7 @@ namespace Plotter
                 { "centroid", AddCentroid },
                 { "select_all", SelectAll },
                 { "snap_settings", SnapSettings },
+                { "show_editor", ShowEditor },
             };
         }
 
@@ -701,6 +702,12 @@ namespace Plotter
 
                 Redraw();
             }
+        }
+
+        public void ShowEditor()
+        {
+            EditorWindow ew = new EditorWindow(mController.ScriptEnv);
+            ew.Show();
         }
 
         /*
