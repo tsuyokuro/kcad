@@ -7,12 +7,12 @@
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d"
         Icon="ResDict/Images/script_icon.png"
-        Title="Script editor" Height="440" Width="330">
+        Title="Script editor" Height="440" Width="442.5">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <MenuItem Header="File">
@@ -24,28 +24,31 @@
             </MenuItem>
         </Menu>
 
-        <StackPanel Grid.Row="1" Background="#FFF0F0F0">
-            <Button
+        <avalonEdit:TextEditor
+            Grid.Row ="1"
+            x:Name="textEditor"
+            Margin="0"
+            FontFamily="Consolas"
+            FontSize="10pt"
+            SyntaxHighlighting="python"
+            ShowLineNumbers="True"
+            BorderThickness="1"
+            BorderBrush="DarkGray"
+            />
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <Button
                 x:Name="BtnRun"
                 Content="Run"
                 Height="Auto"
                 Width="Auto"
                 HorizontalAlignment="Left"
                 Padding="4,2,4,2"
-                Margin="8,4,4,4"
+                Margin="8,1,4,1"
                 Background="SkyBlue"
                 BorderThickness="0"               
                 />
-        </StackPanel>
-        <avalonEdit:TextEditor
-            Grid.Row ="2"
-            x:Name="textEditor"
-            Margin="0"
-            FontFamily="Consolas"
-            FontSize="10pt"
-            SyntaxHighlighting="python"
-            ShowLineNumbers="True"  
-            />
-
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

@@ -14,7 +14,7 @@ def putMsg(s):
 def rect(w=10, h=10, p="xy"):
     SE.Rect(w, h, p)
 
-#[AC] rectAt(p, w=10, h=10, p="xy")
+#[AC] rectAt(pv=getldp(), w=10, h=10, p="xy")
 def rectAt(pv, w=10, h=10, p="xy"):
     SE.RectAt(pv, w, h, p)
 
@@ -83,7 +83,7 @@ def createVector(x, y, z):
 #[AC] getldp()
 def getldp():
     pt = SE.GetLastDownPoint()
-    return (pt.x, pt.y, pt.z)
+    return pt
 
 #[AC] moveCursor(x=10, y=0, z=0)
 def moveCursor(x, y, z):

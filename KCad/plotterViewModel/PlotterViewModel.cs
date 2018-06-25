@@ -375,6 +375,8 @@ namespace Plotter
 
         //public TextCommandHistory CommandHistory = new TextCommandHistory();
 
+        Window mEditorWindow;
+
         public PlotterViewModel(Window mainWindow, WindowsFormsHost viewHost)
         {
             mMainWindow = mainWindow;
@@ -706,8 +708,21 @@ namespace Plotter
 
         public void ShowEditor()
         {
-            EditorWindow ew = new EditorWindow(mController.ScriptEnv);
-            ew.Show();
+            if (mEditorWindow == null)
+            {
+                mEditorWindow = new EditorWindow(mController.ScriptEnv);
+                mEditorWindow.Owner = mMainWindow;
+                mEditorWindow.Show();
+
+                mEditorWindow.Closed += delegate
+                {
+                    mEditorWindow = null;
+                };
+            }
+            else
+            {
+                mEditorWindow.Activate();
+            }
         }
 
         /*
@@ -1177,6 +1192,17 @@ namespace Plotter
             mController.PointSnapRange = settings.PointSnapRange;
 
             mController.LineSnapRange = settings.LineSnapRange;
+        }
+
+        public void Close()
+        {
+            SaveSettings();
+
+            if (mEditorWindow != null)
+            {
+                mEditorWindow.Close();
+                mEditorWindow = null;
+            }
         }
 
         public void SaveSettings()

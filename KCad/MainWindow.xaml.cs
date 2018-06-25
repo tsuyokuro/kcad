@@ -112,7 +112,7 @@ namespace KCad
 
         private void MainWindow_Closed(object sender, EventArgs e)
         {
-            ViewModel.SaveSettings();
+            ViewModel.Close();
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)

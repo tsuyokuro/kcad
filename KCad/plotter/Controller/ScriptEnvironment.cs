@@ -293,8 +293,13 @@ namespace Plotter.Controller
             return null;
         }
 
-        public async void runScriptAsync(string s, Action endCallback)
+        public async void runScriptAsync(string s, RunCallback callback)
         {
+            if (callback != null)
+            {
+                callback.OnStart();
+            }
+
             Exception e = null;
 
             await Task.Run(() =>
@@ -314,15 +319,21 @@ namespace Plotter.Controller
             Controller.DrawAll();
             Controller.PushCurrent();
 
-            if (endCallback != null)
+            if (callback != null)
             {
-                endCallback();
+                callback.OnEnd();
             }
         }
 
         public Exception RunScript(string s)
         {
             return RunCommand(s);
+        }
+
+        public class RunCallback
+        {
+            public Action OnStart = () => { };
+            public Action OnEnd = () => { };
         }
     }
 }
