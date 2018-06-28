@@ -8,6 +8,36 @@
         mc:Ignorable="d"
         Icon="ResDict/Images/script_icon.png"
         Title="Script editor" Height="440" Width="442.5">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ResDict/ToggleBtnRadio.xaml"/>
+                <ResourceDictionary Source="ResDict/Colors.xaml"/>
+                <ResourceDictionary Source="ResDict/Images.xaml"/>
+                <ResourceDictionary Source="ResDict/ButtonStyle.xaml"/>
+                <ResourceDictionary Source="ResDict/ImageCheckBoxs.xaml"/>
+                <ResourceDictionary Source="ResDict/MenuStyle.xaml"/>
+                <ResourceDictionary Source="ResDict/ScrollBarStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="ScrollViewer" BasedOn="{StaticResource CustomScrollViewerStyle}"/>
+
+            <Style TargetType="Menu">
+                <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+                <Setter Property="Background" Value="{StaticResource MenuColor}"/>
+            </Style>
+
+            <Style TargetType="MenuItem" BasedOn="{StaticResource MLB_MenuItem}">
+                <Setter Property="Background" Value="{StaticResource MenuColor}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{StaticResource MenuColor}"/>
+                <Setter Property="Padding" Value="0,0,0,0"/>
+            </Style>
+
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -33,21 +63,67 @@
             SyntaxHighlighting="python"
             ShowLineNumbers="True"
             BorderThickness="1"
-            BorderBrush="DarkGray"
+            BorderBrush="Black"
+            Foreground="#FFE6E6E6"
+            Background="#FF1E1E1E"
             />
-        <StatusBar Grid.Row="2">
+        <StatusBar Grid.Row="2"
+            Background="#FF1E1E1E"       
+            >
             <StatusBarItem>
                 <Button
-                x:Name="BtnRun"
-                Content="Run"
-                Height="Auto"
-                Width="Auto"
-                HorizontalAlignment="Left"
-                Padding="4,2,4,2"
-                Margin="8,1,4,1"
-                Background="SkyBlue"
-                BorderThickness="0"               
-                />
+                    x:Name="BtnRun"
+                    Height="Auto"
+                    Width="Auto"
+                    HorizontalAlignment="Left"
+                    Padding="0,0,0,0"
+                    Margin="8,1,4,1"
+                    >
+                    <Button.Template>
+
+                        <ControlTemplate  TargetType="Button">
+                            <Border
+                                Name="border"
+                                BorderThickness="0"
+                                BorderBrush="Transparent"
+                                Background="#FF333333"
+                                Padding="0,0,8,0"
+                                >
+                                <StackPanel Orientation="Horizontal">
+                                    <Label
+                                        Name="label"
+                                        Foreground="White"
+                                        Padding="4,2,4,2"
+                                    >
+                                        Run
+                                    </Label>
+                                    <Polygon
+                                        Points="0,0 8,5, 0,10"
+                                        Stroke="Black"
+                                        Fill="YellowGreen"
+                                        VerticalAlignment="Center"
+                                    />
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="Orange"/>
+                                    <Setter TargetName="label" Property="Foreground" Value="Black"/>
+                                </Trigger>
+
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="Orange"/>
+                                    <Setter TargetName="label" Property="Foreground" Value="Black"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Background" Value="Gray"/>
+                                    <Setter TargetName="label" Property="Foreground" Value="DarkGray"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+
+                    </Button.Template>
+                </Button>
             </StatusBarItem>
         </StatusBar>
     </Grid>

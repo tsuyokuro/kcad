@@ -1,11 +1,17 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="Python" extensions=".py;.pyw" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
-  <Color name="Comment" foreground="Green" exampleText="# comment" />
+  <!--<Color name="Comment" foreground="Green" exampleText="# comment" />
   <Color name="String" foreground="Gray" exampleText="name = 'abc'"/>
   <Color name="MethodCall" foreground="Purple" exampleText="def Hello()"/>
   <Color name="NumberLiteral" foreground="DarkBlue" exampleText="3.1415f"/>
-  <Color name="Keywords" fontWeight="bold" foreground="Blue" exampleText="if"/>
+  <Color name="Keywords" fontWeight="bold" foreground="Blue" exampleText="if"/>-->
 
+  <Color name="Comment" foreground="#FF57A64A" exampleText="# comment" />
+  <Color name="String" foreground="#FFD69D85" exampleText="name = 'abc'"/>
+  <Color name="MethodCall" foreground="#FF4EC9B0" exampleText="def Hello()"/>
+  <Color name="NumberLiteral" foreground="#FF96CEA8" exampleText="3.1415f"/>
+  <Color name="Keywords" fontWeight="bold" foreground="#FF569CD6" exampleText="if"/>
+  
   <Property name="DocCommentMarker" value="///" />
 
   <RuleSet name="CommentMarkerSet">
@@ -87,18 +93,16 @@
       <Word>async</Word>
       <Word>await</Word>
     </Keywords>
-
+      
     <Rule color="MethodCall">
-      \b
-      [\d\w_]+  # an identifier
-      (?=\s*\() # followed by (
+      \b[\d\w_]+(?=\s*\()
     </Rule>
+
     <Rule color="NumberLiteral">
-      \b0[xX][0-9a-fA-F]+  # hex number
-      (	\b\d+(\.[0-9]+)?   #number with optional floating point
-      |	\.[0-9]+           #or just starting with floating point
-      )
-      ([eE][+-]?[0-9]+)? # optional exponent
-    </Rule>
+      \b0[xX][0-9a-fA-F]+
+    </Rule>  
+    <Rule color="NumberLiteral">
+      \b[0-9]+(\.[0-9]+)?([eE]+[+-]?[0-9]+)?
+    </Rule>  
   </RuleSet>
 </SyntaxDefinition>
