@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using CadDataTypes;
+using Newtonsoft.Json.Linq;
+using Plotter.Serializer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,10 +47,12 @@ namespace SplineCurve
         {
             JObject jn = new JObject();
 
+            JArray pointArray = CadJson.ToJson.VectorListToJson(n.CtrlPoints);
+            jn.Add("CtrlPoints", pointArray);
             jn.Add("CtrlCnt", n.CtrlCnt);
             jn.Add("CtrlDataCnt", n.CtrlDataCnt);
             jn.Add("Weights", ToJArray<double>(n.Weights));
-            jn.Add("Order", ToJArray<int>(n.Order));
+            jn.Add("CtrlOrder", ToJArray<int>(n.CtrlOrder));
 
             jn.Add("BSplineP", BSplineParamToJson(n.BSplineP));
 
@@ -58,10 +62,15 @@ namespace SplineCurve
         public static NurbsLine NURBSLineFromJson(JObject jo)
         {
             NurbsLine n = new NurbsLine();
+
+            JArray jarray = (JArray)jo["CtrlPoints"];
+            VectorList vl = CadJson.FromJson.VectorListFromJson(jarray);
+            n.CtrlPoints = vl;
+
             n.CtrlCnt = (int)jo["CtrlCnt"];
             n.CtrlDataCnt = (int)jo["CtrlDataCnt"];
             n.Weights = DoubleArrayFromJArray((JArray)jo["Weights"]);
-            n.Order = IntArrayFromJArray((JArray)jo["Order"]);
+            n.CtrlOrder = IntArrayFromJArray((JArray)jo["CtrlOrder"]);
 
             n.BSplineP = BSplineParamFromJson((JObject)jo["BSplineP"]);
 
@@ -71,6 +80,8 @@ namespace SplineCurve
         public static JObject NURBSSurfaceToJson(NurbsSurface n)
         {
             JObject jn = new JObject();
+            JArray pointArray = CadJson.ToJson.VectorListToJson(n.CtrlPoints);
+            jn.Add("CtrlPoints", pointArray);
 
             jn.Add("UCtrlCnt", n.UCtrlCnt);
             jn.Add("VCtrlCnt", n.VCtrlCnt);
@@ -79,7 +90,7 @@ namespace SplineCurve
             jn.Add("VCtrlDataCnt", n.VCtrlDataCnt);
 
             jn.Add("Weights", ToJArray<double>(n.Weights));
-            jn.Add("Order", ToJArray<int>(n.Order));
+            jn.Add("CtrlOrder", ToJArray<int>(n.CtrlOrder));
 
             jn.Add("UBSpline", BSplineParamToJson(n.UBSpline));
             jn.Add("VBSpline", BSplineParamToJson(n.VBSpline));
@@ -90,6 +101,11 @@ namespace SplineCurve
         public static NurbsSurface NURBSSurfaceFromJson(JObject jo)
         {
             NurbsSurface n = new NurbsSurface();
+
+            JArray jarray = (JArray)jo["CtrlPoints"];
+            VectorList vl = CadJson.FromJson.VectorListFromJson(jarray);
+            n.CtrlPoints = vl;
+
             n.UCtrlCnt = (int)jo["UCtrlCnt"];
             n.VCtrlCnt = (int)jo["VCtrlCnt"];
 
@@ -97,7 +113,7 @@ namespace SplineCurve
             n.VCtrlDataCnt = (int)jo["VCtrlDataCnt"];
 
             n.Weights = DoubleArrayFromJArray((JArray)jo["Weights"]);
-            n.Order = IntArrayFromJArray((JArray)jo["Order"]);
+            n.CtrlOrder = IntArrayFromJArray((JArray)jo["CtrlOrder"]);
 
             n.UBSpline = BSplineParamFromJson((JObject)jo["UBSpline"]);
             n.VBSpline = BSplineParamFromJson((JObject)jo["VBSpline"]);

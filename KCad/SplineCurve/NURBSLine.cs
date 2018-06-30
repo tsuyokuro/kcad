@@ -15,7 +15,7 @@ namespace SplineCurve
         // Control point‚ÌƒŠƒXƒgã‚Å‚Ì”
         public int CtrlDataCnt;
 
-        public int[] Order;
+        public int[] CtrlOrder;
 
 
         // o—Í‚³‚ê‚éPoint‚ÌŒÂ”
@@ -60,16 +60,19 @@ namespace SplineCurve
                 CtrlCnt += deg;
             }
 
-            Order = new int[CtrlCnt];
-
-            for (int i=0; i< CtrlCnt; i++)
-            {
-                Order[i] = i % ctrlCnt;
-            }
-
             BSplineP.Setup(deg, CtrlCnt, divCnt, edge);
 
             SetDefaultWeights();
+        }
+
+        public void SetupDefaultCtrlOrder()
+        {
+            CtrlOrder = new int[CtrlCnt];
+
+            for (int i = 0; i < CtrlCnt; i++)
+            {
+                CtrlOrder[i] = i % CtrlDataCnt;
+            }
         }
 
         private CadVector CalcPoint(double t)
@@ -87,7 +90,7 @@ namespace SplineCurve
             {
 				bs = BSplineP.BasisFunc(i, t);
 
-                di = Order[i];
+                di = CtrlOrder[i];
 
                 linePoint += bs * Weights[di] * CtrlPoints[di];
 

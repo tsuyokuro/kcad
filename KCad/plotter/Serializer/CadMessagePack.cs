@@ -419,9 +419,6 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpNurbsLineGeometricData : MpGeometricData
     {
-        [Key("ptL")]
-        public List<MpVector> PointList;
-
         [Key("Nurbs")]
         public MpNurbsLine Nurbs;
     }
@@ -429,9 +426,6 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpNurbsSurfaceGeometricData : MpGeometricData
     {
-        [Key("ptL")]
-        public List<MpVector> PointList;
-
         [Key("Nurbs")]
         public MpNurbsSurface Nurbs;
     }
@@ -628,8 +622,11 @@ namespace Plotter.Serializer
         [Key("Weights")]
         public double[] Weights;
 
-        [Key("Order")]
-        public int[] Order;
+        [Key("ptL")]
+        public List<MpVector> CtrlPoints;
+
+        [Key("CtrlOrder")]
+        public int[] CtrlOrder;
 
         [Key("BSplineP")]
         public MpBSplineParam BSplineP;
@@ -641,7 +638,8 @@ namespace Plotter.Serializer
             ret.CtrlCnt = src.CtrlCnt;
             ret.CtrlDataCnt = src.CtrlDataCnt;
             ret.Weights = MpUtil.ArrayClone<double>(src.Weights);
-            ret.Order = MpUtil.ArrayClone<int>(src.Order);
+            ret.CtrlPoints = MpUtil.VectortListToMp(src.CtrlPoints);
+            ret.CtrlOrder = MpUtil.ArrayClone<int>(src.CtrlOrder);
 
             ret.BSplineP = MpBSplineParam.Create(src.BSplineP);
 
@@ -655,7 +653,8 @@ namespace Plotter.Serializer
             nurbs.CtrlCnt = CtrlCnt;
             nurbs.CtrlDataCnt = CtrlDataCnt;
             nurbs.Weights = MpUtil.ArrayClone<double>(Weights);
-            nurbs.Order = MpUtil.ArrayClone<int>(Order);
+            nurbs.CtrlPoints = MpUtil.VectortListFromMp(CtrlPoints);
+            nurbs.CtrlOrder = MpUtil.ArrayClone<int>(CtrlOrder);
 
             nurbs.BSplineP = BSplineP.Restore();
 
@@ -681,8 +680,11 @@ namespace Plotter.Serializer
         [Key("Weights")]
         public double[] Weights;
 
-        [Key("Order")]
-        public int[] Order;
+        [Key("ptL")]
+        public List<MpVector> CtrlPoints;
+
+        [Key("CtrlOrder")]
+        public int[] CtrlOrder;
 
         [Key("UBSpline")]
         public MpBSplineParam UBSpline;
@@ -700,9 +702,10 @@ namespace Plotter.Serializer
             ret.UCtrlDataCnt = src.UCtrlDataCnt;
             ret.VCtrlDataCnt = src.VCtrlDataCnt;
 
+            ret.CtrlPoints = MpUtil.VectortListToMp(src.CtrlPoints);
 
             ret.Weights = MpUtil.ArrayClone<double>(src.Weights);
-            ret.Order = MpUtil.ArrayClone<int>(src.Order);
+            ret.CtrlOrder = MpUtil.ArrayClone<int>(src.CtrlOrder);
 
             ret.UBSpline = MpBSplineParam.Create(src.UBSpline);
             ret.VBSpline = MpBSplineParam.Create(src.VBSpline);
@@ -720,9 +723,10 @@ namespace Plotter.Serializer
             nurbs.UCtrlDataCnt = UCtrlDataCnt;
             nurbs.VCtrlDataCnt = VCtrlDataCnt;
 
+            nurbs.CtrlPoints = MpUtil.VectortListFromMp(CtrlPoints);
 
             nurbs.Weights = MpUtil.ArrayClone<double>(Weights);
-            nurbs.Order = MpUtil.ArrayClone<int>(Order);
+            nurbs.CtrlOrder = MpUtil.ArrayClone<int>(CtrlOrder);
 
             nurbs.UBSpline = UBSpline.Restore();
             nurbs.VBSpline = VBSpline.Restore();

@@ -538,9 +538,27 @@ namespace Plotter.Controller
             int ucnt = 8;
             int vcnt = 5;
 
-            VectorList vl =SplineUtil.CreateControlPoints(ucnt, vcnt, CadVector.UnitX * 20.0, CadVector.UnitZ * 20.0);
+            VectorList vl =SplineUtil.CreateFlatControlPoints(ucnt, vcnt, CadVector.UnitX * 20.0, CadVector.UnitZ * 20.0);
 
-            nfig.Setup(2, ucnt, vcnt, vl, 16, 16);
+            nfig.Setup(2, ucnt, vcnt, vl, null, 16, 16);
+
+
+            Controller.CurrentLayer.AddFigure(nfig);
+
+            Controller.UpdateTreeView(true);
+        }
+
+        private void testNus2()
+        {
+            CadFigureNurbsSurface nfig = (CadFigureNurbsSurface)Controller.DB.NewFigure(CadFigure.Types.NURBS_SURFACE);
+
+            int ucnt = 4;
+            int vcnt = 4;
+
+            VectorList vl = SplineUtil.CreateBoxControlPoints(
+                ucnt, vcnt, CadVector.UnitX * 20.0, CadVector.UnitZ * 20.0, CadVector.UnitY * -20.0 );
+
+            nfig.Setup(2, ucnt*2, vcnt, vl, null, 16, 16, false, false, true, true);
 
             Controller.CurrentLayer.AddFigure(nfig);
 
@@ -630,6 +648,10 @@ namespace Plotter.Controller
             else if (s == "@nus")
             {
                 testNus();
+            }
+            else if (s == "@nus2")
+            {
+                testNus2();
             }
             else if (s == "@testMesh")
             {

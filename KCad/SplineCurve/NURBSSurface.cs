@@ -20,8 +20,7 @@ namespace SplineCurve
         // Weight情報
         public double[] Weights;
 
-        public int[] Order;
-
+        public int[] CtrlOrder;
 
         public BSplineParam UBSpline = new BSplineParam();
         public BSplineParam VBSpline = new BSplineParam();
@@ -82,12 +81,33 @@ namespace SplineCurve
                 VCtrlCnt += deg;
             }
 
-            CreateOrder(UCtrlCnt, VCtrlCnt, uCtrlCnt, vCtrlCnt);
-
             UBSpline.Setup(deg, UCtrlCnt, uDivCnt, uedge);
-            VBSpline.Setup(deg, VCtrlCnt, uDivCnt, vedge);
+            VBSpline.Setup(deg, VCtrlCnt, vDivCnt, vedge);
 
             SetDefaultWeights();
+        }
+
+        public void SetupDefaultCtrlOrder()
+        {
+            int ucnt = UCtrlCnt;
+            int vcnt = VCtrlCnt;
+            int udcnt = UCtrlDataCnt;
+            int vdcnt = VCtrlDataCnt;
+
+            int[] order = new int[ucnt * vcnt];
+
+            for (int j = 0; j < vcnt; j++)
+            {
+                int ds = (j % vdcnt) * udcnt;
+                int s = j * ucnt;
+
+                for (int i = 0; i < ucnt; i++)
+                {
+                    order[s + i] = ds + (i % udcnt);
+                }
+            }
+
+            CtrlOrder = order;
         }
 
         public void SetDefaultWeights()
@@ -97,22 +117,6 @@ namespace SplineCurve
             for (int i = 0; i < Weights.Length; i++)
             {
                 Weights[i] = 1.0;
-            }
-        }
-
-        private void CreateOrder(int ucnt, int vcnt, int udcnt, int vdcnt)
-        {
-            Order = new int[ucnt * vcnt];
-
-            for (int j = 0; j < vcnt; j++)
-            {
-                int ds = (j % vdcnt) * udcnt;
-                int s = j * ucnt;
-
-                for (int i = 0; i < UCtrlCnt; i++)
-                {
-                    Order[s + i] = ds + (i % udcnt);
-                }
             }
         }
 
@@ -136,7 +140,7 @@ namespace SplineCurve
                     double ubs = UBSpline.BasisFunc(i, u);
                     double vbs = VBSpline.BasisFunc(j, v);
 
-                    int cp = Order[sp + i];
+                    int cp = CtrlOrder[sp + i];
 
                     pt += (ubs * vbs * Weights[cp]) * CtrlPoints[cp];
 

@@ -81,13 +81,25 @@ namespace Plotter
             int deg,
             int ucnt, int vcnt,
             VectorList vl,
+            int[] ctrlOrder,
             int uDivCnt, int vDivCnt,
             bool uedge=true, bool vedge=true,
             bool uclose=false, bool vclose=false)
         {
+            Nurbs = new NurbsSurface(deg, ucnt, vcnt, uDivCnt, vDivCnt, uedge, vedge, uclose, vclose);
+
+            Nurbs.CtrlPoints = vl;
+
             mPointList = vl;
 
-            Nurbs = new NurbsSurface(deg, ucnt, vcnt, uDivCnt, vDivCnt, uedge, vedge, uclose, vclose);
+            if (ctrlOrder == null)
+            {
+                Nurbs.SetupDefaultCtrlOrder();
+            }
+            else
+            {
+                Nurbs.CtrlOrder = ctrlOrder;
+            }
 
             NurbsPointList = new VectorList(Nurbs.UOutCnt * Nurbs.VOutCnt);
         }
@@ -165,7 +177,6 @@ namespace Plotter
             if (NeedsEval)
             {
                 NurbsPointList.Clear();
-                Nurbs.CtrlPoints = mPointList;
                 Nurbs.Eval(NurbsPointList);
                 NeedsEval = false;
             }
@@ -238,7 +249,6 @@ namespace Plotter
         public override MpGeometricData GeometricDataToMp()
         {
             MpNurbsSurfaceGeometricData geo = new MpNurbsSurfaceGeometricData();
-            geo.PointList = MpUtil.VectortListToMp(PointList);
             geo.Nurbs = MpNurbsSurface.Create(Nurbs);
             return geo;
         }
@@ -252,11 +262,9 @@ namespace Plotter
 
             MpNurbsSurfaceGeometricData g = (MpNurbsSurfaceGeometricData)geo;
 
-            mPointList = MpUtil.VectortListFromMp(g.PointList);
-
             Nurbs = g.Nurbs.Restore();
 
-            Nurbs.CtrlPoints = mPointList;
+            mPointList = Nurbs.CtrlPoints;
 
             NurbsPointList = new VectorList(Nurbs.UOutCnt * Nurbs.VOutCnt);
 
@@ -266,10 +274,7 @@ namespace Plotter
 
         public override JObject GeometricDataToJson()
         {
-            JArray pointArray = CadJson.ToJson.VectorListToJson(PointList);
-
             JObject jvdata = new JObject();
-            jvdata.Add(CadJson.VECTOR.POINT_LIST, pointArray);
             jvdata.Add("Nurbs", BSplineJson.NURBSSurfaceToJson(Nurbs));
 
             return jvdata;
@@ -277,14 +282,9 @@ namespace Plotter
 
         public override void GeometricDataFromJson(JObject jvdata, CadJson.VersionCode version)
         {
-            JArray jarray = (JArray)jvdata[CadJson.VECTOR.POINT_LIST];
-
-            VectorList vl = CadJson.FromJson.VectorListFromJson(jarray, version);
-            mPointList = vl;
-
             Nurbs = BSplineJson.NURBSSurfaceFromJson((JObject)jvdata["Nurbs"]);
 
-            Nurbs.CtrlPoints = mPointList;
+            mPointList = Nurbs.CtrlPoints;
 
             NurbsPointList = new VectorList(Nurbs.UOutCnt * Nurbs.VOutCnt);
         }

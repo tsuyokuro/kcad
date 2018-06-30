@@ -80,6 +80,7 @@ namespace Plotter
         {
             Nurbs = new NurbsLine(deg, mPointList.Count, divCnt, edge, close);
             Nurbs.CtrlPoints = mPointList;
+            Nurbs.SetupDefaultCtrlOrder();
 
             NurbsPointList = new VectorList(Nurbs.OutCnt);
         }
@@ -151,7 +152,6 @@ namespace Plotter
         public override MpGeometricData GeometricDataToMp()
         {
             MpNurbsLineGeometricData geo = new MpNurbsLineGeometricData();
-            geo.PointList = MpUtil.VectortListToMp(PointList);
             geo.Nurbs = MpNurbsLine.Create(Nurbs);
             return geo;
         }
@@ -165,11 +165,9 @@ namespace Plotter
 
             MpNurbsLineGeometricData g = (MpNurbsLineGeometricData)geo;
 
-            mPointList = MpUtil.VectortListFromMp(g.PointList);
-
             Nurbs = g.Nurbs.Restore();
 
-            Nurbs.CtrlPoints = mPointList;
+            mPointList = Nurbs.CtrlPoints;
 
             NurbsPointList = new VectorList(Nurbs.OutCnt);
         }
@@ -177,10 +175,7 @@ namespace Plotter
 
         public override JObject GeometricDataToJson()
         {
-            JArray pointArray = CadJson.ToJson.VectorListToJson(PointList);
-
             JObject jvdata = new JObject();
-            jvdata.Add(CadJson.VECTOR.POINT_LIST, pointArray);
             jvdata.Add("Nurbs", BSplineJson.NURBSLineToJson(Nurbs));
 
             return jvdata;
@@ -188,14 +183,9 @@ namespace Plotter
 
         public override void GeometricDataFromJson(JObject jvdata, CadJson.VersionCode version)
         {
-            JArray jarray = (JArray)jvdata[CadJson.VECTOR.POINT_LIST];
-
-            VectorList vl = CadJson.FromJson.VectorListFromJson(jarray, version);
-            mPointList = vl;
-
             Nurbs = BSplineJson.NURBSLineFromJson((JObject)jvdata["Nurbs"]);
 
-            Nurbs.CtrlPoints = mPointList;
+            mPointList = Nurbs.CtrlPoints;
 
             NurbsPointList = new VectorList(Nurbs.OutCnt);
         }

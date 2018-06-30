@@ -569,7 +569,8 @@ namespace Plotter.Serializer
                 return fig;
             }
 
-            public static VectorList VectorListFromJson(JArray jarray, VersionCode version)
+            public static VectorList VectorListFromJson(
+                JArray jarray, VersionCode version = CurrentVersion)
             {
                 VectorList vl = new VectorList();
 
@@ -581,7 +582,8 @@ namespace Plotter.Serializer
                 return vl;
             }
 
-            public static CadVector VectorFromJson(JObject jo, VersionCode version)
+            public static CadVector VectorFromJson(
+                JObject jo, VersionCode version = CurrentVersion)
             {
                 CadVector v = default(CadVector);
 
