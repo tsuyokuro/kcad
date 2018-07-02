@@ -27,7 +27,7 @@ namespace KCad
 
             if (App.GetCurrent().InputThread != null)
             {
-                App.GetCurrent().InputThread.OnLineArrived = DebugCommand;
+
             }
 
             //mLBConsole = new LBConsole(MyConsole, 100);
@@ -123,11 +123,6 @@ namespace KCad
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.MenuItemClicked(sender, e);
-        }
-
-        private void DebugCommand(String s)
-        {
-            ViewModel.DebugCommand(s);
         }
 
         private void MyConsole_SelectionChanged(object sender, EventArgs e)

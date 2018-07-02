@@ -571,6 +571,12 @@ namespace Plotter.Controller
             {
                 Controller.InteractOut.clear();
             }
+            else if (s == "@dump")
+            {
+                Controller.DB.dump();
+            }
+
+
             else if (s == "@clearTemp")
             {
                 Controller.TempFigureList.Clear();
@@ -668,17 +674,13 @@ namespace Plotter.Controller
 
             }
 
+            else if (s == "@test")
+            {
+
+            }
+
             else
             {
-                s = s.Remove(0, 1);
-
-                Controller.CurrentDC.StartDraw();
-
-                Controller.debugCommand(Controller.CurrentDC, s);
-
-                Controller.CurrentDC.EndDraw();
-
-                Controller.CurrentDC.Push();
             }
         }
     }

@@ -1026,24 +1026,10 @@ namespace Plotter
         #endregion
 
 
-        #region Command handling
         public void TextCommand(string s)
         {
             mController.ScriptEnv.commandAsync(s);
         }
-
-        public void DebugCommand(string s)
-        {
-            //DrawContext dc = StartDraw();
-
-            //mController.Clear(dc);
-
-            mController.debugCommand(mController.CurrentDC, s);
-            
-            //mController.DrawAll(dc);
-            //EndDraw();
-        }
-        #endregion
 
         private bool UpdateFigureType(CadFigure.Types newType)
         {

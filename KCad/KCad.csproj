@@ -354,7 +354,6 @@
     <Compile Include="plotter\Util\MessageHandler.cs" />
     <Compile Include="plotter\Util\PlotterCommon.cs" />
     <Compile Include="plotter\Controller\PlotterController.cs" />
-    <Compile Include="plotter\Controller\PlotterController_Debug.cs" />
     <Compile Include="plotter\Controller\PlotterController_EditFigure.cs" />
     <Compile Include="plotter\Controller\PlotterController_Input.cs" />
     <Compile Include="plotter\Controller\ScriptEnvironment.cs" />

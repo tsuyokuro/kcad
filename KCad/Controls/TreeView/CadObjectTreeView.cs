@@ -230,7 +230,17 @@ namespace KCad
 
         public void SetVPos(int pos)
         {
-            Scroll.ScrollToVerticalOffset(pos * mItemHeight);
+            if (Dispatcher.CheckAccess())
+            {
+                Scroll.ScrollToVerticalOffset(pos * mItemHeight);
+            }
+            else
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    Scroll.ScrollToVerticalOffset(pos * mItemHeight);
+                }));
+            }
         }
 
         public int Find(Func<CadObjTreeItem, bool> comp)
