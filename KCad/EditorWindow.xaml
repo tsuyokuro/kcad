@@ -21,7 +21,6 @@
                 <ResourceDictionary Source="ResDict/ScrollBarStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <Style TargetType="ScrollViewer" BasedOn="{StaticResource CustomScrollViewerStyle}"/>
 
             <Style TargetType="Menu">
                 <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
@@ -66,7 +65,12 @@
             BorderBrush="Black"
             Foreground="#FFE6E6E6"
             Background="#FF1E1E1E"
-            />
+            >
+            <avalonEdit:TextEditor.Resources>
+                <Style TargetType="ScrollViewer" BasedOn="{StaticResource CustomScrollViewerStyle}"/>
+            </avalonEdit:TextEditor.Resources>
+        </avalonEdit:TextEditor>
+
         <StatusBar Grid.Row="2"
             Background="#FF1E1E1E"       
             >
@@ -124,6 +128,14 @@
 
                     </Button.Template>
                 </Button>
+            </StatusBarItem>
+            <StatusBarItem>
+                <Label
+                    x:Name="LblCaretPos"
+                    Content=""
+                    Foreground="#FFE6E6E6"
+                />
+
             </StatusBarItem>
         </StatusBar>
     </Grid>

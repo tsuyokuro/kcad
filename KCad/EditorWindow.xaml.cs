@@ -52,6 +52,25 @@ namespace KCad
             textEditor.TextArea.TextEntered += TextArea_TextEntered;
 
             textEditor.TextArea.TextEntering += TextArea_TextEntering;
+
+            textEditor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
+
+            mSearchPanel.MarkerBrush = Brushes.SteelBlue;
+
+            ShowRowCol();
+        }
+
+        private void Caret_PositionChanged(object sender, EventArgs e)
+        {
+            ShowRowCol();
+        }
+
+        private void ShowRowCol()
+        {
+            LblCaretPos.Content =
+                textEditor.TextArea.Caret.Position.Line.ToString() +
+                "," +
+                textEditor.TextArea.Caret.Position.Column.ToString();
         }
 
         private void TextArea_TextEntering(object sender, TextCompositionEventArgs e)
