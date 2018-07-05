@@ -183,7 +183,7 @@ namespace KCad
                 BtnRun.IsEnabled = true;
             };
 
-            ScriptEnv.runScriptAsync(s, callback);
+            ScriptEnv.RunScriptAsync(s, callback);
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -217,6 +217,7 @@ namespace KCad
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 textEditor.Load(ofd.FileName);
+                this.Title = ofd.FileName;
             }
         }
 

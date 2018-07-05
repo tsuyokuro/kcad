@@ -1028,7 +1028,7 @@ namespace Plotter
 
         public void TextCommand(string s)
         {
-            mController.ScriptEnv.commandAsync(s);
+            mController.ScriptEnv.ExecuteCommandAsync(s);
         }
 
         private bool UpdateFigureType(CadFigure.Types newType)

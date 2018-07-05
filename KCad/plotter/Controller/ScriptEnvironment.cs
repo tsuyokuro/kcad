@@ -46,8 +46,12 @@ namespace Plotter.Controller
             }
         }
 
+        TaskScheduler mMainThreadScheduler;
+
         public ScriptEnvironment(PlotterController controller)
         {
+            mMainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+
             Controller = controller;
 
             InitScriptingEngine();
@@ -210,7 +214,7 @@ namespace Plotter.Controller
             return Controller.DB.GetFigure(idlist[0]);
         }
 
-        public void command(string s)
+        public void ExecuteCommand(string s)
         {
             s = s.Trim();
             Controller.InteractOut.println("> " + s);
@@ -221,7 +225,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            Exception e = RunCommand(s);
+            Exception e = RunScript(s);
 
             if (e != null)
             {
@@ -238,7 +242,7 @@ namespace Plotter.Controller
             Controller.CurrentDC.Push();
         }
 
-        public async void commandAsync(string s)
+        public async void ExecuteCommandAsync(string s)
         {
             s = s.Trim();
             Controller.InteractOut.println("> " + s);
@@ -253,7 +257,7 @@ namespace Plotter.Controller
 
             await Task.Run( () =>
             {
-                e = RunCommand(s);
+                e = RunScript(s);
             });
 
             if (e != null)
@@ -272,7 +276,7 @@ namespace Plotter.Controller
             Controller.PushCurrent();
         }
 
-        public Exception RunCommand(string s)
+        public Exception RunScript(string s)
         {
             UpdateTreeViewFlag = false;
 
@@ -293,7 +297,7 @@ namespace Plotter.Controller
             return null;
         }
 
-        public async void runScriptAsync(string s, RunCallback callback)
+        public async void RunScriptAsync(string s, RunCallback callback)
         {
             if (callback != null)
             {
@@ -325,9 +329,15 @@ namespace Plotter.Controller
             }
         }
 
-        public Exception RunScript(string s)
+        public void PostRedraw()
         {
-            return RunCommand(s);
+            new Task(() =>
+            {
+                Controller.Clear();
+                Controller.DrawAll();
+                Controller.PushCurrent();
+            }
+            ).Start(mMainThreadScheduler);
         }
 
         public class RunCallback
