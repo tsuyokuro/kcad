@@ -26,7 +26,7 @@ namespace Plotter.Controller
 {
     public partial class ScriptEnvironment
     {
-        private PlotterController Controller;
+        public PlotterController Controller;
 
         private ScriptEngine Engine;
 
@@ -80,32 +80,6 @@ namespace Plotter.Controller
             }
         }
 
-        public void LayerList()
-        {
-            foreach (CadLayer layer in Controller.DB.LayerList)
-            {
-                Controller.InteractOut.println("layer{Name: " + layer.Name + " ID: " + layer.ID + "}");
-            }
-        }
-
-        public void PutMsg(string s)
-        {
-            Controller.InteractOut.println(s);
-        }
-
-        public void PrintVector(CadVector v)
-        {
-            var sb = new StringBuilder();
-
-            sb.Append(CadUtil.ValToString(v.x));
-            sb.Append(", ");
-            sb.Append(CadUtil.ValToString(v.y));
-            sb.Append(", ");
-            sb.Append(CadUtil.ValToString(v.z));
-
-            Controller.InteractOut.println(sb.ToString());
-        }
-
         Regex FigPtn = new Regex(@"fig[ ]*{[ ]*id\:[ ]*([0-9]+)[ ]*;[ ]*idx\:[ ]*([0-9]+)[ ]*;[ ]*}[ ]*");
 
         public void MessageSelected(List<string> messages)
@@ -136,17 +110,6 @@ namespace Plotter.Controller
                     Controller.SelectById(id, -1);
                 }
             }
-        }
-
-        public void ShowVector(CadVector v)
-        {
-            Controller.InteractOut.println(
-                "( " +
-                v.x.ToString() + ", " +
-                v.y.ToString() + ", " +
-                v.z.ToString() +
-                " )"
-            );
         }
 
         public dynamic ExecPartial(string fname)
@@ -200,47 +163,6 @@ namespace Plotter.Controller
 
         //fig.Thickness = t;
         //}
-
-
-        public CadFigure GetTargetFigure()
-        {
-            List<uint> idlist = Controller.GetSelectedFigIDList();
-
-            if (idlist.Count == 0)
-            {
-                return null;
-            }
-
-            return Controller.DB.GetFigure(idlist[0]);
-        }
-
-        public void ExecuteCommand(string s)
-        {
-            s = s.Trim();
-            Controller.InteractOut.println("> " + s);
-
-            if (s.StartsWith("@"))
-            {
-                SimpleCommand(s);
-                return;
-            }
-
-            Exception e = RunScript(s);
-
-            if (e != null)
-            {
-                Controller.InteractOut.println("error: " + e.Message);
-            }
-
-            if (UpdateTreeViewFlag == true)
-            {
-                Controller.UpdateTreeView(true);
-                UpdateTreeViewFlag = false;
-            }
-
-            Controller.DrawAll(Controller.CurrentDC);
-            Controller.CurrentDC.Push();
-        }
 
         public async void ExecuteCommandAsync(string s)
         {

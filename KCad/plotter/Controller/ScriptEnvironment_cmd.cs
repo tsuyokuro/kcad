@@ -26,6 +26,11 @@ namespace Plotter.Controller
 {
     public partial class ScriptEnvironment
     {
+        public void PutMsg(string s)
+        {
+            Controller.InteractOut.println(s);
+        }
+
         public void CursorAngleX(double d)
         {
             double t = -CadMath.Deg2Rad(d);
@@ -40,6 +45,36 @@ namespace Plotter.Controller
 
             Controller.CrossCursor.DirY.x = Math.Cos(t);
             Controller.CrossCursor.DirY.y = Math.Sin(t);
+        }
+
+        public void ShowVector(CadVector v)
+        {
+            Controller.InteractOut.println(
+                "( " +
+                v.x.ToString() + ", " +
+                v.y.ToString() + ", " +
+                v.z.ToString() +
+                " )"
+            );
+        }
+
+        public void PrintVector(CadVector v)
+        {
+            var sb = new StringBuilder();
+
+            sb.Append(CadUtil.ValToString(v.x));
+            sb.Append(", ");
+            sb.Append(CadUtil.ValToString(v.y));
+            sb.Append(", ");
+            sb.Append(CadUtil.ValToString(v.z));
+
+            Controller.InteractOut.println(sb.ToString());
+        }
+
+        public void DumpVector(CadVector v)
+        {
+            string s = v.CoordString();
+            Controller.InteractOut.println(s);
         }
 
         public CadVector GetLastDownPoint()
@@ -99,6 +134,14 @@ namespace Plotter.Controller
             }
 
             Controller.SetTreeViewPos(idx);
+        }
+
+        public void LayerList()
+        {
+            foreach (CadLayer layer in Controller.DB.LayerList)
+            {
+                Controller.InteractOut.println("layer{Name: " + layer.Name + " ID: " + layer.ID + "}");
+            }
         }
 
         public void SelectFigure(uint id)
@@ -188,8 +231,7 @@ namespace Plotter.Controller
                     global::KCad.Properties.Resources.notice_was_grouped
                 );
 
-            //Controller.UpdateTreeView(true);
-            UpdateTreeViewFlag = true;
+            UpdateTreeView();
         }
 
         public void Ungroup()
@@ -239,7 +281,7 @@ namespace Plotter.Controller
                 global::KCad.Properties.Resources.notice_was_ungrouped
                 );
 
-            UpdateTreeViewFlag = true;
+            UpdateTreeView();
         }
 
         public void Distance()
@@ -400,7 +442,6 @@ namespace Plotter.Controller
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            UpdateTreeViewFlag = true;
 
             return (int)fig.ID;
         }
@@ -420,7 +461,6 @@ namespace Plotter.Controller
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            UpdateTreeViewFlag = true;
         }
 
         public void AddCylinder(int slices, double r, double len)
@@ -436,7 +476,6 @@ namespace Plotter.Controller
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            UpdateTreeViewFlag = true;
         }
 
         public void AddSphere(int slices, double r)
@@ -452,7 +491,6 @@ namespace Plotter.Controller
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryManager.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            UpdateTreeViewFlag = true;
         }
 
         public void AddLayer(string name)
@@ -768,8 +806,6 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(fig);
             Controller.CurrentLayer.RemoveFigureByID(tfig.ID);
-
-            UpdateTreeViewFlag = true;
         }
 
         public void ToMesh()
@@ -817,8 +853,6 @@ namespace Plotter.Controller
             }
 
             Controller.ClearSelection();
-
-            UpdateTreeViewFlag = true;
         }
 
         public void InvertDir()
@@ -880,8 +914,6 @@ namespace Plotter.Controller
             Controller.HistoryManager.foward(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
-
-            UpdateTreeViewFlag = true;
         }
 
         public void Union(uint idA, uint idB)
@@ -915,8 +947,6 @@ namespace Plotter.Controller
             Controller.HistoryManager.foward(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
-
-            UpdateTreeViewFlag = true;
         }
 
         public void Intersection(uint idA, uint idB)
@@ -950,8 +980,6 @@ namespace Plotter.Controller
             Controller.HistoryManager.foward(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
-
-            UpdateTreeViewFlag = true;
         }
 
         public void DumpMesh(uint id)
@@ -1024,12 +1052,6 @@ namespace Plotter.Controller
             CadVector rv = qp.ToPoint();
 
             return rv;
-        }
-
-        public void DumpVector(CadVector v)
-        {
-            string s = v.CoordString();
-            Controller.InteractOut.println(s);
         }
 
         public uint GetCurrentFigureID()
@@ -1115,12 +1137,31 @@ namespace Plotter.Controller
             return v;
         }
 
-
-
+        public void UpdateTreeView()
+        {
+            new Task(() =>
+            {
+                Controller.UpdateTreeView(true);
+            }
+            ).Start(mMainThreadScheduler);
+        }
 
         public void Test(CadVector v)
         {
 
+        }
+
+
+        public CadFigure GetTargetFigure()
+        {
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
+            if (idlist.Count == 0)
+            {
+                return null;
+            }
+
+            return Controller.DB.GetFigure(idlist[0]);
         }
     }
 }
