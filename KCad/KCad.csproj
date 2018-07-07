@@ -196,7 +196,7 @@
     </Compile>
     <Compile Include="plotter\Controller\GideLineManager.cs" />
     <Compile Include="plotter\Controller\InteractCtrl.cs" />
-    <Compile Include="plotter\Controller\ScriptEnvironment_cmd.cs" />
+    <Compile Include="plotter\Controller\ScriptFunctions.cs" />
     <Compile Include="SplineCurve\BSplineJson.cs" />
     <Compile Include="SplineCurve\BSplineParam.cs" />
     <Compile Include="SplineCurve\NurbsLine.cs" />

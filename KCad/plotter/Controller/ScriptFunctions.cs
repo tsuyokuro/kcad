@@ -24,8 +24,26 @@ using KCad;
 
 namespace Plotter.Controller
 {
-    public partial class ScriptEnvironment
+    public class ScriptFunctions
     {
+        PlotterController Controller;
+
+        ScriptEnvironment Env;
+
+        TaskScheduler mMainThreadScheduler;
+
+        int mMainThreadID = -1;
+
+        public ScriptFunctions(ScriptEnvironment env)
+        {
+            Env = env;
+            Controller = env.Controller;
+
+            mMainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
+
+            mMainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+        }
+
         public void PutMsg(string s)
         {
             Controller.InteractOut.println(s);
@@ -1137,11 +1155,41 @@ namespace Plotter.Controller
             return v;
         }
 
+        public dynamic ExecPartial(string fname)
+        {
+            return Env.ExecPartial(fname);
+        }
+
         public void UpdateTreeView()
         {
+            if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
+            {
+                Controller.UpdateTreeView(true);
+                return;
+            }
+
             new Task(() =>
             {
                 Controller.UpdateTreeView(true);
+            }
+            ).Start(mMainThreadScheduler);
+        }
+
+        public void PostRedraw()
+        {
+            if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
+            {
+                Controller.Clear();
+                Controller.DrawAll();
+                Controller.PushCurrent();
+                return;
+            }
+
+            new Task(() =>
+            {
+                Controller.Clear();
+                Controller.DrawAll();
+                Controller.PushCurrent();
             }
             ).Start(mMainThreadScheduler);
         }

@@ -565,6 +565,18 @@ namespace Plotter.Controller
             Controller.UpdateTreeView(true);
         }
 
+        public CadFigure GetTargetFigure()
+        {
+            List<uint> idlist = Controller.GetSelectedFigIDList();
+
+            if (idlist.Count == 0)
+            {
+                return null;
+            }
+
+            return Controller.DB.GetFigure(idlist[0]);
+        }
+
         private void SimpleCommand(string s)
         {
             if (s == "@clear" || s == "@cls")

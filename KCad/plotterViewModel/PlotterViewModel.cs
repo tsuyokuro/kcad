@@ -1028,6 +1028,7 @@ namespace Plotter
 
         public void TextCommand(string s)
         {
+            //mController.ScriptEnv.ExecuteCommandSync(s);
             mController.ScriptEnv.ExecuteCommandAsync(s);
         }
 

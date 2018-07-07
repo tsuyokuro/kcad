@@ -36,8 +36,6 @@ namespace Plotter.Controller
 
         private List<string> mAutoCompleteList = new List<string>();
 
-        private bool UpdateTreeViewFlag = false; 
-
         public List<string> AutoCompleteList
         {
             get
@@ -46,13 +44,13 @@ namespace Plotter.Controller
             }
         }
 
-        TaskScheduler mMainThreadScheduler;
+        private ScriptFunctions mScriptFunctions;
 
         public ScriptEnvironment(PlotterController controller)
         {
-            mMainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-
             Controller = controller;
+
+            mScriptFunctions = new ScriptFunctions(this);
 
             InitScriptingEngine();
         }
@@ -68,7 +66,7 @@ namespace Plotter.Controller
             Scope = Engine.CreateScope();
             Source = Engine.CreateScriptSourceFromString(script);
 
-            Scope.SetVariable("SE", this);
+            Scope.SetVariable("SE", mScriptFunctions);
             Source.Execute(Scope);
 
             MatchCollection matches = AutoCompPtn.Matches(script);
@@ -141,11 +139,6 @@ namespace Plotter.Controller
             }
         }
 
-        //public void EndCreateFigure(CadFigure fig)
-        //{
-        //    fig.EndCreate(Controller.CurrentDC);
-        //}
-
         public void AddFigure(CadFigure fig)
         {
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
@@ -153,16 +146,28 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
         }
 
+        public void ExecuteCommandSync(string s)
+        {
+            s = s.Trim();
+            Controller.InteractOut.println("> " + s);
 
-        //public void SetThickness(double t)
-        //{
-        //CadFigure fig = GetTargetFigure();
+            if (s.StartsWith("@"))
+            {
+                SimpleCommand(s);
+                return;
+            }
 
-        //CadOpe ope = CadOpe.CreateSetThickOpe(Controller.CurrentLayer.ID, fig.ID, fig.Thickness, t);
-        //Controller.HistoryManager.foward(ope);
+            Exception e = RunScript(s);
 
-        //fig.Thickness = t;
-        //}
+            if (e != null)
+            {
+                Controller.InteractOut.println("error: " + e.Message);
+            }
+
+            Controller.Clear();
+            Controller.DrawAll();
+            Controller.PushCurrent();
+        }
 
         public async void ExecuteCommandAsync(string s)
         {
@@ -187,12 +192,6 @@ namespace Plotter.Controller
                 Controller.InteractOut.println("error: " + e.Message);
             }
 
-            if (UpdateTreeViewFlag == true)
-            {
-                Controller.UpdateTreeView(true);
-                UpdateTreeViewFlag = false;
-            }
-
             Controller.Clear();
             Controller.DrawAll();
             Controller.PushCurrent();
@@ -200,8 +199,6 @@ namespace Plotter.Controller
 
         public Exception RunScript(string s)
         {
-            UpdateTreeViewFlag = false;
-
             try
             {
                 dynamic ret = Engine.Execute(s, Scope);
@@ -238,9 +235,6 @@ namespace Plotter.Controller
                 Controller.InteractOut.println("error: " + e.Message);
             }
 
-            Controller.UpdateTreeView(true);
-            UpdateTreeViewFlag = false;
-
             Controller.Clear();
             Controller.DrawAll();
             Controller.PushCurrent();
@@ -249,17 +243,6 @@ namespace Plotter.Controller
             {
                 callback.OnEnd();
             }
-        }
-
-        public void PostRedraw()
-        {
-            new Task(() =>
-            {
-                Controller.Clear();
-                Controller.DrawAll();
-                Controller.PushCurrent();
-            }
-            ).Start(mMainThreadScheduler);
         }
 
         public class RunCallback
