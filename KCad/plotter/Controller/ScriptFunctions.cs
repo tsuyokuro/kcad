@@ -249,7 +249,7 @@ namespace Plotter.Controller
                     global::KCad.Properties.Resources.notice_was_grouped
                 );
 
-            UpdateTreeView();
+            UpdateTV();
         }
 
         public void Ungroup()
@@ -299,7 +299,7 @@ namespace Plotter.Controller
                 global::KCad.Properties.Resources.notice_was_ungrouped
                 );
 
-            UpdateTreeView();
+            UpdateTV();
         }
 
         public void Distance()
@@ -1160,7 +1160,7 @@ namespace Plotter.Controller
             return Env.ExecPartial(fname);
         }
 
-        public void UpdateTreeView()
+        public void UpdateTV()
         {
             if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
             {
@@ -1194,11 +1194,32 @@ namespace Plotter.Controller
             ).Start(mMainThreadScheduler);
         }
 
-        public void Test(CadVector v)
+        public void SeturePoint(uint figID, int idx, CadVector p)
+        {
+            CadFigure fig = Controller.DB.GetFigure(figID);
+            fig.SetPointAt(idx, p);
+        }
+
+        public uint AddLines(IList<CadVector> vlist)
+        {
+            VectorList vl = new VectorList(vlist.Count);
+            vl.AddRange(vlist);
+
+            CadFigurePolyLines fig = (CadFigurePolyLines)Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
+
+            fig.AddPoints(vl);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            Controller.HistoryManager.foward(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+
+            return fig.ID;
+        }
+
+        public void Test(IList<CadVector> vlist)
         {
 
         }
-
 
         public CadFigure GetTargetFigure()
         {

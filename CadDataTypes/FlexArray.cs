@@ -152,6 +152,14 @@ namespace MyCollections
             }
         }
 
+        public void AddRange(IList<T> src)
+        {
+            foreach (T v in src)
+            {
+                Add(v);
+            }
+        }
+
         public void Insert(int idx, T val)
         {
             if (Count >= Data.Length)
