@@ -34,6 +34,11 @@ namespace KCad
 
         private CompletionWindow mCompletionWindow;
 
+        private string FileName = null;
+
+        private bool Modified = false;
+        private bool PrevModified = false;
+
         public EditorWindow(ScriptEnvironment scriptEnvironment)
         {
             InitializeComponent();
@@ -53,11 +58,31 @@ namespace KCad
 
             textEditor.TextArea.TextEntering += TextArea_TextEntering;
 
+            textEditor.TextChanged += TextEditor_TextChanged;
+
             textEditor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
 
             mSearchPanel.MarkerBrush = Brushes.SteelBlue;
 
+            PreviewKeyUp += EditorWindow_PreviewKeyUp;
+
             ShowRowCol();
+        }
+
+        private void EditorWindow_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.S)
+            {
+                if (FileName != null)
+                {
+                    textEditor.Save(FileName);
+                    UpdateTitle(false, true);
+                }
+                else
+                {
+                    SaveWithDialog();
+                }
+            }
         }
 
         private void Caret_PositionChanged(object sender, EventArgs e)
@@ -71,6 +96,29 @@ namespace KCad
                 textEditor.TextArea.Caret.Position.Line.ToString() +
                 "," +
                 textEditor.TextArea.Caret.Position.Column.ToString();
+        }
+
+        private void UpdateTitle(bool modified, bool force)
+        {
+            if (modified == Modified && !force)
+            {
+                return;
+            }
+
+            Modified = modified;
+
+            string s = Modified ? "* " : "";
+
+            if (FileName != null)
+            {
+                s += FileName;
+            }
+            else
+            {
+                s += "Script Editor";
+            }
+
+            this.Title = s;
         }
 
         private void TextArea_TextEntering(object sender, TextCompositionEventArgs e)
@@ -93,6 +141,11 @@ namespace KCad
             //DebugOut.println(w.StartPos.ToString() + " " + w.Word);
 
             showCompletionWindow(wd);
+        }
+
+        private void TextEditor_TextChanged(object sender, EventArgs e)
+        {
+            UpdateTitle(true, false);
         }
 
         private void showCompletionWindow(WordData wd)
@@ -236,7 +289,8 @@ namespace KCad
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 textEditor.Load(ofd.FileName);
-                this.Title = ofd.FileName;
+                FileName = ofd.FileName;
+                UpdateTitle(false, true);
             }
         }
 
@@ -249,6 +303,8 @@ namespace KCad
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 textEditor.Save(sfd.FileName);
+                FileName = sfd.FileName;
+                UpdateTitle(false, true);
             }
         }
     }
