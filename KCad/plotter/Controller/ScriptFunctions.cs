@@ -670,25 +670,29 @@ namespace Plotter.Controller
 
             tdc.ViewOrg -= d;
 
-            tdc.Drawing.Clear(DrawTools.BRUSH_TRANSPARENT);
-
-            tdc.graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            foreach (CadFigure fig in figList)
+            new Task(() =>
             {
-                fig.Draw(tdc, DrawTools.PEN_DEFAULT_FIGURE);
-            }
 
-            if (fname.Length > 0)
-            {
-                tdc.Image.Save(fname);
-            }
-            else
-            {
-                BitmapUtil.BitmapToClipboardAsPNG(tdc.Image);
-            }
+                tdc.Drawing.Clear(DrawTools.BRUSH_TRANSPARENT);
 
-            tdc.Dispose();
+                tdc.graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+                foreach (CadFigure fig in figList)
+                {
+                    fig.Draw(tdc, DrawTools.PEN_DEFAULT_FIGURE);
+                }
+
+                if (fname.Length > 0)
+                {
+                    tdc.Image.Save(fname);
+                }
+                else
+                {
+                    BitmapUtil.BitmapToClipboardAsPNG(tdc.Image);
+                }
+
+                tdc.Dispose();
+            }).Start(mMainThreadScheduler);
         }
 
         public void FaceToDirection(CadVector dir)
