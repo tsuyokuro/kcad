@@ -108,19 +108,19 @@ namespace Plotter
         }
     }
 
-    public class CadOpeFigureSS : CadOpe
+    public class CadOpeFigureSnapShot : CadOpe
     {
         public byte[] Before;
         public byte[] After;
 
         public uint FigureID = 0;
 
-        public CadOpeFigureSS()
+        public CadOpeFigureSnapShot()
         {
 
         }
 
-        public void Start(CadFigure fig)
+        public void StoreBefore(CadFigure fig)
         {
             MpFigure mpfig = MpFigure.Create(fig);
             Before = LZ4MessagePackSerializer.Serialize(mpfig);
@@ -128,7 +128,7 @@ namespace Plotter
             FigureID = fig.ID;
         }
 
-        public void End(CadFigure fig)
+        public void StoreAfter(CadFigure fig)
         {
             MpFigure mpfig = MpFigure.Create(fig);
             After = LZ4MessagePackSerializer.Serialize(mpfig);
@@ -165,49 +165,49 @@ namespace Plotter
         }
     }
 
-    public class CadOpeFigureSSList : CadOpe
+    public class CadOpeFigureSnapShotList : CadOpe
     {
-        public List<CadOpeFigureSS> SSList = new List<CadOpeFigureSS>();
+        public List<CadOpeFigureSnapShot> SnapShotList = new List<CadOpeFigureSnapShot>();
 
-        public CadOpeFigureSSList()
+        public CadOpeFigureSnapShotList()
         {
 
         }
 
-        public void Start(List<CadFigure> figList)
+        public void StoreBefore(List<CadFigure> figList)
         {
             for (int i=0; i<figList.Count; i++)
             {
-                CadOpeFigureSS ss = new CadOpeFigureSS();
+                CadOpeFigureSnapShot ss = new CadOpeFigureSnapShot();
 
-                ss.Start(figList[i]);
+                ss.StoreBefore(figList[i]);
 
-                SSList.Add(ss);
+                SnapShotList.Add(ss);
             }
         }
 
-        public void End(CadObjectDB db)
+        public void StoreAfter(CadObjectDB db)
         {
-            for (int i = 0; i<SSList.Count; i++)
+            for (int i = 0; i<SnapShotList.Count; i++)
             {
-                CadOpeFigureSS ss = SSList[i];
-                ss.End(db.GetFigure(ss.FigureID));
+                CadOpeFigureSnapShot ss = SnapShotList[i];
+                ss.StoreAfter(db.GetFigure(ss.FigureID));
             }
         }
 
         public override void Undo(CadObjectDB db)
         {
-            for (int i=0; i< SSList.Count; i++)
+            for (int i=0; i< SnapShotList.Count; i++)
             {
-                SSList[i].Undo(db);
+                SnapShotList[i].Undo(db);
             }
         }
 
         public override void Redo(CadObjectDB db)
         {
-            for (int i = 0; i < SSList.Count; i++)
+            for (int i = 0; i < SnapShotList.Count; i++)
             {
-                SSList[i].Redo(db);
+                SnapShotList[i].Redo(db);
             }
         }
     }

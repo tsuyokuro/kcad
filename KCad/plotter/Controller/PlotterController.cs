@@ -711,15 +711,15 @@ namespace Plotter.Controller
             return list;
         }
 
-        private CadOpeFigureSSList mSSList;
+        private CadOpeFigureSnapShotList mSnapShotList;
 
         public void StartEdit()
         {
             EditFigList = GetSelectedFigList();
 
-            mSSList = new CadOpeFigureSSList();
+            mSnapShotList = new CadOpeFigureSnapShotList();
 
-            mSSList.Start(EditFigList);
+            mSnapShotList.StoreBefore(EditFigList);
 
             foreach (CadFigure fig in EditFigList)
             {
@@ -752,13 +752,13 @@ namespace Plotter.Controller
 
             root.Add(rmOpeList);
 
-            mSSList.End(DB);
-            root.Add(mSSList);
+            mSnapShotList.StoreAfter(DB);
+            root.Add(mSnapShotList);
 
             mHistoryManager.foward(root);
 
 
-            mSSList = null;
+            mSnapShotList = null;
 
             NotifySelectList();
 #endif
