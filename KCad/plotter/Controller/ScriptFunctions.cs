@@ -874,7 +874,12 @@ namespace Plotter.Controller
                 Controller.HistoryManager.foward(opeRoot);
             }
 
-            Controller.ClearSelection();
+            PrintSuccess();
+
+            RunOnMainThread(() =>
+            {
+                Controller.ClearSelection();
+            });
         }
 
         public void InvertDir()
@@ -1198,6 +1203,15 @@ namespace Plotter.Controller
             ).Start(mMainThreadScheduler);
         }
 
+        public void RunOnMainThread(Action action)
+        {
+            new Task(() =>
+            {
+                action();
+            }
+            ).Start(mMainThreadScheduler);
+        }
+
         public void SeturePoint(uint figID, int idx, CadVector p)
         {
             CadFigure fig = Controller.DB.GetFigure(figID);
@@ -1223,6 +1237,11 @@ namespace Plotter.Controller
         public void Test(IList<CadVector> vlist)
         {
 
+        }
+
+        private void PrintSuccess()
+        {
+            Controller.InteractOut.println(AnsiEsc.AGreen + "Success");
         }
 
         public CadFigure GetTargetFigure()

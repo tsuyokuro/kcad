@@ -13,12 +13,12 @@ def putMsg(s):
 #[AC] rect(w=10, h=10, p="xy")
 def rect(w=10, h=10, p="xy"):
     SE.Rect(w, h, p)
-    SE.UpdateTreeView();
+    SE.UpdateTV();
 
 #[AC] rectAt(pv=getldp(), w=10, h=10, p="xy")
 def rectAt(pv, w=10, h=10, p="xy"):
     SE.RectAt(pv, w, h, p)
-    SE.UpdateTreeView();
+    SE.UpdateTV();
 
 #[AC] area()
 def area():
@@ -150,7 +150,7 @@ def printVector(v):
 #[AC] toMesh()
 def toMesh():
     SE.ToMesh()
-    SE.UpdateTreeView()
+    SE.UpdateTV()
 
 
 #[AC] invertDir()
@@ -160,18 +160,18 @@ def invertDir():
 #[AC] sub(l_id=1, r_id=2)
 def sub(l_id, r_id):
     SE.AsubB(l_id, r_id)
-    SE.UpdateTreeView();
+    SE.UpdateTV();
 
 
 #[AC] union(id1=1, id2=2)
 def union(id1, id2):
     SE.Union(id1, id2)
-    SE.UpdateTreeView();
+    SE.UpdateTV();
 
 #[AC] intersection(id1=1, id2=2)
 def intersection(id1, id2):
     SE.Intersection(id1, id2)
-    SE.UpdateTreeView();
+    SE.UpdateTV();
 
 #[AC] dumpMesh(id=currentFigID())
 def dumpMesh(id):
@@ -180,29 +180,29 @@ def dumpMesh(id):
 #[AC] addBox(x=40,y=40,z=20)
 def addBox(x, y, z):
     SE.AddBox(x, y, z)
-    SE.UpdateTreeView();
+    SE.UpdateTV();
 
 #[AC] spf(x=w_1x4, y=40, z=t_1x4)
 def spf(x, y, z):
     SE.AddBox(x, y, z)
-    SE.UpdateTreeView();
+    SE.UpdateTV();
 
 #[AC] addCylinder(slices=16, r=10, len=40)
 def addCylinder(slices, r, len):
     SE.AddCylinder(slices, r, len)
-    SE.UpdateTreeView();
+    SE.UpdateTV();
 
 
 #[AC] addSphere(slices=16, r=20)
 def addSphere(slices, r):
     SE.AddSphere(slices, r)
-    SE.UpdateTreeView();
+    SE.UpdateTV();
 
 #âüÇµèoÇµ
 #[AC] extrude(id=currentFigID(), dir=unitVZ, d=20, div=0)
 def extrude(id, dir, d, div):
     SE.Extrude(id, dir, d, div)
-    SE.UpdateTreeView();
+    SE.UpdateTV();
 
 #[AC] currentFigID()
 def currentFigID():
