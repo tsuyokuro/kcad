@@ -10,6 +10,7 @@
         mc:Ignorable="d"
         Title="KCad" Height="732" Width="1177.667"
         Background="Black"
+        Icon="ResDict/Images/compass_s.png"
         >
     <!--<WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"
