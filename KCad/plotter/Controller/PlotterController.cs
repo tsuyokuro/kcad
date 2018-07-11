@@ -730,6 +730,11 @@ namespace Plotter.Controller
             }
         }
 
+        public void AbendEdit()
+        {
+            mSnapShotList = null;
+        }
+
         public void EndEdit()
         {
 #if USE_DIFF
@@ -762,6 +767,17 @@ namespace Plotter.Controller
 
             NotifySelectList();
 #endif
+        }
+
+        public void CancelEdit()
+        {
+            foreach (CadFigure fig in EditFigList)
+            {
+                if (fig != null)
+                {
+                    fig.CancelEdit();
+                }
+            }
         }
 
         // もう使わない
@@ -804,18 +820,6 @@ namespace Plotter.Controller
             NotifySelectList();
         }
 #endif
-
-        public void CancelEdit()
-        {
-            foreach (CadFigure fig in EditFigList)
-            {
-                if (fig != null)
-                {
-                    fig.CancelEdit();
-                }
-            }
-        }
-
 
         private void UpdateSelectItemPoints()
         {
@@ -904,21 +908,6 @@ namespace Plotter.Controller
             }
         }
 
-        private void RemoveSelectedPoints()
-        {
-            List<CadFigure> figList = GetSelectedFigList();
-            foreach (CadFigure fig in figList)
-            {
-                fig.RemoveSelected();
-            }
-
-            foreach (CadFigure fig in figList)
-            {
-                fig.RemoveGarbageChildren();
-            }
-
-            UpdateTreeView(true);
-        }
 
         #endregion
 

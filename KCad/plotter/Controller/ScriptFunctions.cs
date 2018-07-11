@@ -568,13 +568,19 @@ namespace Plotter.Controller
 
         public void InsPoint()
         {
+            Controller.StartEdit();
+
             if (!Controller.InsPointToLastSelectedSeg())
             {
+                Controller.AbendEdit();
+
                 Controller.InteractOut.println(
                     global::KCad.Properties.Resources.error_operation_failed
                     );
                 return;
             }
+
+            Controller.EndEdit();
 
             Controller.InteractOut.println(
                 global::KCad.Properties.Resources.notice_operation_success

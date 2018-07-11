@@ -581,7 +581,7 @@ namespace Plotter
 
         public void InsPoint()
         {
-            mController.InsPointToLastSelectedSeg();
+            mController.InsPoint();
             Redraw();
         }
 

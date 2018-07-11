@@ -196,6 +196,8 @@
     </Compile>
     <Compile Include="plotter\Controller\GideLineManager.cs" />
     <Compile Include="plotter\Controller\InteractCtrl.cs" />
+    <Compile Include="plotter\Controller\PlotterController_action.cs" />
+    <Compile Include="plotter\Controller\PlotterController_funcs.cs" />
     <Compile Include="plotter\Controller\ScriptFunctions.cs" />
     <Compile Include="SplineCurve\BSplineJson.cs" />
     <Compile Include="SplineCurve\BSplineParam.cs" />
@@ -354,7 +356,7 @@
     <Compile Include="plotter\Util\MessageHandler.cs" />
     <Compile Include="plotter\Util\PlotterCommon.cs" />
     <Compile Include="plotter\Controller\PlotterController.cs" />
-    <Compile Include="plotter\Controller\PlotterController_EditFigure.cs" />
+    <Compile Include="plotter\Controller\PlotterController_edit.cs" />
     <Compile Include="plotter\Controller\PlotterController_Input.cs" />
     <Compile Include="plotter\Controller\ScriptEnvironment.cs" />
     <Compile Include="plotter\Controller\PlotterController_ViewControl.cs" />
