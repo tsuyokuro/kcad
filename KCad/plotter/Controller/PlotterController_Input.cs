@@ -523,7 +523,8 @@ namespace Plotter.Controller
         {
             if (pointer.MDownPoint.x == x && pointer.MDownPoint.y == y)
             {
-                AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
+                ViewCtrl.AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
+                Redraw();
             }
         }
 
@@ -536,7 +537,8 @@ namespace Plotter.Controller
 
             CadVector op = StoreViewOrg + d;
 
-            SetOrigin(dc, (int)op.x, (int)op.y);
+            ViewCtrl.SetOrigin(dc, (int)op.x, (int)op.y);
+            Redraw();
         }
 
         private void Wheel(CadMouse pointer, DrawContext dc, double x, double y, int delta)
@@ -554,7 +556,8 @@ namespace Plotter.Controller
                     f = 0.8;
                 }
 
-                DpiUpDown(dc, f);
+                ViewCtrl.DpiUpDown(dc, f);
+                Redraw();
             }
         }
 

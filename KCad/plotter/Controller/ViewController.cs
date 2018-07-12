@@ -7,7 +7,7 @@ using CadDataTypes;
 
 namespace Plotter.Controller
 {
-    public partial class PlotterController
+    public class ViewController
     {
         public void SetOrigin(DrawContext dc, int pixX, int pixY)
         {
@@ -15,9 +15,6 @@ namespace Plotter.Controller
             op.Set(pixX, pixY, 0);
 
             dc.ViewOrg = op;
-
-            Clear(dc);
-            Draw(dc);
         }
 
         public void MoveOrigin(DrawContext dc, double pixDx, double pixDy)
@@ -25,9 +22,6 @@ namespace Plotter.Controller
             CadVector d = CadVector.Create(pixDx, pixDy, 0);
 
             dc.ViewOrg += d;
-
-            Clear(dc);
-            Draw(dc);
         }
 
         public void AdjustOrigin(DrawContext dc, double pixX, double pixY, int vw, int vh)
@@ -35,7 +29,6 @@ namespace Plotter.Controller
             double dx = vw / 2 - pixX;
             double dy = vh / 2 - pixY;
 
-            Clear(dc);
             MoveOrigin(dc, dx, dy);
         }
 
@@ -57,9 +50,6 @@ namespace Plotter.Controller
             dc.ViewOrg = op;
 
             dc.UnitPerMilli *= f;
-
-            Clear(dc);
-            Draw(dc);
         }
     }
 }

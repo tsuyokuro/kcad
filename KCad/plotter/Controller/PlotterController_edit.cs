@@ -337,5 +337,30 @@ namespace Plotter.Controller
 
             return true;
         }
+
+        public void AddCentroid()
+        {
+            Centroid cent = Centroid();
+
+            if (cent.IsInvalid)
+            {
+                return;
+            }
+
+            CadFigure pointFig = mDB.NewFigure(CadFigure.Types.POINT);
+            pointFig.AddPoint(cent.Point);
+
+            pointFig.EndCreate(CurrentDC);
+
+            CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, pointFig.ID);
+            HistoryManager.foward(ope);
+            CurrentLayer.AddFigure(pointFig);
+
+            string s = string.Format("({0:0.000},{1:0.000},{2:0.000})",
+                               cent.Point.x, cent.Point.y, cent.Point.z);
+
+            InteractOut.println("Centroid:" + s);
+            InteractOut.println("Area:" + (cent.Area / 100).ToString() + "(㎠)");
+        }
     }
 }
