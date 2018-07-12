@@ -136,13 +136,6 @@ namespace Plotter
             mPointList[index] = pt;
         }
 
-        public override DiffData EndEditWithDiff()
-        {
-            DiffData diff = base.EndEditWithDiff();
-            RecalcNormal();
-            return diff;
-        }
-
         public override void EndEdit()
         {
             base.EndEdit();

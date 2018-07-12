@@ -1,5 +1,4 @@
-﻿//#define USE_DIFF
-//#define COPY_AS_JSON
+﻿//#define COPY_AS_JSON
 
 using KCad;
 using MessagePack;
@@ -168,9 +167,6 @@ namespace Plotter.Controller
             }
         }
 
-        //private CadFigure MeasureFigure = null;
-        //private CadFigure CreatingFigure = null;
-
         private CadFigure.Creator FigureCreator = null;
         private CadFigure.Creator MeasureFigureCreator = null;
 
@@ -289,9 +285,6 @@ namespace Plotter.Controller
         #region Constructor
         public PlotterController()
         {
-            //CrossCursor.DirX = CadVector.Create(1, 1, 0).UnitVector();
-            //CrossCursor.DirY = CadVector.Create(1, -2, 0).UnitVector();
-
             CadLayer layer = mDB.NewLayer();
             mDB.LayerList.Add(layer);
             CurrentLayer = layer;
@@ -401,11 +394,6 @@ namespace Plotter.Controller
         {
             State = States.START_CREATE;
             CreatingFigType = type;
-
-            //NotifyStateChange();
-
-            // Creation start when specify the first coordinate.
-            // So, at the moment, not yet a creation start.
         }
 
         public void EndCreateFigure()
@@ -538,9 +526,6 @@ namespace Plotter.Controller
             DrawGrid(dc);
             dc.Drawing.DrawPageFrame();
 
-            //Stopwatch sw = new Stopwatch();
-            //sw.Start();
-
             foreach (CadLayer layer in mDB.LayerList)
             {
                 if (layer.Visible)
@@ -555,9 +540,6 @@ namespace Plotter.Controller
                     dc.Drawing.Draw(layer, pen);
                 }
             }
-
-            //sw.Stop();
-            //DebugOut.StdPrintLn(sw.ElapsedMilliseconds.ToString() + " milli sec");
 
             dc.Drawing.Draw(TempFigureList, DrawTools.PEN_TEST_FIGURE);
 
@@ -625,9 +607,7 @@ namespace Plotter.Controller
         }
         #endregion
 
-    #region Private editing figure methods
-        //-----------------------------------------------------------------------------------------
-        // Edit figure methods
+        #region Private editing figure methods
 
         private void NextState()
         {
@@ -746,10 +726,6 @@ namespace Plotter.Controller
 
         public void EndEdit()
         {
-#if USE_DIFF
-            EndEditWithDiff();
-            return;
-#else
             foreach (CadFigure fig in EditFigList)
             {
                 if (fig != null)
@@ -775,7 +751,6 @@ namespace Plotter.Controller
             mSnapShotList = null;
 
             NotifySelectList();
-#endif
         }
 
         public void CancelEdit()
@@ -788,47 +763,6 @@ namespace Plotter.Controller
                 }
             }
         }
-
-        // もう使わない
-        // MessagePackSerializerによるUndo/Redoに不具合があった場合
-        // USE_DIFFを有効にして検証する
-        // 
-#if USE_DIFF
-        private void EndEditWithDiff()
-        {
-            DiffDataList ddl = new DiffDataList();
-
-            foreach (CadFigure fig in EditIdList)
-            {
-                if (fig != null)
-                {
-                    DiffData dd = fig.EndEditWithDiff();
-
-                    if (dd != null)
-                    {
-                        ddl.DiffDatas.Add(dd);
-                    }
-                }
-            }
-
-            if (ddl.DiffDatas.Count > 0)
-            {
-                CadOpeList root = CadOpe.CreateListOpe();
-
-                CadOpe ope = CadOpe.CreateDiffOpe(ddl);
-                root.OpeList.Add(ope);
-
-                CadOpeList fopeList = RemoveInvalidFigure();
-                root.OpeList.Add(fopeList);
-
-                mHistoryManager.foward(root);
-            }
-
-            UpdateSelectItemPoints();
-
-            NotifySelectList();
-        }
-#endif
 
         private void UpdateSelectItemPoints()
         {

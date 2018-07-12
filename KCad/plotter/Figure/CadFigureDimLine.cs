@@ -225,23 +225,6 @@ namespace Plotter
             PointList[3] = PointList[3].SetVector(seg.P0.vector);
         }
 
-        public override DiffData EndEditWithDiff()
-        {
-            DiffData diff = base.EndEditWithDiff();
-
-            if (PointList.Count == 0)
-            {
-                return diff;
-            }
-
-            CadSegment seg = CadUtil.PerpendicularSeg(PointList[0], PointList[1], PointList[2]);
-
-            PointList[2] = PointList[2].SetVector(seg.P1.vector);
-            PointList[3] = PointList[3].SetVector(seg.P0.vector);
-
-            return diff;
-        }
-
         public override void EndEdit()
         {
             base.EndEdit();

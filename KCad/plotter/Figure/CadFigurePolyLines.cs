@@ -369,17 +369,6 @@ namespace Plotter
             mPointList[index] = pt;
         }
 
-        public override DiffData EndEditWithDiff()
-        {
-            DiffData diff = base.EndEditWithDiff();
-            RecalcNormal();
-
-            //例外ハンドリングテスト用
-            //CadVector v = mPointList[100];
-
-            return diff;
-        }
-
         public override void EndEdit()
         {
             base.EndEdit();

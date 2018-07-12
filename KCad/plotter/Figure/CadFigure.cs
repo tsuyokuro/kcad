@@ -464,16 +464,6 @@ namespace Plotter
             mStoreList.AddRange(mPointList);
         }
 
-        public virtual DiffData EndEditWithDiff()
-        {
-            if (Locked) return null;
-
-
-            DiffData diff = DiffData.create(this);
-            mStoreList = null;
-            return diff;
-        }
-
         public virtual void EndEdit()
         {
             if (mStoreList != null)

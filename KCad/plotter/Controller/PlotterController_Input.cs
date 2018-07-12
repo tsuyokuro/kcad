@@ -172,23 +172,6 @@ namespace Plotter.Controller
         }
         #endregion
 
-        /*
-        public void SetCurrentFigure(CadFigure fig)
-        {
-            if (CurrentFigure != null)
-            {
-                CurrentFigure.Current = false;
-            }
-
-            if (fig != null)
-            {
-                fig.Current = true;
-            }
-
-            CurrentFigure = fig;
-        }
-        */
-
         /// <summary>
         /// 指定デバイス座標について範囲内かつ最も近い図形を選択
         /// </summary>
@@ -396,9 +379,6 @@ namespace Plotter.Controller
 
                 #endregion
             }
-
-            //Clear(dc);
-            //DrawAll(dc);
 
             return sel;
         }
@@ -720,7 +700,6 @@ namespace Plotter.Controller
 
             CrossCursor.Pos = mSnapPointScrn;
 
-            //mSnapScrnPoint.dump(DebugOut.Std);
 
             HighlightPointList.Clear();
 
@@ -757,13 +736,11 @@ namespace Plotter.Controller
 
                     tp = dc.CadPointToUnitPoint(mx.Point);
 
-                    #region New snap
                     CadVector distanceX = CrossCursor.DistanceX(tp);
 
                     CrossCursor.Pos += distanceX;
 
                     mSnapPointScrn = CrossCursor.Pos;
-                    #endregion
 
                     mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
 
@@ -778,13 +755,11 @@ namespace Plotter.Controller
 
                     tp = dc.CadPointToUnitPoint(my.Point);
 
-                    #region New snap
                     CadVector distanceY = CrossCursor.DistanceY(tp);
 
                     CrossCursor.Pos += distanceY;
 
                     mSnapPointScrn = CrossCursor.Pos;
-                    #endregion
 
                     mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
 
@@ -838,8 +813,6 @@ namespace Plotter.Controller
                         }
 
                         segmatch = true;
-
-                        //mSnapScrnPoint.dump(DebugOut.Std);
                     }
                 }
             }
@@ -1010,11 +983,6 @@ namespace Plotter.Controller
             LockCursorScrn(sv);
 
             Mouse.MouseMove(dc, sv.x, sv.y);
-
-            //CadVector tv = CurrentDC.UnitPointToCadPoint(sv);
-            //CadFigure tfig = new CadFigure(CadFigure.Types.POINT);
-            //tfig.AddPoint(tv);
-            //TempFigureList.Add(tfig);
         }
 
         public void LockCursorScrn(CadVector p)
