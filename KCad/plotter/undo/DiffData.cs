@@ -4,7 +4,7 @@ using CadDataTypes;
 
 namespace Plotter
 {
-
+    /*
     #region "Figure level diff data"
     public class DiffItem
     {
@@ -204,4 +204,5 @@ namespace Plotter
         }
     }
     #endregion
+    */
 }

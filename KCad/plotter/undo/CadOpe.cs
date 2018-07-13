@@ -68,11 +68,13 @@ namespace Plotter
             return ope;
         }
 
+        /*
         public static CadOpe CreateDiffOpe(DiffDataList diffList)
         {
             CadOpe ope = new CadOpeDiff(diffList);
             return ope;
         }
+        */
 
         public static CadOpe CreateChangeNormalOpe(uint figID, CadVector oldNormal, CadVector newNormal)
         {
@@ -88,6 +90,7 @@ namespace Plotter
         }
     }
 
+    /*
     public class CadOpeDiff : CadOpe
     {
         DiffDataList Diffs;
@@ -107,6 +110,7 @@ namespace Plotter
             Diffs.redo(db);
         }
     }
+    */
 
     public class CadOpeFigureSnapShot : CadOpe
     {

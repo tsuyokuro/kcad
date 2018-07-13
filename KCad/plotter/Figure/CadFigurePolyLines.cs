@@ -369,7 +369,7 @@ namespace Plotter
             mPointList[index] = pt;
         }
 
-        public override void EndEdit()
+       public override void EndEdit()
         {
             base.EndEdit();
             RecalcNormal();
