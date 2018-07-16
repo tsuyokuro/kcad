@@ -108,6 +108,43 @@
         </Style.Triggers>
     </Style>
 
+
+    <!-- Custom toggle button 2-->
+    
+    <DataTemplate x:Key="CustomToggleCheckedStyle2">
+        <Grid Background="#FF5064A0" >
+            <ContentPresenter Content="{Binding}" />
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="CustomToggleMouseOverStyle2">
+        <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}" >
+            <ContentPresenter Content="{Binding}" />
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="CustomToggleButton2" TargetType="{x:Type ToggleButton}"
+             BasedOn="{StaticResource {x:Type ToggleButton} }">
+
+        <Setter Property="Padding" Value="0,0,0,0"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ButtonColor}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="{StaticResource ButtonColor}" />
+        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+
+        <Setter Property="FontSize" Value="12" />
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="ContentTemplate" Value="{StaticResource CustomToggleMouseOverStyle2}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="ContentTemplate" Value="{StaticResource CustomToggleCheckedStyle2}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
     <!-- Toggle button template -->
 
     <DataTemplate x:Key="MyToggleButtonCheckedStyle">
@@ -151,42 +188,6 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-
-
-    <DataTemplate x:Key="CustomToggleCheckedStyle2">
-        <Grid Background="#FF5064A0" >
-            <ContentPresenter Content="{Binding}" />
-        </Grid>
-    </DataTemplate>
-
-    <DataTemplate x:Key="CustomToggleMouseOverStyle2">
-        <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}" >
-            <ContentPresenter Content="{Binding}" />
-        </Grid>
-    </DataTemplate>
-
-
-    <Style x:Key="CustomToggleButton2" TargetType="{x:Type ToggleButton}"
-             BasedOn="{StaticResource {x:Type ToggleButton} }">
-
-        <Setter Property="Padding" Value="0,0,0,0"/>
-        <Setter Property="BorderBrush" Value="{StaticResource ButtonColor}"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Background" Value="{StaticResource ButtonColor}" />
-        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
-        
-        <Setter Property="FontSize" Value="12" />
-        
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="ContentTemplate" Value="{StaticResource CustomToggleMouseOverStyle2}"/>
-            </Trigger>
-            <Trigger Property="IsChecked" Value="True">
-                <Setter Property="ContentTemplate" Value="{StaticResource CustomToggleCheckedStyle2}"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
 
 </ResourceDictionary>
     
