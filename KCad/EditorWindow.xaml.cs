@@ -279,6 +279,14 @@ namespace KCad
             {
                 mSearchPanel.Open();
             }
+            else if (element.Tag.ToString() == "copy_text")
+            {
+                textEditor.Copy();
+            }
+            else if (element.Tag.ToString() == "paste_text")
+            {
+                textEditor.Paste();
+            }
         }
 
         public void LoadWithDialog()

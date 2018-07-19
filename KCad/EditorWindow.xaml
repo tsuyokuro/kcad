@@ -22,12 +22,13 @@
             </ResourceDictionary.MergedDictionaries>
 
 
-            <Style TargetType="Menu">
+            <Style x:Key="MyMenu" TargetType="Menu">
                 <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
                 <Setter Property="Background" Value="{StaticResource MenuColor}"/>
             </Style>
 
-            <Style TargetType="MenuItem" BasedOn="{StaticResource MLB_MenuItem}">
+            <Style x:Key="MyMenuItem" TargetType="MenuItem" BasedOn="{StaticResource MLB_MenuItem}">
+                <Setter Property="Foreground" Value="White"/>
                 <Setter Property="Background" Value="{StaticResource MenuColor}"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="BorderBrush" Value="{StaticResource MenuColor}"/>
@@ -43,13 +44,13 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0">
-            <MenuItem Header="File">
-                <MenuItem Tag="load_script" Header="Load" Click="MenuItem_Click"/>
-                <MenuItem Tag="save_script" Header="Save" Click="MenuItem_Click"/>
+        <Menu Grid.Row="0" Style="{StaticResource MyMenu}">
+            <MenuItem Header="File" Style="{StaticResource MyMenuItem}">
+                <MenuItem Tag="load_script" Header="Load" Click="MenuItem_Click" Style="{StaticResource MyMenuItem}"/>
+                <MenuItem Tag="save_script" Header="Save" Click="MenuItem_Click" Style="{StaticResource MyMenuItem}"/>
             </MenuItem>
-            <MenuItem Header="Edit">
-                <MenuItem Tag="search_text" Header="Search" Click="MenuItem_Click"/>
+            <MenuItem Header="Edit" Style="{StaticResource MyMenuItem}">
+                    <MenuItem Tag="search_text" Header="Search" Click="MenuItem_Click" Style="{StaticResource MyMenuItem}"/>
             </MenuItem>
         </Menu>
 
@@ -69,6 +70,12 @@
             <avalonEdit:TextEditor.Resources>
                 <Style TargetType="ScrollViewer" BasedOn="{StaticResource CustomScrollViewerStyle}"/>
             </avalonEdit:TextEditor.Resources>
+            <avalonEdit:TextEditor.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Copy" Click="MenuItem_Click" Tag="copy_text"/>
+                    <MenuItem Header="Paste" Click="MenuItem_Click" Tag="paste_text"/>
+                </ContextMenu>
+            </avalonEdit:TextEditor.ContextMenu>
         </avalonEdit:TextEditor>
 
         <StatusBar Grid.Row="2"
