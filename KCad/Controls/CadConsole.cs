@@ -42,15 +42,16 @@ namespace KCad
         public const string BWHITE = "97";
 
 
-        public const string ABalck = ESC + "30m";
-        public const string ARed = ESC + "31m";
-        public const string AGreen = ESC + "32m";
-        public const string AYellow = ESC + "33m";
-        public const string ABlue = ESC + "34m";
-        public const string AMagenta = ESC + "35m";
-        public const string ACyan = ESC + "36m";
-        public const string AWhite = ESC + "37m";
-        public const string DefColor = ESC + "39m";
+        public const string Reset = ESC + "0m";
+
+        public const string Balck = ESC + "30m";
+        public const string Red = ESC + "31m";
+        public const string Green = ESC + "32m";
+        public const string Yellow = ESC + "33m";
+        public const string Blue = ESC + "34m";
+        public const string Magenta = ESC + "35m";
+        public const string Cyan = ESC + "36m";
+        public const string White = ESC + "37m";
 
         public const string BBalck = ESC + "90m";
         public const string BRed = ESC + "91m";
@@ -61,35 +62,59 @@ namespace KCad
         public const string BCyan = ESC + "96m";
         public const string BWhite = ESC + "97m";
 
-        public Dictionary<string, Brush> Palette;
 
-        public Brush DefaultColor = Brushes.LightGray;
+        public const string BalckB = ESC + "40m";
+        public const string RedB = ESC + "41m";
+        public const string GreenB = ESC + "42m";
+        public const string YellowB = ESC + "43m";
+        public const string BlueB = ESC + "44m";
+        public const string MagentaB = ESC + "45m";
+        public const string CyanB = ESC + "46m";
+        public const string WhiteB = ESC + "47m";
+
+        public const string BBalckB = ESC + "100m";
+        public const string BRedB = ESC + "101m";
+        public const string BGreenB = ESC + "102m";
+        public const string BYellowB = ESC + "103m";
+        public const string BBlueB = ESC + "104m";
+        public const string BMagentaB = ESC + "105m";
+        public const string BCyanB = ESC + "106m";
+        public const string BWhiteB = ESC + "107m";
+
+
+        public Brush[] Palette;
+
+        public int DefaultFColor = 7;
+        public int DefaultBColor = 0;
 
         public AnsiEsc()
         {
-            Palette = new Dictionary<string, Brush>()
-            {
-                {"30m", Brushes.Black},
-                {"31m", Brushes.MediumVioletRed},
-                {"32m", Brushes.SeaGreen},
-                {"33m", Brushes.Goldenrod},
-                {"34m", Brushes.SteelBlue},
-                {"35m", Brushes.DarkMagenta},
-                {"36m", Brushes.DarkCyan},
-                {"37m", Brushes.LightGray},
+            Palette = new Brush[16];
 
-                {"39m", Brushes.LightGray},
+            Palette[0] = Brushes.Black;
+            Palette[1] = Brushes.MediumVioletRed;
+            Palette[2] = Brushes.SeaGreen;
+            Palette[3] = Brushes.Goldenrod;
+            Palette[4] = Brushes.SteelBlue;
+            Palette[5] = Brushes.DarkMagenta;
+            Palette[6] = Brushes.DarkCyan;
+            Palette[7] = Brushes.LightGray;
 
-                {"90m", Brushes.Black},
-                {"91m", Brushes.LightCoral},
-                {"92m", Brushes.SpringGreen},
-                {"93m", Brushes.Yellow},
-                {"94m", Brushes.CornflowerBlue},
-                {"95m", Brushes.MediumOrchid},
-                {"96m", Brushes.Turquoise},
-                {"97m", Brushes.White},
-            };
+            Palette[8] = Brushes.Black;
+            Palette[9] = Brushes.LightCoral;
+            Palette[10] = Brushes.SpringGreen;
+            Palette[11] = Brushes.Yellow;
+            Palette[12] = Brushes.CornflowerBlue;
+            Palette[13] = Brushes.MediumOrchid;
+            Palette[14] = Brushes.Turquoise;
+            Palette[15] = Brushes.White;
         }
+    }
+
+    struct TextAttr
+    {
+        public int FColor;
+        public int BColor;
     }
 
     class CadConsoleView : FrameworkElement
@@ -253,6 +278,8 @@ namespace KCad
 
         AnsiEsc Esc = new AnsiEsc();
 
+        TextAttr DefaultAttr = new TextAttr();
+
         public CadConsoleView()
         {
             mFontFamily = new FontFamily("メイリオ");
@@ -281,7 +308,11 @@ namespace KCad
 
             RecalcSize();
 
-            Esc.DefaultColor = mForeground;
+            Esc.Palette[Esc.DefaultFColor] = mForeground;
+            Esc.Palette[Esc.DefaultBColor] = mBackground;
+
+            DefaultAttr.FColor = Esc.DefaultFColor;
+            DefaultAttr.BColor = Esc.DefaultBColor;
         }
 
         private void CadConsoleView_MouseDown(object sender, MouseButtonEventArgs e)
@@ -533,7 +564,7 @@ namespace KCad
                 tp.X = mTextLeftMargin;
                 tp.Y += textOffset;
 
-                DrawText(dc, item, tp);
+                DrawText(dc, item.Data, tp);
 
                 p.Y += mItemHeight;
             }
@@ -545,71 +576,6 @@ namespace KCad
             }
         }
 
-        protected void DrawText(DrawingContext dc, ListItem item, Point pt)
-        {
-            FormattedText ft;
-
-            string s = item.Data;
-
-            string[] ss = s.Split('\x1b');
-
-            Brush br;
-
-            if (item.IsSelected)
-            {
-                br = mSelectedForeground;
-            }
-            else
-            {
-                //br = mForeground;
-                br = Esc.DefaultColor;
-            }
-
-            Brush cbr = br;
-
-            string ps;
-
-            for (int i=0; i<ss.Length; i++)
-            {
-                s = ss[i];
-
-                if (s.Length <= 0)
-                {
-                    continue;
-                }
-
-
-                if (i>0)
-                {
-                    if (s.StartsWith("["))
-                    {
-                        string c = s.Substring(1, 3);
-                        ps = s.Substring(4);
-
-                        cbr = Esc.Palette[c];
-
-                        if (cbr == null)
-                        {
-                            cbr = br;
-                        }
-                    }
-                    else
-                    {
-                        ps = s;
-                    }
-                }
-                else
-                {
-                    ps = s;
-                }
-
-                ft = GetText(ps, cbr);
-                dc.DrawText(ft, pt);
-                pt.X += ft.Width;
-            }
-        }
-
-
         protected FormattedText GetText(string s, Brush brush)
         {
             FormattedText formattedText = new FormattedText(s,
@@ -620,6 +586,123 @@ namespace KCad
                                                       brush);
             return formattedText;
         }
+
+        #region draw text
+        public void DrawText(DrawingContext dc, string s, Point pt)
+        {
+            TextAttr attr = DefaultAttr;
+
+            StringBuilder sb = new StringBuilder();
+
+            int state = 0;
+
+            int x = 0;
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == '\x1b')
+                {
+                    state = 1;
+                    pt = RenderText(dc, attr, sb.ToString(), pt);
+                    sb.Clear();
+                    continue;
+                }
+
+                switch (state)
+                {
+                    case 0:
+                        sb.Append(s[i]);
+                        break;
+                    case 1:
+                        if (s[i] == '[')
+                        {
+                            state = 2;
+                        }
+                        break;
+                    case 2:
+                        if (s[i] >= '0' && s[i] <= '9')
+                        {
+                            state = 3;
+                            x = s[i] - '0';
+                        }
+                        else if (s[i] == 'm')
+                        {
+                            if (x == 0)
+                            {
+                                attr.BColor = 0;
+                                attr.FColor = 7;
+                            }
+
+                            state = 0;
+                        }
+                        else
+                        {
+                            sb.Append(s[i]);
+                            state = 0;
+                        }
+                        break;
+                    case 3:
+                        if (s[i] >= '0' && s[i] <= '9')
+                        {
+                            x = x * 10 + (s[i] - '0');
+                        }
+                        else if (s[i] == 'm')
+                        {
+                            if (x == 0)
+                            {
+                                attr.BColor = 0;
+                                attr.FColor = 7;
+                            }
+                            else if (x >= 30 && x <= 37) // front std
+                            {
+                                attr.FColor = x - 30;
+                            }
+                            else if (x >= 40 && x <= 47) // back std
+                            {
+                                attr.BColor = x - 40;
+                            }
+                            else if (x >= 90 && x <= 97) // front strong
+                            {
+                                attr.FColor = x - 90 + 8;
+                            }
+                            else if (x >= 100 && x <= 107) // back std
+                            {
+                                attr.BColor = x - 100 + 8;
+                            }
+                            state = 0;
+                        }
+                        else
+                        {
+                            sb.Append(s[i]);
+                            state = 0;
+                        }
+
+                        break;
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                pt = RenderText(dc, attr, sb.ToString(), pt);
+                sb.Clear();
+            }
+        }
+
+        public Point RenderText(DrawingContext dc, TextAttr attr, string s, Point pt)
+        {
+            FormattedText ft = GetText(s, Esc.Palette[attr.FColor]);
+
+            Point pt2 = pt;
+            pt2.X += ft.Width;
+            pt2.Y += ft.Height;
+
+            dc.DrawRectangle(Esc.Palette[attr.BColor], null, new Rect(pt, pt2)); 
+
+            dc.DrawText(ft, pt);
+            pt.X += ft.Width;
+            return pt;
+        }
+        #endregion
 
         public void ScrollToEnd()
         {

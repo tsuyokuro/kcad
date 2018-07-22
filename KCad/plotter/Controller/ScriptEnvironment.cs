@@ -205,7 +205,7 @@ namespace Plotter.Controller
 
                 if (ret != null)
                 {
-                    Controller.InteractOut.println(AnsiEsc.ABlue + ret.ToString());
+                    Controller.InteractOut.println(AnsiEsc.Blue + ret.ToString());
                 }
             }
             catch (Exception e)

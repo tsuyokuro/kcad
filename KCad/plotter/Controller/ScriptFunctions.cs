@@ -1105,7 +1105,7 @@ namespace Plotter.Controller
 
             ctrl.Start(InteractCtrl.Mode.POINT);
 
-            Controller.println(AnsiEsc.AYellow + "Input point >>");
+            Controller.println(AnsiEsc.Yellow + "Input point >>");
 
             InteractCtrl.State ret = ctrl.WaitPoint();
             ctrl.End();
@@ -1129,7 +1129,7 @@ namespace Plotter.Controller
 
             ctrl.Start(InteractCtrl.Mode.LINE);
 
-            Controller.println(AnsiEsc.AYellow + "Input point 1 >>");
+            Controller.println(AnsiEsc.Yellow + "Input point 1 >>");
 
             InteractCtrl.State ret;
 
@@ -1145,7 +1145,7 @@ namespace Plotter.Controller
             CadVector p0 = ctrl.PointList[0];
             Controller.println(p0.CoordString());
 
-            Controller.println(AnsiEsc.AYellow + "Input point 2 >>");
+            Controller.println(AnsiEsc.Yellow + "Input point 2 >>");
 
             ret = ctrl.WaitPoint();
 
@@ -1240,14 +1240,15 @@ namespace Plotter.Controller
             return fig.ID;
         }
 
-        public void Test(IList<CadVector> vlist)
+        public void Test()
         {
-
+            Controller.InteractOut.println("abc" + AnsiEsc.BCyan + "def");
+            Controller.InteractOut.println("abc" + AnsiEsc.Balck + AnsiEsc.BCyanB + "def" + AnsiEsc.Reset + "ghi");
         }
 
         private void PrintSuccess()
         {
-            Controller.InteractOut.println(AnsiEsc.AGreen + "Success");
+            Controller.InteractOut.println(AnsiEsc.Green + "Success");
         }
 
         public CadFigure GetTargetFigure()
