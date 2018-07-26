@@ -55,8 +55,6 @@ namespace Plotter.Controller
 
         private CadVector mOffsetScreen = default(CadVector);
 
-        //private CadVector mOffsetWorld = default(CadVector);
-
 
         public CadVector RubberBandScrnPoint0 = CadVector.InvalidValue;
 
@@ -400,7 +398,6 @@ namespace Plotter.Controller
 
 
             mOffsetScreen = pixp - mSnapPointScrn;
-            //mOffsetWorld = cp - mSnapPoint;
 
             if (mInteractCtrl.CurrentMode != InteractCtrl.Mode.NONE)
             {
@@ -625,30 +622,11 @@ namespace Plotter.Controller
             UpdateTreeView(false);
 
             mOffsetScreen = default(CadVector);
-            //mOffsetWorld = default(CadVector);
         }
 
         private void RButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
         {
         }
-
-        /*
-        public CadVector MoveVector = CadVector.UnitX;
-
-        public bool MoveOnLine = false;
-
-        private CadVector GetOnLinePoint(CadVector p)
-        {
-            CrossInfo ci = CadUtil.PerpendicularCrossLine(LastDownPoint, LastDownPoint + MoveVector, p);
-
-            if (ci.IsCross)
-            {
-                return ci.CrossPoint;
-            }
-
-            return p;
-        }
-        */
 
         private void MouseMove(CadMouse pointer, DrawContext dc, double x, double y)
         {
@@ -674,7 +652,6 @@ namespace Plotter.Controller
 
             CadVector pixp = CadVector.Create(x, y, 0);
             CadVector cp = dc.UnitPointToCadPoint(pixp);
-            CadVector tp = default(CadVector);
 
             if (State == States.DRAGING_POINTS)
             {
@@ -689,9 +666,9 @@ namespace Plotter.Controller
 
             RubberBandScrnPoint1 = pixp;
 
-            bool xmatch = false;
-            bool ymatch = false;
-            bool segmatch = false;
+            //bool xmatch = false;
+            //bool ymatch = false;
+            //bool segmatch = false;
 
             double dist = CadConst.MaxValue;
 
@@ -730,6 +707,8 @@ namespace Plotter.Controller
                 MarkPoint mx = mPointSearcher.GetXMatch();
                 MarkPoint my = mPointSearcher.GetYMatch();
 
+                CadVector tp = default(CadVector);
+
                 if (mx.IsValid)
                 {
                     HighlightPointList.Add(new HighlightPointListItem(mx.Point));
@@ -746,7 +725,7 @@ namespace Plotter.Controller
 
                     dist = (tp - pixp).Norm();
 
-                    xmatch = true;
+                    //xmatch = true;
                 }
 
                 if (my.IsValid)
@@ -765,7 +744,7 @@ namespace Plotter.Controller
 
                     dist = (tp - pixp).Norm();
 
-                    ymatch = true;
+                    //ymatch = true;
                 }
 
                 if (mxy.IsValid)
@@ -778,7 +757,7 @@ namespace Plotter.Controller
             {
                 // Search segment
                 mSegSearcher.Clean();
-                mSegSearcher.SetRangePixel(dc, LineSnapRange);
+                mSegSearcher.SetRangePixel(dc, Math.Min(LineSnapRange, dist-CadMath.Epsilon));
 
                 mSegSearcher.SetTargetPoint(CrossCursor);
 
@@ -786,7 +765,7 @@ namespace Plotter.Controller
 
                 MarkSeg markSeg = mSegSearcher.GetMatch();
 
-                if (markSeg.FigureID != 0)
+                if (mSegSearcher.IsMatch)
                 {
                     if (markSeg.Distance < dist)
                     {
@@ -812,25 +791,29 @@ namespace Plotter.Controller
                             mSnapPointScrn.z = 0;
                         }
 
-                        segmatch = true;
+                        //segmatch = true;
+                    }
+                    else
+                    {
+                        mSegSearcher.Clean();
                     }
                 }
             }
 
             #region Gridding
-            if (!segmatch)
+            if (!mSegSearcher.IsMatch)
             {
                 if (SettingsHolder.Settings.SnapToGrid)
                 {
                     mGridding.Clear();
                     mGridding.Check(dc, pixp);
 
-                    if (!xmatch && mGridding.XMatchU.Valid)
+                    if (!mPointSearcher.IsXMatch && mGridding.XMatchU.Valid)
                     {
                         mSnapPointScrn.x = mGridding.XMatchU.x;
                     }
 
-                    if (!ymatch && mGridding.YMatchU.Valid)
+                    if (!mPointSearcher.IsYMatch && mGridding.YMatchU.Valid)
                     {
                         mSnapPointScrn.y = mGridding.YMatchU.y;
                     }
@@ -844,7 +827,7 @@ namespace Plotter.Controller
             {
                 RulerInfo ri = mRulerSet.Capture(dc, cp, LineSnapRange);
 
-                if (!xmatch && !ymatch)
+                if (!mPointSearcher.IsXMatch && !mPointSearcher.IsYMatch)
                 {
                     if (ri.IsValid)
                     {

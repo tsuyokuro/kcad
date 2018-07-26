@@ -17,6 +17,15 @@ namespace Plotter
 
         private IReadOnlyList<SelectItem> IgnoreList = null;
 
+        public bool IsMatch
+        {
+            get
+            {
+                return seg.FigureID != 0;
+            }
+        }
+
+
         public void SetRangePixel(DrawContext dc, double pixel)
         {
             mRange = pixel;

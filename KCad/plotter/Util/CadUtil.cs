@@ -524,7 +524,7 @@ namespace Plotter
 
                 scala = CadMath.InnerProduct(cn, n);
 
-                if (Math.Abs(scala) < CadMath.VRange)
+                if (Math.Abs(scala) < CadMath.Epsilon)
                 {
                     continue;
                 }

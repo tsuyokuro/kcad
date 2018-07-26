@@ -27,6 +27,30 @@ namespace Plotter
             set; get;
         } = 0;
 
+        public bool IsXMatch
+        {
+            get
+            {
+                return xmatch.IsValid;
+            }
+        }
+
+        public bool IsYMatch
+        {
+            get
+            {
+                return ymatch.IsValid;
+            }
+        }
+
+        public bool IsXYMatch
+        {
+            get
+            {
+                return xymatch.IsValid;
+            }
+        }
+
         public PointSearcher()
         {
             CleanMatches();

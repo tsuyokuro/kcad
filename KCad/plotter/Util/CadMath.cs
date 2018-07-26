@@ -6,13 +6,13 @@ namespace Plotter
 {
     public class CadMath
     {
-        public const double VRange = 0.0000005;
+        public const double Epsilon = 0.0000005;
 
-        public const double R1Min = 1.0 - VRange;
-        public const double R1Max = 1.0 + VRange;
+        public const double R1Min = 1.0 - Epsilon;
+        public const double R1Max = 1.0 + Epsilon;
 
-        public const double R0Min = -VRange;
-        public const double R0Max = VRange;
+        public const double R0Min = -Epsilon;
+        public const double R0Max = Epsilon;
 
 
         // 内積
