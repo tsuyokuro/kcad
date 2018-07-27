@@ -628,6 +628,165 @@ namespace Plotter.Controller
         {
         }
 
+        private double PoitSnap(DrawContext dc, CadVector pixp)
+        {
+            double dist = Double.MaxValue;
+
+            mPointSearcher.CleanMatches();
+            mPointSearcher.SetRangePixel(dc, PointSnapRange);
+
+            mPointSearcher.SetTargetPoint(CrossCursor);
+
+            if (FigureCreator != null)
+            {
+                if (FigureCreator.Figure.PointCount == 1)
+                {
+                    mPointSearcher.Check(dc, FigureCreator.Figure.GetPointAt(0));
+                }
+            }
+
+            if (MeasureFigureCreator != null)
+            {
+                mPointSearcher.Check(dc, MeasureFigureCreator.Figure.PointList);
+            }
+
+            // Search point
+            mPointSearcher.SearchAllLayer(dc, mDB);
+
+            MarkPoint mxy = mPointSearcher.GetXYMatch();
+            MarkPoint mx = mPointSearcher.GetXMatch();
+            MarkPoint my = mPointSearcher.GetYMatch();
+
+            CadVector tp = default(CadVector);
+
+            if (mx.IsValid)
+            {
+                HighlightPointList.Add(new HighlightPointListItem(mx.Point));
+
+                tp = dc.CadPointToUnitPoint(mx.Point);
+
+                CadVector distanceX = CrossCursor.DistanceX(tp);
+
+                CrossCursor.Pos += distanceX;
+
+                mSnapPointScrn = CrossCursor.Pos;
+
+                mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
+
+                dist = (tp - pixp).Norm();
+
+                //xmatch = true;
+            }
+
+            if (my.IsValid)
+            {
+                HighlightPointList.Add(new HighlightPointListItem(my.Point));
+
+                tp = dc.CadPointToUnitPoint(my.Point);
+
+                CadVector distanceY = CrossCursor.DistanceY(tp);
+
+                CrossCursor.Pos += distanceY;
+
+                mSnapPointScrn = CrossCursor.Pos;
+
+                mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
+
+                dist = (tp - pixp).Norm();
+
+                //ymatch = true;
+            }
+
+            if (mxy.IsValid)
+            {
+                HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
+            }
+
+            return dist;
+        }
+
+        private double SegSnap(DrawContext dc, CadVector pixp, double dist)
+        {
+            // Search segment
+            mSegSearcher.Clean();
+            mSegSearcher.SetRangePixel(dc, Math.Min(LineSnapRange, dist - CadMath.Epsilon));
+
+            mSegSearcher.SetTargetPoint(CrossCursor);
+
+            mSegSearcher.SearchAllLayer(dc, mDB);
+
+            MarkSeg markSeg = mSegSearcher.GetMatch();
+
+            if (mSegSearcher.IsMatch)
+            {
+                if (markSeg.Distance < dist)
+                {
+                    CadFigure fig = mDB.GetFigure(markSeg.FigureID);
+                    fig.DrawSeg(dc, DrawTools.PEN_MATCH_SEG, markSeg.PtIndexA, markSeg.PtIndexB);
+
+                    CadVector center = markSeg.CenterPoint;
+
+                    CadVector t = dc.CadPointToUnitPoint(center);
+
+                    if ((t - pixp).Norm() < LineSnapRange)
+                    {
+                        HighlightPointList.Add(new HighlightPointListItem(center));
+
+                        mSnapPoint = center;
+                        mSnapPointScrn = t;
+                        mSnapPointScrn.z = 0;
+                    }
+                    else
+                    {
+                        mSnapPoint = markSeg.CrossPoint;
+                        mSnapPointScrn = markSeg.CrossPointScrn;
+                        mSnapPointScrn.z = 0;
+                    }
+
+                    //segmatch = true;
+                }
+                else
+                {
+                    mSegSearcher.Clean();
+                }
+            }
+
+            return markSeg.Distance;
+        }
+
+        private void SnapGrid(DrawContext dc, CadVector pixp)
+        {
+            mGridding.Clear();
+            mGridding.Check(dc, pixp);
+
+            if (!mPointSearcher.IsXMatch && mGridding.XMatchU.Valid)
+            {
+                mSnapPointScrn.x = mGridding.XMatchU.x;
+            }
+
+            if (!mPointSearcher.IsYMatch && mGridding.YMatchU.Valid)
+            {
+                mSnapPointScrn.y = mGridding.YMatchU.y;
+            }
+
+            mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
+        }
+
+        private void SnapLine(DrawContext dc, CadVector cp)
+        {
+            RulerInfo ri = mRulerSet.Capture(dc, cp, LineSnapRange);
+
+            if (!mPointSearcher.IsXMatch && !mPointSearcher.IsYMatch)
+            {
+                if (ri.IsValid)
+                {
+                    mSnapPoint = ri.CrossPoint;
+                    mSnapPointScrn = dc.CadPointToUnitPoint(mSnapPoint);
+                }
+            }
+        }
+
+
         private void MouseMove(CadMouse pointer, DrawContext dc, double x, double y)
         {
             //DebugOut.Std.printf("({0},{1})\n", x, y);
@@ -666,10 +825,6 @@ namespace Plotter.Controller
 
             RubberBandScrnPoint1 = pixp;
 
-            //bool xmatch = false;
-            //bool ymatch = false;
-            //bool segmatch = false;
-
             double dist = CadConst.MaxValue;
 
             mSnapPointScrn = pixp - mOffsetScreen;
@@ -682,122 +837,12 @@ namespace Plotter.Controller
 
             if (SettingsHolder.Settings.SnapToPoint)
             {
-                mPointSearcher.CleanMatches();
-                mPointSearcher.SetRangePixel(dc, PointSnapRange);
-
-                mPointSearcher.SetTargetPoint(CrossCursor);
-
-                if (FigureCreator != null)
-                {
-                    if (FigureCreator.Figure.PointCount == 1)
-                    {
-                        mPointSearcher.Check(dc, FigureCreator.Figure.GetPointAt(0));
-                    }
-                }
-
-                if (MeasureFigureCreator != null)
-                {
-                    mPointSearcher.Check(dc, MeasureFigureCreator.Figure.PointList);
-                }
-
-                // Search point
-                mPointSearcher.SearchAllLayer(dc, mDB);
-
-                MarkPoint mxy = mPointSearcher.GetXYMatch();
-                MarkPoint mx = mPointSearcher.GetXMatch();
-                MarkPoint my = mPointSearcher.GetYMatch();
-
-                CadVector tp = default(CadVector);
-
-                if (mx.IsValid)
-                {
-                    HighlightPointList.Add(new HighlightPointListItem(mx.Point));
-
-                    tp = dc.CadPointToUnitPoint(mx.Point);
-
-                    CadVector distanceX = CrossCursor.DistanceX(tp);
-
-                    CrossCursor.Pos += distanceX;
-
-                    mSnapPointScrn = CrossCursor.Pos;
-
-                    mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
-
-                    dist = (tp - pixp).Norm();
-
-                    //xmatch = true;
-                }
-
-                if (my.IsValid)
-                {
-                    HighlightPointList.Add(new HighlightPointListItem(my.Point));
-
-                    tp = dc.CadPointToUnitPoint(my.Point);
-
-                    CadVector distanceY = CrossCursor.DistanceY(tp);
-
-                    CrossCursor.Pos += distanceY;
-
-                    mSnapPointScrn = CrossCursor.Pos;
-
-                    mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
-
-                    dist = (tp - pixp).Norm();
-
-                    //ymatch = true;
-                }
-
-                if (mxy.IsValid)
-                {
-                    HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
-                }
+                dist = PoitSnap(dc, pixp);
             }
 
             if (SettingsHolder.Settings.SnapToSegment)
             {
-                // Search segment
-                mSegSearcher.Clean();
-                mSegSearcher.SetRangePixel(dc, Math.Min(LineSnapRange, dist-CadMath.Epsilon));
-
-                mSegSearcher.SetTargetPoint(CrossCursor);
-
-                mSegSearcher.SearchAllLayer(dc, mDB);
-
-                MarkSeg markSeg = mSegSearcher.GetMatch();
-
-                if (mSegSearcher.IsMatch)
-                {
-                    if (markSeg.Distance < dist)
-                    {
-                        CadFigure fig = mDB.GetFigure(markSeg.FigureID);
-                        fig.DrawSeg(dc, DrawTools.PEN_MATCH_SEG, markSeg.PtIndexA, markSeg.PtIndexB);
-
-                        CadVector center = markSeg.CenterPoint;
-
-                        CadVector t = dc.CadPointToUnitPoint(center);
-
-                        if ((t - pixp).Norm() < LineSnapRange)
-                        {
-                            HighlightPointList.Add(new HighlightPointListItem(center));
-
-                            mSnapPoint = center;
-                            mSnapPointScrn = t;
-                            mSnapPointScrn.z = 0;
-                        }
-                        else
-                        {
-                            mSnapPoint = markSeg.CrossPoint;
-                            mSnapPointScrn = markSeg.CrossPointScrn;
-                            mSnapPointScrn.z = 0;
-                        }
-
-                        //segmatch = true;
-                    }
-                    else
-                    {
-                        mSegSearcher.Clean();
-                    }
-                }
+                SegSnap(dc, pixp, dist);
             }
 
             #region Gridding
@@ -805,36 +850,14 @@ namespace Plotter.Controller
             {
                 if (SettingsHolder.Settings.SnapToGrid)
                 {
-                    mGridding.Clear();
-                    mGridding.Check(dc, pixp);
-
-                    if (!mPointSearcher.IsXMatch && mGridding.XMatchU.Valid)
-                    {
-                        mSnapPointScrn.x = mGridding.XMatchU.x;
-                    }
-
-                    if (!mPointSearcher.IsYMatch && mGridding.YMatchU.Valid)
-                    {
-                        mSnapPointScrn.y = mGridding.YMatchU.y;
-                    }
-
-                    mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
+                    SnapGrid(dc, pixp);
                 }
             }
             #endregion
 
             if (SettingsHolder.Settings.SnapToLine)
             {
-                RulerInfo ri = mRulerSet.Capture(dc, cp, LineSnapRange);
-
-                if (!mPointSearcher.IsXMatch && !mPointSearcher.IsYMatch)
-                {
-                    if (ri.IsValid)
-                    {
-                        mSnapPoint = ri.CrossPoint;
-                        mSnapPointScrn = dc.CadPointToUnitPoint(mSnapPoint);
-                    }
-                }
+                SnapLine(dc, cp);
             }
 
             switch (State)
