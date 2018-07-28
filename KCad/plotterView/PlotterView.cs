@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Resources;
 using CadDataTypes;
 using Plotter.Controller;
 
@@ -82,6 +83,13 @@ namespace Plotter
             base.MouseUp += mouseUp;
 
             base.MouseWheel += mouseWheel;
+
+            StreamResourceInfo si = System.Windows.Application.GetResourceStream(
+                new Uri("/KCad;component/Resources/mini_cross.cur", UriKind.Relative));
+
+            Cursor cc = new Cursor(si.Stream);
+
+            base.Cursor = cc;
 
             // Context menue for creating polyline
             {
