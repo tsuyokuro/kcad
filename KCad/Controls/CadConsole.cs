@@ -22,26 +22,6 @@ namespace KCad
     {
         public const string ESC = "\x1b[";
 
-        public const string BALCK = "30";
-        public const string RED = "31";
-        public const string GREEN = "32";
-        public const string YELLOW = "33";
-        public const string BLUE = "34";
-        public const string MAGENTA = "35";
-        public const string CYAN = "36";
-        public const string WHITE = "37";
-        public const string DEF_COLOR = "39";
-
-        public const string BBALCK = "90";
-        public const string BRED = "91";
-        public const string BGREEN = "92";
-        public const string BYELLOW = "93";
-        public const string BBLUE = "94";
-        public const string BMAGENTA = "95";
-        public const string BCYAN = "96";
-        public const string BWHITE = "97";
-
-
         public const string Reset = ESC + "0m";
 
         public const string Balck = ESC + "30m";
@@ -83,6 +63,7 @@ namespace KCad
 
 
         public Brush[] Palette;
+        public Brush[] SelPalette;
 
         public int DefaultFColor = 7;
         public int DefaultBColor = 0;
@@ -108,6 +89,49 @@ namespace KCad
             Palette[13] = Brushes.MediumOrchid;
             Palette[14] = Brushes.Turquoise;
             Palette[15] = Brushes.White;
+
+
+
+            SelPalette = new Brush[16];
+
+            float b = 1.4f;
+
+            SelPalette[0] = Brigahtness(Palette[0], b);
+            SelPalette[1] = Brigahtness(Palette[1], b);
+            SelPalette[2] = Brigahtness(Palette[2], b);
+            SelPalette[3] = Brigahtness(Palette[3], b);
+            SelPalette[4] = Brigahtness(Palette[4], b);
+            SelPalette[5] = Brigahtness(Palette[5], b);
+            SelPalette[6] = Brigahtness(Palette[6], b);
+            SelPalette[7] = Brigahtness(Palette[7], b);
+
+            SelPalette[8] = Brigahtness(Palette[8], b);
+            SelPalette[9] = Brigahtness(Palette[9], b);
+            SelPalette[10] = Brigahtness(Palette[10], b);
+            SelPalette[11] = Brigahtness(Palette[11], b);
+            SelPalette[12] = Brigahtness(Palette[12], b);
+            SelPalette[13] = Brigahtness(Palette[13], b);
+            SelPalette[14] = Brigahtness(Palette[14], b);
+            SelPalette[15] = Brigahtness(Palette[15], b);
+        }
+
+        Brush Brigahtness(Brush brush, float a)
+        {
+            if (!(brush is SolidColorBrush))
+            {
+                return brush;
+            }
+
+            SolidColorBrush src = (SolidColorBrush)brush;
+            Color c = src.Color;
+
+            RGB rgb = new RGB(c.R/255f, c.G/255f, c.B/255f);
+
+            rgb = ColorUtil.Brightness(rgb, a);
+
+            Color cc = Color.FromArgb(0xff, (byte)(rgb.R * 255f), (byte)(rgb.G * 255f), (byte)(rgb.B * 255f));
+
+            return new SolidColorBrush(cc);
         }
     }
 
@@ -310,6 +334,10 @@ namespace KCad
 
             Esc.Palette[Esc.DefaultFColor] = mForeground;
             Esc.Palette[Esc.DefaultBColor] = mBackground;
+
+            Esc.SelPalette[Esc.DefaultFColor] = mSelectedForeground;
+            Esc.SelPalette[Esc.DefaultBColor] = mSelectedBackground;
+
 
             DefaultAttr.FColor = Esc.DefaultFColor;
             DefaultAttr.BColor = Esc.DefaultBColor;
@@ -564,7 +592,7 @@ namespace KCad
                 tp.X = mTextLeftMargin;
                 tp.Y += textOffset;
 
-                DrawText(dc, item.Data, tp);
+                DrawText(dc, item.Data, tp, item.IsSelected);
 
                 p.Y += mItemHeight;
             }
@@ -588,7 +616,7 @@ namespace KCad
         }
 
         #region draw text
-        public void DrawText(DrawingContext dc, string s, Point pt)
+        public void DrawText(DrawingContext dc, string s, Point pt, bool selected)
         {
             TextAttr attr = DefaultAttr;
 
@@ -603,7 +631,7 @@ namespace KCad
                 if (s[i] == '\x1b')
                 {
                     state = 1;
-                    pt = RenderText(dc, attr, sb.ToString(), pt);
+                    pt = RenderText(dc, attr, sb.ToString(), pt, selected);
                     sb.Clear();
                     continue;
                 }
@@ -683,20 +711,42 @@ namespace KCad
 
             if (sb.Length > 0)
             {
-                pt = RenderText(dc, attr, sb.ToString(), pt);
+                pt = RenderText(dc, attr, sb.ToString(), pt, selected);
                 sb.Clear();
             }
         }
 
-        public Point RenderText(DrawingContext dc, TextAttr attr, string s, Point pt)
+        public Point RenderText(DrawingContext dc, TextAttr attr, string s, Point pt, bool selected)
         {
-            FormattedText ft = GetText(s, Esc.Palette[attr.FColor]);
+            Brush fgb;
+
+            if (selected)
+            {
+                fgb = Esc.SelPalette[attr.FColor];
+            }
+            else
+            {
+                fgb = Esc.Palette[attr.FColor];
+            }
+
+            FormattedText ft = GetText(s, fgb);
 
             Point pt2 = pt;
             pt2.X += ft.Width;
             pt2.Y += ft.Height;
 
-            dc.DrawRectangle(Esc.Palette[attr.BColor], null, new Rect(pt, pt2)); 
+            Brush bgb;
+
+            if (selected)
+            {
+                bgb = Esc.SelPalette[attr.BColor];
+            }
+            else
+            {
+                bgb = Esc.Palette[attr.BColor];
+            }
+
+            dc.DrawRectangle(bgb, null, new Rect(pt, pt2));
 
             dc.DrawText(ft, pt);
             pt.X += ft.Width;

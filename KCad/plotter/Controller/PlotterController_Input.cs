@@ -630,7 +630,7 @@ namespace Plotter.Controller
 
         private double PoitSnap(DrawContext dc, CadVector pixp)
         {
-            double dist = Double.MaxValue;
+            //double dist = Double.MaxValue;
 
             mPointSearcher.CleanMatches();
             mPointSearcher.SetRangePixel(dc, PointSnapRange);
@@ -673,7 +673,7 @@ namespace Plotter.Controller
 
                 mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
 
-                dist = (tp - pixp).Norm();
+                //dist = (tp - pixp).Norm();
 
                 //xmatch = true;
             }
@@ -692,7 +692,9 @@ namespace Plotter.Controller
 
                 mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
 
-                dist = (tp - pixp).Norm();
+                //double d = (tp - pixp).Norm();
+
+                //dist = Math.Min(d, dist);
 
                 //ymatch = true;
             }
@@ -700,9 +702,18 @@ namespace Plotter.Controller
             if (mxy.IsValid)
             {
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
+                tp = dc.CadPointToUnitPoint(mx.Point);
+
+                //double d = (tp - pixp).Norm();
+                //dist = Math.Min(d, dist);
             }
 
-            return dist;
+            //double rdist = mPointSearcher.Distance(pixp);
+
+            //DebugOut.printf("{0} {1}\n", rdist, dist);
+
+
+            return mPointSearcher.Distance(pixp);
         }
 
         private double SegSnap(DrawContext dc, CadVector pixp, double dist)

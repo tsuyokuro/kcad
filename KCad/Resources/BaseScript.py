@@ -6,8 +6,8 @@ clr.AddReference('CadDataTypes')
 import CadDataTypes.CadVector as CadVector
 import CadDataTypes.VectorList as VectorList
 
-#[AC] putMsg(s)
-def putMsg(s):
+#[AC] puts(s)
+def puts(s):
     SE.PutMsg(s)
 
 #[AC] rect(w=10, h=10, p="xy")
@@ -245,9 +245,9 @@ def inputUnitV():
     return SE.InputUnitVector()
 
 
-#[AC] test(v=-unitVX)
-def test(v):
-    SE.Test(v)
+#[AC] test()
+def test():
+    SE.Test()
 
 
 #[AC] point0
@@ -263,7 +263,30 @@ unitVZ = SE.CreateVector(0,0,1)
 w_1x4 = 8.9
 t_1x4 = 1.9
 
+EscReset = "\x1b[0m"
+
+EscBalck = "\x1b[30m"
+EscRed = "\x1b[31m"
+EscGreen = "\x1b[32m"
+EscYellow = "\x1b[33m"
+EscBlue = "\x1b[34m"
+EscMagenta = "\x1b[35m"
+EscCyan = "\x1b[36m"
+EscWhite = "\x1b[37m"
+
+EscBBalck = "\x1b[90m"
+EscBRed = "\x1b[91m"
+EscBGreen = "\x1b[92m"
+EscBYellow = "\x1b[93m"
+EscBBlue = "\x1b[94m"
+EscBMagenta = "\x1b[95m"
+EscBCyan = "\x1b[96m"
+EscBWhite = "\x1b[97m"
+
+
+
 #test !!
 vv = CadVector.Create(1,1,1);
 vl = VectorList();
 vl.Add(vv);
+

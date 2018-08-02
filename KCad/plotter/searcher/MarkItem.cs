@@ -43,12 +43,12 @@ namespace Plotter
 
         public int PointIndex;
 
-        public CadVector Point;
+        public CadVector Point;     // Match座標 (World座標系)
 
-        public CadVector PointScrn;
+        public CadVector PointScrn; // Match座標 (Screen座標系)
 
-        public double DistanceX;
-        public double DistanceY;
+        public double DistanceX;    // X距離 (Screen座標系)
+        public double DistanceY;    // Y距離 (Screen座標系)
 
         public void reset()
         {
@@ -61,20 +61,8 @@ namespace Plotter
             DistanceX = CadConst.MaxValue;
             DistanceY = CadConst.MaxValue;
         }
-
-        public void dump()
-        {
-            DebugOut.println("MarkPoint {");
-            DebugOut.println("FigureID:" + FigureID.ToString());
-            DebugOut.println("PointIndex:" + PointIndex.ToString());
-            DebugOut.println("}");
-        }
     }
 
-
-    /// <summary>
-    /// 
-    /// </summary>
     public struct MarkSeg
     {
         public FigureSegment FSegment;

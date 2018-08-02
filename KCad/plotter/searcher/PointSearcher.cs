@@ -10,17 +10,17 @@ namespace Plotter
 {
     public class PointSearcher
     {
-        private MarkPoint xmatch = default(MarkPoint);
-        private MarkPoint ymatch = default(MarkPoint);
-        private MarkPoint xymatch = default(MarkPoint);
+        private MarkPoint XMatch = default(MarkPoint);
+        private MarkPoint YMatch = default(MarkPoint);
+        private MarkPoint XYMatch = default(MarkPoint);
 
         private List<MarkPoint> XYMatchList = new List<MarkPoint>();
 
 
         private IReadOnlyList<SelectItem> IgnoreList = null;
 
-        private CadCursor TargetPoint;
-        private double mRange;
+        private CadCursor TargetPoint;  // Cursor(スクリーン座標系)
+        private double mRange;          // matchする範囲(スクリーン座標系)
 
         public uint CurrentLayerID
         {
@@ -31,7 +31,7 @@ namespace Plotter
         {
             get
             {
-                return xmatch.IsValid;
+                return XMatch.IsValid;
             }
         }
 
@@ -39,7 +39,7 @@ namespace Plotter
         {
             get
             {
-                return ymatch.IsValid;
+                return YMatch.IsValid;
             }
         }
 
@@ -47,7 +47,7 @@ namespace Plotter
         {
             get
             {
-                return xymatch.IsValid;
+                return XYMatch.IsValid;
             }
         }
 
@@ -63,9 +63,9 @@ namespace Plotter
 
         public void CleanMatches()
         {
-            xmatch.reset();
-            ymatch.reset();
-            xymatch.reset();
+            XMatch.reset();
+            YMatch.reset();
+            XYMatch.reset();
 
             XYMatchList.Clear();
         }
@@ -82,24 +82,24 @@ namespace Plotter
 
         public MarkPoint GetXMatch()
         {
-            return xmatch;
+            return XMatch;
         }
 
         public MarkPoint GetYMatch()
         {
-            return ymatch;
+            return YMatch;
         }
 
         public MarkPoint GetXYMatch(int n = -1)
         {
             if (n==-1)
             {
-                return xymatch;
+                return XYMatch;
             }
 
             if (XYMatchList.Count == 0)
             {
-                return xymatch;
+                return XYMatch;
             }
 
             return XYMatchList[n];
@@ -108,6 +108,31 @@ namespace Plotter
         public List<MarkPoint> GetXYMatches()
         {
             return XYMatchList;
+        }
+
+        public double Distance(CadVector pixp)
+        {
+            double ret = Double.MaxValue;
+            double t;
+
+            if (IsXMatch)
+            {
+                ret = (XMatch.PointScrn - pixp).Norm();
+            }
+
+            if (IsYMatch)
+            {
+                t = (YMatch.PointScrn - pixp).Norm();
+                ret = Math.Min(t, ret);
+            }
+
+            if (IsXYMatch)
+            {
+                t = (XYMatch.PointScrn - pixp).Norm();
+                ret = Math.Min(t, ret);
+            }
+
+            return ret;
         }
 
         public void SearchAllLayer(DrawContext dc, CadObjectDB db)
@@ -209,23 +234,23 @@ namespace Plotter
 
             if (nx <= mRange)
             {
-                if (nx < xmatch.DistanceX || (nx == xmatch.DistanceX && ny < xmatch.DistanceY))
+                if (nx < XMatch.DistanceX || (nx == XMatch.DistanceX && ny < XMatch.DistanceY))
                 {
-                    xmatch = getMarkPoint();
+                    XMatch = getMarkPoint();
                 }
             }
 
             if (ny <= mRange)
             {
-                if (ny < ymatch.DistanceY || (ny == ymatch.DistanceY && nx < ymatch.DistanceX))
+                if (ny < YMatch.DistanceY || (ny == YMatch.DistanceY && nx < YMatch.DistanceX))
                 {
-                    ymatch = getMarkPoint();
+                    YMatch = getMarkPoint();
                 }
             }
 
             if (dx <= mRange && dy <= mRange)
             {
-                if (dx <= xymatch.DistanceX || dy <= xymatch.DistanceY)
+                if (dx <= XYMatch.DistanceX || dy <= XYMatch.DistanceY)
                 {
                     MarkPoint t = default(MarkPoint);
 
@@ -238,11 +263,11 @@ namespace Plotter
                     t.DistanceX = dx;
                     t.DistanceY = dy;
 
-                    xymatch = t;
+                    XYMatch = t;
 
                     if (!ContainsXYMatch(t))
                     {
-                        XYMatchList.Add(xymatch);
+                        XYMatchList.Add(XYMatch);
                     }
                 }
             }

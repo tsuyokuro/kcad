@@ -69,7 +69,7 @@
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>7.3</LangVersion>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -201,6 +201,7 @@
     <Compile Include="plotter\Controller\PlotterController_funcs.cs" />
     <Compile Include="plotter\Controller\PlotterController_serialize.cs" />
     <Compile Include="plotter\Controller\ScriptFunctions.cs" />
+    <Compile Include="plotter\Controller\SnapManager.cs" />
     <Compile Include="SplineCurve\BSplineJson.cs" />
     <Compile Include="SplineCurve\BSplineParam.cs" />
     <Compile Include="SplineCurve\NurbsLine.cs" />
@@ -246,6 +247,7 @@
     </Compile>
     <Compile Include="Controls\TreeView\CadObjTreeItem.cs" />
     <Compile Include="SplineCurve\NurbsSurface.cs" />
+    <Compile Include="Util\ColorUtil.cs" />
     <Page Include="Dialogs\ExceptionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

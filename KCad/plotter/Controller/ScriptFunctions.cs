@@ -1242,8 +1242,6 @@ namespace Plotter.Controller
 
         public void Test()
         {
-            Controller.InteractOut.println("abc" + AnsiEsc.BCyan + "def");
-            Controller.InteractOut.println("abc" + AnsiEsc.Balck + AnsiEsc.BCyanB + "def" + AnsiEsc.Reset + "ghi");
         }
 
         private void PrintSuccess()
