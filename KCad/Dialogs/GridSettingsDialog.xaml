@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KCad"
         mc:Ignorable="d"
-        Title="Grid settings" Height="163" Width="323.909"
+        Title="Grid settings" Height="175.187" Width="324.417"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         WindowStyle="ToolWindow"

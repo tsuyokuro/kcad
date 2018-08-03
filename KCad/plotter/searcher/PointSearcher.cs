@@ -53,7 +53,7 @@ namespace Plotter
 
         public PointSearcher()
         {
-            CleanMatches();
+            Clean();
         }
 
         public void SetRangePixel(DrawContext dc, double pixel)
@@ -61,7 +61,7 @@ namespace Plotter
             mRange = pixel;
         }
 
-        public void CleanMatches()
+        public void Clean()
         {
             XMatch.reset();
             YMatch.reset();
@@ -110,25 +110,25 @@ namespace Plotter
             return XYMatchList;
         }
 
-        public double Distance(CadVector pixp)
+        public double Distance()
         {
             double ret = Double.MaxValue;
             double t;
 
             if (IsXMatch)
             {
-                ret = (XMatch.PointScrn - pixp).Norm();
+                ret = (XMatch.PointScrn - TargetPoint.Pos).Norm();
             }
 
             if (IsYMatch)
             {
-                t = (YMatch.PointScrn - pixp).Norm();
+                t = (YMatch.PointScrn - TargetPoint.Pos).Norm();
                 ret = Math.Min(t, ret);
             }
 
             if (IsXYMatch)
             {
-                t = (XYMatch.PointScrn - pixp).Norm();
+                t = (XYMatch.PointScrn - TargetPoint.Pos).Norm();
                 ret = Math.Min(t, ret);
             }
 

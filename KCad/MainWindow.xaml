@@ -92,7 +92,7 @@
                 </StackPanel>
             </DataTemplate>-->
 
-            
+
             <Style TargetType="Menu">
                 <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
                 <Setter Property="Background" Value="{StaticResource MenuColor}"/>
@@ -114,7 +114,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="1000*"/>
+            <RowDefinition Height="81*"/>
+            <RowDefinition Height="550*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" >
@@ -166,47 +167,60 @@
 
         <StackPanel
             Grid.Row="1"
-            x:Name="ToolBar1"
-            Background="#FF505050" Height="28" HorizontalAlignment="Stretch"
-            Orientation="Horizontal"
+            Background="{StaticResource BaseColor}"
+            Height="30"
+            HorizontalAlignment="Stretch"
+            Orientation="Vertical"
             >
-            <Label Width="32"/>
 
-            <ToggleButton
+            <StackPanel
+                x:Name="ToolBar1"
+                Background="{StaticResource BaseColor}" Height="28" HorizontalAlignment="Stretch"
+                Orientation="Horizontal">
+
+                <Label Width="32"/>
+
+                <ToggleButton
                 Style="{StaticResource CustomToggleButton2}"
                 IsChecked="{Binding SnapToPoint}"
-                Margin="2,2,2,2"
+                Margin="1,2,0,2"
                 >
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="{StaticResource snap_to_point_icon}" Height="24" VerticalAlignment="Top"/>
-                </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource snap_to_point_icon}" Height="24" VerticalAlignment="Top"/>
+                    </StackPanel>
 
-            </ToggleButton>
-            <ToggleButton
+                </ToggleButton>
+                <ToggleButton
                 Style="{StaticResource CustomToggleButton2}"
                 IsChecked="{Binding SnapToSegment}"
                 BorderThickness="0"
-                Margin="2,2,2,2"
+                Margin="1,2,0,2"
                 >
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="{StaticResource snap_to_seg_icon}" Height="24" VerticalAlignment="Top"/>
-                </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource snap_to_seg_icon}" Height="24" VerticalAlignment="Top"/>
+                    </StackPanel>
 
-            </ToggleButton>
-            <ToggleButton
+                </ToggleButton>
+                <ToggleButton
                 Style="{StaticResource CustomToggleButton2}"
                 IsChecked="{Binding SnapToLine}"
-                Margin="2,2,2,2"
+                Margin="1,2,0,2"
                 >
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="{StaticResource snap_to_line_icon}" Height="24" VerticalAlignment="Top"/>
-                </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource snap_to_line_icon}" Height="24" VerticalAlignment="Top"/>
+                    </StackPanel>
 
-            </ToggleButton>
+                </ToggleButton>
+
+            </StackPanel>
+
+            <Label Height="3"
+                   HorizontalAlignment="Stretch" Background="{StaticResource BoarderColor}"/>
+
         </StackPanel>
 
         <!--Work space-->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -226,7 +240,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="100*"/>
                     </Grid.RowDefinitions>
-                    
+
                     <StackPanel Grid.Row="0" x:Name="SlsectModePanel">
                         <Label Height="Auto" Content="Select mode" Foreground="DarkGray" FontSize="9"/>
                         <RadioButton
@@ -422,7 +436,7 @@
                             FontWeight="Thin"
                             />
 
-                    </Grid>    
+                    </Grid>
                 </Grid>
             </Grid>
 
@@ -554,7 +568,7 @@
         </Grid>
 
         <!--Status bar-->
-        <StackPanel Grid.Row="3" Background="{StaticResource BGColor}" Height="20" HorizontalAlignment="Stretch"
+        <StackPanel Grid.Row="4" Background="{StaticResource BGColor}" Height="20" HorizontalAlignment="Stretch"
                     Orientation="Horizontal">
             <Rectangle
                 VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="20"/>

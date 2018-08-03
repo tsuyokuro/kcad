@@ -187,7 +187,7 @@ namespace Plotter.Controller
 
             mObjDownPoint = null;
 
-            mPointSearcher.CleanMatches();
+            mPointSearcher.Clean();
             mPointSearcher.SetRangePixel(dc, PointSnapRange);
 
             if (CurrentFigure != null && !CadKeyboard.IsShiftKeyDown())
@@ -628,11 +628,11 @@ namespace Plotter.Controller
         {
         }
 
-        private double PoitSnap(DrawContext dc, CadVector pixp)
+        private void PoitSnap(DrawContext dc)
         {
             //double dist = Double.MaxValue;
 
-            mPointSearcher.CleanMatches();
+            mPointSearcher.Clean();
             mPointSearcher.SetRangePixel(dc, PointSnapRange);
 
             mPointSearcher.SetTargetPoint(CrossCursor);
@@ -672,10 +672,6 @@ namespace Plotter.Controller
                 mSnapPointScrn = CrossCursor.Pos;
 
                 mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
-
-                //dist = (tp - pixp).Norm();
-
-                //xmatch = true;
             }
 
             if (my.IsValid)
@@ -691,32 +687,20 @@ namespace Plotter.Controller
                 mSnapPointScrn = CrossCursor.Pos;
 
                 mSnapPoint = dc.UnitPointToCadPoint(mSnapPointScrn);
-
-                //double d = (tp - pixp).Norm();
-
-                //dist = Math.Min(d, dist);
-
-                //ymatch = true;
             }
 
             if (mxy.IsValid)
             {
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
                 tp = dc.CadPointToUnitPoint(mx.Point);
-
-                //double d = (tp - pixp).Norm();
-                //dist = Math.Min(d, dist);
             }
 
             //double rdist = mPointSearcher.Distance(pixp);
 
             //DebugOut.printf("{0} {1}\n", rdist, dist);
-
-
-            return mPointSearcher.Distance(pixp);
         }
 
-        private double SegSnap(DrawContext dc, CadVector pixp, double dist)
+        private double SegSnap(DrawContext dc, double dist)
         {
             // Search segment
             mSegSearcher.Clean();
@@ -739,7 +723,7 @@ namespace Plotter.Controller
 
                     CadVector t = dc.CadPointToUnitPoint(center);
 
-                    if ((t - pixp).Norm() < LineSnapRange)
+                    if ((t - CrossCursor.Pos).Norm() < LineSnapRange)
                     {
                         HighlightPointList.Add(new HighlightPointListItem(center));
 
@@ -848,12 +832,12 @@ namespace Plotter.Controller
 
             if (SettingsHolder.Settings.SnapToPoint)
             {
-                dist = PoitSnap(dc, pixp);
+                PoitSnap(dc);
             }
 
             if (SettingsHolder.Settings.SnapToSegment)
             {
-                SegSnap(dc, pixp, dist);
+                SegSnap(dc, mPointSearcher.Distance());
             }
 
             #region Gridding
@@ -861,7 +845,7 @@ namespace Plotter.Controller
             {
                 if (SettingsHolder.Settings.SnapToGrid)
                 {
-                    SnapGrid(dc, pixp);
+                    SnapGrid(dc, CrossCursor.Pos);
                 }
             }
             #endregion
