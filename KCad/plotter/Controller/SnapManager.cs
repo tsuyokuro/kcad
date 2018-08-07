@@ -34,6 +34,8 @@ namespace Plotter
 
         private CadVector RawPoint;
 
+        private double LineSnapRange;
+
         private List<HighlightPointListItem> HighlightPointList = new List<HighlightPointListItem>();
 
         private void Clean()
@@ -42,12 +44,6 @@ namespace Plotter
             mSegSearcher.Clean();
 
             mDist = Double.MaxValue;
-        }
-
-        public void Start(CadVector rawUnitPoint)
-        {
-            Clean();
-            RawPoint = rawUnitPoint;
         }
 
         public void SetPointRange(DrawContext dc, double range)
@@ -59,6 +55,12 @@ namespace Plotter
         {
             mSegSearcher.SetRangePixel(dc, range);
         }
+
+        public void SetLineSnapRange(double range)
+        {
+            LineSnapRange = range;
+        }
+
 
         public void SetTarget(CadCursor cursor)
         {
@@ -125,17 +127,56 @@ namespace Plotter
             if (mxy.IsValid)
             {
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
-                tp = dc.CadPointToUnitPoint(mx.Point);
             }
 
             return mPointSearcher.Distance();
         }
 
-
-
-        public void End()
+        private double EvalSegSearcher(DrawContext dc, double dist)
         {
+            mSegSearcher.SetRangePixel(dc, Math.Min(LineSnapRange, dist - CadMath.Epsilon));
 
+            MarkSeg markSeg = mSegSearcher.GetMatch();
+
+            if (mSegSearcher.IsMatch)
+            {
+                if (markSeg.Distance < dist)
+                {
+                    CadVector center = markSeg.CenterPoint;
+
+                    CadVector t = dc.CadPointToUnitPoint(center);
+
+                    if ((t - CrossCursor.Pos).Norm() < LineSnapRange)
+                    {
+                        HighlightPointList.Add(new HighlightPointListItem(center));
+
+                        SnapPoint = center;
+                        SnapPointScrn = t;
+                        SnapPointScrn.z = 0;
+                    }
+                    else
+                    {
+                        SnapPoint = markSeg.CrossPoint;
+                        SnapPointScrn = markSeg.CrossPointScrn;
+                        SnapPointScrn.z = 0;
+                    }
+
+                    return markSeg.Distance;
+                }
+                else
+                {
+                    mSegSearcher.Clean();
+                }
+            }
+
+            return dist;
+        }
+
+        public void Eval(DrawContext dc)
+        {
+            double dist = Double.MaxValue;
+            dist = EvalPointSearcher(dc);
+            dist = EvalSegSearcher(dc, dist);
         }
     }
 }

@@ -19,8 +19,8 @@ namespace Plotter
 
         private IReadOnlyList<SelectItem> IgnoreList = null;
 
-        private CadCursor TargetPoint;  // Cursor(スクリーン座標系)
-        private double mRange;          // matchする範囲(スクリーン座標系)
+        public CadCursor TargetPoint;  // Cursor(スクリーン座標系)
+        public double mRange;          // matchする範囲(スクリーン座標系)
 
         public uint CurrentLayerID
         {

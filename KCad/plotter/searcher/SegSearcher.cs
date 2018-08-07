@@ -7,7 +7,7 @@ namespace Plotter
 {
     public class SegSearcher
     {
-        private MarkSeg seg;
+        private MarkSeg markSeg;
 
         private CadCursor TargetPoint;
         private double mRange;
@@ -21,7 +21,7 @@ namespace Plotter
         {
             get
             {
-                return seg.FigureID != 0;
+                return markSeg.FigureID != 0;
             }
         }
 
@@ -33,7 +33,7 @@ namespace Plotter
 
         public void Clean()
         {
-            seg = default(MarkSeg);
+            markSeg = default(MarkSeg);
         }
 
         public void SetTargetPoint(CadCursor p)
@@ -53,7 +53,7 @@ namespace Plotter
 
         public MarkSeg GetMatch()
         {
-            return seg;
+            return markSeg;
         }
 
         public void SearchAllLayer(DrawContext dc, CadObjectDB db)
@@ -176,11 +176,11 @@ namespace Plotter
 
                 CadVector cp = (b - a) * f + a;
 
-                seg.Layer = layer;
-                seg.FSegment = fseg;
-                seg.CrossPoint = cp;
-                seg.CrossPointScrn = p;
-                seg.Distance = dist;
+                markSeg.Layer = layer;
+                markSeg.FSegment = fseg;
+                markSeg.CrossPoint = cp;
+                markSeg.CrossPointScrn = p;
+                markSeg.Distance = dist;
 
                 mMinDist = dist;
             }
@@ -250,11 +250,11 @@ namespace Plotter
 
                 FigureSegment fseg = new FigureSegment(fig, 0, 0, idxB);
 
-                seg.Layer = layer;
-                seg.FSegment = fseg;
-                seg.CrossPoint = td;
-                seg.CrossPointScrn = dc.CadPointToUnitPoint(td);
-                seg.Distance = dist;
+                markSeg.Layer = layer;
+                markSeg.FSegment = fseg;
+                markSeg.CrossPoint = td;
+                markSeg.CrossPointScrn = dc.CadPointToUnitPoint(td);
+                markSeg.Distance = dist;
 
 
                 mMinDist = dist;

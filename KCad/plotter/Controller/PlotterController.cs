@@ -582,14 +582,13 @@ namespace Plotter.Controller
             }
         }
 
-        public void DrawCursor(DrawContext dc)
-        {
-            dc.Drawing.DrawCursorScrn(mSnapPointScrn);
-        }
+        //public void DrawCursor(DrawContext dc)
+        //{
+        //    dc.Drawing.DrawCursorScrn(CrossCursor.Pos);
+        //}
 
         public void DrawCrossCursor(DrawContext dc)
         {
-            CrossCursor.Pos = mSnapPointScrn;
             dc.Drawing.DrawCrossCursorScrn(CrossCursor);
         }
 
