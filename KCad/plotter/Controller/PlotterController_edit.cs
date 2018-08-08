@@ -134,14 +134,14 @@ namespace Plotter.Controller
                 return;
             }
 
-            if (mObjDownPoint == null)
+            if (!ms.CrossPoint.Valid)
             {
                 return;
             }
 
             CadSegmentCutter segCutter = new CadSegmentCutter(mDB);
 
-            var res = segCutter.CutSegment(ms, mObjDownPoint.Value);
+            var res = segCutter.CutSegment(ms, ms.CrossPoint);
 
             if (!res.isValid())
             {

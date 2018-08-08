@@ -295,6 +295,7 @@ namespace Plotter.Controller
 
             ScriptEnv = new ScriptEnvironment(this);
 
+            ObjDownPoint.Valid = false;
 
             InitHid();
         }
@@ -575,10 +576,10 @@ namespace Plotter.Controller
             dc.Drawing.DrawDownPointCursor(
                 DrawTools.PEN_LAST_POINT_MARKER, LastDownPoint);
 
-            if (mObjDownPoint != null)
+            if (ObjDownPoint.Valid)
             {
                 dc.Drawing.DrawDownPointCursor(
-                    DrawTools.PEN_LAST_POINT_MARKER2, mObjDownPoint.Value);
+                    DrawTools.PEN_LAST_POINT_MARKER2, ObjDownPoint);
             }
         }
 

@@ -34,6 +34,7 @@ namespace Plotter
         public void Clean()
         {
             markSeg = default(MarkSeg);
+            markSeg.Clean();
         }
 
         public void SetTargetPoint(CadCursor p)

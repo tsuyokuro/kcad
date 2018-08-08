@@ -175,5 +175,11 @@ namespace Plotter
 
             return true;
         }
+
+        public void Clean()
+        {
+            CrossPoint.Valid = false;
+            CrossPointScrn.Valid = false;
+        }
     }
 }

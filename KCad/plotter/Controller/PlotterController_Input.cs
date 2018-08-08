@@ -50,11 +50,9 @@ namespace Plotter.Controller
 
         public CadVector LastDownPoint = default(CadVector);
 
-
-        private CadVector? mObjDownPoint = null;
+        private CadVector ObjDownPoint = default(CadVector);
 
         private CadVector mOffsetScreen = default(CadVector);
-
 
         public CadVector RubberBandScrnPoint0 = CadVector.InvalidValue;
 
@@ -185,7 +183,7 @@ namespace Plotter.Controller
 
             bool sel = false;
 
-            mObjDownPoint = null;
+            ObjDownPoint.Valid = false;
 
             mPointSearcher.Clean();
             mPointSearcher.SetRangePixel(dc, PointSnapRange);
@@ -226,7 +224,7 @@ namespace Plotter.Controller
 
             if (mp.FigureID != 0)
             {
-                mObjDownPoint = mp.Point;
+                ObjDownPoint = mp.Point;
 
                 mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mp.Point);
 
@@ -285,11 +283,11 @@ namespace Plotter.Controller
 
                     if ((t - pixp).Norm() < LineSnapRange)
                     {
-                        mObjDownPoint = center;
+                        ObjDownPoint = center;
                     }
                     else
                     {
-                        mObjDownPoint = mseg.CrossPoint;
+                        ObjDownPoint = mseg.CrossPoint;
                     }
 
 
@@ -315,7 +313,7 @@ namespace Plotter.Controller
 
                     mSelectedSegs.Add(mseg);
 
-                    mMoveOrgScrnPoint = dc.CadPointToUnitPoint(mObjDownPoint.Value);
+                    mMoveOrgScrnPoint = dc.CadPointToUnitPoint(ObjDownPoint);
 
                     State = States.START_DRAGING_POINTS;
 
@@ -335,9 +333,9 @@ namespace Plotter.Controller
                 }
             }
 
-            if (mObjDownPoint != null)
+            if (ObjDownPoint.Valid)
             {
-                LastDownPoint = mObjDownPoint.Value;
+                LastDownPoint = ObjDownPoint;
 
                 // LastDownPointを投影面上にしたい場合は、こちら
                 //LastDownPoint = mSnapPoint;
