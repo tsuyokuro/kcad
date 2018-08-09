@@ -243,7 +243,7 @@ namespace Plotter.Controller
 
             opeRoot.Add(ope);
 
-            Controller.HistoryManager.foward(opeRoot);
+            Controller.HistoryMan.foward(opeRoot);
 
             Controller.InteractOut.println(
                     global::KCad.Properties.Resources.notice_was_grouped
@@ -293,7 +293,7 @@ namespace Plotter.Controller
                 Controller.CurrentLayer.AddFigure(fig);
             }
 
-            Controller.HistoryManager.foward(opeList);
+            Controller.HistoryMan.foward(opeList);
 
             Controller.InteractOut.println(
                 global::KCad.Properties.Resources.notice_was_ungrouped
@@ -358,7 +358,7 @@ namespace Plotter.Controller
             fig.EndCreate(Controller.CurrentDC);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
 
@@ -391,7 +391,7 @@ namespace Plotter.Controller
             fig.EndCreate(Controller.CurrentDC);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
 
@@ -458,7 +458,7 @@ namespace Plotter.Controller
             fig.EndCreate(Controller.CurrentDC);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
             return (int)fig.ID;
@@ -477,7 +477,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
 
@@ -492,7 +492,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
 
@@ -507,7 +507,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
 
@@ -830,7 +830,7 @@ namespace Plotter.Controller
             ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, tfig.ID);
             root.Add(ope);
 
-            Controller.HistoryManager.foward(root);
+            Controller.HistoryMan.foward(root);
 
             Controller.CurrentLayer.AddFigure(fig);
             Controller.CurrentLayer.RemoveFigureByID(tfig.ID);
@@ -877,7 +877,7 @@ namespace Plotter.Controller
 
             if (opeRoot.OpeList.Count > 0)
             {
-                Controller.HistoryManager.foward(opeRoot);
+                Controller.HistoryMan.foward(opeRoot);
             }
 
             PrintSuccess();
@@ -904,7 +904,7 @@ namespace Plotter.Controller
                 opeRoot.Add(ope);
             }
 
-            Controller.HistoryManager.foward(opeRoot);
+            Controller.HistoryMan.foward(opeRoot);
         }
 
         private CadFigureMesh GetCadFigureMesh(uint id)
@@ -944,7 +944,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
         }
@@ -977,7 +977,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
         }
@@ -1010,7 +1010,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
         }
@@ -1234,7 +1234,7 @@ namespace Plotter.Controller
             fig.AddPoints(vl);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
             return fig.ID;

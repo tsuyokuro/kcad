@@ -142,7 +142,7 @@ namespace Plotter.Controller
         public void AddFigure(CadFigure fig)
         {
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
 

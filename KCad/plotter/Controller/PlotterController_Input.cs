@@ -121,11 +121,11 @@ namespace Plotter.Controller
         {
             if (SelectMode == SelectModes.POINT)
             {
-                return mSelList.isSelected(mp);
+                return SelList.isSelected(mp);
             }
             else if (SelectMode == SelectModes.OBJECT)
             {
-                return mSelList.isSelectedFigure(mp.FigureID);
+                return SelList.isSelectedFigure(mp.FigureID);
             }
 
             return false;
@@ -135,11 +135,11 @@ namespace Plotter.Controller
         {
             if (SelectMode == SelectModes.POINT)
             {
-                return mSelectedSegs.isSelected(ms);
+                return SelSegList.isSelected(ms);
             }
             else if (SelectMode == SelectModes.OBJECT)
             {
-                return mSelectedSegs.isSelectedFigure(ms.FigureID);
+                return SelSegList.isSelectedFigure(ms.FigureID);
             }
 
             return false;
@@ -242,20 +242,20 @@ namespace Plotter.Controller
 
                     if (SelectMode == SelectModes.POINT)
                     {
-                        mSelList.add(mp);
+                        SelList.add(mp);
                         sel = true;
                         fig.SelectPointAt(mp.PointIndex, true);
                     }
                     else if (SelectMode == SelectModes.OBJECT)
                     {
-                        mSelList.add(mp.LayerID, mDB.GetFigure(mp.FigureID));
+                        SelList.add(mp.LayerID, mDB.GetFigure(mp.FigureID));
                         sel = true;
                         fig.SelectWithGroup();
                     }
 
                     // Set ignore list for snap cursor
-                    mPointSearcher.SetIgnoreList(mSelList.List);
-                    mSegSearcher.SetIgnoreList(mSelList.List);
+                    mPointSearcher.SetIgnoreList(SelList.List);
+                    mSegSearcher.SetIgnoreList(SelList.List);
 
                     mRulerSet.Set(fig.PointList, mp.PointIndex, cp);
 
@@ -297,7 +297,7 @@ namespace Plotter.Controller
 
                     if (SelectMode == SelectModes.POINT)
                     {
-                        mSelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID), mseg.PtIndexA, mseg.PtIndexB);
+                        SelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID), mseg.PtIndexA, mseg.PtIndexB);
                         sel = true;
 
                         fig.SelectPointAt(mseg.PtIndexA, true);
@@ -305,22 +305,22 @@ namespace Plotter.Controller
                     }
                     else if (SelectMode == SelectModes.OBJECT)
                     {
-                        mSelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID));
+                        SelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID));
                         sel = true;
 
                         fig.SelectWithGroup();
                     }
 
-                    mSelectedSegs.Add(mseg);
+                    SelSegList.Add(mseg);
 
                     mMoveOrgScrnPoint = dc.CadPointToUnitPoint(ObjDownPoint);
 
                     State = States.START_DRAGING_POINTS;
 
                     // Set ignore liset for snap cursor
-                    mPointSearcher.SetIgnoreList(mSelList.List);
-                    mSegSearcher.SetIgnoreList(mSelList.List);
-                    mSegSearcher.SetIgnoreSeg(mSelectedSegs.List);
+                    mPointSearcher.SetIgnoreList(SelList.List);
+                    mSegSearcher.SetIgnoreList(SelList.List);
+                    mSegSearcher.SetIgnoreSeg(SelSegList.List);
 
                     CurrentFigure = fig;
                 }
@@ -552,7 +552,7 @@ namespace Plotter.Controller
         #region RubberBand
         public void RubberBandSelect(CadVector p0, CadVector p1)
         {
-            mSelList.clear();
+            SelList.clear();
 
             CadVector minp = CadVector.Min(p0, p1);
             CadVector maxp = CadVector.Max(p0, p1);
@@ -560,7 +560,7 @@ namespace Plotter.Controller
             DB.WalkEditable(
                 (layer, fig) =>
                 {
-                    SelectIfContactRect(minp, maxp, layer.ID, fig, mSelList);
+                    SelectIfContactRect(minp, maxp, layer.ID, fig, SelList);
                 });
 
             //CollectSelList(mSelList);
@@ -946,7 +946,7 @@ namespace Plotter.Controller
                 FigureCreator.EndCreate(dc);
 
                 CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, FigureCreator.Figure.ID);
-                mHistoryManager.foward(ope);
+                HistoryMan.foward(ope);
                 CurrentLayer.AddFigure(FigureCreator.Figure);
 
                 NextState();
@@ -954,7 +954,7 @@ namespace Plotter.Controller
             else if (state == CadFigure.Creator.State.ENOUGH)
             {
                 CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, FigureCreator.Figure.ID);
-                mHistoryManager.foward(ope);
+                HistoryMan.foward(ope);
                 CurrentLayer.AddFigure(FigureCreator.Figure);
             }
             else if (state == CadFigure.Creator.State.WAIT_NEXT_POINT)
@@ -966,7 +966,7 @@ namespace Plotter.Controller
                     ref p
                     );
 
-                mHistoryManager.foward(ope);
+                HistoryMan.foward(ope);
             }
         }
 

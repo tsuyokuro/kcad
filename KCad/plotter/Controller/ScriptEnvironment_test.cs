@@ -46,7 +46,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
             Controller.UpdateTreeView(true);
         }
@@ -62,7 +62,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
             Controller.UpdateTreeView(true);
         }
@@ -86,7 +86,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryManager.foward(ope);
+            Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
             Controller.UpdateTreeView(true);
         }
@@ -368,7 +368,7 @@ namespace Plotter.Controller
 
             if (opeRoot.OpeList.Count > 0)
             {
-                Controller.HistoryManager.foward(opeRoot);
+                Controller.HistoryMan.foward(opeRoot);
             }
 
             Controller.UpdateTreeView(true);

@@ -15,24 +15,21 @@ using CadDataTypes;
 
 namespace Plotter.Controller
 {
+    //public delegate void StateChanged(PlotterController sender, PlotterController.StateInfo si);
 
-    public delegate void StateChanged(PlotterController sender, PlotterController.StateInfo si);
+    //public delegate void LayerListChanged(PlotterController sender, PlotterController.LayerListInfo layerListInfo);
 
-    public delegate void LayerListChanged(PlotterController sender, PlotterController.LayerListInfo layerListInfo);
+    //public delegate void RequestContextMenu(PlotterController sender, PlotterController.StateInfo si, int x, int y);
 
-    public delegate void RequestContextMenu(PlotterController sender, PlotterController.StateInfo si, int x, int y);
+    //public delegate void DataChanged(PlotterController sender, bool redraw);
 
-    public delegate void DataChanged(PlotterController sender, bool redraw);
-
+    //public delegate void CursorPosChanged(PlotterController sender, CadVector pt, CursorType type);
 
     public enum CursorType
     {
         TRACKING,
         LAST_DOWN,
     }
-
-
-    public delegate void CursorPosChanged(PlotterController sender, CadVector pt, CursorType type);
 
     public partial class PlotterController
     {
@@ -153,67 +150,32 @@ namespace Plotter.Controller
             }
         }
 
-        MeasureModes mMeasureMode = MeasureModes.NONE;
-
-        public MeasureModes MeasureMode
-        {
-            set
-            {
-                mMeasureMode = value;
-            }
-            get
-            {
-                return mMeasureMode;
-            }
-        }
+        public MeasureModes MeasureMode = MeasureModes.NONE;
 
         private CadFigure.Creator FigureCreator = null;
         private CadFigure.Creator MeasureFigureCreator = null;
 
+        public HistoryManager HistoryMan = null;
 
-        private HistoryManager mHistoryManager = null;
+        public SelectList SelList = new SelectList();
 
-        public HistoryManager HistoryManager
-        {
-            get
-            {
-                return mHistoryManager;
-            }
-        }
-
-        private SelectList mSelList = new SelectList();
-
-        public SelectList SelList
-        {
-            get
-            {
-                return mSelList;
-            }
-        }
-
-        private SelectSegmentList mSelectedSegs = new SelectSegmentList();
-
-        public SelectSegmentList SelSegList
-        {
-            get
-            {
-                return mSelectedSegs;
-            }
-        }
+        public SelectSegmentList SelSegList = new SelectSegmentList();
 
         private List<CadFigure> EditFigList = new List<CadFigure>();
 
 
         public bool ContinueCreate { set; get; } = false;
 
-        public StateChanged StateChanged;
+        // sender, stateInfo
+        public Action<PlotterController, StateInfo> StateChanged;
 
-        public RequestContextMenu RequestContextMenu;
+        // sender, stateInfo, x, y
+        public Action<PlotterController, StateInfo, int, int> RequestContextMenu;
 
-        #region Delegators
-        private LayerListChanged mLayerListChanged = (a, b) => { };
+        // sender, layerListInfo
+        private Action<PlotterController, LayerListInfo> mLayerListChanged = (a, b) => { };
 
-        public LayerListChanged LayerListChanged
+        public Action<PlotterController, LayerListInfo> LayerListChanged
         {
             set
             {
@@ -227,9 +189,10 @@ namespace Plotter.Controller
             }
         }
 
-        private DataChanged mDataChanged = (a, b) => { };
+        // sender, redraw
+        private Action<PlotterController, bool> mDataChanged = (a, b) => { };
 
-        public DataChanged DataChanged
+        public Action<PlotterController, bool> DataChanged
         {
             set
             {
@@ -241,9 +204,10 @@ namespace Plotter.Controller
             }
         }
 
-        private CursorPosChanged mCursorPosChanged = (a, b, c) => { };
+        // sender, cursorPos, cursorType
+        private Action<PlotterController, CadVector, CursorType> mCursorPosChanged = (a, b, c) => { };
 
-        public CursorPosChanged CursorPosChanged
+        public Action<PlotterController, CadVector, CursorType> CursorPosChanged
         {
             set
             {
@@ -258,24 +222,11 @@ namespace Plotter.Controller
                 return mCursorPosChanged;
             }
         }
-        #endregion
+
 
         public List<CadFigure> TempFigureList = new List<CadFigure>();
 
-        DrawContext mCurrentDC;
-
-        public DrawContext CurrentDC
-        {
-            get
-            {
-                return mCurrentDC;
-            }
-
-            set
-            {
-                mCurrentDC = value;
-            }
-        }
+        public DrawContext CurrentDC = null;
 
         public ScriptEnvironment ScriptEnv;
 
@@ -291,7 +242,7 @@ namespace Plotter.Controller
 
             ViewCtrl = new ViewController();
 
-            mHistoryManager = new HistoryManager(mDB);
+            HistoryMan = new HistoryManager(mDB);
 
             ScriptEnv = new ScriptEnvironment(this);
 
@@ -450,7 +401,7 @@ namespace Plotter.Controller
             FigureCreator.EndCreate(CurrentDC);
 
             CadOpe ope = CadOpe.CreateSetCloseOpe(CurrentLayer.ID, FigureCreator.Figure.ID, true);
-            mHistoryManager.foward(ope);
+            HistoryMan.foward(ope);
 
             NextState();
         }
@@ -466,14 +417,14 @@ namespace Plotter.Controller
         public void Undo()
         {
             ClearSelection();
-            mHistoryManager.undo();
+            HistoryMan.undo();
             UpdateTreeView(true);
         }
 
         public void Redo()
         {
             ClearSelection();
-            mHistoryManager.redo();
+            HistoryMan.redo();
             UpdateTreeView(true);
         }
     #endregion
@@ -632,8 +583,8 @@ namespace Plotter.Controller
         {
             CurrentFigure = null;
 
-            mSelList.clear();
-            mSelectedSegs.Clear();
+            SelList.clear();
+            SelSegList.Clear();
 
             foreach (CadLayer layer in mDB.LayerList)
             {
@@ -645,7 +596,7 @@ namespace Plotter.Controller
         {
             HashSet<uint> idSet = new HashSet<uint>();
 
-            foreach (SelectItem a in mSelList.List)
+            foreach (SelectItem a in SelList.List)
             {
                 if (!idSet.Contains(a.FigureID))
                 {
@@ -745,7 +696,7 @@ namespace Plotter.Controller
             mSnapShotList.StoreAfter(DB);
             root.Add(mSnapShotList);
 
-            mHistoryManager.foward(root);
+            HistoryMan.foward(root);
 
 
             mSnapShotList = null;
@@ -768,7 +719,7 @@ namespace Plotter.Controller
         {
             HashSet<SelectItem> removeSels = new HashSet<SelectItem>();
 
-            foreach (SelectItem item in mSelList.List)
+            foreach (SelectItem item in SelList.List)
             {
                 if (!item.update())
                 {
@@ -776,12 +727,12 @@ namespace Plotter.Controller
                 }
             }
 
-            mSelList.RemoveAll(a => removeSels.Contains(a));
+            SelList.RemoveAll(a => removeSels.Contains(a));
 
 
             HashSet<MarkSeg> removeSegs = new HashSet<MarkSeg>();
 
-            foreach (MarkSeg item in mSelectedSegs.List)
+            foreach (MarkSeg item in SelSegList.List)
             {
                 if (!item.Update())
                 {
@@ -789,7 +740,7 @@ namespace Plotter.Controller
                 }
             }
 
-            mSelectedSegs.List.RemoveAll(a => removeSegs.Contains(a));
+            SelSegList.List.RemoveAll(a => removeSegs.Contains(a));
         }
 
         private CadOpeList RemoveInvalidFigure()
@@ -885,7 +836,7 @@ namespace Plotter.Controller
 
             CadOpeList opeList = layer.Clear();
 
-            mHistoryManager.foward(opeList);
+            HistoryMan.foward(opeList);
         }
 
         public void AddLayer(string name)
@@ -1100,7 +1051,7 @@ namespace Plotter.Controller
         public void ClearAll()
         {
             mDB.ClearAll();
-            mHistoryManager.Clear();
+            HistoryMan.Clear();
 
             NotifyLayerInfo();
             UpdateTreeView(true);

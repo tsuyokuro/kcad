@@ -89,7 +89,7 @@ namespace Plotter.Controller
                 opeRoot.OpeList.Add(ope);
             }
 
-            mHistoryManager.foward(opeRoot);
+            HistoryMan.foward(opeRoot);
 
             UpdateTreeView(true);
         }
@@ -159,7 +159,7 @@ namespace Plotter.Controller
                 opeRoot.OpeList.Add(ope);
             }
 
-            mHistoryManager.foward(opeRoot);
+            HistoryMan.foward(opeRoot);
 
             UpdateTreeView(true);
         }
@@ -207,7 +207,7 @@ namespace Plotter.Controller
 
             mDB = db;
 
-            mHistoryManager = new HistoryManager(mDB);
+            HistoryMan = new HistoryManager(mDB);
 
             NotifyLayerInfo();
 
@@ -227,7 +227,7 @@ namespace Plotter.Controller
 
             mDB = db;
 
-            mHistoryManager = new HistoryManager(mDB);
+            HistoryMan = new HistoryManager(mDB);
 
             NotifyLayerInfo();
 
@@ -291,7 +291,7 @@ namespace Plotter.Controller
 
             mDB = mpdata.GetDB();
 
-            mHistoryManager = new HistoryManager(mDB);
+            HistoryMan = new HistoryManager(mDB);
 
             NotifyLayerInfo();
 

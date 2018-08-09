@@ -8,7 +8,7 @@ namespace Plotter.Controller
     {
         public void ToBezier()
         {
-            ToBezier(mSelectedSegs.LastSel);
+            ToBezier(SelSegList.LastSel);
             ClearSelection();
         }
 
@@ -28,7 +28,7 @@ namespace Plotter.Controller
                 CadOpe ope = CadOpe.CreateInsertPointsOpe(
                     fig.LayerID, fig.ID, seg.PtIndexA + 1, num);
 
-                mHistoryManager.foward(ope);
+                HistoryMan.foward(ope);
             }
 
             ClearSelection();
@@ -36,7 +36,7 @@ namespace Plotter.Controller
 
         public void SeparateFigures()
         {
-            SeparateFigures(mSelList.List);
+            SeparateFigures(SelList.List);
             ClearSelection();
         }
 
@@ -74,12 +74,12 @@ namespace Plotter.Controller
                 layer.RemoveFigureByID(ri.FigureID);
             }
 
-            mHistoryManager.foward(opeRoot);
+            HistoryMan.foward(opeRoot);
         }
 
         public void BondFigures()
         {
-            BondFigures(mSelList.List);
+            BondFigures(SelList.List);
             ClearSelection();
         }
 
@@ -117,12 +117,12 @@ namespace Plotter.Controller
                 layer.RemoveFigureByID(ri.FigureID);
             }
 
-            mHistoryManager.foward(opeRoot);
+            HistoryMan.foward(opeRoot);
         }
 
         public void CutSegment()
         {
-            MarkSeg ms = mSelectedSegs.LastSel;
+            MarkSeg ms = SelSegList.LastSel;
             CutSegment(ms);
             ClearSelection();
         }
@@ -171,7 +171,7 @@ namespace Plotter.Controller
                 layer.RemoveFigureByID(ri.FigureID);
             }
 
-            mHistoryManager.foward(opeRoot);
+            HistoryMan.foward(opeRoot);
         }
 
         public void SetLoop(bool isLoop)
@@ -204,7 +204,7 @@ namespace Plotter.Controller
                 }
             }
 
-            mHistoryManager.foward(opeRoot);
+            HistoryMan.foward(opeRoot);
         }
 
         public void Flip(TargetCoord coord)
@@ -293,7 +293,7 @@ namespace Plotter.Controller
             }
 
 
-            HistoryManager.foward(opeList);
+            HistoryMan.foward(opeList);
         }
 
         public bool InsPointToLastSelectedSeg()
@@ -353,7 +353,7 @@ namespace Plotter.Controller
             pointFig.EndCreate(CurrentDC);
 
             CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, pointFig.ID);
-            HistoryManager.foward(ope);
+            HistoryMan.foward(ope);
             CurrentLayer.AddFigure(pointFig);
 
             string s = string.Format("({0:0.000},{1:0.000},{2:0.000})",
