@@ -1,3 +1,4 @@
+# coding: cp932
 import time
 import math
 import clr
@@ -39,10 +40,6 @@ def layerList():
 #[AC] lastDown()
 def lastDown():
     return SE.GetLastDownPoint()
-
-#[AC] showVector(v)
-def showVector(v):
-    SE.ShowVector(v)
 
 #[AC] distance()
 def distance():
@@ -198,7 +195,12 @@ def addSphere(slices, r):
     SE.AddSphere(slices, r)
     SE.UpdateTV();
 
-#âüÇµèoÇµ
+
+#[help]<âüÇµèoÇµ>extrude(id, dir, d, div)
+#[help]<å˙Ç›>extrude(id, dir, d, div)
+#[help]<å˙Ç≥>extrude(id, dir, d, div)
+#[help]<tick>extrude(id, dir, d, div)
+
 #[AC] extrude(id=currentFigID(), dir=unitVZ, d=20, div=0)
 def extrude(id, dir, d, div):
     SE.Extrude(id, dir, d, div)
@@ -248,6 +250,9 @@ def inputUnitV():
 #[AC] test()
 def test():
     SE.Test()
+
+def help(s):
+    SE.Help(s)
 
 
 #[AC] point0

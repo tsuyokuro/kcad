@@ -44,6 +44,9 @@ namespace Plotter.Controller
             }
         }
 
+        public Dictionary<string, string> HelpMap = new Dictionary<string, string>();
+
+
         private ScriptFunctions mScriptFunctions;
 
         public ScriptEnvironment(PlotterController controller)
@@ -55,8 +58,10 @@ namespace Plotter.Controller
             InitScriptingEngine();
         }
 
-        //Regex FuncPtn = new Regex(@"def[ \t]+(\w+\(.*\))\:");
         Regex AutoCompPtn = new Regex(@"#\[AC\][ \t]*(.+)\r\n");
+
+        Regex HelpPtn = new Regex(@"#\[help\][ \t]*<(.+)>(.+)\r\n");
+
 
         private void InitScriptingEngine()
         {
@@ -75,6 +80,15 @@ namespace Plotter.Controller
             {
                 string s = m.Groups[1].Value;
                 mAutoCompleteList.Add(s);
+            }
+
+            matches = HelpPtn.Matches(script);
+
+            foreach (Match m in matches)
+            {
+                string key = m.Groups[1].Value;
+                string s = m.Groups[2].Value;
+                HelpMap[key] = s;
             }
         }
 

@@ -166,64 +166,6 @@ namespace Plotter
             //dc.Drawing.DrawArrow(pen, vl[0], vl[0] + Normal * 10, ArrowTypes.PLUS, ArrowPos.END, 4, 2);
 
             return true;
-
-
-            //if (Thickness == 0)
-            //{
-            //    return true;
-            //}
-
-            //if (Normal.IsZero())
-            //{
-            //    Normal = CadUtil.RepresentativeNormal(mPointList);
-            //}
-
-            //CadVector tv = Normal * Thickness;
-
-            //tv *= -1;
-
-            //VectorList vl2 = new VectorList(vl);
-
-            //for (int i=0; i< vl2.Count; i++)
-            //{
-            //    vl2[i] += tv;
-            //}
-
-            //dc.Drawing.DrawFace(pen, vl2, -Normal, outline);
-
-            //VectorList side = new VectorList(4);
-
-            //side.Add(default(CadVector));
-            //side.Add(default(CadVector));
-            //side.Add(default(CadVector));
-            //side.Add(default(CadVector));
-
-            //CadVector n;
-
-            //for (int i = 0; i < vl.Count-1; i++)
-            //{
-            //    side[0] = vl[i];
-            //    side[1] = vl[i+1];
-            //    side[2] = vl2[i+1];
-            //    side[3] = vl2[i];
-
-            //    n = CadMath.Normal(side[2],side[0],side[1]);
-
-            //    dc.Drawing.DrawFace(pen, side, n, outline);
-            //}
-
-            //int e = vl.Count - 1;
-
-            //side[3] = vl[e];
-            //side[2] = vl[0];
-            //side[1] = vl2[0];
-            //side[0] = vl2[e];
-
-            //n = CadMath.Normal(side[2], side[0], side[1]);
-
-            //dc.Drawing.DrawFace(pen, side, n, outline);
-
-            //return true;
         }
 
         protected void DrawLines(DrawContext dc, int pen)
@@ -241,10 +183,6 @@ namespace Plotter
             {
                 Normal = CadUtil.RepresentativeNormal(PointList);
             }
-
-            //CadVector tv = Normal * Thickness;
-
-            //tv *= -1;
 
             CadVector a;
 
@@ -265,23 +203,12 @@ namespace Plotter
             void action(CadVector v)
             {
                 dc.Drawing.DrawLine(pen, a, v);
-
-                //if (Thickness != 0)
-                //{
-                //    dc.Drawing.DrawLine(pen, a + tv, v + tv);
-                //    dc.Drawing.DrawLine(pen, a, a + tv);
-                //}
                 a = v;
             }
 
             if (IsLoop)
             {
                 dc.Drawing.DrawLine(pen, a, pl[start]);
-                //if (Thickness != 0)
-                //{
-                //    dc.Drawing.DrawLine(pen, a + tv, pl[start] + tv);
-                //    dc.Drawing.DrawLine(pen, a, a + tv);
-                //}
             }
         }
 

@@ -88,12 +88,10 @@ namespace Plotter.Controller
 
         public class Interaction
         {
-            public delegate void PrintFunc(string s);
-            public delegate void FormatPrintFunc(string format, params object[] args);
             public PrintFunc println = (a) => { };
             public PrintFunc print = (a) => { };
             public FormatPrintFunc printf = (a, b) => { };
-            public VoidFunc clear = () => { };
+            public Action clear = () => { };
         }
 
         public Interaction InteractOut { set; get; } = new Interaction();

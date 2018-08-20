@@ -28,8 +28,6 @@ namespace KCad
             public string Text;
         }
 
-        //public delegate void TextEventHandler(object sender, TextEventArgs e);
-
         private Popup CandidatePopup;
         private ListBox CandidateListBox;
 

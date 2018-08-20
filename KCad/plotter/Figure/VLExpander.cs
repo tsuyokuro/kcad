@@ -16,7 +16,8 @@ namespace Plotter
 
         public delegate void delegateForEachPart(
             VectorList src,
-            int start, int cnt,
+            int start,
+            int cnt,
             int curveSplitNum,
             Action<CadVector> action);
 

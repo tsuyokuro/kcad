@@ -9,12 +9,9 @@ namespace Plotter
 {
     public abstract class DrawContext : IDisposable
     {
-        public delegate void DelegatePush(DrawContext dc);
+        Action<DrawContext> mOnPush;
 
-        DelegatePush mOnPush;
-
-
-        public DelegatePush OnPush
+        public Action<DrawContext> OnPush
         {
             set
             {

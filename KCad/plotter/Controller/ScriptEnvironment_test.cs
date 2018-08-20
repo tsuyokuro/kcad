@@ -579,114 +579,65 @@ namespace Plotter.Controller
 
         private void SimpleCommand(string s)
         {
-            if (s == "@clear" || s == "@cls")
+            string[] ss = Regex.Split(s, @"[ \t]+");
+
+            string cmd = ss[0];
+
+
+            if (cmd == "@clear" || s == "@cls")
             {
                 Controller.InteractOut.clear();
             }
-            else if (s == "@dump")
+            else if (cmd == "@h" || cmd == "@help")
+            {
+                if (ss.Length > 1)
+                {
+                    mScriptFunctions.MyHelp(ss[1]);
+                }
+            }
+
+            else if (cmd == "@dump")
             {
                 Controller.DB.dump();
             }
 
-
-            else if (s == "@clearTemp")
+            else if (cmd == "@clearTemp")
             {
                 Controller.TempFigureList.Clear();
             }
-            else if (s == "@test001")
-            {
-                test001();
-            }
-            else if (s == "@test002")
-            {
-                test002();
-            }
-            else if (s == "@test003")
-            {
-                test003();
-            }
-            else if (s == "@test004")
-            {
-                test004();
-            }
-            else if (s == "@test005")
-            {
-                test005();
-            }
-            else if (s == "@test006")
-            {
-                test006();
-            }
-            else if (s == "@test007")
-            {
-                test007();
-            }
-            else if (s == "@test008")
-            {
-                test008();
-            }
-            else if (s == "@test009")
-            {
-                test009();
-            }
-            else if (s == "@test010")
-            {
-                test010();
-            }
-            else if (s == "@test011")
-            {
-                test011();
-            }
-            else if (s == "@test012")
-            {
-                test012();
-            }
-            else if (s == "@test013")
-            {
-                test013();
-            }
-            else if (s == "@loadOff")
+            else if (cmd == "@loadOff")
             {
                 testLoadOff();
 
             }
-            else if (s == "@a-b")
-            {
-                testAminusB();
-
-            }
-            else if (s == "@rb")
-            {
-                testRB();
-            }
-            else if (s == "@nu")
+            else if (cmd == "@nu")
             {
                 testNu();
             }
-            else if (s == "@nus")
+            else if (cmd == "@nus")
             {
                 testNus();
             }
-            else if (s == "@nus2")
+            else if (cmd == "@nus2")
             {
                 testNus2();
             }
-            else if (s == "@testMesh")
+            else if (cmd == "@testMesh")
             {
                 testMesh();
             }
-            else if (s == "@testInvert")
+            else if (cmd == "@testInvert")
             {
                 testInvert();
             }
 
-            else if (s == "@loadDxf")
+            else if (cmd == "@loadDxf")
             {
                 testLoadDxf();
 
             }
 
-            else if (s == "@test")
+            else if (cmd == "test")
             {
 
             }

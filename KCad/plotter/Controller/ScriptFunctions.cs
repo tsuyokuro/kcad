@@ -44,6 +44,30 @@ namespace Plotter.Controller
             mMainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
         }
 
+        public void MyHelp(string s)
+        {
+            if (s == null || s.Length == 0)
+            {
+                return;
+            }
+
+            string help = null;
+
+            foreach (string key in Env.HelpMap.Keys)
+            {
+                if (key.Contains(s))
+                {
+                    help = Env.HelpMap[key];
+                    break;
+                }
+            }
+
+            if (help != null)
+            {
+                Controller.InteractOut.println(help);
+            }
+        }
+        
         public void PutMsg(string s)
         {
             Controller.InteractOut.println(s);
@@ -63,17 +87,6 @@ namespace Plotter.Controller
 
             Controller.CrossCursor.DirY.x = Math.Cos(t);
             Controller.CrossCursor.DirY.y = Math.Sin(t);
-        }
-
-        public void ShowVector(CadVector v)
-        {
-            Controller.InteractOut.println(
-                "( " +
-                v.x.ToString() + ", " +
-                v.y.ToString() + ", " +
-                v.z.ToString() +
-                " )"
-            );
         }
 
         public void PrintVector(CadVector v)

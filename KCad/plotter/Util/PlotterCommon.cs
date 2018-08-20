@@ -26,8 +26,6 @@ namespace Plotter
         }
     }
 
-    public delegate void VoidFunc();
-
     public delegate void PrintFunc(string s);
     public delegate void FormatPrintFunc(string format, params object[] args);
 

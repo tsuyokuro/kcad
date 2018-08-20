@@ -8,9 +8,7 @@ namespace KCad
 {
     public class DebugInputThread
     {
-        public delegate void LineArrived(string s);
-
-        private LineArrived mLineArrived;
+        private Action<string> mLineArrived;
 
         private Thread mThread;
 
@@ -18,7 +16,7 @@ namespace KCad
 
         Dispatcher dispatcher = Application.Current.Dispatcher;
 
-        public LineArrived OnLineArrived
+        public Action<string> OnLineArrived
         {
             set
             {

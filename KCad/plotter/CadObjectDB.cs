@@ -203,11 +203,7 @@ namespace Plotter
         
         #region Walk
 
-        public delegate void WalkFunction(CadLayer layer, CadFigure fig);
-
-        public delegate bool LayerFilterFunction(CadLayer layer);
-
-        public void Walk(WalkFunction walk, LayerFilterFunction layerFilter)
+        public void Walk(Action<CadLayer, CadFigure> walk, Func<CadLayer, bool> layerFilter)
         {
             mLayerList.ForEach(layer =>
             {
@@ -223,7 +219,7 @@ namespace Plotter
             });
         }
 
-        public static LayerFilterFunction EditableLayerFilter = (layer) =>
+        public static Func<CadLayer, bool> EditableLayerFilter = (layer) =>
         {
             if (layer.Locked) return false;
             if (!layer.Visible) return false;
@@ -231,7 +227,7 @@ namespace Plotter
             return true;
         };
 
-        public void WalkEditable(WalkFunction walk)
+        public void WalkEditable(Action<CadLayer, CadFigure> walk)
         {
             mLayerList.ForEach(layer =>
             {
