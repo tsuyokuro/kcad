@@ -21,6 +21,7 @@ using MeshUtilNS;
 using MeshMakerNS;
 using System.Threading.Tasks;
 using KCad;
+using System.Threading;
 
 namespace Plotter.Controller
 {
@@ -33,6 +34,8 @@ namespace Plotter.Controller
         TaskScheduler mMainThreadScheduler;
 
         int mMainThreadID = -1;
+
+        private SemaphoreSlim Sem = new SemaphoreSlim(1, 1);
 
         public ScriptFunctions(ScriptEnvironment env)
         {
@@ -659,7 +662,7 @@ namespace Plotter.Controller
             wr.p0 = dc.UnitPointToCadPoint(r.p0);
             wr.p1 = dc.UnitPointToCadPoint(r.p1);
 
-            DrawContextGDI tdc = new DrawContextGDI();
+            DrawContextGDI tdc = new DrawContextGDI(null);
 
             tdc.CopyMetrics(dc);
 
@@ -893,12 +896,12 @@ namespace Plotter.Controller
                 Controller.HistoryMan.foward(opeRoot);
             }
 
-            PrintSuccess();
-
             RunOnMainThread(() =>
             {
                 Controller.ClearSelection();
             });
+
+            //PrintSuccess();
         }
 
         public void InvertDir()
@@ -1203,7 +1206,7 @@ namespace Plotter.Controller
             ).Start(mMainThreadScheduler);
         }
 
-        public void PostRedraw()
+        public void Redraw()
         {
             if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
             {
@@ -1213,22 +1216,35 @@ namespace Plotter.Controller
                 return;
             }
 
-            new Task(() =>
-            {
-                Controller.Clear();
-                Controller.DrawAll();
-                Controller.PushCurrent();
-            }
-            ).Start(mMainThreadScheduler);
+            Task task = new Task(() =>
+                {
+                    Controller.Clear();
+                    Controller.DrawAll();
+                    Controller.PushCurrent();
+                }
+            );
+            
+            
+            task.Start(mMainThreadScheduler);
+            task.Wait();
         }
 
         public void RunOnMainThread(Action action)
         {
-            new Task(() =>
+            if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
+            {
+                action();
+                return;
+            }
+
+            Task task = new Task(() =>
             {
                 action();
             }
-            ).Start(mMainThreadScheduler);
+            );
+            
+            task.Start(mMainThreadScheduler);
+            task.Wait();
         }
 
         public void SeturePoint(uint figID, int idx, CadVector p)

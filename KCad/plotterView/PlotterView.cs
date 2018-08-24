@@ -38,7 +38,7 @@ namespace Plotter
 
         MyMessageHandler mMessageHandler;
 
-        private DrawContextGDI mDrawContext = new DrawContextGDI();
+        private DrawContextGDI mDrawContext = null;
 
         public DrawContext DrawContext
         {
@@ -60,12 +60,14 @@ namespace Plotter
         {
             get
             {
-                return (Control)this;
+                return this;
             }
         }
 
         public PlotterView()
         {
+            mDrawContext = new DrawContextGDI(this);
+
             this.DoubleBuffered = false;
 
             base.SizeChanged += onSizeChanged;

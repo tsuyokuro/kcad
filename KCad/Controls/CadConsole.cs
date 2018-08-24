@@ -330,8 +330,6 @@ namespace KCad
                 Scroll.ScrollChanged += Scroll_ScrollChanged;
             }
 
-            RecalcSize();
-
             Esc.Palette[Esc.DefaultFColor] = mForeground;
             Esc.Palette[Esc.DefaultBColor] = mBackground;
 
@@ -341,6 +339,9 @@ namespace KCad
 
             DefaultAttr.FColor = Esc.DefaultFColor;
             DefaultAttr.BColor = Esc.DefaultBColor;
+
+            RecalcSize();
+            UpdateView();
         }
 
         private void CadConsoleView_MouseDown(object sender, MouseButtonEventArgs e)

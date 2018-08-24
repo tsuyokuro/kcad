@@ -3,11 +3,14 @@ using OpenTK.Graphics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using CadDataTypes;
+using System.Windows.Forms;
 
 namespace Plotter
 {
     public class DrawContextGDI : DrawContext
     {
+        protected Control Wnd;
+
         protected Graphics mGraphics = null;
 
         private Bitmap mImage = null;
@@ -32,6 +35,18 @@ namespace Plotter
 
         public DrawContextGDI()
         {
+            Init(null);
+        }
+
+        public DrawContextGDI(Control control)
+        {
+            Init(control);
+        }
+
+        private void Init(Control control)
+        {
+            Wnd = control;
+
             SetUnitPerMilli(4); // 4 pix = 1mm
             mViewOrg.x = 0;
             mViewOrg.y = 0;
@@ -41,6 +56,7 @@ namespace Plotter
 
             mDrawing = new DrawingGDI(this);
         }
+
 
         public override void SetViewSize(double w, double h)
         {

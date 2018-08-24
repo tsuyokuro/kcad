@@ -37,6 +37,8 @@ namespace KCad
             return (App)Application.Current;
         }
 
+        TaskScheduler mMainThreadScheduler;
+
         public App()
         {
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
@@ -72,12 +74,16 @@ namespace KCad
         // 別ThreadのException
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
-            HandleException(e.Exception);
+            new Task(() =>
+            {
+                HandleException(e.Exception);
+            }
+            ).Start(mMainThreadScheduler);
         }
 
         private void HandleException(object e)
         {
-            SaveData();
+            //SaveData();
             if (!ShowExceptionDialg(e.ToString()))
             {
                 Shutdown();
@@ -106,6 +112,9 @@ namespace KCad
         override protected void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            mMainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+
 
             OpenTK.Toolkit.Init();
 

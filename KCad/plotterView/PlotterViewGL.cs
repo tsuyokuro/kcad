@@ -10,7 +10,7 @@ namespace Plotter
 {
     class PlotterViewGL : GLControl, IPlotterView
     {
-        private DrawContextGL mDrawContext = new DrawContextGL();
+        private DrawContextGL mDrawContext = null;
 
         private PlotterController mController = null;
 
@@ -34,11 +34,11 @@ namespace Plotter
             }
         }
 
-        public System.Windows.Forms.Control FromsControl
+        public Control FromsControl
         {
             get
             {
-                return (System.Windows.Forms.Control)this;
+                return this;
             }
         }
 
@@ -57,6 +57,8 @@ namespace Plotter
 
         private PlotterViewGL(GraphicsMode mode) : base(mode)
         {
+            mDrawContext = new DrawContextGL(this);
+
             Load += OnLoad;
             Resize += OnResize;
             Paint += OnPaint;

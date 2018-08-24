@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 
 namespace KCad
 {
-    /// <summary>
-    /// EceptionDialog.xaml の相互作用ロジック
-    /// </summary>
     public partial class EceptionDialog : Window
     {
         public EceptionDialog()

@@ -577,6 +577,18 @@ namespace Plotter.Controller
             return Controller.DB.GetFigure(idlist[0]);
         }
 
+        private async void Test()
+        {
+            #region 別スレッド例外処理のテスト
+            CadFigure fig = null;
+
+            await Task.Run(() =>
+            {
+                fig.AddPoint(CadVector.Create(0, 0, 0));
+            });
+            #endregion
+        }
+
         private void SimpleCommand(string s)
         {
             string[] ss = Regex.Split(s, @"[ \t]+");
@@ -637,9 +649,9 @@ namespace Plotter.Controller
 
             }
 
-            else if (cmd == "test")
+            else if (cmd == "@test")
             {
-
+                Test();
             }
 
             else

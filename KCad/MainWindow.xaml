@@ -568,24 +568,25 @@
         </Grid>
 
         <!--Status bar-->
-        <StackPanel Grid.Row="4" Background="{StaticResource BGColor}" Height="20" HorizontalAlignment="Stretch"
+        <Border Grid.Row="4" BorderBrush="{StaticResource BoarderColor}" BorderThickness="1">
+            <StackPanel  Background="{StaticResource BGColor}" Height="20" HorizontalAlignment="Stretch"
                     Orientation="Horizontal">
-            <Rectangle
+                <Rectangle
                 VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="20"/>
 
-            <TextBlock x:Name="textBlockXYZ" TextWrapping="Wrap" Text="{Binding StrCursorPos}"
+                <TextBlock x:Name="textBlockXYZ" TextWrapping="Wrap" Text="{Binding StrCursorPos}"
                 VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="120" Foreground="White">
-            </TextBlock>
-            <TextBlock x:Name="textBlockXYZ2" TextWrapping="Wrap" Text="{Binding StrCursorPos2}"
+                </TextBlock>
+                <TextBlock x:Name="textBlockXYZ2" TextWrapping="Wrap" Text="{Binding StrCursorPos2}"
                 VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="120" Foreground="White">
-            </TextBlock>
+                </TextBlock>
 
-            <StackPanel x:Name="ViewModePanel"
+                <StackPanel x:Name="ViewModePanel"
                 Background="{StaticResource BGColor}"
                 Orientation="Horizontal"
                 VerticalAlignment="Stretch" >
 
-                <RadioButton
+                    <RadioButton
                     Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     IsChecked="{
@@ -593,19 +594,19 @@
                         ConverterParameter=FRONT,
                         Converter={StaticResource ViewModeConv}
                     }">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
                             Grid.Column="0"
                             Text=" Front "/>
 
-                    </Grid>
+                        </Grid>
 
-                </RadioButton>
+                    </RadioButton>
 
-                <RadioButton
+                    <RadioButton
                     Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     IsChecked="{
@@ -613,19 +614,19 @@
                         ConverterParameter=BACK,
                         Converter={StaticResource ViewModeConv}
                     }">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
                             Grid.Column="0"
                             Text=" Back "/>
 
-                    </Grid>
+                        </Grid>
 
-                </RadioButton>
+                    </RadioButton>
 
-                <RadioButton
+                    <RadioButton
                     Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     IsChecked="{
@@ -633,19 +634,19 @@
                         ConverterParameter=TOP,
                         Converter={StaticResource ViewModeConv}
                     }">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock
+                            <TextBlock
                             Grid.Column="0"
                             Text=" Top "/>
 
-                    </Grid>
-                </RadioButton>
+                        </Grid>
+                    </RadioButton>
 
-                <RadioButton
+                    <RadioButton
                     Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     IsChecked="{
@@ -653,19 +654,19 @@
                         ConverterParameter=BOTTOM,
                         Converter={StaticResource ViewModeConv}
                     }">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock
+                            <TextBlock
                             Grid.Column="0"
                             Text=" Bottom "/>
 
-                    </Grid>
-                </RadioButton>
+                        </Grid>
+                    </RadioButton>
 
-                <RadioButton
+                    <RadioButton
                     Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     IsChecked="{
@@ -673,20 +674,20 @@
                         ConverterParameter=RIGHT,
                         Converter={StaticResource ViewModeConv}
                     }">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock
+                            <TextBlock
                             Grid.Column="0"
                             Text=" Right "/>
 
-                    </Grid>
+                        </Grid>
 
-                </RadioButton>
+                    </RadioButton>
 
-                <RadioButton
+                    <RadioButton
                     Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     IsChecked="{
@@ -694,20 +695,20 @@
                         ConverterParameter=LEFT,
                         Converter={StaticResource ViewModeConv}
                     }">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock
+                            <TextBlock
                             Grid.Column="0"
                             Text=" Left "/>
 
-                    </Grid>
+                        </Grid>
 
-                </RadioButton>
+                    </RadioButton>
 
-                <RadioButton
+                    <RadioButton
                     Style="{StaticResource CustomRadioButton}"
                     Template="{StaticResource MyTggleButtonTemplate}"
                     Tag="axis_xyz"
@@ -716,18 +717,19 @@
                         ConverterParameter=FREE,
                         Converter={StaticResource ViewModeConv}
                     }">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock
+                            <TextBlock
                             Grid.Column="0"
                             Text=" 3D "/>
-                    </Grid>
+                        </Grid>
 
-                </RadioButton>
+                    </RadioButton>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
+        </Border>
     </Grid>
 </Window>

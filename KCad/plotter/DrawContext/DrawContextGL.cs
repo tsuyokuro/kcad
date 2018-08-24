@@ -4,11 +4,14 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using CadDataTypes;
+using System.Windows.Forms;
 
 namespace Plotter
 {
     class DrawContextGL : DrawContext
     {
+        protected Control Wnd;
+
         Vector4 LightPosition;
         Color4 LightAmbient;    // 環境光
         Color4 LightDiffuse;    // 拡散光
@@ -21,7 +24,6 @@ namespace Plotter
 
         public bool LightingEnable = true;
 
-
         public enum ProjectionType
         {
             TELESCOPE,
@@ -31,6 +33,18 @@ namespace Plotter
 
         public DrawContextGL()
         {
+            Init(null);
+        }
+
+        public DrawContextGL(Control control)
+        {
+            Init(control);
+        }
+
+        public void Init(Control control)
+        {
+            Wnd = control;
+
             //WoldScale = 0.2f;
 
             WoldScale = 1.0f;
