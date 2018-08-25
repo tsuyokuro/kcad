@@ -466,6 +466,104 @@ namespace HalfEdgeNS
                 }
             }
         }
+
+        public List<int> GetEdgePointList()
+        {
+            List<int> idxList = new List<int>();
+
+            HeFace f = FaceStore[0];
+
+            HalfEdge head = f.Head;
+
+            HalfEdge c = head;
+
+            CadVector v;
+
+            for (; ; )
+            {
+                if (c.Pair == null)
+                {
+                    idxList.Add(c.Vertex);
+                    c = c.Next;
+                }
+                else
+                {
+                    c = c.Pair;
+                    c = c.Next;
+                }
+
+                if (c.ID == head.ID)
+                {
+                    break;
+                }
+            }
+
+            return idxList;
+        }
+
+        public void ForReachEdgePoint(Func<CadVector, bool> func)
+        {
+            HeFace f = FaceStore[0];
+
+            HalfEdge head = f.Head;
+
+            HalfEdge c = head;
+
+            CadVector v;
+
+            for (; ; )
+            {
+                if (c.Pair == null)
+                {
+                    if (!func(VertexStore[c.Vertex]))
+                    {
+                        break;
+                    }
+                    c = c.Next;
+                }
+                else
+                {
+                    c = c.Pair;
+                    c = c.Next;
+                }
+
+                if (c.ID == head.ID)
+                {
+                    break;
+                }
+            }
+        }
+
+        public void ForReachEdgePoint(Action<CadVector> action)
+        {
+            HeFace f = FaceStore[0];
+
+            HalfEdge head = f.Head;
+
+            HalfEdge c = head;
+
+            CadVector v;
+
+            for (; ; )
+            {
+                if (c.Pair == null)
+                {
+                    action(VertexStore[c.Vertex]);
+                    c = c.Next;
+                }
+                else
+                {
+                    c = c.Pair;
+                    c = c.Next;
+                }
+
+                if (c.ID == head.ID)
+                {
+                    break;
+                }
+            }
+        }
+
     }
 
     public class HeConnector

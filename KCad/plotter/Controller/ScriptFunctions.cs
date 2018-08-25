@@ -814,6 +814,7 @@ namespace Plotter.Controller
             }
         }
 
+        // 押し出し
         public void Extrude(uint id, CadVector v, double d, int divide)
         {
             CadFigure tfig = Controller.DB.GetFigure(id);
@@ -852,7 +853,59 @@ namespace Plotter.Controller
             Controller.CurrentLayer.RemoveFigureByID(tfig.ID);
         }
 
-        public void ToMesh()
+        public void ToPolyLine(uint id)
+        {
+            CadFigure fig = Controller.DB.GetFigure(id);
+
+            if (!(fig is CadFigureMesh))
+            {
+                return;
+            }
+
+            CadFigureMesh figMesh = (CadFigureMesh)fig;
+
+            HeModel hm = figMesh.mHeModel;
+
+
+            CadFigure figPoly = Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
+
+            hm.ForReachEdgePoint(v =>
+            {
+                figPoly.AddPoint(v);
+            });
+
+            if (figPoly.PointCount < 1)
+            {
+                return;
+            }
+
+            figPoly.IsLoop = true;
+
+
+            CadOpeList opeRoot = new CadOpeList();
+            CadOpe ope;
+
+            ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, figPoly.ID);
+            opeRoot.Add(ope);
+
+            Controller.CurrentLayer.AddFigure(figPoly);
+
+
+            ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, fig.ID);
+            opeRoot.Add(ope);
+
+            Controller.CurrentLayer.RemoveFigureByID(fig.ID);
+
+
+            Controller.HistoryMan.foward(opeRoot);
+
+            RunOnMainThread(() =>
+            {
+                Controller.ClearSelection();
+            });
+        }
+
+        public void ToMesh(uint id)
         {
             var figlist = Controller.GetSelectedFigList();
 
@@ -860,41 +913,34 @@ namespace Plotter.Controller
 
             CadOpe ope;
 
-            for (int i = 0; i < figlist.Count; i++)
+            CadFigure fig = Controller.DB.GetFigure(id);
+
+
+            if (fig == null)
             {
-                CadFigure fig = figlist[i];
-
-                if (fig == null)
-                {
-                    continue;
-                }
-
-                if (fig.Type != CadFigure.Types.POLY_LINES)
-                {
-                    continue;
-                }
-
-                CadFigureMesh mesh = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
-
-                mesh.CreateModel(fig);
-
-
-                ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, mesh.ID);
-                opeRoot.Add(ope);
-
-                Controller.CurrentLayer.AddFigure(mesh);
-
-
-                ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, fig.ID);
-                opeRoot.Add(ope);
-
-                Controller.CurrentLayer.RemoveFigureByID(fig.ID);
+                return;    
             }
 
-            if (opeRoot.OpeList.Count > 0)
+            if (fig.Type != CadFigure.Types.POLY_LINES)
             {
-                Controller.HistoryMan.foward(opeRoot);
+                return;
             }
+
+            CadFigureMesh mesh = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            mesh.CreateModel(fig);
+
+
+            ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, mesh.ID);
+            opeRoot.Add(ope);
+            Controller.CurrentLayer.AddFigure(mesh);
+
+
+            ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, fig.ID);
+            opeRoot.Add(ope);
+            Controller.CurrentLayer.RemoveFigureByID(fig.ID);
+
+            Controller.HistoryMan.foward(opeRoot);
 
             RunOnMainThread(() =>
             {

@@ -250,7 +250,7 @@ namespace Plotter.Controller
         }
         #endregion
 
-    #region TreeView
+        #region TreeView
         CadObjectTreeView mCadObjectTreeView;
 
         public void SetObjectTreeView(CadObjectTreeView treeView)
@@ -307,7 +307,7 @@ namespace Plotter.Controller
             return idx;
         }
 
-        #endregion
+        #endregion TreeView
 
         #region Notify
         public void NotifyDataChanged(bool redraw)

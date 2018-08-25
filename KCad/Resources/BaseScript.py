@@ -144,11 +144,15 @@ def projDir():
 def printVector(v):
     SE.PrintVector(v)
 
-#[AC] toMesh()
-def toMesh():
-    SE.ToMesh()
+#[AC] toMesh(currentFigID())
+def toMesh(id):
+    SE.ToMesh(id)
     SE.UpdateTV()
 
+#[AC] toPoly(currentFigID())
+def toPoly(id):
+    SE.ToPolyLine(id)
+    SE.UpdateTV()
 
 #[AC] invertDir()
 def invertDir():
@@ -245,6 +249,10 @@ def inputPoint():
 #[AC] inputUnitV()
 def inputUnitV():
     return SE.InputUnitVector()
+
+#[AC] updateTV()
+def updateTV():
+    SE.UpdateTV()
 
 
 #[AC] test()
