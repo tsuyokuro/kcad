@@ -445,6 +445,8 @@
     <Content Include="ftgl\ftgl_x64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\null.cur" />
+    <Resource Include="Resources\dot.cur" />
     <Resource Include="Resources\mini_cross.cur" />
     <Resource Include="ResDict\Images\compass_s.png" />
     <Resource Include="ResDict\Images\script_icon.png" />

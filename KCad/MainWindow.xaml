@@ -428,7 +428,7 @@
                             Padding="2,2,2,2"
                             BorderBrush="{StaticResource BoarderColor}"
                             Foreground="{StaticResource TextColor}"
-                            Background="{StaticResource BGColor}"
+                            Background="{StaticResource MsgBGColor}"
                             CandidateListBackground ="{StaticResource BGColor}"
                             CandidateListForeground ="{StaticResource TextColor}"
                             CandidateListBorder ="Aqua"

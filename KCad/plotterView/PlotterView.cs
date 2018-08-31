@@ -86,8 +86,14 @@ namespace Plotter
 
             base.MouseWheel += mouseWheel;
 
+            //StreamResourceInfo si = System.Windows.Application.GetResourceStream(
+            //    new Uri("/KCad;component/Resources/mini_cross.cur", UriKind.Relative));
+
             StreamResourceInfo si = System.Windows.Application.GetResourceStream(
-                new Uri("/KCad;component/Resources/mini_cross.cur", UriKind.Relative));
+                new Uri("/KCad;component/Resources/dot.cur", UriKind.Relative));
+
+            //StreamResourceInfo si = System.Windows.Application.GetResourceStream(
+            //    new Uri("/KCad;component/Resources/null.cur", UriKind.Relative));
 
             Cursor cc = new Cursor(si.Stream);
 
