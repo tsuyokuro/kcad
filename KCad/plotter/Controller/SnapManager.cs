@@ -64,6 +64,8 @@ namespace Plotter
 
         public void SetTarget(CadCursor cursor)
         {
+            mDist = Double.MaxValue;
+
             CrossCursor = cursor;
 
             mPointSearcher.SetTargetPoint(cursor);
@@ -86,7 +88,7 @@ namespace Plotter
             mSegSearcher.SearchAllLayer(dc, db);
         }
 
-        private double EvalPointSearcher(DrawContext dc)
+        private void EvalPointSearcher(DrawContext dc)
         {
             MarkPoint mxy = mPointSearcher.GetXYMatch();
             MarkPoint mx = mPointSearcher.GetXMatch();
@@ -129,11 +131,13 @@ namespace Plotter
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
             }
 
-            return mPointSearcher.Distance();
+            mDist = Math.Min(mDist, mPointSearcher.Distance());
         }
 
-        private double EvalSegSearcher(DrawContext dc, double dist)
+        private void EvalSegSearcher(DrawContext dc)
         {
+            double dist = mDist;
+
             mSegSearcher.SetRangePixel(dc, Math.Min(LineSnapRange, dist - CadMath.Epsilon));
 
             MarkSeg markSeg = mSegSearcher.GetMatch();
@@ -160,23 +164,16 @@ namespace Plotter
                         SnapPointScrn = markSeg.CrossPointScrn;
                         SnapPointScrn.z = 0;
                     }
+                }
 
-                    return markSeg.Distance;
-                }
-                else
-                {
-                    mSegSearcher.Clean();
-                }
+                mDist = Math.Min(mDist, markSeg.Distance);
             }
-
-            return dist;
         }
 
         public void Eval(DrawContext dc)
         {
-            double dist = Double.MaxValue;
-            dist = EvalPointSearcher(dc);
-            dist = EvalSegSearcher(dc, dist);
+            EvalPointSearcher(dc);
+            EvalSegSearcher(dc);
         }
     }
 }
