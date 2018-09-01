@@ -144,7 +144,7 @@ namespace Plotter
 
                 CadVector tdv = v - TargetPoint.Pos;
 
-                double td = dv.Norm();
+                double td = tdv.Norm();
 
                 if (td < mind)
                 {

@@ -7,18 +7,6 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
-    public class HighlightPointListItem
-    {
-        public CadVector Point;
-        public int Pen;
-
-        public HighlightPointListItem(CadVector p, int pen = DrawTools.PEN_POINT_HIGHTLITE)
-        {
-            Point = p;
-            Pen = pen;
-        }
-    }
-
     class SnapManager
     {
         private PointSearcher mPointSearcher = new PointSearcher();
@@ -36,10 +24,12 @@ namespace Plotter
 
         private double LineSnapRange;
 
-        private List<HighlightPointListItem> HighlightPointList = new List<HighlightPointListItem>();
+        public List<HighlightPointListItem> HighlightPointList = new List<HighlightPointListItem>();
 
         private void Clean()
         {
+            HighlightPointList.Clear();
+
             mPointSearcher.Clean();
             mSegSearcher.Clean();
 
@@ -51,10 +41,12 @@ namespace Plotter
             mPointSearcher.SetRangePixel(dc, range);
         }
 
+        /*
         public void SetSegRange(DrawContext dc, double range)
         {
             mSegSearcher.SetRangePixel(dc, range);
         }
+        */
 
         public void SetLineSnapRange(double range)
         {
@@ -62,33 +54,41 @@ namespace Plotter
         }
 
 
-        public void SetTarget(CadCursor cursor)
+        public void SetTarget(DrawContext dc, CadCursor cursor)
         {
-            mDist = Double.MaxValue;
+            Clean();
 
             CrossCursor = cursor;
+
+            SnapPointScrn = cursor.Pos;
+
+            SnapPoint = dc.UnitPointToCadPoint(SnapPointScrn);
 
             mPointSearcher.SetTargetPoint(cursor);
             mSegSearcher.SetTargetPoint(cursor);
         }
 
-        public void Check(DrawContext dc, CadVector p)
+        public void CheckPoint(DrawContext dc, CadVector p)
         {
             mPointSearcher.Check(dc, p);
         }
 
-        public void Check(DrawContext dc, VectorList vl)
+        public void CheckPoint(DrawContext dc, VectorList vl)
         {
             mPointSearcher.Check(dc, vl);
         }
 
-        public void CheckAllLayer(DrawContext dc, CadObjectDB db)
+        public void CheckPointAllLayer(DrawContext dc, CadObjectDB db)
         {
             mPointSearcher.SearchAllLayer(dc, db);
+        }
+
+        public void CheckSegAllLayer(DrawContext dc, CadObjectDB db)
+        {
             mSegSearcher.SearchAllLayer(dc, db);
         }
 
-        private void EvalPointSearcher(DrawContext dc)
+        public void EvalPointSearcher(DrawContext dc)
         {
             MarkPoint mxy = mPointSearcher.GetXYMatch();
             MarkPoint mx = mPointSearcher.GetXMatch();
@@ -104,9 +104,7 @@ namespace Plotter
 
                 CadVector distanceX = CrossCursor.DistanceX(tp);
 
-                CrossCursor.Pos += distanceX;
-
-                SnapPointScrn = CrossCursor.Pos;
+                SnapPointScrn = CrossCursor.Pos + distanceX;
 
                 SnapPoint = dc.UnitPointToCadPoint(SnapPointScrn);
             }
@@ -119,9 +117,7 @@ namespace Plotter
 
                 CadVector distanceY = CrossCursor.DistanceY(tp);
 
-                CrossCursor.Pos += distanceY;
-
-                SnapPointScrn = CrossCursor.Pos;
+                SnapPointScrn = CrossCursor.Pos + distanceY;
 
                 SnapPoint = dc.UnitPointToCadPoint(SnapPointScrn);
             }
@@ -129,12 +125,17 @@ namespace Plotter
             if (mxy.IsValid)
             {
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
+
+                SnapPointScrn = dc.CadPointToUnitPoint(mxy.Point);
+                SnapPointScrn.z = 0;
+
+                SnapPoint = mxy.Point;
             }
 
             mDist = Math.Min(mDist, mPointSearcher.Distance());
         }
 
-        private void EvalSegSearcher(DrawContext dc)
+        public void EvalSegSearcher(DrawContext dc)
         {
             double dist = mDist;
 

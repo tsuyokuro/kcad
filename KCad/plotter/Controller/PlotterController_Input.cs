@@ -692,6 +692,10 @@ namespace Plotter.Controller
             {
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
                 tp = dc.CadPointToUnitPoint(mx.Point);
+
+                mSnapPoint = mxy.Point;
+                CrossCursor.Pos = dc.CadPointToUnitPoint(mSnapPoint);
+                CrossCursor.Pos.z = 0;
             }
 
             //double rdist = mPointSearcher.Distance(pixp);
@@ -699,11 +703,12 @@ namespace Plotter.Controller
             //DebugOut.printf("{0} {1}\n", rdist, dist);
         }
 
-        private double SegSnap(DrawContext dc, double dist)
+        private void SegSnap(DrawContext dc, double dist)
         {
             // Search segment
             mSegSearcher.Clean();
-            mSegSearcher.SetRangePixel(dc, Math.Min(LineSnapRange, dist - CadMath.Epsilon));
+            //mSegSearcher.SetRangePixel(dc, Math.Min(LineSnapRange, dist - CadMath.Epsilon));
+            mSegSearcher.SetRangePixel(dc, LineSnapRange);
 
             mSegSearcher.SetTargetPoint(CrossCursor);
 
@@ -751,8 +756,6 @@ namespace Plotter.Controller
                     mSegSearcher.Clean();
                 }
             }
-
-            return markSeg.Distance;
         }
 
         private void SnapGrid(DrawContext dc, CadVector pixp)
@@ -997,18 +1000,6 @@ namespace Plotter.Controller
             CrossCursor.Pos = p;
             mSnapPoint = CurrentDC.UnitPointToCadPoint(p);
             CrossCursor.Pos = p;
-        }
-
-        public class HighlightPointListItem
-        {
-            public CadVector Point;
-            public int Pen;
-
-            public HighlightPointListItem(CadVector p, int pen = DrawTools.PEN_POINT_HIGHTLITE)
-            {
-                Point = p;
-                Pen = pen;
-            }
         }
     }
 }
