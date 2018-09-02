@@ -451,18 +451,6 @@ namespace Plotter
         }
         #endregion
 
-        public override void DrawCursor(CadVector pt)
-        {
-            int pen = DrawTools.PEN_CURSOR;
-            CadVector pp = DC.CadPointToUnitPoint(pt);
-
-            //double size = 16;
-            double size = Math.Max(DC.ViewWidth, DC.ViewHeight);
-
-            DrawLineScrn(pen, pp.x - size, pp.y, pp.x + size, pp.y);
-            DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
-        }
-
         public override void DrawRect(int pen, CadVector p0, CadVector p1)
         {
             CadVector pp0 = DC.CadPointToUnitPoint(p0);
@@ -614,20 +602,8 @@ namespace Plotter
             return v;
         }
 
-        public override void DrawCursorScrn(CadVector pp)
+        public override void DrawCrossCursorScrn(CadCursor pp, int pen)
         {
-            int pen = DrawTools.PEN_CURSOR;
-
-            double size = 16;
-
-            DrawLineScrn(pen, pp.x - size, pp.y, pp.x + size, pp.y);
-            DrawLineScrn(pen, pp.x, pp.y - size, pp.x, pp.y + size);
-        }
-
-        public override void DrawCrossCursorScrn(CadCursor pp)
-        {
-            int pen = DrawTools.PEN_CURSOR2;
-
             double size = Math.Max(DC.ViewWidth, DC.ViewHeight);
 
             CadVector p0 = pp.Pos - (pp.DirX * size);

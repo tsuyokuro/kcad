@@ -459,6 +459,7 @@ namespace Plotter.Controller
                 dc = CurrentDC;
             }
 
+            DrawBase(dc);
             DrawCrossCursor(dc);
             Draw(dc);
             DrawSelectedItems(dc);
@@ -468,13 +469,16 @@ namespace Plotter.Controller
             DrawAccordingState(dc);
         }
 
+        public void DrawBase(DrawContext dc)
+        {
+            dc.Drawing.DrawAxis();
+            dc.Drawing.DrawPageFrame();
+            DrawGrid(dc);
+        }
+
         public void Draw(DrawContext dc)
         {
             if (dc == null) return;
-
-            dc.Drawing.DrawAxis();
-            DrawGrid(dc);
-            dc.Drawing.DrawPageFrame();
 
             foreach (CadLayer layer in mDB.LayerList)
             {
@@ -532,14 +536,14 @@ namespace Plotter.Controller
             }
         }
 
-        //public void DrawCursor(DrawContext dc)
-        //{
-        //    dc.Drawing.DrawCursorScrn(CrossCursor.Pos);
-        //}
-
         public void DrawCrossCursor(DrawContext dc)
         {
             dc.Drawing.DrawCrossCursorScrn(CrossCursor);
+
+            if (CursorLocked)
+            {
+                dc.Drawing.DrawCrossScrn(DrawTools.PEN_POINT_HIGHTLITE, CrossCursor.Pos, 8);
+            }
         }
 
         public void DrawSelRect(DrawContext dc)

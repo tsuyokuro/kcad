@@ -51,10 +51,6 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawCursor(CadVector pt)
-        {
-        }
-
         public virtual void DrawRect(int pen, CadVector p0, CadVector p1)
         {
         }
@@ -188,11 +184,7 @@ namespace Plotter
             }
         }
 
-        public virtual void DrawCursorScrn(CadVector pp)
-        {
-        }
-
-        public virtual void DrawCrossCursorScrn(CadCursor pp)
+        public virtual void DrawCrossCursorScrn(CadCursor pp, int pen)
         {
         }
 

@@ -30,8 +30,6 @@ namespace Plotter
 
         void DrawDownPointCursor(int pen, CadVector p);
 
-        void DrawCursor(CadVector pt);
-
         void DrawRect(int pen, CadVector p0, CadVector p1);
 
         void DrawCross(int pen, CadVector p, double size);
@@ -54,9 +52,7 @@ namespace Plotter
 
         void DrawArrow(int pen, CadVector pt0, CadVector pt1, ArrowTypes type, ArrowPos pos, double len, double width);
 
-        void DrawCursorScrn(CadVector pp);
-
-        void DrawCrossCursorScrn(CadCursor pp);
+        void DrawCrossCursorScrn(CadCursor pp, int pen = DrawTools.PEN_CURSOR2);
 
         void DrawRectScrn(int pen, CadVector p0, CadVector p1);
 

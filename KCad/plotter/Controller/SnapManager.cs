@@ -41,13 +41,6 @@ namespace Plotter
             mPointSearcher.SetRangePixel(dc, range);
         }
 
-        /*
-        public void SetSegRange(DrawContext dc, double range)
-        {
-            mSegSearcher.SetRangePixel(dc, range);
-        }
-        */
-
         public void SetLineSnapRange(double range)
         {
             LineSnapRange = range;
@@ -127,8 +120,6 @@ namespace Plotter
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
 
                 SnapPointScrn = dc.CadPointToUnitPoint(mxy.Point);
-                SnapPointScrn.z = 0;
-
                 SnapPoint = mxy.Point;
             }
 

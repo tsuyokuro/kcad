@@ -50,6 +50,7 @@ namespace Plotter
         {
             public SegmentItem Seg0;
             public SegmentItem Seg1;
+            public CadVector Point;
             public CadVector ScrPoint;
             public double Distance;
         }
@@ -84,6 +85,8 @@ namespace Plotter
 
             SegList.Clear();
 
+            CheckZeroPoint();
+
             Controller.DB.WalkEditable(CheckFig);
 
             CheckCross();
@@ -104,19 +107,45 @@ namespace Plotter
             return CadVector.InvalidValue;
         }
 
+        void CheckZeroPoint()
+        {
+            CadVector p = DC.CadPointToUnitPoint(CadVector.Zero);
+
+            CadVector d = p - TargetPoint;
+
+            double dist = d.Norm2D();
+
+            if (dist > Range)
+            {
+                return;
+            }
+
+            if (dist < MinDist)
+            {
+                Point.Layer = null;
+                Point.Fig = null;
+                Point.PointIndex = 0;
+                Point.Distance = dist;
+                Point.ScrPoint = p;
+
+                Type = Types.POINT;
+                MinDist = dist;
+            }
+        }
+
         void CheckFig(CadLayer layer, CadFigure fig)
         {
             int n = fig.PointCount;
             for (int i = 0; i < n; i++)
             {
-                CadVector p = fig.PointList[i];
+                CadVector cp = fig.PointList[i];
 
-                if (p.Selected)
+                if (cp.Selected)
                 {
                     continue;
                 }
 
-                p = DC.CadPointToUnitPoint(p);
+                CadVector p = DC.CadPointToUnitPoint(cp);
 
                 CadVector d = p - TargetPoint;
 
@@ -152,6 +181,8 @@ namespace Plotter
                 {
                     continue;
                 }
+
+                //CadVector cpc = (seg.P1 - seg.P0) / 2 + seg.P0;
 
                 CadVector p0 = DC.CadPointToUnitPoint(seg.P0);
                 CadVector p1 = DC.CadPointToUnitPoint(seg.P1);
