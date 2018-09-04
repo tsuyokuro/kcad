@@ -57,6 +57,10 @@ def ungroup():
 def addPoint(x, y, z):
     SE.AddPoint(x, y, z)
 
+#[AC] addPointV(getldp())
+def addPointV(p):
+    SE.AddPoint(p)
+
 #[AC] addLayer(name)
 def addLayer(name):
     SE.AddLayer(name)

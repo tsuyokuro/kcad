@@ -381,15 +381,6 @@ namespace Plotter.Controller
             Controller.LastDownPoint = p1;
         }
 
-        public void AddPoint()
-        {
-            AddPoint(
-                Controller.LastDownPoint.x,
-                Controller.LastDownPoint.y,
-                Controller.LastDownPoint.z);
-
-        }
-
         public void AddPoint(double x, double y, double z)
         {
             CadVector p = default(CadVector);
