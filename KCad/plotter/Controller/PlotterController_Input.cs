@@ -166,144 +166,39 @@ namespace Plotter.Controller
         }
         #endregion
 
-        /// <summary>
-        /// 指定デバイス座標について範囲内かつ最も近い図形を選択
-        /// </summary>
-        /// <param name="dc"> DrawContext</param>
-        /// <param name="pixp">スクリーン座標</param>
-        /// <returns>
-        /// true:  何かオブジェクトを選択した
-        /// false: 何も選択しなかった
-        /// </returns>
+
+        private struct SelectContext
+        {
+            public DrawContext dc;
+            public CadVector pixp;
+            public CadVector cp;
+            public CadCursor cc;
+
+            public bool pointSel;
+            public MarkPoint mp;
+
+            public bool segSel;
+            public MarkSeg mseg;
+        }
+
         public bool SelectNearest(DrawContext dc, CadVector pixp)
         {
-            CadVector cp = dc.UnitPointToCadPoint(pixp);
+            SelectContext sc = default(SelectContext);
 
-            bool sel = false;
+            sc.dc = dc;
+            sc.cp = dc.UnitPointToCadPoint(pixp);
+            sc.pointSel = false;
+            sc.segSel = false;
 
-            ObjDownPoint.Valid = false;
+            sc.cc = CadCursor.Create(pixp);
 
-            mPointSearcher.Clean();
-            mPointSearcher.SetRangePixel(dc, PointSnapRange);
+            sc = PointSelectNearest(sc);
 
-            if (CurrentFigure != null && !CadKeyboard.IsShiftKeyDown())
+            if (!sc.pointSel)
             {
-                mPointSearcher.CheckFigure(dc, CurrentLayer, CurrentFigure);
-            }
+                sc = SegSelectNearest(sc);
 
-            CadCursor cc = CadCursor.Create(pixp);
-
-            mPointSearcher.SetTargetPoint(cc);
-
-            mPointSearcher.SearchAllLayer(dc, mDB);
-
-            MarkPoint mp = default(MarkPoint);
-
-            mp = mPointSearcher.GetXYMatch();
-
-            if (mp.FigureID != 0)
-            {
-                ObjDownPoint = mp.Point;
-
-                MoveOrgScrnPoint = dc.CadPointToUnitPoint(mp.Point);
-
-                MoveOrgScrnPoint.z = 0;
-
-
-                State = States.START_DRAGING_POINTS;
-                CadFigure fig = mDB.GetFigure(mp.FigureID);
-
-                CadLayer layer = mDB.GetLayer(mp.LayerID);
-
-                if (!layer.Locked)
-                {
-                    ClearSelListConditional(mp);
-
-                    if (SelectMode == SelectModes.POINT)
-                    {
-                        SelList.add(mp);
-                        sel = true;
-                        fig.SelectPointAt(mp.PointIndex, true);
-                    }
-                    else if (SelectMode == SelectModes.OBJECT)
-                    {
-                        SelList.add(mp.LayerID, mDB.GetFigure(mp.FigureID));
-                        sel = true;
-                        fig.SelectWithGroup();
-                    }
-
-                    // Set ignore list for snap cursor
-                    mPointSearcher.SetIgnoreList(SelList.List);
-                    mSegSearcher.SetIgnoreList(SelList.List);
-
-                    mRulerSet.Set(fig.PointList, mp.PointIndex, cp);
-
-                    CurrentFigure = fig;
-                }
-            }
-            else
-            {
-                mSegSearcher.Clean();
-                mSegSearcher.SetRangePixel(dc, LineSnapRange);
-                mSegSearcher.SetTargetPoint(cc);
-
-                mSegSearcher.SearchAllLayer(dc, mDB);
-
-                MarkSeg mseg = mSegSearcher.GetMatch();
-
-                CadLayer layer = mDB.GetLayer(mseg.LayerID);
-
-                if (mseg.FigureID != 0 && !layer.Locked)
-                {
-
-                    CadVector center = mseg.CenterPoint;
-
-                    CadVector t = dc.CadPointToUnitPoint(center);
-
-                    if ((t - pixp).Norm() < LineSnapRange)
-                    {
-                        ObjDownPoint = center;
-                    }
-                    else
-                    {
-                        ObjDownPoint = mseg.CrossPoint;
-                    }
-
-
-                    CadFigure fig = mDB.GetFigure(mseg.FigureID);
-
-                    ClearSelListConditional(mseg);
-
-                    if (SelectMode == SelectModes.POINT)
-                    {
-                        SelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID), mseg.PtIndexA, mseg.PtIndexB);
-                        sel = true;
-
-                        fig.SelectPointAt(mseg.PtIndexA, true);
-                        fig.SelectPointAt(mseg.PtIndexB, true);
-                    }
-                    else if (SelectMode == SelectModes.OBJECT)
-                    {
-                        SelList.add(mseg.LayerID, mDB.GetFigure(mseg.FigureID));
-                        sel = true;
-
-                        fig.SelectWithGroup();
-                    }
-
-                    SelSegList.Add(mseg);
-
-                    MoveOrgScrnPoint = dc.CadPointToUnitPoint(ObjDownPoint);
-
-                    State = States.START_DRAGING_POINTS;
-
-                    // Set ignore liset for snap cursor
-                    mPointSearcher.SetIgnoreList(SelList.List);
-                    mSegSearcher.SetIgnoreList(SelList.List);
-                    mSegSearcher.SetIgnoreSeg(SelSegList.List);
-
-                    CurrentFigure = fig;
-                }
-                else
+                if (!sc.segSel)
                 {
                     if (!CadKeyboard.IsCtrlKeyDown())
                     {
@@ -322,8 +217,6 @@ namespace Plotter.Controller
             else
             {
                 LastDownPoint = mSnapPoint;
-
-                #region Gridding
 
                 if (SettingsHolder.Settings.SnapToGrid)
                 {
@@ -351,11 +244,146 @@ namespace Plotter.Controller
                         LastDownPoint = dc.UnitPointToCadPoint(p);
                     }
                 }
-
-                #endregion
             }
 
-            return sel;
+            return sc.pointSel || sc.segSel;
+        }
+
+        private SelectContext PointSelectNearest(SelectContext sc)
+        {
+            mPointSearcher.Clean();
+            mPointSearcher.SetRangePixel(sc.dc, PointSnapRange);
+
+            if (CurrentFigure != null)
+            {
+                mPointSearcher.CheckFigure(sc.dc, CurrentLayer, CurrentFigure);
+            }
+
+            mPointSearcher.SetTargetPoint(sc.cc);
+
+            mPointSearcher.SearchAllLayer(sc.dc, mDB);
+
+            sc.mp = mPointSearcher.GetXYMatch();
+
+            if (sc.mp.FigureID == 0)
+            {
+                return sc;
+            }
+
+            ObjDownPoint = sc.mp.Point;
+
+            MoveOrgScrnPoint = sc.dc.CadPointToUnitPoint(sc.mp.Point);
+
+            MoveOrgScrnPoint.z = 0;
+
+            State = States.START_DRAGING_POINTS;
+            CadFigure fig = mDB.GetFigure(sc.mp.FigureID);
+
+            CadLayer layer = mDB.GetLayer(sc.mp.LayerID);
+
+            if (layer.Locked)
+            {
+                sc.mp.reset();
+                return sc;
+            }
+
+            ClearSelListConditional(sc.mp);
+
+            if (SelectMode == SelectModes.POINT)
+            {
+                SelList.add(sc.mp);
+                sc.pointSel = true;
+                fig.SelectPointAt(sc.mp.PointIndex, true);
+            }
+            else if (SelectMode == SelectModes.OBJECT)
+            {
+                SelList.add(sc.mp.LayerID, mDB.GetFigure(sc.mp.FigureID));
+                sc.pointSel = true;
+                fig.SelectWithGroup();
+            }
+
+            // Set ignore list for snap cursor
+            mPointSearcher.SetIgnoreList(SelList.List);
+            mSegSearcher.SetIgnoreList(SelList.List);
+
+            mRulerSet.Set(fig.PointList, sc.mp.PointIndex, sc.cp);
+
+            CurrentFigure = fig;
+
+            return sc;
+        }
+
+        private SelectContext SegSelectNearest(SelectContext sc)
+        {
+            mSegSearcher.Clean();
+            mSegSearcher.SetRangePixel(sc.dc, LineSnapRange);
+            mSegSearcher.SetTargetPoint(sc.cc);
+
+            mSegSearcher.SearchAllLayer(sc.dc, mDB);
+
+            sc.mseg = mSegSearcher.GetMatch();
+
+            if (sc.mseg.FigureID == 0)
+            {
+                return sc;
+            }
+
+            CadLayer layer = mDB.GetLayer(sc.mseg.LayerID);
+
+            if (layer.Locked)
+            {
+                sc.mseg.FSegment.Figure = null;
+                return sc;
+            }
+
+            CadVector center = sc.mseg.CenterPoint;
+
+            CadVector t = sc.dc.CadPointToUnitPoint(center);
+
+            if ((t - sc.pixp).Norm() < LineSnapRange)
+            {
+                ObjDownPoint = center;
+            }
+            else
+            {
+                ObjDownPoint = sc.mseg.CrossPoint;
+            }
+
+
+            CadFigure fig = mDB.GetFigure(sc.mseg.FigureID);
+
+            ClearSelListConditional(sc.mseg);
+
+            if (SelectMode == SelectModes.POINT)
+            {
+                SelList.add(sc.mseg.LayerID, mDB.GetFigure(sc.mseg.FigureID), sc.mseg.PtIndexA, sc.mseg.PtIndexB);
+                sc.segSel = true;
+
+                fig.SelectPointAt(sc.mseg.PtIndexA, true);
+                fig.SelectPointAt(sc.mseg.PtIndexB, true);
+            }
+            else if (SelectMode == SelectModes.OBJECT)
+            {
+                SelList.add(sc.mseg.LayerID, mDB.GetFigure(sc.mseg.FigureID));
+                sc.segSel = true;
+
+                fig.SelectWithGroup();
+            }
+
+            SelSegList.Add(sc.mseg);
+
+            MoveOrgScrnPoint = sc.dc.CadPointToUnitPoint(ObjDownPoint);
+
+            State = States.START_DRAGING_POINTS;
+
+            // Set ignore liset for snap cursor
+            mPointSearcher.SetIgnoreList(SelList.List);
+            mSegSearcher.SetIgnoreList(SelList.List);
+            mSegSearcher.SetIgnoreSeg(SelSegList.List);
+
+            CurrentFigure = fig;
+
+            return sc;
         }
 
         private void LButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
