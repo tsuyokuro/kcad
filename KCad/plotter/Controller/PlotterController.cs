@@ -265,6 +265,15 @@ namespace Plotter.Controller
                 return;
             }
 
+
+            /* 選択されたオブジェクトだけのリスト
+            CadLayerTreeItem item = new CadLayerTreeItem();
+            item.AddChildren(CurrentLayer, fig => { return fig.HasSelectedPoint(); });
+
+            mCadObjectTreeView.AttachRoot(item);
+            mCadObjectTreeView.Redraw();
+            */
+
             if (remakeTree)
             {
                 CadLayerTreeItem item = new CadLayerTreeItem(CurrentLayer);
