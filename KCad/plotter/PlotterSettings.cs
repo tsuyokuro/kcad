@@ -34,6 +34,9 @@ namespace Plotter
 
         public bool FillFace = true;
 
+        public bool FilterTreeView = false;
+
+
 
         public PlotterSettings()
         {

@@ -279,6 +279,29 @@ namespace Plotter
         }
         #endregion
 
+        #region Tree view
+        public bool FilterTreeView
+        {
+            set
+            {
+                SettingsHolder.Settings.FilterTreeView = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
+
+                if (Controller != null)
+                {
+                    Controller.UpdateTreeView(true);
+                }
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.FilterTreeView;
+            }
+        }
+        #endregion
+
+
+
         #region 表示設定
 
         public bool DrawFaceOutline
@@ -1173,6 +1196,7 @@ namespace Plotter
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawFaceOutline)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillFace)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
 
             mController.Grid.GridSize = settings.GridSize;
 

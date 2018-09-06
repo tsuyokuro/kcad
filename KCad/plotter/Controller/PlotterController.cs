@@ -265,24 +265,26 @@ namespace Plotter.Controller
                 return;
             }
 
-
-            /* 選択されたオブジェクトだけのリスト
-            CadLayerTreeItem item = new CadLayerTreeItem();
-            item.AddChildren(CurrentLayer, fig => { return fig.HasSelectedPoint(); });
-
-            mCadObjectTreeView.AttachRoot(item);
-            mCadObjectTreeView.Redraw();
-            */
-
-            if (remakeTree)
+            if (SettingsHolder.Settings.FilterTreeView)
             {
-                CadLayerTreeItem item = new CadLayerTreeItem(CurrentLayer);
+                CadLayerTreeItem item = new CadLayerTreeItem();
+                item.AddChildren(CurrentLayer, fig => { return fig.HasSelectedPoint(); });
+
                 mCadObjectTreeView.AttachRoot(item);
                 mCadObjectTreeView.Redraw();
             }
             else
             {
-                mCadObjectTreeView.Redraw();
+                if (remakeTree)
+                {
+                    CadLayerTreeItem item = new CadLayerTreeItem(CurrentLayer);
+                    mCadObjectTreeView.AttachRoot(item);
+                    mCadObjectTreeView.Redraw();
+                }
+                else
+                {
+                    mCadObjectTreeView.Redraw();
+                }
             }
         }
 

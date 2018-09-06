@@ -12,5 +12,8 @@
     <BitmapImage x:Key="snap_to_line_icon" UriSource="Images/SnapToLine.png"/>
     <BitmapImage x:Key="snap_to_point_icon" UriSource="Images/SnapToPoint.png"/>
     <BitmapImage x:Key="snap_to_seg_icon" UriSource="Images/SnapToSeg.png"/>
+
+    <BitmapImage x:Key="filter_icon" UriSource="Images/filter.png"/>
+
 </ResourceDictionary>
     

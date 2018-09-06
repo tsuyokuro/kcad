@@ -181,34 +181,36 @@
                 <Label Width="32"/>
 
                 <ToggleButton
-                Style="{StaticResource CustomToggleButton2}"
-                IsChecked="{Binding SnapToPoint}"
-                Margin="1,2,0,2"
-                >
+                    Style="{StaticResource CustomToggleButton2}"
+                    IsChecked="{Binding SnapToPoint}"
+                    Margin="1,2,0,2"
+                    >
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource snap_to_point_icon}" Height="24" VerticalAlignment="Top"/>
                     </StackPanel>
 
                 </ToggleButton>
+
                 <ToggleButton
-                Style="{StaticResource CustomToggleButton2}"
-                IsChecked="{Binding SnapToSegment}"
-                BorderThickness="0"
-                Margin="1,2,0,2"
-                >
+                    Style="{StaticResource CustomToggleButton2}"
+                    IsChecked="{Binding SnapToSegment}"
+                    BorderThickness="0"
+                    Margin="1,2,0,2"
+                    >
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource snap_to_seg_icon}" Height="24" VerticalAlignment="Top"/>
                     </StackPanel>
 
                 </ToggleButton>
+
                 <ToggleButton
-                Style="{StaticResource CustomToggleButton2}"
-                IsChecked="{Binding SnapToLine}"
-                Margin="1,2,0,2"
-                >
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource snap_to_line_icon}" Height="24" VerticalAlignment="Top"/>
-                    </StackPanel>
+                    Style="{StaticResource CustomToggleButton2}"
+                    IsChecked="{Binding SnapToLine}"
+                    Margin="1,2,0,2"
+                    >
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{StaticResource snap_to_line_icon}" Height="24" VerticalAlignment="Top"/>
+                        </StackPanel>
 
                 </ToggleButton>
 
@@ -537,26 +539,53 @@
                             HorizontalAlignment="Stretch"
                             Background="{StaticResource BoarderColor}"
                             />
+                        <Grid Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="100*"/>
+                            </Grid.RowDefinitions>
 
-                        <ScrollViewer
-                            Grid.Row="2"
-                            Style="{StaticResource CustomScrollViewerStyle}"
-                            VerticalAlignment="Stretch"
-                            HorizontalScrollBarVisibility="Hidden"
-                            VerticalScrollBarVisibility = "Visible"
-                            >
+                            <Border Grid.Row="0" BorderBrush="{StaticResource BoarderColor}" BorderThickness="0,1,0,1">
+                                <StackPanel
+                                    Orientation="Horizontal"
+                                    x:Name="TreeViewToolBar"
+                                    >
+                                    <ToggleButton
+                                        Style="{StaticResource CustomToggleButton2}"
+                                        IsChecked="{Binding FilterTreeView}"
+                                        Margin="2,2,2,2">
+                                        
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="{StaticResource filter_icon}" Height="16" VerticalAlignment="Top"/>
+                                        </StackPanel>
 
-                            <local:CadObjectTreeView
-                                x:Name="ObjTree"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Top"
-                                Height="0"
-                                Background="{StaticResource BaseColor}"
-                                Foreground="White"
-                                TextSize="12.0"
-                                ItemHeight="16.0"
-                                />
-                        </ScrollViewer>
+                                    </ToggleButton>
+
+
+                                </StackPanel>
+                            </Border>
+                            
+                            <ScrollViewer
+                                Grid.Row="1"
+                                Style="{StaticResource CustomScrollViewerStyle}"
+                                VerticalAlignment="Stretch"
+                                HorizontalScrollBarVisibility="Hidden"
+                                VerticalScrollBarVisibility = "Visible"
+                                BorderBrush="AliceBlue"
+                                >
+
+                                    <local:CadObjectTreeView
+                                    x:Name="ObjTree"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    Height="0"
+                                    Background="{StaticResource BaseColor}"
+                                    Foreground="White"
+                                    TextSize="12.0"
+                                    ItemHeight="16.0"
+                                    />
+                            </ScrollViewer>
+                        </Grid>
                     </Grid>
 
 

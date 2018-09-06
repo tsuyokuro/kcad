@@ -85,6 +85,8 @@ namespace KCad
 
             ToolBar1.DataContext = ViewModel;
 
+            TreeViewToolBar.DataContext = ViewModel;
+
             MyConsole.SelectionChanged += MyConsole_SelectionChanged;
 
             Loaded += MainWindow_Loaded;
