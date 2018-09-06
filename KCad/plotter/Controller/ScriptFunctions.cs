@@ -127,35 +127,6 @@ namespace Plotter.Controller
             return -viewv;
         }
 
-        public void Find(double range)
-        {
-            CadVector org = Controller.LastDownPoint;
-
-            DrawContext dc = Controller.CurrentDC;
-
-            CadVector pixp = dc.CadPointToUnitPoint(org);
-
-
-            PointSearcher searcher = new PointSearcher();
-
-            searcher.SetRangePixel(dc, range);
-
-            CadCursor cc = CadCursor.Create(pixp);
-
-            searcher.SetTargetPoint(cc);
-            searcher.SearchAllLayer(dc, Controller.DB);
-
-
-            List<MarkPoint> list = searcher.GetXYMatches();
-
-
-            foreach (MarkPoint mp in list)
-            {
-                string s = "fig{ id: " + mp.FigureID.ToString() + "; idx: " + mp.PointIndex.ToString() + "; }";
-                Controller.InteractOut.println(s);
-            }
-        }
-
         public void FindFigureById(uint id)
         {
             int idx = Controller.FindTreeViewItem(id);
@@ -1223,9 +1194,9 @@ namespace Plotter.Controller
             return v;
         }
 
-        public dynamic ExecPartial(string fname)
+        public dynamic ExecScript(string fname)
         {
-            return Env.ExecPartial(fname);
+            return Env.ExecScript(fname);
         }
 
         public void UpdateTV()

@@ -25,10 +25,6 @@ def rectAt(pv, w=10, h=10, p="xy"):
 def area():
     return SE.Area()
 
-#[AC] find(range)
-def find(range):
-    SE.Find(range)
-
 #[AC] findFigId(id=currentFigID())
 def findFigId(id):
     SE.FindFigureById(id)
@@ -105,7 +101,7 @@ def selFig(id):
 
 #[AC] execScript(fname)
 def execScript(fname):
-    return SE.ExecPartial(fname)
+    return SE.ExecScript(fname)
 
 #[AC] scale(ratio)
 def scale(ratio):

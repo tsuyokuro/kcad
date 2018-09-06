@@ -1229,12 +1229,14 @@ namespace Plotter
             settings.Save();
         }
 
+        /*
         public void MessageSelected(List<string> messages)
         {
             mController.ScriptEnv.MessageSelected(messages);
 
             Redraw();
         }
+        */
     }
 
     public class TextCommandHistory

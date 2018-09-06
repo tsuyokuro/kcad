@@ -93,6 +93,7 @@ namespace Plotter.Controller
             }
         }
 
+        /*
         Regex FigPtn = new Regex(@"fig[ ]*{[ ]*id\:[ ]*([0-9]+)[ ]*;[ ]*idx\:[ ]*([0-9]+)[ ]*;[ ]*}[ ]*");
 
         public void MessageSelected(List<string> messages)
@@ -124,8 +125,9 @@ namespace Plotter.Controller
                 }
             }
         }
+        */
 
-        public dynamic ExecPartial(string fname)
+        public dynamic ExecScript(string fname)
         {
             try
             {
@@ -152,13 +154,6 @@ namespace Plotter.Controller
                 Controller.InteractOut.println("error: " + e.Message);
                 return null;
             }
-        }
-
-        public void AddFigure(CadFigure fig)
-        {
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryMan.foward(ope);
-            Controller.CurrentLayer.AddFigure(fig);
         }
 
         public void ExecuteCommandSync(string s)
