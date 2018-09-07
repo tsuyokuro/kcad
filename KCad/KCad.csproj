@@ -203,6 +203,7 @@
     <Compile Include="plotter\Controller\PlotterController_serialize.cs" />
     <Compile Include="plotter\Controller\ScriptFunctions.cs" />
     <Compile Include="plotter\Controller\SnapManager.cs" />
+    <Compile Include="plotter\Util\DebugOut.cs" />
     <Compile Include="SplineCurve\BSplineJson.cs" />
     <Compile Include="SplineCurve\BSplineParam.cs" />
     <Compile Include="SplineCurve\NurbsLine.cs" />

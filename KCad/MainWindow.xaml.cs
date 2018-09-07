@@ -3,6 +3,7 @@ using Plotter.Controller;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -25,21 +26,23 @@ namespace KCad
         {
             InitializeComponent();
 
-            if (App.GetCurrent().InputThread != null)
-            {
-
-            }
-
-            //mLBConsole = new LBConsole(MyConsole, 100);
-
             mInteractionOut.println = MyConsole.PrintLn;
             mInteractionOut.print = MyConsole.Print;
             mInteractionOut.printf = MyConsole.Printf;
             mInteractionOut.clear = MyConsole.Clear;
 
-            DebugOut.PrintFunc = MyConsole.Print;
-            DebugOut.PrintLnFunc = MyConsole.PrintLn;
-            DebugOut.FormatPrintFunc = MyConsole.Printf;
+            if (App.UseConsole)
+            {
+                // DebugOutの出力はデフォルトでConsoleになっているので、UseConsoleの場合は、
+                // あらためて設定する必要はない
+                DebugOut.println("DebugOut's output setting is Console");
+            }
+            else {
+                DebugOut.PrintFunc = MyConsole.Print;
+                DebugOut.PrintLnFunc = MyConsole.PrintLn;
+                DebugOut.FormatPrintFunc = MyConsole.Printf;
+            }
+
 
             ItConsole.PrintFunc = MyConsole.Print;
             ItConsole.PrintLnFunc = MyConsole.PrintLn;

@@ -758,17 +758,27 @@ namespace Plotter.Controller
             mGridding.Clear();
             mGridding.Check(dc, pixp);
 
+            bool snapx = false;
+            bool snapy = false;
+
             if (!mPointSearcher.IsXMatch && mGridding.XMatchU.Valid)
             {
                 CrossCursor.Pos.x = mGridding.XMatchU.x;
+                snapx = true;
             }
 
             if (!mPointSearcher.IsYMatch && mGridding.YMatchU.Valid)
             {
                 CrossCursor.Pos.y = mGridding.YMatchU.y;
+                snapy = true;
             }
 
             mSnapPoint = dc.UnitPointToCadPoint(CrossCursor.Pos);
+
+            if (snapx && snapy)
+            {
+                HighlightPointList.Add(new HighlightPointListItem(mSnapPoint));
+            }
         }
 
         private void SnapLine(DrawContext dc, CadVector cp)

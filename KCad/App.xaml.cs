@@ -10,8 +10,8 @@
  * 
  **/
 
-//#define USE_CONSOLE
-
+#define USE_CONSOLE
+//#define USE_CONSOL_INPUT
 
 using Plotter.Serializer;
 using System;
@@ -38,6 +38,12 @@ namespace KCad
         }
 
         TaskScheduler mMainThreadScheduler;
+
+#if USE_CONSOLE
+        public const bool UseConsole = true;
+#else
+        public const bool UseConsole = false;
+#endif
 
         public App()
         {
@@ -120,13 +126,16 @@ namespace KCad
 
 #if USE_CONSOLE
             NativeMethods.AllocConsole();
+            Console.WriteLine("App OnStartup USE_CONSOLE");
+#endif
 
+#if USE_CONSOL_INPUT
             InputThread = new DebugInputThread();
             InputThread.start();
 #endif
+
             SplashWindow = new MySplashWindow();
             SplashWindow.Show();
-
 
             this.MainWindow = new MainWindow();
             this.MainWindow.Show();
