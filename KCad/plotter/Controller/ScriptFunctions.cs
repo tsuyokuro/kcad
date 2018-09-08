@@ -185,7 +185,7 @@ namespace Plotter.Controller
 
         public void Group()
         {
-            List<CadFigure> list = GetRootFigList(Controller.GetSelectedFigList());
+            List<CadFigure> list = GetRootFigList(Controller.DB.GetSelectedFigList());
 
             if (list.Count < 2)
             {
@@ -241,7 +241,7 @@ namespace Plotter.Controller
 
         public void Ungroup()
         {
-            List<uint> idlist = Controller.GetSelectedFigIDList();
+            List<uint> idlist = Controller.DB.GetSelectedFigIDList();
 
             var idSet = new HashSet<uint>();
 
@@ -609,7 +609,7 @@ namespace Plotter.Controller
 
             CadObjectDB db = Controller.DB;
 
-            List<uint> idlist = Controller.GetSelectedFigIDList();
+            List<uint> idlist = Controller.DB.GetSelectedFigIDList();
 
             var figList = new List<CadFigure>();
 
@@ -720,7 +720,7 @@ namespace Plotter.Controller
 
         public void SwapXZ(double ax, double az)
         {
-            var figlist = Controller.GetSelectedFigList();
+            var figlist = Controller.DB.GetSelectedFigList();
 
             int i = 0;
             int j = 0;
@@ -749,7 +749,7 @@ namespace Plotter.Controller
 
         public void SwapYZ(double ay, double az)
         {
-            var figlist = Controller.GetSelectedFigList();
+            var figlist = Controller.DB.GetSelectedFigList();
 
             int j = 0;
             int i = 0;
@@ -869,7 +869,7 @@ namespace Plotter.Controller
 
         public void ToMesh(uint id)
         {
-            var figlist = Controller.GetSelectedFigList();
+            var figlist = Controller.DB.GetSelectedFigList();
 
             CadOpeList opeRoot = new CadOpeList();
 
@@ -914,7 +914,7 @@ namespace Plotter.Controller
 
         public void InvertDir()
         {
-            List<CadFigure> figList = Controller.GetSelectedFigList();
+            List<CadFigure> figList = Controller.DB.GetSelectedFigList();
 
             CadOpeList opeRoot = new CadOpeList();
             CadOpeInvertDir ope;
@@ -1288,7 +1288,7 @@ namespace Plotter.Controller
 
         public CadFigure GetTargetFigure()
         {
-            List<uint> idlist = Controller.GetSelectedFigIDList();
+            List<uint> idlist = Controller.DB.GetSelectedFigIDList();
 
             if (idlist.Count == 0)
             {

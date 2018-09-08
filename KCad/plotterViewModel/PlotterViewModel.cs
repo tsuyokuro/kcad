@@ -396,8 +396,6 @@ namespace Plotter
             }
         }
 
-        //public TextCommandHistory CommandHistory = new TextCommandHistory();
-
         Window mEditorWindow;
 
         public PlotterViewModel(Window mainWindow, WindowsFormsHost viewHost)
@@ -421,8 +419,6 @@ namespace Plotter
 
             PlotterView1 = new PlotterView();
             PlotterViewGL1 = PlotterViewGL.Create();
-
-            //SetView(PlotterView1);
 
             ViewMode = ViewModes.FREE;  // 一旦GL側を設定してViewをLoadしておく
             ViewMode = ViewModes.FRONT;
@@ -747,16 +743,6 @@ namespace Plotter
                 mEditorWindow.Activate();
             }
         }
-
-        /*
-        public void RedrawAll()
-        {
-            DrawContext dc = StartDraw();
-            mController.Clear(dc);
-            mController.DrawAll(dc);
-            EndDraw();
-        }
-        */
 
         public void AddLayer()
         {
@@ -1227,56 +1213,6 @@ namespace Plotter
             settings.LineSnapRange = mController.LineSnapRange;
 
             settings.Save();
-        }
-
-        /*
-        public void MessageSelected(List<string> messages)
-        {
-            mController.ScriptEnv.MessageSelected(messages);
-
-            Redraw();
-        }
-        */
-    }
-
-    public class TextCommandHistory
-    {
-        private List<string> History = new List<string>();
-        int Pos = 0;
-
-        private string empty = "";
-
-        public void Add(string s)
-        {
-            History.Add(s);
-            Pos = History.Count;
-        }
-
-        public string Rewind()
-        {
-            Pos--;
-
-            if (Pos<0)
-            {
-                Pos = 0;
-                return empty;
-            }
-
-            return History[Pos];
-        }
-
-
-        public string Forward()
-        {
-            Pos++;
-
-            if (Pos >= History.Count)
-            {
-                Pos = History.Count;
-                return empty;
-            }
-
-            return History[Pos];
         }
     }
 }

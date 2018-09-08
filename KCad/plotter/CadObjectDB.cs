@@ -245,6 +245,52 @@ namespace Plotter
 
         #endregion Walk
 
+        #region Query
+        public List<uint> GetSelectedFigIDList()
+        {
+            List<uint> idList = new List<uint>();
+
+            foreach (CadLayer layer in LayerList)
+            {
+                layer.ForEachFig(fig =>
+                {
+                    if (fig.HasSelectedPoint())
+                    {
+                        idList.Add(fig.ID);
+                    }
+                });
+            }
+            return idList;
+        }
+
+        public List<CadFigure> GetSelectedFigList()
+        {
+            List<CadFigure> list = new List<CadFigure>();
+
+            HashSet<CadFigure> fset = new HashSet<CadFigure>();
+
+
+            foreach (CadLayer layer in LayerList)
+            {
+                layer.ForEachFig(fig =>
+                {
+                    if (fig.HasSelectedPoint())
+                    {
+                        fset.Add(fig);
+                        if (fig.Parent != null)
+                        {
+                            fset.Add(fig.Parent);
+                        }
+                    }
+                });
+            }
+
+            list.AddRange(fset);
+
+            return list;
+        }
+        #endregion Query
+
         public void ClearAll()
         {
             LayerMap.Clear();

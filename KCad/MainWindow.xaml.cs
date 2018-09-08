@@ -90,8 +90,6 @@ namespace KCad
 
             TreeViewToolBar.DataContext = ViewModel;
 
-            //MyConsole.SelectionChanged += MyConsole_SelectionChanged;
-
             Loaded += MainWindow_Loaded;
             Closed += MainWindow_Closed;
         }
@@ -129,14 +127,6 @@ namespace KCad
         {
             ViewModel.MenuItemClicked(sender, e);
         }
-
-        /*
-        private void MyConsole_SelectionChanged(object sender, EventArgs e)
-        {
-            List<string> lines = MyConsole.GetSelectedStrings();
-            ViewModel.MessageSelected(lines);
-        }
-        */
 
         #region TextCommand
         private void InitTextCommand()

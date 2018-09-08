@@ -176,7 +176,7 @@ namespace Plotter.Controller
 
         public void SetLoop(bool isLoop)
         {
-            List<uint> list = GetSelectedFigIDList();
+            List<uint> list = DB.GetSelectedFigIDList();
 
             CadOpeList opeRoot = CadOpe.CreateListOpe();
             CadOpe ope;
@@ -261,7 +261,7 @@ namespace Plotter.Controller
 
         private void RemoveSelectedPoints()
         {
-            List<CadFigure> figList = GetSelectedFigList();
+            List<CadFigure> figList = DB.GetSelectedFigList();
             foreach (CadFigure fig in figList)
             {
                 fig.RemoveSelected();
@@ -277,7 +277,7 @@ namespace Plotter.Controller
 
         public void FlipNormal()
         {
-            List<uint> ids = GetSelectedFigIDList();
+            List<uint> ids = DB.GetSelectedFigIDList();
 
             CadOpeList opeList = CadOpe.CreateListOpe();
 

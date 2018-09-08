@@ -121,7 +121,7 @@ namespace Plotter.Controller
 
             CadObjectDB db = Controller.DB;
 
-            List<uint> idlist = Controller.GetSelectedFigIDList();
+            List<uint> idlist = Controller.DB.GetSelectedFigIDList();
 
             int i;
             for (i = 0; i < idlist.Count; i++)
@@ -329,7 +329,7 @@ namespace Plotter.Controller
 
         private void testMesh()
         {
-            var figlist = Controller.GetSelectedFigList();
+            var figlist = Controller.DB.GetSelectedFigList();
 
             CadOpeList opeRoot = new CadOpeList();
 
@@ -417,7 +417,7 @@ namespace Plotter.Controller
 
         private void testAminusB()
         {
-            List<CadFigure> figList = Controller.GetSelectedFigList();
+            List<CadFigure> figList = Controller.DB.GetSelectedFigList();
 
             if (figList.Count < 2)
             {
@@ -567,7 +567,7 @@ namespace Plotter.Controller
 
         public CadFigure GetTargetFigure()
         {
-            List<uint> idlist = Controller.GetSelectedFigIDList();
+            List<uint> idlist = Controller.DB.GetSelectedFigIDList();
 
             if (idlist.Count == 0)
             {

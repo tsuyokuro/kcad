@@ -15,16 +15,6 @@ using CadDataTypes;
 
 namespace Plotter.Controller
 {
-    //public delegate void StateChanged(PlotterController sender, PlotterController.StateInfo si);
-
-    //public delegate void LayerListChanged(PlotterController sender, PlotterController.LayerListInfo layerListInfo);
-
-    //public delegate void RequestContextMenu(PlotterController sender, PlotterController.StateInfo si, int x, int y);
-
-    //public delegate void DataChanged(PlotterController sender, bool redraw);
-
-    //public delegate void CursorPosChanged(PlotterController sender, CadVector pt, CursorType type);
-
     public enum CursorType
     {
         TRACKING,
@@ -605,70 +595,11 @@ namespace Plotter.Controller
             }
         }
 
-        private HashSet<uint> SelListToIDSet()
-        {
-            HashSet<uint> idSet = new HashSet<uint>();
-
-            foreach (SelectItem a in SelList.List)
-            {
-                if (!idSet.Contains(a.FigureID))
-                {
-                    idSet.Add(a.FigureID);
-                }
-            }
-
-            return idSet;
-        }
-
-        public List<uint> GetSelectedFigIDList()
-        {
-            List<uint> idList = new List<uint>();
-
-            foreach (CadLayer layer in mDB.LayerList)
-            {
-                layer.ForEachFig(fig =>
-                {
-                    if (fig.HasSelectedPoint())
-                    {
-                        idList.Add(fig.ID);
-                    }
-                });
-            }
-            return idList;
-        }
-
-        public List<CadFigure> GetSelectedFigList()
-        {
-            List<CadFigure> list = new List<CadFigure>();
-
-            HashSet<CadFigure> fset = new HashSet<CadFigure>(); 
-
-
-            foreach (CadLayer layer in mDB.LayerList)
-            {
-                layer.ForEachFig(fig =>
-                {
-                    if (fig.HasSelectedPoint())
-                    {
-                        fset.Add(fig);
-                        if (fig.Parent != null)
-                        {
-                            fset.Add(fig.Parent);
-                        }
-                    }
-                });
-            }
-
-            list.AddRange(fset);
-
-            return list;
-        }
-
         private CadOpeFigureSnapShotList mSnapShotList;
 
         public void StartEdit()
         {
-            EditFigList = GetSelectedFigList();
+            EditFigList = DB.GetSelectedFigList();
 
             mSnapShotList = new CadOpeFigureSnapShotList();
 
@@ -801,7 +732,7 @@ namespace Plotter.Controller
 
         private void MoveSelectedPoints(DrawContext dc, CadVector delta)
         {
-            List<uint> figIDList = GetSelectedFigIDList();
+            List<uint> figIDList = DB.GetSelectedFigIDList();
 
             //delta.z = 0;
 
@@ -982,7 +913,7 @@ namespace Plotter.Controller
         {
             StartEdit();
 
-            List<uint> idlist = GetSelectedFigIDList();
+            List<uint> idlist = DB.GetSelectedFigIDList();
 
             foreach (uint id in idlist)
             {
@@ -1019,7 +950,7 @@ namespace Plotter.Controller
         //
         public void RotateSelectedFigure(CadVector org, CadVector axisDir, double t)
         {
-            List<uint> idlist = GetSelectedFigIDList();
+            List<uint> idlist = DB.GetSelectedFigIDList();
 
             foreach (uint id in idlist)
             {

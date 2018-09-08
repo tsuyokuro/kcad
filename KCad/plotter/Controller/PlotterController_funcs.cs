@@ -45,7 +45,7 @@ namespace Plotter.Controller
 
         public Centroid Centroid()
         {
-            List<uint> idList = GetSelectedFigIDList();
+            List<uint> idList = DB.GetSelectedFigIDList();
 
             Centroid cent = default(Centroid);
 
@@ -76,7 +76,7 @@ namespace Plotter.Controller
 
         public double Area()
         {
-            List<uint> idList = GetSelectedFigIDList();
+            List<uint> idList = DB.GetSelectedFigIDList();
 
             Centroid cent = default(Centroid);
 

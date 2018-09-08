@@ -474,7 +474,7 @@ namespace Plotter.Controller
 
         private void NotifySelectList()
         {
-            List<uint> ids = GetSelectedFigIDList();
+            List<uint> ids = DB.GetSelectedFigIDList();
         }
 
         private void PutMeasure()
