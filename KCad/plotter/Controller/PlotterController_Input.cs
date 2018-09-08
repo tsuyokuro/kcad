@@ -185,6 +185,8 @@ namespace Plotter.Controller
         {
             SelectContext sc = default(SelectContext);
 
+            ObjDownPoint = CadVector.InvalidValue;
+
             sc.dc = dc;
             sc.cp = dc.UnitPointToCadPoint(pixp);
             sc.pointSel = false;

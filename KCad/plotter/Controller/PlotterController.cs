@@ -258,7 +258,10 @@ namespace Plotter.Controller
             if (SettingsHolder.Settings.FilterTreeView)
             {
                 CadLayerTreeItem item = new CadLayerTreeItem();
-                item.AddChildren(CurrentLayer, fig => { return fig.HasSelectedPoint(); });
+                item.AddChildren(CurrentLayer, fig =>
+                    {
+                        return fig.HasSelectedPointInclueChild();
+                    });
 
                 mCadObjectTreeView.AttachRoot(item);
                 mCadObjectTreeView.Redraw();
