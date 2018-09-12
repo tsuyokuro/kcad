@@ -40,21 +40,21 @@ namespace Plotter.Controller
         private CadRulerSet mRulerSet = new CadRulerSet();
 
 
-        private CadVector StoreViewOrg = default(CadVector);
+        private CadVector StoreViewOrg = default;
 
         private CadVector mSnapPoint;
 
         private CadVector MoveOrgScrnPoint;
 
-        public CadVector LastDownPoint = default(CadVector);
+        public CadVector LastDownPoint = default;
 
-        private CadVector ObjDownPoint = default(CadVector);
+        private CadVector ObjDownPoint = default;
 
-        private CadVector mOffsetScreen = default(CadVector);
+        private CadVector mOffsetScreen = default;
 
         public CadVector RubberBandScrnPoint0 = CadVector.InvalidValue;
 
-        public CadVector RubberBandScrnPoint1 = default(CadVector);
+        public CadVector RubberBandScrnPoint1 = default;
 
 
         private Gridding mGridding = new Gridding();
@@ -481,20 +481,45 @@ namespace Plotter.Controller
 
         private void PutMeasure()
         {
-            double d = CadUtil.AroundLength(MeasureFigureCreator.Figure);
+            int pcnt = MeasureFigureCreator.Figure.PointCount;
 
-            d = Math.Round(d, 4);
+            double currentD = 0;
+                       
+            if (pcnt > 1)
+            {
+                int idx0 = pcnt - 1;
+                int idx1 = pcnt;
+
+                CadVector p0 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 2);
+                CadVector p1 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 1);
+
+                currentD = (p1 - p0).Norm();
+                currentD = Math.Round(currentD, 4);
+            }
+
+            double a = 0;
+
+            if (pcnt > 2)
+            {
+                CadVector p0 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 2);
+                CadVector p1 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 3);
+                CadVector p2 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 1);
+
+                CadVector v1 = p1 - p0;
+                CadVector v2 = p2 - p0;
+
+                double t = CadMath.AngleOfVector(v1, v2);
+                a = CadMath.Rad2Deg(t);
+                a = Math.Round(a, 4);
+            }
+
+            double totalD = CadUtil.AroundLength(MeasureFigureCreator.Figure);
+
+            totalD = Math.Round(totalD, 4);
 
             int cnt = MeasureFigureCreator.Figure.PointCount;
 
-            if (d >= 10.0)
-            {
-                InteractOut.println("(" + cnt.ToString() + ") " + (d / 10.0).ToString() + "cm");
-            }
-            else
-            {
-                InteractOut.println("(" + cnt.ToString() + ") " + d.ToString() + "mm");
-            }
+            InteractOut.println("[" + cnt.ToString() + "]  " + currentD.ToString() + "  total:" + totalD.ToString() + "  angle:" + a.ToString());
         }
 
         private void MButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
