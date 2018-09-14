@@ -394,7 +394,8 @@
                     <ScrollViewer
                         Grid.Row="0"
                         Style="{StaticResource CustomScrollViewerStyle}"
-                        VerticalScrollBarVisibility = "Auto">
+                        VerticalScrollBarVisibility = "Auto"
+                        Focusable="True">
 
                         <local:CadConsoleView
                             x:Name="MyConsole"
@@ -404,6 +405,7 @@
                             SelectedForeground="{StaticResource MsgTextColor}"
                             TextSize="12"
                             VerticalAlignment="Top"
+                            Focusable="True"
                             />
 
                     </ScrollViewer>

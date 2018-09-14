@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -65,8 +66,8 @@ namespace KCad
         public Brush[] Palette;
         public Brush[] SelPalette;
 
-        public int DefaultFColor = 7;
-        public int DefaultBColor = 0;
+        public byte DefaultFColor = 7;
+        public byte DefaultBColor = 0;
 
         public AnsiEsc()
         {
@@ -135,10 +136,23 @@ namespace KCad
         }
     }
 
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
     struct TextAttr
     {
-        public int FColor;
-        public int BColor;
+        public byte FColor;
+        public byte BColor;
+    }
+
+    struct AttrItem
+    {
+        public TextAttr Attr;
+        public int Len;
+
+        public AttrItem(TextAttr attr, int len)
+        {
+            Attr = attr;
+            Len = len;
+        }
     }
 
     class CadConsoleView : FrameworkElement
@@ -147,6 +161,7 @@ namespace KCad
         {
             public bool IsSelected = false;
             public string Data = "";
+            public List<AttrItem> Attr = new List<AttrItem>();
         }
 
         #region Properties
@@ -304,6 +319,9 @@ namespace KCad
 
         TextAttr DefaultAttr = new TextAttr();
 
+        TextAttr CurrentAttr = default;
+
+
         public CadConsoleView()
         {
             mFontFamily = new FontFamily("メイリオ");
@@ -340,12 +358,16 @@ namespace KCad
             DefaultAttr.FColor = Esc.DefaultFColor;
             DefaultAttr.BColor = Esc.DefaultBColor;
 
+            CurrentAttr = DefaultAttr;
+
             RecalcSize();
             UpdateView();
         }
 
         private void CadConsoleView_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            Focus();
+
             Point p = e.GetPosition(this);
 
             int idx = (int)(p.Y / mItemHeight);
@@ -442,6 +464,8 @@ namespace KCad
         {
             int prevCnt = mList.Count;
 
+            CurrentAttr = DefaultAttr;
+
             var line = new ListItem();
             mList.Add(line);
 
@@ -474,7 +498,123 @@ namespace KCad
                 line = mList[idx];
             }
 
-            line.Data += s;
+            //line.Data += s;
+
+            Parse(line, s);
+        }
+
+        private void Parse(ListItem line, string s)
+        {
+            TextAttr attr = CurrentAttr;
+
+            StringBuilder sb = new StringBuilder();
+
+            int blen = 0;
+
+            int state = 0;
+
+            int x = 0;
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == '\x1b')
+                {
+                    state = 1;
+
+                    line.Attr.Add(new AttrItem(attr, blen));
+                    blen = 0;
+
+                    continue;
+                }
+
+                switch (state)
+                {
+                    case 0:
+                        sb.Append(s[i]);
+                        blen++;
+                        break;
+                    case 1:
+                        if (s[i] == '[')
+                        {
+                            state = 2;
+                        }
+                        break;
+                    case 2:
+                        if (s[i] >= '0' && s[i] <= '9')
+                        {
+                            state = 3;
+                            x = s[i] - '0';
+                        }
+                        else if (s[i] == 'm')
+                        {
+                            if (x == 0)
+                            {
+                                attr.BColor = 0;
+                                attr.FColor = 7;
+                            }
+
+                            blen = 0;
+                            state = 0;
+                        }
+                        else
+                        {
+                            sb.Append(s[i]);
+                            blen++;
+                            state = 0;
+                        }
+                        break;
+                    case 3:
+                        if (s[i] >= '0' && s[i] <= '9')
+                        {
+                            x = x * 10 + (s[i] - '0');
+                        }
+                        else if (s[i] == 'm')
+                        {
+                            if (x == 0)
+                            {
+                                attr.BColor = 0;
+                                attr.FColor = 7;
+                            }
+                            else if (x >= 30 && x <= 37) // front std
+                            {
+                                attr.FColor = (byte)(x - 30);
+                            }
+                            else if (x >= 40 && x <= 47) // back std
+                            {
+                                attr.BColor = (byte)(x - 40);
+                            }
+                            else if (x >= 90 && x <= 97) // front strong
+                            {
+                                attr.FColor = (byte)(x - 90 + 8);
+                            }
+                            else if (x >= 100 && x <= 107) // back std
+                            {
+                                attr.BColor = (byte)(x - 100 + 8);
+                            }
+
+                            blen = 0;
+                            state = 0;
+                        }
+                        else
+                        {
+                            sb.Append(s[i]);
+                            blen++;
+                            state = 0;
+                        }
+
+                        break;
+                }
+            }
+
+            if (blen > 0)
+            {
+                line.Attr.Add(new AttrItem(attr, blen));
+                blen = 0;
+            }
+
+            CurrentAttr = attr;
+
+            line.Data += sb.ToString();
         }
 
         public void Printf(string format, params object[] args)
@@ -506,6 +646,7 @@ namespace KCad
             return lines;
         }
 
+        /*
         public string GetStringAll()
         {
             string s = "";
@@ -528,6 +669,22 @@ namespace KCad
             foreach (ListItem line in mList)
             {
                 s += line.Data + "\n";
+            }
+
+            return s;
+        }
+        */
+
+        public string GetSelectedString()
+        {
+            string s = "";
+
+            foreach (ListItem line in mList)
+            {
+                if (line.IsSelected)
+                {
+                    s += line.Data + "\n";
+                }
             }
 
             return s;
@@ -593,7 +750,7 @@ namespace KCad
                 tp.X = mTextLeftMargin;
                 tp.Y += textOffset;
 
-                DrawText(dc, item.Data, tp, item.IsSelected);
+                DrawText(dc, item, tp);
 
                 p.Y += mItemHeight;
             }
@@ -617,6 +774,7 @@ namespace KCad
         }
 
         #region draw text
+        /*
         public void DrawText(DrawingContext dc, string s, Point pt, bool selected)
         {
             TextAttr attr = DefaultAttr;
@@ -684,19 +842,19 @@ namespace KCad
                             }
                             else if (x >= 30 && x <= 37) // front std
                             {
-                                attr.FColor = x - 30;
+                                attr.FColor = (byte)(x - 30);
                             }
                             else if (x >= 40 && x <= 47) // back std
                             {
-                                attr.BColor = x - 40;
+                                attr.BColor = (byte)(x - 40);
                             }
                             else if (x >= 90 && x <= 97) // front strong
                             {
-                                attr.FColor = x - 90 + 8;
+                                attr.FColor = (byte)(x - 90 + 8);
                             }
                             else if (x >= 100 && x <= 107) // back std
                             {
-                                attr.BColor = x - 100 + 8;
+                                attr.BColor = (byte)(x - 100 + 8);
                             }
                             state = 0;
                         }
@@ -714,6 +872,19 @@ namespace KCad
             {
                 pt = RenderText(dc, attr, sb.ToString(), pt, selected);
                 sb.Clear();
+            }
+        }
+        */
+
+        public void DrawText(DrawingContext dc, ListItem line, Point pt)
+        {
+            int sp = 0;
+
+            foreach (AttrItem attr in line.Attr)
+            {
+                string s = line.Data.Substring(sp, attr.Len);
+                pt = RenderText(dc, attr.Attr, s, pt, line.IsSelected);
+                sp += attr.Len;
             }
         }
 

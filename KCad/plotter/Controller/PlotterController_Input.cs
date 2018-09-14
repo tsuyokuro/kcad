@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Forms;
 using CadDataTypes;
+using KCad;
 
 namespace Plotter.Controller
 {
@@ -519,7 +520,10 @@ namespace Plotter.Controller
 
             int cnt = MeasureFigureCreator.Figure.PointCount;
 
-            InteractOut.println("[" + cnt.ToString() + "]  " + currentD.ToString() + "  total:" + totalD.ToString() + "  angle:" + a.ToString());
+            InteractOut.println("[" + cnt.ToString() + "]" +
+                AnsiEsc.Reset + " LEN:" + AnsiEsc.BGreen + currentD.ToString() +
+                AnsiEsc.Reset + " ANGLE:" + AnsiEsc.BBlue + a.ToString() +
+                AnsiEsc.Reset + " TOTAL:" + totalD.ToString());
         }
 
         private void MButtonDown(CadMouse pointer, DrawContext dc, double x, double y)

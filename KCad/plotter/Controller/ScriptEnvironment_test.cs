@@ -22,6 +22,7 @@ using HalfEdgeNS;
 using CarveWapper;
 using MeshMakerNS;
 using SplineCurve;
+using KCad;
 
 namespace Plotter.Controller
 {
@@ -652,6 +653,22 @@ namespace Plotter.Controller
             else if (cmd == "@test")
             {
                 Test();
+            }
+
+            else if (cmd == "@tcons")
+            {
+                Controller.InteractOut.println("test");
+                Controller.InteractOut.println("test" + AnsiEsc.BCyan + "-cyan-" + AnsiEsc.Reset + "abc");
+                Controller.InteractOut.println("test" + AnsiEsc.Blue + "-Blue-" + "abc");
+                Controller.InteractOut.print("test");
+                Controller.InteractOut.print(AnsiEsc.BGreen);
+                Controller.InteractOut.print("-Green!!!");
+                Controller.InteractOut.print(AnsiEsc.Reset);
+                Controller.InteractOut.print("abc");
+                Controller.InteractOut.print("\n");
+                Controller.InteractOut.println("test");
+
+
             }
 
             else

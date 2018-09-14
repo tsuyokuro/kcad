@@ -96,16 +96,21 @@ namespace KCad
 
         private void OnPreviewKeyUp(object sender, KeyEventArgs e)
         {
-            if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.C)
-            {
-                string copyString = MyConsole.GetStringAll();
+            // TODO なぜかMyConsoleにFocusが当たらないのでFocusチェックなし
 
-                Clipboard.SetDataObject(copyString, true);
-                KeyHandled = true;
-            }
-            else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.X)
+            //if (MyConsole.IsFocused)
             {
-                MyConsole.Clear();
+                if (Keyboard.Modifiers == ModifierKeys.Control && (e.Key == Key.C || e.Key == Key.Insert))
+                {
+                    string copyString = MyConsole.GetSelectedString();
+
+                    Clipboard.SetDataObject(copyString, true);
+                    KeyHandled = true;
+                }
+                else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.X)
+                {
+                    MyConsole.Clear();
+                }
             }
         }
 
