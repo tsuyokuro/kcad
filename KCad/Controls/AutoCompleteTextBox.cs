@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows;
 using System.Text.RegularExpressions;
+using Plotter;
 
 namespace KCad
 {

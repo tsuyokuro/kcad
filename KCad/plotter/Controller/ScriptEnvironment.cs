@@ -186,7 +186,11 @@ namespace Plotter.Controller
 
             if (s.StartsWith("@"))
             {
-                SimpleCommand(s);
+                await Task.Run(() =>
+                {
+                    SimpleCommand(s);
+                });
+
                 return;
             }
 

@@ -655,22 +655,36 @@ namespace Plotter.Controller
                 Test();
             }
 
-            else if (cmd == "@tcons")
+            else if (cmd == "@tcons1")
             {
                 Controller.InteractOut.println("test");
+            }
+            else if (cmd == "@tcons2")
+            {
                 Controller.InteractOut.println("test" + AnsiEsc.BCyan + "-cyan-" + AnsiEsc.Reset + "abc");
-                Controller.InteractOut.println("test" + AnsiEsc.Blue + "-Blue-" + "abc");
+            }
+            else if (cmd == "@tcons3")
+            {
                 Controller.InteractOut.print("test");
-                Controller.InteractOut.print(AnsiEsc.BGreen);
+                Controller.InteractOut.print(AnsiEsc.BGreen + "xx");
                 Controller.InteractOut.print("-Green!!!");
                 Controller.InteractOut.print(AnsiEsc.Reset);
                 Controller.InteractOut.print("abc");
                 Controller.InteractOut.print("\n");
-                Controller.InteractOut.println("test");
-
-
             }
-
+            else if (cmd == "@tcons4")
+            {
+                Controller.InteractOut.print("1/5");
+                Thread.Sleep(1000);
+                Controller.InteractOut.print("\r2/5");
+                Thread.Sleep(1000);
+                Controller.InteractOut.print("\r3/5");
+                Thread.Sleep(1000);
+                Controller.InteractOut.print("\r4/5");
+                Thread.Sleep(1000);
+                Controller.InteractOut.print("\r5/5");
+                Controller.InteractOut.print("\nFinish!\n");
+            }
             else
             {
             }

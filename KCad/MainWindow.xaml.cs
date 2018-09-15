@@ -26,6 +26,8 @@ namespace KCad
         {
             InitializeComponent();
 
+            //FocusManager.SetIsFocusScope(this, true);
+
             mInteractionOut.println = MyConsole.PrintLn;
             mInteractionOut.print = MyConsole.Print;
             mInteractionOut.printf = MyConsole.Printf;
@@ -98,20 +100,17 @@ namespace KCad
         {
             // TODO なぜかMyConsoleにFocusが当たらないのでFocusチェックなし
 
-            //if (MyConsole.IsFocused)
-            {
-                if (Keyboard.Modifiers == ModifierKeys.Control && (e.Key == Key.C || e.Key == Key.Insert))
-                {
-                    string copyString = MyConsole.GetSelectedString();
+            //if (Keyboard.Modifiers == ModifierKeys.Control && (e.Key == Key.C || e.Key == Key.Insert))
+            //{
+            //    string copyString = MyConsole.GetSelectedString();
 
-                    Clipboard.SetDataObject(copyString, true);
-                    KeyHandled = true;
-                }
-                else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.X)
-                {
-                    MyConsole.Clear();
-                }
-            }
+            //    Clipboard.SetDataObject(copyString, true);
+            //    KeyHandled = true;
+            //}
+            //else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.X)
+            //{
+            //    MyConsole.Clear();
+            //}
         }
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)

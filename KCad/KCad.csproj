@@ -192,6 +192,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\CadConsole\AnsiEsc.cs" />
+    <Compile Include="Controls\CadConsole\TextLine.cs" />
     <Compile Include="EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
@@ -208,7 +210,7 @@
     <Compile Include="SplineCurve\BSplineParam.cs" />
     <Compile Include="SplineCurve\NurbsLine.cs" />
     <Compile Include="Controls\AutoCompleteTextBox.cs" />
-    <Compile Include="Controls\CadConsole.cs" />
+    <Compile Include="Controls\CadConsole\CadConsole.cs" />
     <Compile Include="SplineCurve\BSpline.cs" />
     <Compile Include="Dialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>

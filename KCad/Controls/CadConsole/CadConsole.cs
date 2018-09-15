@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plotter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -19,151 +20,8 @@ using System.Windows.Threading;
 
 namespace KCad
 {
-    public class AnsiEsc
+    public partial class CadConsoleView : FrameworkElement
     {
-        public const string ESC = "\x1b[";
-
-        public const string Reset = ESC + "0m";
-
-        public const string Balck = ESC + "30m";
-        public const string Red = ESC + "31m";
-        public const string Green = ESC + "32m";
-        public const string Yellow = ESC + "33m";
-        public const string Blue = ESC + "34m";
-        public const string Magenta = ESC + "35m";
-        public const string Cyan = ESC + "36m";
-        public const string White = ESC + "37m";
-
-        public const string BBalck = ESC + "90m";
-        public const string BRed = ESC + "91m";
-        public const string BGreen = ESC + "92m";
-        public const string BYellow = ESC + "93m";
-        public const string BBlue = ESC + "94m";
-        public const string BMagenta = ESC + "95m";
-        public const string BCyan = ESC + "96m";
-        public const string BWhite = ESC + "97m";
-
-
-        public const string BalckB = ESC + "40m";
-        public const string RedB = ESC + "41m";
-        public const string GreenB = ESC + "42m";
-        public const string YellowB = ESC + "43m";
-        public const string BlueB = ESC + "44m";
-        public const string MagentaB = ESC + "45m";
-        public const string CyanB = ESC + "46m";
-        public const string WhiteB = ESC + "47m";
-
-        public const string BBalckB = ESC + "100m";
-        public const string BRedB = ESC + "101m";
-        public const string BGreenB = ESC + "102m";
-        public const string BYellowB = ESC + "103m";
-        public const string BBlueB = ESC + "104m";
-        public const string BMagentaB = ESC + "105m";
-        public const string BCyanB = ESC + "106m";
-        public const string BWhiteB = ESC + "107m";
-
-
-        public Brush[] Palette;
-        public Brush[] SelPalette;
-
-        public byte DefaultFColor = 7;
-        public byte DefaultBColor = 0;
-
-        public AnsiEsc()
-        {
-            Palette = new Brush[16];
-
-            Palette[0] = Brushes.Black;
-            Palette[1] = Brushes.MediumVioletRed;
-            Palette[2] = Brushes.SeaGreen;
-            Palette[3] = Brushes.Goldenrod;
-            Palette[4] = Brushes.SteelBlue;
-            Palette[5] = Brushes.DarkMagenta;
-            Palette[6] = Brushes.DarkCyan;
-            Palette[7] = Brushes.LightGray;
-
-            Palette[8] = Brushes.Black;
-            Palette[9] = Brushes.LightCoral;
-            Palette[10] = Brushes.SpringGreen;
-            Palette[11] = Brushes.Yellow;
-            Palette[12] = Brushes.CornflowerBlue;
-            Palette[13] = Brushes.MediumOrchid;
-            Palette[14] = Brushes.Turquoise;
-            Palette[15] = Brushes.White;
-
-
-
-            SelPalette = new Brush[16];
-
-            float b = 1.4f;
-
-            SelPalette[0] = Brigahtness(Palette[0], b);
-            SelPalette[1] = Brigahtness(Palette[1], b);
-            SelPalette[2] = Brigahtness(Palette[2], b);
-            SelPalette[3] = Brigahtness(Palette[3], b);
-            SelPalette[4] = Brigahtness(Palette[4], b);
-            SelPalette[5] = Brigahtness(Palette[5], b);
-            SelPalette[6] = Brigahtness(Palette[6], b);
-            SelPalette[7] = Brigahtness(Palette[7], b);
-
-            SelPalette[8] = Brigahtness(Palette[8], b);
-            SelPalette[9] = Brigahtness(Palette[9], b);
-            SelPalette[10] = Brigahtness(Palette[10], b);
-            SelPalette[11] = Brigahtness(Palette[11], b);
-            SelPalette[12] = Brigahtness(Palette[12], b);
-            SelPalette[13] = Brigahtness(Palette[13], b);
-            SelPalette[14] = Brigahtness(Palette[14], b);
-            SelPalette[15] = Brigahtness(Palette[15], b);
-        }
-
-        Brush Brigahtness(Brush brush, float a)
-        {
-            if (!(brush is SolidColorBrush))
-            {
-                return brush;
-            }
-
-            SolidColorBrush src = (SolidColorBrush)brush;
-            Color c = src.Color;
-
-            RGB rgb = new RGB(c.R/255f, c.G/255f, c.B/255f);
-
-            rgb = ColorUtil.Brightness(rgb, a);
-
-            Color cc = Color.FromArgb(0xff, (byte)(rgb.R * 255f), (byte)(rgb.G * 255f), (byte)(rgb.B * 255f));
-
-            return new SolidColorBrush(cc);
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 8)]
-    struct TextAttr
-    {
-        public byte FColor;
-        public byte BColor;
-    }
-
-    struct AttrItem
-    {
-        public TextAttr Attr;
-        public int Len;
-
-        public AttrItem(TextAttr attr, int len)
-        {
-            Attr = attr;
-            Len = len;
-        }
-    }
-
-    class CadConsoleView : FrameworkElement
-    {
-        public class ListItem
-        {
-            public bool IsSelected = false;
-            public string Data = "";
-            public List<AttrItem> Attr = new List<AttrItem>();
-        }
-
         #region Properties
         protected FontFamily mFontFamily;
 
@@ -313,23 +171,65 @@ namespace KCad
 
         protected ScrollViewer Scroll;
 
-        protected List<ListItem> mList = new List<ListItem>();
+        protected List<TextLine> mList = new List<TextLine>();
 
-        AnsiEsc Esc = new AnsiEsc();
+        protected AnsiEsc Esc = new AnsiEsc();
 
-        TextAttr DefaultAttr = new TextAttr();
+        protected TextAttr DefaultAttr = new TextAttr();
 
-        TextAttr CurrentAttr = default;
+        protected TextAttr CurrentAttr = default;
 
+        protected Pen FocusedBorderPen = new Pen(
+                new SolidColorBrush(Color.FromRgb(0x56, 0x9D, 0xE5)), 1);
 
         public CadConsoleView()
         {
+            Focusable = true;
+
             mFontFamily = new FontFamily("メイリオ");
             mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
 
             Loaded += CadConsoleView_Loaded;
 
-            MouseDown += CadConsoleView_MouseDown;
+            GotFocus += CadConsoleView_GotFocus;
+            LostFocus += CadConsoleView_LostFocus;
+
+            KeyUp += CadConsoleView_KeyUp;
+
+            SizeChanged += CadConsoleView_SizeChanged;
+        }
+
+        private void CadConsoleView_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SizeChanged -= CadConsoleView_SizeChanged;
+            RecalcSize();
+            SizeChanged += CadConsoleView_SizeChanged;
+        }
+
+        private void CadConsoleView_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            DebugOut.println("CadConsoleView_KeyUp");
+
+            if (Keyboard.Modifiers == ModifierKeys.Control && (e.Key == Key.C || e.Key == Key.Insert))
+            {
+                string copyString = GetSelectedString();
+
+                System.Windows.Clipboard.SetDataObject(copyString, true);
+            }
+            else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.X)
+            {
+                Clear();
+            }
+        }
+
+        private void CadConsoleView_LostFocus(object sender, RoutedEventArgs e)
+        {
+            CleanSelection();
+            UpdateView();
+        }
+
+        private void CadConsoleView_GotFocus(object sender, RoutedEventArgs e)
+        {
         }
 
         private void CadConsoleView_Loaded(object sender, RoutedEventArgs e)
@@ -360,37 +260,51 @@ namespace KCad
 
             CurrentAttr = DefaultAttr;
 
-            RecalcSize();
+            //RecalcSize();
+            NewLine();
+
             UpdateView();
         }
 
-        private void CadConsoleView_MouseDown(object sender, MouseButtonEventArgs e)
+        //
+        // MouseDown += handler ではなく、OnMouseDownをoverrideするように
+        // しないと、Focus()を呼んでもすぐにLostFocusしてしまう
+        // 上手くEventを処理済みに出来ないのかもしれない
+        //
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            Focus();
-
             Point p = e.GetPosition(this);
 
             int idx = (int)(p.Y / mItemHeight);
 
+            CleanSelection();
+
             if (idx >= mList.Count)
             {
+                UpdateView();
                 return;
             }
 
-            ListItem item = mList[idx];
+            TextLine item = mList[idx];
 
             if (item == null)
             {
+                UpdateView();
                 return;
             }
-
-            CleanSelection();
 
             item.IsSelected = true;
 
             UpdateView();
 
             OnSelectionChanged(EventArgs.Empty);
+
+            if (Focus())
+            {
+                e.Handled = true;
+            }
+
+            base.OnMouseDown(e);
         }
 
         private void CleanSelection()
@@ -410,6 +324,14 @@ namespace KCad
         private void RecalcSize()
         {
             Height = mItemHeight * (double)(mList.Count);
+
+            if (Scroll != null)
+            {
+                if (Height < Scroll.ActualHeight)
+                {
+                    Height = Scroll.ActualHeight;
+                }
+            }
         }
 
 
@@ -466,7 +388,7 @@ namespace KCad
 
             CurrentAttr = DefaultAttr;
 
-            var line = new ListItem();
+            var line = new TextLine(DefaultAttr);
             mList.Add(line);
 
             while (mList.Count > mMaxLine)
@@ -486,135 +408,11 @@ namespace KCad
         {
             int idx = mList.Count - 1;
 
-            ListItem line;
+            TextLine line;
 
-            if (idx < 0)
-            {
-                line = new ListItem();
-                mList.Add(line);
-            }
-            else
-            {
-                line = mList[idx];
-            }
+            line = mList[idx];
 
-            //line.Data += s;
-
-            Parse(line, s);
-        }
-
-        private void Parse(ListItem line, string s)
-        {
-            TextAttr attr = CurrentAttr;
-
-            StringBuilder sb = new StringBuilder();
-
-            int blen = 0;
-
-            int state = 0;
-
-            int x = 0;
-
-            for (int i = 0; i < s.Length; i++)
-            {
-                if (s[i] == '\x1b')
-                {
-                    state = 1;
-
-                    line.Attr.Add(new AttrItem(attr, blen));
-                    blen = 0;
-
-                    continue;
-                }
-
-                switch (state)
-                {
-                    case 0:
-                        sb.Append(s[i]);
-                        blen++;
-                        break;
-                    case 1:
-                        if (s[i] == '[')
-                        {
-                            state = 2;
-                        }
-                        break;
-                    case 2:
-                        if (s[i] >= '0' && s[i] <= '9')
-                        {
-                            state = 3;
-                            x = s[i] - '0';
-                        }
-                        else if (s[i] == 'm')
-                        {
-                            if (x == 0)
-                            {
-                                attr.BColor = 0;
-                                attr.FColor = 7;
-                            }
-
-                            blen = 0;
-                            state = 0;
-                        }
-                        else
-                        {
-                            sb.Append(s[i]);
-                            blen++;
-                            state = 0;
-                        }
-                        break;
-                    case 3:
-                        if (s[i] >= '0' && s[i] <= '9')
-                        {
-                            x = x * 10 + (s[i] - '0');
-                        }
-                        else if (s[i] == 'm')
-                        {
-                            if (x == 0)
-                            {
-                                attr.BColor = 0;
-                                attr.FColor = 7;
-                            }
-                            else if (x >= 30 && x <= 37) // front std
-                            {
-                                attr.FColor = (byte)(x - 30);
-                            }
-                            else if (x >= 40 && x <= 47) // back std
-                            {
-                                attr.BColor = (byte)(x - 40);
-                            }
-                            else if (x >= 90 && x <= 97) // front strong
-                            {
-                                attr.FColor = (byte)(x - 90 + 8);
-                            }
-                            else if (x >= 100 && x <= 107) // back std
-                            {
-                                attr.BColor = (byte)(x - 100 + 8);
-                            }
-
-                            blen = 0;
-                            state = 0;
-                        }
-                        else
-                        {
-                            sb.Append(s[i]);
-                            blen++;
-                            state = 0;
-                        }
-
-                        break;
-                }
-            }
-
-            if (blen > 0)
-            {
-                line.Attr.Add(new AttrItem(attr, blen));
-                blen = 0;
-            }
-
-            CurrentAttr = attr;
-
-            line.Data += sb.ToString();
+            line.Parse(s);
         }
 
         public void Printf(string format, params object[] args)
@@ -626,7 +424,8 @@ namespace KCad
         public void Clear()
         {
             mList.Clear();
-            RecalcSize();
+            //RecalcSize();
+            NewLine();
             UpdateView();
         }
 
@@ -636,7 +435,7 @@ namespace KCad
 
             for (int i = 0; i < mList.Count; i++)
             {
-                ListItem line = mList[i];
+                TextLine line = mList[i];
                 if (line.IsSelected)
                 {
                     lines.Add(line.Data);
@@ -679,7 +478,7 @@ namespace KCad
         {
             string s = "";
 
-            foreach (ListItem line in mList)
+            foreach (TextLine line in mList)
             {
                 if (line.IsSelected)
                 {
@@ -729,7 +528,7 @@ namespace KCad
                     break;
                 }
 
-                ListItem item = mList[n];
+                TextLine item = mList[n];
                 n++;
 
                 FormattedText ft;
@@ -760,17 +559,12 @@ namespace KCad
                 Rect sr = new Rect(0, p.Y, ActualWidth, rangeY - p.Y);
                 dc.DrawRectangle(mBackground, null, sr);
             }
-        }
 
-        protected FormattedText GetText(string s, Brush brush)
-        {
-            FormattedText formattedText = new FormattedText(s,
-                                                      System.Globalization.CultureInfo.CurrentCulture,
-                                                      System.Windows.FlowDirection.LeftToRight,
-                                                      mTypeface,
-                                                      mTextSize,
-                                                      brush);
-            return formattedText;
+            if (IsFocused)
+            {
+                Rect sr = new Rect(0, offset, ActualWidth, dispHeight);
+                dc.DrawRectangle(null, FocusedBorderPen, sr);
+            }
         }
 
         #region draw text
@@ -876,11 +670,11 @@ namespace KCad
         }
         */
 
-        public void DrawText(DrawingContext dc, ListItem line, Point pt)
+        protected void DrawText(DrawingContext dc, TextLine line, Point pt)
         {
             int sp = 0;
 
-            foreach (AttrItem attr in line.Attr)
+            foreach (AttrSpan attr in line.Attrs)
             {
                 string s = line.Data.Substring(sp, attr.Len);
                 pt = RenderText(dc, attr.Attr, s, pt, line.IsSelected);
@@ -888,7 +682,7 @@ namespace KCad
             }
         }
 
-        public Point RenderText(DrawingContext dc, TextAttr attr, string s, Point pt, bool selected)
+        protected Point RenderText(DrawingContext dc, TextAttr attr, string s, Point pt, bool selected)
         {
             Brush fgb;
 
@@ -901,7 +695,7 @@ namespace KCad
                 fgb = Esc.Palette[attr.FColor];
             }
 
-            FormattedText ft = GetText(s, fgb);
+            FormattedText ft = GetFormattedText(s, fgb);
 
             Point pt2 = pt;
             pt2.X += ft.Width;
@@ -925,6 +719,17 @@ namespace KCad
             return pt;
         }
         #endregion
+
+        protected FormattedText GetFormattedText(string s, Brush brush)
+        {
+            FormattedText formattedText = new FormattedText(s,
+                                                      System.Globalization.CultureInfo.CurrentCulture,
+                                                      System.Windows.FlowDirection.LeftToRight,
+                                                      mTypeface,
+                                                      mTextSize,
+                                                      brush);
+            return formattedText;
+        }
 
         public void ScrollToEnd()
         {
