@@ -102,6 +102,19 @@ namespace Plotter.Controller
             }
         }
 
+        private PaperPageSize mPageSize = new PaperPageSize();
+
+        public PaperPageSize PageSize
+        {
+            get
+            {
+                return mPageSize;
+            }
+            set
+            {
+                mPageSize = value;
+            }
+        }
 
         public SelectModes SelectMode
         {
@@ -476,7 +489,7 @@ namespace Plotter.Controller
         public void DrawBase(DrawContext dc)
         {
             dc.Drawing.DrawAxis();
-            dc.Drawing.DrawPageFrame();
+            dc.Drawing.DrawPageFrame(PageSize.Width, PageSize.Height, CadVector.Zero);
             DrawGrid(dc);
         }
 

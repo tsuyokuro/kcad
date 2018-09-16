@@ -48,14 +48,6 @@ namespace Plotter
             }
         }
 
-        public PaperPageSize PageSize
-        {
-            get
-            {
-                return mDrawContext.PageSize.clone();
-            }
-        }
-
         public Control FromsControl
         {
             get

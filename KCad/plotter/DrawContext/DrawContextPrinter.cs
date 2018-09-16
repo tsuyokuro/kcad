@@ -10,13 +10,12 @@ namespace Plotter
 {
     class DrawContextPrinter : DrawContextGDI
     {
-        public DrawContextPrinter(DrawContext currentDC, Graphics g, PaperPageSize pageSize, CadSize2D unitSize)
+        public DrawContextPrinter(DrawContext currentDC, Graphics g, CadSize2D pageSize, CadSize2D deviceSize)
         {
             graphics = g;
             SetupTools(DrawTools.ToolsType.PRINTER);
-            PageSize = pageSize;
 
-            UnitPerMilli = unitSize.Width / PageSize.Width;
+            UnitPerMilli = deviceSize.Width / pageSize.Width;
 
             CopyCamera(currentDC);
 
@@ -30,14 +29,10 @@ namespace Plotter
 
             CadVector org = default(CadVector);
 
-            org.x = unitSize.Width / 2.0;
-            org.y = unitSize.Height / 2.0;
+            org.x = deviceSize.Width / 2.0;
+            org.y = deviceSize.Height / 2.0;
 
             ViewOrg = org;
         }
-
-        //public override void SetViewSize(double w, double h)
-        //{
-        //}
     }
 }

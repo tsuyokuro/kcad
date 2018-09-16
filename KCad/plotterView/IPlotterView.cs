@@ -14,11 +14,6 @@ namespace Plotter
             get;
         }
 
-        PaperPageSize PageSize
-        {
-            get;
-        }
-
         System.Windows.Forms.Control FromsControl
         {
             get;

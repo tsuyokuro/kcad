@@ -20,7 +20,7 @@ namespace Plotter
         }
 
         // 用紙サイズ
-        public PaperPageSize PageSize = new PaperPageSize();
+        //public PaperPageSize PageSize = new PaperPageSize();
 
         // 画素/Milli
         // 1ミリあたりの画素数
@@ -155,7 +155,7 @@ namespace Plotter
 
         public virtual void CopyMetrics(DrawContext dc)
         {
-            PageSize = dc.PageSize.clone();
+            //PageSize = dc.PageSize.clone();
             UnitPerMilli = dc.UnitPerMilli;
             Eye = dc.Eye;
             LookAt = dc.LookAt;

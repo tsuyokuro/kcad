@@ -20,7 +20,7 @@ namespace Plotter
 
         void DrawAxis();
 
-        void DrawPageFrame();
+        void DrawPageFrame(double w, double h, CadVector center);
 
         void DrawGrid(Gridding grid);
 

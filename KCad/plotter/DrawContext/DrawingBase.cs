@@ -31,7 +31,7 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawPageFrame()
+        public virtual void DrawPageFrame(double w, double h, CadVector center)
         {
         }
 

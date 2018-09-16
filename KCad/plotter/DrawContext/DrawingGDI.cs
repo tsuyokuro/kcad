@@ -392,13 +392,13 @@ namespace Plotter
             //tgt.UnlockBits(bitmapData);
         }
 
-        public override void DrawPageFrame()
+        public override void DrawPageFrame(double w, double h, CadVector center)
         {
             CadVector pt = default(CadVector);
 
             // p0
-            pt.x = -DC.PageSize.Width / 2;
-            pt.y = DC.PageSize.Height / 2;
+            pt.x = -w / 2 + center.x;
+            pt.y = h / 2 + center.y;
             pt.z = 0;
 
             CadVector p0 = default(CadVector);
@@ -408,8 +408,8 @@ namespace Plotter
             p0 += DC.ViewOrg;
 
             // p1
-            pt.x = DC.PageSize.Width / 2;
-            pt.y = -DC.PageSize.Height / 2;
+            pt.x = w / 2 + center.x;
+            pt.y = -h / 2 + center.y;
             pt.z = 0;
 
             CadVector p1 = default(CadVector);

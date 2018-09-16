@@ -479,6 +479,7 @@ namespace Plotter
                 { "load", Load },
                 { "save",Save },
                 { "print",StartPrint },
+                { "page_setting",PageSetting },
                 { "undo",Undo },
                 { "redo",Redo },
                 { "copy",Copy },
@@ -1005,8 +1006,9 @@ namespace Plotter
 
             PageSettings storePageSettings = pd.DefaultPageSettings;
 
-            pd.DefaultPageSettings.Landscape = mPlotterView.DrawContext.PageSize.IsLandscape();
-            pd.DefaultPageSettings.PrinterResolution.Kind = PrinterResolutionKind.High;
+            pd.DefaultPageSettings.PaperSize = Controller.PageSize.GetPaperSize();
+
+            pd.DefaultPageSettings.Landscape = Controller.PageSize.mLandscape;
 
             pd.PrintPage += PrintPage;
 
@@ -1025,14 +1027,36 @@ namespace Plotter
         private void PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
             Graphics g = e.Graphics;
-            CadSize2D size = new CadSize2D(e.PageBounds.Size.Width, e.PageBounds.Size.Height);
-            
-            DrawContextPrinter dc = new DrawContextPrinter(mController.CurrentDC, g, mPlotterView.PageSize, size);
+            CadSize2D deviceSize = new CadSize2D(e.PageBounds.Size.Width, e.PageBounds.Size.Height);
+            CadSize2D pageSize = new CadSize2D(Controller.PageSize.Width, Controller.PageSize.Height);
+
+            DrawContextPrinter dc = new DrawContextPrinter(mController.CurrentDC, g, pageSize, deviceSize);
 
             mController.Print(dc);
         }
 
         #endregion
+
+        public void PageSetting()
+        {
+            System.Windows.Forms.PageSetupDialog pageDlg = new System.Windows.Forms.PageSetupDialog();
+
+            PageSettings pageSettings = new PageSettings();
+
+            pageSettings.PaperSize = Controller.PageSize.GetPaperSize();
+            pageSettings.Landscape = Controller.PageSize.mLandscape;
+
+            pageDlg.PageSettings = pageSettings;
+
+            System.Windows.Forms.DialogResult result = pageDlg.ShowDialog();
+
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                Controller.PageSize.Setup(pageDlg.PageSettings);
+
+                Controller.Redraw();
+            }
+        }
 
 
         public void TextCommand(string s)

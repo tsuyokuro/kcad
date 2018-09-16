@@ -124,6 +124,7 @@
                 <MenuItem Tag="load" Header="{x:Static properties:Resources.menu_load}" Click="MenuItem_Click" />
                 <MenuItem Tag="save" Header="{x:Static properties:Resources.menu_save}" Click="MenuItem_Click"/>
                 <MenuItem Tag="print" Header="{x:Static properties:Resources.menu_print}" Click="MenuItem_Click"/>
+                <MenuItem Tag="page_setting" Header="Page Setting" Click="MenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="{x:Static properties:Resources.menu_edit}" >
                 <MenuItem Tag="undo" Header="Undo" Click="MenuItem_Click"/>

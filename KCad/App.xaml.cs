@@ -8,6 +8,7 @@
  * コンソールの使用を止めるときは、出力の種類を Windowsアプリケーションもどすこと
  *
  * 
+ * Visual studio 2017 15.8.4では、Windowsアプリケーションのまま、普通にコンソールに出力される
  **/
 
 #define USE_CONSOLE
@@ -18,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -137,8 +139,16 @@ namespace KCad
             SplashWindow = new MySplashWindow();
             SplashWindow.Show();
 
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
             this.MainWindow = new MainWindow();
             this.MainWindow.Show();
+
+            sw.Stop();
+
+            Console.WriteLine("MainWindow startup: " + sw.ElapsedMilliseconds.ToString());
 
             SplashWindow.Close();
             SplashWindow = null;
