@@ -138,6 +138,9 @@
   <data name="menu_new_doc" xml:space="preserve">
     <value>新規作成</value>
   </data>
+  <data name="menu_page_settings" xml:space="preserve">
+    <value>ページ設定...</value>
+  </data>
   <data name="menu_print" xml:space="preserve">
     <value>印刷</value>
   </data>

@@ -47,7 +47,7 @@ namespace KCad.Properties {
         }
         
         /// <summary>
-        ///   厳密に型指定されたこのリソース クラスを使用して、すべての検索リソースに対し、
+        ///   すべてについて、現在のスレッドの CurrentUICulture プロパティをオーバーライドします
         ///   現在のスレッドの CurrentUICulture プロパティをオーバーライドします。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
@@ -130,6 +130,15 @@ namespace KCad.Properties {
         public static string menu_new_doc {
             get {
                 return ResourceManager.GetString("menu_new_doc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Page settings ... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_page_settings {
+            get {
+                return ResourceManager.GetString("menu_page_settings", resourceCulture);
             }
         }
         

@@ -142,6 +142,9 @@
   <data name="menu_new_doc" xml:space="preserve">
     <value>New</value>
   </data>
+  <data name="menu_page_settings" xml:space="preserve">
+    <value>Page settings ...</value>
+  </data>
   <data name="menu_print" xml:space="preserve">
     <value>Print</value>
   </data>
