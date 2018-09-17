@@ -118,9 +118,6 @@
     <Reference Include="IronPython.Modules, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\IronPython.2.7.7\lib\Net45\IronPython.Modules.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="MessagePack, Version=1.7.3.4, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
       <HintPath>..\packages\MessagePack.1.7.3.4\lib\net45\MessagePack.dll</HintPath>
     </Reference>
@@ -222,7 +219,6 @@
     <Compile Include="plotter\Figure\CadFigureNurbsLine.cs" />
     <Compile Include="plotter\Figure\CadFigureNurbsSurface.cs" />
     <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
-    <Compile Include="Log.cs" />
     <Compile Include="plotter\Figure\CadFigureUtil.cs" />
     <Compile Include="plotter\HalfEdge\HeJson.cs" />
     <Compile Include="plotter\Figure\VLExpander.cs" />
@@ -388,9 +384,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
