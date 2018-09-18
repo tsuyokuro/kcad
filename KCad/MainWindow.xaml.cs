@@ -54,33 +54,33 @@ namespace KCad
 
             viewContainer.Focusable = true;
 
-            LayerListView.DataContext = ViewModel.LayerList;
-
             ViewModel.LayerListView = LayerListView;
             ViewModel.SetObjectTreeView(ObjTree);
 
-
-            PreviewKeyDown += OnPreviewKeyDown;
-
-            PreviewKeyUp += OnPreviewKeyUp;
+            ViewModel.SetupTextCommandView(textCommand);
+            textCommand.Determine += TextCommand_Determine;
 
             KeyDown += onKeyDown;
             KeyUp += onKeyUp;
 
-            SlsectModePanel.DataContext = ViewModel;
-            FigurePanel.DataContext = ViewModel;
-
-            InitTextCommand();
-
-            textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
-            textBlockXYZ2.DataContext = ViewModel.FreqChangedInfo;
-
+            Loaded += MainWindow_Loaded;
+            Closed += MainWindow_Closed;
 
             ViewModel.InteractOut = mInteractionOut;
 
             AddLayerButton.Click += ViewModel.ButtonClicked;
             RemoveLayerButton.Click += ViewModel.ButtonClicked;
             RunTextCommandButton.Click += RunTextCommandButtonClicked;
+
+
+            // Setup Data Context
+            LayerListView.DataContext = ViewModel.LayerList;
+
+            SlsectModePanel.DataContext = ViewModel;
+            FigurePanel.DataContext = ViewModel;
+
+            textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
+            textBlockXYZ2.DataContext = ViewModel.FreqChangedInfo;
 
             ViewModePanel.DataContext = ViewModel;
 
@@ -91,17 +91,6 @@ namespace KCad
             ToolBar1.DataContext = ViewModel;
 
             TreeViewToolBar.DataContext = ViewModel;
-
-            Loaded += MainWindow_Loaded;
-            Closed += MainWindow_Closed;
-        }
-
-        private void OnPreviewKeyUp(object sender, KeyEventArgs e)
-        {
-        }
-
-        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
@@ -120,20 +109,17 @@ namespace KCad
         }
 
         #region TextCommand
-        private void InitTextCommand()
-        {
-            ViewModel.SetupTextCommandView(textCommand);
-
-            textCommand.Determine += TextCommand_Determine;
-        }
-
         public void RunTextCommandButtonClicked(object sender, RoutedEventArgs e)
         {
             var s = textCommand.Text;
+
+            textCommand.Text = "";
+
             if (s.Length > 0)
             {
                 ViewModel.TextCommand(s);
                 textCommand.History.Add(s);
+                textCommand.Focus();
             }
         }
 
@@ -146,7 +132,7 @@ namespace KCad
             if (s.Length > 0)
             {
                 ViewModel.TextCommand(s);
-                viewContainer.Focus();
+                //viewContainer.Focus();
             }
         }
         #endregion
@@ -174,11 +160,5 @@ namespace KCad
             }
         }
         #endregion
-
-
-        public void EmergencySave(string path)
-        {
-            ViewModel.Save(path);
-        }
     }
 }

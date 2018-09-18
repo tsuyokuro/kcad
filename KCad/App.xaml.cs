@@ -56,10 +56,6 @@ namespace KCad
             currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             System.Windows.Forms.Application.ThreadException += Application_ThreadException;
-
-            // MessagePack for C# は、初回の実行が遅いので、起動時にダミーを実行して
-            // 紛れさせる
-            MpInitializer.Init();
         }
 
         private void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
@@ -91,17 +87,10 @@ namespace KCad
 
         private void HandleException(object e)
         {
-            //SaveData();
             if (!ShowExceptionDialg(e.ToString()))
             {
                 Shutdown();
             }
-        }
-
-        private void SaveData()
-        {
-            //KCad.MainWindow mw = (KCad.MainWindow)this.MainWindow;
-            //mw.EmergencySave(@".\EmergencySave.txt");
         }
 
         private bool ShowExceptionDialg(string text)
@@ -140,15 +129,19 @@ namespace KCad
             SplashWindow.Show();
 
             Stopwatch sw = new Stopwatch();
-
+                       
             sw.Start();
+
+            // MessagePack for C# は、初回の実行が遅いので、起動時にダミーを実行して
+            // 紛れさせる
+            MpInitializer.Init();
 
             this.MainWindow = new MainWindow();
             this.MainWindow.Show();
 
             sw.Stop();
 
-            Console.WriteLine("MainWindow startup: " + sw.ElapsedMilliseconds.ToString());
+            Console.WriteLine("MainWindow startup. Start up time: " + sw.ElapsedMilliseconds.ToString());
 
             SplashWindow.Close();
             SplashWindow = null;
