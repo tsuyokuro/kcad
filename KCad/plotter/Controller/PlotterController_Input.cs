@@ -57,9 +57,6 @@ namespace Plotter.Controller
 
         public CadVector RubberBandScrnPoint1 = default;
 
-
-        private Gridding mGridding = new Gridding();
-
         private CadFigure mCurrentFigure = null;
 
         public CadFigure CurrentFigure
@@ -85,11 +82,12 @@ namespace Plotter.Controller
             }
         }
 
-        //private int MatchIndex = 0;
-
         private bool CursorLocked = false;
 
         private List<HighlightPointListItem> HighlightPointList = new List<HighlightPointListItem>();
+
+
+        private Gridding mGridding = new Gridding();
 
         public Gridding Grid
         {
@@ -115,7 +113,6 @@ namespace Plotter.Controller
             Mouse.Wheel = Wheel;
         }
 
-        #region "Clear selection control"
         private bool IsSelected(MarkPoint mp)
         {
             if (SelectMode == SelectModes.POINT)
@@ -165,8 +162,6 @@ namespace Plotter.Controller
                 }
             }
         }
-        #endregion
-
 
         private struct SelectContext
         {
@@ -184,7 +179,7 @@ namespace Plotter.Controller
 
         public bool SelectNearest(DrawContext dc, CadVector pixp)
         {
-            SelectContext sc = default(SelectContext);
+            SelectContext sc = default;
 
             ObjDownPoint = CadVector.InvalidValue;
 
@@ -542,7 +537,7 @@ namespace Plotter.Controller
 
         private void MDrag(CadMouse pointer, DrawContext dc, double x, double y)
         {
-            CadVector cp = default(CadVector);
+            CadVector cp = default;
             cp.Set(x, y, 0);
 
             CadVector d = cp - pointer.MDownPoint;
@@ -579,7 +574,7 @@ namespace Plotter.Controller
 
             if (RequestContextMenu != null)
             {
-                StateInfo si = default(StateInfo);
+                StateInfo si = default;
                 si.set(this);
                 RequestContextMenu(this, si, (int)x, (int)y);
             }
@@ -598,8 +593,6 @@ namespace Plotter.Controller
                 {
                     SelectIfContactRect(minp, maxp, layer.ID, fig, SelList);
                 });
-
-            //CollectSelList(mSelList);
         }
 
         public void SelectIfContactRect(CadVector minp, CadVector maxp, uint layerID, CadFigure fig, SelectList selList)
@@ -624,7 +617,6 @@ namespace Plotter.Controller
 
         private void LButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
         {
-            //Log.d("LUp");
             switch (State)
             {
                 case States.SELECT:
@@ -656,7 +648,7 @@ namespace Plotter.Controller
 
             UpdateTreeView(false);
 
-            mOffsetScreen = default(CadVector);
+            mOffsetScreen = default;
         }
 
         private void RButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
@@ -696,7 +688,7 @@ namespace Plotter.Controller
             MarkPoint mx = mPointSearcher.GetXMatch();
             MarkPoint my = mPointSearcher.GetYMatch();
 
-            CadVector tp = default(CadVector);
+            CadVector tp = default;
 
             if (mx.IsValid)
             {
@@ -736,9 +728,8 @@ namespace Plotter.Controller
 
         private void SegSnap(DrawContext dc, double dist)
         {
-            // Search segment
             mSegSearcher.Clean();
-            //mSegSearcher.SetRangePixel(dc, Math.Min(LineSnapRange, dist - CadMath.Epsilon));
+
             mSegSearcher.SetRangePixel(dc, LineSnapRange);
 
             mSegSearcher.SetTargetPoint(CrossCursor);
@@ -774,8 +765,6 @@ namespace Plotter.Controller
                         CrossCursor.Pos = markSeg.CrossPointScrn;
                         CrossCursor.Pos.z = 0;
                     }
-
-                    //segmatch = true;
                 }
                 else
                 {
@@ -881,15 +870,13 @@ namespace Plotter.Controller
                 SegSnap(dc, mPointSearcher.Distance());
             }
 
-            #region Gridding
-            if (!mSegSearcher.IsMatch)
+            if (SettingsHolder.Settings.SnapToGrid)
             {
-                if (SettingsHolder.Settings.SnapToGrid)
+                if (!mPointSearcher.IsXYMatch && !mSegSearcher.IsMatch)
                 {
                     SnapGrid(dc, CrossCursor.Pos);
                 }
             }
-            #endregion
 
             if (SettingsHolder.Settings.SnapToLine)
             {
