@@ -26,5 +26,5 @@
     <SolidColorBrush x:Key="MsgSelectedBGColor" Color="#FF303030" />
     <SolidColorBrush x:Key="MsgTextColor" Color="#FFDDDDDD" />
 
-
+    <SolidColorBrush x:Key="DialogBaseColor" Color="#FFEBEBEB" />
 </ResourceDictionary>

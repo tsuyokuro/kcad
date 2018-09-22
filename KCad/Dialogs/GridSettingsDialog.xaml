@@ -8,113 +8,102 @@
         Title="Grid settings"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        WindowStyle="ToolWindow" Height="188.666" Width="241.667"
+        WindowStyle="ToolWindow" Height="214.667" Width="256.333"
         >
 
-    <Grid Margin="8,8,8,8" Width="Auto" Height="Auto">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../ResDict/Colors.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Width="Auto" Height="Auto">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="100*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <Border Grid.Row="0" Padding="16" Background="{StaticResource DialogBaseColor}">
+            <StackPanel Orientation="Vertical" Height="Auto" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
 
-        <StackPanel Orientation="Vertical" Height="Auto" Grid.Row="0">
-            <StackPanel Orientation="Horizontal" Margin="16,0,16,0">
+                    <Label
+                        Content="X"
+                        Width="Auto"
+                        Height="Auto"
+                        Margin="0,0,8,0"
+                        />
 
-                <Label
-                    Content="X"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Width="Auto"
-                    Height="Auto"
-                    />
+                    <TextBox
+                        x:Name="grid_x_size"
+                        Width="100"
+                        Height="Auto"
+                        VerticalContentAlignment="Center"                        
+                        />
 
-                <TextBox
-                    x:Name="grid_x_size"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    Width="100"
-                    Height="Auto"
-                    />
+                    <Label
+                        Width="Auto"
+                        Height="Auto"
+                        Content="mm"
+                        />
 
-                <Label
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Width="Auto"
-                    Height="Auto"
-                    Content="mm"/>
+                </StackPanel>
 
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <Label
+                        Content="Y"
+                        Width="Auto"
+                        Height="Auto"
+                        Margin="0,0,8,0"
+                        />
+
+                    <TextBox
+                        x:Name="grid_y_size"
+                        Width="100"
+                        Height="Auto"
+                        VerticalContentAlignment="Center"                        
+                        />
+
+                    <Label
+                        Width="Auto"
+                        Height="Auto"
+                        Content="mm"
+                        />
+
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                    <Label
+                        Content="Z"
+                        Width="Auto"
+                        Height="Auto"
+                        Margin="0,0,8,0"
+                        />
+
+                    <TextBox
+                        x:Name="grid_z_size"
+                        Width="100"
+                        Height="Auto"
+                        VerticalContentAlignment="Center"                        
+                        />
+
+                    <Label
+                        Width="Auto"
+                        Height="Auto"
+                        Content="mm"
+                        />
+                </StackPanel>
             </StackPanel>
+        </Border>
 
-            <StackPanel Orientation="Horizontal" Margin="16,0,16,0">
-                <Label
-                    Content="Y"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Width="Auto"
-                    Height="Auto"
-                    />
-
-                <TextBox
-                    x:Name="grid_y_size"
-                    Grid.Row="1"
-                    Grid.Column="1" 
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    Width="100"
-                    Height="Auto"
-                    />
-
-                <Label
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Width="Auto"
-                    Height="Auto"
-                    Content="mm"/>
-
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="16,0,16,0">
-                <Label
-                    Content="Z"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Width="Auto"
-                    Height="Auto"
-                    />
-
-                <TextBox
-                    x:Name="grid_z_size"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    Width="100"
-                    Height="Auto"
-                    />
-
-                <Label
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Width="Auto"
-                    Height="Auto"
-                    Content="mm"/>
-            </StackPanel>
-        </StackPanel>
-        <StackPanel Height="42" ></StackPanel>
-
-
-        <StackPanel
-            Grid.Row="1"
-            Width="Auto"
-            Height="Auto"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Bottom"
-            Margin="0,16,0,0"
-            >
+        <Border Grid.Row="1" Padding="8,8,8,8">
 
             <StackPanel HorizontalAlignment="Right"  Orientation="Horizontal">
-                <Button x:Name="ok_button" 
-                    Content="OK"
-                    VerticalAlignment="Center"
+                <Button x:Name="cancel_button" 
+                    Content="Cancel"
                     HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
                     Width="75"
                     Height="Auto"
                     Margin="0,0,8,0"
@@ -122,10 +111,11 @@
                     BorderThickness="0"
                     />
 
-                <Button x:Name="cancel_button" 
-                    Content="Cancel"
-                    HorizontalAlignment="Right"
+
+                <Button x:Name="ok_button" 
+                    Content="OK"
                     VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
                     Width="75"
                     Height="Auto"
                     Margin="0,0,0,0"
@@ -134,6 +124,6 @@
                     />
 
             </StackPanel>
-        </StackPanel>
+        </Border>
     </Grid>
 </Window>
