@@ -104,6 +104,9 @@ namespace Plotter
             p1.y = 0;
             p1.z = 0;
 
+            p0 /= DC.WoldScale;
+            p1 /= DC.WoldScale;
+
             DrawLine(DrawTools.PEN_AXIS, p0, p1);
 
             // Y軸
@@ -115,6 +118,9 @@ namespace Plotter
             p1.y = 100;
             p1.z = 0;
 
+            p0 /= DC.WoldScale;
+            p1 /= DC.WoldScale;
+
             DrawLine(DrawTools.PEN_AXIS, p0, p1);
 
             // Z軸
@@ -125,6 +131,9 @@ namespace Plotter
             p1.x = 0;
             p1.y = 0;
             p1.z = 100;
+
+            p0 /= DC.WoldScale;
+            p1 /= DC.WoldScale;
 
             DrawLine(DrawTools.PEN_AXIS, p0, p1);
 

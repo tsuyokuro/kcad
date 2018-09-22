@@ -88,11 +88,11 @@ namespace Plotter
             {
                 if (e.Delta > 0)
                 {
-                    mDrawContext.WoldScale *= (double)(e.Delta / e.Delta) * 1.2;
+                    mDrawContext.MoveForwardEyePoint(3);
                 }
                 else if (e.Delta < 0)
                 {
-                    mDrawContext.WoldScale *= (double)(e.Delta / e.Delta) * 0.8;
+                    mDrawContext.MoveForwardEyePoint(-3);
                 }
 
                 Redraw();

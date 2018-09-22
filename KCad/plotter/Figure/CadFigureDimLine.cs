@@ -254,8 +254,11 @@ namespace Plotter
 
             CadVector cp = CadUtil.CenterPoint(seg.P0, seg.P1);
 
-            dc.Drawing.DrawArrow(pen, cp, seg.P0, ArrowTypes.CROSS, ArrowPos.END, ARROW_LEN, ARROW_W);
-            dc.Drawing.DrawArrow(pen, cp, seg.P1, ArrowTypes.CROSS, ArrowPos.END, ARROW_LEN, ARROW_W);
+            double arrowW = ARROW_W / dc.WoldScale;
+            double arrowL = ARROW_LEN / dc.WoldScale;
+
+            dc.Drawing.DrawArrow(pen, cp, seg.P0, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp, seg.P1, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
         }
 
         private void DrawDim(DrawContext dc, int pen)
@@ -265,8 +268,11 @@ namespace Plotter
 
             CadVector cp = CadUtil.CenterPoint(PointList[3], PointList[2]);
 
-            dc.Drawing.DrawArrow(pen, cp, PointList[3], ArrowTypes.CROSS, ArrowPos.END, ARROW_LEN, ARROW_W);
-            dc.Drawing.DrawArrow(pen, cp, PointList[2], ArrowTypes.CROSS, ArrowPos.END, ARROW_LEN, ARROW_W);
+            double arrowW = ARROW_W / dc.WoldScale;
+            double arrowL = ARROW_LEN / dc.WoldScale;
+
+            dc.Drawing.DrawArrow(pen, cp, PointList[3], ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp, PointList[2], ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
 
 
             CadVector d = PointList[2] - PointList[3];

@@ -59,7 +59,7 @@ namespace Plotter
             }
         }
 
-        // ワールド座標系から視点座標系への変換行列
+        // ワールド座標系から視点座標系への変換(ビュー変換)行列
         protected UMatrix4 mViewMatrix = new UMatrix4();
 
         public UMatrix4 ViewMatrix
@@ -131,7 +131,10 @@ namespace Plotter
             }
         }
 
+        // 縮尺
         public double WoldScale = 1.0;
+
+        // 画面に描画する際の係数
         public double DeviceScaleX = 1.0;
         public double DeviceScaleY = -1.0;
 

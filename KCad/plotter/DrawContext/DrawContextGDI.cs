@@ -110,6 +110,8 @@ namespace Plotter
 
         public override CadVector CadVectorToUnitVector(CadVector pt)
         {
+            pt *= WoldScale;
+
             Vector4d ptv = (Vector4d)pt;
 
             ptv.W = 1.0f;

@@ -60,9 +60,9 @@ namespace Plotter
         {
             mDrawContext = new DrawContextGDI(this);
 
-            this.DoubleBuffered = false;
+            DoubleBuffered = false;
 
-            base.SizeChanged += onSizeChanged;
+            SizeChanged += onSizeChanged;
 
             mMessageHandler = new MyMessageHandler(this, 100);
 
@@ -72,11 +72,11 @@ namespace Plotter
 
             mDrawContext.OnPush = OnPushDraw;
 
-            base.MouseMove += mouseMove;
-            base.MouseDown += mouseDown;
-            base.MouseUp += mouseUp;
+            MouseMove += mouseMove;
+            MouseDown += mouseDown;
+            MouseUp += mouseUp;
 
-            base.MouseWheel += mouseWheel;
+            MouseWheel += mouseWheel;
 
             //StreamResourceInfo si = System.Windows.Application.GetResourceStream(
             //    new Uri("/KCad;component/Resources/mini_cross.cur", UriKind.Relative));

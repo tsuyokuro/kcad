@@ -299,10 +299,10 @@ namespace Plotter
             //                                );
             //mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
 
-            RecalcMatrix();
+            RecalcProjectionMatrix();
         }
 
-        private void RecalcMatrix()
+        private void RecalcProjectionMatrix()
         {
             double aspect = mViewWidth / mViewHeight;
 
@@ -316,6 +316,11 @@ namespace Plotter
             mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
         }
 
+        private void RecalcViewTransMatrix()
+        {
+            mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
+            mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
+        }
 
         public void RotateEyePoint(Vector2 prev, Vector2 current)
         {
@@ -368,20 +373,39 @@ namespace Plotter
                 UpVector = qp.ToVector3d();
             }
 
-            mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
-            mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
+            RecalcViewTransMatrix();
 
             RecalcViewDirFromCameraDirection();
         }
 
-        public void MoveForwardEyePoint(double d)
+        public void MoveForwardEyePoint(double d, bool withLookAt = false)
         {
-            Eye += ViewDir * d;
+            Vector3d dv = ViewDir * d;
 
-            mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
-            mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
+            if (withLookAt)
+            {
+                Eye += dv;
+                LookAt += dv;                
+            }
+            else
+            {
+                Vector3d eye = Eye + dv;
 
-            RecalcMatrix();
+                Vector3d viewDir = LookAt - eye;
+
+                viewDir.Normalize();
+
+                if ((ViewDir - viewDir).Length > 1.0)
+                {
+                    return;
+                }
+
+                Eye += dv;
+            }
+
+            RecalcViewTransMatrix();
+
+            RecalcProjectionMatrix();
         }
 
         public override void Dispose()
