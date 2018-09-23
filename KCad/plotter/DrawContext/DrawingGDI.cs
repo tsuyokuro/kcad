@@ -454,9 +454,9 @@ namespace Plotter
                 );
         }
 
-        public override void DrawDownPointCursor(int pen, CadVector p)
+        public override void DrawMarkCursor(int pen, CadVector p, double size)
         {
-            DrawCross(pen, p, 10);
+            DrawCross(pen, p, size);
         }
         #endregion
 

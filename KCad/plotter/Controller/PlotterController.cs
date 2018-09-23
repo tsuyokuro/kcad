@@ -543,13 +543,13 @@ namespace Plotter.Controller
 
         public void DrawLastPoint(DrawContext dc)
         {
-            dc.Drawing.DrawDownPointCursor(
-                DrawTools.PEN_LAST_POINT_MARKER, LastDownPoint);
+            dc.Drawing.DrawMarkCursor(
+                DrawTools.PEN_LAST_POINT_MARKER, LastDownPoint, 10.0);
 
             if (ObjDownPoint.Valid)
             {
-                dc.Drawing.DrawDownPointCursor(
-                    DrawTools.PEN_LAST_POINT_MARKER2, ObjDownPoint);
+                dc.Drawing.DrawMarkCursor(
+                    DrawTools.PEN_LAST_POINT_MARKER2, ObjDownPoint, 10.0);
             }
         }
 

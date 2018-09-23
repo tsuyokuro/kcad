@@ -448,9 +448,9 @@ namespace Plotter
             GL.End();
         }
 
-        public override void DrawDownPointCursor(int pen, CadVector p)
+        public override void DrawMarkCursor(int pen, CadVector p, double size)
         {
-            DrawCross(pen, p, 10.0 / DC.WoldScale);
+            DrawCross(pen, p, size / DC.WoldScale);
         }
 
         public override void DrawCross(int pen, CadVector p, double size)

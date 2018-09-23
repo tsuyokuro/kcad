@@ -28,7 +28,7 @@ namespace Plotter
 
         void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT);
 
-        void DrawDownPointCursor(int pen, CadVector p);
+        void DrawMarkCursor(int pen, CadVector p, double size);
 
         void DrawRect(int pen, CadVector p0, CadVector p1);
 
