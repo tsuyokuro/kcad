@@ -197,6 +197,7 @@
     <Compile Include="EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="plotter\Controller\ControllerConst.cs" />
     <Compile Include="plotter\Controller\GideLineManager.cs" />
     <Compile Include="plotter\Controller\HighlightPointListItem.cs" />
     <Compile Include="plotter\Controller\InteractCtrl.cs" />

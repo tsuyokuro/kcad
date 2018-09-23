@@ -544,12 +544,16 @@ namespace Plotter.Controller
         public void DrawLastPoint(DrawContext dc)
         {
             dc.Drawing.DrawMarkCursor(
-                DrawTools.PEN_LAST_POINT_MARKER, LastDownPoint, 10.0);
+                DrawTools.PEN_LAST_POINT_MARKER,
+                LastDownPoint,
+                ControllerConst.MARK_CURSOR_SIZE);
 
             if (ObjDownPoint.Valid)
             {
                 dc.Drawing.DrawMarkCursor(
-                    DrawTools.PEN_LAST_POINT_MARKER2, ObjDownPoint, 10.0);
+                    DrawTools.PEN_LAST_POINT_MARKER2,
+                    ObjDownPoint,
+                    ControllerConst.MARK_CURSOR_SIZE);
             }
         }
 
@@ -559,13 +563,19 @@ namespace Plotter.Controller
 
             if (CursorLocked)
             {
-                dc.Drawing.DrawCrossScrn(DrawTools.PEN_POINT_HIGHTLITE, CrossCursor.Pos, 8);
+                dc.Drawing.DrawCrossScrn(
+                    DrawTools.PEN_POINT_HIGHTLITE,
+                    CrossCursor.Pos,
+                    ControllerConst.CURSOR_LOCK_MARK_SIZE);
             }
         }
 
         public void DrawSelRect(DrawContext dc)
         {
-            dc.Drawing.DrawRectScrn(DrawTools.PEN_TEMP_FIGURE, RubberBandScrnPoint0, RubberBandScrnPoint1);
+            dc.Drawing.DrawRectScrn(
+                DrawTools.PEN_TEMP_FIGURE,
+                RubberBandScrnPoint0,
+                RubberBandScrnPoint1);
         }
 
         public void Print(DrawContext dc)
