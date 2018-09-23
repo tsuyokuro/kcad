@@ -191,6 +191,9 @@
     </ApplicationDefinition>
     <Compile Include="Controls\CadConsole\AnsiEsc.cs" />
     <Compile Include="Controls\CadConsole\TextLine.cs" />
+    <Compile Include="Dialogs\DocumentSettingsDialog.xaml.cs">
+      <DependentUpon>DocumentSettingsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
@@ -248,6 +251,10 @@
     <Compile Include="Controls\TreeView\CadObjTreeItem.cs" />
     <Compile Include="SplineCurve\NurbsSurface.cs" />
     <Compile Include="Util\ColorUtil.cs" />
+    <Page Include="Dialogs\DocumentSettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\ExceptionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

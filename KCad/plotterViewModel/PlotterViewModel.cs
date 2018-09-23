@@ -14,6 +14,7 @@ using System.Collections;
 using static System.Drawing.Printing.PrinterSettings;
 using CadDataTypes;
 using Plotter.Controller;
+using KCad.Dialogs;
 
 namespace Plotter
 {
@@ -480,6 +481,7 @@ namespace Plotter
                 { "save",Save },
                 { "print",StartPrint },
                 { "page_setting",PageSetting },
+                { "doc_setting",DocSetting },
                 { "undo",Undo },
                 { "redo",Redo },
                 { "copy",Copy },
@@ -1054,10 +1056,28 @@ namespace Plotter
             {
                 Controller.PageSize.Setup(pageDlg.PageSettings);
 
-                Controller.Redraw();
+                Redraw();
             }
         }
 
+        public void DocSetting()
+        {
+            DocumentSettingsDialog dlg = new DocumentSettingsDialog();
+
+            dlg.Owner = mMainWindow;
+
+            dlg.WoldScale = PlotterView1.DrawContext.WoldScale;
+
+            bool? result = dlg.ShowDialog();
+
+            if (result ?? false)
+            {
+                PlotterView1.DrawContext.WoldScale = dlg.WoldScale;
+                PlotterViewGL1.DrawContext.WoldScale = dlg.WoldScale;
+
+                Redraw();
+            }
+        }
 
         public void TextCommand(string s)
         {

@@ -297,8 +297,8 @@ namespace Plotter
             CadVector p1 = default(CadVector);
 
             double len = 120.0;
-            double arrowLen = 12.0;
-            double arrowW2 = 6.0;
+            double arrowLen = 12.0 / DC.WoldScale;
+            double arrowW2 = 6.0 / DC.WoldScale;
 
             // X軸
             p0.x = -len;
@@ -308,6 +308,9 @@ namespace Plotter
             p1.x = len;
             p1.y = 0;
             p1.z = 0;
+
+            p0 /= DC.WoldScale;
+            p1 /= DC.WoldScale;
 
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
@@ -320,6 +323,9 @@ namespace Plotter
             p1.y = len;
             p1.z = 0;
 
+            p0 /= DC.WoldScale;
+            p1 /= DC.WoldScale;
+
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
             // Z軸
@@ -330,6 +336,9 @@ namespace Plotter
             p1.x = 0;
             p1.y = 0;
             p1.z = len;
+
+            p0 /= DC.WoldScale;
+            p1 /= DC.WoldScale;
 
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
@@ -441,7 +450,7 @@ namespace Plotter
 
         public override void DrawDownPointCursor(int pen, CadVector p)
         {
-            DrawCross(pen, p, 10.0);
+            DrawCross(pen, p, 10.0 / DC.WoldScale);
         }
 
         public override void DrawCross(int pen, CadVector p, double size)

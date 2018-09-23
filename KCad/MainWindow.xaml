@@ -125,6 +125,7 @@
                 <MenuItem Tag="save" Header="{x:Static properties:Resources.menu_save}" Click="MenuItem_Click"/>
                 <MenuItem Tag="print" Header="{x:Static properties:Resources.menu_print}" Click="MenuItem_Click"/>
                 <MenuItem Tag="page_setting" Header="{x:Static properties:Resources.menu_page_settings}" Click="MenuItem_Click"/>
+                <MenuItem Tag="doc_setting" Header="Document settings..." Click="MenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="{x:Static properties:Resources.menu_edit}" >
                 <MenuItem Tag="undo" Header="Undo" Click="MenuItem_Click"/>
