@@ -1042,5 +1042,18 @@ namespace Plotter.Controller
         {
             InteractOut.printf(format, args);
         }
+
+        public void SetDB(CadObjectDB db)
+        {
+            mDB = db;
+
+            HistoryMan = new HistoryManager(mDB);
+
+            NotifyLayerInfo();
+
+            UpdateTreeView(true);
+
+            Redraw(CurrentDC);
+        }
     }
 }

@@ -15,6 +15,11 @@ using static System.Drawing.Printing.PrinterSettings;
 using CadDataTypes;
 using Plotter.Controller;
 using KCad.Dialogs;
+using System.IO;
+using Newtonsoft.Json.Linq;
+using Plotter.Serializer;
+using System.Threading.Tasks;
+using MessagePack;
 
 namespace Plotter
 {
@@ -123,7 +128,7 @@ namespace Plotter
         }
     }
 
-    public class PlotterViewModel : INotifyPropertyChanged
+    public partial class PlotterViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -685,11 +690,6 @@ namespace Plotter
             }
         }
 
-        public void Save(string pathName)
-        {
-            SaveFile(pathName);
-        }
-
         public void GridSettings()
         {
             GridSettingsDialog dlg = new GridSettingsDialog();
@@ -963,35 +963,6 @@ namespace Plotter
 
             ExecCommand(cmd);
         }
-
-        // Save / Load
-        #region File
-        private void SaveFile(String fname)
-        {
-            if (fname.EndsWith(".txt"))
-            {
-                mController.SaveToJsonFile(fname);
-            }
-            else
-            {
-                mController.SaveToMsgPackFile(fname);
-            }
-        }
-
-        private void LoadFile(String fname)
-        {
-            if (fname.EndsWith(".txt"))
-            {
-                mController.LoadFromJsonFile(fname);
-                //mController.LoadFromJsonFileAsync(fname);
-            }
-            else
-            {
-                mController.LoadFromMsgPackFile(fname);
-            }
-        }
-        #endregion
-
 
         #region helper
         private void Redraw()
