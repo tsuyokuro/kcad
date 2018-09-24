@@ -132,7 +132,7 @@ namespace Plotter
         }
 
         // 縮尺
-        public double WoldScale = 1.0;
+        public double WorldScale = 1.0;
 
         // 画面に描画する際の係数
         public double DeviceScaleX = 1.0;
@@ -174,7 +174,7 @@ namespace Plotter
             mProjectionMatrix = dc.mProjectionMatrix;
             mProjectionMatrixInv = dc.mProjectionMatrixInv;
 
-            WoldScale = dc.WoldScale;
+            WorldScale = dc.WorldScale;
             DeviceScaleX = dc.DeviceScaleX;
             DeviceScaleY = dc.DeviceScaleY;
 

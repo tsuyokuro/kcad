@@ -104,8 +104,8 @@ namespace Plotter
             p1.y = 0;
             p1.z = 0;
 
-            p0 /= DC.WoldScale;
-            p1 /= DC.WoldScale;
+            p0 /= DC.WorldScale;
+            p1 /= DC.WorldScale;
 
             DrawLine(DrawTools.PEN_AXIS, p0, p1);
 
@@ -118,8 +118,8 @@ namespace Plotter
             p1.y = 100;
             p1.z = 0;
 
-            p0 /= DC.WoldScale;
-            p1 /= DC.WoldScale;
+            p0 /= DC.WorldScale;
+            p1 /= DC.WorldScale;
 
             DrawLine(DrawTools.PEN_AXIS, p0, p1);
 
@@ -132,8 +132,8 @@ namespace Plotter
             p1.y = 0;
             p1.z = 100;
 
-            p0 /= DC.WoldScale;
-            p1 /= DC.WoldScale;
+            p0 /= DC.WorldScale;
+            p1 /= DC.WorldScale;
 
             DrawLine(DrawTools.PEN_AXIS, p0, p1);
 

@@ -153,7 +153,7 @@ namespace Plotter
 
         private void DrawEdge(DrawContext dc, int pen)
         {
-            Vector3d t = dc.ViewDir * (-0.2f / dc.WoldScale);
+            Vector3d t = dc.ViewDir * (-0.2f / dc.WorldScale);
 
             CadVector shift = (CadVector)t;
 

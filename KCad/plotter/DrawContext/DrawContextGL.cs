@@ -47,7 +47,7 @@ namespace Plotter
 
             //WoldScale = 0.2f;
 
-            WoldScale = 1.0f;
+            WorldScale = 1.0f;
             Tools.Setup(DrawTools.ToolsType.DARK_GL);
 
             mDrawing = new DrawingGL(this);
@@ -201,7 +201,7 @@ namespace Plotter
 
         public override CadVector CadVectorToUnitVector(CadVector pt)
         {
-            pt *= WoldScale;
+            pt *= WorldScale;
 
             // 透視変換用にWが必要なので、Vector4に変換
             Vector4d wv = (Vector4d)pt;
@@ -246,7 +246,7 @@ namespace Plotter
             wv = wv * mProjectionMatrixInv;
             wv = wv * mViewMatrixInv;
 
-            wv /= WoldScale;
+            wv /= WorldScale;
 
             return CadVector.Create(wv);
         }

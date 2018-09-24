@@ -21,7 +21,7 @@ namespace Plotter
 
             if (currentDC is DrawContextGL)
             {
-                WoldScale = 0.2;
+                WorldScale = 0.2;
                 UnitPerMilli = 1.0;
                 DeviceScaleX = currentDC.ViewWidth / 2.0;
                 DeviceScaleY = -currentDC.ViewHeight / 2.0;

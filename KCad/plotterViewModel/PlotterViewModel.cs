@@ -1037,17 +1037,21 @@ namespace Plotter
 
             dlg.Owner = mMainWindow;
 
-            dlg.WoldScale = PlotterView1.DrawContext.WoldScale;
+            dlg.WoldScale = PlotterView1.DrawContext.WorldScale;
 
             bool? result = dlg.ShowDialog();
 
             if (result ?? false)
             {
-                PlotterView1.DrawContext.WoldScale = dlg.WoldScale;
-                PlotterViewGL1.DrawContext.WoldScale = dlg.WoldScale;
-
+                SetWorldScale(dlg.WoldScale);
                 Redraw();
             }
+        }
+
+        public void SetWorldScale(double scale)
+        {
+            PlotterView1.DrawContext.WorldScale = scale;
+            PlotterViewGL1.DrawContext.WorldScale = scale;
         }
 
         public void TextCommand(string s)

@@ -254,8 +254,8 @@ namespace Plotter
 
             CadVector cp = CadUtil.CenterPoint(seg.P0, seg.P1);
 
-            double arrowW = ARROW_W / dc.WoldScale;
-            double arrowL = ARROW_LEN / dc.WoldScale;
+            double arrowW = ARROW_W / dc.WorldScale;
+            double arrowL = ARROW_LEN / dc.WorldScale;
 
             dc.Drawing.DrawArrow(pen, cp, seg.P0, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
             dc.Drawing.DrawArrow(pen, cp, seg.P1, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
@@ -268,8 +268,8 @@ namespace Plotter
 
             CadVector cp = CadUtil.CenterPoint(PointList[3], PointList[2]);
 
-            double arrowW = ARROW_W / dc.WoldScale;
-            double arrowL = ARROW_LEN / dc.WoldScale;
+            double arrowW = ARROW_W / dc.WorldScale;
+            double arrowL = ARROW_LEN / dc.WorldScale;
 
             dc.Drawing.DrawArrow(pen, cp, PointList[3], ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
             dc.Drawing.DrawArrow(pen, cp, PointList[2], ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);

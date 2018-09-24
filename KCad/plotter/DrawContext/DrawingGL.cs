@@ -85,8 +85,8 @@ namespace Plotter
             GL.Begin(PrimitiveType.LineStrip);
             GL.Color4(glpen.Color);
 
-            a *= DC.WoldScale;
-            b *= DC.WoldScale;
+            a *= DC.WorldScale;
+            b *= DC.WorldScale;
 
             GL.Vertex3(a.x, a.y, a.z);
             GL.Vertex3(b.x, b.y, b.z);
@@ -123,7 +123,7 @@ namespace Plotter
 
             foreach (CadVector pt in pointList)
             {
-                p = pt * DC.WoldScale;
+                p = pt * DC.WorldScale;
 
                 GL.Vertex3(p.vector);
             }
@@ -142,7 +142,7 @@ namespace Plotter
                 GL.Color4(glpen.Color);
                 GL.LineWidth(1.0f);
 
-                Vector3d t = DC.ViewDir * (-1.0f / DC.WoldScale);
+                Vector3d t = DC.ViewDir * (-1.0f / DC.WorldScale);
 
                 CadVector shift = (CadVector)t;
 
@@ -150,12 +150,12 @@ namespace Plotter
 
                 foreach (CadVector pt in pointList)
                 {
-                    p = (pt + shift) * DC.WoldScale;
+                    p = (pt + shift) * DC.WorldScale;
                     GL.Vertex3(p.vector);
                 }
 
                 CadVector pt0 = pointList[0];
-                p = (pt0 + shift) * DC.WoldScale;
+                p = (pt0 + shift) * DC.WorldScale;
 
                 GL.Vertex3(p.vector);
 
@@ -194,7 +194,7 @@ namespace Plotter
 
                     CadVector p = model.VertexStore.Ref(c.Vertex);
 
-                    GL.Vertex3((p * DC.WoldScale).vector);
+                    GL.Vertex3((p * DC.WorldScale).vector);
 
                     c = next;
 
@@ -252,7 +252,7 @@ namespace Plotter
             GL.Color4(glpen.Color);
             GL.LineWidth(1.0f);
 
-            Vector3d t = DC.ViewDir * (-0.1f / DC.WoldScale);
+            Vector3d t = DC.ViewDir * (-0.1f / DC.WorldScale);
 
             CadVector shift = (CadVector)t;
 
@@ -274,7 +274,7 @@ namespace Plotter
 
                     CadVector p = model.VertexStore.Ref(c.Vertex);
 
-                    p = (p + shift) * DC.WoldScale;
+                    p = (p + shift) * DC.WorldScale;
 
                     GL.Vertex3(p.vector);
 
@@ -297,8 +297,8 @@ namespace Plotter
             CadVector p1 = default(CadVector);
 
             double len = 120.0;
-            double arrowLen = 12.0 / DC.WoldScale;
-            double arrowW2 = 6.0 / DC.WoldScale;
+            double arrowLen = 12.0 / DC.WorldScale;
+            double arrowW2 = 6.0 / DC.WorldScale;
 
             // X軸
             p0.x = -len;
@@ -309,8 +309,8 @@ namespace Plotter
             p1.y = 0;
             p1.z = 0;
 
-            p0 /= DC.WoldScale;
-            p1 /= DC.WoldScale;
+            p0 /= DC.WorldScale;
+            p1 /= DC.WorldScale;
 
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
@@ -323,8 +323,8 @@ namespace Plotter
             p1.y = len;
             p1.z = 0;
 
-            p0 /= DC.WoldScale;
-            p1 /= DC.WoldScale;
+            p0 /= DC.WorldScale;
+            p1 /= DC.WorldScale;
 
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
@@ -337,8 +337,8 @@ namespace Plotter
             p1.y = 0;
             p1.z = len;
 
-            p0 /= DC.WoldScale;
-            p1 /= DC.WoldScale;
+            p0 /= DC.WorldScale;
+            p1 /= DC.WorldScale;
 
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
@@ -450,7 +450,7 @@ namespace Plotter
 
         public override void DrawMarkCursor(int pen, CadVector p, double size)
         {
-            DrawCross(pen, p, size / DC.WoldScale);
+            DrawCross(pen, p, size / DC.WorldScale);
         }
 
         public override void DrawCross(int pen, CadVector p, double size)

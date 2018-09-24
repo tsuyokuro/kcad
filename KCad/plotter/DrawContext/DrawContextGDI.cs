@@ -110,7 +110,7 @@ namespace Plotter
 
         public override CadVector CadVectorToUnitVector(CadVector pt)
         {
-            pt *= WoldScale;
+            pt *= WorldScale;
 
             Vector4d ptv = (Vector4d)pt;
 
@@ -145,7 +145,7 @@ namespace Plotter
 
             wv = wv * mViewMatrixInv;
 
-            wv /= WoldScale;
+            wv /= WorldScale;
 
             return CadVector.Create(wv);
         }
