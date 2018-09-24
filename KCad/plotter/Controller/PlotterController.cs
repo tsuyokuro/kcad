@@ -1021,6 +1021,8 @@ namespace Plotter.Controller
 
         public void ClearAll()
         {
+            PageSize = new PaperPageSize();
+
             mDB.ClearAll();
             HistoryMan.Clear();
 

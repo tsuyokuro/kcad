@@ -113,7 +113,9 @@ namespace Plotter
         {
             MpCadData data = MpCadData.Create(mController.DB);
 
-            data.WorldScale = mController.CurrentDC.WorldScale;
+            data.ViewInfo.WorldScale = mController.CurrentDC.WorldScale;
+
+            data.ViewInfo.PaperSettings.Set(mController.PageSize);
 
             byte[] bin_data = MessagePackSerializer.Serialize(data);
 
@@ -136,9 +138,38 @@ namespace Plotter
                 return;
             }
 
-            double worldScale = mpdata.WorldScale == 0 ? 1.0 : mpdata.WorldScale;
+            MpViewInfo viewInfo = mpdata.ViewInfo;
+
+            double worldScale = 0;
+
+            PaperPageSize pps = null;
+
+            if (viewInfo != null)
+            {
+                worldScale = viewInfo.WorldScale;
+
+                if (viewInfo.PaperSettings != null)
+                {
+                    pps = viewInfo.PaperSettings.GetPaperPageSize();
+                }
+            }
+
+
+            if (worldScale == 0)
+            {
+                worldScale = 1.0;
+            }
 
             SetWorldScale(worldScale);
+
+
+            if (pps == null)
+            {
+                pps = new PaperPageSize();
+            }
+
+            mController.PageSize = pps;
+
 
             mController.SetDB(mpdata.GetDB());
         }

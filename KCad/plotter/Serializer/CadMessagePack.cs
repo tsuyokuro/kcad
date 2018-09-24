@@ -9,29 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using CadDataTypes;
 using SplineCurve;
+using System.Drawing.Printing;
 
 namespace Plotter.Serializer
 {
-    [MessagePackObject]
-    public class MpDummy
-    {
-        [Key("value")]
-        int value = 0;
-    }
-
-    public class MpInitializer
-    {
-        public static void Init()
-        {
-            MpDummy v = new MpDummy();
-
-            byte[] b = MessagePackSerializer.Serialize(v);
-
-            v = MessagePackSerializer.Deserialize<MpDummy>(b);
-        }
-    }
-
-
     [MessagePackObject]
     public struct MpVector
     {
@@ -120,8 +101,8 @@ namespace Plotter.Serializer
         [Key("db")]
         public MpCadObjectDB MpDB;
 
-        [Key("WorldScale")]
-        public double WorldScale = 1.0;
+        [Key("viewInfo")]
+        public MpViewInfo ViewInfo;
 
         [IgnoreMember]
         CadObjectDB DB = null;
@@ -131,6 +112,8 @@ namespace Plotter.Serializer
             MpCadData ret = new MpCadData();
 
             ret.MpDB = MpCadObjectDB.Create(db);
+
+            ret.ViewInfo = new MpViewInfo();
 
             return ret;
         }
@@ -143,6 +126,56 @@ namespace Plotter.Serializer
             }
 
             return DB;
+        }
+    }
+
+    [MessagePackObject]
+    public class MpViewInfo
+    {
+        [Key("WorldScale")]
+        public double WorldScale = 1.0;
+
+        [Key("Paper")]
+        public MpPaperSettings PaperSettings = new MpPaperSettings();
+    }
+
+    [MessagePackObject]
+    public class MpPaperSettings
+    {
+        [Key("w")]
+        public double Width = 210.0;
+
+        [Key("h")]
+        public double Height = 297.0;
+
+        [Key("bool")]
+        public bool Landscape = false;
+
+        [Key("kind")]
+        public PaperKind Kind = PaperKind.A4;
+
+        public void Set(PaperPageSize pp)
+        {
+            Width = pp.Width;
+            Height = pp.Height;
+
+            Landscape = pp.mLandscape;
+
+            Kind = pp.mPaperKind;
+        }
+
+        public PaperPageSize GetPaperPageSize()
+        {
+            PaperPageSize pp = new PaperPageSize();
+
+            pp.Width = Width;
+            pp.Height = Height;
+
+            pp.mLandscape = Landscape;
+
+            pp.mPaperKind = Kind;
+
+            return pp;
         }
     }
 

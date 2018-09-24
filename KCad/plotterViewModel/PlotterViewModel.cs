@@ -668,6 +668,9 @@ namespace Plotter
 
         public void NewDocument()
         {
+            PlotterView1.DrawContext.WorldScale = 1.0;
+            PlotterViewGL1.DrawContext.WorldScale = 1.0;
+
             mController.ClearAll();
             Redraw();
         }
