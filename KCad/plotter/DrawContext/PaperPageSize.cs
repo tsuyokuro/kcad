@@ -7,9 +7,37 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
+    public class PaperSizes
+    {
+        public static Dictionary<PaperKind, (double Width, double Height)> SizeMap =
+            new Dictionary<PaperKind, (double Width, double Height)>();
+
+        public static (double Width, double Height) GetSize(PaperKind kind, bool landscape)
+        {
+            (double w, double h) = SizeMap[kind];
+
+            if (landscape)
+            {
+                return (h, w);
+            }
+
+            return (w, h);
+        }
+
+        static PaperSizes()
+        {
+            SizeMap[PaperKind.A4] = (210.0, 297.0);
+            SizeMap[PaperKind.A5] = (148.0, 210.0);
+            SizeMap[PaperKind.A6] = (105.0, 148.0);
+
+            SizeMap[PaperKind.B5] = (182.0, 257.0);
+        }
+    }
+
+
     public class PaperPageSize
     {
-        // A4
+        // デフォルト A4縦
         public double Width = 210.0;
         public double Height = 297.0;
 
@@ -19,7 +47,14 @@ namespace Plotter
 
         public PaperPageSize()
         {
-            //SetPageSettings(new PageSettings());
+        }
+
+        public PaperPageSize(PaperKind papaerKind, bool landscape)
+        {
+            mPaperKind = papaerKind;
+            mLandscape = landscape;
+
+            (Width, Height) = PaperSizes.GetSize(papaerKind, landscape);
         }
 
         public void Setup(PageSettings settings)
@@ -27,6 +62,9 @@ namespace Plotter
             mPaperKind = settings.PaperSize.Kind;
 
             mLandscape = settings.Landscape;
+
+
+            // PageSettingsは、1/100 Inch単位で設定されているのでmmに変換
 
             Width =
                 Math.Round(settings.Bounds.Width * 25.4 / 100.0, MidpointRounding.AwayFromZero);

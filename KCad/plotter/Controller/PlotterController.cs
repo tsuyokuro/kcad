@@ -12,6 +12,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using CadDataTypes;
+using System.Drawing.Printing;
 
 namespace Plotter.Controller
 {
@@ -102,7 +103,7 @@ namespace Plotter.Controller
             }
         }
 
-        private PaperPageSize mPageSize = new PaperPageSize();
+        private PaperPageSize mPageSize = new PaperPageSize(PaperKind.A4, false);
 
         public PaperPageSize PageSize
         {
