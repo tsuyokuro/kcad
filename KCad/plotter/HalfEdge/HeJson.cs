@@ -98,13 +98,13 @@ namespace HalfEdgeNS
             public HalfEdge mHalfEdge;
         }
 
-        public static HeModel HeModelFromJson(JObject jmodel, CadJson.VersionCode version)
+        public static HeModel HeModelFromJson(JObject jmodel)
         {
             HeModel model = new HeModel();
 
             JArray ja = (JArray)jmodel["vertex_store"];
 
-            VectorList vlist = CadJson.FromJson.VectorListFromJson(ja, version);
+            VectorList vlist = CadJson.FromJson.VectorListFromJson(ja);
             model.VertexStore = vlist;
 
             bool normalExist = false;
@@ -113,7 +113,7 @@ namespace HalfEdgeNS
             if (ja != null)
             {
                 normalExist = true;
-                VectorList nlist = CadJson.FromJson.VectorListFromJson(ja, version);
+                VectorList nlist = CadJson.FromJson.VectorListFromJson(ja);
                 model.NormalStore = nlist;
             }
 

@@ -12,49 +12,49 @@ namespace Plotter.Serializer
 {
     public static class CadJson
     {
-        public enum VersionCode
-        {
-            NULL = 0,
-            VER_1_0_0_3 = 0x01_00_00_03,
-        }
+        //public enum VersionCode
+        //{
+        //    NULL = 0,
+        //    VER_1_0_0_3 = 0x01_00_00_03,
+        //}
 
-        public const VersionCode CurrentVersion = VersionCode.VER_1_0_0_3;
+        //public const VersionCode CurrentVersion = VersionCode.VER_1_0_0_3;
 
-        private static Dictionary<string, VersionCode> VersionStrToCodeMap =
-            new Dictionary<String, VersionCode>()
-            {
-                { "1.0.0.3", VersionCode.VER_1_0_0_3 },
-            };
+        //private static Dictionary<string, VersionCode> VersionStrToCodeMap =
+        //    new Dictionary<String, VersionCode>()
+        //    {
+        //        { "1.0.0.3", VersionCode.VER_1_0_0_3 },
+        //    };
 
-        private static Dictionary<VersionCode, string> VersionCodeToStrMap =
-            new Dictionary<VersionCode, string>()
-            {
-                { VersionCode.NULL, null },
-                { VersionCode.VER_1_0_0_3, "1.0.0.3" },
-            };
+        //private static Dictionary<VersionCode, string> VersionCodeToStrMap =
+        //    new Dictionary<VersionCode, string>()
+        //    {
+        //        { VersionCode.NULL, null },
+        //        { VersionCode.VER_1_0_0_3, "1.0.0.3" },
+        //    };
 
 
-        public static VersionCode ToVersionCode(string sv)
-        {
-            VersionCode ret;
-            if (VersionStrToCodeMap.TryGetValue(sv, out ret))
-            {
-                return ret;
-            }
+        //public static VersionCode ToVersionCode(string sv)
+        //{
+        //    VersionCode ret;
+        //    if (VersionStrToCodeMap.TryGetValue(sv, out ret))
+        //    {
+        //        return ret;
+        //    }
 
-            return VersionCode.NULL;
-        }
+        //    return VersionCode.NULL;
+        //}
 
-        public static string ToVersionString(VersionCode version)
-        {
-            string ret;
-            if (VersionCodeToStrMap.TryGetValue(version, out ret))
-            {
-                return ret;
-            }
+        //public static string ToVersionString(VersionCode version)
+        //{
+        //    string ret;
+        //    if (VersionCodeToStrMap.TryGetValue(version, out ret))
+        //    {
+        //        return ret;
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         public static class COMMON
         {
@@ -116,10 +116,7 @@ namespace Plotter.Serializer
             {
                 JObject root = new JObject();
 
-                VersionCode version = CurrentVersion;
-
                 root.Add(DB.DATA_TYPE_KEY, DB.DATA_TYPE_VAL);
-                root.Add(DB.VERSION_KEY, ToVersionString(version));
 
                 root.Add(DB.LAYER_ID_COUNTER, db.LayerIdProvider.Counter);
                 root.Add(DB.FIG_ID_COUNTER, db.FigIdProvider.Counter);
@@ -315,7 +312,7 @@ namespace Plotter.Serializer
                 return jo;
             }
 
-            public static JObject FigListToJsonForClipboard(List<CadFigure> figList, VersionCode version = CurrentVersion)
+            public static JObject FigListToJsonForClipboard(List<CadFigure> figList)
             {
                 JArray ja = new JArray();
 
@@ -359,40 +356,11 @@ namespace Plotter.Serializer
 
         public static class FromJson
         {
-            public static VersionCode VersionCodeFromJson(JObject jo)
-            {
-                string sv;
-
-                sv = (string)jo[DB.DATA_TYPE_KEY];
-
-                if (sv == null || sv != DB.DATA_TYPE_VAL)
-                {
-                    return VersionCode.NULL;
-                }
-
-                sv = (string)jo[DB.VERSION_KEY];
-
-                VersionCode version = ToVersionCode(sv);
-
-                return version;
-            }
-
-            public static string VersionStringFromJson(JObject jo)
-            {
-                VersionCode version = VersionCodeFromJson(jo);
-                return ToVersionString(version);
-            }
 
             public static CadObjectDB DbFromJson(JObject jo)
             {
                 CadObjectDB db = new CadObjectDB();
 
-                VersionCode version = VersionCodeFromJson(jo);
-
-                if (version == VersionCode.NULL)
-                {
-                    return db;
-                }
 
                 db.LayerIdProvider.Counter = (uint)jo[DB.LAYER_ID_COUNTER];
                 db.FigIdProvider.Counter = (uint)jo[DB.FIG_ID_COUNTER];
@@ -400,11 +368,11 @@ namespace Plotter.Serializer
                 JArray ja;
 
                 ja = (JArray)jo[DB.FIG_MAP];
-                db.FigureMap = JArrayToFigMap(ja, version);
+                db.FigureMap = JArrayToFigMap(ja);
 
 
                 ja = (JArray)jo[DB.LAYER_MAP];
-                db.LayerMap = JArrayToLayerMap(db, ja, version);
+                db.LayerMap = JArrayToLayerMap(db, ja);
 
 
                 ja = (JArray)jo[DB.LAYER_ID_LIST];
@@ -415,12 +383,12 @@ namespace Plotter.Serializer
                 db.CurrentLayer = db.GetLayer(currentLayerID);
 
                 ja = (JArray)jo[DB.GROUP_INFO];
-                GroupInfoFromJson(db, ja, version);
+                GroupInfoFromJson(db, ja);
 
                 return db;
             }
 
-            public static void GroupInfoFromJson(CadObjectDB db, JArray ja, VersionCode version)
+            public static void GroupInfoFromJson(CadObjectDB db, JArray ja)
             {
                 foreach (JObject jo in ja)
                 {
@@ -432,11 +400,11 @@ namespace Plotter.Serializer
                         continue;
                     }
 
-                    FigGroupInfoFromJson(fig, db, jo, version);
+                    FigGroupInfoFromJson(fig, db, jo);
                 }
             }
 
-            public static void FigGroupInfoFromJson(CadFigure fig, CadObjectDB db, JObject jo, VersionCode version)
+            public static void FigGroupInfoFromJson(CadFigure fig, CadObjectDB db, JObject jo)
             {
                 uint joid = (uint)jo[COMMON.ID];
 
@@ -452,26 +420,26 @@ namespace Plotter.Serializer
                 }
             }
 
-            public static Dictionary<uint, CadFigure> JArrayToFigMap(JArray ja, VersionCode version)
+            public static Dictionary<uint, CadFigure> JArrayToFigMap(JArray ja)
             {
                 var figMap = new Dictionary<uint, CadFigure>();
 
                 foreach (JObject jo in ja)
                 {
-                    CadFigure fig = FigFromJson(jo, version);
+                    CadFigure fig = FigFromJson(jo);
                     figMap.Add(fig.ID, fig);
                 }
 
                 return figMap;
             }
 
-            public static Dictionary<uint, CadLayer> JArrayToLayerMap(CadObjectDB db, JArray ja, VersionCode version)
+            public static Dictionary<uint, CadLayer> JArrayToLayerMap(CadObjectDB db, JArray ja)
             {
                 var layerMap = new Dictionary<uint, CadLayer>();
 
                 foreach (JObject jo in ja)
                 {
-                    CadLayer layer = LayerFromJson(db, jo, version);
+                    CadLayer layer = LayerFromJson(db, jo);
                     layerMap.Add(layer.ID, layer);
                 }
 
@@ -494,7 +462,7 @@ namespace Plotter.Serializer
                 return layerList;
             }
 
-            public static CadLayer LayerFromJson(CadObjectDB db, JObject jo, VersionCode version)
+            public static CadLayer LayerFromJson(CadObjectDB db, JObject jo)
             {
                 CadLayer layer = new CadLayer();
 
@@ -527,7 +495,7 @@ namespace Plotter.Serializer
                 return layer;
             }
 
-            public static CadFigure FigFromJson(JObject jo, VersionCode version)
+            public static CadFigure FigFromJson(JObject jo)
             {
                 CadFigure.Types type = (CadFigure.Types)(byte)jo[FIG.TYPE];
 
@@ -537,20 +505,20 @@ namespace Plotter.Serializer
                 fig.IsLoop = (bool)jo[FIG.CLOSED];
                 fig.Locked = (bool)jo[FIG.LOCKED];
 
-                fig.Normal = VectorFromJson((JObject)jo[FIG.NORMAL], version);
+                fig.Normal = VectorFromJson((JObject)jo[FIG.NORMAL]);
 
                 //fig.Thickness = jo.GetDouble(FIG.THICKNESSS, 0);
 
                 JObject jvdata = (JObject)jo[FIG.VECTOR_DATA];
 
-                fig.GeometricDataFromJson(jvdata, version);
+                fig.GeometricDataFromJson(jvdata);
 
                 return fig;
             }
 
-            public static CadFigure FigFromJsonForClipboard(JObject jo, VersionCode version)
+            public static CadFigure FigFromJsonForClipboard(JObject jo)
             {
-                CadFigure fig = FigFromJson(jo, version);
+                CadFigure fig = FigFromJson(jo);
 
 
                 // Clip boardには子Figureも含めて保存されているので
@@ -561,7 +529,7 @@ namespace Plotter.Serializer
                 {
                     foreach (JObject jchild in jchildArray)
                     {
-                        CadFigure child = FigFromJsonForClipboard(jchild, version);
+                        CadFigure child = FigFromJsonForClipboard(jchild);
                         fig.AddChild(child);
                     }
                 }
@@ -569,21 +537,19 @@ namespace Plotter.Serializer
                 return fig;
             }
 
-            public static VectorList VectorListFromJson(
-                JArray jarray, VersionCode version = CurrentVersion)
+            public static VectorList VectorListFromJson(JArray jarray)
             {
                 VectorList vl = new VectorList();
 
                 foreach (JObject jv in jarray)
                 {
-                    vl.Add(VectorFromJson(jv, version));
+                    vl.Add(VectorFromJson(jv));
                 }
 
                 return vl;
             }
 
-            public static CadVector VectorFromJson(
-                JObject jo, VersionCode version = CurrentVersion)
+            public static CadVector VectorFromJson(JObject jo)
             {
                 CadVector v = default(CadVector);
 
@@ -607,7 +573,7 @@ namespace Plotter.Serializer
                 return v;
             }
 
-            public static List<CadFigure> FigListFromJsonForClipboard(JObject jo, VersionCode version = CurrentVersion)
+            public static List<CadFigure> FigListFromJsonForClipboard(JObject jo)
             {
                 List<CadFigure> figList = new List<CadFigure>();
 
@@ -616,7 +582,7 @@ namespace Plotter.Serializer
                 foreach (JObject jfig in ja)
                 {
                     figList.Add(
-                        FigFromJsonForClipboard(jfig, version));
+                        FigFromJsonForClipboard(jfig));
                 }
 
                 return figList;

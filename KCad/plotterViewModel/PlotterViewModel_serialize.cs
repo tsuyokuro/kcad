@@ -82,16 +82,6 @@ namespace Plotter
                 }
             }
 
-            string version = CadJson.FromJson.VersionStringFromJson(jdb);
-
-            if (version == null)
-            {
-                ItConsole.println("Bat file format");
-                return;
-            }
-
-            ItConsole.println("Format version: " + version);
-
             CadObjectDB db = CadJson.FromJson.DbFromJson(jdb);
 
             mController.SetDB(db);
@@ -109,16 +99,6 @@ namespace Plotter
             reader.Close();
 
             JObject jo = JObject.Parse(js);
-
-            string version = CadJson.FromJson.VersionStringFromJson(jo);
-
-            if (version == null)
-            {
-                ItConsole.println("Bat file format");
-                return null;
-            }
-
-            ItConsole.println("Format version: " + version);
 
             CadObjectDB db = CadJson.FromJson.DbFromJson(jo);
             return db;

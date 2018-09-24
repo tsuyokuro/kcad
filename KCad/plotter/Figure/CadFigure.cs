@@ -880,11 +880,11 @@ namespace Plotter
             return jvdata;
         }
 
-        public virtual void GeometricDataFromJson(JObject jvdata, CadJson.VersionCode version)
+        public virtual void GeometricDataFromJson(JObject jvdata)
         {
             JArray jarray = (JArray)jvdata[CadJson.VECTOR.POINT_LIST];
 
-            VectorList vl = CadJson.FromJson.VectorListFromJson(jarray, version);
+            VectorList vl = CadJson.FromJson.VectorListFromJson(jarray);
             mPointList = vl;
         }
 

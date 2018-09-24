@@ -174,7 +174,7 @@ namespace Plotter
             return jvdata;
         }
 
-        public override void GeometricDataFromJson(JObject jvdata, CadJson.VersionCode version)
+        public override void GeometricDataFromJson(JObject jvdata)
         {
             Nurbs = BSplineJson.NURBSLineFromJson((JObject)jvdata["Nurbs"]);
 

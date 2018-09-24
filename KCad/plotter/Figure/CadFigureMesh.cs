@@ -281,11 +281,11 @@ namespace Plotter
             return jvdata;
         }
 
-        public override void GeometricDataFromJson(JObject jvdata, CadJson.VersionCode version)
+        public override void GeometricDataFromJson(JObject jvdata)
         {
             JObject jmodel = (JObject)jvdata["model"];
 
-            HeModel model = HeJson.HeModelFromJson(jmodel, version);
+            HeModel model = HeJson.HeModelFromJson(jmodel);
 
             if (model == null)
             {
