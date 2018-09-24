@@ -120,6 +120,9 @@ namespace Plotter.Serializer
         [Key("db")]
         public MpCadObjectDB MpDB;
 
+        [Key("WorldScale")]
+        public double WorldScale = 1.0;
+
         [IgnoreMember]
         CadObjectDB DB = null;
 

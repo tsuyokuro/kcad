@@ -40,39 +40,62 @@ namespace Plotter
         {
             StreamWriter writer = new StreamWriter(fname);
 
+            JObject jroot = new JObject();
+
+            jroot.Add("WorldScale", mController.CurrentDC.WorldScale);
+
             JObject jo = CadJson.ToJson.DbToJson(mController.DB);
 
+            jroot.Add("DB", jo);
+
             //writer.Write(jo.ToString(Newtonsoft.Json.Formatting.None));
-            writer.Write(jo.ToString());
+            writer.Write(jroot.ToString());
             writer.Close();
-        }
-
-        public async void LoadFromJsonFileAsync(string fname)
-        {
-            CadObjectDB db = await Task<CadObjectDB>.Run(() =>
-            {
-                return DBFromJsonFile(fname);
-            });
-
-            if (db == null)
-            {
-                return;
-            }
-
-            mController.SetDB(db);
-
         }
 
         public void LoadFromJsonFile(string fname)
         {
-            CadObjectDB db = DBFromJsonFile(fname);
+            ItConsole.println("Loading file: " + fname);
 
-            if (db == null)
+            StreamReader reader = new StreamReader(fname);
+
+            var js = reader.ReadToEnd();
+
+            reader.Close();
+
+            JObject jroot = JObject.Parse(js);
+
+            JObject jdb = (JObject)jroot["DB"];
+
+            double worldScale = 1.0;
+
+            if (jdb == null)
             {
+                jdb = jroot;
+            }
+            else
+            {
+                worldScale = (double)jroot["WorldScale"];
+                if (worldScale == 0)
+                {
+                    worldScale = 1.0;
+                }
+            }
+
+            string version = CadJson.FromJson.VersionStringFromJson(jdb);
+
+            if (version == null)
+            {
+                ItConsole.println("Bat file format");
                 return;
             }
 
+            ItConsole.println("Format version: " + version);
+
+            CadObjectDB db = CadJson.FromJson.DbFromJson(jdb);
+
             mController.SetDB(db);
+            SetWorldScale(worldScale);
         }
 
         public CadObjectDB DBFromJsonFile(string fname)
@@ -102,10 +125,15 @@ namespace Plotter
         }
         #endregion
 
+
+
+
         #region "MessagePack file access"
         public void SaveToMsgPackFile(string fname)
         {
             MpCadData data = MpCadData.Create(mController.DB);
+
+            data.WorldScale = mController.CurrentDC.WorldScale;
 
             byte[] bin_data = MessagePackSerializer.Serialize(data);
 
@@ -127,6 +155,10 @@ namespace Plotter
             {
                 return;
             }
+
+            double worldScale = mpdata.WorldScale == 0 ? 1.0 : mpdata.WorldScale;
+
+            SetWorldScale(worldScale);
 
             mController.SetDB(mpdata.GetDB());
         }
