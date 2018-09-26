@@ -50,7 +50,7 @@ namespace Plotter.Serializer
     public class MpCadFile
     {
         private static byte[] Sign;
-        private static byte[] CurrentVersion = { 1, 0, 0, 0 };
+        private static byte[] Version = { 1, 0, 0, 0 };
 
         static MpCadFile()
         {
@@ -61,19 +61,19 @@ namespace Plotter.Serializer
         {
             FileStream fs = new FileStream(fname, FileMode.Open, FileAccess.Read);
 
-            byte[] sig = new byte[Sign.Length];
+            byte[] sign = new byte[Sign.Length];
 
-            fs.Read(sig,0, Sign.Length);
+            fs.Read(sign, 0, Sign.Length);
 
-            if (!Sign.SequenceEqual<byte>(sig))
+            if (!Sign.SequenceEqual<byte>(sign))
             {
                 fs.Close();
                 return null;
             }
 
-            fs.Read(CurrentVersion, 0, CurrentVersion.Length);
+            fs.Read(Version, 0, Version.Length);
 
-            byte[] data = new byte[fs.Length - Sign.Length - CurrentVersion.Length];
+            byte[] data = new byte[fs.Length - Sign.Length - Version.Length];
 
             fs.Read(data, 0, data.Length);
 
@@ -87,7 +87,7 @@ namespace Plotter.Serializer
             FileStream fs = new FileStream(fname, FileMode.Create, FileAccess.Write);
 
             fs.Write(Sign, 0, Sign.Length);
-            fs.Write(CurrentVersion, 0, CurrentVersion.Length);
+            fs.Write(Version, 0, Version.Length);
             fs.Write(data, 0, data.Length);
 
             fs.Close();
@@ -98,10 +98,10 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpCadData
     {
-        [Key("db")]
+        [Key("DB")]
         public MpCadObjectDB MpDB;
 
-        [Key("viewInfo")]
+        [Key("ViewInfo")]
         public MpViewInfo ViewInfo;
 
         [IgnoreMember]
@@ -142,16 +142,16 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpPaperSettings
     {
-        [Key("w")]
+        [Key("W")]
         public double Width = 210.0;
 
-        [Key("h")]
+        [Key("H")]
         public double Height = 297.0;
 
-        [Key("bool")]
+        [Key("Landscape")]
         public bool Landscape = false;
 
-        [Key("kind")]
+        [Key("Kind")]
         public PaperKind Kind = PaperKind.A4;
 
         public void Set(PaperPageSize pp)
@@ -183,19 +183,19 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpCadObjectDB
     {
-        [Key("layerIdC")]
+        [Key("LayerIdCnt")]
         public uint LayerIdCount;
 
-        [Key("figIdC")]
+        [Key("FigIdCnt")]
         public uint FigureIdCount;
 
-        [Key("figL")]
+        [Key("FigList")]
         public List<MpFigure> FigureList;
 
-        [Key("layerL")]
+        [Key("LayerList")]
         public List<MpLayer> LayerList;
 
-        [Key("layerID")]
+        [Key("CurrentLayerID")]
         public uint CurrentLayerID;
 
         public static MpCadObjectDB Create(CadObjectDB db)
@@ -278,16 +278,16 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpLayer
     {
-        [Key("id")]
+        [Key("ID")]
         public uint ID;
 
-        [Key("vis")]
+        [Key("Visible")]
         public bool Visible;
 
-        [Key("lck")]
+        [Key("Locked")]
         public bool Locked;
 
-        [Key("figIL")]
+        [Key("FigIdList")]
         public List<uint> FigureIdList;
 
         public static MpLayer Create(CadLayer layer)
@@ -323,31 +323,28 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpFigure
     {
-        [Key("id")]
+        [Key("ID")]
         public uint ID;
 
-        [Key("typ")]
+        [Key("Type")]
         public byte Type;
 
-        [Key("lck")]
+        [Key("Locked")]
         public bool Locked;
 
-        [Key("lop")]
+        [Key("IsLoop")]
         public bool IsLoop;
 
-        [Key("nrm")]
+        [Key("Normal")]
         public MpVector Normal;
 
-        //[Key("tck")]
-        //public double Tickness;
-
-        [Key("cL")]
+        [Key("ChildList")]
         public List<MpFigure> ChildList;
 
-        [Key("cIL")]
+        [Key("ChildIdList")]
         public List<uint> ChildIdList;
 
-        [Key("geo")]
+        [Key("GeoData")]
         public MpGeometricData GeoData;
 
         [IgnoreMember]
@@ -377,7 +374,6 @@ namespace Plotter.Serializer
             Locked = fig.Locked;
             IsLoop = fig.IsLoop;
             Normal = MpVector.Create(fig.Normal);
-            //Tickness = fig.Thickness;
 
             GeoData = fig.GeometricDataToMp();
         }
@@ -397,7 +393,6 @@ namespace Plotter.Serializer
             fig.Locked = Locked;
             fig.IsLoop = IsLoop;
             fig.Normal = Normal.Restore();
-            //fig.Thickness = Tickness;
 
             if (ChildList != null)
             {
@@ -440,7 +435,7 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpSimpleGeometricData : MpGeometricData
     {
-        [Key("ptL")]
+        [Key("PointList")]
         public List<MpVector> PointList;
     }
 
@@ -448,7 +443,7 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpMeshGeometricData : MpGeometricData
     {
-        [Key("heModel")]
+        [Key("HeModel")]
         public MpHeModel HeModel;
     }
 
@@ -471,22 +466,22 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpHeModel
     {
-        [Key("vStr")]
+        [Key("VertexStore")]
         public List<MpVector> VertexStore;
 
-        [Key("nStr")]
+        [Key("NormalStore")]
         public List<MpVector> NormalStore;
 
-        [Key("fStr")]
+        [Key("FaceStore")]
         public List<MpHeFace> FaceStore;
 
-        [Key("heL")]
+        [Key("HalfEdgeList")]
         public List<MpHalfEdge> HalfEdgeList;
 
-        [Key("heIdC")]
+        [Key("HeIdCnt")]
         public uint HeIdCount;
 
-        [Key("fcIdC")]
+        [Key("FaceIdCnt")]
         public uint FaceIdCount;
 
 
@@ -557,10 +552,10 @@ namespace Plotter.Serializer
         [Key("ID")]
         public uint ID;
 
-        [Key("head")]
+        [Key("HeadID")]
         public uint HeadID;
 
-        [Key("nrm")]
+        [Key("Normal")]
         public int Normal = HeModel.INVALID_INDEX;
 
         public static MpHeFace Create(HeFace face)
@@ -590,26 +585,26 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpHalfEdge
     {
-        [Key("id")]
+        [Key("ID")]
         public uint ID;
 
-        [Key("v")]
+        [Key("Vertex")]
         public int Vertex;
 
-        [Key("face")]
+        [Key("Face")]
         public int Face;
 
-        [Key("nrm")]
+        [Key("Normal")]
         public int Normal;
 
         // Links
-        [Key("pair")]
+        [Key("Pair")]
         public uint PairID;
 
-        [Key("next")]
+        [Key("Next")]
         public uint NextID;
 
-        [Key("prev")]
+        [Key("Prev")]
         public uint PrevID;
 
         [IgnoreMember]
@@ -658,13 +653,13 @@ namespace Plotter.Serializer
         [Key("Weights")]
         public double[] Weights;
 
-        [Key("ptL")]
+        [Key("CtrlPoints")]
         public List<MpVector> CtrlPoints;
 
         [Key("CtrlOrder")]
         public int[] CtrlOrder;
 
-        [Key("BSplineP")]
+        [Key("BSplineParam")]
         public MpBSplineParam BSplineP;
 
         public static MpNurbsLine Create(NurbsLine src)
@@ -716,7 +711,7 @@ namespace Plotter.Serializer
         [Key("Weights")]
         public double[] Weights;
 
-        [Key("ptL")]
+        [Key("CtrlPoints")]
         public List<MpVector> CtrlPoints;
 
         [Key("CtrlOrder")]

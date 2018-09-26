@@ -15,6 +15,10 @@ namespace Plotter
             {
                 SaveToJsonFile(fname);
             }
+            else if (fname.EndsWith(".kjs"))
+            {
+                SaveToMsgPackJsonFile(fname);
+            }
             else
             {
                 SaveToMsgPackFile(fname);
@@ -26,7 +30,10 @@ namespace Plotter
             if (fname.EndsWith(".txt"))
             {
                 LoadFromJsonFile(fname);
-                //mController.LoadFromJsonFileAsync(fname);
+            }
+            else if (fname.EndsWith(".kjs"))
+            {
+                LoadFromMsgPackJsonFile(fname);
             }
             else
             {
@@ -48,7 +55,6 @@ namespace Plotter
 
             jroot.Add("DB", jo);
 
-            //writer.Write(jo.ToString(Newtonsoft.Json.Formatting.None));
             writer.Write(jroot.ToString());
             writer.Close();
         }
@@ -109,7 +115,7 @@ namespace Plotter
 
 
         #region "MessagePack file access"
-        public void SaveToMsgPackFile(string fname)
+        private MpCadData ToMpCadData()
         {
             MpCadData data = MpCadData.Create(mController.DB);
 
@@ -117,27 +123,11 @@ namespace Plotter
 
             data.ViewInfo.PaperSettings.Set(mController.PageSize);
 
-            byte[] bin_data = MessagePackSerializer.Serialize(data);
-
-            MpCadFile.Save(fname, bin_data);
+            return data;
         }
 
-        public void LoadFromMsgPackFile(string fname)
+        private void FromMpCadData(MpCadData mpdata)
         {
-            byte[] bin = MpCadFile.Load(fname);
-
-            if (bin == null)
-            {
-                return;
-            }
-
-            MpCadData mpdata = MessagePackSerializer.Deserialize<MpCadData>(bin);
-
-            if (mpdata == null)
-            {
-                return;
-            }
-
             MpViewInfo viewInfo = mpdata.ViewInfo;
 
             double worldScale = 0;
@@ -172,6 +162,68 @@ namespace Plotter
 
 
             mController.SetDB(mpdata.GetDB());
+        }
+
+
+        private void SaveToMsgPackFile(string fname)
+        {
+            MpCadData data = ToMpCadData();
+
+            byte[] bin_data = MessagePackSerializer.Serialize(data);
+
+            MpCadFile.Save(fname, bin_data);
+        }
+
+        private void LoadFromMsgPackFile(string fname)
+        {
+            byte[] bin = MpCadFile.Load(fname);
+
+            if (bin == null)
+            {
+                return;
+            }
+
+            MpCadData mpdata = MessagePackSerializer.Deserialize<MpCadData>(bin);
+
+            if (mpdata == null)
+            {
+                return;
+            }
+
+            FromMpCadData(mpdata);
+        }
+
+
+        private void SaveToMsgPackJsonFile(string fname)
+        {
+            MpCadData data = ToMpCadData();
+            string s = MessagePackSerializer.ToJson<MpCadData>(data);
+
+            StreamWriter writer = new StreamWriter(fname);
+            writer.Write(s);
+
+            writer.Close();
+        }
+
+        private void LoadFromMsgPackJsonFile(string fname)
+        {
+            StreamReader reader = new StreamReader(fname);
+
+            string js = reader.ReadToEnd();
+
+            reader.Close();
+
+
+            byte[] bin = MessagePackSerializer.FromJson(js);
+
+            MpCadData mpdata = MessagePackSerializer.Deserialize<MpCadData>(bin);
+
+            if (mpdata == null)
+            {
+                return;
+            }
+
+            FromMpCadData(mpdata);
         }
         #endregion
     }

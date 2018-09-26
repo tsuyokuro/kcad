@@ -23,6 +23,9 @@ using CarveWapper;
 using MeshMakerNS;
 using SplineCurve;
 using KCad;
+using Plotter.Serializer;
+using MessagePack;
+using Newtonsoft.Json.Linq;
 
 namespace Plotter.Controller
 {
@@ -581,13 +584,27 @@ namespace Plotter.Controller
         private async void Test()
         {
             #region 別スレッド例外処理のテスト
-            CadFigure fig = null;
+            //CadFigure fig = null;
 
-            await Task.Run(() =>
-            {
-                fig.AddPoint(CadVector.Create(0, 0, 0));
-            });
+            //await Task.Run(() =>
+            //{
+            //    fig.AddPoint(CadVector.Create(0, 0, 0));
+            //});
             #endregion
+
+            MpCadData data = MpCadData.Create(Controller.DB);
+
+            data.ViewInfo.WorldScale = Controller.CurrentDC.WorldScale;
+
+            data.ViewInfo.PaperSettings.Set(Controller.PageSize);
+
+            byte[] bin_data = MessagePackSerializer.Serialize(data);
+
+            string s = MessagePackSerializer.ToJson(bin_data);
+
+            JObject jo = JObject.Parse(s);
+
+            s = jo.ToString();
         }
 
         private void SimpleCommand(string s)

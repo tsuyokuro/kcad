@@ -5,8 +5,8 @@ namespace Plotter.Serializer
     [MessagePackObject]
     public class MpDummy
     {
-        [Key("value")]
-        int value = 0;
+        [Key("Value")]
+        int Value = 0;
     }
 
     public class MpInitializer
