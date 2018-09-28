@@ -130,6 +130,9 @@
   <data name="error_select_2_points" xml:space="preserve">
     <value>Please select 2 point</value>
   </data>
+  <data name="menu_doc_settings" xml:space="preserve">
+    <value>Document settings ...</value>
+  </data>
   <data name="menu_edit" xml:space="preserve">
     <value>Edit</value>
   </data>
@@ -150,6 +153,9 @@
   </data>
   <data name="menu_save" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="menu_save_as" xml:space="preserve">
+    <value>Save as ...</value>
   </data>
   <data name="menu_snap" xml:space="preserve">
     <value>Snap</value>

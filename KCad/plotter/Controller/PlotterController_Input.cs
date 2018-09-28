@@ -209,6 +209,10 @@ namespace Plotter.Controller
             {
                 LastDownPoint = ObjDownPoint;
 
+                CrossCursor.Pos = dc.CadPointToUnitPoint(ObjDownPoint);
+
+                //DebugOut.println("SelectNearest ObjDownPoint.Valid");
+
                 // LastDownPointを投影面上にしたい場合は、こちら
                 //LastDownPoint = mSnapPoint;
             }
@@ -411,7 +415,11 @@ namespace Plotter.Controller
             switch (State)
             {
                 case States.SELECT:
-                    if (!SelectNearest(dc, CrossCursor.Pos))
+                    if (SelectNearest(dc, CrossCursor.Pos))
+                    {
+                        mOffsetScreen = pixp - CrossCursor.Pos;
+                    }
+                    else
                     {
                         State = States.RUBBER_BAND_SELECT;
                     }
@@ -819,8 +827,6 @@ namespace Plotter.Controller
 
         private void MouseMove(CadMouse pointer, DrawContext dc, double x, double y)
         {
-            //DebugOut.Std.printf("({0},{1})\n", x, y);
-
             if ((Control.MouseButtons & MouseButtons.Middle) != 0)
             {
                 MDrag(pointer, dc, x, y);
@@ -844,6 +850,8 @@ namespace Plotter.Controller
 
             if (State == States.DRAGING_POINTS)
             {
+                //mOffsetScreen.dump("Offset");
+
                 if (GideLines.Enabled)
                 {
                     cp = GideLines.GetOnGideLine(LastDownPoint, cp);

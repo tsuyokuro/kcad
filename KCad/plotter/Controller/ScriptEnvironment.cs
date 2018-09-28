@@ -47,12 +47,21 @@ namespace Plotter.Controller
 
         public Dictionary<string, string> HelpMap = new Dictionary<string, string>();
 
+        public TaskScheduler mMainThreadScheduler;
+
+        public int mMainThreadID = -1;
 
         private ScriptFunctions mScriptFunctions;
 
         public ScriptEnvironment(PlotterController controller)
         {
             Controller = controller;
+
+
+            mMainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+
+            mMainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
+
 
             mScriptFunctions = new ScriptFunctions(this);
 
@@ -263,6 +272,24 @@ namespace Plotter.Controller
         {
             public Action OnStart = () => { };
             public Action OnEnd = () => { };
+        }
+
+        public void RunOnMainThread(Action action)
+        {
+            if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
+            {
+                action();
+                return;
+            }
+
+            Task task = new Task(() =>
+            {
+                action();
+            }
+            );
+
+            task.Start(mMainThreadScheduler);
+            task.Wait();
         }
     }
 }

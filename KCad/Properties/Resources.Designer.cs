@@ -98,6 +98,15 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Document settings ... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_doc_settings {
+            get {
+                return ResourceManager.GetString("menu_doc_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Edit に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_edit {
@@ -157,6 +166,15 @@ namespace KCad.Properties {
         public static string menu_save {
             get {
                 return ResourceManager.GetString("menu_save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Save as ... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_save_as {
+            get {
+                return ResourceManager.GetString("menu_save_as", resourceCulture);
             }
         }
         

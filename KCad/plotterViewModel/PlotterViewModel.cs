@@ -484,6 +484,7 @@ namespace Plotter
                 { "new_doc", NewDocument },
                 { "load", Load },
                 { "save",Save },
+                { "save_as",SaveAs },
                 { "print",StartPrint },
                 { "page_setting",PageSetting },
                 { "doc_setting",DocSetting },
@@ -668,6 +669,8 @@ namespace Plotter
 
         public void NewDocument()
         {
+            CurrentFileName = null;
+
             PlotterView1.DrawContext.WorldScale = 1.0;
             PlotterViewGL1.DrawContext.WorldScale = 1.0;
 
@@ -685,6 +688,17 @@ namespace Plotter
         }
 
         public void Save()
+        {
+            if (CurrentFileName != null)
+            {
+                SaveFile(CurrentFileName);
+                return;
+            }
+
+            SaveAs();
+        }
+
+        public void SaveAs()
         {
             System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)

@@ -490,7 +490,12 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(fig);
 
-            Controller.UpdateTreeView(true);
+            RunOnMainThread(() =>
+            {
+                Controller.UpdateTreeView(true);
+            });
+
+            Redraw();
         }
 
         private void testRB()
@@ -705,6 +710,15 @@ namespace Plotter.Controller
             else
             {
             }
+        }
+
+        public void Redraw()
+        {
+            RunOnMainThread(() => {
+                Controller.Clear();
+                Controller.DrawAll();
+                Controller.PushCurrent();
+            });
         }
     }
 }

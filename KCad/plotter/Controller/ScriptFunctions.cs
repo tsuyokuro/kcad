@@ -31,9 +31,9 @@ namespace Plotter.Controller
 
         ScriptEnvironment Env;
 
-        TaskScheduler mMainThreadScheduler;
+        //TaskScheduler mMainThreadScheduler;
 
-        int mMainThreadID = -1;
+        //int mMainThreadID = -1;
 
         private SemaphoreSlim Sem = new SemaphoreSlim(1, 1);
 
@@ -42,9 +42,9 @@ namespace Plotter.Controller
             Env = env;
             Controller = env.Controller;
 
-            mMainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            //mMainThreadID = env.mMainThreadID;
 
-            mMainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            //mMainThreadScheduler = env.mMainThreadScheduler;
         }
 
         public void MyHelp(string s)
@@ -654,9 +654,8 @@ namespace Plotter.Controller
 
             tdc.ViewOrg -= d;
 
-            new Task(() =>
+            Env.RunOnMainThread(() =>
             {
-
                 tdc.Drawing.Clear(DrawTools.BRUSH_TRANSPARENT);
 
                 tdc.graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -676,7 +675,7 @@ namespace Plotter.Controller
                 }
 
                 tdc.Dispose();
-            }).Start(mMainThreadScheduler);
+            });
         }
 
         public void FaceToDirection(CadVector dir)
@@ -861,7 +860,7 @@ namespace Plotter.Controller
 
             Controller.HistoryMan.foward(opeRoot);
 
-            RunOnMainThread(() =>
+            Env.RunOnMainThread(() =>
             {
                 Controller.ClearSelection();
             });
@@ -904,7 +903,7 @@ namespace Plotter.Controller
 
             Controller.HistoryMan.foward(opeRoot);
 
-            RunOnMainThread(() =>
+            Env.RunOnMainThread(() =>
             {
                 Controller.ClearSelection();
             });
@@ -1201,59 +1200,37 @@ namespace Plotter.Controller
 
         public void UpdateTV()
         {
-            if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
-            {
+            Env.RunOnMainThread(()=>{
                 Controller.UpdateTreeView(true);
-                return;
-            }
-
-            new Task(() =>
-            {
-                Controller.UpdateTreeView(true);
-            }
-            ).Start(mMainThreadScheduler);
+            });
         }
 
         public void Redraw()
         {
-            if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
-            {
+            Env.RunOnMainThread(()=>{
                 Controller.Clear();
                 Controller.DrawAll();
                 Controller.PushCurrent();
-                return;
-            }
-
-            Task task = new Task(() =>
-                {
-                    Controller.Clear();
-                    Controller.DrawAll();
-                    Controller.PushCurrent();
-                }
-            );
-            
-            
-            task.Start(mMainThreadScheduler);
-            task.Wait();
+            });
         }
 
-        public void RunOnMainThread(Action action)
-        {
-            if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
-            {
-                action();
-                return;
-            }
+        //public void RunOnMainThread(Action action)
+        //{
+        //    if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
+        //    {
+        //        action();
+        //        return;
+        //    }
 
-            Task task = new Task(() =>
-            {
-                action();
-            }
-            );
+        //    Task task = new Task(() =>
+        //    {
+        //        action();
+        //    }
+        //    );
             
-            task.Start(mMainThreadScheduler);
-            task.Wait();
-        }
+        //    task.Start(mMainThreadScheduler);
+        //    task.Wait();
+        //}
 
         public void SeturePoint(uint figID, int idx, CadVector p)
         {

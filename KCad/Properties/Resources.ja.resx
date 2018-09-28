@@ -126,6 +126,9 @@
   <data name="error_select_2_points" xml:space="preserve">
     <value>Pointを2個選択してください</value>
   </data>
+  <data name="menu_doc_settings" xml:space="preserve">
+    <value>図面の設定...</value>
+  </data>
   <data name="menu_edit" xml:space="preserve">
     <value>編集</value>
   </data>
@@ -146,6 +149,9 @@
   </data>
   <data name="menu_save" xml:space="preserve">
     <value>保存</value>
+  </data>
+  <data name="menu_save_as" xml:space="preserve">
+    <value>名前を付けて保存...</value>
   </data>
   <data name="menu_snap" xml:space="preserve">
     <value>スナップ</value>

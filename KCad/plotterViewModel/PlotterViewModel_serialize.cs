@@ -9,6 +9,30 @@ namespace Plotter
 {
     public partial class PlotterViewModel : INotifyPropertyChanged
     {
+        private string mCurrentFileName = null;
+
+        public string CurrentFileName
+        {
+            get
+            {
+                return mCurrentFileName;
+            }
+
+            private set
+            {
+                mCurrentFileName = value;
+
+                if (mCurrentFileName != null)
+                {
+                    mMainWindow.Title = "KCad " + mCurrentFileName;
+                }
+                else
+                {
+                    mMainWindow.Title = "KCad";
+                }
+            }
+        }
+
         private void SaveFile(string fname)
         {
             if (fname.EndsWith(".txt"))
@@ -57,6 +81,8 @@ namespace Plotter
 
             writer.Write(jroot.ToString());
             writer.Close();
+
+            CurrentFileName = fname;
         }
 
         public void LoadFromJsonFile(string fname)
@@ -92,6 +118,8 @@ namespace Plotter
 
             mController.SetDB(db);
             SetWorldScale(worldScale);
+
+            CurrentFileName = fname;
         }
 
         public CadObjectDB DBFromJsonFile(string fname)
@@ -172,6 +200,8 @@ namespace Plotter
             byte[] bin_data = MessagePackSerializer.Serialize(data);
 
             MpCadFile.Save(fname, bin_data);
+
+            CurrentFileName = fname;
         }
 
         private void LoadFromMsgPackFile(string fname)
@@ -191,6 +221,8 @@ namespace Plotter
             }
 
             FromMpCadData(mpdata);
+
+            CurrentFileName = fname;
         }
 
 
@@ -203,6 +235,8 @@ namespace Plotter
             writer.Write(s);
 
             writer.Close();
+
+            CurrentFileName = fname;
         }
 
         private void LoadFromMsgPackJsonFile(string fname)
@@ -220,10 +254,13 @@ namespace Plotter
 
             if (mpdata == null)
             {
+                CurrentFileName = "";
                 return;
             }
 
             FromMpCadData(mpdata);
+
+            CurrentFileName = fname;
         }
         #endregion
     }
