@@ -175,7 +175,7 @@ namespace Plotter
         {
             set
             {
-                bool changed = UpdateFigureType(value);
+                bool changed = ChangeFigureType(value);
 
                 if (changed)
                 {
@@ -195,7 +195,7 @@ namespace Plotter
         {
             set
             {
-                bool changed = UpdateMeasuerType(value);
+                bool changed = ChangeMeasuerType(value);
 
                 if (changed)
                 {
@@ -1077,7 +1077,7 @@ namespace Plotter
             mController.ScriptEnv.ExecuteCommandAsync(s);
         }
 
-        private bool UpdateFigureType(CadFigure.Types newType)
+        private bool ChangeFigureType(CadFigure.Types newType)
         {
             var prev = mFigureType;
 
@@ -1105,10 +1105,10 @@ namespace Plotter
                 Redraw();
             }
 
-            return true;
+            return prev != mFigureType;
         }
 
-        private bool UpdateMeasuerType(PlotterController.MeasureModes newType)
+        private bool ChangeMeasuerType(PlotterController.MeasureModes newType)
         {
             var prev = mMeasureMode;
 
@@ -1199,10 +1199,10 @@ namespace Plotter
             textBox.CandidateList = Controller.ScriptEnv.AutoCompleteList;
         }
 
-        public AutoCompleteFilterPredicate<object> ScriptFilter
-        {
-            get { return (str, obj) => (obj as string).Contains(str); }
-        }
+        //public AutoCompleteFilterPredicate<object> ScriptFilter
+        //{
+        //    get { return (str, obj) => (obj as string).Contains(str); }
+        //}
 
         public void LoadSettings()
         {

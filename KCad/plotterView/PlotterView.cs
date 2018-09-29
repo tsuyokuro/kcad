@@ -98,11 +98,11 @@ namespace Plotter
 
                 mMnItemClosePolyLines = new ToolStripMenuItem();
                 mMnItemClosePolyLines.Text = "Close";
-                mMnItemClosePolyLines.Click += cm_Click;
+                mMnItemClosePolyLines.Click += ContextMenueClick;
 
                 mMnItemEndPolyLines = new ToolStripMenuItem();
                 mMnItemEndPolyLines.Text = "End";
-                mMnItemEndPolyLines.Click += cm_Click;
+                mMnItemEndPolyLines.Click += ContextMenueClick;
 
                 mPolyLineContextMenu.Items.Add(mMnItemClosePolyLines);
                 mPolyLineContextMenu.Items.Add(mMnItemEndPolyLines);
@@ -115,7 +115,7 @@ namespace Plotter
 
                 mMnItemQuitRect = new ToolStripMenuItem();
                 mMnItemQuitRect.Text = "Quit";
-                mMnItemQuitRect.Click += cm_Click;
+                mMnItemQuitRect.Click += ContextMenueClick;
 
                 mRectContextMenu.Items.Add(mMnItemQuitRect);
             }
@@ -252,7 +252,7 @@ namespace Plotter
             }
         }
 
-        private void cm_Click(object sender, System.EventArgs e)
+        private void ContextMenueClick(object sender, System.EventArgs e)
         {
             if (sender == mMnItemClosePolyLines)
             {

@@ -37,6 +37,9 @@ namespace Plotter
         public bool FilterTreeView = false;
 
 
+        public double InitialMoveLimit = 6.0;
+
+        public bool SnapToZero = true;
 
         public PlotterSettings()
         {

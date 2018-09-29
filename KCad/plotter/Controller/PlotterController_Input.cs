@@ -47,10 +47,16 @@ namespace Plotter.Controller
 
         private CadVector MoveOrgScrnPoint;
 
+        // 生のL button down point (デバイス座標系)
+        private CadVector RawDownPoint = default;
+
+        // Snap等で補正された L button down point (Wold座標系)
         public CadVector LastDownPoint = default;
 
+        // 選択したObjectの点の座標 (Wold座標系)
         private CadVector ObjDownPoint = default;
 
+        // 実際のMouse座標からCross cursorへのOffset
         private CadVector mOffsetScreen = default;
 
         public CadVector RubberBandScrnPoint0 = CadVector.InvalidValue;
@@ -96,6 +102,7 @@ namespace Plotter.Controller
                 return mGridding;
             }
         }
+
 
         private void InitHid()
         {
@@ -165,15 +172,15 @@ namespace Plotter.Controller
 
         private struct SelectContext
         {
-            public DrawContext dc;
-            public CadVector pixp;
-            public CadVector cp;
-            public CadCursor cc;
+            public DrawContext DC;
+            public CadVector CursorScrPt;
+            public CadVector CursorWoldPt;
+            public CadCursor Cursor;
 
-            public bool pointSel;
-            public MarkPoint mp;
+            public bool PointSelected;
+            public MarkPoint MarkPt;
 
-            public bool segSel;
+            public bool SegmentSelected;
             public MarkSeg mseg;
         }
 
@@ -183,20 +190,21 @@ namespace Plotter.Controller
 
             ObjDownPoint = CadVector.InvalidValue;
 
-            sc.dc = dc;
-            sc.cp = dc.UnitPointToCadPoint(pixp);
-            sc.pointSel = false;
-            sc.segSel = false;
+            sc.DC = dc;
+            sc.CursorWoldPt = dc.UnitPointToCadPoint(pixp);
+            sc.PointSelected = false;
+            sc.SegmentSelected = false;
 
-            sc.cc = CadCursor.Create(pixp);
+            sc.CursorScrPt = pixp;
+            sc.Cursor = CadCursor.Create(pixp);
 
             sc = PointSelectNearest(sc);
 
-            if (!sc.pointSel)
+            if (!sc.PointSelected)
             {
                 sc = SegSelectNearest(sc);
 
-                if (!sc.segSel)
+                if (!sc.SegmentSelected)
                 {
                     if (!CadKeyboard.IsCtrlKeyDown())
                     {
@@ -248,59 +256,59 @@ namespace Plotter.Controller
                 }
             }
 
-            return sc.pointSel || sc.segSel;
+            return sc.PointSelected || sc.SegmentSelected;
         }
 
         private SelectContext PointSelectNearest(SelectContext sc)
         {
             mPointSearcher.Clean();
-            mPointSearcher.SetRangePixel(sc.dc, PointSnapRange);
+            mPointSearcher.SetRangePixel(sc.DC, PointSnapRange);
 
             if (CurrentFigure != null)
             {
-                mPointSearcher.CheckFigure(sc.dc, CurrentLayer, CurrentFigure);
+                mPointSearcher.CheckFigure(sc.DC, CurrentLayer, CurrentFigure);
             }
 
-            mPointSearcher.SetTargetPoint(sc.cc);
+            mPointSearcher.SetTargetPoint(sc.Cursor);
 
-            mPointSearcher.SearchAllLayer(sc.dc, mDB);
+            mPointSearcher.SearchAllLayer(sc.DC, mDB);
 
-            sc.mp = mPointSearcher.GetXYMatch();
+            sc.MarkPt = mPointSearcher.GetXYMatch();
 
-            if (sc.mp.FigureID == 0)
+            if (sc.MarkPt.FigureID == 0)
             {
                 return sc;
             }
 
-            ObjDownPoint = sc.mp.Point;
+            ObjDownPoint = sc.MarkPt.Point;
 
-            MoveOrgScrnPoint = sc.dc.CadPointToUnitPoint(sc.mp.Point);
+            MoveOrgScrnPoint = sc.DC.CadPointToUnitPoint(sc.MarkPt.Point);
 
             MoveOrgScrnPoint.z = 0;
 
             State = States.START_DRAGING_POINTS;
-            CadFigure fig = mDB.GetFigure(sc.mp.FigureID);
+            CadFigure fig = mDB.GetFigure(sc.MarkPt.FigureID);
 
-            CadLayer layer = mDB.GetLayer(sc.mp.LayerID);
+            CadLayer layer = mDB.GetLayer(sc.MarkPt.LayerID);
 
             if (layer.Locked)
             {
-                sc.mp.reset();
+                sc.MarkPt.reset();
                 return sc;
             }
 
-            ClearSelListConditional(sc.mp);
+            ClearSelListConditional(sc.MarkPt);
 
             if (SelectMode == SelectModes.POINT)
             {
-                SelList.add(sc.mp);
-                sc.pointSel = true;
-                fig.SelectPointAt(sc.mp.PointIndex, true);
+                SelList.add(sc.MarkPt);
+                sc.PointSelected = true;
+                fig.SelectPointAt(sc.MarkPt.PointIndex, true);
             }
             else if (SelectMode == SelectModes.OBJECT)
             {
-                SelList.add(sc.mp.LayerID, mDB.GetFigure(sc.mp.FigureID));
-                sc.pointSel = true;
+                SelList.add(sc.MarkPt.LayerID, mDB.GetFigure(sc.MarkPt.FigureID));
+                sc.PointSelected = true;
                 fig.SelectWithGroup();
             }
 
@@ -308,7 +316,7 @@ namespace Plotter.Controller
             mPointSearcher.SetIgnoreList(SelList.List);
             mSegSearcher.SetIgnoreList(SelList.List);
 
-            mRulerSet.Set(fig.PointList, sc.mp.PointIndex, sc.cp);
+            mRulerSet.Set(fig.PointList, sc.MarkPt.PointIndex, sc.CursorWoldPt);
 
             CurrentFigure = fig;
 
@@ -318,10 +326,10 @@ namespace Plotter.Controller
         private SelectContext SegSelectNearest(SelectContext sc)
         {
             mSegSearcher.Clean();
-            mSegSearcher.SetRangePixel(sc.dc, LineSnapRange);
-            mSegSearcher.SetTargetPoint(sc.cc);
+            mSegSearcher.SetRangePixel(sc.DC, LineSnapRange);
+            mSegSearcher.SetTargetPoint(sc.Cursor);
 
-            mSegSearcher.SearchAllLayer(sc.dc, mDB);
+            mSegSearcher.SearchAllLayer(sc.DC, mDB);
 
             sc.mseg = mSegSearcher.GetMatch();
 
@@ -340,9 +348,9 @@ namespace Plotter.Controller
 
             CadVector center = sc.mseg.CenterPoint;
 
-            CadVector t = sc.dc.CadPointToUnitPoint(center);
+            CadVector t = sc.DC.CadPointToUnitPoint(center);
 
-            if ((t - sc.pixp).Norm() < LineSnapRange)
+            if ((t - sc.CursorScrPt).Norm() < LineSnapRange)
             {
                 ObjDownPoint = center;
             }
@@ -359,7 +367,7 @@ namespace Plotter.Controller
             if (SelectMode == SelectModes.POINT)
             {
                 SelList.add(sc.mseg.LayerID, mDB.GetFigure(sc.mseg.FigureID), sc.mseg.PtIndexA, sc.mseg.PtIndexB);
-                sc.segSel = true;
+                sc.SegmentSelected = true;
 
                 fig.SelectPointAt(sc.mseg.PtIndexA, true);
                 fig.SelectPointAt(sc.mseg.PtIndexB, true);
@@ -367,14 +375,14 @@ namespace Plotter.Controller
             else if (SelectMode == SelectModes.OBJECT)
             {
                 SelList.add(sc.mseg.LayerID, mDB.GetFigure(sc.mseg.FigureID));
-                sc.segSel = true;
+                sc.SegmentSelected = true;
 
                 fig.SelectWithGroup();
             }
 
             SelSegList.Add(sc.mseg);
 
-            MoveOrgScrnPoint = sc.dc.CadPointToUnitPoint(ObjDownPoint);
+            MoveOrgScrnPoint = sc.DC.CadPointToUnitPoint(ObjDownPoint);
 
             State = States.START_DRAGING_POINTS;
 
@@ -399,6 +407,8 @@ namespace Plotter.Controller
 
             CadVector pixp = CadVector.Create(x, y, 0);
             CadVector cp = dc.UnitPointToCadPoint(pixp);
+
+            RawDownPoint = pixp;
 
             RubberBandScrnPoint1 = pixp;
             RubberBandScrnPoint0 = pixp;
@@ -671,7 +681,10 @@ namespace Plotter.Controller
             mPointSearcher.SetTargetPoint(CrossCursor);
 
             // (0, 0, 0)にスナップするようにする
-            mPointSearcher.Check(dc, CadVector.Zero);
+            if (SettingsHolder.Settings.SnapToZero)
+            {
+                mPointSearcher.Check(dc, CadVector.Zero);
+            }
 
             // 複数の点が必要な図形を作成中、最初の点が入力された状態では、
             // オブジェクトがまだ作成されていない。このため、別途チェックする
@@ -841,8 +854,18 @@ namespace Plotter.Controller
 
             if (State == States.START_DRAGING_POINTS)
             {
-                State = States.DRAGING_POINTS;
-                StartEdit();
+                //
+                // 選択時に思わずずらしてしまうことを防ぐため、
+                // 最初だけある程度ずらさないと移動しないようにする
+                //
+                CadVector v = CadVector.Create(x, y, 0);
+                double d = (RawDownPoint - v).Norm();
+
+                if (d > SettingsHolder.Settings.InitialMoveLimit)
+                {
+                    State = States.DRAGING_POINTS;
+                    StartEdit();
+                }
             }
 
             CadVector pixp = CadVector.Create(x, y, 0) - mOffsetScreen;
