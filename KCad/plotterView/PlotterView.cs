@@ -275,14 +275,14 @@ namespace Plotter
         {
             if (mController != null)
             {
-                mController.RequestContextMenu -= ShowContextMenu;
+                mController.Observer.RequestContextMenu -= ShowContextMenu;
             }
 
             mController = controller;
 
             if (controller != null)
             {
-                mController.RequestContextMenu += ShowContextMenu;
+                mController.Observer.RequestContextMenu += ShowContextMenu;
             }
         }
 

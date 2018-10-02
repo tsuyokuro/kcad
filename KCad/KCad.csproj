@@ -205,6 +205,7 @@
     <Compile Include="plotter\Controller\PlotterController_action.cs" />
     <Compile Include="plotter\Controller\PlotterController_funcs.cs" />
     <Compile Include="plotter\Controller\PlotterController_serialize.cs" />
+    <Compile Include="plotter\Controller\PlotterObserver.cs" />
     <Compile Include="plotter\Controller\ScriptFunctions.cs" />
     <Compile Include="plotter\Controller\SnapManager.cs" />
     <Compile Include="plotter\Serializer\MpInitializer.cs" />

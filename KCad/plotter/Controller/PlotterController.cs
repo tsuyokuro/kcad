@@ -168,62 +168,8 @@ namespace Plotter.Controller
 
         public bool ContinueCreate { set; get; } = false;
 
-        // sender, stateInfo
-        public Action<PlotterController, StateInfo> StateChanged;
 
-        // sender, stateInfo, x, y
-        public Action<PlotterController, StateInfo, int, int> RequestContextMenu;
-
-        // sender, layerListInfo
-        private Action<PlotterController, LayerListInfo> mLayerListChanged = (a, b) => { };
-
-        public Action<PlotterController, LayerListInfo> LayerListChanged
-        {
-            set
-            {
-                mLayerListChanged = value;
-                if (mLayerListChanged == null)
-                {
-                    mLayerListChanged = (a, b) => { };
-                }
-
-                NotifyLayerInfo();
-            }
-        }
-
-        // sender, redraw
-        private Action<PlotterController, bool> mDataChanged = (a, b) => { };
-
-        public Action<PlotterController, bool> DataChanged
-        {
-            set
-            {
-                mDataChanged = value;
-                if (mDataChanged == null)
-                {
-                    mDataChanged = (a, b) => { };
-                }
-            }
-        }
-
-        // sender, cursorPos, cursorType
-        private Action<PlotterController, CadVector, CursorType> mCursorPosChanged = (a, b, c) => { };
-
-        public Action<PlotterController, CadVector, CursorType> CursorPosChanged
-        {
-            set
-            {
-                mCursorPosChanged = value;
-                if (mCursorPosChanged == null)
-                {
-                    mCursorPosChanged = (a, b, c) => { };
-                }
-            }
-            get
-            {
-                return mCursorPosChanged;
-            }
-        }
+        public PlotterObserver Observer = new PlotterObserver();
 
 
         public List<CadFigure> TempFigureList = new List<CadFigure>();
@@ -233,7 +179,6 @@ namespace Plotter.Controller
         public ScriptEnvironment ScriptEnv;
 
         public ViewController ViewCtrl;
-
 
         #region Constructor
         public PlotterController()
@@ -255,74 +200,19 @@ namespace Plotter.Controller
         #endregion
 
         #region TreeView
-        CadObjectTreeView mCadObjectTreeView;
-
-        public void SetObjectTreeView(CadObjectTreeView treeView)
-        {
-            mCadObjectTreeView = treeView;
-        }
-
         public void UpdateTreeView(bool remakeTree)
         {
-            if (mCadObjectTreeView == null)
-            {
-                return;
-            }
-
-            if (SettingsHolder.Settings.FilterTreeView)
-            {
-                CadLayerTreeItem item = new CadLayerTreeItem();
-                item.AddChildren(CurrentLayer, fig =>
-                    {
-                        return fig.HasSelectedPointInclueChild();
-                    });
-
-                mCadObjectTreeView.AttachRoot(item);
-                mCadObjectTreeView.Redraw();
-            }
-            else
-            {
-                if (remakeTree)
-                {
-                    CadLayerTreeItem item = new CadLayerTreeItem(CurrentLayer);
-                    mCadObjectTreeView.AttachRoot(item);
-                    mCadObjectTreeView.Redraw();
-                }
-                else
-                {
-                    mCadObjectTreeView.Redraw();
-                }
-            }
+            Observer.UpdateTreeView(remakeTree);
         }
 
         public void SetTreeViewPos(int index)
         {
-            if (mCadObjectTreeView == null)
-            {
-                return;
-            }
-
-            mCadObjectTreeView.SetVPos(index);
+            Observer.SetTreeViewPos(index);
         }
 
         public int FindTreeViewItem(uint id)
         {
-            int idx = mCadObjectTreeView.Find((item) =>
-            {
-                if (item is CadFigTreeItem)
-                {
-                    CadFigTreeItem figItem = (CadFigTreeItem)item;
-
-                    if (figItem.Fig.ID == id)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
-
-            return idx;
+            return Observer.FindTreeViewItem(id);
         }
 
         #endregion TreeView
@@ -330,7 +220,7 @@ namespace Plotter.Controller
         #region Notify
         public void NotifyDataChanged(bool redraw)
         {
-            mDataChanged(this, redraw);
+            Observer.DataChanged(this, redraw);
         }
 
         private void NotifyLayerInfo()
@@ -339,20 +229,24 @@ namespace Plotter.Controller
             layerInfo.LayerList = mDB.LayerList;
             layerInfo.CurrentID = CurrentLayer.ID;
 
-            mLayerListChanged(this, layerInfo);
+            Observer.LayerListChanged(this, layerInfo);
+        }
+
+        public LayerListInfo GetLayerListInfo()
+        {
+            LayerListInfo layerInfo = default(LayerListInfo);
+            layerInfo.LayerList = mDB.LayerList;
+            layerInfo.CurrentID = CurrentLayer.ID;
+
+            return layerInfo;
         }
 
         private void NotifyStateChange()
         {
-            if (StateChanged == null)
-            {
-                return;
-            }
-
             StateInfo si = default(StateInfo);
             si.set(this);
 
-            StateChanged(this, si);
+            Observer.StateChanged(this, si);
         }
     #endregion
 
@@ -671,8 +565,6 @@ namespace Plotter.Controller
 
 
             mSnapShotList = null;
-
-            NotifySelectList();
         }
 
         public void CancelEdit()

@@ -132,7 +132,7 @@ namespace Plotter
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private PlotterController mController = new PlotterController();
+        private PlotterController mController;
 
         public PlotterController.Interaction InteractOut
         {
@@ -304,6 +304,70 @@ namespace Plotter
                 return SettingsHolder.Settings.FilterTreeView;
             }
         }
+
+        private void UpdateTreeView(bool remakeTree)
+        {
+            if (mCadObjectTreeView == null)
+            {
+                return;
+            }
+
+            if (SettingsHolder.Settings.FilterTreeView)
+            {
+                CadLayerTreeItem item = new CadLayerTreeItem();
+                item.AddChildren(Controller.CurrentLayer, fig =>
+                {
+                    return fig.HasSelectedPointInclueChild();
+                });
+
+                mCadObjectTreeView.AttachRoot(item);
+                mCadObjectTreeView.Redraw();
+            }
+            else
+            {
+                if (remakeTree)
+                {
+                    CadLayerTreeItem item = new CadLayerTreeItem(Controller.CurrentLayer);
+                    mCadObjectTreeView.AttachRoot(item);
+                    mCadObjectTreeView.Redraw();
+                }
+                else
+                {
+                    mCadObjectTreeView.Redraw();
+                }
+            }
+        }
+
+        private void SetTreeViewPos(int index)
+        {
+            if (mCadObjectTreeView == null)
+            {
+                return;
+            }
+
+            mCadObjectTreeView.SetVPos(index);
+        }
+
+        private int FindTreeViewItem(uint id)
+        {
+            int idx = mCadObjectTreeView.Find((item) =>
+            {
+                if (item is CadFigTreeItem)
+                {
+                    CadFigTreeItem figItem = (CadFigTreeItem)item;
+
+                    if (figItem.Fig.ID == id)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+
+            return idx;
+        }
+
         #endregion
 
 
@@ -406,6 +470,8 @@ namespace Plotter
 
         public PlotterViewModel(Window mainWindow, WindowsFormsHost viewHost)
         {
+            mController = new PlotterController();
+
             mMainWindow = mainWindow;
             mViewHost = viewHost;
 
@@ -415,13 +481,22 @@ namespace Plotter
             SelectMode = mController.SelectMode;
             FigureType = mController.CreatingFigType;
 
-            mController.StateChanged = StateChanged;
+            mController.Observer.StateChanged = StateChanged;
 
-            mController.LayerListChanged =  LayerListChanged;
+            mController.Observer.LayerListChanged =  LayerListChanged;
 
-            mController.DataChanged = DataChanged;
+            mController.Observer.DataChanged = DataChanged;
 
-            mController.CursorPosChanged = CursorPosChanged;
+            mController.Observer.CursorPosChanged = CursorPosChanged;
+
+            mController.Observer.UpdateTreeView = UpdateTreeView;
+
+            mController.Observer.SetTreeViewPos = SetTreeViewPos;
+
+            mController.Observer.FindTreeViewItem = FindTreeViewItem;
+
+
+            LayerListChanged(mController, mController.GetLayerListInfo());
 
             PlotterView1 = new PlotterView();
             PlotterViewGL1 = PlotterViewGL.Create();
@@ -456,7 +531,6 @@ namespace Plotter
         public void SetObjectTreeView(CadObjectTreeView treeView)
         {
             mCadObjectTreeView = treeView;
-            mController.SetObjectTreeView(treeView);
 
             if (mCadObjectTreeView != null)
             {

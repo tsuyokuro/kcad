@@ -434,7 +434,6 @@ namespace Plotter.Controller
                         State = States.RUBBER_BAND_SELECT;
                     }
 
-                    NotifySelectList();
                     return;
 
                 case States.RUBBER_BAND_SELECT:
@@ -485,12 +484,7 @@ namespace Plotter.Controller
 
             }
 
-            CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
-        }
-
-        private void NotifySelectList()
-        {
-            List<uint> ids = DB.GetSelectedFigIDList();
+            Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
         }
 
         private void PutMeasure()
@@ -590,12 +584,9 @@ namespace Plotter.Controller
         {
             DrawAll(dc);
 
-            if (RequestContextMenu != null)
-            {
-                StateInfo si = default;
-                si.set(this);
-                RequestContextMenu(this, si, (int)x, (int)y);
-            }
+            StateInfo si = default;
+            si.set(this);
+            Observer.RequestContextMenu(this, si, (int)x, (int)y);
         }
 
         #region RubberBand
@@ -642,8 +633,6 @@ namespace Plotter.Controller
 
                 case States.RUBBER_BAND_SELECT:
                     RubberBandSelect(RubberBandScrnPoint0, RubberBandScrnPoint1);
-
-                    NotifySelectList();
 
                     State = States.SELECT;
                     break;
@@ -929,8 +918,8 @@ namespace Plotter.Controller
                     }
             }
 
-            CursorPosChanged(this, mSnapPoint, CursorType.TRACKING);
-            CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
+            Observer.CursorPosChanged(this, mSnapPoint, CursorType.TRACKING);
+            Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
         }
 
         private void LDrag(CadMouse pointer, DrawContext dc, int x, int y)
