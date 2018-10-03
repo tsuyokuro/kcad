@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace KCad
 {
@@ -36,6 +37,16 @@ namespace KCad
             {
                 return "----";
             }
+        }
+
+        public virtual SolidColorBrush getForeColor()
+        {
+            return null;
+        }
+
+        public virtual SolidColorBrush getBackColor()
+        {
+            return null;
         }
 
         protected List<CadObjTreeItem> mChildren;

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static KCad.CadObjectTreeView;
 using CadDataTypes;
+using System.Windows.Media;
 
 namespace Plotter
 {
@@ -164,6 +165,8 @@ namespace Plotter
         public CadFigure Fig;
         public int Index;
 
+        private static SolidColorBrush CheckedBackColor = new SolidColorBrush(Color.FromRgb(0x11, 0x46, 0x11));
+
         public override bool IsChecked
         {
             get
@@ -201,6 +204,21 @@ namespace Plotter
 
                 return "removed";
             }
+        }
+
+        public override SolidColorBrush getForeColor()
+        {
+            return null;
+        }
+
+        public override SolidColorBrush getBackColor()
+        {
+            if (!IsChecked)
+            {
+                return null;
+            }
+
+            return CheckedBackColor;
         }
 
         public CadPointTreeItem(CadFigure fig, int idx)

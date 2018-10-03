@@ -349,16 +349,23 @@ namespace KCad
 
                 rect.Y = p.Y;
 
+                Brush fbrush = item.getForeColor();
+
+                Brush bbrush = item.getBackColor();
+
                 if (item.IsChecked)
                 {
-                    ft = GetText(item.Text, mCheckedForeground);
-                    dc.DrawRectangle(mCheckedBackground, null, rect);
+                    fbrush = fbrush ?? mCheckedForeground;
+                    bbrush = bbrush ?? mCheckedBackground;
                 }
                 else
                 {
-                    ft = GetText(item.Text, mForeground);
-                    dc.DrawRectangle(mBackground, null, rect);
+                    fbrush = fbrush ?? mForeground;
+                    bbrush = bbrush ?? mBackground;
                 }
+
+                ft = GetText(item.Text, fbrush);
+                dc.DrawRectangle(bbrush, null, rect);
 
                 p.X = mIndentSize * (level - topLevel) + mIndentSize;
 
