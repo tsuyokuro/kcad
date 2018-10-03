@@ -1273,11 +1273,6 @@ namespace Plotter
             textBox.CandidateList = Controller.ScriptEnv.AutoCompleteList;
         }
 
-        //public AutoCompleteFilterPredicate<object> ScriptFilter
-        //{
-        //    get { return (str, obj) => (obj as string).Contains(str); }
-        //}
-
         public void LoadSettings()
         {
             PlotterSettings settings = SettingsHolder.Settings;
@@ -1301,17 +1296,6 @@ namespace Plotter
             mController.LineSnapRange = settings.LineSnapRange;
         }
 
-        public void Close()
-        {
-            SaveSettings();
-
-            if (mEditorWindow != null)
-            {
-                mEditorWindow.Close();
-                mEditorWindow = null;
-            }
-        }
-
         public void SaveSettings()
         {
             PlotterSettings settings = SettingsHolder.Settings;
@@ -1323,6 +1307,22 @@ namespace Plotter
             settings.LineSnapRange = mController.LineSnapRange;
 
             settings.Save();
+        }
+
+        public void Open()
+        {
+            LoadSettings();
+        }
+
+        public void Close()
+        {
+            SaveSettings();
+
+            if (mEditorWindow != null)
+            {
+                mEditorWindow.Close();
+                mEditorWindow = null;
+            }
         }
     }
 }

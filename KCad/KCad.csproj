@@ -209,6 +209,9 @@
     <Compile Include="plotter\Controller\ScriptFunctions.cs" />
     <Compile Include="plotter\Controller\SnapManager.cs" />
     <Compile Include="plotter\Serializer\MpInitializer.cs" />
+    <Compile Include="plotter\TreeViewItem\CadFigTreeItem.cs" />
+    <Compile Include="plotter\TreeViewItem\CadLayerTreeItem.cs" />
+    <Compile Include="plotter\TreeViewItem\CadPointTreeItem.cs" />
     <Compile Include="plotter\Util\DebugOut.cs" />
     <Compile Include="SplineCurve\BSplineJson.cs" />
     <Compile Include="SplineCurve\BSplineParam.cs" />
@@ -238,7 +241,6 @@
     <Compile Include="MySplashWindow.xaml.cs">
       <DependentUpon>MySplashWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="plotter\CadObTreeItemImpl.cs" />
     <Compile Include="plotter\DrawContext\DrawContextPrinter.cs" />
     <Compile Include="plotter\DrawContext\IDrawing.cs" />
     <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
@@ -354,7 +356,7 @@
     <Compile Include="plotter\Figure\CadFigurePolyLines.cs" />
     <Compile Include="plotter\CadLayer.cs" />
     <Compile Include="plotter\Util\Quaternion.cs" />
-    <Compile Include="plotter\Gridding.cs" />
+    <Compile Include="plotter\Controller\Gridding.cs" />
     <Compile Include="plotter\searcher\SegSearcher.cs" />
     <Compile Include="plotter\Util\UMatrix4.cs" />
     <Compile Include="plotter\Util\CadMath.cs" />

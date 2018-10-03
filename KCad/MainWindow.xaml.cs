@@ -100,7 +100,7 @@ namespace KCad
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            ViewModel.LoadSettings();
+            ViewModel.Open();
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
