@@ -104,17 +104,17 @@ namespace Plotter
 
         public void dump()
         {
-            DebugOut.println(this.GetType().Name);
-            DebugOut.println("{");
-            DebugOut.Indent++;
-            DebugOut.println("UndoStack [");
-            DebugOut.Indent++;
+            DbgOut.pln(this.GetType().Name);
+            DbgOut.pln("{");
+            DbgOut.Indent++;
+            DbgOut.pln("UndoStack [");
+            DbgOut.Indent++;
 
 
 
-            DebugOut.Indent--;
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.Indent--;
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
     }
 }

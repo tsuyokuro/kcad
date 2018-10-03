@@ -61,13 +61,13 @@ namespace Plotter
     {
         public static void dump(this CadVector v, string prefix = nameof(CadVector))
         {
-            DebugOut.println(prefix + "{");
-            DebugOut.Indent++;
-            DebugOut.println("x:" + v.x.ToString());
-            DebugOut.println("y:" + v.y.ToString());
-            DebugOut.println("z:" + v.z.ToString());
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.pln(prefix + "{");
+            DbgOut.Indent++;
+            DbgOut.pln("x:" + v.x.ToString());
+            DbgOut.pln("y:" + v.y.ToString());
+            DbgOut.pln("z:" + v.z.ToString());
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
     }
 }

@@ -122,8 +122,6 @@ namespace Plotter
 
         public static Matrix4d ToMatrix4d(CadQuaternion q)
         {
-            DebugOut.println("Matrix4#ToMatrix4d");
-
             Matrix4d m = default(Matrix4d);
 
             double xx = q.x * q.x * 2.0;

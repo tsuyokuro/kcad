@@ -87,13 +87,13 @@ namespace Plotter
 
         public void dump(string name = "FigureSegment")
         {
-            DebugOut.println(name + "{");
-            DebugOut.Indent++;
-            DebugOut.println("Valid:" + Valid.ToString());
+            DbgOut.pln(name + "{");
+            DbgOut.Indent++;
+            DbgOut.pln("Valid:" + Valid.ToString());
             P0.dump("P0");
             P1.dump("P1");
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
     }
 
@@ -155,14 +155,14 @@ namespace Plotter
 
         public void dump(string name = "FigureSegment")
         {
-            DebugOut.println(name + "{");
-            DebugOut.Indent++;
-            DebugOut.println("FigureID:" + Figure.ID.ToString());
-            DebugOut.println("SegIndex:" + SegIndex.ToString());
-            DebugOut.println("Index0:" + Index0.ToString());
-            DebugOut.println("Index1:" + Index1.ToString());
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.pln(name + "{");
+            DbgOut.Indent++;
+            DbgOut.pln("FigureID:" + Figure.ID.ToString());
+            DbgOut.pln("SegIndex:" + SegIndex.ToString());
+            DbgOut.pln("Index0:" + Index0.ToString());
+            DbgOut.pln("Index1:" + Index1.ToString());
+            DbgOut.Indent--;
+            DbgOut.pln("}");
 
         }
     }

@@ -287,7 +287,7 @@ namespace Plotter.Controller
             }
 
             sw.Stop();
-            DebugOut.println(sw.ElapsedMilliseconds.ToString() + " milli sec");
+            DbgOut.pln(sw.ElapsedMilliseconds.ToString() + " milli sec");
         }
 
         private void test010()
@@ -309,12 +309,6 @@ namespace Plotter.Controller
             Controller.InteractOut.println("_test");
             Controller.InteractOut.println("abc\ndef");
             Controller.InteractOut.println("end");
-
-            DebugOut.printf("DebugOut {0}\n", 10);
-            DebugOut.Indent++;
-            DebugOut.printf("t1 {0}\n", 10);
-            DebugOut.printf("t2 {0}\n", 20);
-            DebugOut.reset();
         }
 
         private void test012()

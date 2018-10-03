@@ -310,53 +310,53 @@ namespace Plotter
         #region "For debug"
         public void dump()
         {
-            DebugOut.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
-            DebugOut.Indent++;
+            DbgOut.pln(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
+            DbgOut.Indent++;
 
             {
                 List<uint> ids = new List<uint>(mLayerIdMap.Keys);
 
-                DebugOut.println("Layer map {");
-                DebugOut.Indent++;
+                DbgOut.pln("Layer map {");
+                DbgOut.Indent++;
                 foreach (uint id in ids)
                 {
                     CadLayer layer = mLayerIdMap[id];
                     layer.sdump();
                 }
-                DebugOut.Indent--;
-                DebugOut.println("}");
+                DbgOut.Indent--;
+                DbgOut.pln("}");
             }
 
             {
-                DebugOut.println("Layer list {");
-                DebugOut.Indent++;
+                DbgOut.pln("Layer list {");
+                DbgOut.Indent++;
                 foreach (CadLayer layer in mLayerList)
                 {
                     layer.sdump();
                 }
-                DebugOut.Indent--;
-                DebugOut.println("}");
+                DbgOut.Indent--;
+                DbgOut.pln("}");
             }
 
             dumpFigureMap();
 
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
 
         public void dumpFigureMap()
         {
             List<uint> ids = new List<uint>(mFigureIdMap.Keys);
 
-            DebugOut.println("Figure map {");
-            DebugOut.Indent++;
+            DbgOut.pln("Figure map {");
+            DbgOut.Indent++;
             foreach (uint id in ids)
             {
                 CadFigure fig = mFigureIdMap[id];
                 fig.Dump("fig");
             }
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
 
         #endregion

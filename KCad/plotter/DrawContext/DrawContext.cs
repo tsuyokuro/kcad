@@ -269,7 +269,7 @@ namespace Plotter
         {
             ViewOrg.dump("ViewOrg");
 
-            DebugOut.println("View Width=" + mViewWidth.ToString() + " Height=" + mViewHeight.ToString());
+            DbgOut.pln("View Width=" + mViewWidth.ToString() + " Height=" + mViewHeight.ToString());
 
             CadVector t = CadVector.Create(mViewDir);
             t.dump("ViewDir");

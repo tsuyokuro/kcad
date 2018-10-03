@@ -596,7 +596,7 @@ namespace Plotter
         #region "Dump" 
         public void SimpleDump(string prefix = nameof(CadFigure))
         {
-            DebugOut.println(
+            DbgOut.pln(
                 prefix +
                 "(" + this.GetHashCode().ToString() + ")" +
                 "ID=" + ID.ToString());
@@ -604,35 +604,35 @@ namespace Plotter
 
         public void Dump(string prefix = nameof(CadFigure))
         {
-            DebugOut.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
-            DebugOut.Indent++;
-            DebugOut.println("ID=" + ID.ToString());
-            DebugOut.println("LayerID=" + LayerID.ToString());
-            DebugOut.println("Type=" + Type.ToString());
+            DbgOut.pln(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
+            DbgOut.Indent++;
+            DbgOut.pln("ID=" + ID.ToString());
+            DbgOut.pln("LayerID=" + LayerID.ToString());
+            DbgOut.pln("Type=" + Type.ToString());
 
-            DebugOut.println("PointList [");
-            DebugOut.Indent++;
+            DbgOut.pln("PointList [");
+            DbgOut.Indent++;
             foreach (CadVector point in PointList)
             {
                 point.dump("");
             }
-            DebugOut.Indent--;
-            DebugOut.println("]");
+            DbgOut.Indent--;
+            DbgOut.pln("]");
 
 
-            DebugOut.println("ParentID=" + (mParent != null ? mParent.ID : 0));
+            DbgOut.pln("ParentID=" + (mParent != null ? mParent.ID : 0));
 
-            DebugOut.println("Child [");
-            DebugOut.Indent++;
+            DbgOut.pln("Child [");
+            DbgOut.Indent++;
             foreach (CadFigure fig in mChildList)
             {
-                DebugOut.println("" + fig.ID);
+                DbgOut.pln("" + fig.ID);
             }
-            DebugOut.Indent--;
-            DebugOut.println("]");
+            DbgOut.Indent--;
+            DbgOut.pln("]");
 
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
 
         #endregion

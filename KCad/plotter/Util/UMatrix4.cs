@@ -190,14 +190,14 @@ namespace Plotter
 
         public void dump()
         {
-            DebugOut.println(nameof(UMatrix4) + "{");
-            DebugOut.Indent++;
-            DebugOut.println(M11.ToString() + "," + M12.ToString() + "," + M13.ToString() + "," + M14.ToString());
-            DebugOut.println(M21.ToString() + "," + M22.ToString() + "," + M23.ToString() + "," + M24.ToString());
-            DebugOut.println(M31.ToString() + "," + M32.ToString() + "," + M33.ToString() + "," + M34.ToString());
-            DebugOut.println(M41.ToString() + "," + M42.ToString() + "," + M43.ToString() + "," + M44.ToString());
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.pln(nameof(UMatrix4) + "{");
+            DbgOut.Indent++;
+            DbgOut.pln(M11.ToString() + "," + M12.ToString() + "," + M13.ToString() + "," + M14.ToString());
+            DbgOut.pln(M21.ToString() + "," + M22.ToString() + "," + M23.ToString() + "," + M24.ToString());
+            DbgOut.pln(M31.ToString() + "," + M32.ToString() + "," + M33.ToString() + "," + M34.ToString());
+            DbgOut.pln(M41.ToString() + "," + M42.ToString() + "," + M43.ToString() + "," + M44.ToString());
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
     }
 }

@@ -58,13 +58,13 @@ namespace Plotter
 
         public void dump()
         {
-            DebugOut.println("SelectItem {");
-            DebugOut.Indent++;
-            DebugOut.println("LayerID:" + LayerID.ToString());
-            DebugOut.println("FigureID:" + FigureID.ToString());
-            DebugOut.println("PointIndex:" + PointIndex.ToString());
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.pln("SelectItem {");
+            DbgOut.Indent++;
+            DbgOut.pln("LayerID:" + LayerID.ToString());
+            DbgOut.pln("FigureID:" + FigureID.ToString());
+            DbgOut.pln("PointIndex:" + PointIndex.ToString());
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
 
         public bool update()
@@ -193,14 +193,14 @@ namespace Plotter
 
         public void dump()
         {
-            DebugOut.println("SelectList {");
-            DebugOut.Indent++;
+            DbgOut.pln("SelectList {");
+            DbgOut.Indent++;
             foreach (SelectItem item in mList)
             {
                 item.dump();
             }
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
     }
 
@@ -262,14 +262,14 @@ namespace Plotter
 
         public void dump()
         {
-            DebugOut.println("SelectSegmentList {");
-            DebugOut.Indent++;
+            DbgOut.pln("SelectSegmentList {");
+            DbgOut.Indent++;
             foreach (MarkSeg ms in mList)
             {
                 ms.dump();
             }
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
     }
 }

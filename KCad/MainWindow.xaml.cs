@@ -37,12 +37,12 @@ namespace KCad
             {
                 // DebugOutの出力はデフォルトでConsoleになっているので、UseConsoleの場合は、
                 // あらためて設定する必要はない
-                DebugOut.println("DebugOut's output setting is Console");
+                DbgOut.pln("DbgOut's output setting is Console");
             }
             else {
-                DebugOut.PrintFunc = MyConsole.Print;
-                DebugOut.PrintLnFunc = MyConsole.PrintLn;
-                DebugOut.FormatPrintFunc = MyConsole.Printf;
+                DbgOut.PrintFunc = MyConsole.Print;
+                DbgOut.PrintLnFunc = MyConsole.PrintLn;
+                DbgOut.FormatPrintFunc = MyConsole.Printf;
             }
 
 

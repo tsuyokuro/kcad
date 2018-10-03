@@ -208,8 +208,6 @@ namespace KCad
 
         private void CadConsoleView_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            DebugOut.println("CadConsoleView_KeyUp");
-
             if (Keyboard.Modifiers == ModifierKeys.Control && (e.Key == Key.C || e.Key == Key.Insert))
             {
                 string copyString = GetSelectedString();

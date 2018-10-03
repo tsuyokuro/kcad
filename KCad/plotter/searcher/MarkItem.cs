@@ -149,11 +149,11 @@ namespace Plotter
 
         public void dump(string name= "MarkSeg")
         {
-            DebugOut.println(name + " {");
-            DebugOut.Indent++;
+            DbgOut.pln(name + " {");
+            DbgOut.Indent++;
             FSegment.dump("FSegment");
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
 
         public bool Update()

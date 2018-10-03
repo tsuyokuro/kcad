@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Plotter
 {
-    public static class DebugOut
+    public static class DbgOut
     {
         public static ulong PutCount = 0;
 
@@ -55,10 +55,10 @@ namespace Plotter
 
         public static void printIndent()
         {
-            print(space);
+            p(space);
         }
 
-        public static void print(String s)
+        public static void p(String s)
         {
             Begin();
             PutCount++;
@@ -66,7 +66,7 @@ namespace Plotter
             End();
         }
 
-        public static void println(String s)
+        public static void pln(String s)
         {
             Begin();
             PutCount++;
@@ -74,7 +74,7 @@ namespace Plotter
             End();
         }
 
-        public static void printf(String format, params object[] args)
+        public static void pf(String format, params object[] args)
         {
             Begin();
             PutCount++;

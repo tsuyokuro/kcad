@@ -264,7 +264,7 @@ namespace HalfEdgeNS
                 he.Vertex = indexMap[he.Vertex];
                 if (he.Vertex == -1)
                 {
-                    DebugOut.println("HeModel.RemoveVertexs error. he.Vertex == -1");
+                    DbgOut.pln("HeModel.RemoveVertexs error. he.Vertex == -1");
                 }
             });
 
@@ -350,7 +350,7 @@ namespace HalfEdgeNS
 
             if (s == -1)
             {
-                DebugOut.println("HeModel.GetOuterEdge not found start HalfEdge");
+                DbgOut.pln("HeModel.GetOuterEdge not found start HalfEdge");
                 return ret;
             }
 

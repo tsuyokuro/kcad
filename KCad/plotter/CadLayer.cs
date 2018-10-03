@@ -222,7 +222,7 @@ namespace Plotter
 
         public void sdump()
         {
-            DebugOut.println(
+            DbgOut.pln(
                 this.GetType().Name + 
                 "(" + this.GetHashCode().ToString() + ")" +
                 "ID=" + ID.ToString());
@@ -230,17 +230,17 @@ namespace Plotter
 
         public void dump()
         {
-            DebugOut.println(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
-            DebugOut.Indent++;
-            DebugOut.println("ID=" + ID.ToString());
+            DbgOut.pln(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
+            DbgOut.Indent++;
+            DbgOut.pln("ID=" + ID.ToString());
 
             foreach (CadFigure fig in FigureList)
             {
                 fig.Dump("fig");
             }
 
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
     }
 }

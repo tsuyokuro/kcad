@@ -1463,32 +1463,32 @@ namespace Plotter
 
         public static void Dump(Vector4d v, string prefix)
         {
-            DebugOut.Begin();
+            DbgOut.Begin();
 
-            DebugOut.print(prefix);
-            DebugOut.println("{");
-            DebugOut.Indent++;
-            DebugOut.println("x:" + v.X.ToString());
-            DebugOut.println("y:" + v.Y.ToString());
-            DebugOut.println("z:" + v.Z.ToString());
-            DebugOut.println("w:" + v.W.ToString());
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.p(prefix);
+            DbgOut.pln("{");
+            DbgOut.Indent++;
+            DbgOut.pln("x:" + v.X.ToString());
+            DbgOut.pln("y:" + v.Y.ToString());
+            DbgOut.pln("z:" + v.Z.ToString());
+            DbgOut.pln("w:" + v.W.ToString());
+            DbgOut.Indent--;
+            DbgOut.pln("}");
 
-            DebugOut.End();
+            DbgOut.End();
         }
 
         public static void Dump(UMatrix4 m, string prefix)
         {
-            DebugOut.print(prefix);
-            DebugOut.println("{");
-            DebugOut.Indent++;
-            DebugOut.println(m.M11.ToString() + "," + m.M12.ToString() + "," + m.M13.ToString() + "," + m.M14.ToString());
-            DebugOut.println(m.M21.ToString() + "," + m.M22.ToString() + "," + m.M23.ToString() + "," + m.M24.ToString());
-            DebugOut.println(m.M31.ToString() + "," + m.M32.ToString() + "," + m.M33.ToString() + "," + m.M34.ToString());
-            DebugOut.println(m.M41.ToString() + "," + m.M42.ToString() + "," + m.M43.ToString() + "," + m.M44.ToString());
-            DebugOut.Indent--;
-            DebugOut.println("}");
+            DbgOut.p(prefix);
+            DbgOut.pln("{");
+            DbgOut.Indent++;
+            DbgOut.pln(m.M11.ToString() + "," + m.M12.ToString() + "," + m.M13.ToString() + "," + m.M14.ToString());
+            DbgOut.pln(m.M21.ToString() + "," + m.M22.ToString() + "," + m.M23.ToString() + "," + m.M24.ToString());
+            DbgOut.pln(m.M31.ToString() + "," + m.M32.ToString() + "," + m.M33.ToString() + "," + m.M34.ToString());
+            DbgOut.pln(m.M41.ToString() + "," + m.M42.ToString() + "," + m.M43.ToString() + "," + m.M44.ToString());
+            DbgOut.Indent--;
+            DbgOut.pln("}");
         }
     }
 }
