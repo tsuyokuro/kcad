@@ -106,6 +106,11 @@ namespace Plotter
             }
         }
 
+        public virtual void DrawHarfEdgeModel(int pen, int edgePen, double edgeThreshold, HeModel model)
+        {
+            DrawHarfEdgeModel(pen, model);
+        }
+
         public virtual void DrawText(int font, int brush, CadVector a, string s)
         {
         }

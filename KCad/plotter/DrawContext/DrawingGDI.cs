@@ -460,6 +460,76 @@ namespace Plotter
         }
         #endregion
 
+        public override void DrawHarfEdgeModel(int pen, int edgePen, double edgeThreshold, HeModel model)
+        {
+            Vector3d t = DC.ViewDir * (-0.2f / DC.WorldScale);
+
+            CadVector shift = (CadVector)t;
+
+
+            CadVector p0;
+            CadVector p1;
+
+
+            for (int i = 0; i < model.FaceStore.Count; i++)
+            {
+                HeFace f = model.FaceStore[i];
+
+                HalfEdge head = f.Head;
+
+                HalfEdge c = head;
+
+                HalfEdge pair;
+
+                CadVector v;
+
+                for (; ; )
+                {
+                    bool edge = false;
+
+                    pair = c.Pair;
+
+                    if (pair == null)
+                    {
+                        edge = true;
+                    }
+                    else
+                    {
+                        double s = CadMath.InnerProduct(model.NormalStore[c.Normal], model.NormalStore[pair.Normal]);
+
+                        if (Math.Abs(s) < edgeThreshold)
+                        {
+                            edge = true;
+                        }
+                    }
+
+                    HalfEdge next = c.Next;
+
+                    if (edge)
+                    {
+                        DrawLine(edgePen,
+                            model.VertexStore.Ref(c.Vertex) + shift,
+                            model.VertexStore.Ref(next.Vertex) + shift
+                            );
+                    }
+                    else
+                    {
+                        DrawLine(pen,
+                            model.VertexStore.Ref(c.Vertex) + shift,
+                            model.VertexStore.Ref(next.Vertex) + shift
+                            );
+                    }
+
+                    c = next;
+
+                    if (c == head)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
         public override void DrawRect(int pen, CadVector p0, CadVector p1)
         {
             CadVector pp0 = DC.CadPointToUnitPoint(p0);

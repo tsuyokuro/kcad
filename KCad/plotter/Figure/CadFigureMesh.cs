@@ -23,7 +23,7 @@ namespace Plotter
 
         static CadFigureMesh()
         {
-            EDGE_THRESHOLD = Math.Cos(CadMath.Deg2Rad(15));
+            EDGE_THRESHOLD = Math.Cos(CadMath.Deg2Rad(30));
         }
 
         public override VectorList PointList
@@ -147,71 +147,7 @@ namespace Plotter
 
         public override void Draw(DrawContext dc, int pen)
         {
-            dc.Drawing.DrawHarfEdgeModel(DrawTools.PEN_MESH_LINE, mHeModel);
-            DrawEdge(dc, pen);
-        }
-
-        private void DrawEdge(DrawContext dc, int pen)
-        {
-            Vector3d t = dc.ViewDir * (-0.2f / dc.WorldScale);
-
-            CadVector shift = (CadVector)t;
-
-
-            CadVector p0;
-            CadVector p1;
-
-
-            for (int i = 0; i < mHeModel.FaceStore.Count; i++)
-            {
-                HeFace f = mHeModel.FaceStore[i];
-
-                HalfEdge head = f.Head;
-
-                HalfEdge c = head;
-
-                HalfEdge pair;
-
-                CadVector v;
-
-                for (; ; )
-                {
-                    bool draw = false;
-
-                    pair = c.Pair;
-
-                    if (pair == null)
-                    {
-                        draw = true;
-                    }
-                    else
-                    {
-                        double s = CadMath.InnerProduct(mHeModel.NormalStore[c.Normal], mHeModel.NormalStore[pair.Normal]);
-
-                        if ( Math.Abs(s) < EDGE_THRESHOLD)
-                        {
-                            draw = true;
-                        } 
-                    }
-
-                    HalfEdge next = c.Next;
-
-                    if (draw)
-                    {
-                        dc.Drawing.DrawLine(pen,
-                            mHeModel.VertexStore.Ref(c.Vertex) + shift,
-                            mHeModel.VertexStore.Ref(next.Vertex) + shift
-                            );
-                    }
-
-                    c = next;
-
-                    if (c == head)
-                    {
-                        break;
-                    }
-                }
-            }
+            dc.Drawing.DrawHarfEdgeModel(DrawTools.PEN_MESH_LINE, pen, EDGE_THRESHOLD, mHeModel);
         }
 
         public override void DrawSelected(DrawContext dc, int pen)
