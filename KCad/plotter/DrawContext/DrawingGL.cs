@@ -142,9 +142,7 @@ namespace Plotter
                 GL.Color4(glpen.Color);
                 GL.LineWidth(1.0f);
 
-                Vector3d t = DC.ViewDir * (-1.0f / DC.WorldScale);
-
-                CadVector shift = (CadVector)t;
+                CadVector shift = GetShiftForOutLine();
 
                 GL.Begin(PrimitiveType.LineStrip);
 
@@ -167,15 +165,24 @@ namespace Plotter
         public override void DrawHarfEdgeModel(int pen, int edgePen, double edgeThreshold, HeModel model)
         {
             DrawHarfEdgeModel(pen, model);
-            DrawEdge(edgePen, edgeThreshold, model);
+
+#if DRAW_HALF_EDGE_OUTLINE
+            DrawEdge(pen, edgePen, edgeThreshold, model);
+#endif
         }
 
-        private void DrawEdge(int pen, double edgeThreshold, HeModel model)
+        private void DrawEdge(int pen, int edgePen, double edgeThreshold, HeModel model)
         {
-            Vector3d t = DC.ViewDir * (-0.2f / DC.WorldScale);
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
+            GL.LineWidth(1.0f);
 
-            CadVector shift = (CadVector)t;
+            GLPen glpen = DC.Pen(pen);
+            GLPen glEdgepen = DC.Pen(edgePen);
 
+            //Vector3d t = DC.ViewDir * (-0.1f / DC.WorldScale);
+
+            CadVector shift = GetShiftForOutLine();
 
             CadVector p0;
             CadVector p1;
@@ -215,13 +222,22 @@ namespace Plotter
 
                     HalfEdge next = c.Next;
 
+                    p0 = model.VertexStore.Ref(c.Vertex) * DC.WorldScale + shift;
+                    p1 = model.VertexStore.Ref(next.Vertex) * DC.WorldScale + shift;
+
                     if (draw)
                     {
-                        DC.Drawing.DrawLine(pen,
-                            model.VertexStore.Ref(c.Vertex) + shift,
-                            model.VertexStore.Ref(next.Vertex) + shift
-                            );
+                        GL.Color4(glEdgepen.Color);
                     }
+                    else
+                    {
+                        GL.Color4(glpen.Color);
+                    }
+
+                    GL.Begin(PrimitiveType.Lines);
+                    GL.Vertex3(p0.vector);
+                    GL.Vertex3(p1.vector);
+                    GL.End();
 
                     c = next;
 
@@ -310,54 +326,6 @@ namespace Plotter
                 }
 #endif
             }
-
-#if DRAW_HALF_EDGE_OUTLINE
-            GL.Disable(EnableCap.Lighting);
-            GL.Disable(EnableCap.Light0);
-
-
-            GLPen glpen = DC.Pen(pen);
-
-            GL.Color4(glpen.Color);
-            GL.LineWidth(1.0f);
-
-            Vector3d t = DC.ViewDir * (-0.1f / DC.WorldScale);
-
-            CadVector shift = (CadVector)t;
-
-            for (int i = 0; i < model.FaceStore.Count; i++)
-            {
-                HeFace f = model.FaceStore[i];
-
-                HalfEdge head = f.Head;
-
-                HalfEdge c = head;
-
-                CadVector v;
-
-                GL.Begin(PrimitiveType.LineLoop);
-
-                for (; ; )
-                {
-                    HalfEdge next = c.Next;
-
-                    CadVector p = model.VertexStore.Ref(c.Vertex);
-
-                    p = (p + shift) * DC.WorldScale;
-
-                    GL.Vertex3(p.vector);
-
-                    c = next;
-
-                    if (c == head)
-                    {
-                        break;
-                    }
-                }
-
-                GL.End();
-            }
-#endif
         }
 
         public override void DrawAxis()
@@ -592,5 +560,13 @@ namespace Plotter
             DrawLine(pen, tp1, pa);
         }
         */
+
+        private CadVector GetShiftForOutLine()
+        {
+            CadVector v = DC.UnitVectorToCadVector(CadVector.UnitX);
+            Vector3d vv = -DC.ViewDir * v.Norm();
+
+            return (CadVector)vv;
+        }
     }
 }

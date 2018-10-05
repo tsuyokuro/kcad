@@ -462,15 +462,6 @@ namespace Plotter
 
         public override void DrawHarfEdgeModel(int pen, int edgePen, double edgeThreshold, HeModel model)
         {
-            Vector3d t = DC.ViewDir * (-0.2f / DC.WorldScale);
-
-            CadVector shift = (CadVector)t;
-
-
-            CadVector p0;
-            CadVector p1;
-
-
             for (int i = 0; i < model.FaceStore.Count; i++)
             {
                 HeFace f = model.FaceStore[i];
@@ -505,20 +496,12 @@ namespace Plotter
 
                     HalfEdge next = c.Next;
 
-                    if (edge)
-                    {
-                        DrawLine(edgePen,
-                            model.VertexStore.Ref(c.Vertex) + shift,
-                            model.VertexStore.Ref(next.Vertex) + shift
-                            );
-                    }
-                    else
-                    {
-                        DrawLine(pen,
-                            model.VertexStore.Ref(c.Vertex) + shift,
-                            model.VertexStore.Ref(next.Vertex) + shift
-                            );
-                    }
+                    int dpen = edge ? edgePen : pen;
+
+                    DrawLine(dpen,
+                        model.VertexStore.Ref(c.Vertex),
+                        model.VertexStore.Ref(next.Vertex)
+                        );
 
                     c = next;
 
