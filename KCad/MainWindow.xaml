@@ -178,42 +178,47 @@
 
             <StackPanel
                 x:Name="ToolBar1"
-                Background="{StaticResource BaseColor}" Height="28" HorizontalAlignment="Stretch"
+                Background="{StaticResource BaseColor}" Height="30" HorizontalAlignment="Stretch"
                 Orientation="Horizontal">
 
                 <Label Width="32"/>
 
                 <ToggleButton
-                    Style="{StaticResource CustomToggleButton2}"
+                    Style="{StaticResource ToolToggleButton}"
                     IsChecked="{Binding SnapToPoint}"
                     Margin="1,2,0,2"
                     >
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource snap_to_point_icon}" Height="24" VerticalAlignment="Top"/>
-                    </StackPanel>
+                    <Border Padding="2">
+                        <Image Source="{StaticResource SnapToPointDrawingImage}"
+                               Width="24"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Border>
 
                 </ToggleButton>
 
                 <ToggleButton
-                    Style="{StaticResource CustomToggleButton2}"
+                    Style="{StaticResource ToolToggleButton}"
                     IsChecked="{Binding SnapToSegment}"
-                    BorderThickness="0"
                     Margin="1,2,0,2"
                     >
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource snap_to_seg_icon}" Height="24" VerticalAlignment="Top"/>
-                    </StackPanel>
+                    <Border Padding="2">
+                        <Image Source="{StaticResource SnapToSegDrawingImage}"
+                               Width="24"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Border>
 
                 </ToggleButton>
 
                 <ToggleButton
-                    Style="{StaticResource CustomToggleButton2}"
+                    Style="{StaticResource ToolToggleButton}"
                     IsChecked="{Binding SnapToLine}"
                     Margin="1,2,0,2"
                     >
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="{StaticResource snap_to_line_icon}" Height="24" VerticalAlignment="Top"/>
-                        </StackPanel>
+                    <Border Padding="2">
+                        <Image Source="{StaticResource SnapToLineDrawingImage}"
+                                Width="24"
+                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Border>
 
                 </ToggleButton>
 
@@ -556,13 +561,13 @@
                                     x:Name="TreeViewToolBar"
                                     >
                                     <ToggleButton
-                                        Style="{StaticResource CustomToggleButton2}"
+                                        Style="{StaticResource ToolToggleButton}"
                                         IsChecked="{Binding FilterTreeView}"
                                         Margin="2,2,2,2">
                                         
-                                        <StackPanel Orientation="Horizontal">
-                                            <Image Source="{StaticResource filter_icon}" Height="16" VerticalAlignment="Top"/>
-                                        </StackPanel>
+                                        <Border Padding="4">
+                                            <Image Source="{StaticResource filterDrawingImage}" Height="12" VerticalAlignment="Top"/>
+                                        </Border>
 
                                     </ToggleButton>
 

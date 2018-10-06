@@ -15,5 +15,91 @@
 
     <BitmapImage x:Key="filter_icon" UriSource="Images/filter.png"/>
 
+    <DrawingImage x:Key="filterDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V1052.36220472441 H744.094488188976 V0 H0 Z">
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M744.094488188976,1052.36220472441z M0,0z M180,397.36218L290,397.36218 255,442.36218 255,507.36218 215,507.36218 215,442.36218z">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="#FF000000" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+
+
+    <DrawingImage x:Key="SnapToPointDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V39.999989 H128 V0 H0 Z">
+                <DrawingGroup Transform="1,0,0,1,-6.2939444E-07,-920.3622">
+                    <GeometryDrawing Brush="#FFFFFFFF">
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry RadiusX="0" RadiusY="0" Rect="6.2939,936.3622,108,8" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing>
+                        <GeometryDrawing.Brush>
+                            <SolidColorBrush Color="#FF8DFF42" Opacity="1" Transform="1.3333331,0,0,1.3333329,-131.99996,97.212892" />
+                        </GeometryDrawing.Brush>
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry FillRule="Nonzero" Transform="1.3333331,0,0,1.3333329,-131.99996,97.212892" Figures="M128,39.999989z M0,0z M195,632.36218A15,15,0,1,1,165,632.36218A15,15,0,1,1,195,632.36218z" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="SnapToSegDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V39.999989 H128 V0 H0 Z">
+                <DrawingGroup Transform="1,0,0,1,-6.2939444E-07,-920.3622">
+                    <GeometryDrawing Brush="#FFFFFFFF">
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry RadiusX="0" RadiusY="0" Rect="6.2939,936.3622,128,8" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing>
+                        <GeometryDrawing.Brush>
+                            <SolidColorBrush Color="#FF8DFF42" Opacity="1" Transform="1.3333331,0,0,1.3333329,-175.99995,97.21289" />
+                        </GeometryDrawing.Brush>
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry FillRule="Nonzero" Transform="1.3333331,0,0,1.3333329,-175.99995,97.21289" Figures="M128,39.999989z M0,0z M195,632.36218C195,640.64645 188.28427,647.36218 180,647.36218 171.71573,647.36218 165,640.64645 165,632.36218 165,624.07791 171.71573,617.36218 180,617.36218 188.28427,617.36218 195,624.07791 195,632.36218z" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="SnapToLineDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V39.999989 H128 V0 H0 Z">
+                <DrawingGroup Transform="1,0,0,1,-6.2939444E-07,-920.3622">
+                    <GeometryDrawing Brush="#FFFFFFFF">
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry RadiusX="0" RadiusY="0" Rect="6.2939,936.3622,56,8" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing>
+                        <GeometryDrawing.Brush>
+                            <SolidColorBrush Color="#FF8DFF42" Opacity="1" Transform="1.3333331,0,0,1.3333329,-131.99996,97.212892" />
+                        </GeometryDrawing.Brush>
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry FillRule="Nonzero" Transform="1.3333331,0,0,1.3333329,-131.99996,97.212892" Figures="M128,39.999989z M0,0z M195,632.36218A15,15,0,1,1,165,632.36218A15,15,0,1,1,195,632.36218z" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FFC0C0C0">
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry RadiusX="0" RadiusY="0" Rect="56,938.3622,32,4" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
 </ResourceDictionary>
     
