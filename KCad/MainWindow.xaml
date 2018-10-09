@@ -254,25 +254,27 @@
                     <StackPanel Grid.Row="0" x:Name="SlsectModePanel">
                         <Label Height="Auto" Content="Select mode" Foreground="DarkGray" FontSize="9"/>
                         <RadioButton
-                            Template="{StaticResource MyTggleButtonTemplate}"
+                            Style="{StaticResource ColorRadioButton}"
                             Tag="OBJECT"
-                            Content="  Select Figure  " 
+                            Content="Select Figure" 
                             IsChecked="{
                                 Binding SelectMode,
                                 ConverterParameter=OBJECT,
                                 Converter={StaticResource SelModeConv}
                             }"
-                        />
+                            Margin="1,0,1,3"
+                            />
 
                         <RadioButton
-                            Template="{StaticResource MyTggleButtonTemplate}"
+                            Style="{StaticResource ColorRadioButton}"
                             Tag="POINT"
-                            Content="  Select Point  " 
+                            Content="Select Point" 
                             IsChecked="{
                                 Binding SelectMode,
                                 ConverterParameter=POINT,
                                 Converter={StaticResource SelModeConv}
                             }"
+                            Margin="1,0,1,3"
                         />
                     </StackPanel>
 
@@ -281,7 +283,7 @@
                         <Label  Height="Auto" Content="Create figure" Foreground="DarkGray" FontSize="9"/>
 
                         <RadioButton
-                            Template="{StaticResource MyTggleButtonTemplate}"
+                            Style="{StaticResource ColorRadioButton}"
                             Tag="LINE"
                             Content="Line" 
                             IsChecked="{
@@ -289,10 +291,12 @@
                                 ConverterParameter=LINE,
                                 Converter={StaticResource FigTypeConv}
                             }"
-                        />
+                            Margin="1,0,1,3"
+                        >
+                        </RadioButton>
 
                         <RadioButton
-                            Template="{StaticResource MyTggleButtonTemplate}"
+                            Style="{StaticResource ColorRadioButton}"
                             Tag="RECT"
                             Content="Rect" 
                             IsChecked="{
@@ -300,10 +304,11 @@
                                 ConverterParameter=RECT,
                                 Converter={StaticResource FigTypeConv}
                             }"
+                            Margin="1,0,1,3"
                         />
 
                         <RadioButton
-                            Template="{StaticResource MyTggleButtonTemplate}"
+                            Style="{StaticResource ColorRadioButton}"
                             Tag="POLY_LINES"
                             Content="Poly lines" 
                             IsChecked="{
@@ -311,10 +316,11 @@
                                 ConverterParameter=POLY_LINES,
                                 Converter={StaticResource FigTypeConv}
                             }"
+                            Margin="1,0,1,3"
                         />
 
                         <RadioButton
-                            Template="{StaticResource MyTggleButtonTemplate}"
+                            Style="{StaticResource ColorRadioButton}"
                             Tag="CIRCLE"
                             Content="Circle" 
                             IsChecked="{
@@ -322,10 +328,11 @@
                                 ConverterParameter=CIRCLE,
                                 Converter={StaticResource FigTypeConv}
                             }"
+                            Margin="1,0,1,3"
                         />
 
                         <RadioButton
-                            Template="{StaticResource MyTggleButtonTemplate}"
+                            Style="{StaticResource ColorRadioButton}"
                             Tag="POINT"
                             Content="Point" 
                             IsChecked="{
@@ -333,10 +340,11 @@
                                 ConverterParameter=POINT,
                                 Converter={StaticResource FigTypeConv}
                             }"
+                            Margin="1,0,1,3"
                         />
 
                         <RadioButton
-                            Template="{StaticResource MyTggleButtonTemplate}"
+                            Style="{StaticResource ColorRadioButton}"
                             Tag="DIMENTION_LINE"
                             Content="Dimention" 
                             IsChecked="{
@@ -344,12 +352,13 @@
                                 ConverterParameter=DIMENTION_LINE,
                                 Converter={StaticResource FigTypeConv}
                             }"
+                            Margin="1,0,1,3"
                         />
 
                         <Label Height="4"/>
 
                         <RadioButton
-                            Template="{StaticResource MyTggleButtonTemplate}"
+                            Style="{StaticResource ColorRadioButton}"
                             Tag="POLY_LINE"
                             Content="Measure" 
                             IsChecked="{
@@ -357,6 +366,7 @@
                                 ConverterParameter=POLY_LINE,
                                 Converter={StaticResource MeasureModeConv}
                             }"
+                            Margin="1,0,1,3"
                         />
                     </StackPanel>
 
@@ -626,145 +636,64 @@
                 VerticalAlignment="Stretch" >
 
                     <RadioButton
-                    Style="{StaticResource CustomRadioButton}"
-                    Template="{StaticResource MyTggleButtonTemplate}"
-                    IsChecked="{
-                        Binding ViewMode,
-                        ConverterParameter=FRONT,
-                        Converter={StaticResource ViewModeConv}
-                    }">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                            Grid.Column="0"
-                            Text=" Front "/>
+                        Style="{StaticResource ColorRadioButton}"
+                        IsChecked="{Binding ViewMode,ConverterParameter=FRONT,Converter={StaticResource ViewModeConv}}"
+                        Margin="1,1,1,1"
+                        >
+                        <TextBlock Width="40" Text="Front" TextAlignment="Center"/>
+                    </RadioButton>
 
-                        </Grid>
+                    <RadioButton
+                        Style="{StaticResource ColorRadioButton}"
+                        IsChecked="{Binding ViewMode,ConverterParameter=BACK,Converter={StaticResource ViewModeConv}}"
+                        Margin="1,1,1,1"
+                        >
+                        <TextBlock Width="40" Text="Back" TextAlignment="Center"/>
+                    </RadioButton>
+
+                    <RadioButton
+                        Style="{StaticResource ColorRadioButton}"
+                        IsChecked="{Binding ViewMode,ConverterParameter=TOP,Converter={StaticResource ViewModeConv}}"
+                        Margin="1,1,1,1"
+                        >
+                        <TextBlock Width="40" Text="Top" TextAlignment="Center"/>
+                    </RadioButton>
+
+                    <RadioButton
+                        Style="{StaticResource ColorRadioButton}"
+                        IsChecked="{Binding ViewMode,ConverterParameter=BOTTOM,Converter={StaticResource ViewModeConv}}"
+                        Margin="1,1,1,1"
+                        >
+                        <TextBlock Width="40" Text="Bottom" TextAlignment="Center"/>
+                    </RadioButton>
+
+                    <RadioButton
+                        Style="{StaticResource ColorRadioButton}"
+                        IsChecked="{Binding ViewMode,ConverterParameter=RIGHT,Converter={StaticResource ViewModeConv}}"
+                        Margin="1,1,1,1"
+                        >
+                        <TextBlock Width="40" Text="Right" TextAlignment="Center"/>
 
                     </RadioButton>
 
                     <RadioButton
-                    Style="{StaticResource CustomRadioButton}"
-                    Template="{StaticResource MyTggleButtonTemplate}"
-                    IsChecked="{
-                        Binding ViewMode,
-                        ConverterParameter=BACK,
-                        Converter={StaticResource ViewModeConv}
-                    }">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                            Grid.Column="0"
-                            Text=" Back "/>
+                        Style="{StaticResource ColorRadioButton}"
+                        IsChecked="{Binding ViewMode,ConverterParameter=LEFT,Converter={StaticResource ViewModeConv}}"
+                        Margin="1,1,1,1"
+                        >
 
-                        </Grid>
+                        <TextBlock Width="40" Text="Left" TextAlignment="Center"/>
 
                     </RadioButton>
 
                     <RadioButton
-                    Style="{StaticResource CustomRadioButton}"
-                    Template="{StaticResource MyTggleButtonTemplate}"
-                    IsChecked="{
-                        Binding ViewMode,
-                        ConverterParameter=TOP,
-                        Converter={StaticResource ViewModeConv}
-                    }">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
+                        Style="{StaticResource ColorRadioButton}"
+                        Tag="axis_xyz"
+                        IsChecked="{Binding ViewMode,ConverterParameter=FREE,Converter={StaticResource ViewModeConv}}"
+                        Margin="1,1,1,1"
+                        >
 
-                            <TextBlock
-                            Grid.Column="0"
-                            Text=" Top "/>
-
-                        </Grid>
-                    </RadioButton>
-
-                    <RadioButton
-                    Style="{StaticResource CustomRadioButton}"
-                    Template="{StaticResource MyTggleButtonTemplate}"
-                    IsChecked="{
-                        Binding ViewMode,
-                        ConverterParameter=BOTTOM,
-                        Converter={StaticResource ViewModeConv}
-                    }">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock
-                            Grid.Column="0"
-                            Text=" Bottom "/>
-
-                        </Grid>
-                    </RadioButton>
-
-                    <RadioButton
-                    Style="{StaticResource CustomRadioButton}"
-                    Template="{StaticResource MyTggleButtonTemplate}"
-                    IsChecked="{
-                        Binding ViewMode,
-                        ConverterParameter=RIGHT,
-                        Converter={StaticResource ViewModeConv}
-                    }">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock
-                            Grid.Column="0"
-                            Text=" Right "/>
-
-                        </Grid>
-
-                    </RadioButton>
-
-                    <RadioButton
-                    Style="{StaticResource CustomRadioButton}"
-                    Template="{StaticResource MyTggleButtonTemplate}"
-                    IsChecked="{
-                        Binding ViewMode,
-                        ConverterParameter=LEFT,
-                        Converter={StaticResource ViewModeConv}
-                    }">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock
-                            Grid.Column="0"
-                            Text=" Left "/>
-
-                        </Grid>
-
-                    </RadioButton>
-
-                    <RadioButton
-                    Style="{StaticResource CustomRadioButton}"
-                    Template="{StaticResource MyTggleButtonTemplate}"
-                    Tag="axis_xyz"
-                    IsChecked="{
-                        Binding ViewMode,
-                        ConverterParameter=FREE,
-                        Converter={StaticResource ViewModeConv}
-                    }">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock
-                            Grid.Column="0"
-                            Text=" 3D "/>
-                        </Grid>
+                        <TextBlock Width="40" Text="3D" TextAlignment="Center"/>
 
                     </RadioButton>
                 </StackPanel>
