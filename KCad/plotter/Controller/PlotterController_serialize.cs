@@ -25,7 +25,10 @@ namespace Plotter.Controller
             PasteFiguresAsBin();
         }
 
-
+        public bool HasCopyData()
+        {
+            return Clipboard.ContainsData(CadClipBoard.TypeNameBin);
+        }
 
         public void CopyFiguresAsBin()
         {

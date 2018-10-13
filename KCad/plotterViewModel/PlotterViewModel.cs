@@ -169,9 +169,9 @@ namespace Plotter
         }
 
 
-        private CadFigure.Types mFigureType = CadFigure.Types.NONE;
+        private CadFigure.Types mCreatingFigureType = CadFigure.Types.NONE;
 
-        public CadFigure.Types FigureType
+        public CadFigure.Types CreatingFigureType
         {
             set
             {
@@ -179,13 +179,13 @@ namespace Plotter
 
                 if (changed)
                 {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FigureType)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CreatingFigureType)));
                 }
             }
 
             get
             {
-                return mFigureType;
+                return mCreatingFigureType;
             }
         }
 
@@ -479,7 +479,7 @@ namespace Plotter
             InitKeyMap();
 
             SelectMode = mController.SelectMode;
-            FigureType = mController.CreatingFigType;
+            CreatingFigureType = mController.CreatingFigType;
 
             mController.Observer.StateChanged = StateChanged;
 
@@ -891,9 +891,9 @@ namespace Plotter
 
         public void StateChanged(PlotterController sender, PlotterController.StateInfo si)
         {
-            if (FigureType != si.CreatingFigureType)
+            if (CreatingFigureType != si.CreatingFigureType)
             {
-                FigureType = si.CreatingFigureType;
+                CreatingFigureType = si.CreatingFigureType;
             }
 
             if (MeasureMode != si.MeasureMode)
@@ -1153,22 +1153,22 @@ namespace Plotter
 
         private bool ChangeFigureType(CadFigure.Types newType)
         {
-            var prev = mFigureType;
+            var prev = mCreatingFigureType;
 
-            if (mFigureType == newType)
+            if (mCreatingFigureType == newType)
             {
                 // 現在のタイプを再度選択したら解除する
-                mFigureType = CadFigure.Types.NONE;
+                mCreatingFigureType = CadFigure.Types.NONE;
             }
             else
             {
-                mFigureType = newType;
+                mCreatingFigureType = newType;
             }
 
-            if (mFigureType != CadFigure.Types.NONE)
+            if (mCreatingFigureType != CadFigure.Types.NONE)
             {
                 MeasureMode = PlotterController.MeasureModes.NONE;
-                mController.StartCreateFigure(mFigureType);
+                mController.StartCreateFigure(mCreatingFigureType);
 
                 Redraw();
             }
@@ -1179,7 +1179,7 @@ namespace Plotter
                 Redraw();
             }
 
-            return prev != mFigureType;
+            return prev != mCreatingFigureType;
         }
 
         private bool ChangeMeasuerType(PlotterController.MeasureModes newType)
@@ -1198,7 +1198,7 @@ namespace Plotter
 
             if (mMeasureMode != PlotterController.MeasureModes.NONE)
             {
-                FigureType = CadFigure.Types.NONE;
+                CreatingFigureType = CadFigure.Types.NONE;
                 mController.StartMeasure(newType);
             }
             else if (prev != PlotterController.MeasureModes.NONE)

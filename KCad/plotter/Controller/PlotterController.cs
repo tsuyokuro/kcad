@@ -50,10 +50,16 @@ namespace Plotter.Controller
         public struct StateInfo
         {
             public States State;
+
             public SelectModes SelectMode;
+
             public CadFigure.Types CreatingFigureType;
+
             public int CreatingFigurePointCnt;
+
             public MeasureModes MeasureMode;
+
+            public bool HasSelect;
 
             public void set(PlotterController pc)
             {
@@ -68,7 +74,23 @@ namespace Plotter.Controller
                 }
 
                 MeasureMode = pc.MeasureMode;
+
+                HasSelect = pc.HasSelect();
             }
+        }
+
+        public class ContextMenuInfo
+        {
+            public enum Types
+            {
+                CREATING_FIGURE_END,
+                CREATING_FIGURE_CLOSE,
+                COPY,
+                PASTE,
+            }
+
+            public Types[] ItemTbl = new Types[20];
+            public int ItemCount;
         }
 
         public struct LayerListInfo
@@ -667,6 +689,27 @@ namespace Plotter.Controller
 
 
         #endregion
+
+        private bool HasSelect()
+        {
+            bool ret = false;
+
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                layer.ForEachFigF(fig =>
+                {
+                    if (fig.HasSelectedPointInclueChild())
+                    {
+                        ret = true;
+                        return false;
+                    }
+
+                    return true;
+                });
+            }
+
+            return ret;
+        }
 
         private List<CadFigure> GetSelectedFigureList()
         {

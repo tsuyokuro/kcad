@@ -287,7 +287,7 @@
                             Tag="LINE"
                             Content="Line" 
                             IsChecked="{
-                                Binding FigureType,
+                                Binding CreatingFigureType,
                                 ConverterParameter=LINE,
                                 Converter={StaticResource FigTypeConv}
                             }"
@@ -300,7 +300,7 @@
                             Tag="RECT"
                             Content="Rect" 
                             IsChecked="{
-                                Binding FigureType,
+                                Binding CreatingFigureType,
                                 ConverterParameter=RECT,
                                 Converter={StaticResource FigTypeConv}
                             }"
@@ -312,7 +312,7 @@
                             Tag="POLY_LINES"
                             Content="Poly lines" 
                             IsChecked="{
-                                Binding FigureType,
+                                Binding CreatingFigureType,
                                 ConverterParameter=POLY_LINES,
                                 Converter={StaticResource FigTypeConv}
                             }"
@@ -324,7 +324,7 @@
                             Tag="CIRCLE"
                             Content="Circle" 
                             IsChecked="{
-                                Binding FigureType,
+                                Binding CreatingFigureType,
                                 ConverterParameter=CIRCLE,
                                 Converter={StaticResource FigTypeConv}
                             }"
@@ -336,7 +336,7 @@
                             Tag="POINT"
                             Content="Point" 
                             IsChecked="{
-                                Binding FigureType,
+                                Binding CreatingFigureType,
                                 ConverterParameter=POINT,
                                 Converter={StaticResource FigTypeConv}
                             }"
@@ -348,7 +348,7 @@
                             Tag="DIMENTION_LINE"
                             Content="Dimention" 
                             IsChecked="{
-                                Binding FigureType,
+                                Binding CreatingFigureType,
                                 ConverterParameter=DIMENTION_LINE,
                                 Converter={StaticResource FigTypeConv}
                             }"
