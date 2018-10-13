@@ -7,7 +7,7 @@ namespace Plotter.Controller
     {
         public Action<PlotterController, PlotterController.StateInfo> StateChanged = (controller, state) => { };
 
-        public Action<PlotterController, PlotterController.StateInfo, int, int> RequestContextMenu = (controller, state, x, y) => { };
+        public Action<PlotterController, MenuInfo, int, int> RequestContextMenu = (controller, state, x, y) => { };
 
         public Action<PlotterController, PlotterController.LayerListInfo> LayerListChanged = (controller, layerListInfo) => { };
 

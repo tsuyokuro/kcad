@@ -26,15 +26,8 @@ namespace Plotter
 
         private bool firstSizeChange = true;
 
-        ContextMenuEx mPolyLineContextMenu;
-        ToolStripMenuItem mMnItemClosePolyLines;
-        ToolStripMenuItem mMnItemEndPolyLines;
-
-        ContextMenuEx mRectContextMenu;
-        ToolStripMenuItem mMnItemQuitRect;
-
         ContextMenuEx mCurrentContextMenu = null;
-
+        ContextMenuEx mContextMenu = new ContextMenuEx();
 
         MyMessageHandler mMessageHandler;
 
@@ -90,35 +83,6 @@ namespace Plotter
             Cursor cc = new Cursor(si.Stream);
 
             base.Cursor = cc;
-
-            // Context menue for creating polyline
-            {
-                mPolyLineContextMenu = new ContextMenuEx();
-                mPolyLineContextMenu.AutoClose = false;
-
-                mMnItemClosePolyLines = new ToolStripMenuItem();
-                mMnItemClosePolyLines.Text = "Close";
-                mMnItemClosePolyLines.Click += ContextMenueClick;
-
-                mMnItemEndPolyLines = new ToolStripMenuItem();
-                mMnItemEndPolyLines.Text = "End";
-                mMnItemEndPolyLines.Click += ContextMenueClick;
-
-                mPolyLineContextMenu.Items.Add(mMnItemClosePolyLines);
-                mPolyLineContextMenu.Items.Add(mMnItemEndPolyLines);
-            }
-
-            // Context menue for creating rect
-            {
-                mRectContextMenu = new ContextMenuEx();
-                mRectContextMenu.AutoClose = false;
-
-                mMnItemQuitRect = new ToolStripMenuItem();
-                mMnItemQuitRect.Text = "Quit";
-                mMnItemQuitRect.Click += ContextMenueClick;
-
-                mRectContextMenu.Items.Add(mMnItemQuitRect);
-            }
         }
 
         protected override void Dispose(bool disposing)
@@ -223,46 +187,32 @@ namespace Plotter
             Redraw();
         }
 
-        public void ShowContextMenu(PlotterController sender, PlotterController.StateInfo state, int x, int y)
+        public void ShowContextMenu(PlotterController sender, MenuInfo menuInfo, int x, int y)
         {
-            if (state.CreatingFigureType != CadFigure.Types.NONE)
+            mContextMenu.Items.Clear();
+
+            foreach (MenuInfo.Item item in menuInfo.Items)
             {
-                switch (state.CreatingFigureType)
-                {
-                    case CadFigure.Types.POLY_LINES:
-                        if (state.CreatingFigurePointCnt > 2)
-                        {
-                            mMnItemClosePolyLines.Enabled = true;
-                        }
-                        else
-                        {
-                            mMnItemClosePolyLines.Enabled = false;
-                        }
+                ToolStripMenuItem m = new ToolStripMenuItem(item.DefaultText);
+                m.Tag = item;
+                m.Click += ContextMenueClick;
 
-                        mCurrentContextMenu = mPolyLineContextMenu;
-                        mCurrentContextMenu.Show(this, new Point(x, y));
-
-                        break;
-
-                    case CadFigure.Types.RECT:
-                        mCurrentContextMenu = mRectContextMenu;
-                        mCurrentContextMenu.Show(this, new Point(x, y));
-                        break;
-                }
+                mContextMenu.Items.Add(m);
             }
+
+            mCurrentContextMenu = mContextMenu;
+            mCurrentContextMenu.Show(this, new Point(x, y));
         }
 
         private void ContextMenueClick(object sender, System.EventArgs e)
         {
-            if (sender == mMnItemClosePolyLines)
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+
+            MenuInfo.Item infoItem = item.Tag as MenuInfo.Item;
+
+            if (infoItem != null)
             {
-                mController.CloseFigure();
-                Redraw();
-            }
-            else if (sender == mMnItemEndPolyLines || sender == mMnItemQuitRect)
-            {
-                mController.EndCreateFigureState();
-                Redraw();
+                mController.ContextMenuEvent(infoItem);
             }
         }
 

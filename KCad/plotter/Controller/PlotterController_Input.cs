@@ -584,9 +584,7 @@ namespace Plotter.Controller
         {
             DrawAll(dc);
 
-            StateInfo si = default;
-            si.set(this);
-            Observer.RequestContextMenu(this, si, (int)x, (int)y);
+            RequestContextMenu(x, y);
         }
 
         #region RubberBand

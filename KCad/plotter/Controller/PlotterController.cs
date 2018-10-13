@@ -79,20 +79,6 @@ namespace Plotter.Controller
             }
         }
 
-        public class ContextMenuInfo
-        {
-            public enum Types
-            {
-                CREATING_FIGURE_END,
-                CREATING_FIGURE_CLOSE,
-                COPY,
-                PASTE,
-            }
-
-            public Types[] ItemTbl = new Types[20];
-            public int ItemCount;
-        }
-
         public struct LayerListInfo
         {
             public List<CadLayer> LayerList;
