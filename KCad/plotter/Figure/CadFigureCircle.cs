@@ -103,19 +103,10 @@ namespace Plotter
 
             CadVector normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
 
-            //CadVector tv = (normal * -1) * Thickness;
-
-
             CircleExpander.ForEachSegs(PointList[0], PointList[1], PointList[2], 32, action);
             void action(CadVector p0, CadVector p1)
             {
                 dc.Drawing.DrawLine(pen, p0, p1);
-                
-                //if (Thickness != 0)
-                //{
-                //    dc.Drawing.DrawLine(pen, p0+tv, p1+tv);
-                //    dc.Drawing.DrawLine(pen, p0, p0 + tv);
-                //}
             }
         }
 
@@ -140,54 +131,6 @@ namespace Plotter
             CadVector normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
 
             dc.Drawing.DrawFace(pen, vl, normal, outline);
-
-            //if (Thickness == 0)
-            //{
-            //    return;
-            //}
-
-            //VectorList vl2 = new VectorList(vl.Count);
-
-            //CadVector tv = (normal * -1) * Thickness;
-
-            //for (int i=0; i<vl.Count; i++)
-            //{
-            //    vl2.Add(vl[i] + tv);
-            //}
-
-            //dc.Drawing.DrawFace(pen, vl2, normal * -1, SettingsHolder.Settings.DrawFaceOutline);
-
-            //VectorList side = new VectorList(4);
-
-            //side.Add(default(CadVector));
-            //side.Add(default(CadVector));
-            //side.Add(default(CadVector));
-            //side.Add(default(CadVector));
-
-            //CadVector n;
-
-            //for (int i = 0; i < vl.Count - 1; i++)
-            //{
-            //    side[3] = vl[i];
-            //    side[2] = vl[i + 1];
-            //    side[1] = vl2[i + 1];
-            //    side[0] = vl2[i];
-
-            //    n = CadMath.Normal(side[2], side[0], side[1]);
-
-            //    dc.Drawing.DrawFace(pen, side, n, outline);
-            //}
-
-            //int e = vl.Count - 1;
-
-            //side[0] = vl[e];
-            //side[1] = vl[0];
-            //side[2] = vl2[0];
-            //side[3] = vl2[e];
-
-            //n = CadMath.Normal(side[1], side[0], side[2]);
-
-            //dc.Drawing.DrawFace(pen, side, n, outline);
         }
 
         private void drawSelected_Circle(DrawContext dc, int pen)

@@ -167,12 +167,12 @@ namespace Plotter
         }
     }
 
-    public struct Index2
+    public struct IndexPair
     {
         public int Idx0;
         public int Idx1;
 
-        public Index2(int i0, int i1)
+        public IndexPair(int i0, int i1)
         {
             Idx0 = i0;
             Idx1 = i1;

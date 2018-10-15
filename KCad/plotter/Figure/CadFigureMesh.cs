@@ -18,7 +18,7 @@ namespace Plotter
 
         public static double EDGE_THRESHOLD;
 
-        private FlexArray<Index2> SegList = new FlexArray<Index2>();
+        private FlexArray<IndexPair> SegList = new FlexArray<IndexPair>();
 
 
         static CadFigureMesh()
@@ -133,7 +133,7 @@ namespace Plotter
                 {
                     HalfEdge next = c.Next;
 
-                    SegList.Add(new Index2(c.Vertex, next.Vertex));
+                    SegList.Add(new IndexPair(c.Vertex, next.Vertex));
 
                     c = next;
 

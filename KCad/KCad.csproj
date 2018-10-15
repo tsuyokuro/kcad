@@ -210,6 +210,8 @@
     <Compile Include="plotter\Controller\PlotterObserver.cs" />
     <Compile Include="plotter\Controller\ScriptFunctions.cs" />
     <Compile Include="plotter\Controller\SnapManager.cs" />
+    <Compile Include="plotter\Figure\CircleExpander.cs" />
+    <Compile Include="plotter\Figure\PolyLineExpander.cs" />
     <Compile Include="plotter\Serializer\MpInitializer.cs" />
     <Compile Include="plotter\TreeViewItem\CadFigTreeItem.cs" />
     <Compile Include="plotter\TreeViewItem\CadLayerTreeItem.cs" />
@@ -233,7 +235,6 @@
     <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
     <Compile Include="plotter\Figure\CadFigureUtil.cs" />
     <Compile Include="plotter\HalfEdge\HeJson.cs" />
-    <Compile Include="plotter\Figure\VLExpander.cs" />
     <Compile Include="plotter\Serializer\CadMessagePack.cs" />
     <Compile Include="plotter\Serializer\JsonExtends.cs" />
     <Compile Include="plotter\Util\BitmapUtil.cs" />
