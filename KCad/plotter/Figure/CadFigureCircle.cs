@@ -42,12 +42,7 @@ namespace Plotter
 
         public override void RemoveSelected()
         {
-            mPointList.RemoveAll(a => a.Selected);
-
-            if (PointCount < 2)
-            {
-                mPointList.Clear();
-            }
+            mPointList.Clear();
         }
 
         public override void Draw(DrawContext dc, int pen)
@@ -74,17 +69,25 @@ namespace Plotter
             }
 
             CadVector cp = PointList[0];
+
+            CadVector a = tp;
             CadVector b = getRP(dc, cp, tp, true);
 
-            CircleExpander.ForEachSegs(cp, tp, b, 32, action);
-            void action(CadVector p0, CadVector p1)
-            {
-                dc.Drawing.DrawLine(pen, p0, p1);
-            }
+            CadVector c = -(a - cp) + cp;
+            CadVector d = -(b - cp) + cp;
 
 
-            dc.Drawing.DrawLine(pen, cp, tp);
+            CircleExpander.ForEachSegs(cp, a, b, 32,
+                (CadVector p0, CadVector p1) =>
+                {
+                    dc.Drawing.DrawLine(pen, p0, p1);
+                });
+
+
+            dc.Drawing.DrawLine(pen, cp, a);
             dc.Drawing.DrawLine(pen, cp, b);
+            dc.Drawing.DrawLine(pen, cp, c);
+            dc.Drawing.DrawLine(pen, cp, d);
         }
 
         private void drawCircle(DrawContext dc, int pen)
@@ -126,11 +129,14 @@ namespace Plotter
 
             bool outline = SettingsHolder.Settings.DrawFaceOutline;
 
-            VectorList vl = CircleExpander.GetExpandList(PointList[0], PointList[1], PointList[2], 32);
+            VectorList vl = CircleExpander.GetExpandList(PointList[0], PointList[1], PointList[2], 48);
 
             CadVector normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
 
             dc.Drawing.DrawFace(pen, vl, normal, outline);
+
+            dc.Drawing.DrawLine(pen, mPointList[1], mPointList[3]);
+            dc.Drawing.DrawLine(pen, mPointList[2], mPointList[4]);
         }
 
         private void drawSelected_Circle(DrawContext dc, int pen)
@@ -157,9 +163,20 @@ namespace Plotter
                 return;
             }
 
-            CadVector b = getRP(dc, mPointList[0], mPointList[1], true);
+            CadVector cp = mPointList[0];
+
+            CadVector a = mPointList[1];
+
+            CadVector b = getRP(dc, cp, a, true);
 
             AddPoint(b);
+
+            CadVector c = -(a - cp) + cp;
+            CadVector d = -(b - cp) + cp;
+
+            AddPoint(c);
+
+            AddPoint(d);
 
             return;
         }
@@ -167,86 +184,86 @@ namespace Plotter
         public override void MoveSelectedPoints(DrawContext dc, CadVector delta)
         {
             CadVector cp = StoreList[0];
-            CadVector a = StoreList[1];
-            CadVector b = StoreList[2];
 
             if (cp.Selected)
             {
                 mPointList[0] = cp + delta;
-                mPointList[1] = a + delta;
-                mPointList[2] = b + delta;
+                mPointList[1] = StoreList[1] + delta;
+                mPointList[2] = StoreList[2] + delta;
+                mPointList[3] = StoreList[3] + delta;
+                mPointList[4] = StoreList[4] + delta;
                 return;
             }
 
-            CadVector va = a - cp;
-            CadVector vb = b - cp;
+            CadVector[] vt = new CadVector[4];
+            vt[0] = StoreList[1] - cp;
+            vt[1] = StoreList[2] - cp;
+            vt[2] = StoreList[3] - cp;
+            vt[3] = StoreList[4] - cp;
 
-            if (va.Norm() < 0.01)
+            if (vt[0].Norm() < 0.01)
             {
                 return;
             }
 
-            CadVector normal = CadMath.CrossProduct(va, vb);
+            int ai = -1;
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (StoreList[i+1].Selected)
+                {
+                    ai = i;
+                    break;
+                }
+            }
+
+            if (ai < 0)
+            {
+                return;
+            }
+
+            int bi = (ai + 1) % 4;
+            int ci = (ai + 2) % 4;
+            int di = (ai + 3) % 4;
+
+            CadVector normal = CadMath.CrossProduct(vt[ai], vt[bi]);
             normal = normal.UnitVector();
 
-            if (a.Selected)
+            vt[ai] += delta;
+
+            CadVector uva = vt[ai].UnitVector();
+            CadVector uvb = vt[bi].UnitVector();
+
+            if (!uva.EqualsThreshold(uvb))
             {
-                va += delta;
+                normal = CadMath.CrossProduct(vt[ai], vt[bi]);
 
-                CadVector uva = va.UnitVector();
-                CadVector uvb = vb.UnitVector();
-
-                if (!uva.EqualsThreshold(uvb))
+                if (normal.IsZero())
                 {
-                    normal = CadMath.CrossProduct(va, vb);
-
-                    if (normal.IsZero())
-                    {
-                        return;
-                    }
-
-                    normal = normal.UnitVector();
-
+                    return;
                 }
 
-                CadQuaternion q = CadQuaternion.RotateQuaternion(normal, -Math.PI / 2.0);
-                CadQuaternion r = q.Conjugate();
+                normal = normal.UnitVector();
 
-                CadQuaternion qp = CadQuaternion.FromPoint(va);
-                qp = r * qp;
-                qp = qp * q;
-
-                vb = qp.ToPoint();
-
-                mPointList[1] = va + cp;
-                mPointList[2] = vb + cp;
             }
-            else if (b.Selected)
-            {
-                vb += delta;
 
-                CadVector uva = va.UnitVector();
-                CadVector uvb = vb.UnitVector();
+            CadQuaternion q = CadQuaternion.RotateQuaternion(normal, Math.PI / 2.0);
+            CadQuaternion r = q.Conjugate();
 
-                if (!uva.EqualsThreshold(uvb))
-                {
-                    normal = CadMath.CrossProduct(va, vb);
-                    normal = normal.UnitVector();
+            CadQuaternion qp = CadQuaternion.FromPoint(vt[ai]);
+            qp = r * qp;
+            qp = qp * q;
 
-                }
+            vt[bi] = qp.ToPoint();
 
-                CadQuaternion q = CadQuaternion.RotateQuaternion(normal, Math.PI / 2.0);
-                CadQuaternion r = q.Conjugate();
+            vt[ci] = -vt[ai];
+            vt[di] = -vt[bi];
 
-                CadQuaternion qp = CadQuaternion.FromPoint(vb);
-                qp = r * qp;
-                qp = qp * q;
 
-                va = qp.ToPoint();
-
-                mPointList[1] = va + cp;
-                mPointList[2] = vb + cp;
-            }
+            mPointList[1] = vt[0] + cp;
+            mPointList[2] = vt[1] + cp;
+            mPointList[3] = vt[2] + cp;
+            mPointList[4] = vt[3] + cp;
         }
 
         public override Centroid GetCentroid()
@@ -268,26 +285,17 @@ namespace Plotter
 
         private CadVector getRP(DrawContext dc, CadVector cp, CadVector p, bool isA)
         {
-            CadVector scp = dc.CadPointToUnitPoint(cp);
-            CadVector sbasep = dc.CadPointToUnitPoint(p);
-
-            CadVector t = sbasep - scp;
-            CadVector r = t;
-
-            if (isA)
+            if (p.Equals(cp))
             {
-                r.x = -t.y;
-                r.y = t.x;
-            }
-            else
-            {
-                r.x = t.y;
-                r.y = -t.x;
+                return cp;
             }
 
-            r += scp;
 
-            r = dc.UnitPointToCadPoint(r);
+            CadVector r = CadMath.CrossProduct(p - cp, (CadVector)(dc.ViewDir));
+
+            r = r.UnitVector();
+
+            r = r * (p - cp).Norm() + cp;
 
             return r;
         }
