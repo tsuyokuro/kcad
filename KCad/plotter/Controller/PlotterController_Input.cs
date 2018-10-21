@@ -313,10 +313,10 @@ namespace Plotter.Controller
             }
 
             // Set ignore list for snap cursor
-            mPointSearcher.SetIgnoreList(SelList.List);
+            //mPointSearcher.SetIgnoreList(SelList.List);
             mSegSearcher.SetIgnoreList(SelList.List);
 
-            mRulerSet.Set(fig.PointList, sc.MarkPt.PointIndex, sc.CursorWoldPt);
+            mRulerSet.Set(fig, sc.MarkPt.PointIndex);
 
             CurrentFigure = fig;
 
@@ -646,6 +646,8 @@ namespace Plotter.Controller
                     {
                         EndEdit();
                     }
+
+                    mRulerSet.Update();
 
                     State = States.SELECT;
                     break;

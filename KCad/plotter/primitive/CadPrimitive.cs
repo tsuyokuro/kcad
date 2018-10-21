@@ -136,6 +136,23 @@ namespace Plotter
             }
         }
 
+        public CadVector StoredPoint0
+        {
+            get
+            {
+                return Figure.GetStorePointAt(Index0);
+            }
+
+        }
+
+        public CadVector StoredPoint1
+        {
+            get
+            {
+                return Figure.GetStorePointAt(Index1);
+            }
+        }
+
         public CadSegment Segment
         {
             get

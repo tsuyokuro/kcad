@@ -189,20 +189,17 @@ namespace Plotter
 
         public void CheckFigure(DrawContext dc, CadLayer layer, CadFigure fig)
         {
-            for (int i=0;i < fig.PointCount; i++)
+            VectorList list = fig.PointList;
+
+            if (fig.StoreList != null)
             {
-                CheckFigPoint(dc, fig.PointList[i], layer, fig, i);
+                list = fig.StoreList;
             }
 
-            //if (fig.Thickness != 0)
-            //{
-            //    CadVector tv = fig.ThicknessV;
-
-            //    for (int i = 0; i < fig.PointCount; i++)
-            //    {
-            //        CheckFigPoint(dc, fig.PointList[i] + tv, layer, fig, i);
-            //    }
-            //}
+            for (int i=0; i < fig.PointCount; i++)
+            {
+                CheckFigPoint(dc, list[i], layer, fig, i);
+            }
 
             if (fig.ChildList != null)
             {

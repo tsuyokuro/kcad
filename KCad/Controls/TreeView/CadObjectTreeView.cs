@@ -149,6 +149,9 @@ namespace KCad
 
         protected double mIndentSize = 12.0;
 
+        protected double mSmallIndentSize = 4.0;
+
+
         FormattedText mExpand;
 
         FormattedText mContract;
@@ -367,7 +370,14 @@ namespace KCad
                 ft = GetText(item.Text, fbrush);
                 dc.DrawRectangle(bbrush, null, rect);
 
-                p.X = mIndentSize * (level - topLevel) + mIndentSize;
+                if (item.Children != null)
+                {
+                    p.X = mIndentSize * (level - topLevel) + mIndentSize;
+                }
+                else
+                {
+                    p.X = mIndentSize * (level - topLevel) + mSmallIndentSize;
+                }
 
                 tp = p;
 

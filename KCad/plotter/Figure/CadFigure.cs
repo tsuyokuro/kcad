@@ -420,6 +420,11 @@ namespace Plotter
             return mPointList[idx];
         }
 
+        public virtual CadVector GetStorePointAt(int idx)
+        {
+            return mStoreList[idx];
+        }
+
         public virtual void SetPointAt(int index, CadVector pt)
         {
             mPointList[index] = pt;

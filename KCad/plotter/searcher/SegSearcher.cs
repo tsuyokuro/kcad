@@ -103,6 +103,11 @@ namespace Plotter
             CadVector a = fseg.Point0;
             CadVector b = fseg.Point1;
 
+            if (fig.StoreList != null)
+            {
+                a = fseg.StoredPoint0;
+                b = fseg.StoredPoint1;
+            }
 
             if (fig != null && IsIgnore(fig.ID, idxA))
             {

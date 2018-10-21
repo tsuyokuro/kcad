@@ -259,6 +259,13 @@ namespace Plotter
             vt[ci] = -vt[ai];
             vt[di] = -vt[bi];
 
+            vt[0].Selected = false;
+            vt[1].Selected = false;
+            vt[2].Selected = false;
+            vt[3].Selected = false;
+
+            vt[ai].Selected = true;
+
 
             mPointList[1] = vt[0] + cp;
             mPointList[2] = vt[1] + cp;

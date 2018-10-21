@@ -73,11 +73,25 @@ namespace Plotter
         private int RCount = 0;
         private int MatchIndex = -1;
 
-        public void Set(
-                        VectorList list,
-                        int pointIndex,
-                        CadVector cp)
+        private CadFigure Fig;
+        private int SetPointIndex;
+
+        public void Update()
         {
+            Set(Fig, SetPointIndex);
+        }
+
+        public void Set(
+                        CadFigure fig,
+                        int pointIndex)
+        {
+            Fig = fig;
+
+            SetPointIndex = pointIndex;
+
+            VectorList list = fig.PointList;
+           
+
             if (list.Count < 2)
             {
                 RCount = 0;
@@ -137,6 +151,14 @@ namespace Plotter
             }
 
             return match;
+        }
+
+        public void Clear()
+        {
+            for (int i = 0; i < RCount; i++)
+            {
+                Ruler[i].IsValid = false;
+            }
         }
     }
 }
