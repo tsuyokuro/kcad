@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Resources;
 using CadDataTypes;
+using KCad;
 using Plotter.Controller;
 
 namespace Plotter
@@ -266,19 +267,50 @@ namespace Plotter
 
             public void handleMouseMove(int x, int y)
             {
+                Exception exp = null;
+
                 mPlotterView.Invoke(new Action(() =>
                 {
-                    mPlotterView.mController.Mouse.MouseMove(mPlotterView.mDrawContext, x, y);
-                    mPlotterView.Redraw();
+                    try
+                    {
+                        mPlotterView.mController.Mouse.MouseMove(mPlotterView.mDrawContext, x, y);
+                        mPlotterView.Redraw();
+                    }
+                    catch (Exception ex)
+                    {
+                        exp = ex;
+                    }
+
+                    if (exp != null)
+                    {
+                        App.ShowExceptionDialg(exp.ToString());
+                        App.GetCurrent().Shutdown();
+                    }
                 }));
             }
 
             public void handleMouseWheel(MouseEventArgs e)
             {
+                Exception exp = null;
+
                 mPlotterView.Invoke(new Action(() =>
                 {
-                    mPlotterView.mController.Mouse.MouseWheel(mPlotterView.mDrawContext, e.X, e.Y, e.Delta);
-                    mPlotterView.Redraw();
+                    try
+                    {
+                        mPlotterView.mController.Mouse.MouseWheel(mPlotterView.mDrawContext, e.X, e.Y, e.Delta);
+                        mPlotterView.Redraw();
+                    }
+                    catch (Exception ex)
+                    {
+                        exp = ex;
+                    }
+
+                    if (exp != null)
+                    {
+                        App.ShowExceptionDialg(exp.ToString());
+                        App.GetCurrent().Shutdown();
+                    }
+
                 }));
             }
         }

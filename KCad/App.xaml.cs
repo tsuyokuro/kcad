@@ -93,7 +93,7 @@ namespace KCad
             }
         }
 
-        private bool ShowExceptionDialg(string text)
+        public static bool ShowExceptionDialg(string text)
         {
             EceptionDialog dlg = new EceptionDialog();
 

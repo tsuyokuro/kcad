@@ -647,8 +647,6 @@ namespace Plotter.Controller
                         EndEdit();
                     }
 
-                    mRulerSet.Update();
-
                     State = States.SELECT;
                     break;
             }
@@ -664,7 +662,6 @@ namespace Plotter.Controller
 
         private void PointSnap(DrawContext dc)
         {
-            mPointSearcher.Clean();
             mPointSearcher.SetRangePixel(dc, PointSnapRange);
 
             mPointSearcher.SetTargetPoint(CrossCursor);
@@ -738,8 +735,6 @@ namespace Plotter.Controller
 
         private void SegSnap(DrawContext dc, double dist)
         {
-            mSegSearcher.Clean();
-
             mSegSearcher.SetRangePixel(dc, LineSnapRange);
 
             mSegSearcher.SetTargetPoint(CrossCursor);
@@ -785,6 +780,12 @@ namespace Plotter.Controller
 
         private void SnapGrid(DrawContext dc, CadVector pixp)
         {
+            if (mPointSearcher.IsXYMatch || mSegSearcher.IsMatch)
+            {
+                return;
+            }
+
+
             mGridding.Clear();
             mGridding.Check(dc, pixp);
 
@@ -813,17 +814,19 @@ namespace Plotter.Controller
 
         private void SnapLine(DrawContext dc, CadVector cp)
         {
-            if (!mPointSearcher.IsXMatch && !mPointSearcher.IsYMatch)
+            if (mPointSearcher.IsXMatch || mPointSearcher.IsYMatch)
             {
-                RulerInfo ri = mRulerSet.Capture(dc, cp, LineSnapRange);
+                return;
+            }
 
-                if (ri.IsValid)
-                {
-                    mSnapPoint = ri.CrossPoint;
-                    CrossCursor.Pos = dc.CadPointToUnitPoint(mSnapPoint);
-                    HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1));
-                    HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint));
-                }
+            RulerInfo ri = mRulerSet.Capture(dc, cp, LineSnapRange);
+
+            if (ri.IsValid)
+            {
+                mSnapPoint = ri.CrossPoint;
+                CrossCursor.Pos = dc.CadPointToUnitPoint(mSnapPoint);
+                HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1));
+                HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint));
             }
         }
 
@@ -880,11 +883,13 @@ namespace Plotter.Controller
 
             HighlightPointList.Clear();
 
+            mPointSearcher.Clean();
             if (SettingsHolder.Settings.SnapToPoint)
             {
                 PointSnap(dc);
             }
 
+            mSegSearcher.Clean();
             if (SettingsHolder.Settings.SnapToSegment)
             {
                 SegSnap(dc, mPointSearcher.Distance());
@@ -892,10 +897,7 @@ namespace Plotter.Controller
 
             if (SettingsHolder.Settings.SnapToGrid)
             {
-                if (!mPointSearcher.IsXYMatch && !mSegSearcher.IsMatch)
-                {
-                    SnapGrid(dc, CrossCursor.Pos);
-                }
+                SnapGrid(dc, CrossCursor.Pos);
             }
 
             if (SettingsHolder.Settings.SnapToLine)

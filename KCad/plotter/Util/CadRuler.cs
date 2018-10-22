@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +21,25 @@ namespace Plotter
     public struct CadRuler
     {
         public bool IsValid;
-        public CadVector P0;
-        public CadVector P1;
-        public CadVector V;
+        public CadFigure Fig;
+        public int Idx0;
+        public int Idx1;
+
+        public CadVector P0
+        {
+            get
+            {
+                return Fig.GetPointAt(Idx0);
+            }
+        }
+
+        public CadVector P1
+        {
+            get
+            {
+                return Fig.GetPointAt(Idx1);
+            }
+        }
 
         public RulerInfo Capture(DrawContext dc, CadVector p, double range)
         {
@@ -47,21 +64,12 @@ namespace Plotter
             return default(RulerInfo);
         }
 
-        public void Draw(DrawContext dc, int pen)
-        {
-            CadVector pt = (V * 1000) + P0;
-
-            dc.Drawing.DrawLine(pen, P0, pt);
-        }
-
-        public static CadRuler Create(CadVector p0, CadVector p1)
+        public static CadRuler Create(CadFigure fig, int idx0, int idx1)
         {
             CadRuler ret = default(CadRuler);
-
-            ret.P0 = p0;
-            ret.P1 = p1;
-
-            ret.V = (p1 - p0).UnitVector();
+            ret.Fig = fig;
+            ret.Idx0 = idx0;
+            ret.Idx1 = idx1;
 
             return ret;
         }
@@ -73,58 +81,58 @@ namespace Plotter
         private int RCount = 0;
         private int MatchIndex = -1;
 
-        private CadFigure Fig;
-        private int SetPointIndex;
-
-        public void Update()
-        {
-            Set(Fig, SetPointIndex);
-        }
-
         public void Set(
                         CadFigure fig,
                         int pointIndex)
         {
-            Fig = fig;
+            int cnt = fig.PointList.Count;
 
-            SetPointIndex = pointIndex;
-
-            VectorList list = fig.PointList;
-           
-
-            if (list.Count < 2)
+            if (cnt < 2)
             {
                 RCount = 0;
                 return;
             }
 
-            if (pointIndex == list.Count - 1)
+            if (!fig.IsLoop)
             {
-                Ruler[0] = CadRuler.Create(list[pointIndex - 1], list[pointIndex]);
-                RCount = 1;
-                return;
-            }
-            else if (pointIndex == 0)
-            {
-                Ruler[0] = CadRuler.Create(list[1], list[0]);
-                RCount = 1;
-                return;
+                if (pointIndex == cnt - 1)
+                {
+                    Ruler[0] = CadRuler.Create(fig, pointIndex - 1, pointIndex);
+                    RCount = 1;
+                    return;
+                }
+                else if (pointIndex == 0)
+                {
+                    Ruler[0] = CadRuler.Create(fig, 1, 0);
+                    RCount = 1;
+                    return;
+                }
             }
 
-            Ruler[0] = CadRuler.Create(list[pointIndex - 1], list[pointIndex]);
-            Ruler[1] = CadRuler.Create(list[pointIndex + 1], list[pointIndex]);
+            int idx0;
+            int idx1;
+
+            idx0 = (pointIndex + cnt - 1) % cnt;
+            idx1 = pointIndex;
+
+            Debug.Assert(idx0 >= 0 && idx0 < cnt);
+
+            Ruler[0] = CadRuler.Create(fig, idx0, idx1);
+
+
+            idx0 = (pointIndex + 1) % cnt;
+            idx1 = pointIndex;
+
+            Debug.Assert(idx0 >= 0 && idx0 < cnt);
+
+            Ruler[1] = CadRuler.Create(fig, idx0, idx1);
 
             RCount = 2;
         }
 
-        public void Draw(DrawContext dc)
+        public void Clean()
         {
-            if (MatchIndex == -1)
-            {
-                return;
-            }
-
-            Ruler[MatchIndex].Draw(dc, DrawTools.PEN_GRID);
+            RCount = 0;
         }
 
         public RulerInfo Capture(DrawContext dc, CadVector p, double rangePixel)
