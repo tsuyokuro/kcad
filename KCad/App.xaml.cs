@@ -21,6 +21,7 @@ using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -34,11 +35,6 @@ namespace KCad
 
         public MySplashWindow SplashWindow = null;
 
-        public static App GetCurrent()
-        {
-            return (App)Application.Current;
-        }
-
         TaskScheduler mMainThreadScheduler;
 
 #if USE_CONSOLE
@@ -46,6 +42,21 @@ namespace KCad
 #else
         public const bool UseConsole = false;
 #endif
+
+        public static App GetCurrent()
+        {
+            return (App)Current;
+        }
+
+        public static TaskScheduler MainThreadScheduler
+        {
+            get
+            {
+                return GetCurrent().mMainThreadScheduler;
+            }
+        }
+
+        private static bool NowExceptionHandling = false;
 
         public App()
         {
@@ -85,12 +96,31 @@ namespace KCad
             ).Start(mMainThreadScheduler);
         }
 
+        public static void ThrowException(object e)
+        {
+            new Task(() =>
+            {
+                GetCurrent().HandleException(e);
+            }
+            ).Start(GetCurrent().mMainThreadScheduler);
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private void HandleException(object e)
         {
+            if (NowExceptionHandling)
+            {
+                return;
+            }
+
+            NowExceptionHandling = true;
+
             if (!ShowExceptionDialg(e.ToString()))
             {
                 Shutdown();
             }
+
+            NowExceptionHandling = false;
         }
 
         public static bool ShowExceptionDialg(string text)

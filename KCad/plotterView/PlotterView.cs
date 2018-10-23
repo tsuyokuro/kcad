@@ -280,13 +280,12 @@ namespace Plotter
                     {
                         exp = ex;
                     }
-
-                    if (exp != null)
-                    {
-                        App.ShowExceptionDialg(exp.ToString());
-                        App.GetCurrent().Shutdown();
-                    }
                 }));
+
+                if (exp != null)
+                {
+                    App.ThrowException(exp);
+                }
             }
 
             public void handleMouseWheel(MouseEventArgs e)
@@ -305,13 +304,12 @@ namespace Plotter
                         exp = ex;
                     }
 
-                    if (exp != null)
-                    {
-                        App.ShowExceptionDialg(exp.ToString());
-                        App.GetCurrent().Shutdown();
-                    }
-
                 }));
+
+                if (exp != null)
+                {
+                    App.ThrowException(exp);
+                }
             }
         }
     }
