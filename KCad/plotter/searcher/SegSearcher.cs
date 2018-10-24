@@ -7,13 +7,13 @@ namespace Plotter
 {
     public class SegSearcher
     {
-        private MarkSeg markSeg;
+        private MarkSegment markSeg;
 
         private CadCursor TargetPoint;
         private double mRange;
         private double mMinDist = 0;
 
-        private List<MarkSeg> IgnoreSegList;
+        private List<MarkSegment> IgnoreSegList;
 
         private IReadOnlyList<SelectItem> IgnoreList = null;
 
@@ -33,7 +33,7 @@ namespace Plotter
 
         public void Clean()
         {
-            markSeg = default(MarkSeg);
+            markSeg = default(MarkSegment);
             markSeg.Clean();
         }
 
@@ -47,12 +47,12 @@ namespace Plotter
             IgnoreList = list; 
         }
 
-        public void SetIgnoreSeg(List<MarkSeg> segList)
+        public void SetIgnoreSeg(List<MarkSegment> segList)
         {
             IgnoreSegList = segList;
         }
 
-        public MarkSeg GetMatch()
+        public MarkSegment GetMatch()
         {
             return markSeg;
         }
@@ -183,7 +183,7 @@ namespace Plotter
                 CadVector cp = (b - a) * f + a;
 
                 markSeg.Layer = layer;
-                markSeg.FSegment = fseg;
+                markSeg.FigSeg = fseg;
                 markSeg.CrossPoint = cp;
                 markSeg.CrossPointScrn = p;
                 markSeg.Distance = dist;
@@ -257,7 +257,7 @@ namespace Plotter
                 FigureSegment fseg = new FigureSegment(fig, 0, 0, idxB);
 
                 markSeg.Layer = layer;
-                markSeg.FSegment = fseg;
+                markSeg.FigSeg = fseg;
                 markSeg.CrossPoint = td;
                 markSeg.CrossPointScrn = dc.CadPointToUnitPoint(td);
                 markSeg.Distance = dist;
@@ -324,7 +324,7 @@ namespace Plotter
 
             for (int i=0; i<IgnoreSegList.Count; i++)
             {
-                MarkSeg item = IgnoreSegList[i];
+                MarkSegment item = IgnoreSegList[i];
 
                 if (item.FigureID == figId && (item.PtIndexA == index || item.PtIndexB == index))
                 {

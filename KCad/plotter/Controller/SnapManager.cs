@@ -132,7 +132,7 @@ namespace Plotter
 
             mSegSearcher.SetRangePixel(dc, Math.Min(LineSnapRange, dist - CadMath.Epsilon));
 
-            MarkSeg markSeg = mSegSearcher.GetMatch();
+            MarkSegment markSeg = mSegSearcher.GetMatch();
 
             if (mSegSearcher.IsMatch)
             {

@@ -601,9 +601,9 @@ namespace Plotter.Controller
             SelList.RemoveAll(a => removeSels.Contains(a));
 
 
-            HashSet<MarkSeg> removeSegs = new HashSet<MarkSeg>();
+            HashSet<MarkSegment> removeSegs = new HashSet<MarkSegment>();
 
-            foreach (MarkSeg item in SelSegList.List)
+            foreach (MarkSegment item in SelSegList.List)
             {
                 if (!item.Update())
                 {

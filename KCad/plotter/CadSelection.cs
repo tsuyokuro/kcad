@@ -145,7 +145,7 @@ namespace Plotter
             }
         }
 
-        public void add(MarkSeg ms)
+        public void add(MarkSegment ms)
         {
             add(ms.LayerID, ms.Figure, ms.PtIndexA);
             add(ms.LayerID, ms.Figure, ms.PtIndexB);
@@ -206,13 +206,13 @@ namespace Plotter
 
     public class SelectSegmentList
     {
-        private List<MarkSeg> mList = new List<MarkSeg>();
+        private List<MarkSegment> mList = new List<MarkSegment>();
 
-        public List<MarkSeg> List { get { return mList; } }
+        public List<MarkSegment> List { get { return mList; } }
 
-        public MarkSeg LastSel { get; set; }
+        public MarkSegment LastSel { get; set; }
 
-        public void Add(MarkSeg ms)
+        public void Add(MarkSegment ms)
         {
             LastSel = ms;
 
@@ -236,12 +236,12 @@ namespace Plotter
         public void Clear()
         {
             mList.Clear();
-            LastSel = default(MarkSeg);
+            LastSel = default(MarkSegment);
         }
 
-        public bool isSelected(MarkSeg ms)
+        public bool isSelected(MarkSegment ms)
         {
-            MarkSeg selItem = mList.Find(a => {
+            MarkSegment selItem = mList.Find(a => {
                 return a.FigureID == ms.FigureID &&
                 a.PtIndexA == ms.PtIndexA &&
                 a.PtIndexB == ms.PtIndexB
@@ -253,7 +253,7 @@ namespace Plotter
 
         public bool isSelectedFigure(uint figId)
         {
-            MarkSeg selItem = mList.Find(a => {
+            MarkSegment selItem = mList.Find(a => {
                 return a.FigureID == figId;
             });
 
@@ -264,7 +264,7 @@ namespace Plotter
         {
             DbgOut.pln("SelectSegmentList {");
             DbgOut.Indent++;
-            foreach (MarkSeg ms in mList)
+            foreach (MarkSegment ms in mList)
             {
                 ms.dump();
             }

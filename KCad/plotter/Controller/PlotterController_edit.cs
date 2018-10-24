@@ -12,7 +12,7 @@ namespace Plotter.Controller
             ClearSelection();
         }
 
-        public void ToBezier(MarkSeg seg)
+        public void ToBezier(MarkSegment seg)
         {
             if (seg.FigureID == 0)
             {
@@ -122,12 +122,12 @@ namespace Plotter.Controller
 
         public void CutSegment()
         {
-            MarkSeg ms = SelSegList.LastSel;
+            MarkSegment ms = SelSegList.LastSel;
             CutSegment(ms);
             ClearSelection();
         }
 
-        public void CutSegment(MarkSeg ms)
+        public void CutSegment(MarkSegment ms)
         {
             if (!ms.Valid)
             {
@@ -298,7 +298,7 @@ namespace Plotter.Controller
 
         public bool InsPointToLastSelectedSeg()
         {
-            MarkSeg seg = SelSegList.LastSel;
+            MarkSegment seg = SelSegList.LastSel;
 
             CadFigure fig = DB.GetFigure(seg.FigureID);
 

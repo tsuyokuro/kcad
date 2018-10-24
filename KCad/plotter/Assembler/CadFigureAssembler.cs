@@ -200,7 +200,7 @@ namespace Plotter
         {
         }
 
-        public Result CutSegment(MarkSeg seg, CadVector p)
+        public Result CutSegment(MarkSegment seg, CadVector p)
         {
             ProcResult.clear();
 

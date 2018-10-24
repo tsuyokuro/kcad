@@ -63,15 +63,15 @@ namespace Plotter
         }
     }
 
-    public struct MarkSeg
+    public struct MarkSegment
     {
-        public FigureSegment FSegment;
+        public FigureSegment FigSeg;
 
         public CadFigure Figure
         {
             get
             {
-                return FSegment.Figure;
+                return FigSeg.Figure;
             }
         }
 
@@ -79,7 +79,7 @@ namespace Plotter
         {
             get
             {
-                return FSegment.FigureID;
+                return FigSeg.FigureID;
             }
         }
 
@@ -87,7 +87,7 @@ namespace Plotter
         {
             get
             {
-                return FSegment.Index0;
+                return FigSeg.Index0;
             }
         }
 
@@ -95,7 +95,7 @@ namespace Plotter
         {
             get
             {
-                return FSegment.Point0;
+                return FigSeg.Point0;
             }
         }
 
@@ -103,7 +103,7 @@ namespace Plotter
         {
             get
             {
-                return FSegment.Index1;
+                return FigSeg.Index1;
             }
         }
 
@@ -111,7 +111,7 @@ namespace Plotter
         {
             get
             {
-                return FSegment.Point1;
+                return FigSeg.Point1;
             }
         }
 
@@ -139,7 +139,7 @@ namespace Plotter
         {
             get
             {
-                return CadUtil.CenterPoint(FSegment.Point0, FSegment.Point1);
+                return CadUtil.CenterPoint(FigSeg.Point0, FigSeg.Point1);
             }
         }
 
@@ -151,24 +151,24 @@ namespace Plotter
         {
             DbgOut.pln(name + " {");
             DbgOut.Indent++;
-            FSegment.dump("FSegment");
+            FigSeg.dump("FSegment");
             DbgOut.Indent--;
             DbgOut.pln("}");
         }
 
         public bool Update()
         {
-            if (FSegment.Figure == null)
+            if (FigSeg.Figure == null)
             {
                 return true;
             }
 
-            if (PtIndexA >= FSegment.Figure.PointList.Count)
+            if (PtIndexA >= FigSeg.Figure.PointList.Count)
             {
                 return false;
             }
 
-            if (PtIndexB >= FSegment.Figure.PointList.Count)
+            if (PtIndexB >= FigSeg.Figure.PointList.Count)
             {
                 return false;
             }

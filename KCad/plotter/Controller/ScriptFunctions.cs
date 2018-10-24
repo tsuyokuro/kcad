@@ -503,7 +503,7 @@ namespace Plotter.Controller
 
         public void SegLen(double len)
         {
-            MarkSeg seg = Controller.SelSegList.LastSel;
+            MarkSegment seg = Controller.SelSegList.LastSel;
 
             if (seg.FigureID == 0)
             {

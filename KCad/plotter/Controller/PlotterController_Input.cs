@@ -134,7 +134,7 @@ namespace Plotter.Controller
             return false;
         }
 
-        private bool IsSelectedSeg(MarkSeg ms)
+        private bool IsSelectedSeg(MarkSegment ms)
         {
             if (SelectMode == SelectModes.POINT)
             {
@@ -159,7 +159,7 @@ namespace Plotter.Controller
             }
         }
 
-        private void ClearSelListConditional(MarkSeg newSel)
+        private void ClearSelListConditional(MarkSegment newSel)
         {
             if (!CadKeyboard.IsCtrlKeyDown())
             {
@@ -181,7 +181,7 @@ namespace Plotter.Controller
             public MarkPoint MarkPt;
 
             public bool SegmentSelected;
-            public MarkSeg mseg;
+            public MarkSegment MarkSeg;
         }
 
         public bool SelectNearest(DrawContext dc, CadVector pixp)
@@ -210,6 +210,13 @@ namespace Plotter.Controller
                     {
                         ClearSelection();
                     }
+                }
+                else
+                {
+                    //DbgOut.pf(
+                    //    "SegSelected fig id:{0} idx0:{1} idx1:{2}\n",
+                    //    sc.MarkSeg.FigureID,
+                    //    sc.MarkSeg.FSegment.Index0, sc.MarkSeg.FSegment.Index1);
                 }
             }
 
@@ -331,22 +338,22 @@ namespace Plotter.Controller
 
             mSegSearcher.SearchAllLayer(sc.DC, mDB);
 
-            sc.mseg = mSegSearcher.GetMatch();
+            sc.MarkSeg = mSegSearcher.GetMatch();
 
-            if (sc.mseg.FigureID == 0)
+            if (sc.MarkSeg.FigureID == 0)
             {
                 return sc;
             }
 
-            CadLayer layer = mDB.GetLayer(sc.mseg.LayerID);
+            CadLayer layer = mDB.GetLayer(sc.MarkSeg.LayerID);
 
             if (layer.Locked)
             {
-                sc.mseg.FSegment.Figure = null;
+                sc.MarkSeg.FigSeg.Figure = null;
                 return sc;
             }
 
-            CadVector center = sc.mseg.CenterPoint;
+            CadVector center = sc.MarkSeg.CenterPoint;
 
             CadVector t = sc.DC.CadPointToUnitPoint(center);
 
@@ -356,31 +363,31 @@ namespace Plotter.Controller
             }
             else
             {
-                ObjDownPoint = sc.mseg.CrossPoint;
+                ObjDownPoint = sc.MarkSeg.CrossPoint;
             }
 
 
-            CadFigure fig = mDB.GetFigure(sc.mseg.FigureID);
+            CadFigure fig = mDB.GetFigure(sc.MarkSeg.FigureID);
 
-            ClearSelListConditional(sc.mseg);
+            ClearSelListConditional(sc.MarkSeg);
 
             if (SelectMode == SelectModes.POINT)
             {
-                SelList.add(sc.mseg.LayerID, mDB.GetFigure(sc.mseg.FigureID), sc.mseg.PtIndexA, sc.mseg.PtIndexB);
+                SelList.add(sc.MarkSeg.LayerID, mDB.GetFigure(sc.MarkSeg.FigureID), sc.MarkSeg.PtIndexA, sc.MarkSeg.PtIndexB);
                 sc.SegmentSelected = true;
 
-                fig.SelectPointAt(sc.mseg.PtIndexA, true);
-                fig.SelectPointAt(sc.mseg.PtIndexB, true);
+                fig.SelectPointAt(sc.MarkSeg.PtIndexA, true);
+                fig.SelectPointAt(sc.MarkSeg.PtIndexB, true);
             }
             else if (SelectMode == SelectModes.OBJECT)
             {
-                SelList.add(sc.mseg.LayerID, mDB.GetFigure(sc.mseg.FigureID));
+                SelList.add(sc.MarkSeg.LayerID, mDB.GetFigure(sc.MarkSeg.FigureID));
                 sc.SegmentSelected = true;
 
                 fig.SelectWithGroup();
             }
 
-            SelSegList.Add(sc.mseg);
+            SelSegList.Add(sc.MarkSeg);
 
             MoveOrgScrnPoint = sc.DC.CadPointToUnitPoint(ObjDownPoint);
 
@@ -741,7 +748,7 @@ namespace Plotter.Controller
 
             mSegSearcher.SearchAllLayer(dc, mDB);
 
-            MarkSeg markSeg = mSegSearcher.GetMatch();
+            MarkSegment markSeg = mSegSearcher.GetMatch();
 
             if (mSegSearcher.IsMatch)
             {
