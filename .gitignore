@@ -1,0 +1,16 @@
+.gitignore
+*.suo
+*.user
+*.sln.docstates
+.vs/
+*.TMP
+*.cd
+TestResults/
+memo/
+*.VC.db
+!*.lib
+!*.dll
+Debug/*
+Release/*
+Win32
+x64
