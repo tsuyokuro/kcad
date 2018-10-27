@@ -68,9 +68,9 @@ namespace Plotter.Controller
             InitScriptingEngine();
         }
 
-        Regex AutoCompPtn = new Regex(@"#\[AC\][ \t]*(.+)\r\n");
+        Regex AutoCompPtn = new Regex(@"#\[AC\][ \t]*(.+)\n");
 
-        Regex HelpPtn = new Regex(@"#\[help\][ \t]*<(.+)>(.+)\r\n");
+        Regex HelpPtn = new Regex(@"#\[help\][ \t]*<(.+)>(.+)\n");
 
 
         private void InitScriptingEngine()
@@ -88,7 +88,7 @@ namespace Plotter.Controller
 
             foreach (Match m in matches)
             {
-                string s = m.Groups[1].Value;
+                string s = m.Groups[1].Value.TrimEnd('\r', '\n');
                 mAutoCompleteList.Add(s);
             }
 
@@ -97,7 +97,7 @@ namespace Plotter.Controller
             foreach (Match m in matches)
             {
                 string key = m.Groups[1].Value;
-                string s = m.Groups[2].Value;
+                string s = m.Groups[2].Value.TrimEnd('\r', '\n');
                 HelpMap[key] = s;
             }
         }
