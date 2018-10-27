@@ -14,3 +14,7 @@ Debug/*
 Release/*
 Win32
 x64
+CadDataTypes/bin/
+CadDataTypes/obj/
+KCad/bin/
+KCad/obj/
