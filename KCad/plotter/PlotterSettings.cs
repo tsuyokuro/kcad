@@ -41,6 +41,8 @@ namespace Plotter
 
         public bool SnapToZero = true;
 
+        public bool SnapToLastDownPoint = true;
+
         public PlotterSettings()
         {
             GridSize = CadVector.Create(10, 10, 10);

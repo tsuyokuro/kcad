@@ -55,6 +55,7 @@ namespace Plotter.Controller
 
         // 選択したObjectの点の座標 (Wold座標系)
         private CadVector ObjDownPoint = default;
+        private CadVector SObjDownPoint = default;
 
         // 実際のMouse座標からCross cursorへのOffset
         private CadVector mOffsetScreen = default;
@@ -174,7 +175,7 @@ namespace Plotter.Controller
         {
             public DrawContext DC;
             public CadVector CursorScrPt;
-            public CadVector CursorWoldPt;
+            public CadVector CursorWorldPt;
             public CadCursor Cursor;
 
             public bool PointSelected;
@@ -190,8 +191,10 @@ namespace Plotter.Controller
 
             ObjDownPoint = CadVector.InvalidValue;
 
+            mRulerSet.Clear();
+
             sc.DC = dc;
-            sc.CursorWoldPt = dc.UnitPointToCadPoint(pixp);
+            sc.CursorWorldPt = dc.UnitPointToCadPoint(pixp);
             sc.PointSelected = false;
             sc.SegmentSelected = false;
 
@@ -293,7 +296,6 @@ namespace Plotter.Controller
 
             MoveOrgScrnPoint.z = 0;
 
-            State = States.START_DRAGING_POINTS;
             CadFigure fig = mDB.GetFigure(sc.MarkPt.FigureID);
 
             CadLayer layer = mDB.GetLayer(sc.MarkPt.LayerID);
@@ -323,7 +325,10 @@ namespace Plotter.Controller
             //mPointSearcher.SetIgnoreList(SelList.List);
             mSegSearcher.SetIgnoreList(SelList.List);
 
-            mRulerSet.Set(fig, sc.MarkPt.PointIndex);
+            if (sc.PointSelected)
+            {
+                mRulerSet.Set(sc.MarkPt);
+            }
 
             CurrentFigure = fig;
 
@@ -391,12 +396,15 @@ namespace Plotter.Controller
 
             MoveOrgScrnPoint = sc.DC.CadPointToUnitPoint(ObjDownPoint);
 
-            State = States.START_DRAGING_POINTS;
-
             // Set ignore liset for snap cursor
             mPointSearcher.SetIgnoreList(SelList.List);
             mSegSearcher.SetIgnoreList(SelList.List);
             mSegSearcher.SetIgnoreSeg(SelSegList.List);
+
+            if (sc.SegmentSelected)
+            {
+                mRulerSet.Set(sc.MarkSeg, sc.DC);
+            }
 
             CurrentFigure = fig;
 
@@ -434,7 +442,11 @@ namespace Plotter.Controller
                 case States.SELECT:
                     if (SelectNearest(dc, CrossCursor.Pos))
                     {
+                        State = States.START_DRAGING_POINTS;
+
                         mOffsetScreen = pixp - CrossCursor.Pos;
+
+                        SObjDownPoint = ObjDownPoint;
                     }
                     else
                     {
@@ -677,6 +689,12 @@ namespace Plotter.Controller
             if (SettingsHolder.Settings.SnapToZero)
             {
                 mPointSearcher.Check(dc, CadVector.Zero);
+            }
+
+            // 最後にマウスダウンしたポイントにスナップする
+            if (SettingsHolder.Settings.SnapToLastDownPoint)
+            {
+                mPointSearcher.Check(dc, LastDownPoint);
             }
 
             // 複数の点が必要な図形を作成中、最初の点が入力された状態では、
@@ -922,6 +940,8 @@ namespace Plotter.Controller
                         CadVector delta = p1 - p0;
 
                         MoveSelectedPoints(dc, delta);
+
+                        ObjDownPoint = SObjDownPoint + delta;
 
                         break;
                     }
