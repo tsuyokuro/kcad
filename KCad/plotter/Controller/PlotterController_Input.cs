@@ -681,22 +681,6 @@ namespace Plotter.Controller
 
         private void PointSnap(DrawContext dc)
         {
-            mPointSearcher.SetRangePixel(dc, PointSnapRange);
-
-            mPointSearcher.SetTargetPoint(CrossCursor);
-
-            // (0, 0, 0)にスナップするようにする
-            if (SettingsHolder.Settings.SnapToZero)
-            {
-                mPointSearcher.Check(dc, CadVector.Zero);
-            }
-
-            // 最後にマウスダウンしたポイントにスナップする
-            if (SettingsHolder.Settings.SnapToLastDownPoint)
-            {
-                mPointSearcher.Check(dc, LastDownPoint);
-            }
-
             // 複数の点が必要な図形を作成中、最初の点が入力された状態では、
             // オブジェクトがまだ作成されていない。このため、別途チェックする
             if (FigureCreator != null)
@@ -715,7 +699,10 @@ namespace Plotter.Controller
 
             // Search point
             mPointSearcher.SearchAllLayer(dc, mDB);
+        }
 
+        private void evalPointSearcher(DrawContext dc)
+        {
             MarkPoint mxy = mPointSearcher.GetXYMatch();
             MarkPoint mx = mPointSearcher.GetXMatch();
             MarkPoint my = mPointSearcher.GetYMatch();
@@ -760,10 +747,6 @@ namespace Plotter.Controller
 
         private void SegSnap(DrawContext dc, double dist)
         {
-            mSegSearcher.SetRangePixel(dc, LineSnapRange);
-
-            mSegSearcher.SetTargetPoint(CrossCursor);
-
             mSegSearcher.SearchAllLayer(dc, mDB);
 
             MarkSegment markSeg = mSegSearcher.GetMatch();
@@ -794,6 +777,8 @@ namespace Plotter.Controller
 
                         CrossCursor.Pos = markSeg.CrossPointScrn;
                         CrossCursor.Pos.z = 0;
+
+                        HighlightPointList.Add(new HighlightPointListItem(mSnapPoint, DrawTools.PEN_LINE_SNAP));
                     }
                 }
                 else
@@ -844,12 +829,19 @@ namespace Plotter.Controller
                 return;
             }
 
+            if (mSegSearcher.IsMatch)
+            {
+                return;
+            }
+
+
             RulerInfo ri = mRulerSet.Capture(dc, cp, LineSnapRange);
 
             if (ri.IsValid)
             {
                 mSnapPoint = ri.CrossPoint;
                 CrossCursor.Pos = dc.CadPointToUnitPoint(mSnapPoint);
+
                 HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1));
                 HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint));
             }
@@ -909,12 +901,32 @@ namespace Plotter.Controller
             HighlightPointList.Clear();
 
             mPointSearcher.Clean();
+            mPointSearcher.SetRangePixel(dc, PointSnapRange);
+            mPointSearcher.SetTargetPoint(CrossCursor);
+
+            // (0, 0, 0)にスナップするようにする
+            if (SettingsHolder.Settings.SnapToZero)
+            {
+                mPointSearcher.Check(dc, CadVector.Zero);
+            }
+
+            // 最後にマウスダウンしたポイントにスナップする
+            if (SettingsHolder.Settings.SnapToLastDownPoint)
+            {
+                mPointSearcher.Check(dc, LastDownPoint);
+            }
+
             if (SettingsHolder.Settings.SnapToPoint)
             {
                 PointSnap(dc);
             }
 
+            evalPointSearcher(dc);
+
             mSegSearcher.Clean();
+            mSegSearcher.SetRangePixel(dc, LineSnapRange);
+            mSegSearcher.SetTargetPoint(CrossCursor);
+
             if (SettingsHolder.Settings.SnapToSegment)
             {
                 SegSnap(dc, mPointSearcher.Distance());
