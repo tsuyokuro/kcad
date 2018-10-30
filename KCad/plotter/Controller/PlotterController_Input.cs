@@ -55,6 +55,7 @@ namespace Plotter.Controller
 
         // 選択したObjectの点の座標 (Wold座標系)
         private CadVector ObjDownPoint = default;
+        private CadVector SObjDownPoint = default;
 
         // 実際のMouse座標からCross cursorへのOffset
         private CadVector mOffsetScreen = default;
@@ -174,7 +175,7 @@ namespace Plotter.Controller
         {
             public DrawContext DC;
             public CadVector CursorScrPt;
-            public CadVector CursorWoldPt;
+            public CadVector CursorWorldPt;
             public CadCursor Cursor;
 
             public bool PointSelected;
@@ -190,8 +191,10 @@ namespace Plotter.Controller
 
             ObjDownPoint = CadVector.InvalidValue;
 
+            mRulerSet.Clear();
+
             sc.DC = dc;
-            sc.CursorWoldPt = dc.UnitPointToCadPoint(pixp);
+            sc.CursorWorldPt = dc.UnitPointToCadPoint(pixp);
             sc.PointSelected = false;
             sc.SegmentSelected = false;
 
@@ -293,7 +296,6 @@ namespace Plotter.Controller
 
             MoveOrgScrnPoint.z = 0;
 
-            State = States.START_DRAGING_POINTS;
             CadFigure fig = mDB.GetFigure(sc.MarkPt.FigureID);
 
             CadLayer layer = mDB.GetLayer(sc.MarkPt.LayerID);
@@ -323,7 +325,10 @@ namespace Plotter.Controller
             //mPointSearcher.SetIgnoreList(SelList.List);
             mSegSearcher.SetIgnoreList(SelList.List);
 
-            mRulerSet.Set(fig, sc.MarkPt.PointIndex);
+            if (sc.PointSelected)
+            {
+                mRulerSet.Set(sc.MarkPt);
+            }
 
             CurrentFigure = fig;
 
@@ -391,12 +396,15 @@ namespace Plotter.Controller
 
             MoveOrgScrnPoint = sc.DC.CadPointToUnitPoint(ObjDownPoint);
 
-            State = States.START_DRAGING_POINTS;
-
             // Set ignore liset for snap cursor
             mPointSearcher.SetIgnoreList(SelList.List);
             mSegSearcher.SetIgnoreList(SelList.List);
             mSegSearcher.SetIgnoreSeg(SelSegList.List);
+
+            if (sc.SegmentSelected)
+            {
+                mRulerSet.Set(sc.MarkSeg, sc.DC);
+            }
 
             CurrentFigure = fig;
 
@@ -434,7 +442,11 @@ namespace Plotter.Controller
                 case States.SELECT:
                     if (SelectNearest(dc, CrossCursor.Pos))
                     {
+                        State = States.START_DRAGING_POINTS;
+
                         mOffsetScreen = pixp - CrossCursor.Pos;
+
+                        SObjDownPoint = ObjDownPoint;
                     }
                     else
                     {
@@ -669,16 +681,6 @@ namespace Plotter.Controller
 
         private void PointSnap(DrawContext dc)
         {
-            mPointSearcher.SetRangePixel(dc, PointSnapRange);
-
-            mPointSearcher.SetTargetPoint(CrossCursor);
-
-            // (0, 0, 0)にスナップするようにする
-            if (SettingsHolder.Settings.SnapToZero)
-            {
-                mPointSearcher.Check(dc, CadVector.Zero);
-            }
-
             // 複数の点が必要な図形を作成中、最初の点が入力された状態では、
             // オブジェクトがまだ作成されていない。このため、別途チェックする
             if (FigureCreator != null)
@@ -697,7 +699,10 @@ namespace Plotter.Controller
 
             // Search point
             mPointSearcher.SearchAllLayer(dc, mDB);
+        }
 
+        private void evalPointSearcher(DrawContext dc)
+        {
             MarkPoint mxy = mPointSearcher.GetXYMatch();
             MarkPoint mx = mPointSearcher.GetXMatch();
             MarkPoint my = mPointSearcher.GetYMatch();
@@ -742,10 +747,6 @@ namespace Plotter.Controller
 
         private void SegSnap(DrawContext dc, double dist)
         {
-            mSegSearcher.SetRangePixel(dc, LineSnapRange);
-
-            mSegSearcher.SetTargetPoint(CrossCursor);
-
             mSegSearcher.SearchAllLayer(dc, mDB);
 
             MarkSegment markSeg = mSegSearcher.GetMatch();
@@ -776,6 +777,8 @@ namespace Plotter.Controller
 
                         CrossCursor.Pos = markSeg.CrossPointScrn;
                         CrossCursor.Pos.z = 0;
+
+                        HighlightPointList.Add(new HighlightPointListItem(mSnapPoint, DrawTools.PEN_LINE_SNAP));
                     }
                 }
                 else
@@ -826,12 +829,19 @@ namespace Plotter.Controller
                 return;
             }
 
+            if (mSegSearcher.IsMatch)
+            {
+                return;
+            }
+
+
             RulerInfo ri = mRulerSet.Capture(dc, cp, LineSnapRange);
 
             if (ri.IsValid)
             {
                 mSnapPoint = ri.CrossPoint;
                 CrossCursor.Pos = dc.CadPointToUnitPoint(mSnapPoint);
+
                 HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1));
                 HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint));
             }
@@ -891,12 +901,32 @@ namespace Plotter.Controller
             HighlightPointList.Clear();
 
             mPointSearcher.Clean();
+            mPointSearcher.SetRangePixel(dc, PointSnapRange);
+            mPointSearcher.SetTargetPoint(CrossCursor);
+
+            // (0, 0, 0)にスナップするようにする
+            if (SettingsHolder.Settings.SnapToZero)
+            {
+                mPointSearcher.Check(dc, CadVector.Zero);
+            }
+
+            // 最後にマウスダウンしたポイントにスナップする
+            if (SettingsHolder.Settings.SnapToLastDownPoint)
+            {
+                mPointSearcher.Check(dc, LastDownPoint);
+            }
+
             if (SettingsHolder.Settings.SnapToPoint)
             {
                 PointSnap(dc);
             }
 
+            evalPointSearcher(dc);
+
             mSegSearcher.Clean();
+            mSegSearcher.SetRangePixel(dc, LineSnapRange);
+            mSegSearcher.SetTargetPoint(CrossCursor);
+
             if (SettingsHolder.Settings.SnapToSegment)
             {
                 SegSnap(dc, mPointSearcher.Distance());
@@ -922,6 +952,8 @@ namespace Plotter.Controller
                         CadVector delta = p1 - p0;
 
                         MoveSelectedPoints(dc, delta);
+
+                        ObjDownPoint = SObjDownPoint + delta;
 
                         break;
                     }

@@ -77,19 +77,19 @@ namespace Plotter
 
     public class CadRulerSet
     {
-        private CadRuler[] Ruler = new CadRuler[2];
+        private CadRuler[] Ruler = new CadRuler[10];
         private int RCount = 0;
         private int MatchIndex = -1;
 
-        public void Set(
-                        CadFigure fig,
-                        int pointIndex)
+        public void Set(MarkPoint mkp)
         {
+            CadFigure fig = mkp.Figure;
+            int pointIndex = mkp.PointIndex;
+
             int cnt = fig.PointList.Count;
 
             if (cnt < 2)
             {
-                RCount = 0;
                 return;
             }
 
@@ -97,14 +97,14 @@ namespace Plotter
             {
                 if (pointIndex == cnt - 1)
                 {
-                    Ruler[0] = CadRuler.Create(fig, pointIndex - 1, pointIndex);
-                    RCount = 1;
+                    Ruler[RCount] = CadRuler.Create(fig, pointIndex - 1, pointIndex);
+                    RCount++;
                     return;
                 }
                 else if (pointIndex == 0)
                 {
-                    Ruler[0] = CadRuler.Create(fig, 1, 0);
-                    RCount = 1;
+                    Ruler[RCount] = CadRuler.Create(fig, 1, 0);
+                    RCount++;
                     return;
                 }
             }
@@ -117,22 +117,22 @@ namespace Plotter
 
             Debug.Assert(idx0 >= 0 && idx0 < cnt);
 
-            Ruler[0] = CadRuler.Create(fig, idx0, idx1);
-
+            Ruler[RCount] = CadRuler.Create(fig, idx0, idx1);
+            RCount++;
 
             idx0 = (pointIndex + 1) % cnt;
             idx1 = pointIndex;
 
             Debug.Assert(idx0 >= 0 && idx0 < cnt);
 
-            Ruler[1] = CadRuler.Create(fig, idx0, idx1);
-
-            RCount = 2;
+            Ruler[RCount] = CadRuler.Create(fig, idx0, idx1);
+            RCount++;
         }
 
-        public void Clean()
+        public void Set(MarkSegment mks, DrawContext dc)
         {
-            RCount = 0;
+            Ruler[RCount] = CadRuler.Create(mks.Figure, mks.PtIndexA, mks.PtIndexB);
+            RCount++;
         }
 
         public RulerInfo Capture(DrawContext dc, CadVector p, double rangePixel)
@@ -167,6 +167,8 @@ namespace Plotter
             {
                 Ruler[i].IsValid = false;
             }
+
+            RCount = 0;
         }
     }
 }
