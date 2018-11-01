@@ -822,9 +822,9 @@ namespace Plotter.Controller
             }
         }
 
-        private void SnapLine(DrawContext dc, CadVector cp)
+        private void SnapLine(DrawContext dc)
         {
-            if (mPointSearcher.IsXMatch || mPointSearcher.IsYMatch)
+            if (mPointSearcher.IsXYMatch)
             {
                 return;
             }
@@ -834,8 +834,19 @@ namespace Plotter.Controller
                 return;
             }
 
+            CadCursor cursor = CrossCursor;
 
-            RulerInfo ri = mRulerSet.Capture(dc, cp, LineSnapRange);
+            if (mPointSearcher.IsXMatch)
+            {
+                cursor.Pos.x = mPointSearcher.GetXMatch().PointScrn.x;
+            }
+
+            if (mPointSearcher.IsYMatch)
+            {
+                cursor.Pos.y = mPointSearcher.GetXMatch().PointScrn.y;
+            }
+
+            RulerInfo ri = mRulerSet.Capture(dc, cursor, LineSnapRange);
 
             if (ri.IsValid)
             {
@@ -939,7 +950,7 @@ namespace Plotter.Controller
 
             if (SettingsHolder.Settings.SnapToLine)
             {
-                SnapLine(dc, cp);
+                SnapLine(dc);
             }
 
             switch (State)

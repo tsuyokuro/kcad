@@ -119,14 +119,16 @@ namespace Plotter
                 return;
             }
 
+            CadVector cwp = dc.UnitPointToCadPoint(TargetPoint.Pos);
+
+            CadVector xfaceNormal = dc.UnitVectorToCadVector(TargetPoint.DirX);
+            CadVector yfaceNormal = dc.UnitVectorToCadVector(TargetPoint.DirY);
+
+            CadVector cx = CadUtil.CrossSegPlane(a, b, cwp, xfaceNormal);
+            CadVector cy = CadUtil.CrossSegPlane(a, b, cwp, yfaceNormal);
+
             CadVector pa = dc.CadPointToUnitPoint(a);
             CadVector pb = dc.CadPointToUnitPoint(b);
-
-            // X軸交点
-            CadVector cx = CadUtil.CrossSegLine2D(pa, pb, TargetPoint.Pos, TargetPoint.Pos + TargetPoint.DirX);
-
-            // Y軸交点
-            CadVector cy = CadUtil.CrossSegLine2D(pa, pb, TargetPoint.Pos, TargetPoint.Pos + TargetPoint.DirY);
 
             if (!cx.Valid && !cy.Valid)
             {
@@ -134,11 +136,10 @@ namespace Plotter
             }
 
             CadVector p = CadVector.InvalidValue;
-            CadVector dv = CadVector.InvalidValue;
             double mind = Double.MaxValue;
             CadVector[] vtbl = new CadVector[] { cx, cy };
 
-            for (int i=0; i<vtbl.Length; i++)
+            for (int i = 0; i < vtbl.Length; i++)
             {
                 CadVector v = vtbl[i];
 
@@ -147,15 +148,14 @@ namespace Plotter
                     continue;
                 }
 
-                CadVector tdv = v - TargetPoint.Pos;
+                CadVector devv = dc.CadPointToUnitPoint(v);
 
-                double td = tdv.Norm();
+                double td = (devv - TargetPoint.Pos).Norm();
 
                 if (td < mind)
                 {
                     mind = td;
                     p = v;
-                    dv = tdv;
                 }
             }
 
@@ -164,33 +164,23 @@ namespace Plotter
                 return;
             }
 
-            double dist = dv.Norm();
-
-            if (dist > mRange)
+            if (mind > mRange)
             {
                 return;
             }
 
-            if (dist < mMinDist)
+            if (mind < mMinDist)
             {
-                CadVector sv = b - a;
-
-                double cd = (p - pa).Norm();
-                double sd = (pb - pa).Norm();
-
-                double f = cd / sd;
-
-                CadVector cp = (b - a) * f + a;
-
                 markSeg.Layer = layer;
                 markSeg.FigSeg = fseg;
-                markSeg.CrossPoint = cp;
-                markSeg.CrossPointScrn = p;
-                markSeg.Distance = dist;
+                markSeg.CrossPoint = p;
+                markSeg.CrossPointScrn = dc.CadPointToUnitPoint(p);
+                markSeg.Distance = mind;
 
-                mMinDist = dist;
+                mMinDist = mind;
             }
         }
+
 
         private void CheckCircle(DrawContext dc, CadLayer layer, CadFigure fig)
         {
