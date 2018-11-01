@@ -1060,6 +1060,39 @@ namespace Plotter
         }
 
         /// <summary>
+        /// 直線 a b と p と normalが示す平面との交点を求める
+        /// </summary>
+        /// <param name="a">直線上の点</param>
+        /// <param name="b">直線上の点</param>
+        /// <param name="p">平面上の点</param>
+        /// <param name="normal">平面の法線</param>
+        /// <returns>交点</returns>
+        /// 
+        public static CadVector CrossSegPlane(CadVector a, CadVector b, CadVector p, CadVector normal)
+        {
+            CadVector cp = CrossPlane(a, b, p, normal);
+
+            if (!cp.Valid)
+            {
+                return cp;
+            }
+
+            if (CadMath.InnerProduct((b - a), (cp - a)) < 0)
+            {
+                cp.Valid = false;
+                return cp;
+            }
+
+            if (CadMath.InnerProduct((a - b), (cp - b)) < 0)
+            {
+                cp.Valid = false;
+                return cp;
+            }
+
+            return cp;
+        }
+
+        /// <summary>
         /// 直線Aと直線Bの交点を求める
         /// </summary>
         /// <param name="a1">直線A上の点1</param>
