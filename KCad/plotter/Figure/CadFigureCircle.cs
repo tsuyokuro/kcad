@@ -195,7 +195,8 @@ namespace Plotter
                 return;
             }
 
-            CadVector[] vt = new CadVector[4];
+            Span<CadVector> vt = stackalloc CadVector[4];
+
             vt[0] = StoreList[1] - cp;
             vt[1] = StoreList[2] - cp;
             vt[2] = StoreList[3] - cp;

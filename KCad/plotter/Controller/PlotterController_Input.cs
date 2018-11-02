@@ -843,7 +843,7 @@ namespace Plotter.Controller
 
             if (mPointSearcher.IsYMatch)
             {
-                cursor.Pos.y = mPointSearcher.GetXMatch().PointScrn.y;
+                cursor.Pos.y = mPointSearcher.GetYMatch().PointScrn.y;
             }
 
             RulerInfo ri = mRulerSet.Capture(dc, cursor, LineSnapRange);
