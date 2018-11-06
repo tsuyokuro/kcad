@@ -43,6 +43,11 @@ namespace Plotter
             YMatchW.Valid = false;
         }
 
+        public void CopyFrom(Gridding g)
+        {
+            mGridSize = g.mGridSize;
+            Range = g.Range;
+        }
 
         private CadVector CalcGridSizeU(DrawContext dc, CadVector gridSizeW)
         {

@@ -38,12 +38,12 @@ namespace Plotter.Controller
 
         private SegSearcher mSegSearcher = new SegSearcher();
 
-        private CadRulerSet mRulerSet = new CadRulerSet();
+        private CadRulerSet RulerSet = new CadRulerSet();
 
 
         private CadVector StoreViewOrg = default;
 
-        private CadVector mSnapPoint;
+        private CadVector SnapPoint;
 
         private CadVector MoveOrgScrnPoint;
 
@@ -58,7 +58,7 @@ namespace Plotter.Controller
         private CadVector SObjDownPoint = default;
 
         // 実際のMouse座標からCross cursorへのOffset
-        private CadVector mOffsetScreen = default;
+        private CadVector OffsetScreen = default;
 
         public CadVector RubberBandScrnPoint0 = CadVector.InvalidValue;
 
@@ -171,27 +171,13 @@ namespace Plotter.Controller
             }
         }
 
-        private struct SelectContext
-        {
-            public DrawContext DC;
-            public CadVector CursorScrPt;
-            public CadVector CursorWorldPt;
-            public CadCursor Cursor;
-
-            public bool PointSelected;
-            public MarkPoint MarkPt;
-
-            public bool SegmentSelected;
-            public MarkSegment MarkSeg;
-        }
-
         public bool SelectNearest(DrawContext dc, CadVector pixp)
         {
             SelectContext sc = default;
 
             ObjDownPoint = CadVector.InvalidValue;
 
-            mRulerSet.Clear();
+            RulerSet.Clear();
 
             sc.DC = dc;
             sc.CursorWorldPt = dc.UnitPointToCadPoint(pixp);
@@ -236,7 +222,7 @@ namespace Plotter.Controller
             }
             else
             {
-                LastDownPoint = mSnapPoint;
+                LastDownPoint = SnapPoint;
 
                 if (SettingsHolder.Settings.SnapToGrid)
                 {
@@ -327,7 +313,7 @@ namespace Plotter.Controller
 
             if (sc.PointSelected)
             {
-                mRulerSet.Set(sc.MarkPt);
+                RulerSet.Set(sc.MarkPt);
             }
 
             CurrentFigure = fig;
@@ -403,7 +389,7 @@ namespace Plotter.Controller
 
             if (sc.SegmentSelected)
             {
-                mRulerSet.Set(sc.MarkSeg, sc.DC);
+                RulerSet.Set(sc.MarkSeg, sc.DC);
             }
 
             CurrentFigure = fig;
@@ -428,12 +414,12 @@ namespace Plotter.Controller
             RubberBandScrnPoint1 = pixp;
             RubberBandScrnPoint0 = pixp;
 
-            mOffsetScreen = pixp - CrossCursor.Pos;
+            OffsetScreen = pixp - CrossCursor.Pos;
 
             if (mInteractCtrl.CurrentMode != InteractCtrl.Mode.NONE)
             {
-                mInteractCtrl.Draw(dc, mSnapPoint);
-                mInteractCtrl.SetPoint(mSnapPoint);
+                mInteractCtrl.Draw(dc, SnapPoint);
+                mInteractCtrl.SetPoint(SnapPoint);
                 return;
             }
 
@@ -444,7 +430,7 @@ namespace Plotter.Controller
                     {
                         State = States.START_DRAGING_POINTS;
 
-                        mOffsetScreen = pixp - CrossCursor.Pos;
+                        OffsetScreen = pixp - CrossCursor.Pos;
 
                         SObjDownPoint = ObjDownPoint;
                     }
@@ -461,7 +447,7 @@ namespace Plotter.Controller
 
                 case States.START_CREATE:
                     {
-                        LastDownPoint = mSnapPoint;
+                        LastDownPoint = SnapPoint;
 
                         CadFigure fig = mDB.NewFigure(CreatingFigType);
 
@@ -480,7 +466,7 @@ namespace Plotter.Controller
 
                 case States.CREATING:
                     {
-                        LastDownPoint = mSnapPoint;
+                        LastDownPoint = SnapPoint;
 
                         CadVector p = dc.UnitPointToCadPoint(CrossCursor.Pos);
 
@@ -490,7 +476,7 @@ namespace Plotter.Controller
 
                 case States.MEASURING:
                     {
-                        LastDownPoint = mSnapPoint;
+                        LastDownPoint = SnapPoint;
                         CadVector p = dc.UnitPointToCadPoint(CrossCursor.Pos);
 
                         SetPointInMeasuring(dc, p);
@@ -672,7 +658,7 @@ namespace Plotter.Controller
 
             UpdateTreeView(false);
 
-            mOffsetScreen = default;
+            OffsetScreen = default;
         }
 
         private void RButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
@@ -701,7 +687,7 @@ namespace Plotter.Controller
             mPointSearcher.SearchAllLayer(dc, mDB);
         }
 
-        private void evalPointSearcher(DrawContext dc)
+        private void EvalPointSearcher(DrawContext dc)
         {
             MarkPoint mxy = mPointSearcher.GetXYMatch();
             MarkPoint mx = mPointSearcher.GetXMatch();
@@ -719,7 +705,7 @@ namespace Plotter.Controller
 
                 CrossCursor.Pos += distanceX;
 
-                mSnapPoint = dc.UnitPointToCadPoint(CrossCursor.Pos);
+                SnapPoint = dc.UnitPointToCadPoint(CrossCursor.Pos);
             }
 
             if (my.IsValid)
@@ -732,7 +718,7 @@ namespace Plotter.Controller
 
                 CrossCursor.Pos += distanceY;
 
-                mSnapPoint = dc.UnitPointToCadPoint(CrossCursor.Pos);
+                SnapPoint = dc.UnitPointToCadPoint(CrossCursor.Pos);
             }
 
             if (mxy.IsValid)
@@ -740,15 +726,18 @@ namespace Plotter.Controller
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
                 tp = dc.CadPointToUnitPoint(mx.Point);
 
-                mSnapPoint = mxy.Point;
-                CrossCursor.Pos = dc.CadPointToUnitPoint(mSnapPoint);
+                SnapPoint = mxy.Point;
+                CrossCursor.Pos = dc.CadPointToUnitPoint(SnapPoint);
             }
         }
 
-        private void SegSnap(DrawContext dc, double dist)
+        private void SegSnap(DrawContext dc)
         {
             mSegSearcher.SearchAllLayer(dc, mDB);
+        }
 
+        private void EvalSegSeracher(DrawContext dc, double dist)
+        {
             MarkSegment markSeg = mSegSearcher.GetMatch();
 
             if (mSegSearcher.IsMatch)
@@ -766,19 +755,19 @@ namespace Plotter.Controller
                     {
                         HighlightPointList.Add(new HighlightPointListItem(center));
 
-                        mSnapPoint = center;
+                        SnapPoint = center;
 
                         CrossCursor.Pos = t;
                         CrossCursor.Pos.z = 0;
                     }
                     else
                     {
-                        mSnapPoint = markSeg.CrossPoint;
+                        SnapPoint = markSeg.CrossPoint;
 
                         CrossCursor.Pos = markSeg.CrossPointScrn;
                         CrossCursor.Pos.z = 0;
 
-                        HighlightPointList.Add(new HighlightPointListItem(mSnapPoint, DrawTools.PEN_LINE_SNAP));
+                        HighlightPointList.Add(new HighlightPointListItem(SnapPoint, DrawTools.PEN_LINE_SNAP));
                     }
                 }
                 else
@@ -787,6 +776,7 @@ namespace Plotter.Controller
                 }
             }
         }
+
 
         private void SnapGrid(DrawContext dc, CadVector pixp)
         {
@@ -814,11 +804,11 @@ namespace Plotter.Controller
                 snapy = true;
             }
 
-            mSnapPoint = dc.UnitPointToCadPoint(CrossCursor.Pos);
+            SnapPoint = dc.UnitPointToCadPoint(CrossCursor.Pos);
 
             if (snapx && snapy)
             {
-                HighlightPointList.Add(new HighlightPointListItem(mSnapPoint));
+                HighlightPointList.Add(new HighlightPointListItem(SnapPoint));
             }
         }
 
@@ -846,15 +836,64 @@ namespace Plotter.Controller
                 cursor.Pos.y = mPointSearcher.GetYMatch().PointScrn.y;
             }
 
-            RulerInfo ri = mRulerSet.Capture(dc, cursor, LineSnapRange);
+            RulerInfo ri = RulerSet.Capture(dc, cursor, LineSnapRange);
 
             if (ri.IsValid)
             {
-                mSnapPoint = ri.CrossPoint;
-                CrossCursor.Pos = dc.CadPointToUnitPoint(mSnapPoint);
+                SnapPoint = ri.CrossPoint;
+                CrossCursor.Pos = dc.CadPointToUnitPoint(SnapPoint);
 
                 HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1));
                 HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint));
+            }
+        }
+
+        private void SnapCursor(DrawContext dc)
+        {
+            HighlightPointList.Clear();
+
+            mPointSearcher.Clean();
+            mPointSearcher.SetRangePixel(dc, PointSnapRange);
+            mPointSearcher.SetTargetPoint(CrossCursor);
+
+            // (0, 0, 0)にスナップするようにする
+            if (SettingsHolder.Settings.SnapToZero)
+            {
+                mPointSearcher.Check(dc, CadVector.Zero);
+            }
+
+            // 最後にマウスダウンしたポイントにスナップする
+            if (SettingsHolder.Settings.SnapToLastDownPoint)
+            {
+                mPointSearcher.Check(dc, LastDownPoint);
+            }
+
+            if (SettingsHolder.Settings.SnapToPoint)
+            {
+                PointSnap(dc);
+            }
+
+            EvalPointSearcher(dc);
+
+            mSegSearcher.Clean();
+            mSegSearcher.SetRangePixel(dc, LineSnapRange);
+            mSegSearcher.SetTargetPoint(CrossCursor);
+
+            if (SettingsHolder.Settings.SnapToSegment)
+            {
+                SegSnap(dc);
+            }
+
+            EvalSegSeracher(dc, mPointSearcher.Distance());
+
+            if (SettingsHolder.Settings.SnapToGrid)
+            {
+                SnapGrid(dc, CrossCursor.Pos);
+            }
+
+            if (SettingsHolder.Settings.SnapToLine)
+            {
+                SnapLine(dc);
             }
         }
 
@@ -888,7 +927,7 @@ namespace Plotter.Controller
                 }
             }
 
-            CadVector pixp = CadVector.Create(x, y, 0) - mOffsetScreen;
+            CadVector pixp = CadVector.Create(x, y, 0) - OffsetScreen;
             CadVector cp = dc.UnitPointToCadPoint(pixp);
 
             if (State == States.DRAGING_POINTS)
@@ -900,58 +939,16 @@ namespace Plotter.Controller
                     cp = GideLines.GetOnGideLine(LastDownPoint, cp);
                     pixp = dc.CadPointToUnitPoint(cp);
 
-                    mOffsetScreen = CadVector.Zero;
+                    OffsetScreen = CadVector.Zero;
                 }
             }
 
             RubberBandScrnPoint1 = pixp;
 
             CrossCursor.Pos = pixp;
-            mSnapPoint = cp;
+            SnapPoint = cp;
 
-            HighlightPointList.Clear();
-
-            mPointSearcher.Clean();
-            mPointSearcher.SetRangePixel(dc, PointSnapRange);
-            mPointSearcher.SetTargetPoint(CrossCursor);
-
-            // (0, 0, 0)にスナップするようにする
-            if (SettingsHolder.Settings.SnapToZero)
-            {
-                mPointSearcher.Check(dc, CadVector.Zero);
-            }
-
-            // 最後にマウスダウンしたポイントにスナップする
-            if (SettingsHolder.Settings.SnapToLastDownPoint)
-            {
-                mPointSearcher.Check(dc, LastDownPoint);
-            }
-
-            if (SettingsHolder.Settings.SnapToPoint)
-            {
-                PointSnap(dc);
-            }
-
-            evalPointSearcher(dc);
-
-            mSegSearcher.Clean();
-            mSegSearcher.SetRangePixel(dc, LineSnapRange);
-            mSegSearcher.SetTargetPoint(CrossCursor);
-
-            if (SettingsHolder.Settings.SnapToSegment)
-            {
-                SegSnap(dc, mPointSearcher.Distance());
-            }
-
-            if (SettingsHolder.Settings.SnapToGrid)
-            {
-                SnapGrid(dc, CrossCursor.Pos);
-            }
-
-            if (SettingsHolder.Settings.SnapToLine)
-            {
-                SnapLine(dc);
-            }
+            SnapCursor(dc);
 
             switch (State)
             {
@@ -970,7 +967,7 @@ namespace Plotter.Controller
                     }
             }
 
-            Observer.CursorPosChanged(this, mSnapPoint, CursorType.TRACKING);
+            Observer.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);
             Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
         }
 
@@ -1018,7 +1015,7 @@ namespace Plotter.Controller
 
             if (mInteractCtrl.CurrentMode != InteractCtrl.Mode.NONE)
             {
-                mInteractCtrl.Draw(dc, mSnapPoint);
+                mInteractCtrl.Draw(dc, SnapPoint);
             }
         }
 
@@ -1091,7 +1088,7 @@ namespace Plotter.Controller
             CursorLocked = true;
 
             CrossCursor.Pos = p;
-            mSnapPoint = CurrentDC.UnitPointToCadPoint(p);
+            SnapPoint = CurrentDC.UnitPointToCadPoint(p);
             CrossCursor.Pos = p;
         }
     }

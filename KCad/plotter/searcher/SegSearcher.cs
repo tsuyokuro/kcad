@@ -7,11 +7,13 @@ namespace Plotter
 {
     public class SegSearcher
     {
-        private MarkSegment markSeg;
+        private MarkSegment MarkSeg;
 
-        private CadCursor TargetPoint;
-        private double mRange;
-        private double mMinDist = 0;
+        private CadCursor Target;
+
+        public double Range;
+
+        public double MinDist = 0;
 
         private List<MarkSegment> IgnoreSegList;
 
@@ -21,25 +23,25 @@ namespace Plotter
         {
             get
             {
-                return markSeg.FigureID != 0;
+                return MarkSeg.FigureID != 0;
             }
         }
 
 
         public void SetRangePixel(DrawContext dc, double pixel)
         {
-            mRange = pixel;
+            Range = pixel;
         }
 
         public void Clean()
         {
-            markSeg = default(MarkSegment);
-            markSeg.Clean();
+            MarkSeg = default(MarkSegment);
+            MarkSeg.Clean();
         }
 
-        public void SetTargetPoint(CadCursor p)
+        public void SetTargetPoint(CadCursor cursor)
         {
-            TargetPoint = p;
+            Target = cursor;
         }
 
         public void SetIgnoreList(IReadOnlyList<SelectItem> list)
@@ -54,7 +56,7 @@ namespace Plotter
 
         public MarkSegment GetMatch()
         {
-            return markSeg;
+            return MarkSeg;
         }
 
         public void SearchAllLayer(DrawContext dc, CadObjectDB db)
@@ -86,7 +88,7 @@ namespace Plotter
                 return;
             }
 
-            mMinDist = CadConst.MaxValue;
+            MinDist = CadConst.MaxValue;
 
             for (int i=layer.FigureList.Count-1; i>=0; i--)
             {
@@ -119,10 +121,10 @@ namespace Plotter
                 return;
             }
 
-            CadVector cwp = dc.UnitPointToCadPoint(TargetPoint.Pos);
+            CadVector cwp = dc.UnitPointToCadPoint(Target.Pos);
 
-            CadVector xfaceNormal = dc.UnitVectorToCadVector(TargetPoint.DirX);
-            CadVector yfaceNormal = dc.UnitVectorToCadVector(TargetPoint.DirY);
+            CadVector xfaceNormal = dc.UnitVectorToCadVector(Target.DirX);
+            CadVector yfaceNormal = dc.UnitVectorToCadVector(Target.DirY);
 
             CadVector cx = CadUtil.CrossSegPlane(a, b, cwp, xfaceNormal);
             CadVector cy = CadUtil.CrossSegPlane(a, b, cwp, yfaceNormal);
@@ -151,7 +153,7 @@ namespace Plotter
 
                 CadVector devv = dc.CadPointToUnitPoint(v);
 
-                double td = (devv - TargetPoint.Pos).Norm();
+                double td = (devv - Target.Pos).Norm();
 
                 if (td < mind)
                 {
@@ -165,20 +167,20 @@ namespace Plotter
                 return;
             }
 
-            if (mind > mRange)
+            if (mind > Range)
             {
                 return;
             }
 
-            if (mind < mMinDist)
+            if (mind < MinDist)
             {
-                markSeg.Layer = layer;
-                markSeg.FigSeg = fseg;
-                markSeg.CrossPoint = p;
-                markSeg.CrossPointScrn = dc.CadPointToUnitPoint(p);
-                markSeg.Distance = mind;
+                MarkSeg.Layer = layer;
+                MarkSeg.FigSeg = fseg;
+                MarkSeg.CrossPoint = p;
+                MarkSeg.CrossPointScrn = dc.CadPointToUnitPoint(p);
+                MarkSeg.Distance = mind;
 
-                mMinDist = mind;
+                MinDist = mind;
             }
         }
 
@@ -214,10 +216,10 @@ namespace Plotter
             CadVector pb = dc.CadPointToUnitPoint(b);
 
             double r = CadUtil.SegNorm2D(pa, pc);
-            double tr = CadUtil.SegNorm2D(TargetPoint.Pos, pc);
+            double tr = CadUtil.SegNorm2D(Target.Pos, pc);
 
-            double pad = CadUtil.SegNorm2D(TargetPoint.Pos, pa);
-            double pbd = CadUtil.SegNorm2D(TargetPoint.Pos, pb);
+            double pad = CadUtil.SegNorm2D(Target.Pos, pa);
+            double pbd = CadUtil.SegNorm2D(Target.Pos, pb);
 
             int idxB = 1;
 
@@ -229,14 +231,14 @@ namespace Plotter
 
             double dist = Math.Abs(tr - r);
 
-            if (dist > mRange * 2.0)
+            if (dist > Range * 2.0)
             {
                 return;
             }
 
-            if (dist < mMinDist)
+            if (dist < MinDist)
             {
-                CadVector tp = dc.UnitPointToCadPoint(TargetPoint.Pos);
+                CadVector tp = dc.UnitPointToCadPoint(Target.Pos);
                 r = CadUtil.SegNorm(a, c);
                 tr = CadUtil.SegNorm(tp, c);
 
@@ -247,14 +249,14 @@ namespace Plotter
 
                 FigureSegment fseg = new FigureSegment(fig, 0, 0, idxB);
 
-                markSeg.Layer = layer;
-                markSeg.FigSeg = fseg;
-                markSeg.CrossPoint = td;
-                markSeg.CrossPointScrn = dc.CadPointToUnitPoint(td);
-                markSeg.Distance = dist;
+                MarkSeg.Layer = layer;
+                MarkSeg.FigSeg = fseg;
+                MarkSeg.CrossPoint = td;
+                MarkSeg.CrossPointScrn = dc.CadPointToUnitPoint(td);
+                MarkSeg.Distance = dist;
 
 
-                mMinDist = dist;
+                MinDist = dist;
             }
         }
 
