@@ -5,11 +5,11 @@ namespace Plotter.Controller
 {
     public class PlotterObserver
     {
-        public Action<PlotterController, PlotterController.StateInfo> StateChanged = (controller, state) => { };
+        public Action<PlotterController, PlotterStateInfo> StateChanged = (controller, state) => { };
 
         public Action<PlotterController, MenuInfo, int, int> RequestContextMenu = (controller, state, x, y) => { };
 
-        public Action<PlotterController, PlotterController.LayerListInfo> LayerListChanged = (controller, layerListInfo) => { };
+        public Action<PlotterController, LayerListInfo> LayerListChanged = (controller, layerListInfo) => { };
 
         public Action<PlotterController, bool> DataChanged = (controller, redraw) => { };
 

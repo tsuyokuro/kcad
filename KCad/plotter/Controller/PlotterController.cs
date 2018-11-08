@@ -16,12 +16,6 @@ using System.Drawing.Printing;
 
 namespace Plotter.Controller
 {
-    public enum CursorType
-    {
-        TRACKING,
-        LAST_DOWN,
-    }
-
     public partial class PlotterController
     {
         public enum States
@@ -35,55 +29,6 @@ namespace Plotter.Controller
             MEASURING,
         }
 
-        public enum SelectModes
-        {
-            POINT,
-            OBJECT,
-        }
-
-        public enum MeasureModes
-        {
-            NONE,
-            POLY_LINE,
-        }
-
-        public struct StateInfo
-        {
-            public States State;
-
-            public SelectModes SelectMode;
-
-            public CadFigure.Types CreatingFigureType;
-
-            public int CreatingFigurePointCnt;
-
-            public MeasureModes MeasureMode;
-
-            public bool HasSelect;
-
-            public void set(PlotterController pc)
-            {
-                State = pc.State;
-                SelectMode = pc.SelectMode;
-                CreatingFigureType = pc.CreatingFigType;
-                CreatingFigurePointCnt = 0;
-
-                if (pc.FigureCreator != null)
-                {
-                    CreatingFigurePointCnt = pc.FigureCreator.Figure.PointCount;
-                }
-
-                MeasureMode = pc.MeasureMode;
-
-                HasSelect = pc.HasSelect();
-            }
-        }
-
-        public struct LayerListInfo
-        {
-            public List<CadLayer> LayerList;
-            public uint CurrentID;
-        }
 
         public class Interaction
         {
@@ -162,8 +107,11 @@ namespace Plotter.Controller
 
         public MeasureModes MeasureMode = MeasureModes.NONE;
 
-        private CadFigure.Creator FigureCreator = null;
-        private CadFigure.Creator MeasureFigureCreator = null;
+
+        public CadFigure.Creator FigureCreator = null;
+
+        public CadFigure.Creator MeasureFigureCreator = null;
+
 
         public HistoryManager HistoryMan = null;
 
@@ -251,7 +199,7 @@ namespace Plotter.Controller
 
         private void NotifyStateChange()
         {
-            StateInfo si = default(StateInfo);
+            PlotterStateInfo si = default(PlotterStateInfo);
             si.set(this);
 
             Observer.StateChanged(this, si);
@@ -676,7 +624,7 @@ namespace Plotter.Controller
 
         #endregion
 
-        private bool HasSelect()
+        public bool HasSelect()
         {
             bool ret = false;
 

@@ -6,6 +6,24 @@ using System.Threading.Tasks;
 
 namespace Plotter.Controller
 {
+    public enum SelectModes
+    {
+        POINT,
+        OBJECT,
+    }
+
+    public enum MeasureModes
+    {
+        NONE,
+        POLY_LINE,
+    }
+
+    public enum CursorType
+    {
+        TRACKING,
+        LAST_DOWN,
+    }
+
     class ControllerConst
     {
         public const double MARK_CURSOR_SIZE = 10.0;
