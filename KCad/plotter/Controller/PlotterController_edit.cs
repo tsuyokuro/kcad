@@ -359,8 +359,8 @@ namespace Plotter.Controller
             string s = string.Format("({0:0.000},{1:0.000},{2:0.000})",
                                cent.Point.x, cent.Point.y, cent.Point.z);
 
-            InteractOut.println("Centroid:" + s);
-            InteractOut.println("Area:" + (cent.Area / 100).ToString() + "(㎠)");
+            ItConsole.println("Centroid:" + s);
+            ItConsole.println("Area:" + (cent.Area / 100).ToString() + "(㎠)");
         }
     }
 }

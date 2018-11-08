@@ -29,17 +29,6 @@ namespace Plotter.Controller
             MEASURING,
         }
 
-
-        public class Interaction
-        {
-            public PrintFunc println = (a) => { };
-            public PrintFunc print = (a) => { };
-            public FormatPrintFunc printf = (a, b) => { };
-            public Action clear = () => { };
-        }
-
-        public Interaction InteractOut { set; get; } = new Interaction();
-
         private CadObjectDB mDB = new CadObjectDB();
 
         public States State
@@ -691,7 +680,7 @@ namespace Plotter.Controller
 
             NotifyLayerInfo();
 
-            InteractOut.println("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
+            ItConsole.println("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
         }
 
         public void RemoveLayer(uint id)
@@ -728,7 +717,7 @@ namespace Plotter.Controller
             }
 
             NotifyLayerInfo();
-            InteractOut.println("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
+            ItConsole.println("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
         }
 
         public void SelectAllInCurrentLayer()
@@ -897,22 +886,6 @@ namespace Plotter.Controller
 
             NotifyLayerInfo();
             UpdateTreeView(true);
-        }
-
-
-        public void print(string s)
-        {
-            InteractOut.print(s);
-        }
-
-        public void println(string s)
-        {
-            InteractOut.println(s);
-        }
-
-        public void printf(string format, params object[] args)
-        {
-            InteractOut.printf(format, args);
         }
 
         public void SetDB(CadObjectDB db)

@@ -34,6 +34,7 @@ namespace Plotter
         public static PrintFunc PrintFunc = (s)=>{};
         public static PrintFunc PrintLnFunc = (s) => { };
         public static FormatPrintFunc FormatPrintFunc = (s, args) => { };
+        public static Action clear = () => { };
 
         public static void print(string s)
         {

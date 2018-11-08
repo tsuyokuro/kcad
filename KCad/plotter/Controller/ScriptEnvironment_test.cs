@@ -97,7 +97,7 @@ namespace Plotter.Controller
 
         private void test004()
         {
-            Controller.InteractOut.println("\x1b[33mTest1\x1b[00mテスト\x1b[36mTest3");
+            ItConsole.println("\x1b[33mTest1\x1b[00mテスト\x1b[36mTest3");
         }
 
         private void test005()
@@ -116,7 +116,7 @@ namespace Plotter.Controller
 
             double a = CadMath.Rad2Deg(t);
 
-            Controller.InteractOut.println(string.Format("angle:{0}(deg)", a));
+            ItConsole.println(string.Format("angle:{0}(deg)", a));
         }
 
         private void test006()
@@ -304,11 +304,11 @@ namespace Plotter.Controller
         {
             //formatTest("{0},{1}", 10, 20);
 
-            Controller.InteractOut.printf("{0},{1}\n", 10, 20);
-            Controller.InteractOut.print("test");
-            Controller.InteractOut.println("_test");
-            Controller.InteractOut.println("abc\ndef");
-            Controller.InteractOut.println("end");
+            ItConsole.printf("{0},{1}\n", 10, 20);
+            ItConsole.print("test");
+            ItConsole.println("_test");
+            ItConsole.println("abc\ndef");
+            ItConsole.println("end");
         }
 
         private void test012()
@@ -615,7 +615,7 @@ namespace Plotter.Controller
 
             if (cmd == "@clear" || s == "@cls")
             {
-                Controller.InteractOut.clear();
+                ItConsole.clear();
             }
             else if (cmd == "@h" || cmd == "@help")
             {
@@ -673,33 +673,33 @@ namespace Plotter.Controller
 
             else if (cmd == "@tcons1")
             {
-                Controller.InteractOut.println("test");
+                ItConsole.println("test");
             }
             else if (cmd == "@tcons2")
             {
-                Controller.InteractOut.println("test" + AnsiEsc.BCyan + "-cyan-" + AnsiEsc.Reset + "abc");
+                ItConsole.println("test" + AnsiEsc.BCyan + "-cyan-" + AnsiEsc.Reset + "abc");
             }
             else if (cmd == "@tcons3")
             {
-                Controller.InteractOut.print("test");
-                Controller.InteractOut.print(AnsiEsc.BGreen + "xx");
-                Controller.InteractOut.print("-Green!!!");
-                Controller.InteractOut.print(AnsiEsc.Reset);
-                Controller.InteractOut.print("abc");
-                Controller.InteractOut.print("\n");
+                ItConsole.print("test");
+                ItConsole.print(AnsiEsc.BGreen + "xx");
+                ItConsole.print("-Green!!!");
+                ItConsole.print(AnsiEsc.Reset);
+                ItConsole.print("abc");
+                ItConsole.print("\n");
             }
             else if (cmd == "@tcons4")
             {
-                Controller.InteractOut.print("1/5");
+                ItConsole.print("1/5");
                 Thread.Sleep(1000);
-                Controller.InteractOut.print("\r2/5");
+                ItConsole.print("\r2/5");
                 Thread.Sleep(1000);
-                Controller.InteractOut.print("\r3/5");
+                ItConsole.print("\r3/5");
                 Thread.Sleep(1000);
-                Controller.InteractOut.print("\r4/5");
+                ItConsole.print("\r4/5");
                 Thread.Sleep(1000);
-                Controller.InteractOut.print("\r5/5");
-                Controller.InteractOut.print("\nFinish!\n");
+                ItConsole.print("\r5/5");
+                ItConsole.print("\nFinish!\n");
             }
             else
             {

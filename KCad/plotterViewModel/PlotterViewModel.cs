@@ -134,14 +134,6 @@ namespace Plotter
 
         private PlotterController mController;
 
-        public PlotterController.Interaction InteractOut
-        {
-            set
-            {
-                mController.InteractOut = value;
-            }
-        }
-
         private Dictionary<string, Action> CommandMap;
 
         private Dictionary<string, Action> KeyMap;

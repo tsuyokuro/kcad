@@ -532,7 +532,7 @@ namespace Plotter.Controller
 
             int cnt = MeasureFigureCreator.Figure.PointCount;
 
-            InteractOut.println("[" + cnt.ToString() + "]" +
+            ItConsole.println("[" + cnt.ToString() + "]" +
                 AnsiEsc.Reset + " LEN:" + AnsiEsc.BGreen + currentD.ToString() +
                 AnsiEsc.Reset + " ANGLE:" + AnsiEsc.BBlue + a.ToString() +
                 AnsiEsc.Reset + " TOTAL:" + totalD.ToString());

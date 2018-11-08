@@ -67,13 +67,13 @@ namespace Plotter.Controller
 
             if (help != null)
             {
-                Controller.InteractOut.println(help);
+                ItConsole.println(help);
             }
         }
         
         public void PutMsg(string s)
         {
-            Controller.InteractOut.println(s);
+            ItConsole.println(s);
         }
 
         public void CursorAngleX(double d)
@@ -102,13 +102,13 @@ namespace Plotter.Controller
             sb.Append(", ");
             sb.Append(CadUtil.ValToString(v.z));
 
-            Controller.InteractOut.println(sb.ToString());
+            ItConsole.println(sb.ToString());
         }
 
         public void DumpVector(CadVector v)
         {
             string s = v.CoordString();
-            Controller.InteractOut.println(s);
+            ItConsole.println(s);
         }
 
         public CadVector GetLastDownPoint()
@@ -133,7 +133,7 @@ namespace Plotter.Controller
 
             if (idx < 0)
             {
-                Controller.InteractOut.println(
+                ItConsole.println(
                     String.Format("ID:{0} is not found", id));
                 return;
             }
@@ -145,7 +145,7 @@ namespace Plotter.Controller
         {
             foreach (CadLayer layer in Controller.DB.LayerList)
             {
-                Controller.InteractOut.println("layer{Name: " + layer.Name + " ID: " + layer.ID + "}");
+                ItConsole.println("layer{Name: " + layer.Name + " ID: " + layer.ID + "}");
             }
         }
 
@@ -189,7 +189,7 @@ namespace Plotter.Controller
 
             if (list.Count < 2)
             {
-                Controller.InteractOut.println(
+                ItConsole.println(
                     global::KCad.Properties.Resources.error_select_2_or_more
                     );
 
@@ -232,7 +232,7 @@ namespace Plotter.Controller
 
             Controller.HistoryMan.foward(opeRoot);
 
-            Controller.InteractOut.println(
+            ItConsole.println(
                     global::KCad.Properties.Resources.notice_was_grouped
                 );
 
@@ -282,7 +282,7 @@ namespace Plotter.Controller
 
             Controller.HistoryMan.foward(opeList);
 
-            Controller.InteractOut.println(
+            ItConsole.println(
                 global::KCad.Properties.Resources.notice_was_ungrouped
                 );
 
@@ -298,11 +298,11 @@ namespace Plotter.Controller
 
                 CadVector d = a - b;
 
-                Controller.InteractOut.println("" + d.Norm() + "(mm)");
+                ItConsole.println("" + d.Norm() + "(mm)");
             }
             else
             {
-                Controller.InteractOut.println(
+                ItConsole.println(
                     global::KCad.Properties.Resources.error_select_2_points
                     );
             }
@@ -427,7 +427,7 @@ namespace Plotter.Controller
             }
             else
             {
-                Controller.InteractOut.println("error! \"xy\" or \"xz\" or \"zy\"");
+                ItConsole.println("error! \"xy\" or \"xz\" or \"zy\"");
                 return 0;
             }
 
@@ -552,7 +552,7 @@ namespace Plotter.Controller
             {
                 Controller.AbendEdit();
 
-                Controller.InteractOut.println(
+                ItConsole.println(
                     global::KCad.Properties.Resources.error_operation_failed
                     );
                 return;
@@ -560,7 +560,7 @@ namespace Plotter.Controller
 
             Controller.EndEdit();
 
-            Controller.InteractOut.println(
+            ItConsole.println(
                 global::KCad.Properties.Resources.notice_operation_success
                 );
         }
@@ -568,7 +568,7 @@ namespace Plotter.Controller
         public double Area()
         {
             double area = Controller.Area();
-            Controller.InteractOut.println("Area: " + (area / 100).ToString() + " (㎠)");
+            ItConsole.println("Area: " + (area / 100).ToString() + " (㎠)");
 
             return area;
         }
@@ -1128,20 +1128,20 @@ namespace Plotter.Controller
 
             ctrl.Start(InteractCtrl.Mode.POINT);
 
-            Controller.println(AnsiEsc.Yellow + "Input point >>");
+            ItConsole.println(AnsiEsc.Yellow + "Input point >>");
 
             InteractCtrl.State ret = ctrl.WaitPoint();
             ctrl.End();
 
             if (ret != InteractCtrl.State.CONTINUE)
             {
-                Controller.println("Cancel!");
+                ItConsole.println("Cancel!");
                 return CadVector.InvalidValue;
             }
 
             CadVector p = ctrl.PointList[0];
 
-            Controller.println(p.CoordString());
+            ItConsole.println(p.CoordString());
 
             return p;
         }
@@ -1152,7 +1152,7 @@ namespace Plotter.Controller
 
             ctrl.Start(InteractCtrl.Mode.LINE);
 
-            Controller.println(AnsiEsc.Yellow + "Input point 1 >>");
+            ItConsole.println(AnsiEsc.Yellow + "Input point 1 >>");
 
             InteractCtrl.State ret;
 
@@ -1161,21 +1161,21 @@ namespace Plotter.Controller
             if (ret != InteractCtrl.State.CONTINUE)
             {
                 ctrl.End();
-                Controller.println("Cancel!");
+                ItConsole.println("Cancel!");
                 return CadVector.InvalidValue;
             }
 
             CadVector p0 = ctrl.PointList[0];
-            Controller.println(p0.CoordString());
+            ItConsole.println(p0.CoordString());
 
-            Controller.println(AnsiEsc.Yellow + "Input point 2 >>");
+            ItConsole.println(AnsiEsc.Yellow + "Input point 2 >>");
 
             ret = ctrl.WaitPoint();
 
             if (ret != InteractCtrl.State.CONTINUE)
             {
                 ctrl.End();
-                Controller.println("Cancel!");
+                ItConsole.println("Cancel!");
                 return CadVector.InvalidValue;
             }
 
@@ -1188,7 +1188,7 @@ namespace Plotter.Controller
 
             v = v.UnitVector();
 
-            Controller.println(v.CoordString());
+            ItConsole.println(v.CoordString());
 
             return v;
         }
@@ -1260,7 +1260,7 @@ namespace Plotter.Controller
 
         private void PrintSuccess()
         {
-            Controller.InteractOut.println(AnsiEsc.Green + "Success");
+            ItConsole.println(AnsiEsc.Green + "Success");
         }
 
         public CadFigure GetTargetFigure()

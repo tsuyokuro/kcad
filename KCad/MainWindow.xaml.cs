@@ -16,8 +16,6 @@ namespace KCad
     {
         public PlotterViewModel ViewModel;
 
-        private PlotterController.Interaction mInteractionOut = new PlotterController.Interaction();
-
         private bool KeyHandled = false;
 
         //private LBConsole mLBConsole;
@@ -27,11 +25,6 @@ namespace KCad
             InitializeComponent();
 
             //FocusManager.SetIsFocusScope(this, true);
-
-            mInteractionOut.println = MyConsole.PrintLn;
-            mInteractionOut.print = MyConsole.Print;
-            mInteractionOut.printf = MyConsole.Printf;
-            mInteractionOut.clear = MyConsole.Clear;
 
             if (App.UseConsole)
             {
@@ -49,6 +42,7 @@ namespace KCad
             ItConsole.PrintFunc = MyConsole.Print;
             ItConsole.PrintLnFunc = MyConsole.PrintLn;
             ItConsole.FormatPrintFunc = MyConsole.Printf;
+            ItConsole.clear = MyConsole.Clear;
 
             ViewModel = new PlotterViewModel(this, viewContainer);
 
@@ -65,8 +59,6 @@ namespace KCad
 
             Loaded += MainWindow_Loaded;
             Closed += MainWindow_Closed;
-
-            ViewModel.InteractOut = mInteractionOut;
 
             AddLayerButton.Click += ViewModel.ButtonClicked;
             RemoveLayerButton.Click += ViewModel.ButtonClicked;
