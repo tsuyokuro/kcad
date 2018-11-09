@@ -37,7 +37,6 @@ namespace KCad
         private string FileName = null;
 
         private bool Modified = false;
-        private bool PrevModified = false;
 
         public EditorWindow(ScriptEnvironment scriptEnvironment)
         {

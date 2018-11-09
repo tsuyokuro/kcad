@@ -218,7 +218,7 @@ namespace Plotter
                 return;
             }
 
-            CadVector ppt = dc.CadPointToUnitPoint(pt);
+            CadVector ppt = dc.WorldPointToDevPoint(pt);
 
             double dx = Math.Abs(ppt.x - Target.Pos.x);
             double dy = Math.Abs(ppt.y - Target.Pos.y);

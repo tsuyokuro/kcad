@@ -188,8 +188,6 @@ namespace Plotter.Controller
 
             CadFigure fig = GetTargetFigure();
 
-            CadVector p0;
-            CadVector p1;
 
             MinMax2D mm = FigureMinMaxScrn(dc, fig);
         }
@@ -202,8 +200,8 @@ namespace Plotter.Controller
 
             fig.ForEachSegment(seg =>
             {
-                p0 = dc.CadPointToUnitPoint(seg.P0);
-                p1 = dc.CadPointToUnitPoint(seg.P1);
+                p0 = dc.WorldPointToDevPoint(seg.P0);
+                p1 = dc.WorldPointToDevPoint(seg.P1);
 
                 if (p0.x < mm.MinX)
                 {
@@ -281,7 +279,7 @@ namespace Plotter.Controller
                     for (; k < pcnt; k++)
                     {
                         CadVector p = fig.PointList[k];
-                        CadVector sp = dc.CadPointToUnitPoint(p);
+                        CadVector sp = dc.WorldPointToDevPoint(p);
                     }
                 }
             }
@@ -580,7 +578,7 @@ namespace Plotter.Controller
             return Controller.DB.GetFigure(idlist[0]);
         }
 
-        private async void Test()
+        private void Test()
         {
             #region 別スレッド例外処理のテスト
             //CadFigure fig = null;

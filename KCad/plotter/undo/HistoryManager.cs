@@ -60,46 +60,33 @@ namespace Plotter
 
         public void undo()
         {
-            try
+            if (mUndoStack.Count == 0) return;
+
+            CadOpe ope = mUndoStack.Pop();
+
+            if (ope == null)
             {
-                if (mUndoStack.Count == 0) return;
-
-                CadOpe ope = mUndoStack.Pop();
-
-                if (ope == null)
-                {
-                    return;
-                }
-
-                ope.Undo(mDB);
-
-                mRedoStack.Push(ope);
+                return;
             }
-            catch (InvalidOperationException e)
-            {
 
-            }
+            ope.Undo(mDB);
+
+            mRedoStack.Push(ope);
         }
 
         public void redo()
         {
-            try
+            if (mRedoStack.Count == 0) return;
+
+            CadOpe ope = mRedoStack.Pop();
+
+            if (ope == null)
             {
-                if (mRedoStack.Count == 0) return;
-
-                CadOpe ope = mRedoStack.Pop();
-
-                if (ope == null)
-                {
-                    return;
-                }
-
-                ope.Redo(mDB);
-                mUndoStack.Push(ope);
+                return;
             }
-            catch (InvalidOperationException e)
-            {
-            }
+
+            ope.Redo(mDB);
+            mUndoStack.Push(ope);
         }
 
         public void dump()

@@ -220,13 +220,13 @@ namespace Plotter
             UnitPerMilli = unit / MILLI_PER_INCH;
         }
 
-        public abstract CadVector CadPointToUnitPoint(CadVector pt);
+        public abstract CadVector WorldPointToDevPoint(CadVector pt);
 
-        public abstract CadVector UnitPointToCadPoint(CadVector pt);
+        public abstract CadVector DevPointToWorldPoint(CadVector pt);
 
-        public abstract CadVector CadVectorToUnitVector(CadVector pt);
+        public abstract CadVector WorldVectorToDevVector(CadVector pt);
 
-        public abstract CadVector UnitVectorToCadVector(CadVector pt);
+        public abstract CadVector DevVectorToWorldVector(CadVector pt);
 
         public virtual double UnitToMilli(double d)
         {

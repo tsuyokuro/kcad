@@ -50,7 +50,6 @@ namespace Plotter
         {
             public SegmentItem Seg0;
             public SegmentItem Seg1;
-            public CadVector Point;
             public CadVector ScrPoint;
             public double Distance;
         }
@@ -109,7 +108,7 @@ namespace Plotter
 
         void CheckZeroPoint()
         {
-            CadVector p = DC.CadPointToUnitPoint(CadVector.Zero);
+            CadVector p = DC.WorldPointToDevPoint(CadVector.Zero);
 
             CadVector d = p - TargetPoint;
 
@@ -145,7 +144,7 @@ namespace Plotter
                     continue;
                 }
 
-                CadVector p = DC.CadPointToUnitPoint(cp);
+                CadVector p = DC.WorldPointToDevPoint(cp);
 
                 CadVector d = p - TargetPoint;
 
@@ -184,8 +183,8 @@ namespace Plotter
 
                 //CadVector cpc = (seg.P1 - seg.P0) / 2 + seg.P0;
 
-                CadVector p0 = DC.CadPointToUnitPoint(seg.P0);
-                CadVector p1 = DC.CadPointToUnitPoint(seg.P1);
+                CadVector p0 = DC.WorldPointToDevPoint(seg.P0);
+                CadVector p1 = DC.WorldPointToDevPoint(seg.P1);
 
                 CadVector pc = (p1 - p0) / 2 + p0;
 

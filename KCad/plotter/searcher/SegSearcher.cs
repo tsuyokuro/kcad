@@ -121,16 +121,16 @@ namespace Plotter
                 return;
             }
 
-            CadVector cwp = dc.UnitPointToCadPoint(Target.Pos);
+            CadVector cwp = dc.DevPointToWorldPoint(Target.Pos);
 
-            CadVector xfaceNormal = dc.UnitVectorToCadVector(Target.DirX);
-            CadVector yfaceNormal = dc.UnitVectorToCadVector(Target.DirY);
+            CadVector xfaceNormal = dc.DevVectorToWorldVector(Target.DirX);
+            CadVector yfaceNormal = dc.DevVectorToWorldVector(Target.DirY);
 
             CadVector cx = CadUtil.CrossSegPlane(a, b, cwp, xfaceNormal);
             CadVector cy = CadUtil.CrossSegPlane(a, b, cwp, yfaceNormal);
 
-            CadVector pa = dc.CadPointToUnitPoint(a);
-            CadVector pb = dc.CadPointToUnitPoint(b);
+            CadVector pa = dc.WorldPointToDevPoint(a);
+            CadVector pb = dc.WorldPointToDevPoint(b);
 
             if (!cx.Valid && !cy.Valid)
             {
@@ -151,7 +151,7 @@ namespace Plotter
                     continue;
                 }
 
-                CadVector devv = dc.CadPointToUnitPoint(v);
+                CadVector devv = dc.WorldPointToDevPoint(v);
 
                 double td = (devv - Target.Pos).Norm();
 
@@ -177,7 +177,7 @@ namespace Plotter
                 MarkSeg.Layer = layer;
                 MarkSeg.FigSeg = fseg;
                 MarkSeg.CrossPoint = p;
-                MarkSeg.CrossPointScrn = dc.CadPointToUnitPoint(p);
+                MarkSeg.CrossPointScrn = dc.WorldPointToDevPoint(p);
                 MarkSeg.Distance = mind;
 
                 MinDist = mind;
@@ -211,9 +211,9 @@ namespace Plotter
             CadVector a = fig.GetPointAt(1);
             CadVector b = fig.GetPointAt(2);
 
-            CadVector pc = dc.CadPointToUnitPoint(c);
-            CadVector pa = dc.CadPointToUnitPoint(a);
-            CadVector pb = dc.CadPointToUnitPoint(b);
+            CadVector pc = dc.WorldPointToDevPoint(c);
+            CadVector pa = dc.WorldPointToDevPoint(a);
+            CadVector pb = dc.WorldPointToDevPoint(b);
 
             double r = CadUtil.SegNorm2D(pa, pc);
             double tr = CadUtil.SegNorm2D(Target.Pos, pc);
@@ -238,7 +238,7 @@ namespace Plotter
 
             if (dist < MinDist)
             {
-                CadVector tp = dc.UnitPointToCadPoint(Target.Pos);
+                CadVector tp = dc.DevPointToWorldPoint(Target.Pos);
                 r = CadUtil.SegNorm(a, c);
                 tr = CadUtil.SegNorm(tp, c);
 
@@ -252,7 +252,7 @@ namespace Plotter
                 MarkSeg.Layer = layer;
                 MarkSeg.FigSeg = fseg;
                 MarkSeg.CrossPoint = td;
-                MarkSeg.CrossPointScrn = dc.CadPointToUnitPoint(td);
+                MarkSeg.CrossPointScrn = dc.WorldPointToDevPoint(td);
                 MarkSeg.Distance = dist;
 
 

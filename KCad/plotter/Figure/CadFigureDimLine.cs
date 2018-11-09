@@ -282,8 +282,8 @@ namespace Plotter
             String s = CadUtil.ValToString(len);
 
 
-            CadVector p0 = dc.CadPointToUnitPoint(PointList[3]);
-            CadVector p1 = dc.CadPointToUnitPoint(PointList[2]);
+            CadVector p0 = dc.WorldPointToDevPoint(PointList[3]);
+            CadVector p1 = dc.WorldPointToDevPoint(PointList[2]);
 
             d = p1 - p0;
 

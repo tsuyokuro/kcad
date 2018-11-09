@@ -485,7 +485,6 @@ namespace Plotter
         // 図形は凸である
         public static bool IsConvex(VectorList points)
         {
-            int p = 0;
             int cnt = points.Count;
 
             if (cnt<3)
@@ -974,7 +973,7 @@ namespace Plotter
 
             list.ForEach(p =>
             {
-                CadVector v = dc.CadPointToUnitPoint(p);
+                CadVector v = dc.WorldPointToDevPoint(p);
 
                 minx = Math.Min(minx, v.x);
                 miny = Math.Min(miny, v.y);

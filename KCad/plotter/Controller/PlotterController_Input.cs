@@ -180,7 +180,7 @@ namespace Plotter.Controller
             RulerSet.Clear();
 
             sc.DC = dc;
-            sc.CursorWorldPt = dc.UnitPointToCadPoint(pixp);
+            sc.CursorWorldPt = dc.DevPointToWorldPoint(pixp);
             sc.PointSelected = false;
             sc.SegmentSelected = false;
 
@@ -213,7 +213,7 @@ namespace Plotter.Controller
             {
                 LastDownPoint = ObjDownPoint;
 
-                CrossCursor.Pos = dc.CadPointToUnitPoint(ObjDownPoint);
+                CrossCursor.Pos = dc.WorldPointToDevPoint(ObjDownPoint);
 
                 //DebugOut.println("SelectNearest ObjDownPoint.Valid");
 
@@ -247,7 +247,7 @@ namespace Plotter.Controller
 
                     if (match)
                     {
-                        LastDownPoint = dc.UnitPointToCadPoint(p);
+                        LastDownPoint = dc.DevPointToWorldPoint(p);
                     }
                 }
             }
@@ -278,7 +278,7 @@ namespace Plotter.Controller
 
             ObjDownPoint = sc.MarkPt.Point;
 
-            MoveOrgScrnPoint = sc.DC.CadPointToUnitPoint(sc.MarkPt.Point);
+            MoveOrgScrnPoint = sc.DC.WorldPointToDevPoint(sc.MarkPt.Point);
 
             MoveOrgScrnPoint.z = 0;
 
@@ -346,7 +346,7 @@ namespace Plotter.Controller
 
             CadVector center = sc.MarkSeg.CenterPoint;
 
-            CadVector t = sc.DC.CadPointToUnitPoint(center);
+            CadVector t = sc.DC.WorldPointToDevPoint(center);
 
             if ((t - sc.CursorScrPt).Norm() < LineSnapRange)
             {
@@ -380,7 +380,7 @@ namespace Plotter.Controller
 
             SelSegList.Add(sc.MarkSeg);
 
-            MoveOrgScrnPoint = sc.DC.CadPointToUnitPoint(ObjDownPoint);
+            MoveOrgScrnPoint = sc.DC.WorldPointToDevPoint(ObjDownPoint);
 
             // Set ignore liset for snap cursor
             mPointSearcher.SetIgnoreList(SelList.List);
@@ -407,7 +407,7 @@ namespace Plotter.Controller
             }
 
             CadVector pixp = CadVector.Create(x, y, 0);
-            CadVector cp = dc.UnitPointToCadPoint(pixp);
+            CadVector cp = dc.DevPointToWorldPoint(pixp);
 
             RawDownPoint = pixp;
 
@@ -458,7 +458,7 @@ namespace Plotter.Controller
                         FigureCreator.StartCreate(dc);
 
 
-                        CadVector p = dc.UnitPointToCadPoint(CrossCursor.Pos);
+                        CadVector p = dc.DevPointToWorldPoint(CrossCursor.Pos);
 
                         SetPointInCreating(dc, p);
                     }
@@ -468,7 +468,7 @@ namespace Plotter.Controller
                     {
                         LastDownPoint = SnapPoint;
 
-                        CadVector p = dc.UnitPointToCadPoint(CrossCursor.Pos);
+                        CadVector p = dc.DevPointToWorldPoint(CrossCursor.Pos);
 
                         SetPointInCreating(dc, p);
                     }
@@ -477,7 +477,7 @@ namespace Plotter.Controller
                 case States.MEASURING:
                     {
                         LastDownPoint = SnapPoint;
-                        CadVector p = dc.UnitPointToCadPoint(CrossCursor.Pos);
+                        CadVector p = dc.DevPointToWorldPoint(CrossCursor.Pos);
 
                         SetPointInMeasuring(dc, p);
                         PutMeasure();
@@ -611,7 +611,7 @@ namespace Plotter.Controller
         {
             for (int i = 0; i < fig.PointCount; i++)
             {
-                CadVector p = CurrentDC.CadPointToUnitPoint(fig.PointList[i]);
+                CadVector p = CurrentDC.WorldPointToDevPoint(fig.PointList[i]);
 
                 if (CadUtil.IsInRect2D(minp, maxp, p))
                 {
@@ -699,35 +699,35 @@ namespace Plotter.Controller
             {
                 HighlightPointList.Add(new HighlightPointListItem(mx.Point));
 
-                tp = dc.CadPointToUnitPoint(mx.Point);
+                tp = dc.WorldPointToDevPoint(mx.Point);
 
                 CadVector distanceX = CrossCursor.DistanceX(tp);
 
                 CrossCursor.Pos += distanceX;
 
-                SnapPoint = dc.UnitPointToCadPoint(CrossCursor.Pos);
+                SnapPoint = dc.DevPointToWorldPoint(CrossCursor.Pos);
             }
 
             if (my.IsValid)
             {
                 HighlightPointList.Add(new HighlightPointListItem(my.Point));
 
-                tp = dc.CadPointToUnitPoint(my.Point);
+                tp = dc.WorldPointToDevPoint(my.Point);
 
                 CadVector distanceY = CrossCursor.DistanceY(tp);
 
                 CrossCursor.Pos += distanceY;
 
-                SnapPoint = dc.UnitPointToCadPoint(CrossCursor.Pos);
+                SnapPoint = dc.DevPointToWorldPoint(CrossCursor.Pos);
             }
 
             if (mxy.IsValid)
             {
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
-                tp = dc.CadPointToUnitPoint(mx.Point);
+                tp = dc.WorldPointToDevPoint(mx.Point);
 
                 SnapPoint = mxy.Point;
-                CrossCursor.Pos = dc.CadPointToUnitPoint(SnapPoint);
+                CrossCursor.Pos = dc.WorldPointToDevPoint(SnapPoint);
             }
         }
 
@@ -749,7 +749,7 @@ namespace Plotter.Controller
 
                     CadVector center = markSeg.CenterPoint;
 
-                    CadVector t = dc.CadPointToUnitPoint(center);
+                    CadVector t = dc.WorldPointToDevPoint(center);
 
                     if ((t - CrossCursor.Pos).Norm() < LineSnapRange)
                     {
@@ -804,7 +804,7 @@ namespace Plotter.Controller
                 snapy = true;
             }
 
-            SnapPoint = dc.UnitPointToCadPoint(CrossCursor.Pos);
+            SnapPoint = dc.DevPointToWorldPoint(CrossCursor.Pos);
 
             if (snapx && snapy)
             {
@@ -841,7 +841,7 @@ namespace Plotter.Controller
             if (ri.IsValid)
             {
                 SnapPoint = ri.CrossPoint;
-                CrossCursor.Pos = dc.CadPointToUnitPoint(SnapPoint);
+                CrossCursor.Pos = dc.WorldPointToDevPoint(SnapPoint);
 
                 HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1));
                 HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint));
@@ -928,7 +928,7 @@ namespace Plotter.Controller
             }
 
             CadVector pixp = CadVector.Create(x, y, 0) - OffsetScreen;
-            CadVector cp = dc.UnitPointToCadPoint(pixp);
+            CadVector cp = dc.DevPointToWorldPoint(pixp);
 
             if (State == States.DRAGING_POINTS)
             {
@@ -937,7 +937,7 @@ namespace Plotter.Controller
                 if (GideLines.Enabled)
                 {
                     cp = GideLines.GetOnGideLine(LastDownPoint, cp);
-                    pixp = dc.CadPointToUnitPoint(cp);
+                    pixp = dc.WorldPointToDevPoint(cp);
 
                     OffsetScreen = CadVector.Zero;
                 }
@@ -954,8 +954,8 @@ namespace Plotter.Controller
             {
                 case States.DRAGING_POINTS:
                     {
-                        CadVector p0 = dc.UnitPointToCadPoint(MoveOrgScrnPoint);
-                        CadVector p1 = dc.UnitPointToCadPoint(CrossCursor.Pos);
+                        CadVector p0 = dc.DevPointToWorldPoint(MoveOrgScrnPoint);
+                        CadVector p1 = dc.DevPointToWorldPoint(CrossCursor.Pos);
 
                         CadVector delta = p1 - p0;
 
@@ -999,7 +999,7 @@ namespace Plotter.Controller
                 case States.CREATING:
                     if (FigureCreator != null)
                     {
-                        CadVector p = dc.UnitPointToCadPoint(CrossCursor.Pos);
+                        CadVector p = dc.DevPointToWorldPoint(CrossCursor.Pos);
                         FigureCreator.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
                     }
                     break;
@@ -1007,7 +1007,7 @@ namespace Plotter.Controller
                 case States.MEASURING:
                     if (MeasureFigureCreator != null)
                     {
-                        CadVector p = dc.UnitPointToCadPoint(CrossCursor.Pos);
+                        CadVector p = dc.DevPointToWorldPoint(CrossCursor.Pos);
                         MeasureFigureCreator.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
                     }
                     break;
@@ -1088,7 +1088,7 @@ namespace Plotter.Controller
             CursorLocked = true;
 
             CrossCursor.Pos = p;
-            SnapPoint = CurrentDC.UnitPointToCadPoint(p);
+            SnapPoint = CurrentDC.DevPointToWorldPoint(p);
             CrossCursor.Pos = p;
         }
     }

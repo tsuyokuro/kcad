@@ -621,8 +621,8 @@ namespace Plotter.Controller
             CadRect r = CadUtil.GetContainsRectScrn(dc, figList);
 
             CadRect wr = default(CadRect);
-            wr.p0 = dc.UnitPointToCadPoint(r.p0);
-            wr.p1 = dc.UnitPointToCadPoint(r.p1);
+            wr.p0 = dc.DevPointToWorldPoint(r.p0);
+            wr.p1 = dc.DevPointToWorldPoint(r.p1);
 
             DrawContextGDI tdc = new DrawContextGDI(null);
 

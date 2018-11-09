@@ -98,8 +98,6 @@ namespace HalfEdgeNS
 
         public List<HalfEdge> GetHalfEdgeList()
         {
-            int tag = 0;
-
             List<HalfEdge> list = new List<HalfEdge>();
 
             // すべてのFaceを巡回する
@@ -477,8 +475,6 @@ namespace HalfEdgeNS
 
             HalfEdge c = head;
 
-            CadVector v;
-
             for (; ; )
             {
                 if (c.Pair == null)
@@ -508,8 +504,6 @@ namespace HalfEdgeNS
             HalfEdge head = f.Head;
 
             HalfEdge c = head;
-
-            CadVector v;
 
             for (; ; )
             {
@@ -541,8 +535,6 @@ namespace HalfEdgeNS
             HalfEdge head = f.Head;
 
             HalfEdge c = head;
-
-            CadVector v;
 
             for (; ; )
             {
