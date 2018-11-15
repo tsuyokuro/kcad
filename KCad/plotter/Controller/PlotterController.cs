@@ -634,7 +634,7 @@ namespace Plotter.Controller
             return ret;
         }
 
-        private List<CadFigure> GetSelectedFigureList()
+        public List<CadFigure> GetSelectedFigureList()
         {
             List<CadFigure> figList = new List<CadFigure>();
 
@@ -899,6 +899,17 @@ namespace Plotter.Controller
             UpdateTreeView(true);
 
             Redraw(CurrentDC);
+        }
+
+        public void Copy()
+        {
+            PlotterClipboard.CopyFiguresAsBin(this);
+        }
+
+        public void Paste()
+        {
+            PlotterClipboard.PasteFiguresAsBin(this);
+            UpdateTreeView(true);
         }
     }
 }

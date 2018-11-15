@@ -567,7 +567,7 @@ namespace Plotter.Controller
 
         public double Area()
         {
-            double area = Controller.Area();
+            double area = PlotterUtil.Area(Controller);
             ItConsole.println("Area: " + (area / 100).ToString() + " (㎠)");
 
             return area;
@@ -575,7 +575,7 @@ namespace Plotter.Controller
 
         public CadVector Centroid()
         {
-            Centroid c = Controller.Centroid();
+            Centroid c = PlotterUtil.Centroid(Controller);
             return c.Point;
         }
 

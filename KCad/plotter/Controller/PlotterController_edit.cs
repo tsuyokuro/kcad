@@ -209,7 +209,7 @@ namespace Plotter.Controller
 
         public void Flip(TargetCoord coord)
         {
-            CadVector cp = GetSelectionCenter();
+            CadVector cp = PlotterUtil.GetSelectionCenter(this);
 
             foreach (CadLayer layer in mDB.LayerList)
             {
@@ -340,7 +340,7 @@ namespace Plotter.Controller
 
         public void AddCentroid()
         {
-            Centroid cent = Centroid();
+            Centroid cent = PlotterUtil.Centroid(this);
 
             if (cent.IsInvalid)
             {

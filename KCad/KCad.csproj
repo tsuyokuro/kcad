@@ -211,8 +211,8 @@
     <Compile Include="plotter\Controller\InteractCtrl.cs" />
     <Compile Include="plotter\Controller\PlotterController_action.cs" />
     <Compile Include="plotter\Controller\PlotterController_context_menu.cs" />
-    <Compile Include="plotter\Controller\PlotterController_funcs.cs" />
-    <Compile Include="plotter\Controller\PlotterController_serialize.cs" />
+    <Compile Include="plotter\Controller\PlotterUtil.cs" />
+    <Compile Include="plotter\Controller\PlotterClipboard.cs" />
     <Compile Include="plotter\Controller\PlotterObserver.cs" />
     <Compile Include="plotter\Controller\ScriptFunctions.cs" />
     <Compile Include="plotter\Controller\ControllerTypes.cs" />
