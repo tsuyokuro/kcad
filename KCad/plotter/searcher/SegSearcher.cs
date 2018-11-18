@@ -17,7 +17,7 @@ namespace Plotter
 
         private List<MarkSegment> IgnoreSegList;
 
-        private IReadOnlyList<SelectItem> IgnoreList = null;
+        private IReadOnlyList<MarkPoint> IgnoreList = null;
 
         public bool IsMatch
         {
@@ -44,7 +44,7 @@ namespace Plotter
             Target = cursor;
         }
 
-        public void SetIgnoreList(IReadOnlyList<SelectItem> list)
+        public void SetIgnoreList(IReadOnlyList<MarkPoint> list)
         {
             IgnoreList = list; 
         }
@@ -297,7 +297,7 @@ namespace Plotter
 
             for (int i=0; i<IgnoreList.Count; i++)
             {
-                SelectItem item = IgnoreList[i];
+                MarkPoint item = IgnoreList[i];
 
                 if (item.FigureID == figId && item.PointIndex == index)
                 {

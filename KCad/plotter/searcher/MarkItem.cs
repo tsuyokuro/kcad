@@ -61,6 +61,39 @@ namespace Plotter
             DistanceX = CadConst.MaxValue;
             DistanceY = CadConst.MaxValue;
         }
+
+        public bool IsSelected()
+        {
+            if (Figure == null)
+            {
+                return false;
+            }
+
+            return Figure.IsPointSelected(PointIndex);
+        }
+
+        public ulong Hash
+        {
+            get
+            {
+                return FigureID << 32 + PointIndex;
+            }
+        }
+
+        public bool update()
+        {
+            if (Figure == null)
+            {
+                return true;
+            }
+
+            if (PointIndex >= Figure.PointList.Count)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 
     public struct MarkSegment
@@ -180,6 +213,16 @@ namespace Plotter
         {
             CrossPoint.Valid = false;
             CrossPointScrn.Valid = false;
+        }
+
+        public bool IsSelected()
+        {
+            if (Figure == null)
+            {
+                return false;
+            }
+
+            return Figure.IsPointSelected(PtIndexA) && Figure.IsPointSelected(PtIndexB);
         }
     }
 }

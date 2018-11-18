@@ -17,7 +17,7 @@ namespace Plotter
         private List<MarkPoint> XYMatchList = new List<MarkPoint>();
 
 
-        private IReadOnlyList<SelectItem> IgnoreList = null;
+        private IReadOnlyList<MarkPoint> IgnoreList = null;
 
         public CadCursor Target;    // Cursor(スクリーン座標系)
         public double Range;        // matchする範囲(スクリーン座標系)
@@ -75,7 +75,7 @@ namespace Plotter
             Target = cursor;
         }
 
-        public void SetIgnoreList(List<SelectItem> list)
+        public void SetIgnoreList(List<MarkPoint> list)
         {
             IgnoreList = list;
         }
@@ -311,7 +311,7 @@ namespace Plotter
 
             for (int i=0;i<IgnoreList.Count;i++)
             {
-                SelectItem item = IgnoreList[i];
+                MarkPoint item = IgnoreList[i];
 
                 if (item.FigureID == figId && item.PointIndex == index)
                 {

@@ -455,6 +455,9 @@ namespace Plotter.Controller
             SelList.clear();
             SelSegList.Clear();
 
+            LastSelPoint = null;
+            LastSelSegment = null;
+
             foreach (CadLayer layer in mDB.LayerList)
             {
                 layer.ClearSelectedFlags();
@@ -525,9 +528,9 @@ namespace Plotter.Controller
 
         private void UpdateSelectItemPoints()
         {
-            HashSet<SelectItem> removeSels = new HashSet<SelectItem>();
+            HashSet<MarkPoint> removeSels = new HashSet<MarkPoint>();
 
-            foreach (SelectItem item in SelList.List)
+            foreach (MarkPoint item in SelList.List)
             {
                 if (!item.update())
                 {
@@ -847,33 +850,6 @@ namespace Plotter.Controller
                 }
 
                 CadUtil.RotateFigure(fig, org, axisDir, t);
-            }
-        }
-
-        /// <summary>
-        /// 選択されたPointをselListに追加する
-        /// </summary>
-        /// <param name="selList">追加されるSelectList</param>
-        /// 
-        public void CollectSelList(SelectList selList)
-        {
-            foreach (CadLayer layer in DB.LayerList)
-            {
-                if (layer.Locked || layer.Visible == false)
-                {
-                    continue;
-                }
-
-                foreach (CadFigure fig in layer.FigureList)
-                {
-                    for (int i = 0; i < fig.PointCount; i++)
-                    {
-                        if (fig.PointList[i].Selected)
-                        {
-                            selList.add(layer.ID, fig, i);
-                        }
-                    }
-                }
             }
         }
 

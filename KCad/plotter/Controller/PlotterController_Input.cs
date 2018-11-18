@@ -66,6 +66,11 @@ namespace Plotter.Controller
 
         private CadFigure mCurrentFigure = null;
 
+        public MarkSegment? LastSelSegment = null;
+
+        public MarkPoint? LastSelPoint = null;
+
+
         public CadFigure CurrentFigure
         {
             set
@@ -121,50 +126,22 @@ namespace Plotter.Controller
             Mouse.Wheel = Wheel;
         }
 
-        private bool IsSelected(MarkPoint mp)
-        {
-            if (SelectMode == SelectModes.POINT)
-            {
-                return SelList.isSelected(mp);
-            }
-            else if (SelectMode == SelectModes.OBJECT)
-            {
-                return SelList.isSelectedFigure(mp.FigureID);
-            }
-
-            return false;
-        }
-
-        private bool IsSelectedSeg(MarkSegment ms)
-        {
-            if (SelectMode == SelectModes.POINT)
-            {
-                return SelSegList.isSelected(ms);
-            }
-            else if (SelectMode == SelectModes.OBJECT)
-            {
-                return SelSegList.isSelectedFigure(ms.FigureID);
-            }
-
-            return false;
-        }
-
-        private void ClearSelListConditional(MarkPoint newSel)
+        private void ClearSelectionConditional(MarkPoint newSel)
         {
             if (!CadKeyboard.IsCtrlKeyDown())
             {
-                if (!IsSelected(newSel))
+                if (!newSel.IsSelected())
                 {
                     ClearSelection();
                 }
             }
         }
 
-        private void ClearSelListConditional(MarkSegment newSel)
+        private void ClearSelectionConditional(MarkSegment newSel)
         {
             if (!CadKeyboard.IsCtrlKeyDown())
             {
-                if (!IsSelectedSeg(newSel))
+                if (!newSel.IsSelected())
                 {
                     ClearSelection();
                 }
@@ -292,17 +269,22 @@ namespace Plotter.Controller
                 return sc;
             }
 
-            ClearSelListConditional(sc.MarkPt);
+            ClearSelectionConditional(sc.MarkPt);
 
             if (SelectMode == SelectModes.POINT)
             {
                 SelList.add(sc.MarkPt);
+                LastSelPoint = sc.MarkPt;
+
                 sc.PointSelected = true;
                 fig.SelectPointAt(sc.MarkPt.PointIndex, true);
             }
             else if (SelectMode == SelectModes.OBJECT)
             {
-                SelList.add(sc.MarkPt.LayerID, mDB.GetFigure(sc.MarkPt.FigureID));
+                SelList.add(sc.MarkPt);
+
+                LastSelPoint = sc.MarkPt;
+
                 sc.PointSelected = true;
                 fig.SelectWithGroup();
             }
@@ -360,11 +342,15 @@ namespace Plotter.Controller
 
             CadFigure fig = mDB.GetFigure(sc.MarkSeg.FigureID);
 
-            ClearSelListConditional(sc.MarkSeg);
+            ClearSelectionConditional(sc.MarkSeg);
 
             if (SelectMode == SelectModes.POINT)
             {
-                SelList.add(sc.MarkSeg.LayerID, mDB.GetFigure(sc.MarkSeg.FigureID), sc.MarkSeg.PtIndexA, sc.MarkSeg.PtIndexB);
+                SelList.add(sc.MarkSeg);
+
+                LastSelPoint = null;
+                LastSelSegment = sc.MarkSeg;
+
                 sc.SegmentSelected = true;
 
                 fig.SelectPointAt(sc.MarkSeg.PtIndexA, true);
@@ -372,8 +358,11 @@ namespace Plotter.Controller
             }
             else if (SelectMode == SelectModes.OBJECT)
             {
-                SelList.add(sc.MarkSeg.LayerID, mDB.GetFigure(sc.MarkSeg.FigureID));
+                SelList.add(sc.MarkSeg);
                 sc.SegmentSelected = true;
+
+                LastSelPoint = null;
+                LastSelSegment = sc.MarkSeg;
 
                 fig.SelectWithGroup();
             }
@@ -439,9 +428,13 @@ namespace Plotter.Controller
                         State = States.RUBBER_BAND_SELECT;
                     }
 
+                    DebugPrintLastSel();
+
                     return;
 
                 case States.RUBBER_BAND_SELECT:
+
+                    DebugPrintLastSel();
 
                     return;
 
@@ -490,6 +483,29 @@ namespace Plotter.Controller
             }
 
             Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
+        }
+
+        private void DebugPrintLastSel()
+        {
+            if (LastSelPoint != null)
+            {
+                MarkPoint mp = LastSelPoint.Value;
+                DbgOut.pln("LastSelPoint FigID:" + mp.FigureID.ToString() + " Point:" + mp.PointIndex.ToString());
+            }
+            else
+            {
+                DbgOut.pln("LastSelPoint = null");
+            }
+
+            if (LastSelSegment != null)
+            {
+                MarkSegment ms = LastSelSegment.Value;
+                DbgOut.pln("LastSelSegment FigID:" + ms.FigureID.ToString() + " PointA:" + ms.PtIndexA.ToString() + " PointB:" + ms.PtIndexB.ToString());
+            }
+            else
+            {
+                DbgOut.pln("LastSelSegment = null");
+            }
         }
 
         private void PutMeasure()
@@ -597,17 +613,20 @@ namespace Plotter.Controller
         {
             SelList.clear();
 
+            LastSelPoint = null;
+            LastSelSegment = null;
+
             CadVector minp = CadVector.Min(p0, p1);
             CadVector maxp = CadVector.Max(p0, p1);
 
             DB.WalkEditable(
                 (layer, fig) =>
                 {
-                    SelectIfContactRect(minp, maxp, layer.ID, fig, SelList);
+                    SelectIfContactRect(minp, maxp, layer, fig, SelList);
                 });
         }
 
-        public void SelectIfContactRect(CadVector minp, CadVector maxp, uint layerID, CadFigure fig, SelectList selList)
+        public void SelectIfContactRect(CadVector minp, CadVector maxp, CadLayer layer, CadFigure fig, SelectList selList)
         {
             for (int i = 0; i < fig.PointCount; i++)
             {
@@ -619,7 +638,7 @@ namespace Plotter.Controller
 
                     if (selList != null)
                     {
-                        selList.add(layerID, fig, i);
+                        selList.add(layer, fig, i);
                     }
                 }
             }

@@ -787,6 +787,12 @@ namespace Plotter
             return true;
         }
 
+        public virtual bool IsPointSelected(int idx)
+        {
+            if (idx >= PointCount) return false;
+            return PointList[idx].Selected;
+        }
+
         public virtual void ForEachSegment(Func<CadSegment, bool> dg)
         {
             int cnt = SegmentCount;

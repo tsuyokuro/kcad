@@ -289,25 +289,6 @@ namespace Plotter.Controller
             UpdateTV();
         }
 
-        public void Distance()
-        {
-            if (Controller.SelList.List.Count == 2)
-            {
-                CadVector a = Controller.SelList.List[0].Point;
-                CadVector b = Controller.SelList.List[1].Point;
-
-                CadVector d = a - b;
-
-                ItConsole.println("" + d.Norm() + "(mm)");
-            }
-            else
-            {
-                ItConsole.println(
-                    global::KCad.Properties.Resources.error_select_2_points
-                    );
-            }
-        }
-
         public void MoveCursor(double x, double y, double z)
         {
             Controller.LastDownPoint.x += x;

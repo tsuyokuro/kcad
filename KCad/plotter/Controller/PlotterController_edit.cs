@@ -36,15 +36,18 @@ namespace Plotter.Controller
 
         public void SeparateFigures()
         {
-            SeparateFigures(SelList.List);
+            if (LastSelPoint == null)
+            {
+                return;
+            }
+
+            SeparateFigures(LastSelPoint.Value.Figure, LastSelPoint.Value.PointIndex);
             ClearSelection();
         }
 
-        public void SeparateFigures(IReadOnlyList<SelectItem> selList)
+        public void SeparateFigures(CadFigure fig, int pointIdx)
         {
-            CadFigureCutter fa = new CadFigureCutter(mDB);
-
-            var res = fa.Cut(selList);
+            var res = CadFigureCutter.Cut(mDB, fig, pointIdx);
 
             if (!res.isValid())
             {
@@ -54,7 +57,7 @@ namespace Plotter.Controller
             CadOpeList opeRoot = CadOpe.CreateListOpe();
             CadOpe ope;
 
-            foreach (CadFigureAssembler.ResultItem ri in res.AddList)
+            foreach (EditResult.Item ri in res.AddList)
             {
                 CadLayer layer = mDB.GetLayer(ri.LayerID);
 
@@ -64,7 +67,7 @@ namespace Plotter.Controller
                 layer.AddFigure(ri.Figure);
             }
 
-            foreach (CadFigureAssembler.ResultItem ri in res.RemoveList)
+            foreach (EditResult.Item ri in res.RemoveList)
             {
                 CadLayer layer = mDB.GetLayer(ri.LayerID);
 
@@ -79,15 +82,13 @@ namespace Plotter.Controller
 
         public void BondFigures()
         {
-            BondFigures(SelList.List);
+            BondFigures(CurrentFigure);
             ClearSelection();
         }
 
-        public void BondFigures(IReadOnlyList<SelectItem> selList)
+        public void BondFigures(CadFigure fig)
         {
-            CadFigureBonder fa = new CadFigureBonder(mDB, CurrentLayer);
-
-            var res = fa.Bond(selList);
+            var res = CadFigureBonder.Bond(mDB, fig);
 
             if (!res.isValid())
             {
@@ -97,7 +98,7 @@ namespace Plotter.Controller
             CadOpeList opeRoot = CadOpe.CreateListOpe();
             CadOpe ope;
 
-            foreach (CadFigureAssembler.ResultItem ri in res.AddList)
+            foreach (EditResult.Item ri in res.AddList)
             {
                 CadLayer layer = mDB.GetLayer(ri.LayerID);
 
@@ -107,7 +108,7 @@ namespace Plotter.Controller
                 layer.AddFigure(ri.Figure);
             }
 
-            foreach (CadFigureAssembler.ResultItem ri in res.RemoveList)
+            foreach (EditResult.Item ri in res.RemoveList)
             {
                 CadLayer layer = mDB.GetLayer(ri.LayerID);
 
@@ -122,7 +123,12 @@ namespace Plotter.Controller
 
         public void CutSegment()
         {
-            MarkSegment ms = SelSegList.LastSel;
+            if (LastSelSegment == null)
+            {
+                return;
+            }
+
+            MarkSegment ms = LastSelSegment.Value;
             CutSegment(ms);
             ClearSelection();
         }
@@ -139,9 +145,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            CadSegmentCutter segCutter = new CadSegmentCutter(mDB);
-
-            var res = segCutter.CutSegment(ms, ms.CrossPoint);
+            var res = CadSegmentCutter.CutSegment(mDB, ms, ms.CrossPoint);
 
             if (!res.isValid())
             {
@@ -151,7 +155,7 @@ namespace Plotter.Controller
             CadOpeList opeRoot = CadOpe.CreateListOpe();
             CadOpe ope;
 
-            foreach (CadFigureAssembler.ResultItem ri in res.AddList)
+            foreach (EditResult.Item ri in res.AddList)
             {
                 CadLayer layer = mDB.GetLayer(ri.LayerID);
 
@@ -161,7 +165,7 @@ namespace Plotter.Controller
                 layer.AddFigure(ri.Figure);
             }
 
-            foreach (CadFigureAssembler.ResultItem ri in res.RemoveList)
+            foreach (EditResult.Item ri in res.RemoveList)
             {
                 CadLayer layer = mDB.GetLayer(ri.LayerID);
 

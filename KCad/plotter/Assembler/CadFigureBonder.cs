@@ -7,373 +7,109 @@ using CadDataTypes;
 
 namespace Plotter
 {
-    class CadFigureBonder : CadFigureAssembler
+    class CadFigureBonder
     {
-        private CadLayer Layer = null;
-
-        private List<CadFigure> Work;
-        private List<SelectItem> SelectList;
-        private List<Item> ItemList;
-
-        private uint LayerID
+        public static EditResult Bond(CadObjectDB db, CadFigure fig)
         {
-            get
+            EditResult result = new EditResult();
+
+            if (fig.LayerID == 0)
             {
-                if (Layer == null)
+                return result;
+            }
+
+            if (fig.IsLoop)
+            {
+                return result;
+            }
+
+            CadLayer layer = db.GetLayer(fig.LayerID);
+
+            CadVector ps = fig.PointList[0];
+            CadVector pe = fig.PointList[fig.PointCount-1];
+
+            int pi = -1;
+            int bpi = -1;
+
+            CadFigure bfig = null;
+
+            foreach (CadFigure tfig in layer.FigureList)
+            {
+                if (tfig.ID == fig.ID)
                 {
-                    return 0;
+                    continue;
                 }
 
-                return Layer.ID;
-            }
-        }
-
-        public CadFigureBonder(CadObjectDB db, CadLayer layer) : base(db)
-        {
-            Layer = layer;
-
-            // Copy figure list to Work
-            if (layer != null)
-            {
-                Work = new List<CadFigure>(layer.FigureList);
-            }
-            else
-            {
-                Work = new List<CadFigure>();
-
-                foreach (CadLayer la in db.LayerList)
+                if (tfig.IsLoop)
                 {
-                    foreach (CadFigure fig in la.FigureList)
-                    {
-                        Work.Add(fig);
-                    }
-                }
-            }
-        }
-
-        private class Item
-        {
-            public uint LayerID;
-            public uint FigureID;
-            public int PointIndex;
-            public CadVector Point;
-
-            public void Set(CadObjectDB db, SelectItem si)
-            {
-                LayerID = si.LayerID;
-                FigureID = si.FigureID;
-                PointIndex = si.PointIndex;
-
-                CadFigure fig = db.GetFigure(FigureID);
-                Point = fig.PointList[PointIndex];
-            }
-        }
-
-        private class BondInfo
-        {
-            public CadFigure BondedFigure;
-
-            public Item item;
-
-            public CadFigure figA;
-            public int indexA;
-
-            public CadFigure figB;
-            public int indexB;
-        }
-
-        public Result Bond(IReadOnlyList<SelectItem> selList)
-        {
-            SelectList = new List<SelectItem>();
-
-            foreach (SelectItem item in selList)
-            {
-                if (Layer != null)
-                {
-                    if (item.LayerID != LayerID)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
 
-                SelectList.Add(item);
-            }
+                CadVector tps = tfig.PointList[0];
+                CadVector tpe = tfig.PointList[tfig.PointCount - 1];
 
-            // Collect endpoint (first and last point) items
-            // to ItemList 
-            CollectEndPoint(SelectList);
-
-            // joint end points
-            BondMain();
-
-            foreach (ResultItem ri in ProcResult.AddList)
-            {
-                if (ri.Figure.PointCount > 2)
+                if (tps.Equals(ps))
                 {
-                    CadVector sp = ri.Figure.PointList[0];
-                    CadVector ep = ri.Figure.PointList[ri.Figure.PointList.Count-1];
+                    bpi = 0;
+                    pi = 0;
+                    bfig = tfig;
+                    break;
+                }
 
-                    if (ep.Equals(sp))
-                    {
-                        ri.Figure.RemovePointAt(ri.Figure.PointList.Count - 1);
-                        ri.Figure.IsLoop = true;
-                    }
+                if (tps.Equals(pe))
+                {
+                    bpi = 0;
+                    pi = fig.PointCount-1;
+                    bfig = tfig;
+                    break;
+                }
+
+                if (tpe.Equals(ps))
+                {
+                    bpi = tfig.PointCount-1;
+                    pi = 0;
+                    bfig = tfig;
+                    break;
+                }
+
+                if (tpe.Equals(pe))
+                {
+                    bpi = tfig.PointCount - 1;
+                    pi = fig.PointCount - 1;
+                    bfig = tfig;
+                    break;
                 }
             }
 
-            return ProcResult;
-        }
-
-        private void CollectEndPoint(List<SelectItem> selList)
-        {
-            ItemList = new List<Item>();
-
-            foreach (SelectItem si in selList)
+            if (pi < 0)
             {
-                if (si.FigureID == 0) continue;
-
-
-                // falldown if index is 0 or last
-                if (si.PointIndex != 0)
-                {
-                    CadFigure fig = DB.GetFigure(si.FigureID);
-
-                    if (si.PointIndex != fig.PointCount - 1)
-                    {
-                        continue;
-                    }
-                }
-
-
-                Item item = new Item();
-                item.Set(DB, si);
-                ItemList.Add(item);
-            }
-        }
-
-        private void BondMain()
-        {
-            while (ItemList.Count > 0)
-            {
-                BondInfo bondInfo = null;
-
-                Item item = ItemList[0];
-
-                foreach (CadFigure fig1 in Work)
-                {
-                    if (fig1.ID == item.FigureID)
-                    {
-                        continue;
-                    }
-
-                    bondInfo = BondFigure(item, fig1);
-
-                    if (bondInfo != null)
-                    {
-                        break;
-                    }
-                }
-
-                if (bondInfo != null)
-                {
-                    UpdateItemList(bondInfo);
-
-                    ProcResult.AddList.Add(new ResultItem(LayerID, bondInfo.BondedFigure));
-                    ProcResult.RemoveList.Add(new ResultItem(bondInfo.figA.LayerID, bondInfo.figA));
-                    ProcResult.RemoveList.Add(new ResultItem(bondInfo.figB.LayerID, bondInfo.figB));
-
-                    Work.RemoveAll(a =>
-                        a.ID == bondInfo.figA.ID ||
-                        a.ID == bondInfo.figB.ID
-                        );
-
-
-                    Work.Add(bondInfo.BondedFigure);
-                }
-                else
-                {
-                    ItemList.RemoveAll((a) =>
-                        a.FigureID == item.FigureID &&
-                        a.PointIndex == item.PointIndex
-                        );
-                }
-            }
-        }
-
-        private Item FindItem(CadVector p)
-        {
-            foreach (Item item in ItemList)
-            {
-                if (p.Equals(item.Point))
-                {
-                    return item;
-                }
+                return result;
             }
 
-            return null;
-        }
+            CadFigure newFig = db.NewFigure(CadFigure.Types.POLY_LINES);
 
+            VectorList plist = new VectorList(fig.PointList);
+            VectorList blist = new VectorList(bfig.PointList);
 
-        /**
-         * replace Item in ItemList to bondedFigure
-         *
-         */
-        private void UpdateItemList(BondInfo bi)
-        {
-            int pcnt = bi.BondedFigure.PointCount;
-            CadVector head = bi.BondedFigure.GetPointAt(0);
-            CadVector tail = bi.BondedFigure.GetPointAt(pcnt - 1);
-
-            Item item = null;
-
-            Item litem = null;
-            item = FindItem(head);
-
-            if (item != null)
+            if (pi == 0)
             {
-                litem = new Item();
-                litem.FigureID = bi.BondedFigure.ID;
-                litem.PointIndex = 0;
-                litem.Point = head;
-
-                ItemList.RemoveAll((a) =>
-                    a.Point.Equals(head)
-                    );
-
-                ItemList.Add(litem);
+                plist.Reverse();
             }
 
-            Item ritem = null;
-            item = FindItem(tail);
-
-            if (item != null)
+            if (bpi != 0)
             {
-                ritem = new Item();
-                ritem.FigureID = bi.BondedFigure.ID;
-                ritem.PointIndex = bi.BondedFigure.PointCount - 1;
-                ritem.Point = tail;
-
-                ItemList.RemoveAll((a) =>
-                    a.Point.Equals(tail)
-                    );
-
-                ItemList.Add(ritem);
+                blist.Reverse();
             }
 
-            // Remove item that is used for bond
-            ItemList.RemoveAll((a) =>
-                a.FigureID == bi.item.FigureID &&
-                a.PointIndex == bi.item.PointIndex
-                );
-        }
+            newFig.PointList.AddRange(plist);
+            newFig.PointList.AddRange(blist);
 
-        private BondInfo BondFigure(Item item, CadFigure fig1)
-        {
-            CadFigure fig0 = DB.GetFigure(item.FigureID);
-            int idx0 = item.PointIndex;
+            result.AddList.Add(new EditResult.Item(layer.ID, newFig));
 
-            if (fig0.ID == fig1.ID)
-            {
-                return null;
-            }
+            result.RemoveList.Add(new EditResult.Item(layer.ID, fig));
+            result.RemoveList.Add(new EditResult.Item(layer.ID, bfig));
 
-            // Is point index first or last ?
-            if ((idx0 != 0) && (idx0 != fig0.PointCount - 1))
-            {
-                return null;
-            }
-
-            CadVector p0 = fig0.GetPointAt(idx0);
-            CadVector p1 = fig1.GetPointAt(0);
-
-
-            int idx1 = -1;
-
-            if (p1.Equals(p0))
-            {
-                idx1 = 0;
-            }
-            else
-            {
-                p1 = fig1.GetPointAt(fig1.PointCount - 1);
-
-                if (p1.Equals(p0))
-                {
-                    idx1 = fig1.PointCount - 1;
-                }
-            }
-
-            if (idx1 == -1)
-            {
-                return null;
-            }
-
-            // Create figure that will be marged fig0 and fig1.
-            CadFigure rfig = DB.NewFigure(CadFigure.Types.POLY_LINES);
-            rfig.LayerID = LayerID;
-
-            BondInfo ret = new BondInfo();
-
-            if (idx0 == fig0.PointCount - 1)
-            {
-                // bond fig1 to fig0's tail
-
-                ret.figA = fig0;
-                ret.indexA = idx0;
-
-                ret.figB = fig1;
-                ret.indexB = idx1;
-
-                rfig.CopyPoints(fig0);
-
-                if (idx1 == 0)
-                {
-                    rfig.AddPoints(fig1.PointList, 1);
-                }
-                else
-                {
-                    rfig.AddPointsReverse(fig1.PointList, 1);
-                }
-            }
-            else if (idx1 == fig1.PointCount - 1)
-            {
-                // bond fig0 to fig1's tail
-
-                ret.figA = fig1;
-                ret.indexA = idx1;
-
-                ret.figB = fig0;
-                ret.indexB = idx0;
-
-                rfig.CopyPoints(fig1);
-
-                if (idx0 == 0)
-                {
-                    rfig.AddPoints(fig0.PointList, 1);
-                }
-                else
-                {
-                    rfig.AddPointsReverse(fig0.PointList, 1);
-                }
-            }
-            else
-            {
-                // Both points are head. Bond fig1 to reversed fig0 
-
-                ret.figA = fig0;
-                ret.indexA = idx0;
-
-                ret.figB = fig1;
-                ret.indexB = idx1;
-
-                rfig.AddPointsReverse(fig0.PointList);
-                rfig.AddPoints(fig1.PointList, 1);
-            }
-
-            ret.BondedFigure = rfig;
-            ret.item = item;
-
-            return ret;
+            return result;
         }
     }
 }
