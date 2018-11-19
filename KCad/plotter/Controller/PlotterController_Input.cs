@@ -273,7 +273,6 @@ namespace Plotter.Controller
 
             if (SelectMode == SelectModes.POINT)
             {
-                SelList.add(sc.MarkPt);
                 LastSelPoint = sc.MarkPt;
 
                 sc.PointSelected = true;
@@ -281,8 +280,6 @@ namespace Plotter.Controller
             }
             else if (SelectMode == SelectModes.OBJECT)
             {
-                SelList.add(sc.MarkPt);
-
                 LastSelPoint = sc.MarkPt;
 
                 sc.PointSelected = true;
@@ -291,7 +288,7 @@ namespace Plotter.Controller
 
             // Set ignore list for snap cursor
             //mPointSearcher.SetIgnoreList(SelList.List);
-            mSegSearcher.SetIgnoreList(SelList.List);
+            //mSegSearcher.SetIgnoreList(SelList.List);
 
             if (sc.PointSelected)
             {
@@ -346,8 +343,6 @@ namespace Plotter.Controller
 
             if (SelectMode == SelectModes.POINT)
             {
-                SelList.add(sc.MarkSeg);
-
                 LastSelPoint = null;
                 LastSelSegment = sc.MarkSeg;
 
@@ -358,7 +353,6 @@ namespace Plotter.Controller
             }
             else if (SelectMode == SelectModes.OBJECT)
             {
-                SelList.add(sc.MarkSeg);
                 sc.SegmentSelected = true;
 
                 LastSelPoint = null;
@@ -367,14 +361,7 @@ namespace Plotter.Controller
                 fig.SelectWithGroup();
             }
 
-            SelSegList.Add(sc.MarkSeg);
-
             MoveOrgScrnPoint = sc.DC.WorldPointToDevPoint(ObjDownPoint);
-
-            // Set ignore liset for snap cursor
-            mPointSearcher.SetIgnoreList(SelList.List);
-            mSegSearcher.SetIgnoreList(SelList.List);
-            mSegSearcher.SetIgnoreSeg(SelSegList.List);
 
             if (sc.SegmentSelected)
             {
@@ -611,8 +598,6 @@ namespace Plotter.Controller
         #region RubberBand
         public void RubberBandSelect(CadVector p0, CadVector p1)
         {
-            SelList.clear();
-
             LastSelPoint = null;
             LastSelSegment = null;
 
@@ -622,11 +607,11 @@ namespace Plotter.Controller
             DB.WalkEditable(
                 (layer, fig) =>
                 {
-                    SelectIfContactRect(minp, maxp, layer, fig, SelList);
+                    SelectIfContactRect(minp, maxp, layer, fig);
                 });
         }
 
-        public void SelectIfContactRect(CadVector minp, CadVector maxp, CadLayer layer, CadFigure fig, SelectList selList)
+        public void SelectIfContactRect(CadVector minp, CadVector maxp, CadLayer layer, CadFigure fig)
         {
             for (int i = 0; i < fig.PointCount; i++)
             {
@@ -635,11 +620,6 @@ namespace Plotter.Controller
                 if (CadUtil.IsInRect2D(minp, maxp, p))
                 {
                     fig.SelectPointAt(i, true);
-
-                    if (selList != null)
-                    {
-                        selList.add(layer, fig, i);
-                    }
                 }
             }
             return;
@@ -661,10 +641,10 @@ namespace Plotter.Controller
 
                 case States.START_DRAGING_POINTS:
                 case States.DRAGING_POINTS:
-                    mPointSearcher.SetIgnoreList(null);
 
-                    mSegSearcher.SetIgnoreList(null);
-                    mSegSearcher.SetIgnoreSeg(null);
+                    //mPointSearcher.SetIgnoreList(null);
+                    //mSegSearcher.SetIgnoreList(null);
+                    //mSegSearcher.SetIgnoreSeg(null);
 
                     if (State == States.DRAGING_POINTS)
                     {

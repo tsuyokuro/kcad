@@ -16,10 +16,8 @@ namespace Plotter
 
         private List<MarkPoint> XYMatchList = new List<MarkPoint>();
 
-
-        private IReadOnlyList<MarkPoint> IgnoreList = null;
-
         public CadCursor Target;    // Cursor(スクリーン座標系)
+
         public double Range;        // matchする範囲(スクリーン座標系)
 
         public uint CurrentLayerID
@@ -73,11 +71,6 @@ namespace Plotter
         public void SetTargetPoint(CadCursor cursor)
         {
             Target = cursor;
-        }
-
-        public void SetIgnoreList(List<MarkPoint> list)
-        {
-            IgnoreList = list;
         }
 
         public MarkPoint GetXMatch()
@@ -213,11 +206,6 @@ namespace Plotter
 
         private void CheckFigPoint(DrawContext dc, CadVector pt, CadLayer layer, CadFigure fig, int ptIdx)
         {
-            if (fig != null && IsIgnore(fig.ID, ptIdx))
-            {
-                return;
-            }
-
             CadVector ppt = dc.WorldPointToDevPoint(pt);
 
             double dx = Math.Abs(ppt.x - Target.Pos.x);
@@ -293,27 +281,6 @@ namespace Plotter
                 MarkPoint lmp = XYMatchList[i];
 
                 if (mp.FigureID == lmp.FigureID && mp.PointIndex == lmp.PointIndex)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-
-        private bool IsIgnore(uint figId, int index)
-        {
-            if (IgnoreList == null)
-            {
-                return false;
-            }
-
-            for (int i=0;i<IgnoreList.Count;i++)
-            {
-                MarkPoint item = IgnoreList[i];
-
-                if (item.FigureID == figId && item.PointIndex == index)
                 {
                     return true;
                 }

@@ -15,10 +15,6 @@ namespace Plotter
 
         public double MinDist = 0;
 
-        private List<MarkSegment> IgnoreSegList;
-
-        private IReadOnlyList<MarkPoint> IgnoreList = null;
-
         public bool IsMatch
         {
             get
@@ -26,7 +22,6 @@ namespace Plotter
                 return MarkSeg.FigureID != 0;
             }
         }
-
 
         public void SetRangePixel(DrawContext dc, double pixel)
         {
@@ -42,16 +37,6 @@ namespace Plotter
         public void SetTargetPoint(CadCursor cursor)
         {
             Target = cursor;
-        }
-
-        public void SetIgnoreList(IReadOnlyList<MarkPoint> list)
-        {
-            IgnoreList = list; 
-        }
-
-        public void SetIgnoreSeg(List<MarkSegment> segList)
-        {
-            IgnoreSegList = segList;
         }
 
         public MarkSegment GetMatch()
@@ -109,16 +94,6 @@ namespace Plotter
             {
                 a = fseg.StoredPoint0;
                 b = fseg.StoredPoint1;
-            }
-
-            if (fig != null && IsIgnore(fig.ID, idxA))
-            {
-                return;
-            }
-
-            if (fig != null && IsIgnore(fig.ID, idxB))
-            {
-                return;
             }
 
             CadVector cwp = dc.DevPointToWorldPoint(Target.Pos);
@@ -187,29 +162,23 @@ namespace Plotter
 
         private void CheckCircle(DrawContext dc, CadLayer layer, CadFigure fig)
         {
-            if (IsIgnore(fig.ID, 0))
-            {
-                return;
-            }
-
-            if (IsIgnore(fig.ID, 1))
-            {
-                return;
-            }
-
-            if (IsIgnore(fig.ID, 2))
-            {
-                return;
-            }
-
             if (fig.PointCount < 3)
             {
                 return;
             }
 
-            CadVector c = fig.GetPointAt(0);
-            CadVector a = fig.GetPointAt(1);
-            CadVector b = fig.GetPointAt(2);
+            VectorList vl = fig.PointList;
+
+            if (fig.StoreList != null)
+            {
+                vl = fig.StoreList;
+            }
+
+
+            CadVector c = vl[0];
+            CadVector a = vl[1];
+            CadVector b = vl[2];
+
 
             CadVector pc = dc.WorldPointToDevPoint(c);
             CadVector pa = dc.WorldPointToDevPoint(a);
@@ -286,46 +255,6 @@ namespace Plotter
                 default:
                     break;
             }
-        }
-
-        private bool IsIgnore(uint figId, int index)
-        {
-            if (IgnoreList == null)
-            {
-                return false;
-            }
-
-            for (int i=0; i<IgnoreList.Count; i++)
-            {
-                MarkPoint item = IgnoreList[i];
-
-                if (item.FigureID == figId && item.PointIndex == index)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private bool IsIgnoreSeg(uint figId, int index)
-        {
-            if (IgnoreSegList == null)
-            {
-                return false;
-            }
-
-            for (int i=0; i<IgnoreSegList.Count; i++)
-            {
-                MarkSegment item = IgnoreSegList[i];
-
-                if (item.FigureID == figId && (item.PtIndexA == index || item.PtIndexB == index))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

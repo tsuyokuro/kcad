@@ -8,7 +8,12 @@ namespace Plotter.Controller
     {
         public void ToBezier()
         {
-            ToBezier(SelSegList.LastSel);
+            if (LastSelSegment == null)
+            {
+                return;
+            }
+
+            ToBezier(LastSelSegment.Value);
             ClearSelection();
         }
 
@@ -302,7 +307,12 @@ namespace Plotter.Controller
 
         public bool InsPointToLastSelectedSeg()
         {
-            MarkSegment seg = SelSegList.LastSel;
+            if (LastSelSegment == null)
+            {
+                return false;
+            }
+
+            MarkSegment seg = LastSelSegment.Value;
 
             CadFigure fig = DB.GetFigure(seg.FigureID);
 

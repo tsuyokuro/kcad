@@ -484,7 +484,12 @@ namespace Plotter.Controller
 
         public void SegLen(double len)
         {
-            MarkSegment seg = Controller.SelSegList.LastSel;
+            if (Controller.LastSelSegment == null)
+            {
+                return;
+            }
+
+            MarkSegment seg = Controller.LastSelSegment.Value;
 
             if (seg.FigureID == 0)
             {

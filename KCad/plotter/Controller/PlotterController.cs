@@ -104,12 +104,7 @@ namespace Plotter.Controller
 
         public HistoryManager HistoryMan = null;
 
-        public SelectList SelList = new SelectList();
-
-        public SelectSegmentList SelSegList = new SelectSegmentList();
-
         private List<CadFigure> EditFigList = new List<CadFigure>();
-
 
         public bool ContinueCreate { set; get; } = false;
 
@@ -452,9 +447,6 @@ namespace Plotter.Controller
         {
             CurrentFigure = null;
 
-            SelList.clear();
-            SelSegList.Clear();
-
             LastSelPoint = null;
             LastSelSegment = null;
 
@@ -498,8 +490,6 @@ namespace Plotter.Controller
                 }
             }
 
-            UpdateSelectItemPoints();
-
             CadOpeList root = new CadOpeList();
 
             CadOpeList rmOpeList = RemoveInvalidFigure();
@@ -524,34 +514,6 @@ namespace Plotter.Controller
                     fig.CancelEdit();
                 }
             }
-        }
-
-        private void UpdateSelectItemPoints()
-        {
-            HashSet<MarkPoint> removeSels = new HashSet<MarkPoint>();
-
-            foreach (MarkPoint item in SelList.List)
-            {
-                if (!item.update())
-                {
-                    removeSels.Add(item);
-                }
-            }
-
-            SelList.RemoveAll(a => removeSels.Contains(a));
-
-
-            HashSet<MarkSegment> removeSegs = new HashSet<MarkSegment>();
-
-            foreach (MarkSegment item in SelSegList.List)
-            {
-                if (!item.Update())
-                {
-                    removeSegs.Add(item);
-                }
-            }
-
-            SelSegList.List.RemoveAll(a => removeSegs.Contains(a));
         }
 
         private CadOpeList RemoveInvalidFigure()
