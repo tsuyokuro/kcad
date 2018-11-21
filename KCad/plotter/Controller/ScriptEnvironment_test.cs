@@ -285,7 +285,7 @@ namespace Plotter.Controller
             }
 
             sw.Stop();
-            DbgOut.pln(sw.ElapsedMilliseconds.ToString() + " milli sec");
+            DOut.pl(sw.ElapsedMilliseconds.ToString() + " milli sec");
         }
 
         private void test010()

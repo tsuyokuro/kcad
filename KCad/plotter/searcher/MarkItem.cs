@@ -182,11 +182,11 @@ namespace Plotter
 
         public void dump(string name= "MarkSeg")
         {
-            DbgOut.pln(name + " {");
-            DbgOut.Indent++;
+            DOut.pl(name + " {");
+            DOut.Indent++;
             FigSeg.dump("FSegment");
-            DbgOut.Indent--;
-            DbgOut.pln("}");
+            DOut.Indent--;
+            DOut.pl("}");
         }
 
         public bool Update()

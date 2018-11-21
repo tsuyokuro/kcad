@@ -473,21 +473,21 @@ namespace Plotter.Controller
             if (LastSelPoint != null)
             {
                 MarkPoint mp = LastSelPoint.Value;
-                DbgOut.pln("LastSelPoint FigID:" + mp.FigureID.ToString() + " Point:" + mp.PointIndex.ToString());
+                DOut.pl("LastSelPoint FigID:" + mp.FigureID.ToString() + " Point:" + mp.PointIndex.ToString());
             }
             else
             {
-                DbgOut.pln("LastSelPoint = null");
+                DOut.pl("LastSelPoint = null");
             }
 
             if (LastSelSegment != null)
             {
                 MarkSegment ms = LastSelSegment.Value;
-                DbgOut.pln("LastSelSegment FigID:" + ms.FigureID.ToString() + " PointA:" + ms.PtIndexA.ToString() + " PointB:" + ms.PtIndexB.ToString());
+                DOut.pl("LastSelSegment FigID:" + ms.FigureID.ToString() + " PointA:" + ms.PtIndexA.ToString() + " PointB:" + ms.PtIndexB.ToString());
             }
             else
             {
-                DbgOut.pln("LastSelSegment = null");
+                DOut.pl("LastSelSegment = null");
             }
         }
 

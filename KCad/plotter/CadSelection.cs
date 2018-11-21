@@ -138,14 +138,14 @@ namespace Plotter
 
         public void dump()
         {
-            DbgOut.pln("SelectSegmentList {");
-            DbgOut.Indent++;
+            DOut.pl("SelectSegmentList {");
+            DOut.Indent++;
             foreach (MarkSegment ms in mList)
             {
                 ms.dump();
             }
-            DbgOut.Indent--;
-            DbgOut.pln("}");
+            DOut.Indent--;
+            DOut.pl("}");
         }
     }
 }

@@ -91,17 +91,17 @@ namespace Plotter
 
         public void dump()
         {
-            DbgOut.pln(this.GetType().Name);
-            DbgOut.pln("{");
-            DbgOut.Indent++;
-            DbgOut.pln("UndoStack [");
-            DbgOut.Indent++;
+            DOut.pl(this.GetType().Name);
+            DOut.pl("{");
+            DOut.Indent++;
+            DOut.pl("UndoStack [");
+            DOut.Indent++;
 
 
 
-            DbgOut.Indent--;
-            DbgOut.Indent--;
-            DbgOut.pln("}");
+            DOut.Indent--;
+            DOut.Indent--;
+            DOut.pl("}");
         }
     }
 }

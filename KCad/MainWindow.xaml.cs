@@ -28,14 +28,14 @@ namespace KCad
 
             if (App.UseConsole)
             {
-                // DebugOutの出力はデフォルトでConsoleになっているので、UseConsoleの場合は、
+                // DOutの出力はデフォルトでConsoleになっているので、UseConsoleの場合は、
                 // あらためて設定する必要はない
-                DbgOut.pln("DbgOut's output setting is Console");
+                DOut.pl("DOut's output setting is Console");
             }
             else {
-                DbgOut.PrintFunc = MyConsole.Print;
-                DbgOut.PrintLnFunc = MyConsole.PrintLn;
-                DbgOut.FormatPrintFunc = MyConsole.Printf;
+                DOut.PrintFunc = MyConsole.Print;
+                DOut.PrintLnFunc = MyConsole.PrintLn;
+                DOut.FormatPrintFunc = MyConsole.Printf;
             }
 
 
