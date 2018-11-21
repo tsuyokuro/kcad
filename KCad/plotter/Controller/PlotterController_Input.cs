@@ -415,13 +415,9 @@ namespace Plotter.Controller
                         State = States.RUBBER_BAND_SELECT;
                     }
 
-                    DebugPrintLastSel();
-
                     return;
 
                 case States.RUBBER_BAND_SELECT:
-
-                    DebugPrintLastSel();
 
                     return;
 

@@ -218,8 +218,8 @@ namespace Plotter
             dv.Z = pv.Z / pv.W;
             dv.W = pv.W;
 
-            dv.X = dv.X * (ViewWidth / 2.0);
-            dv.Y = -dv.Y * (ViewHeight / 2.0);
+            dv.X = dv.X * DeviceScaleX;
+            dv.Y = dv.Y * DeviceScaleY;
             dv.Z = 0;
 
             return CadVector.Create(dv);
@@ -227,8 +227,8 @@ namespace Plotter
 
         public override CadVector DevVectorToWorldVector(CadVector pt)
         {
-            pt.x = pt.x / (ViewWidth / 2.0);
-            pt.y = -pt.y / (ViewHeight / 2.0);
+            pt.x = pt.x / DeviceScaleX;
+            pt.y = pt.y / DeviceScaleY;
 
             Vector3d epv = pt.vector - Eye;
 
@@ -286,6 +286,9 @@ namespace Plotter
 
             mViewOrg.x = w / 2.0;
             mViewOrg.y = h / 2.0;
+
+            DeviceScaleX = w / 2.0;
+            DeviceScaleY = -h / 2.0;
 
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 
