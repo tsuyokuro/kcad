@@ -1,6 +1,4 @@
-﻿using CadDataTypes;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Threading;
 
 namespace Plotter
@@ -73,6 +71,17 @@ namespace Plotter
             Begin();
             PutCount++;
             PrintLnFunc(space + s);
+            End();
+        }
+
+        // print with new line
+        public static void tpl(String s)
+        {
+            DateTime dt = DateTime.Now;
+
+            Begin();
+            PutCount++;
+            PrintLnFunc(dt.ToString("HH:mm:ss.fff") + " " + space + s);
             End();
         }
 

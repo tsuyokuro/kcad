@@ -29,7 +29,14 @@ namespace Plotter
         {
             get
             {
-                return Fig.GetPointAt(Idx0);
+                if (Fig.StoreList == null)
+                {
+                    return Fig.PointList[Idx0];
+                }
+                else
+                {
+                    return Fig.StoreList[Idx0];
+                }
             }
         }
 
@@ -37,7 +44,14 @@ namespace Plotter
         {
             get
             {
-                return Fig.GetPointAt(Idx1);
+                if (Fig.StoreList == null)
+                {
+                    return Fig.PointList[Idx1];
+                }
+                else
+                {
+                    return Fig.StoreList[Idx1];
+                }
             }
         }
 
