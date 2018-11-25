@@ -312,6 +312,7 @@ namespace Plotter.Controller
             }
 
             DrawBase(dc);
+            DrawDragLine(dc);
             DrawCrossCursor(dc);
             Draw(dc);
             DrawSelectedItems(dc);
@@ -390,6 +391,17 @@ namespace Plotter.Controller
                     ObjDownPoint,
                     ControllerConst.MARK_CURSOR_SIZE);
             }
+        }
+
+        public void DrawDragLine(DrawContext dc)
+        {
+            if (State != States.DRAGING_POINTS)
+            {
+                return;
+            }
+
+            dc.Drawing.DrawLine(DrawTools.PEN_DRAG_LINE,
+                LastDownPoint, dc.DevPointToWorldPoint(CrossCursor.Pos));
         }
 
         public void DrawCrossCursor(DrawContext dc)
