@@ -814,11 +814,6 @@ namespace Plotter.Controller
                 return;
             }
 
-            if (mSegSearcher.IsMatch)
-            {
-                return;
-            }
-
             CadCursor cursor = CrossCursor;
 
             if (mPointSearcher.IsXMatch)
@@ -837,6 +832,22 @@ namespace Plotter.Controller
             {
                 SnapPoint = ri.CrossPoint;
                 CrossCursor.Pos = dc.WorldPointToDevPoint(SnapPoint);
+
+                if (mSegSearcher.IsMatch)
+                {
+                    MarkSegment ms = mSegSearcher.GetMatch();
+
+                    if (ms.FigureID != ri.Ruler.Fig.ID)
+                    {
+                        CadVector cp = PlotterUtil.CrossOnScreen(dc, ri.Ruler.P0, ri.Ruler.P1, ms.FigSeg.Point0, ms.FigSeg.Point1);
+
+                        if (cp.Valid)
+                        {
+                            SnapPoint = dc.DevPointToWorldPoint(cp);
+                            CrossCursor.Pos = cp;
+                        }
+                    }
+                }
 
                 HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1));
                 HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint));

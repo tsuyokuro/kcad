@@ -107,5 +107,17 @@ namespace Plotter.Controller
 
             return cent.Area;
         }
+
+        public static CadVector CrossOnScreen(DrawContext dc, CadVector wp00, CadVector wp01, CadVector wp10, CadVector wp11)
+        {
+            CadVector sp00 = dc.WorldPointToDevPoint(wp00);
+            CadVector sp01 = dc.WorldPointToDevPoint(wp01);
+            CadVector sp10 = dc.WorldPointToDevPoint(wp10);
+            CadVector sp11 = dc.WorldPointToDevPoint(wp11);
+
+            CadVector cp = CadUtil.CrossLine2D(sp00, sp01, sp10, sp11);
+
+            return cp;
+        }
     }
 }

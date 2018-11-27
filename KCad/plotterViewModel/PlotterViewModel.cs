@@ -90,7 +90,7 @@ namespace Plotter
 
                 mCursorPos = value;
 
-                String s = string.Format("({0:0.00},{1:0.00},{2:0.00})",
+                String s = string.Format("({0:0.00}, {1:0.00}, {2:0.00})",
                     mCursorPos.x, mCursorPos.y, mCursorPos.z);
 
                 StrCursorPos = s;
