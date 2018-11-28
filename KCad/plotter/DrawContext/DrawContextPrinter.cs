@@ -21,10 +21,8 @@ namespace Plotter
 
             if (currentDC is DrawContextGL)
             {
-                WorldScale = 0.2;
-                UnitPerMilli = 1.0;
-                DeviceScaleX = currentDC.ViewWidth / 2.0;
-                DeviceScaleY = -currentDC.ViewHeight / 2.0;
+                DeviceScaleX = currentDC.DeviceScaleX;
+                DeviceScaleY = currentDC.DeviceScaleY;
             }
 
             CadVector org = default(CadVector);

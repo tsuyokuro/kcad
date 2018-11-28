@@ -139,7 +139,7 @@ namespace Plotter
             msg.Arg1 = e.X;
             msg.Arg2 = e.Y;
 
-            mMessageHandler.SendMessage(msg, 2);
+            mMessageHandler.SendMessage(msg, 0);
 #else
             // Mouse eventを直接処理
             mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
@@ -242,7 +242,7 @@ namespace Plotter
             public const int MOUSE_MOVE = 1;
             public const int MOUSE_WHEEL = 2;
 
-            private PlotterView mPlotterView; 
+            private PlotterView mPlotterView;
 
             public MyMessageHandler(PlotterView view, int maxMessage) : base(maxMessage)
             {

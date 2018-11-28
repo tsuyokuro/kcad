@@ -59,8 +59,6 @@ namespace Plotter
                 uint* srcPixels = (uint*)srcBits.Scan0;
                 uint* dstPixels = (uint*)dstBits.Scan0;
 
-                int sline0 = 0;
-                int si = 0;
 
                 int x;
                 int y = 0;

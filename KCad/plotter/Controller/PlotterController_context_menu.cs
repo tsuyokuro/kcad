@@ -37,7 +37,7 @@ namespace Plotter.Controller
                     mContextMenuInfo.Items.Add(MenuInfo.Copy);
                 }
 
-                if (HasCopyData())
+                if (PlotterClipboard.HasCopyData())
                 {
                     mContextMenuInfo.Items.Add(MenuInfo.Paste);
                 }

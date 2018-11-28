@@ -34,6 +34,7 @@ namespace Plotter
         public static PrintFunc PrintFunc = (s)=>{};
         public static PrintFunc PrintLnFunc = (s) => { };
         public static FormatPrintFunc FormatPrintFunc = (s, args) => { };
+        public static Action clear = () => { };
 
         public static void print(string s)
         {
@@ -61,13 +62,13 @@ namespace Plotter
     {
         public static void dump(this CadVector v, string prefix = nameof(CadVector))
         {
-            DbgOut.pln(prefix + "{");
-            DbgOut.Indent++;
-            DbgOut.pln("x:" + v.x.ToString());
-            DbgOut.pln("y:" + v.y.ToString());
-            DbgOut.pln("z:" + v.z.ToString());
-            DbgOut.Indent--;
-            DbgOut.pln("}");
+            DOut.pl(prefix + "{");
+            DOut.Indent++;
+            DOut.pl("x:" + v.x.ToString());
+            DOut.pl("y:" + v.y.ToString());
+            DOut.pl("z:" + v.z.ToString());
+            DOut.Indent--;
+            DOut.pl("}");
         }
     }
 }

@@ -485,7 +485,6 @@ namespace Plotter
         // 図形は凸である
         public static bool IsConvex(VectorList points)
         {
-            int p = 0;
             int cnt = points.Count;
 
             if (cnt<3)
@@ -974,7 +973,7 @@ namespace Plotter
 
             list.ForEach(p =>
             {
-                CadVector v = dc.CadPointToUnitPoint(p);
+                CadVector v = dc.WorldPointToDevPoint(p);
 
                 minx = Math.Min(minx, v.x);
                 miny = Math.Min(miny, v.y);
@@ -1496,32 +1495,32 @@ namespace Plotter
 
         public static void Dump(Vector4d v, string prefix)
         {
-            DbgOut.Begin();
+            DOut.Begin();
 
-            DbgOut.p(prefix);
-            DbgOut.pln("{");
-            DbgOut.Indent++;
-            DbgOut.pln("x:" + v.X.ToString());
-            DbgOut.pln("y:" + v.Y.ToString());
-            DbgOut.pln("z:" + v.Z.ToString());
-            DbgOut.pln("w:" + v.W.ToString());
-            DbgOut.Indent--;
-            DbgOut.pln("}");
+            DOut.p(prefix);
+            DOut.pl("{");
+            DOut.Indent++;
+            DOut.pl("x:" + v.X.ToString());
+            DOut.pl("y:" + v.Y.ToString());
+            DOut.pl("z:" + v.Z.ToString());
+            DOut.pl("w:" + v.W.ToString());
+            DOut.Indent--;
+            DOut.pl("}");
 
-            DbgOut.End();
+            DOut.End();
         }
 
         public static void Dump(UMatrix4 m, string prefix)
         {
-            DbgOut.p(prefix);
-            DbgOut.pln("{");
-            DbgOut.Indent++;
-            DbgOut.pln(m.M11.ToString() + "," + m.M12.ToString() + "," + m.M13.ToString() + "," + m.M14.ToString());
-            DbgOut.pln(m.M21.ToString() + "," + m.M22.ToString() + "," + m.M23.ToString() + "," + m.M24.ToString());
-            DbgOut.pln(m.M31.ToString() + "," + m.M32.ToString() + "," + m.M33.ToString() + "," + m.M34.ToString());
-            DbgOut.pln(m.M41.ToString() + "," + m.M42.ToString() + "," + m.M43.ToString() + "," + m.M44.ToString());
-            DbgOut.Indent--;
-            DbgOut.pln("}");
+            DOut.p(prefix);
+            DOut.pl("{");
+            DOut.Indent++;
+            DOut.pl(m.M11.ToString() + "," + m.M12.ToString() + "," + m.M13.ToString() + "," + m.M14.ToString());
+            DOut.pl(m.M21.ToString() + "," + m.M22.ToString() + "," + m.M23.ToString() + "," + m.M24.ToString());
+            DOut.pl(m.M31.ToString() + "," + m.M32.ToString() + "," + m.M33.ToString() + "," + m.M34.ToString());
+            DOut.pl(m.M41.ToString() + "," + m.M42.ToString() + "," + m.M43.ToString() + "," + m.M44.ToString());
+            DOut.Indent--;
+            DOut.pl("}");
         }
     }
 }

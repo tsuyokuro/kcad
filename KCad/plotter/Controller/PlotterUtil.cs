@@ -4,16 +4,16 @@ using System.Collections.Generic;
 
 namespace Plotter.Controller
 {
-    public partial class PlotterController
+    public class PlotterUtil
     {
-        private CadVector GetSelectionCenter()
+        public static CadVector GetSelectionCenter(PlotterController c)
         {
             CadVector min = CadVector.Create(CadConst.MaxValue);
             CadVector max = CadVector.Create(CadConst.MinValue);
 
             int selPointCnt = 0;
 
-            foreach (CadLayer layer in mDB.LayerList)
+            foreach (CadLayer layer in c.DB.LayerList)
             {
                 foreach (CadFigure fig in layer.FigureList)
                 {
@@ -41,9 +41,9 @@ namespace Plotter.Controller
         }
 
 
-        public Centroid Centroid()
+        public static Centroid Centroid(PlotterController c)
         {
-            List<uint> idList = DB.GetSelectedFigIDList();
+            List<uint> idList = c.DB.GetSelectedFigIDList();
 
             Centroid cent = default(Centroid);
 
@@ -51,7 +51,7 @@ namespace Plotter.Controller
 
             foreach (uint id in idList)
             {
-                CadFigure fig = mDB.GetFigure(id);
+                CadFigure fig = c.DB.GetFigure(id);
 
                 Centroid t = fig.GetCentroid();
 
@@ -72,9 +72,9 @@ namespace Plotter.Controller
             return cent;
         }
 
-        public double Area()
+        public static double Area(PlotterController c)
         {
-            List<uint> idList = DB.GetSelectedFigIDList();
+            List<uint> idList = c.DB.GetSelectedFigIDList();
 
             Centroid cent = default(Centroid);
 
@@ -82,7 +82,7 @@ namespace Plotter.Controller
 
             foreach (uint id in idList)
             {
-                CadFigure fig = mDB.GetFigure(id);
+                CadFigure fig = c.DB.GetFigure(id);
 
                 Centroid t = fig.GetCentroid();
 
@@ -106,6 +106,18 @@ namespace Plotter.Controller
             }
 
             return cent.Area;
+        }
+
+        public static CadVector CrossOnScreen(DrawContext dc, CadVector wp00, CadVector wp01, CadVector wp10, CadVector wp11)
+        {
+            CadVector sp00 = dc.WorldPointToDevPoint(wp00);
+            CadVector sp01 = dc.WorldPointToDevPoint(wp01);
+            CadVector sp10 = dc.WorldPointToDevPoint(wp10);
+            CadVector sp11 = dc.WorldPointToDevPoint(wp11);
+
+            CadVector cp = CadUtil.CrossLine2D(sp00, sp01, sp10, sp11);
+
+            return cp;
         }
     }
 }

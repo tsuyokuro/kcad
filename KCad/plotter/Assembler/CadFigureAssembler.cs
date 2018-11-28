@@ -8,14 +8,11 @@ using CadDataTypes;
 
 namespace Plotter
 {
-    class CadFigureAssembler
+    public class EditResult
     {
-        protected CadObjectDB DB;
-        protected Result ProcResult = new Result();
-
-        public class ResultItem
+        public class Item
         {
-            public uint LayerID { set; get; }=0;
+            public uint LayerID { set; get; } = 0;
 
             private CadFigure mFigure;
 
@@ -45,180 +42,121 @@ namespace Plotter
                 }
             }
 
-            public ResultItem()
+            public Item()
             {
             }
 
-            public ResultItem(uint layerID, CadFigure fig)
+            public Item(uint layerID, CadFigure fig)
             {
                 LayerID = layerID;
                 Figure = fig;
             }
         }
 
-        public class Result
+
+        public List<Item> AddList = new List<Item>();
+        public List<Item> RemoveList = new List<Item>();
+
+        public bool isValid()
         {
-            public List<ResultItem> AddList = new List<ResultItem>();
-            public List<ResultItem> RemoveList = new List<ResultItem>();
-
-            public bool isValid()
-            {
-                return AddList.Count > 0 || RemoveList.Count > 0;
-            }
-
-            public void clear()
-            {
-                AddList.Clear();
-                RemoveList.Clear();
-            }
+            return AddList.Count > 0 || RemoveList.Count > 0;
         }
 
-        public CadFigureAssembler(CadObjectDB db)
+        public void clear()
         {
-            DB = db;
+            AddList.Clear();
+            RemoveList.Clear();
         }
     }
 
-    class CadFigureCutter : CadFigureAssembler
+    class CadFigureCutter
     {
-        public CadFigureCutter(CadObjectDB db) : base(db)
+        public static EditResult Cut(CadObjectDB db, CadFigure fig, int sp)
         {
+            EditResult result = new EditResult();
+
+            if (fig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return result;
+            }
+
+            if (fig.IsLoop)
+            {
+                return result;
+            }
+
+            int pcnt = fig.PointCount;
+
+            int headNum = sp + 1;
+            int tailNum = pcnt - sp;
+
+            CadFigure headFig = null;
+            CadFigure tailFig = null;
+
+            if (headNum <= 1 || tailNum <= 1)
+            {
+                return result;
+            }
+
+            if (headNum >= 2)
+            {
+                headFig = db.NewFigure(CadFigure.Types.POLY_LINES);
+                headFig.AddPoints(fig.PointList, 0, headNum);
+            }
+
+            if (tailNum >= 2)
+            {
+                tailFig = db.NewFigure(CadFigure.Types.POLY_LINES);
+                tailFig.AddPoints(fig.PointList, sp, tailNum);
+            }
+
+            if (headFig != null)
+            {
+                result.AddList.Add(new EditResult.Item(fig.LayerID, headFig));
+            }
+
+            if (tailFig != null)
+            {
+                result.AddList.Add(new EditResult.Item(fig.LayerID, tailFig));
+            }
+
+            result.RemoveList.Add(new EditResult.Item(fig.LayerID, fig));
+
+            return result;
         }
-
-        public Result Cut(IReadOnlyList<SelectItem> selList)
-        {
-            var sels = (
-                from a in selList
-                orderby a.FigureID, a.PointIndex ascending
-                select a);
-
-            uint figId = 0;
-            CadFigure fig = null;
-            int pcnt = 0;
-            int sp = -1;
-            int cp = -1;
-            int num = 0;
-
-            List<SelectItem> figSet = new List<SelectItem>();
-
-            Action<CadFigure> endFig = (f) =>
-            {
-                num = pcnt - sp;
-
-                CadFigure nfig = null;
-
-                if (f.IsLoop)
-                {
-                    if (num >= 1)
-                    {
-                        nfig = DB.NewFigure(CadFigure.Types.POLY_LINES);
-                        nfig.AddPoints(fig.PointList, sp, num);
-
-                        CadVector t = fig.GetPointAt(0);
-                        nfig.AddPoint(t);
-                    }
-                }
-                else
-                {
-                    if (num >= 2)
-                    {
-                        nfig = DB.NewFigure(CadFigure.Types.POLY_LINES);
-                        nfig.AddPoints(fig.PointList, sp, num);
-                    }
-                }
-
-                if (nfig != null)
-                {
-                    ProcResult.AddList.Add(new ResultItem(f.LayerID, nfig));
-                }
-            };
-
-            foreach (SelectItem si in sels)
-            {
-                if (si.FigureID != figId)
-                {
-                    if (sp != -1)
-                    {
-                        endFig(fig);
-                    }
-
-                    figId = si.FigureID;
-                    fig = DB.GetFigure(figId);
-                    pcnt = fig.PointCount;
-                    sp = -1;
-                }
-
-                cp = si.PointIndex;
-
-                if (cp == 0)
-                {
-                    continue;
-                }
-
-                if (sp == -1)
-                {
-                    figSet.Add(si);
-                    sp = 0;
-                }
-
-                num = cp - sp + 1;
-
-                if (sp + num <= pcnt)
-                {
-                    CadFigure nfig = DB.NewFigure(CadFigure.Types.POLY_LINES);
-                    nfig.AddPoints(fig.PointList, sp, num);
-
-                    ProcResult.AddList.Add(new ResultItem(si.LayerID, nfig));
-                }
-
-                sp = cp;
-            }
-
-            if (sp != -1)
-            {
-                endFig(fig);
-            }
-
-            foreach (SelectItem si in figSet)
-            {
-                CadFigure removefig = DB.GetFigure(si.FigureID);
-
-                if (removefig != null)
-                {
-                    ProcResult.RemoveList.Add(new ResultItem(si.LayerID, removefig));
-                }
-            }
-
-            return ProcResult;
-        }
-
     }
 
-    class CadSegmentCutter : CadFigureAssembler
+    class CadSegmentCutter
     {
-        public CadSegmentCutter(CadObjectDB db) : base(db)
+        public static EditResult CutSegment(CadObjectDB db, MarkSegment seg, CadVector p)
         {
-        }
+            EditResult result = new EditResult();
 
-        public Result CutSegment(MarkSegment seg, CadVector p)
-        {
-            ProcResult.clear();
+            if (seg.Figure.Type != CadFigure.Types.POLY_LINES)
+            {
+                return result;
+            }
+
+            if (seg.Figure.IsLoop)
+            {
+                return result;
+            }
 
             var ci = CadUtil.PerpendicularCrossSeg(seg.pA, seg.pB, p);
 
             if (!ci.IsCross)
             {
-                return ProcResult;
+                return result;
             }
 
-            CadFigure org = DB.GetFigure(seg.FigureID);
+            CadFigure org = db.GetFigure(seg.FigureID);
 
             int a = Math.Min(seg.PtIndexA, seg.PtIndexB);
             int b = Math.Max(seg.PtIndexA, seg.PtIndexB);
 
 
-            CadFigure fa = DB.NewFigure(CadFigure.Types.POLY_LINES);
-            CadFigure fb = DB.NewFigure(CadFigure.Types.POLY_LINES);
+            CadFigure fa = db.NewFigure(CadFigure.Types.POLY_LINES);
+            CadFigure fb = db.NewFigure(CadFigure.Types.POLY_LINES);
 
             fa.AddPoints(org.PointList, 0, a + 1);
             fa.AddPoint(ci.CrossPoint);
@@ -231,78 +169,11 @@ namespace Plotter
                 fb.AddPoint(fa.GetPointAt(0));
             }
 
-            ProcResult.AddList.Add(new ResultItem(seg.LayerID, fa));
-            ProcResult.AddList.Add(new ResultItem(seg.LayerID, fb));
-            ProcResult.RemoveList.Add(new ResultItem(org.LayerID, org));
+            result.AddList.Add(new EditResult.Item(seg.LayerID, fa));
+            result.AddList.Add(new EditResult.Item(seg.LayerID, fb));
+            result.RemoveList.Add(new EditResult.Item(org.LayerID, org));
 
-            return ProcResult;
-        }
-    }
-
-
-    class AreaCollecter
-    {
-        public CadObjectDB DB;
-
-        public AreaCollecter(CadObjectDB db)
-        {
-            DB = db;
-        }
-
-        public List<CadFigure> Collect(IReadOnlyList<SelectItem> selList)
-        {
-            List<CadFigure> res = new List<CadFigure>();
-
-            CadFigureBonder bonder = new CadFigureBonder(DB, null);
-
-            var bondRes = bonder.Bond(selList);
-
-            foreach (SelectItem si in selList)
-            {
-                if (bondRes.RemoveList.Find(a => a.FigureID == si.Figure.ID) != null)
-                {
-                    continue;
-                }
-
-                if (res.Find(a => a.ID == si.Figure.ID) != null)
-                {
-                    continue;
-                }
-
-                if (si.Figure.PointCount < 3)
-                {
-                    continue;
-                }
-
-                res.Add(si.Figure);
-            }
-
-            foreach (var item in bondRes.AddList)
-            {
-                if (item.Figure.PointCount < 3)
-                {
-                    continue;
-                }
-
-                res.Add(item.Figure);
-            }
-
-            foreach (CadFigure fig in res)
-            {
-                if (fig.Type != CadFigure.Types.POLY_LINES)
-                {
-                    continue;
-                }
-
-                if (fig.PointCount < 3)
-                {
-                    continue;
-                }
-
-                fig.Normal = CadUtil.Normal(fig);
-            }
-
-            return res;
+            return result;
         }
     }
 }

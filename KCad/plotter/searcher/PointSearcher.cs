@@ -16,11 +16,9 @@ namespace Plotter
 
         private List<MarkPoint> XYMatchList = new List<MarkPoint>();
 
+        public CadCursor Target;    // Cursor(スクリーン座標系)
 
-        private IReadOnlyList<SelectItem> IgnoreList = null;
-
-        public CadCursor TargetPoint;  // Cursor(スクリーン座標系)
-        public double mRange;          // matchする範囲(スクリーン座標系)
+        public double Range;        // matchする範囲(スクリーン座標系)
 
         public uint CurrentLayerID
         {
@@ -58,7 +56,7 @@ namespace Plotter
 
         public void SetRangePixel(DrawContext dc, double pixel)
         {
-            mRange = pixel;
+            Range = pixel;
         }
 
         public void Clean()
@@ -70,14 +68,9 @@ namespace Plotter
             XYMatchList.Clear();
         }
 
-        public void SetTargetPoint(CadCursor p)
+        public void SetTargetPoint(CadCursor cursor)
         {
-            TargetPoint = p;
-        }
-
-        public void SetIgnoreList(List<SelectItem> list)
-        {
-            IgnoreList = list;
+            Target = cursor;
         }
 
         public MarkPoint GetXMatch()
@@ -117,18 +110,18 @@ namespace Plotter
 
             if (IsXMatch)
             {
-                ret = (XMatch.PointScrn - TargetPoint.Pos).Norm();
+                ret = (XMatch.PointScrn - Target.Pos).Norm();
             }
 
             if (IsYMatch)
             {
-                t = (YMatch.PointScrn - TargetPoint.Pos).Norm();
+                t = (YMatch.PointScrn - Target.Pos).Norm();
                 ret = Math.Min(t, ret);
             }
 
             if (IsXYMatch)
             {
-                t = (XYMatch.PointScrn - TargetPoint.Pos).Norm();
+                t = (XYMatch.PointScrn - Target.Pos).Norm();
                 ret = Math.Min(t, ret);
             }
 
@@ -213,23 +206,18 @@ namespace Plotter
 
         private void CheckFigPoint(DrawContext dc, CadVector pt, CadLayer layer, CadFigure fig, int ptIdx)
         {
-            if (fig != null && IsIgnore(fig.ID, ptIdx))
-            {
-                return;
-            }
+            CadVector ppt = dc.WorldPointToDevPoint(pt);
 
-            CadVector ppt = dc.CadPointToUnitPoint(pt);
+            double dx = Math.Abs(ppt.x - Target.Pos.x);
+            double dy = Math.Abs(ppt.y - Target.Pos.y);
 
-            double dx = Math.Abs(ppt.x - TargetPoint.Pos.x);
-            double dy = Math.Abs(ppt.y - TargetPoint.Pos.y);
-
-            CrossInfo cix = CadUtil.PerpendicularCrossLine(TargetPoint.Pos, TargetPoint.Pos + TargetPoint.DirX, ppt);
-            CrossInfo ciy = CadUtil.PerpendicularCrossLine(TargetPoint.Pos, TargetPoint.Pos + TargetPoint.DirY, ppt);
+            CrossInfo cix = CadUtil.PerpendicularCrossLine(Target.Pos, Target.Pos + Target.DirX, ppt);
+            CrossInfo ciy = CadUtil.PerpendicularCrossLine(Target.Pos, Target.Pos + Target.DirY, ppt);
 
             double nx = (ppt - ciy.CrossPoint).Norm(); // Cursor Y軸からの距離
             double ny = (ppt - cix.CrossPoint).Norm(); // Cursor X軸からの距離
 
-            if (nx <= mRange)
+            if (nx <= Range)
             {
                 if (nx < XMatch.DistanceX || (nx == XMatch.DistanceX && ny < XMatch.DistanceY))
                 {
@@ -237,7 +225,7 @@ namespace Plotter
                 }
             }
 
-            if (ny <= mRange)
+            if (ny <= Range)
             {
                 if (ny < YMatch.DistanceY || (ny == YMatch.DistanceY && nx < YMatch.DistanceX))
                 {
@@ -245,7 +233,7 @@ namespace Plotter
                 }
             }
 
-            if (dx <= mRange && dy <= mRange)
+            if (dx <= Range && dy <= Range)
             {
                 if (dx <= XYMatch.DistanceX || dy <= XYMatch.DistanceY)
                 {
@@ -293,27 +281,6 @@ namespace Plotter
                 MarkPoint lmp = XYMatchList[i];
 
                 if (mp.FigureID == lmp.FigureID && mp.PointIndex == lmp.PointIndex)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-
-        private bool IsIgnore(uint figId, int index)
-        {
-            if (IgnoreList == null)
-            {
-                return false;
-            }
-
-            for (int i=0;i<IgnoreList.Count;i++)
-            {
-                SelectItem item = IgnoreList[i];
-
-                if (item.FigureID == figId && item.PointIndex == index)
                 {
                     return true;
                 }

@@ -98,8 +98,6 @@ namespace HalfEdgeNS
 
         public List<HalfEdge> GetHalfEdgeList()
         {
-            int tag = 0;
-
             List<HalfEdge> list = new List<HalfEdge>();
 
             // すべてのFaceを巡回する
@@ -264,7 +262,7 @@ namespace HalfEdgeNS
                 he.Vertex = indexMap[he.Vertex];
                 if (he.Vertex == -1)
                 {
-                    DbgOut.pln("HeModel.RemoveVertexs error. he.Vertex == -1");
+                    DOut.pl("HeModel.RemoveVertexs error. he.Vertex == -1");
                 }
             });
 
@@ -350,7 +348,7 @@ namespace HalfEdgeNS
 
             if (s == -1)
             {
-                DbgOut.pln("HeModel.GetOuterEdge not found start HalfEdge");
+                DOut.pl("HeModel.GetOuterEdge not found start HalfEdge");
                 return ret;
             }
 
@@ -477,8 +475,6 @@ namespace HalfEdgeNS
 
             HalfEdge c = head;
 
-            CadVector v;
-
             for (; ; )
             {
                 if (c.Pair == null)
@@ -508,8 +504,6 @@ namespace HalfEdgeNS
             HalfEdge head = f.Head;
 
             HalfEdge c = head;
-
-            CadVector v;
 
             for (; ; )
             {
@@ -541,8 +535,6 @@ namespace HalfEdgeNS
             HalfEdge head = f.Head;
 
             HalfEdge c = head;
-
-            CadVector v;
 
             for (; ; )
             {

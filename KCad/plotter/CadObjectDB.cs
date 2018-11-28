@@ -310,53 +310,53 @@ namespace Plotter
         #region "For debug"
         public void dump()
         {
-            DbgOut.pln(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
-            DbgOut.Indent++;
+            DOut.pl(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
+            DOut.Indent++;
 
             {
                 List<uint> ids = new List<uint>(mLayerIdMap.Keys);
 
-                DbgOut.pln("Layer map {");
-                DbgOut.Indent++;
+                DOut.pl("Layer map {");
+                DOut.Indent++;
                 foreach (uint id in ids)
                 {
                     CadLayer layer = mLayerIdMap[id];
                     layer.sdump();
                 }
-                DbgOut.Indent--;
-                DbgOut.pln("}");
+                DOut.Indent--;
+                DOut.pl("}");
             }
 
             {
-                DbgOut.pln("Layer list {");
-                DbgOut.Indent++;
+                DOut.pl("Layer list {");
+                DOut.Indent++;
                 foreach (CadLayer layer in mLayerList)
                 {
                     layer.sdump();
                 }
-                DbgOut.Indent--;
-                DbgOut.pln("}");
+                DOut.Indent--;
+                DOut.pl("}");
             }
 
             dumpFigureMap();
 
-            DbgOut.Indent--;
-            DbgOut.pln("}");
+            DOut.Indent--;
+            DOut.pl("}");
         }
 
         public void dumpFigureMap()
         {
             List<uint> ids = new List<uint>(mFigureIdMap.Keys);
 
-            DbgOut.pln("Figure map {");
-            DbgOut.Indent++;
+            DOut.pl("Figure map {");
+            DOut.Indent++;
             foreach (uint id in ids)
             {
                 CadFigure fig = mFigureIdMap[id];
                 fig.Dump("fig");
             }
-            DbgOut.Indent--;
-            DbgOut.pln("}");
+            DOut.Indent--;
+            DOut.pl("}");
         }
 
         #endregion

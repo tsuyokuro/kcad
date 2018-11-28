@@ -5,202 +5,78 @@ using CadDataTypes;
 
 namespace Plotter
 {
-    public class SelectItem
-    {
-        public uint LayerID
-        {
-            get; set;
-        }
-
-        public uint FigureID
-        {
-            get
-            {
-                return Figure.ID;
-            }
-        }
-
-        public CadFigure Figure
-        {
-            get; set;
-        }
-
-        public int PointIndex
-        {
-            get; set;
-        }
-
-        public CadVector Point
-        {
-            get
-            {
-                return Figure.PointList[PointIndex];
-            }
-        }
-
-        public SelectItem()
-        {
-        }
-
-        public SelectItem(MarkPoint mp)
-        {
-            LayerID = mp.LayerID;
-            Figure = mp.Figure;
-            PointIndex = mp.PointIndex;
-        }
-
-        public SelectItem(SelectItem src)
-        {
-            LayerID = src.LayerID;
-            Figure = src.Figure;
-            PointIndex = src.PointIndex;
-        }
-
-        public void dump()
-        {
-            DbgOut.pln("SelectItem {");
-            DbgOut.Indent++;
-            DbgOut.pln("LayerID:" + LayerID.ToString());
-            DbgOut.pln("FigureID:" + FigureID.ToString());
-            DbgOut.pln("PointIndex:" + PointIndex.ToString());
-            DbgOut.Indent--;
-            DbgOut.pln("}");
-        }
-
-        public bool update()
-        {
-            if (Figure == null)
-            {
-                return true;
-            }
-
-            if (PointIndex >= Figure.PointList.Count)
-            {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
     public class SelectList
     {
-        private List<SelectItem> mList = new List<SelectItem>();
+        private List<MarkPoint> mList = new List<MarkPoint>();
 
-        public List<SelectItem> List
+        private HashSet<ulong> mSet = new HashSet<ulong>();
+
+        public List<MarkPoint> List
         {
             get { return mList; }
         }
 
-        public int RemoveAll(Predicate<SelectItem> match)
+        public int RemoveAll(Predicate<MarkPoint> match)
         {
             return mList.RemoveAll(match);
         }
 
-        public void ForEach(Action<SelectItem> action)
+        public void ForEach(Action<MarkPoint> action)
         {
             mList.ForEach(action);
         }
 
-        public void add(uint layerID, CadFigure fig, int pointIndex)
+        public void add(CadLayer layer, CadFigure fig, int pointIndex)
         {
-            SelectItem f = null;
+            MarkPoint item = new MarkPoint();
 
-            if (fig != null)
-            {
-                f = find(fig.ID, pointIndex);
-            }
-
-            if (f != null)
-            {
-                return;
-            }
-
-            SelectItem item = new SelectItem();
-
-            item.LayerID = layerID;
+            item.Layer = layer;
             item.Figure = fig;
             item.PointIndex = pointIndex;
 
-            mList.Add(item);
+            add(item);
         }
 
-        public void add(uint layerID, CadFigure fig)
+        public void add(CadLayer layer, CadFigure fig)
         {
             for (int idx = 0; idx < fig.PointCount; idx++)
             {
-                add(layerID, fig, idx);
+                add(layer, fig, idx);
             }
         }
 
         public void add(MarkPoint mp)
         {
-            SelectItem f = null;
-
-            f = find(mp.FigureID, mp.PointIndex);
-
-            if (f == null)
+            if (mSet.Contains(mp.Hash))
             {
-                mList.Add(new SelectItem(mp));
+                return;
             }
+
+            mSet.Add(mp.Hash);
+            mList.Add(mp);
         }
 
         public void add(MarkSegment ms)
         {
-            add(ms.LayerID, ms.Figure, ms.PtIndexA);
-            add(ms.LayerID, ms.Figure, ms.PtIndexB);
+            add(ms.Layer, ms.Figure, ms.PtIndexA);
+            add(ms.Layer, ms.Figure, ms.PtIndexB);
         }
 
-        public void add(uint layerID, CadFigure fig, int a, int b)
+        public void add(CadLayer layer, CadFigure fig, int a, int b)
         {
             int si = Math.Min(a, b);
             int ei = Math.Max(a, b);
 
             for (int i = si; i <= ei; i++)
             {
-                add(layerID, fig, i);
+                add(layer, fig, i);
             }
-        }
-
-        public SelectItem find(uint figureId, int pointIndex)
-        {
-            return mList.Find((a) => (a.FigureID == figureId && a.PointIndex == pointIndex));
         }
 
         public void clear()
         {
+            mSet.Clear();
             mList.Clear();
-        }
-
-        public bool isSelected(MarkPoint mp)
-        {
-            SelectItem selItem = mList.Find(a => {
-                return a.FigureID == mp.FigureID &&
-                a.PointIndex == mp.PointIndex;
-            });
-
-            return selItem != null;
-        }
-
-        public bool isSelectedFigure(uint figId)
-        {
-            SelectItem selItem = mList.Find(a => {
-                return a.FigureID == figId;
-            });
-
-            return selItem != null;
-        }
-
-        public void dump()
-        {
-            DbgOut.pln("SelectList {");
-            DbgOut.Indent++;
-            foreach (SelectItem item in mList)
-            {
-                item.dump();
-            }
-            DbgOut.Indent--;
-            DbgOut.pln("}");
         }
     }
 
@@ -262,14 +138,14 @@ namespace Plotter
 
         public void dump()
         {
-            DbgOut.pln("SelectSegmentList {");
-            DbgOut.Indent++;
+            DOut.pl("SelectSegmentList {");
+            DOut.Indent++;
             foreach (MarkSegment ms in mList)
             {
                 ms.dump();
             }
-            DbgOut.Indent--;
-            DbgOut.pln("}");
+            DOut.Indent--;
+            DOut.pl("}");
         }
     }
 }

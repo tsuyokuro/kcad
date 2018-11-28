@@ -8,7 +8,7 @@ namespace Plotter
 {
     using PenHolder = ToolHolder<Pen>;
     using BrushHolder = ToolHolder<Brush>;
-    using ColorHolder = ToolHolder<Color>;
+    //using ColorHolder = ToolHolder<Color>;
     using FontHolder = ToolHolder<Font>;
 
     public class GLPen
@@ -83,6 +83,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_TEST] = Color.FromArgb(0xFF, 0xBB, 0xCC, 0xDD);
             PenColorTbl[DrawTools.PEN_NURBS_CTRL_LINE] = Color.FromArgb(0xFF, 0x60, 0xC0, 0x60);
             PenColorTbl[DrawTools.PEN_LINE_SNAP] = Color.FromArgb(0xFF, 0x00, 0xC0, 0x60);
+            PenColorTbl[DrawTools.PEN_DRAG_LINE] = Color.FromArgb(0xFF, 0x60, 0x60, 0x80);
 
 
             BrushColorTbl = new Color[DrawTools.BRUSH_TBL_SIZE];
@@ -124,7 +125,8 @@ namespace Plotter
         public const int PEN_TEST = 25;
         public const int PEN_NURBS_CTRL_LINE = 26;
         public const int PEN_LINE_SNAP = 27;
-        public const int PEN_TBL_SIZE = 28;
+        public const int PEN_DRAG_LINE = 28;
+        public const int PEN_TBL_SIZE = 29;
 
         public const int BRUSH_DEFAULT = 0;
         public const int BRUSH_BACKGROUND = 1;
