@@ -203,6 +203,7 @@
     <Compile Include="EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="plotterViewModel\CursorPosViewModel.cs" />
     <Compile Include="plotterViewModel\PlotterViewModel_serialize.cs" />
     <Compile Include="plotter\Controller\ContextMenuInfo.cs" />
     <Compile Include="plotter\Controller\ControllerConst.cs" />

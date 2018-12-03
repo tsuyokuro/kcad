@@ -71,8 +71,8 @@ namespace KCad
             SlsectModePanel.DataContext = ViewModel;
             FigurePanel.DataContext = ViewModel;
 
-            textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
-            textBlockXYZ2.DataContext = ViewModel.FreqChangedInfo;
+            textBlockXYZ.DataContext = ViewModel.CursorPosVM;
+            textBlockXYZ2.DataContext = ViewModel.CursorPosVM;
 
             ViewModePanel.DataContext = ViewModel;
 

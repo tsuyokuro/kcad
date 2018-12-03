@@ -72,6 +72,8 @@ namespace Plotter.Controller
             return cent;
         }
 
+        // Calculate the sum of the areas of selected shapes
+        // 選択された図形の面積の総和を求める
         public static double Area(PlotterController c)
         {
             List<uint> idList = c.DB.GetSelectedFigIDList();
@@ -108,6 +110,10 @@ namespace Plotter.Controller
             return cent.Area;
         }
 
+        //
+        // Calculate the intersection point in the screen coordinate system
+        // スクリーン座標系での交点を求める
+        //
         public static CadVector CrossOnScreen(DrawContext dc, CadVector wp00, CadVector wp01, CadVector wp10, CadVector wp11)
         {
             CadVector sp00 = dc.WorldPointToDevPoint(wp00);

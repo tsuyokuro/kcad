@@ -24,6 +24,18 @@ namespace Plotter.Controller
         LAST_DOWN,
     }
 
+    public enum ViewModes
+    {
+        NONE,
+        FRONT,
+        BACK,
+        TOP,
+        BOTTOM,
+        RIGHT,
+        LEFT,
+        FREE,
+    }
+
     class ControllerConst
     {
         public const double MARK_CURSOR_SIZE = 10.0;
