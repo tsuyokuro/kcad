@@ -86,8 +86,6 @@ namespace Plotter
 
                 HalfEdge c = head;
 
-                CadVector v;
-
                 for (; ; )
                 {
                     HalfEdge next = c.Next;

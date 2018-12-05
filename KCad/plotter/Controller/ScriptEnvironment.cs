@@ -160,7 +160,7 @@ namespace Plotter.Controller
             }
             catch (Exception e)
             {
-                Controller.InteractOut.println("error: " + e.Message);
+                ItConsole.println("error: " + e.Message);
                 return null;
             }
         }
@@ -168,7 +168,7 @@ namespace Plotter.Controller
         public void ExecuteCommandSync(string s)
         {
             s = s.Trim();
-            Controller.InteractOut.println("> " + s);
+            ItConsole.println("> " + s);
 
             if (s.StartsWith("@"))
             {
@@ -180,7 +180,7 @@ namespace Plotter.Controller
 
             if (e != null)
             {
-                Controller.InteractOut.println("error: " + e.Message);
+                ItConsole.println("error: " + e.Message);
             }
 
             Controller.Clear();
@@ -191,7 +191,7 @@ namespace Plotter.Controller
         public async void ExecuteCommandAsync(string s)
         {
             s = s.Trim();
-            Controller.InteractOut.println("> " + s);
+            ItConsole.println("> " + s);
 
             if (s.StartsWith("@"))
             {
@@ -212,7 +212,7 @@ namespace Plotter.Controller
 
             if (e != null)
             {
-                Controller.InteractOut.println("error: " + e.Message);
+                ItConsole.println("error: " + e.Message);
             }
 
             Controller.Clear();
@@ -228,7 +228,7 @@ namespace Plotter.Controller
 
                 if (ret != null)
                 {
-                    Controller.InteractOut.println(AnsiEsc.Blue + ret.ToString());
+                    ItConsole.println(AnsiEsc.Blue + ret.ToString());
                 }
             }
             catch (Exception e)
@@ -255,7 +255,7 @@ namespace Plotter.Controller
 
             if (e != null)
             {
-                Controller.InteractOut.println("error: " + e.Message);
+                ItConsole.println("error: " + e.Message);
             }
 
             Controller.Clear();

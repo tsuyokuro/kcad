@@ -304,13 +304,11 @@ namespace MeshMakerNS
 
             CadVector n = CadUtil.RepresentativeNormal(src);
 
-            bool rev = false;
 
             if (CadMath.InnerProduct(n, dv) <= 0)
             {
                 vl = new VectorList(src);
                 vl.Reverse();
-                rev = true;
             }
             else
             {

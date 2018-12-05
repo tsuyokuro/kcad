@@ -95,20 +95,20 @@ namespace Plotter
             }
         }
 
-        public override CadVector CadPointToUnitPoint(CadVector pt)
+        public override CadVector WorldPointToDevPoint(CadVector pt)
         {
-            CadVector p = CadVectorToUnitVector(pt);
+            CadVector p = WorldVectorToDevVector(pt);
             p = p + mViewOrg;
             return p;
         }
 
-        public override CadVector UnitPointToCadPoint(CadVector pt)
+        public override CadVector DevPointToWorldPoint(CadVector pt)
         {
             pt = pt - mViewOrg;
-            return UnitVectorToCadVector(pt);
+            return DevVectorToWorldVector(pt);
         }
 
-        public override CadVector CadVectorToUnitVector(CadVector pt)
+        public override CadVector WorldVectorToDevVector(CadVector pt)
         {
             pt *= WorldScale;
 
@@ -133,7 +133,7 @@ namespace Plotter
             return p;
         }
 
-        public override CadVector UnitVectorToCadVector(CadVector pt)
+        public override CadVector DevVectorToWorldVector(CadVector pt)
         {
             Vector4d wv = default(Vector4d);
             wv.X = pt.x / (UnitPerMilli * DeviceScaleX);

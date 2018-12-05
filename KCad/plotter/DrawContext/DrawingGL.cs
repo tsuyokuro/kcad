@@ -198,8 +198,6 @@ namespace Plotter
 
                 HalfEdge pair;
 
-                CadVector v;
-
                 for (; ; )
                 {
                     bool draw = false;
@@ -261,8 +259,6 @@ namespace Plotter
                 HalfEdge head = f.Head;
 
                 HalfEdge c = head;
-
-                CadVector v;
 
                 GL.Begin(PrimitiveType.Polygon);
                 GL.Color4(0.8f, 0.8f, 0.8f, 1.0f);
@@ -446,7 +442,7 @@ namespace Plotter
 
         public override void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT)
         {
-            CadVector p0 = DC.CadPointToUnitPoint(pt) - 2;
+            CadVector p0 = DC.WorldPointToDevPoint(pt) - 2;
             CadVector p1 = p0 + 4;
 
             DrawRect2D(p0.vector, p1.vector, pen);
@@ -563,7 +559,7 @@ namespace Plotter
 
         private CadVector GetShiftForOutLine()
         {
-            CadVector v = DC.UnitVectorToCadVector(CadVector.UnitX);
+            CadVector v = DC.DevVectorToWorldVector(CadVector.UnitX);
             Vector3d vv = -DC.ViewDir * v.Norm();
 
             return (CadVector)vv;

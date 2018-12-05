@@ -203,6 +203,7 @@
     <Compile Include="EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="plotterViewModel\CursorPosViewModel.cs" />
     <Compile Include="plotterViewModel\PlotterViewModel_serialize.cs" />
     <Compile Include="plotter\Controller\ContextMenuInfo.cs" />
     <Compile Include="plotter\Controller\ControllerConst.cs" />
@@ -211,13 +212,14 @@
     <Compile Include="plotter\Controller\InteractCtrl.cs" />
     <Compile Include="plotter\Controller\PlotterController_action.cs" />
     <Compile Include="plotter\Controller\PlotterController_context_menu.cs" />
-    <Compile Include="plotter\Controller\PlotterController_funcs.cs" />
-    <Compile Include="plotter\Controller\PlotterController_serialize.cs" />
+    <Compile Include="plotter\Controller\PlotterUtil.cs" />
+    <Compile Include="plotter\Controller\PlotterClipboard.cs" />
     <Compile Include="plotter\Controller\PlotterObserver.cs" />
     <Compile Include="plotter\Controller\ScriptFunctions.cs" />
-    <Compile Include="plotter\Controller\SnapManager.cs" />
+    <Compile Include="plotter\Controller\ControllerTypes.cs" />
     <Compile Include="plotter\Figure\CircleExpander.cs" />
     <Compile Include="plotter\Figure\PolyLineExpander.cs" />
+    <Compile Include="plotter\Serializer\MpCadFile.cs" />
     <Compile Include="plotter\Serializer\MpInitializer.cs" />
     <Compile Include="plotter\TreeViewItem\CadFigTreeItem.cs" />
     <Compile Include="plotter\TreeViewItem\CadLayerTreeItem.cs" />

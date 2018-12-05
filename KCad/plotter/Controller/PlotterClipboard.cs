@@ -13,26 +13,16 @@ using CadDataTypes;
 
 namespace Plotter.Controller
 {
-    public partial class PlotterController
+    public class PlotterClipboard
     {
-        public void Copy()
-        {
-            CopyFiguresAsBin();
-        }
-
-        public void Paste()
-        {
-            PasteFiguresAsBin();
-        }
-
-        public bool HasCopyData()
+        public static bool HasCopyData()
         {
             return Clipboard.ContainsData(CadClipBoard.TypeNameBin);
         }
 
-        public void CopyFiguresAsBin()
+        public static void CopyFiguresAsBin(PlotterController controller)
         {
-            var temp = GetSelectedFigureList();
+            var temp = controller.GetSelectedFigureList();
 
             var figList = CadFigure.Util.GetRootFigList(temp);
 
@@ -46,13 +36,9 @@ namespace Plotter.Controller
             byte[] bin = MessagePackSerializer.Serialize(mpfigList);
 
             Clipboard.SetData(CadClipBoard.TypeNameBin, bin);
-
-            // For debug
-            //string js = MessagePackSerializer.ToJson(bin);
-            //Clipboard.SetText(js);
         }
 
-        public void PasteFiguresAsBin()
+        public static void PasteFiguresAsBin(PlotterController controller)
         {
             if (!Clipboard.ContainsData(CadClipBoard.TypeNameBin))
             {
@@ -66,7 +52,7 @@ namespace Plotter.Controller
 
 
             // Pase figures in fig list
-            CadVector pp = LastDownPoint;
+            CadVector pp = controller.LastDownPoint;
 
             MinMax3D mm3d = CadUtil.GetFigureMinMaxIncludeChild(figList);
 
@@ -76,28 +62,26 @@ namespace Plotter.Controller
 
             foreach (CadFigure fig in figList)
             {
-                PasteFigure(fig, d);
-                CurrentLayer.AddFigure(fig);    // 子ObjectはLayerに追加しない
+                PasteFigure(controller, fig, d);
+                controller.CurrentLayer.AddFigure(fig);    // 子ObjectはLayerに追加しない
 
-                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, fig.ID);
+                CadOpe ope = CadOpe.CreateAddFigureOpe(controller.CurrentLayer.ID, fig.ID);
                 opeRoot.OpeList.Add(ope);
             }
 
-            HistoryMan.foward(opeRoot);
-
-            UpdateTreeView(true);
+            controller.HistoryMan.foward(opeRoot);
         }
 
-        private void PasteFigure(CadFigure fig, CadVector delta)
+        private static void PasteFigure(PlotterController controller, CadFigure fig, CadVector delta)
         {
-            fig.MoveAllPoints(CurrentDC, delta);
-            mDB.AddFigure(fig);
+            fig.MoveAllPoints(controller.CurrentDC, delta);
+            controller.DB.AddFigure(fig);
 
             if (fig.ChildList != null)
             {
                 foreach (CadFigure child in fig.ChildList)
                 {
-                    PasteFigure(child, delta);
+                    PasteFigure(controller, child, delta);
                 }
             }
         }

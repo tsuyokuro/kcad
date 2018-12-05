@@ -621,13 +621,13 @@
             <StackPanel  Background="{StaticResource BGColor}" Height="20" HorizontalAlignment="Stretch"
                     Orientation="Horizontal">
                 <Rectangle
-                VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="20"/>
+                VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="8"/>
 
                 <TextBlock x:Name="textBlockXYZ" TextWrapping="Wrap" Text="{Binding StrCursorPos}"
-                VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="120" Foreground="White">
+                VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="136" Foreground="White">
                 </TextBlock>
                 <TextBlock x:Name="textBlockXYZ2" TextWrapping="Wrap" Text="{Binding StrCursorPos2}"
-                VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="120" Foreground="White">
+                VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="136" Foreground="White">
                 </TextBlock>
 
                 <StackPanel x:Name="ViewModePanel"

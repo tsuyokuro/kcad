@@ -29,7 +29,14 @@ namespace Plotter
         {
             get
             {
-                return Fig.GetPointAt(Idx0);
+                if (Fig.StoreList == null)
+                {
+                    return Fig.PointList[Idx0];
+                }
+                else
+                {
+                    return Fig.StoreList[Idx0];
+                }
             }
         }
 
@@ -37,7 +44,14 @@ namespace Plotter
         {
             get
             {
-                return Fig.GetPointAt(Idx1);
+                if (Fig.StoreList == null)
+                {
+                    return Fig.PointList[Idx1];
+                }
+                else
+                {
+                    return Fig.StoreList[Idx1];
+                }
             }
         }
 
@@ -45,10 +59,10 @@ namespace Plotter
         {
             RulerInfo ret = default(RulerInfo);
 
-            CadVector cwp = dc.UnitPointToCadPoint(cursor.Pos);
+            CadVector cwp = dc.DevPointToWorldPoint(cursor.Pos);
 
-            CadVector xfaceNormal = dc.UnitVectorToCadVector(cursor.DirX);
-            CadVector yfaceNormal = dc.UnitVectorToCadVector(cursor.DirY);
+            CadVector xfaceNormal = dc.DevVectorToWorldVector(cursor.DirX);
+            CadVector yfaceNormal = dc.DevVectorToWorldVector(cursor.DirY);
 
             CadVector cx = CadUtil.CrossPlane(P0, P1, cwp, xfaceNormal);
             CadVector cy = CadUtil.CrossPlane(P0, P1, cwp, yfaceNormal);
@@ -72,7 +86,7 @@ namespace Plotter
                     continue;
                 }
 
-                CadVector devv = dc.CadPointToUnitPoint(v);
+                CadVector devv = dc.WorldPointToDevPoint(v);
 
                 double td = (devv - cursor.Pos).Norm();
 

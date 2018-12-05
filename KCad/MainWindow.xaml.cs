@@ -16,8 +16,6 @@ namespace KCad
     {
         public PlotterViewModel ViewModel;
 
-        private PlotterController.Interaction mInteractionOut = new PlotterController.Interaction();
-
         private bool KeyHandled = false;
 
         //private LBConsole mLBConsole;
@@ -28,27 +26,23 @@ namespace KCad
 
             //FocusManager.SetIsFocusScope(this, true);
 
-            mInteractionOut.println = MyConsole.PrintLn;
-            mInteractionOut.print = MyConsole.Print;
-            mInteractionOut.printf = MyConsole.Printf;
-            mInteractionOut.clear = MyConsole.Clear;
-
             if (App.UseConsole)
             {
-                // DebugOutの出力はデフォルトでConsoleになっているので、UseConsoleの場合は、
+                // DOutの出力はデフォルトでConsoleになっているので、UseConsoleの場合は、
                 // あらためて設定する必要はない
-                DbgOut.pln("DbgOut's output setting is Console");
+                DOut.pl("DOut's output setting is Console");
             }
             else {
-                DbgOut.PrintFunc = MyConsole.Print;
-                DbgOut.PrintLnFunc = MyConsole.PrintLn;
-                DbgOut.FormatPrintFunc = MyConsole.Printf;
+                DOut.PrintFunc = MyConsole.Print;
+                DOut.PrintLnFunc = MyConsole.PrintLn;
+                DOut.FormatPrintFunc = MyConsole.Printf;
             }
 
 
             ItConsole.PrintFunc = MyConsole.Print;
             ItConsole.PrintLnFunc = MyConsole.PrintLn;
             ItConsole.FormatPrintFunc = MyConsole.Printf;
+            ItConsole.clear = MyConsole.Clear;
 
             ViewModel = new PlotterViewModel(this, viewContainer);
 
@@ -66,8 +60,6 @@ namespace KCad
             Loaded += MainWindow_Loaded;
             Closed += MainWindow_Closed;
 
-            ViewModel.InteractOut = mInteractionOut;
-
             AddLayerButton.Click += ViewModel.ButtonClicked;
             RemoveLayerButton.Click += ViewModel.ButtonClicked;
             RunTextCommandButton.Click += RunTextCommandButtonClicked;
@@ -79,8 +71,8 @@ namespace KCad
             SlsectModePanel.DataContext = ViewModel;
             FigurePanel.DataContext = ViewModel;
 
-            textBlockXYZ.DataContext = ViewModel.FreqChangedInfo;
-            textBlockXYZ2.DataContext = ViewModel.FreqChangedInfo;
+            textBlockXYZ.DataContext = ViewModel.CursorPosVM;
+            textBlockXYZ2.DataContext = ViewModel.CursorPosVM;
 
             ViewModePanel.DataContext = ViewModel;
 

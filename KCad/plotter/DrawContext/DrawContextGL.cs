@@ -186,20 +186,20 @@ namespace Plotter
             SetupLight();
         }
 
-        public override CadVector CadPointToUnitPoint(CadVector pt)
+        public override CadVector WorldPointToDevPoint(CadVector pt)
         {
-            CadVector p = CadVectorToUnitVector(pt);
+            CadVector p = WorldVectorToDevVector(pt);
             p = p + mViewOrg;
             return p;
         }
 
-        public override CadVector UnitPointToCadPoint(CadVector pt)
+        public override CadVector DevPointToWorldPoint(CadVector pt)
         {
             pt = pt - mViewOrg;
-            return UnitVectorToCadVector(pt);
+            return DevVectorToWorldVector(pt);
         }
 
-        public override CadVector CadVectorToUnitVector(CadVector pt)
+        public override CadVector WorldVectorToDevVector(CadVector pt)
         {
             pt *= WorldScale;
 
@@ -218,17 +218,17 @@ namespace Plotter
             dv.Z = pv.Z / pv.W;
             dv.W = pv.W;
 
-            dv.X = dv.X * (ViewWidth / 2.0);
-            dv.Y = -dv.Y * (ViewHeight / 2.0);
+            dv.X = dv.X * DeviceScaleX;
+            dv.Y = dv.Y * DeviceScaleY;
             dv.Z = 0;
 
             return CadVector.Create(dv);
         }
 
-        public override CadVector UnitVectorToCadVector(CadVector pt)
+        public override CadVector DevVectorToWorldVector(CadVector pt)
         {
-            pt.x = pt.x / (ViewWidth / 2.0);
-            pt.y = -pt.y / (ViewHeight / 2.0);
+            pt.x = pt.x / DeviceScaleX;
+            pt.y = pt.y / DeviceScaleY;
 
             Vector3d epv = pt.vector - Eye;
 
@@ -286,6 +286,9 @@ namespace Plotter
 
             mViewOrg.x = w / 2.0;
             mViewOrg.y = h / 2.0;
+
+            DeviceScaleX = w / 2.0;
+            DeviceScaleY = -h / 2.0;
 
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 

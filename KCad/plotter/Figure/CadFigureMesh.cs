@@ -127,7 +127,6 @@ namespace Plotter
 
                 HalfEdge c = head;
 
-                CadVector v;
 
                 for (; ; )
                 {

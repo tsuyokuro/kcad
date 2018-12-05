@@ -601,7 +601,7 @@ namespace Plotter
         #region "Dump" 
         public void SimpleDump(string prefix = nameof(CadFigure))
         {
-            DbgOut.pln(
+            DOut.pl(
                 prefix +
                 "(" + this.GetHashCode().ToString() + ")" +
                 "ID=" + ID.ToString());
@@ -609,35 +609,35 @@ namespace Plotter
 
         public void Dump(string prefix = nameof(CadFigure))
         {
-            DbgOut.pln(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
-            DbgOut.Indent++;
-            DbgOut.pln("ID=" + ID.ToString());
-            DbgOut.pln("LayerID=" + LayerID.ToString());
-            DbgOut.pln("Type=" + Type.ToString());
+            DOut.pl(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
+            DOut.Indent++;
+            DOut.pl("ID=" + ID.ToString());
+            DOut.pl("LayerID=" + LayerID.ToString());
+            DOut.pl("Type=" + Type.ToString());
 
-            DbgOut.pln("PointList [");
-            DbgOut.Indent++;
+            DOut.pl("PointList [");
+            DOut.Indent++;
             foreach (CadVector point in PointList)
             {
                 point.dump("");
             }
-            DbgOut.Indent--;
-            DbgOut.pln("]");
+            DOut.Indent--;
+            DOut.pl("]");
 
 
-            DbgOut.pln("ParentID=" + (mParent != null ? mParent.ID : 0));
+            DOut.pl("ParentID=" + (mParent != null ? mParent.ID : 0));
 
-            DbgOut.pln("Child [");
-            DbgOut.Indent++;
+            DOut.pl("Child [");
+            DOut.Indent++;
             foreach (CadFigure fig in mChildList)
             {
-                DbgOut.pln("" + fig.ID);
+                DOut.pl("" + fig.ID);
             }
-            DbgOut.Indent--;
-            DbgOut.pln("]");
+            DOut.Indent--;
+            DOut.pl("]");
 
-            DbgOut.Indent--;
-            DbgOut.pln("}");
+            DOut.Indent--;
+            DOut.pl("}");
         }
 
         #endregion
@@ -785,6 +785,12 @@ namespace Plotter
             }
 
             return true;
+        }
+
+        public virtual bool IsPointSelected(int idx)
+        {
+            if (idx >= PointCount) return false;
+            return PointList[idx].Selected;
         }
 
         public virtual void ForEachSegment(Func<CadSegment, bool> dg)

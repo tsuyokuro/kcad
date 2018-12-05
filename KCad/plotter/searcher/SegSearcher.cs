@@ -7,54 +7,41 @@ namespace Plotter
 {
     public class SegSearcher
     {
-        private MarkSegment markSeg;
+        private MarkSegment MarkSeg;
 
-        private CadCursor TargetPoint;
-        private double mRange;
-        private double mMinDist = 0;
+        private CadCursor Target;
 
-        private List<MarkSegment> IgnoreSegList;
+        public double Range;
 
-        private IReadOnlyList<SelectItem> IgnoreList = null;
+        public double MinDist = 0;
 
         public bool IsMatch
         {
             get
             {
-                return markSeg.FigureID != 0;
+                return MarkSeg.FigureID != 0;
             }
         }
 
-
         public void SetRangePixel(DrawContext dc, double pixel)
         {
-            mRange = pixel;
+            Range = pixel;
         }
 
         public void Clean()
         {
-            markSeg = default(MarkSegment);
-            markSeg.Clean();
+            MarkSeg = default(MarkSegment);
+            MarkSeg.Clean();
         }
 
-        public void SetTargetPoint(CadCursor p)
+        public void SetTargetPoint(CadCursor cursor)
         {
-            TargetPoint = p;
-        }
-
-        public void SetIgnoreList(IReadOnlyList<SelectItem> list)
-        {
-            IgnoreList = list; 
-        }
-
-        public void SetIgnoreSeg(List<MarkSegment> segList)
-        {
-            IgnoreSegList = segList;
+            Target = cursor;
         }
 
         public MarkSegment GetMatch()
         {
-            return markSeg;
+            return MarkSeg;
         }
 
         public void SearchAllLayer(DrawContext dc, CadObjectDB db)
@@ -86,7 +73,7 @@ namespace Plotter
                 return;
             }
 
-            mMinDist = CadConst.MaxValue;
+            MinDist = CadConst.MaxValue;
 
             for (int i=layer.FigureList.Count-1; i>=0; i--)
             {
@@ -109,26 +96,16 @@ namespace Plotter
                 b = fseg.StoredPoint1;
             }
 
-            if (fig != null && IsIgnore(fig.ID, idxA))
-            {
-                return;
-            }
+            CadVector cwp = dc.DevPointToWorldPoint(Target.Pos);
 
-            if (fig != null && IsIgnore(fig.ID, idxB))
-            {
-                return;
-            }
-
-            CadVector cwp = dc.UnitPointToCadPoint(TargetPoint.Pos);
-
-            CadVector xfaceNormal = dc.UnitVectorToCadVector(TargetPoint.DirX);
-            CadVector yfaceNormal = dc.UnitVectorToCadVector(TargetPoint.DirY);
+            CadVector xfaceNormal = dc.DevVectorToWorldVector(Target.DirX);
+            CadVector yfaceNormal = dc.DevVectorToWorldVector(Target.DirY);
 
             CadVector cx = CadUtil.CrossSegPlane(a, b, cwp, xfaceNormal);
             CadVector cy = CadUtil.CrossSegPlane(a, b, cwp, yfaceNormal);
 
-            CadVector pa = dc.CadPointToUnitPoint(a);
-            CadVector pb = dc.CadPointToUnitPoint(b);
+            CadVector pa = dc.WorldPointToDevPoint(a);
+            CadVector pb = dc.WorldPointToDevPoint(b);
 
             if (!cx.Valid && !cy.Valid)
             {
@@ -149,9 +126,9 @@ namespace Plotter
                     continue;
                 }
 
-                CadVector devv = dc.CadPointToUnitPoint(v);
+                CadVector devv = dc.WorldPointToDevPoint(v);
 
-                double td = (devv - TargetPoint.Pos).Norm();
+                double td = (devv - Target.Pos).Norm();
 
                 if (td < mind)
                 {
@@ -165,59 +142,53 @@ namespace Plotter
                 return;
             }
 
-            if (mind > mRange)
+            if (mind > Range)
             {
                 return;
             }
 
-            if (mind < mMinDist)
+            if (mind < MinDist)
             {
-                markSeg.Layer = layer;
-                markSeg.FigSeg = fseg;
-                markSeg.CrossPoint = p;
-                markSeg.CrossPointScrn = dc.CadPointToUnitPoint(p);
-                markSeg.Distance = mind;
+                MarkSeg.Layer = layer;
+                MarkSeg.FigSeg = fseg;
+                MarkSeg.CrossPoint = p;
+                MarkSeg.CrossPointScrn = dc.WorldPointToDevPoint(p);
+                MarkSeg.Distance = mind;
 
-                mMinDist = mind;
+                MinDist = mind;
             }
         }
 
 
         private void CheckCircle(DrawContext dc, CadLayer layer, CadFigure fig)
         {
-            if (IsIgnore(fig.ID, 0))
-            {
-                return;
-            }
-
-            if (IsIgnore(fig.ID, 1))
-            {
-                return;
-            }
-
-            if (IsIgnore(fig.ID, 2))
-            {
-                return;
-            }
-
             if (fig.PointCount < 3)
             {
                 return;
             }
 
-            CadVector c = fig.GetPointAt(0);
-            CadVector a = fig.GetPointAt(1);
-            CadVector b = fig.GetPointAt(2);
+            VectorList vl = fig.PointList;
 
-            CadVector pc = dc.CadPointToUnitPoint(c);
-            CadVector pa = dc.CadPointToUnitPoint(a);
-            CadVector pb = dc.CadPointToUnitPoint(b);
+            if (fig.StoreList != null)
+            {
+                vl = fig.StoreList;
+            }
+
+
+            CadVector c = vl[0];
+            CadVector a = vl[1];
+            CadVector b = vl[2];
+
+
+            CadVector pc = dc.WorldPointToDevPoint(c);
+            CadVector pa = dc.WorldPointToDevPoint(a);
+            CadVector pb = dc.WorldPointToDevPoint(b);
 
             double r = CadUtil.SegNorm2D(pa, pc);
-            double tr = CadUtil.SegNorm2D(TargetPoint.Pos, pc);
+            double tr = CadUtil.SegNorm2D(Target.Pos, pc);
 
-            double pad = CadUtil.SegNorm2D(TargetPoint.Pos, pa);
-            double pbd = CadUtil.SegNorm2D(TargetPoint.Pos, pb);
+            double pad = CadUtil.SegNorm2D(Target.Pos, pa);
+            double pbd = CadUtil.SegNorm2D(Target.Pos, pb);
 
             int idxB = 1;
 
@@ -229,14 +200,14 @@ namespace Plotter
 
             double dist = Math.Abs(tr - r);
 
-            if (dist > mRange * 2.0)
+            if (dist > Range * 2.0)
             {
                 return;
             }
 
-            if (dist < mMinDist)
+            if (dist < MinDist)
             {
-                CadVector tp = dc.UnitPointToCadPoint(TargetPoint.Pos);
+                CadVector tp = dc.DevPointToWorldPoint(Target.Pos);
                 r = CadUtil.SegNorm(a, c);
                 tr = CadUtil.SegNorm(tp, c);
 
@@ -247,14 +218,14 @@ namespace Plotter
 
                 FigureSegment fseg = new FigureSegment(fig, 0, 0, idxB);
 
-                markSeg.Layer = layer;
-                markSeg.FigSeg = fseg;
-                markSeg.CrossPoint = td;
-                markSeg.CrossPointScrn = dc.CadPointToUnitPoint(td);
-                markSeg.Distance = dist;
+                MarkSeg.Layer = layer;
+                MarkSeg.FigSeg = fseg;
+                MarkSeg.CrossPoint = td;
+                MarkSeg.CrossPointScrn = dc.WorldPointToDevPoint(td);
+                MarkSeg.Distance = dist;
 
 
-                mMinDist = dist;
+                MinDist = dist;
             }
         }
 
@@ -284,46 +255,6 @@ namespace Plotter
                 default:
                     break;
             }
-        }
-
-        private bool IsIgnore(uint figId, int index)
-        {
-            if (IgnoreList == null)
-            {
-                return false;
-            }
-
-            for (int i=0; i<IgnoreList.Count; i++)
-            {
-                SelectItem item = IgnoreList[i];
-
-                if (item.FigureID == figId && item.PointIndex == index)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private bool IsIgnoreSeg(uint figId, int index)
-        {
-            if (IgnoreSegList == null)
-            {
-                return false;
-            }
-
-            for (int i=0; i<IgnoreSegList.Count; i++)
-            {
-                MarkSegment item = IgnoreSegList[i];
-
-                if (item.FigureID == figId && (item.PtIndexA == index || item.PtIndexB == index))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

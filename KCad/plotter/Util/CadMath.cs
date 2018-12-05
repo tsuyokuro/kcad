@@ -330,20 +330,20 @@ namespace Plotter
 
         public void dump()
         {
-            DbgOut.pln(nameof(MatrixMN) + "{");
-            DbgOut.Indent++;
+            DOut.pl(nameof(MatrixMN) + "{");
+            DOut.Indent++;
 
             for (int r = 0; r < RN; r++)
             {
                 for (int c = 0; c < CN; c++)
                 {
-                    DbgOut.p(v[r, c].ToString() + ",");
+                    DOut.p(v[r, c].ToString() + ",");
                 }
-                DbgOut.pln("");
+                DOut.pl("");
             }
 
-            DbgOut.Indent--;
-            DbgOut.pln("}");
+            DOut.Indent--;
+            DOut.pl("}");
         }
     }
 }

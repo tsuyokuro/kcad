@@ -84,8 +84,6 @@ namespace Plotter
             int cnt = pd.PrinterSettings.PaperSizes.Count;
             int i;
 
-            PaperSize matchSize = null;
-
             for (i = 0; i < cnt; i++)
             {
                 PaperSize ps = pd.PrinterSettings.PaperSizes[i];

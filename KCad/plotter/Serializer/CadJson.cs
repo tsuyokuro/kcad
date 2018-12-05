@@ -467,7 +467,6 @@ namespace Plotter.Serializer
                 CadLayer layer = new CadLayer();
 
                 layer.ID = (uint)jo[COMMON.ID];
-                List<uint> idList;
 
                 layer.Name = (String)jo[COMMON.NAME];
 

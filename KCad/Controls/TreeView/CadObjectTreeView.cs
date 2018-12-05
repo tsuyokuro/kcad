@@ -425,7 +425,8 @@ namespace KCad
                                                       System.Windows.FlowDirection.LeftToRight,
                                                       mTypeface,
                                                       mTextSize,
-                                                      brush);
+                                                      brush,
+                                                      VisualTreeHelper.GetDpi(this).PixelsPerDip);
             return formattedText;
         }
 
@@ -436,7 +437,8 @@ namespace KCad
                                                       System.Windows.FlowDirection.LeftToRight,
                                                       typeFace,
                                                       mTextSize,
-                                                      brush);
+                                                      brush,
+                                                      VisualTreeHelper.GetDpi(this).PixelsPerDip);
             return formattedText;
         }
 
