@@ -219,6 +219,7 @@
     <Compile Include="plotter\Controller\ControllerTypes.cs" />
     <Compile Include="plotter\Figure\CircleExpander.cs" />
     <Compile Include="plotter\Figure\PolyLineExpander.cs" />
+    <Compile Include="plotter\Serializer\MpCadFile.cs" />
     <Compile Include="plotter\Serializer\MpInitializer.cs" />
     <Compile Include="plotter\TreeViewItem\CadFigTreeItem.cs" />
     <Compile Include="plotter\TreeViewItem\CadLayerTreeItem.cs" />
