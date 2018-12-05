@@ -16,12 +16,6 @@ using System.Drawing.Printing;
 
 namespace Plotter.Controller
 {
-    public enum CursorType
-    {
-        TRACKING,
-        LAST_DOWN,
-    }
-
     public partial class PlotterController
     {
         public enum States
@@ -34,66 +28,6 @@ namespace Plotter.Controller
             CREATING,
             MEASURING,
         }
-
-        public enum SelectModes
-        {
-            POINT,
-            OBJECT,
-        }
-
-        public enum MeasureModes
-        {
-            NONE,
-            POLY_LINE,
-        }
-
-        public struct StateInfo
-        {
-            public States State;
-
-            public SelectModes SelectMode;
-
-            public CadFigure.Types CreatingFigureType;
-
-            public int CreatingFigurePointCnt;
-
-            public MeasureModes MeasureMode;
-
-            public bool HasSelect;
-
-            public void set(PlotterController pc)
-            {
-                State = pc.State;
-                SelectMode = pc.SelectMode;
-                CreatingFigureType = pc.CreatingFigType;
-                CreatingFigurePointCnt = 0;
-
-                if (pc.FigureCreator != null)
-                {
-                    CreatingFigurePointCnt = pc.FigureCreator.Figure.PointCount;
-                }
-
-                MeasureMode = pc.MeasureMode;
-
-                HasSelect = pc.HasSelect();
-            }
-        }
-
-        public struct LayerListInfo
-        {
-            public List<CadLayer> LayerList;
-            public uint CurrentID;
-        }
-
-        public class Interaction
-        {
-            public PrintFunc println = (a) => { };
-            public PrintFunc print = (a) => { };
-            public FormatPrintFunc printf = (a, b) => { };
-            public Action clear = () => { };
-        }
-
-        public Interaction InteractOut { set; get; } = new Interaction();
 
         private CadObjectDB mDB = new CadObjectDB();
 
@@ -162,17 +96,15 @@ namespace Plotter.Controller
 
         public MeasureModes MeasureMode = MeasureModes.NONE;
 
-        private CadFigure.Creator FigureCreator = null;
-        private CadFigure.Creator MeasureFigureCreator = null;
+
+        public CadFigure.Creator FigureCreator = null;
+
+        public CadFigure.Creator MeasureFigureCreator = null;
+
 
         public HistoryManager HistoryMan = null;
 
-        public SelectList SelList = new SelectList();
-
-        public SelectSegmentList SelSegList = new SelectSegmentList();
-
         private List<CadFigure> EditFigList = new List<CadFigure>();
-
 
         public bool ContinueCreate { set; get; } = false;
 
@@ -251,7 +183,7 @@ namespace Plotter.Controller
 
         private void NotifyStateChange()
         {
-            StateInfo si = default(StateInfo);
+            PlotterStateInfo si = default(PlotterStateInfo);
             si.set(this);
 
             Observer.StateChanged(this, si);
@@ -380,6 +312,7 @@ namespace Plotter.Controller
             }
 
             DrawBase(dc);
+            DrawDragLine(dc);
             DrawCrossCursor(dc);
             Draw(dc);
             DrawSelectedItems(dc);
@@ -460,6 +393,17 @@ namespace Plotter.Controller
             }
         }
 
+        public void DrawDragLine(DrawContext dc)
+        {
+            if (State != States.DRAGING_POINTS)
+            {
+                return;
+            }
+
+            dc.Drawing.DrawLine(DrawTools.PEN_DRAG_LINE,
+                LastDownPoint, dc.DevPointToWorldPoint(CrossCursor.Pos));
+        }
+
         public void DrawCrossCursor(DrawContext dc)
         {
             dc.Drawing.DrawCrossCursorScrn(CrossCursor);
@@ -515,8 +459,8 @@ namespace Plotter.Controller
         {
             CurrentFigure = null;
 
-            SelList.clear();
-            SelSegList.Clear();
+            LastSelPoint = null;
+            LastSelSegment = null;
 
             foreach (CadLayer layer in mDB.LayerList)
             {
@@ -558,8 +502,6 @@ namespace Plotter.Controller
                 }
             }
 
-            UpdateSelectItemPoints();
-
             CadOpeList root = new CadOpeList();
 
             CadOpeList rmOpeList = RemoveInvalidFigure();
@@ -584,34 +526,6 @@ namespace Plotter.Controller
                     fig.CancelEdit();
                 }
             }
-        }
-
-        private void UpdateSelectItemPoints()
-        {
-            HashSet<SelectItem> removeSels = new HashSet<SelectItem>();
-
-            foreach (SelectItem item in SelList.List)
-            {
-                if (!item.update())
-                {
-                    removeSels.Add(item);
-                }
-            }
-
-            SelList.RemoveAll(a => removeSels.Contains(a));
-
-
-            HashSet<MarkSegment> removeSegs = new HashSet<MarkSegment>();
-
-            foreach (MarkSegment item in SelSegList.List)
-            {
-                if (!item.Update())
-                {
-                    removeSegs.Add(item);
-                }
-            }
-
-            SelSegList.List.RemoveAll(a => removeSegs.Contains(a));
         }
 
         private CadOpeList RemoveInvalidFigure()
@@ -676,7 +590,7 @@ namespace Plotter.Controller
 
         #endregion
 
-        private bool HasSelect()
+        public bool HasSelect()
         {
             bool ret = false;
 
@@ -697,7 +611,7 @@ namespace Plotter.Controller
             return ret;
         }
 
-        private List<CadFigure> GetSelectedFigureList()
+        public List<CadFigure> GetSelectedFigureList()
         {
             List<CadFigure> figList = new List<CadFigure>();
 
@@ -743,7 +657,7 @@ namespace Plotter.Controller
 
             NotifyLayerInfo();
 
-            InteractOut.println("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
+            ItConsole.println("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
         }
 
         public void RemoveLayer(uint id)
@@ -780,7 +694,7 @@ namespace Plotter.Controller
             }
 
             NotifyLayerInfo();
-            InteractOut.println("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
+            ItConsole.println("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
         }
 
         public void SelectAllInCurrentLayer()
@@ -913,33 +827,6 @@ namespace Plotter.Controller
             }
         }
 
-        /// <summary>
-        /// 選択されたPointをselListに追加する
-        /// </summary>
-        /// <param name="selList">追加されるSelectList</param>
-        /// 
-        public void CollectSelList(SelectList selList)
-        {
-            foreach (CadLayer layer in DB.LayerList)
-            {
-                if (layer.Locked || layer.Visible == false)
-                {
-                    continue;
-                }
-
-                foreach (CadFigure fig in layer.FigureList)
-                {
-                    for (int i = 0; i < fig.PointCount; i++)
-                    {
-                        if (fig.PointList[i].Selected)
-                        {
-                            selList.add(layer.ID, fig, i);
-                        }
-                    }
-                }
-            }
-        }
-
         public void ClearAll()
         {
             PageSize = new PaperPageSize();
@@ -949,22 +836,6 @@ namespace Plotter.Controller
 
             NotifyLayerInfo();
             UpdateTreeView(true);
-        }
-
-
-        public void print(string s)
-        {
-            InteractOut.print(s);
-        }
-
-        public void println(string s)
-        {
-            InteractOut.println(s);
-        }
-
-        public void printf(string format, params object[] args)
-        {
-            InteractOut.printf(format, args);
         }
 
         public void SetDB(CadObjectDB db)
@@ -978,6 +849,17 @@ namespace Plotter.Controller
             UpdateTreeView(true);
 
             Redraw(CurrentDC);
+        }
+
+        public void Copy()
+        {
+            PlotterClipboard.CopyFiguresAsBin(this);
+        }
+
+        public void Paste()
+        {
+            PlotterClipboard.PasteFiguresAsBin(this);
+            UpdateTreeView(true);
         }
     }
 }

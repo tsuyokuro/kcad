@@ -29,7 +29,14 @@ namespace Plotter
         {
             get
             {
-                return Fig.GetPointAt(Idx0);
+                if (Fig.StoreList == null)
+                {
+                    return Fig.PointList[Idx0];
+                }
+                else
+                {
+                    return Fig.StoreList[Idx0];
+                }
             }
         }
 
@@ -37,31 +44,76 @@ namespace Plotter
         {
             get
             {
-                return Fig.GetPointAt(Idx1);
+                if (Fig.StoreList == null)
+                {
+                    return Fig.PointList[Idx1];
+                }
+                else
+                {
+                    return Fig.StoreList[Idx1];
+                }
             }
         }
 
-        public RulerInfo Capture(DrawContext dc, CadVector p, double range)
+        public RulerInfo Capture(DrawContext dc, CadCursor cursor, double range)
         {
             RulerInfo ret = default(RulerInfo);
-            CrossInfo ci = default(CrossInfo);
 
-            ci = CadUtil.PerpendicularCrossLine(P0, P1, p);
+            CadVector cwp = dc.DevPointToWorldPoint(cursor.Pos);
 
-            double d = (ci.CrossPoint - p).Norm();
+            CadVector xfaceNormal = dc.DevVectorToWorldVector(cursor.DirX);
+            CadVector yfaceNormal = dc.DevVectorToWorldVector(cursor.DirY);
 
-            if (d <= range)
+            CadVector cx = CadUtil.CrossPlane(P0, P1, cwp, xfaceNormal);
+            CadVector cy = CadUtil.CrossPlane(P0, P1, cwp, yfaceNormal);
+
+            if (!cx.Valid && !cy.Valid)
             {
-                ret.IsValid = true;
-                ret.CrossPoint = ci.CrossPoint;
-                ret.Distance = d;
-
-                ret.Ruler = this;
-
                 return ret;
             }
 
-            return default(RulerInfo);
+            CadVector p = CadVector.InvalidValue;
+            double mind = Double.MaxValue;
+
+            Span<CadVector> vtbl = stackalloc CadVector[] { cx, cy };
+
+            for (int i = 0; i < vtbl.Length; i++)
+            {
+                CadVector v = vtbl[i];
+
+                if (!v.Valid)
+                {
+                    continue;
+                }
+
+                CadVector devv = dc.WorldPointToDevPoint(v);
+
+                double td = (devv - cursor.Pos).Norm();
+
+                if (td < mind)
+                {
+                    mind = td;
+                    p = v;
+                }
+            }
+
+            if (!p.Valid)
+            {
+                return ret;
+            }
+
+            if (mind > range)
+            {
+                return ret;
+            }
+
+            ret.IsValid = true;
+            ret.CrossPoint = p;
+            ret.Distance = mind;
+
+            ret.Ruler = this;
+
+            return ret;
         }
 
         public static CadRuler Create(CadFigure fig, int idx0, int idx1)
@@ -135,20 +187,18 @@ namespace Plotter
             RCount++;
         }
 
-        public RulerInfo Capture(DrawContext dc, CadVector p, double rangePixel)
+        public RulerInfo Capture(DrawContext dc, CadCursor cursor, double rangePixel)
         {
             RulerInfo match = default(RulerInfo);
             RulerInfo ri = default(RulerInfo);
 
-            double range = dc.UnitToMilli(rangePixel);
-
-            double min = range;
+            double min = rangePixel;
 
             MatchIndex = -1;
 
             for (int i = 0; i < RCount; i++)
             {
-                ri = Ruler[i].Capture(dc, p, range);
+                ri = Ruler[i].Capture(dc, cursor, rangePixel);
 
                 if (ri.IsValid && ri.Distance < min)
                 {

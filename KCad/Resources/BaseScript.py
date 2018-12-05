@@ -37,10 +37,6 @@ def layerList():
 def lastDown():
     return SE.GetLastDownPoint()
 
-#[AC] distance()
-def distance():
-    SE.Distance()
-
 #[AC] group()
 def group():
     SE.Group()

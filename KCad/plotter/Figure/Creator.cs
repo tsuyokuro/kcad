@@ -165,8 +165,8 @@ namespace Plotter
                 {
                     // 左回りになるように設定
 
-                    CadVector pp0 = dc.CadPointToUnitPoint(Figure.PointList[0]);
-                    CadVector pp2 = dc.CadPointToUnitPoint(p);
+                    CadVector pp0 = dc.WorldPointToDevPoint(Figure.PointList[0]);
+                    CadVector pp2 = dc.WorldPointToDevPoint(p);
 
                     CadVector pp1 = pp0;
                     pp1.y = pp2.y;
@@ -174,9 +174,9 @@ namespace Plotter
                     CadVector pp3 = pp0;
                     pp3.x = pp2.x;
 
-                    Figure.mPointList.Add(dc.UnitPointToCadPoint(pp1));
-                    Figure.mPointList.Add(dc.UnitPointToCadPoint(pp2));
-                    Figure.mPointList.Add(dc.UnitPointToCadPoint(pp3));
+                    Figure.mPointList.Add(dc.DevPointToWorldPoint(pp1));
+                    Figure.mPointList.Add(dc.DevPointToWorldPoint(pp2));
+                    Figure.mPointList.Add(dc.DevPointToWorldPoint(pp3));
 
                     Figure.IsLoop = true;
                 }

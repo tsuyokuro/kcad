@@ -60,61 +60,48 @@ namespace Plotter
 
         public void undo()
         {
-            try
+            if (mUndoStack.Count == 0) return;
+
+            CadOpe ope = mUndoStack.Pop();
+
+            if (ope == null)
             {
-                if (mUndoStack.Count == 0) return;
-
-                CadOpe ope = mUndoStack.Pop();
-
-                if (ope == null)
-                {
-                    return;
-                }
-
-                ope.Undo(mDB);
-
-                mRedoStack.Push(ope);
+                return;
             }
-            catch (InvalidOperationException e)
-            {
 
-            }
+            ope.Undo(mDB);
+
+            mRedoStack.Push(ope);
         }
 
         public void redo()
         {
-            try
+            if (mRedoStack.Count == 0) return;
+
+            CadOpe ope = mRedoStack.Pop();
+
+            if (ope == null)
             {
-                if (mRedoStack.Count == 0) return;
-
-                CadOpe ope = mRedoStack.Pop();
-
-                if (ope == null)
-                {
-                    return;
-                }
-
-                ope.Redo(mDB);
-                mUndoStack.Push(ope);
+                return;
             }
-            catch (InvalidOperationException e)
-            {
-            }
+
+            ope.Redo(mDB);
+            mUndoStack.Push(ope);
         }
 
         public void dump()
         {
-            DbgOut.pln(this.GetType().Name);
-            DbgOut.pln("{");
-            DbgOut.Indent++;
-            DbgOut.pln("UndoStack [");
-            DbgOut.Indent++;
+            DOut.pl(this.GetType().Name);
+            DOut.pl("{");
+            DOut.Indent++;
+            DOut.pl("UndoStack [");
+            DOut.Indent++;
 
 
 
-            DbgOut.Indent--;
-            DbgOut.Indent--;
-            DbgOut.pln("}");
+            DOut.Indent--;
+            DOut.Indent--;
+            DOut.pl("}");
         }
     }
 }

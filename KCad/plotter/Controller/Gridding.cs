@@ -43,10 +43,15 @@ namespace Plotter
             YMatchW.Valid = false;
         }
 
+        public void CopyFrom(Gridding g)
+        {
+            mGridSize = g.mGridSize;
+            Range = g.Range;
+        }
 
         private CadVector CalcGridSizeU(DrawContext dc, CadVector gridSizeW)
         {
-            CadVector gridSize = dc.CadPointToUnitPoint(gridSizeW) - dc.CadPointToUnitPoint(CadVector.Zero);
+            CadVector gridSize = dc.WorldPointToDevPoint(gridSizeW) - dc.WorldPointToDevPoint(CadVector.Zero);
 
             gridSize.x = Math.Abs(gridSize.x);
             gridSize.y = Math.Abs(gridSize.y);
@@ -95,12 +100,12 @@ namespace Plotter
 
             if (XMatchU.Valid)
             {
-                XMatchW = dc.UnitPointToCadPoint(XMatchU);
+                XMatchW = dc.DevPointToWorldPoint(XMatchU);
             }
 
             if (YMatchU.Valid)
             {
-                YMatchW = dc.UnitPointToCadPoint(YMatchU);
+                YMatchW = dc.DevPointToWorldPoint(YMatchU);
             }
         }
 
@@ -120,12 +125,12 @@ namespace Plotter
             double t = 1;
             double d;
 
-            CadVector uzero = dc.CadPointToUnitPoint(CadVector.Zero);
+            CadVector uzero = dc.WorldPointToDevPoint(CadVector.Zero);
 
             double uszx;
             double uszy;
 
-            usz = dc.CadPointToUnitPoint(CadVector.Create(szx, 0, 0)) - uzero;
+            usz = dc.WorldPointToDevPoint(CadVector.Create(szx, 0, 0)) - uzero;
 
             uszx = Math.Abs(usz.x);
             uszy = Math.Abs(usz.y);
@@ -152,7 +157,7 @@ namespace Plotter
                 n = t;
             }
 
-            usz = dc.CadPointToUnitPoint(CadVector.Create(0, szy, 0)) - uzero;
+            usz = dc.WorldPointToDevPoint(CadVector.Create(0, szy, 0)) - uzero;
 
             uszx = Math.Abs(usz.x);
             uszy = Math.Abs(usz.y);
@@ -179,7 +184,7 @@ namespace Plotter
                 n = t;
             }
 
-            usz = dc.CadPointToUnitPoint(CadVector.Create(0, 0, szy)) - uzero;
+            usz = dc.WorldPointToDevPoint(CadVector.Create(0, 0, szy)) - uzero;
 
             uszx = Math.Abs(usz.x);
             uszy = Math.Abs(usz.y);

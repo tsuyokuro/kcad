@@ -248,8 +248,8 @@ namespace Plotter
             CadVector lt = CadVector.Zero;
             CadVector rb = CadVector.Create(DC.ViewWidth, DC.ViewHeight, 0);
 
-            CadVector ltw = DC.UnitPointToCadPoint(lt);
-            CadVector rbw = DC.UnitPointToCadPoint(rb);
+            CadVector ltw = DC.DevPointToWorldPoint(lt);
+            CadVector rbw = DC.DevPointToWorldPoint(rb);
 
             double minx = Math.Min(ltw.x, rbw.x);
             double maxx = Math.Max(ltw.x, rbw.x);
@@ -261,18 +261,12 @@ namespace Plotter
             double maxz = Math.Max(ltw.z, rbw.z);
 
 
-            int pen = DrawTools.PEN_GRID;
-
             Color c = DC.PenColor(DrawTools.PEN_GRID);
 
             int argb = c.ToArgb();
 
-            CadVector p = default(CadVector);
-
-
             double n = grid.Decimate(DC, grid, 8);
 
-            double x, y, z;
             double sx, sy, sz;
             double szx = grid.GridSize.x * n;
             double szy = grid.GridSize.y * n;
@@ -332,7 +326,7 @@ namespace Plotter
                     while (y < maxy)
                     {
                         p.y = y;
-                        up = DC.CadPointToUnitPoint(p);
+                        up = DC.WorldPointToDevPoint(p);
 
                         if (up.x >= 0 && up.x < tgt.Width && up.y >= 0 && up.y < tgt.Height)
                         {
@@ -357,7 +351,7 @@ namespace Plotter
                     {
                         p.y = y;
 
-                        up = DC.CadPointToUnitPoint(p);
+                        up = DC.WorldPointToDevPoint(p);
 
                         if (up.x >= 0 && up.x < tgt.Width && up.y >= 0 && up.y < tgt.Height)
                         {
@@ -382,7 +376,7 @@ namespace Plotter
                     {
                         p.z = z;
 
-                        up = DC.CadPointToUnitPoint(p);
+                        up = DC.WorldPointToDevPoint(p);
 
                         if (up.x >= 0 && up.x < tgt.Width && up.y >= 0 && up.y < tgt.Height)
                         {
@@ -434,7 +428,7 @@ namespace Plotter
         #region "Draw marker"
         public override void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHTLITE)
         {
-            CadVector pp = DC.CadPointToUnitPoint(pt);
+            CadVector pp = DC.WorldPointToDevPoint(pt);
 
             //DrawCircleScrn(pen, pp, 3);
 
@@ -443,7 +437,7 @@ namespace Plotter
 
         public override void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT)
         {
-            CadVector pp = DC.CadPointToUnitPoint(pt);
+            CadVector pp = DC.WorldPointToDevPoint(pt);
 
             int size = 3;
 
@@ -471,8 +465,6 @@ namespace Plotter
                 HalfEdge c = head;
 
                 HalfEdge pair;
-
-                CadVector v;
 
                 for (; ; )
                 {
@@ -515,15 +507,15 @@ namespace Plotter
 
         public override void DrawRect(int pen, CadVector p0, CadVector p1)
         {
-            CadVector pp0 = DC.CadPointToUnitPoint(p0);
-            CadVector pp1 = DC.CadPointToUnitPoint(p1);
+            CadVector pp0 = DC.WorldPointToDevPoint(p0);
+            CadVector pp1 = DC.WorldPointToDevPoint(p1);
 
             DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
         }
 
         public override void DrawCross(int pen, CadVector p, double size)
         {
-            CadVector a = DC.CadPointToUnitPoint(p);
+            CadVector a = DC.WorldPointToDevPoint(p);
 
             DrawLineScrn(pen, a.x - size, a.y + 0, a.x + size, a.y + 0);
             DrawLineScrn(pen, a.x + 0, a.y + size, a.x + 0, a.y - size);
@@ -540,8 +532,8 @@ namespace Plotter
             if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
 
-            CadVector pa = DC.CadPointToUnitPoint(a);
-            CadVector pb = DC.CadPointToUnitPoint(b);
+            CadVector pa = DC.WorldPointToDevPoint(a);
+            CadVector pb = DC.WorldPointToDevPoint(b);
 
            BitmapData bd = DC.GetLockedBits();
 
@@ -567,7 +559,7 @@ namespace Plotter
                 return;
             }
  
-            CadVector p0 = DC.CadPointToUnitPoint(p);
+            CadVector p0 = DC.WorldPointToDevPoint(p);
             //CadVector p1 = p0;
             //p0.x = (int)p0.x;
             //p1.x = p0.x + 0.1;
@@ -610,7 +602,7 @@ namespace Plotter
 
         public override void DrawText(int font, int brush, CadVector a, string s)
         {
-            CadVector pa = DC.CadPointToUnitPoint(a);
+            CadVector pa = DC.WorldPointToDevPoint(a);
             DrawTextScrn(font, brush, pa, CadVector.UnitX, s);
         }
 
@@ -783,14 +775,14 @@ namespace Plotter
 
             CadVector uv = CadVector.Create(size, 0, 0);
 
-            CadVector cv = DC.UnitVectorToCadVector(uv);
+            CadVector cv = DC.DevVectorToWorldVector(uv);
 
             double len = cv.Norm();
 
 
             CadVector up = CadVector.Create(size+5, size+5, 0);
 
-            CadVector cp = DC.UnitPointToCadPoint(up);
+            CadVector cp = DC.DevPointToWorldPoint(up);
 
 
             CadVector p0 = default(CadVector);

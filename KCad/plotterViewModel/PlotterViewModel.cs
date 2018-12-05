@@ -23,110 +23,10 @@ using MessagePack;
 
 namespace Plotter
 {
-    public class SelectModeConverter : EnumBoolConverter<PlotterController.SelectModes> { }
+    public class SelectModeConverter : EnumBoolConverter<SelectModes> { }
     public class FigureTypeConverter : EnumBoolConverter<CadFigure.Types> { }
-    public class MeasureModeConverter : EnumBoolConverter<PlotterController.MeasureModes> { }
-
-    public enum ViewModes
-    {
-        NONE,
-        FRONT,
-        BACK,
-        TOP,
-        BOTTOM,
-        RIGHT,
-        LEFT,
-        FREE,
-    }
-
+    public class MeasureModeConverter : EnumBoolConverter<MeasureModes> { }
     public class ViewModeConverter : EnumBoolConverter<ViewModes> { }
-
-    public class FreqChangedInfo : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private string mStrCursorPos = "";
-
-        public string StrCursorPos
-        {
-            set
-            {
-                mStrCursorPos = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StrCursorPos)));
-            }
-
-            get
-            {
-                return mStrCursorPos;
-            }
-        }
-
-        private string mStrCursorPos2 = "";
-
-        public string StrCursorPos2
-        {
-            set
-            {
-                mStrCursorPos2 = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StrCursorPos2)));
-            }
-
-            get
-            {
-                return mStrCursorPos2;
-            }
-        }
-
-        private CadVector mCursorPos;
-
-        public CadVector CursorPos
-        {
-            set
-            {
-                if (!String.IsNullOrEmpty(mStrCursorPos) && mCursorPos.Equals(value))
-                {
-                    return;
-                }
-
-                mCursorPos = value;
-
-                String s = string.Format("({0:0.00},{1:0.00},{2:0.00})",
-                    mCursorPos.x, mCursorPos.y, mCursorPos.z);
-
-                StrCursorPos = s;
-            }
-
-            get
-            {
-                return mCursorPos;
-            }
-        }
-
-        private CadVector mCursorPos2;
-
-        public CadVector CursorPos2
-        {
-            set
-            {
-                if (!String.IsNullOrEmpty(mStrCursorPos2) && mCursorPos2.Equals(value))
-                {
-                    return;
-                }
-
-                mCursorPos2 = value;
-
-                String s = string.Format("({0:0.00},{1:0.00},{2:0.00})",
-                    mCursorPos2.x, mCursorPos2.y, mCursorPos2.z);
-
-                StrCursorPos2 = s;
-            }
-
-            get
-            {
-                return mCursorPos2;
-            }
-        }
-    }
 
     public partial class PlotterViewModel : INotifyPropertyChanged
     {
@@ -134,11 +34,11 @@ namespace Plotter
 
         private PlotterController mController;
 
-        public PlotterController.Interaction InteractOut
+        public PlotterController Controller
         {
-            set
+            get
             {
-                mController.InteractOut = value;
+                return mController;
             }
         }
 
@@ -146,13 +46,13 @@ namespace Plotter
 
         private Dictionary<string, Action> KeyMap;
 
-        private PlotterController.SelectModes mSelectMode = PlotterController.SelectModes.POINT;
+        private SelectModes mSelectMode = SelectModes.POINT;
 
         public ObservableCollection<LayerHolder> LayerList = new ObservableCollection<LayerHolder>();
 
-        public FreqChangedInfo FreqChangedInfo = new FreqChangedInfo();
+        public CursorPosViewModel CursorPosVM = new CursorPosViewModel();
 
-        public PlotterController.SelectModes SelectMode
+        public SelectModes SelectMode
         {
             set
             {
@@ -189,9 +89,9 @@ namespace Plotter
             }
         }
 
-        private PlotterController.MeasureModes mMeasureMode = PlotterController.MeasureModes.NONE;
+        private MeasureModes mMeasureMode = MeasureModes.NONE;
 
-        public PlotterController.MeasureModes MeasureMode
+        public MeasureModes MeasureMode
         {
             set
             {
@@ -435,14 +335,6 @@ namespace Plotter
             get
             {
                 return mLayerListView;
-            }
-        }
-
-        public PlotterController Controller
-        {
-            get
-            {
-                return mController;
             }
         }
 
@@ -889,7 +781,7 @@ namespace Plotter
             }
         }
 
-        public void StateChanged(PlotterController sender, PlotterController.StateInfo si)
+        public void StateChanged(PlotterController sender, PlotterStateInfo si)
         {
             if (CreatingFigureType != si.CreatingFigureType)
             {
@@ -902,7 +794,7 @@ namespace Plotter
             }
         }
 
-        public void LayerListChanged(PlotterController sender, PlotterController.LayerListInfo layerListInfo)
+        public void LayerListChanged(PlotterController sender, LayerListInfo layerListInfo)
         {
             foreach (LayerHolder lh in LayerList)
             {
@@ -945,11 +837,11 @@ namespace Plotter
         {
             if (type == Plotter.Controller.CursorType.TRACKING)
             {
-                FreqChangedInfo.CursorPos = pt;
+                CursorPosVM.CursorPos = pt;
             }
             else if (type == Plotter.Controller.CursorType.LAST_DOWN)
             {
-                FreqChangedInfo.CursorPos2 = pt;
+                CursorPosVM.CursorPos2 = pt;
             }
         }
 
@@ -1167,7 +1059,7 @@ namespace Plotter
 
             if (mCreatingFigureType != CadFigure.Types.NONE)
             {
-                MeasureMode = PlotterController.MeasureModes.NONE;
+                MeasureMode = MeasureModes.NONE;
                 mController.StartCreateFigure(mCreatingFigureType);
 
                 Redraw();
@@ -1182,26 +1074,26 @@ namespace Plotter
             return prev != mCreatingFigureType;
         }
 
-        private bool ChangeMeasuerType(PlotterController.MeasureModes newType)
+        private bool ChangeMeasuerType(MeasureModes newType)
         {
             var prev = mMeasureMode;
 
             if (mMeasureMode == newType)
             {
                 // 現在のタイプを再度選択したら解除する
-                mMeasureMode = PlotterController.MeasureModes.NONE;
+                mMeasureMode = MeasureModes.NONE;
             }
             else
             {
                 mMeasureMode = newType;
             }
 
-            if (mMeasureMode != PlotterController.MeasureModes.NONE)
+            if (mMeasureMode != MeasureModes.NONE)
             {
                 CreatingFigureType = CadFigure.Types.NONE;
                 mController.StartMeasure(newType);
             }
-            else if (prev != PlotterController.MeasureModes.NONE)
+            else if (prev != MeasureModes.NONE)
             {
                 mController.EndMeasure();
                 Redraw();

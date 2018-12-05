@@ -3,9 +3,7 @@ using MessagePack;
 using MyCollections;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CadDataTypes;
 using SplineCurve;
@@ -46,54 +44,6 @@ namespace Plotter.Serializer
             return v;
         }
     }
-
-    public class MpCadFile
-    {
-        private static byte[] Sign;
-        private static byte[] Version = { 1, 0, 0, 0 };
-
-        static MpCadFile()
-        {
-            Sign = Encoding.ASCII.GetBytes("KCAD_BIN");
-        }
-
-        public static byte[] Load(string fname)
-        {
-            FileStream fs = new FileStream(fname, FileMode.Open, FileAccess.Read);
-
-            byte[] sign = new byte[Sign.Length];
-
-            fs.Read(sign, 0, Sign.Length);
-
-            if (!Sign.SequenceEqual<byte>(sign))
-            {
-                fs.Close();
-                return null;
-            }
-
-            fs.Read(Version, 0, Version.Length);
-
-            byte[] data = new byte[fs.Length - Sign.Length - Version.Length];
-
-            fs.Read(data, 0, data.Length);
-
-            fs.Close();
-
-            return data;
-        }
-
-        public static void Save(string fname, byte[] data)
-        {
-            FileStream fs = new FileStream(fname, FileMode.Create, FileAccess.Write);
-
-            fs.Write(Sign, 0, Sign.Length);
-            fs.Write(Version, 0, Version.Length);
-            fs.Write(data, 0, data.Length);
-
-            fs.Close();
-        }
-    }
-
 
     [MessagePackObject]
     public class MpCadData

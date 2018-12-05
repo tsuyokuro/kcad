@@ -143,84 +143,86 @@ namespace Plotter
 
 
         #region "MessagePack file access"
-        private MpCadData ToMpCadData()
-        {
-            MpCadData data = MpCadData.Create(mController.DB);
+        //private MpCadData ToMpCadData()
+        //{
+        //    MpCadData data = MpCadData.Create(mController.DB);
 
-            data.ViewInfo.WorldScale = mController.CurrentDC.WorldScale;
+        //    data.ViewInfo.WorldScale = mController.CurrentDC.WorldScale;
 
-            data.ViewInfo.PaperSettings.Set(mController.PageSize);
+        //    data.ViewInfo.PaperSettings.Set(mController.PageSize);
 
-            return data;
-        }
+        //    return data;
+        //}
 
-        private void FromMpCadData(MpCadData mpdata)
-        {
-            MpViewInfo viewInfo = mpdata.ViewInfo;
+        //private void FromMpCadData(MpCadData mpdata)
+        //{
+        //    MpViewInfo viewInfo = mpdata.ViewInfo;
 
-            double worldScale = 0;
+        //    double worldScale = 0;
 
-            PaperPageSize pps = null;
+        //    PaperPageSize pps = null;
 
-            if (viewInfo != null)
-            {
-                worldScale = viewInfo.WorldScale;
+        //    if (viewInfo != null)
+        //    {
+        //        worldScale = viewInfo.WorldScale;
 
-                if (viewInfo.PaperSettings != null)
-                {
-                    pps = viewInfo.PaperSettings.GetPaperPageSize();
-                }
-            }
-
-
-            if (worldScale == 0)
-            {
-                worldScale = 1.0;
-            }
-
-            SetWorldScale(worldScale);
+        //        if (viewInfo.PaperSettings != null)
+        //        {
+        //            pps = viewInfo.PaperSettings.GetPaperPageSize();
+        //        }
+        //    }
 
 
-            if (pps == null)
-            {
-                pps = new PaperPageSize();
-            }
+        //    if (worldScale == 0)
+        //    {
+        //        worldScale = 1.0;
+        //    }
 
-            mController.PageSize = pps;
+        //    SetWorldScale(worldScale);
 
 
-            mController.SetDB(mpdata.GetDB());
-        }
+        //    if (pps == null)
+        //    {
+        //        pps = new PaperPageSize();
+        //    }
+
+        //    mController.PageSize = pps;
+
+
+        //    mController.SetDB(mpdata.GetDB());
+        //}
 
 
         private void SaveToMsgPackFile(string fname)
         {
-            MpCadData data = ToMpCadData();
+            CadData cd = new CadData(
+                                mController.DB,
+                                mController.CurrentDC.WorldScale,
+                                mController.PageSize
+                                );
 
-            byte[] bin_data = MessagePackSerializer.Serialize(data);
-
-            MpCadFile.Save(fname, bin_data);
+            MpCadFile.Save(fname, cd);
 
             CurrentFileName = fname;
         }
 
         private void LoadFromMsgPackFile(string fname)
         {
-            byte[] bin = MpCadFile.Load(fname);
+            CadData? cd = MpCadFile.Load(fname);
 
-            if (bin == null)
+            if (cd == null)
             {
                 return;
             }
 
-            MpCadData mpdata = MessagePackSerializer.Deserialize<MpCadData>(bin);
+            CadData rcd = cd.Value;
 
-            if (mpdata == null)
-            {
-                return;
-            }
 
-            FromMpCadData(mpdata);
+            SetWorldScale(rcd.WorldScale);
+
+            mController.PageSize = rcd.PageSize;
+
+            mController.SetDB(rcd.DB);
 
             CurrentFileName = fname;
         }
@@ -228,37 +230,33 @@ namespace Plotter
 
         private void SaveToMsgPackJsonFile(string fname)
         {
-            MpCadData data = ToMpCadData();
-            string s = MessagePackSerializer.ToJson<MpCadData>(data);
+            CadData cd = new CadData(
+                mController.DB,
+                mController.CurrentDC.WorldScale,
+                mController.PageSize);
 
-            StreamWriter writer = new StreamWriter(fname);
-            writer.Write(s);
 
-            writer.Close();
+            MpCadFile.SaveAsJson(fname, cd);
 
             CurrentFileName = fname;
         }
 
         private void LoadFromMsgPackJsonFile(string fname)
         {
-            StreamReader reader = new StreamReader(fname);
+            CadData? cd = MpCadFile.LoadJson(fname);
 
-            string js = reader.ReadToEnd();
-
-            reader.Close();
-
-
-            byte[] bin = MessagePackSerializer.FromJson(js);
-
-            MpCadData mpdata = MessagePackSerializer.Deserialize<MpCadData>(bin);
-
-            if (mpdata == null)
+            if (cd == null)
             {
-                CurrentFileName = "";
                 return;
             }
 
-            FromMpCadData(mpdata);
+            CadData rcd = cd.Value;
+
+            SetWorldScale(rcd.WorldScale);
+
+            mController.PageSize = rcd.PageSize;
+
+            mController.SetDB(rcd.DB);
 
             CurrentFileName = fname;
         }

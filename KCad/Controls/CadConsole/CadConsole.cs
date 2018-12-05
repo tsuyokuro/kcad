@@ -529,8 +529,6 @@ namespace KCad
                 TextLine item = mList[n];
                 n++;
 
-                FormattedText ft;
-
                 rect.Y = p.Y;
 
                 if (item.IsSelected)
@@ -725,7 +723,8 @@ namespace KCad
                                                       System.Windows.FlowDirection.LeftToRight,
                                                       mTypeface,
                                                       mTextSize,
-                                                      brush);
+                                                      brush,
+                                                      VisualTreeHelper.GetDpi(this).PixelsPerDip);
             return formattedText;
         }
 

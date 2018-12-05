@@ -1,11 +1,9 @@
-﻿using CadDataTypes;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Threading;
 
 namespace Plotter
 {
-    public static class DbgOut
+    public static class DOut
     {
         public static ulong PutCount = 0;
 
@@ -58,6 +56,7 @@ namespace Plotter
             p(space);
         }
 
+        // print without new line
         public static void p(String s)
         {
             Begin();
@@ -66,7 +65,8 @@ namespace Plotter
             End();
         }
 
-        public static void pln(String s)
+        // print with new line
+        public static void pl(String s)
         {
             Begin();
             PutCount++;
@@ -74,6 +74,18 @@ namespace Plotter
             End();
         }
 
+        // print with new line
+        public static void tpl(String s)
+        {
+            DateTime dt = DateTime.Now;
+
+            Begin();
+            PutCount++;
+            PrintLnFunc(dt.ToString("HH:mm:ss.fff") + " " + space + s);
+            End();
+        }
+
+        // Format print without new line
         public static void pf(String format, params object[] args)
         {
             Begin();

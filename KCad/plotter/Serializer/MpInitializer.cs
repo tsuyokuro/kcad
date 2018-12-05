@@ -6,7 +6,7 @@ namespace Plotter.Serializer
     public class MpDummy
     {
         [Key("Value")]
-        int Value = 0;
+        public int Value = 0;
     }
 
     public class MpInitializer
@@ -18,6 +18,8 @@ namespace Plotter.Serializer
             byte[] b = MessagePackSerializer.Serialize(v);
 
             v = MessagePackSerializer.Deserialize<MpDummy>(b);
+
+            int a = v.Value;
         }
     }
 }
