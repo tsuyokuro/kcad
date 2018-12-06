@@ -58,7 +58,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_DEFAULT] = Color.White;
             PenColorTbl[DrawTools.PEN_SELECT_POINT] = Color.FromArgb(128, 255, 0);
             PenColorTbl[DrawTools.PEN_CURSOR] = Color.LightBlue;
-            PenColorTbl[DrawTools.PEN_CURSOR2] = Color.DarkSlateBlue;
+            PenColorTbl[DrawTools.PEN_CURSOR2] = Color.FromArgb(128, 255, 128);
             PenColorTbl[DrawTools.PEN_DEFAULT_FIGURE] = Color.White;
             PenColorTbl[DrawTools.PEN_TEMP_FIGURE] = Color.CadetBlue;
             PenColorTbl[DrawTools.PEN_POINT_HIGHTLITE] = Color.Orange;
@@ -77,7 +77,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_AXIS2] = Color.LightSeaGreen;
             PenColorTbl[DrawTools.PEN_PALE_FIGURE] = Color.FromArgb(0x7E, 0x7E, 0x7E);
             PenColorTbl[DrawTools.PEN_MEASURE_FIGURE] = Color.OrangeRed;
-            PenColorTbl[DrawTools.PEN_DIMENTION] = Color.PaleGreen;
+            PenColorTbl[DrawTools.PEN_DIMENTION] = Color.FromArgb(0xFF, 128, 192, 255);
             PenColorTbl[DrawTools.PEN_BLACK] = Color.Black;
             PenColorTbl[DrawTools.PEN_MESH_LINE] = Color.FromArgb(0xFF, 0x70, 0x70, 0x70);
             PenColorTbl[DrawTools.PEN_TEST] = Color.FromArgb(0xFF, 0xBB, 0xCC, 0xDD);

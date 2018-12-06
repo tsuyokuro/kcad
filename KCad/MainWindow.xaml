@@ -110,7 +110,6 @@
     </Window.Resources>
 
     <Grid>
-        <!--Menu space-->
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -118,6 +117,8 @@
             <RowDefinition Height="550*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+
+        <!-- Menu area -->
         <Menu Grid.Row="0" >
             <MenuItem Header="{x:Static properties:Resources.menu_file}" >
                 <MenuItem Tag="new_doc" Header="{x:Static properties:Resources.menu_new_doc}" Click="MenuItem_Click"/>
@@ -168,8 +169,8 @@
 
         </Menu>
 
-        <StackPanel
-            Grid.Row="1"
+        <!-- Tool bar area -->
+        <StackPanel Grid.Row="1"
             Background="{StaticResource BaseColor}"
             Height="30"
             HorizontalAlignment="Stretch"
@@ -229,7 +230,7 @@
 
         </StackPanel>
 
-        <!--Work space-->
+        <!-- Work area and Console area -->
         <Grid Grid.Row="2" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10*"/>
@@ -616,8 +617,10 @@
 
         </Grid>
 
-        <!--Status bar-->
-        <Border Grid.Row="4" BorderBrush="{StaticResource BoarderColor}" BorderThickness="1">
+        <!-- Status bar area -->
+        <Border Grid.Row="4"
+                BorderBrush="{StaticResource BoarderColor}" BorderThickness="1">
+            
             <StackPanel  Background="{StaticResource BGColor}" Height="20" HorizontalAlignment="Stretch"
                     Orientation="Horizontal">
                 <Rectangle
