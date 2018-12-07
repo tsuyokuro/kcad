@@ -27,6 +27,7 @@
                 <ResourceDictionary Source="ResDict/ImageCheckBoxs.xaml"/>
                 <ResourceDictionary Source="ResDict/MenuStyle.xaml"/>
                 <ResourceDictionary Source="ResDict/ScrollBarStyle.xaml"/>
+                <ResourceDictionary Source="ResDict/CaptionButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
@@ -109,152 +110,180 @@
 
     </Window.Resources>
 
+    <!-- Client area -->
     <Grid>
-        <Grid.RowDefinitions>
+        <!--<Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="81*"/>
-            <RowDefinition Height="550*"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
+            <RowDefinition Height="100*"/>
+        </Grid.RowDefinitions>-->
 
-        <!-- Menu area -->
-        <Menu Grid.Row="0" >
-            <MenuItem Header="{x:Static properties:Resources.menu_file}" >
-                <MenuItem Tag="new_doc" Header="{x:Static properties:Resources.menu_new_doc}" Click="MenuItem_Click"/>
-                <MenuItem Tag="load" Header="{x:Static properties:Resources.menu_load}" Click="MenuItem_Click" />
-                <MenuItem Tag="save" Header="{x:Static properties:Resources.menu_save}" Click="MenuItem_Click"/>
-                <MenuItem Tag="save_as" Header="{x:Static properties:Resources.menu_save_as}" Click="MenuItem_Click"/>
-                <MenuItem Tag="print" Header="{x:Static properties:Resources.menu_print}" Click="MenuItem_Click"/>
-                <MenuItem Tag="page_setting" Header="{x:Static properties:Resources.menu_page_settings}" Click="MenuItem_Click"/>
-                <MenuItem Tag="doc_setting" Header="{x:Static properties:Resources.menu_doc_settings}" Click="MenuItem_Click"/>
-            </MenuItem>
-            <MenuItem Header="{x:Static properties:Resources.menu_edit}" >
-                <MenuItem Tag="undo" Header="Undo" Click="MenuItem_Click"/>
-                <MenuItem Tag="redo" Header="Redo" Click="MenuItem_Click"/>
-                <MenuItem Tag="copy" Header="Copy" Click="MenuItem_Click"/>
-                <MenuItem Tag="paste" Header="Paste" Click="MenuItem_Click"/>
-                <MenuItem Tag="separate" Header="Separate" Click="MenuItem_Click"/>
-                <MenuItem Tag="bond" Header="Bond" Click="MenuItem_Click"/>
-                <MenuItem Tag="to_bezier" Header="To Bezier" Click="MenuItem_Click"/>
-                <MenuItem Tag="cut_segment" Header="Cut Segment" Click="MenuItem_Click"/>
-                <MenuItem Tag="ins_point" Header="Insert point" Click="MenuItem_Click"/>
-                <MenuItem Tag="to_loop" Header="To Loop lines" Click="MenuItem_Click"/>
-                <MenuItem Tag="to_unloop" Header="To Unloop lines" Click="MenuItem_Click"/>
-                <MenuItem Header="Flip" >
-                    <MenuItem Tag="flip_x" Header="Flip X" Click="MenuItem_Click"/>
-                    <MenuItem Tag="flip_y" Header="Flip Y" Click="MenuItem_Click"/>
-                    <MenuItem Tag="flip_z" Header="Flip Z" Click="MenuItem_Click"/>
-                    <MenuItem Tag="flip_normal" Header="Flip Normal" Click="MenuItem_Click"/>
+        <!--<Grid Grid.Row="0"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Stretch"
+                    Height="Auto"
+                    Background="{StaticResource BaseColor}">
+
+            <StackPanel
+                Orientation="Horizontal" Margin="5"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Height="26"
+                Background="{StaticResource BaseColor}">
+
+                <Button x:Name="BtnMinWindow" Content="0" Style="{DynamicResource CaptionButtonStyleKey}" WindowChrome.IsHitTestVisibleInChrome="True"/>
+                <Button x:Name="BtnMaxWindow" Content="1" Style="{DynamicResource CaptionButtonStyleKey}" WindowChrome.IsHitTestVisibleInChrome="True"/>
+                <Button x:Name="BtnRestWindow" Content="2" Style="{DynamicResource CaptionButtonStyleKey}" WindowChrome.IsHitTestVisibleInChrome="True"/>
+                <Button x:Name="BtnCloseWindow" Content="r" Style="{DynamicResource CaptionButtonStyleKey}" WindowChrome.IsHitTestVisibleInChrome="True"/>
+
+            </StackPanel>
+        </Grid>-->
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="81*"/>
+                <RowDefinition Height="550*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Menu area -->
+            <Menu Grid.Row="0" >
+                <MenuItem Header="{x:Static properties:Resources.menu_file}" >
+                    <MenuItem Tag="new_doc" Header="{x:Static properties:Resources.menu_new_doc}" Click="MenuItem_Click"/>
+                    <MenuItem Tag="load" Header="{x:Static properties:Resources.menu_load}" Click="MenuItem_Click" />
+                    <MenuItem Tag="save" Header="{x:Static properties:Resources.menu_save}" Click="MenuItem_Click"/>
+                    <MenuItem Tag="save_as" Header="{x:Static properties:Resources.menu_save_as}" Click="MenuItem_Click"/>
+                    <MenuItem Tag="print" Header="{x:Static properties:Resources.menu_print}" Click="MenuItem_Click"/>
+                    <MenuItem Tag="page_setting" Header="{x:Static properties:Resources.menu_page_settings}" Click="MenuItem_Click"/>
+                    <MenuItem Tag="doc_setting" Header="{x:Static properties:Resources.menu_doc_settings}" Click="MenuItem_Click"/>
                 </MenuItem>
-                <MenuItem Tag="clear_layer" Header="Clear layer" Click="MenuItem_Click"/>
-                <MenuItem Tag="centroid" Header="Centroid" Click="MenuItem_Click"/>
-                <MenuItem Tag="select_all" Header="Select all" Click="MenuItem_Click"/>
-            </MenuItem>
-            <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
-                <MenuItem Header="Snap to grid" IsCheckable="True" IsChecked="{Binding SnapToGrid}"/>
-                <MenuItem Header="Snap to point" IsCheckable="True" IsChecked="{Binding SnapToPoint}"/>
-                <MenuItem Header="Snap to segment" IsCheckable="True" IsChecked="{Binding SnapToSegment}"/>
-                <MenuItem Header="Snap to Line" IsCheckable="True" IsChecked="{Binding SnapToLine}"/>
-                <MenuItem Tag="grid_settings" Header="Grid Settings" Click="MenuItem_Click"/>
-                <MenuItem Tag="snap_settings" Header="Snap Settings" Click="MenuItem_Click"/>
-            </MenuItem>
-            <MenuItem x:Name="DrawOptionMenu" Header="Draw">
-                <MenuItem Header="Draw face outline" IsCheckable="True" IsChecked="{Binding DrawFaceOutline}"/>
-                <MenuItem Header="Fill face" IsCheckable="True" IsChecked="{Binding FillFace}"/>
-            </MenuItem>
-            <MenuItem Header="Script" >
-                <MenuItem Tag="show_editor" Header="Show editor" Click="MenuItem_Click"/>
-            </MenuItem>
+                <MenuItem Header="{x:Static properties:Resources.menu_edit}" >
+                    <MenuItem Tag="undo" Header="Undo" Click="MenuItem_Click"/>
+                    <MenuItem Tag="redo" Header="Redo" Click="MenuItem_Click"/>
+                    <MenuItem Tag="copy" Header="Copy" Click="MenuItem_Click"/>
+                    <MenuItem Tag="paste" Header="Paste" Click="MenuItem_Click"/>
+                    <MenuItem Tag="separate" Header="Separate" Click="MenuItem_Click"/>
+                    <MenuItem Tag="bond" Header="Bond" Click="MenuItem_Click"/>
+                    <MenuItem Tag="to_bezier" Header="To Bezier" Click="MenuItem_Click"/>
+                    <MenuItem Tag="cut_segment" Header="Cut Segment" Click="MenuItem_Click"/>
+                    <MenuItem Tag="ins_point" Header="Insert point" Click="MenuItem_Click"/>
+                    <MenuItem Tag="to_loop" Header="To Loop lines" Click="MenuItem_Click"/>
+                    <MenuItem Tag="to_unloop" Header="To Unloop lines" Click="MenuItem_Click"/>
+                    <MenuItem Header="Flip" >
+                        <MenuItem Tag="flip_x" Header="Flip X" Click="MenuItem_Click"/>
+                        <MenuItem Tag="flip_y" Header="Flip Y" Click="MenuItem_Click"/>
+                        <MenuItem Tag="flip_z" Header="Flip Z" Click="MenuItem_Click"/>
+                        <MenuItem Tag="flip_normal" Header="Flip Normal" Click="MenuItem_Click"/>
+                    </MenuItem>
+                    <MenuItem Tag="clear_layer" Header="Clear layer" Click="MenuItem_Click"/>
+                    <MenuItem Tag="centroid" Header="Centroid" Click="MenuItem_Click"/>
+                    <MenuItem Tag="select_all" Header="Select all" Click="MenuItem_Click"/>
+                </MenuItem>
+                <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
+                    <MenuItem Header="Snap to grid" IsCheckable="True" IsChecked="{Binding SnapToGrid}"/>
+                    <MenuItem Header="Snap to point" IsCheckable="True" IsChecked="{Binding SnapToPoint}"/>
+                    <MenuItem Header="Snap to segment" IsCheckable="True" IsChecked="{Binding SnapToSegment}"/>
+                    <MenuItem Header="Snap to Line" IsCheckable="True" IsChecked="{Binding SnapToLine}"/>
+                    <MenuItem Tag="grid_settings" Header="Grid Settings" Click="MenuItem_Click"/>
+                    <MenuItem Tag="snap_settings" Header="Snap Settings" Click="MenuItem_Click"/>
+                </MenuItem>
+                <MenuItem x:Name="DrawOptionMenu" Header="Draw">
+                    <MenuItem Header="Draw face outline" IsCheckable="True" IsChecked="{Binding DrawFaceOutline}"/>
+                    <MenuItem Header="Fill face" IsCheckable="True" IsChecked="{Binding FillFace}"/>
+                </MenuItem>
+                <MenuItem Header="Script" >
+                    <MenuItem Tag="show_editor" Header="Show editor" Click="MenuItem_Click"/>
+                </MenuItem>
 
-        </Menu>
+            </Menu>
 
-        <!-- Tool bar area -->
-        <StackPanel Grid.Row="1"
+            <!-- Tool bar area -->
+            <StackPanel Grid.Row="1"
             Background="{StaticResource BaseColor}"
             Height="30"
             HorizontalAlignment="Stretch"
             Orientation="Vertical"
             >
 
-            <StackPanel
+                <StackPanel
                 x:Name="ToolBar1"
                 Background="{StaticResource BaseColor}" Height="30" HorizontalAlignment="Stretch"
                 Orientation="Horizontal">
 
-                <Label Width="32"/>
+                    <Label Width="32"/>
 
-                <ToggleButton
+                    <ToggleButton
                     Style="{StaticResource ToolToggleButton}"
                     IsChecked="{Binding SnapToPoint}"
                     Margin="1,2,0,2"
                     >
-                    <Border Padding="2">
-                        <Image Source="{StaticResource SnapToPointDrawingImage}"
+                        <Border Padding="2">
+                            <Image Source="{StaticResource SnapToPointDrawingImage}"
                                Width="24"
                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Border>
+                        </Border>
 
-                </ToggleButton>
+                    </ToggleButton>
 
-                <ToggleButton
+                    <ToggleButton
                     Style="{StaticResource ToolToggleButton}"
                     IsChecked="{Binding SnapToSegment}"
                     Margin="1,2,0,2"
                     >
-                    <Border Padding="2">
-                        <Image Source="{StaticResource SnapToSegDrawingImage}"
+                        <Border Padding="2">
+                            <Image Source="{StaticResource SnapToSegDrawingImage}"
                                Width="24"
                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Border>
+                        </Border>
 
-                </ToggleButton>
+                    </ToggleButton>
 
-                <ToggleButton
+                    <ToggleButton
                     Style="{StaticResource ToolToggleButton}"
                     IsChecked="{Binding SnapToLine}"
                     Margin="1,2,0,2"
                     >
-                    <Border Padding="2">
-                        <Image Source="{StaticResource SnapToLineDrawingImage}"
+                        <Border Padding="2">
+                            <Image Source="{StaticResource SnapToLineDrawingImage}"
                                 Width="24"
                                 VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Border>
+                        </Border>
 
-                </ToggleButton>
+                    </ToggleButton>
+
+                </StackPanel>
+
+                <Label Height="3"
+                   HorizontalAlignment="Stretch" Background="{StaticResource BoarderColor}"/>
 
             </StackPanel>
 
-            <Label Height="3"
-                   HorizontalAlignment="Stretch" Background="{StaticResource BoarderColor}"/>
+            <!-- Work area and Console area -->
+            <Grid Grid.Row="2" Grid.RowSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="100*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="15*"/>
+                </Grid.ColumnDefinitions>
 
-        </StackPanel>
-
-        <!-- Work area and Console area -->
-        <Grid Grid.Row="2" Grid.RowSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="100*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="15*"/>
-            </Grid.ColumnDefinitions>
-
-            <!--Left panel-->
-            <Border Grid.Column="0" BorderBrush="{StaticResource BoarderColor}" BorderThickness="0">
-                <Grid
+                <!--Left panel-->
+                <Border Grid.Column="0" BorderBrush="{StaticResource BoarderColor}" BorderThickness="0">
+                    <Grid
                     x:Name="LeftPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="100*"/>
-                    </Grid.RowDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="100*"/>
+                        </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0" x:Name="SlsectModePanel">
-                        <Label Height="Auto" Content="Select mode" Foreground="DarkGray" FontSize="9"/>
-                        <RadioButton
+                        <StackPanel Grid.Row="0" x:Name="SlsectModePanel">
+                            <Label Height="Auto" Content="Select mode" Foreground="DarkGray" FontSize="9"/>
+                            <RadioButton
                             Style="{StaticResource ColorRadioButton}"
                             Tag="OBJECT"
                             Content="Select Figure" 
@@ -266,7 +295,7 @@
                             Margin="1,0,1,3"
                             />
 
-                        <RadioButton
+                            <RadioButton
                             Style="{StaticResource ColorRadioButton}"
                             Tag="POINT"
                             Content="Select Point" 
@@ -277,13 +306,13 @@
                             }"
                             Margin="1,0,1,3"
                         />
-                    </StackPanel>
+                        </StackPanel>
 
-                    <StackPanel Grid.Row="1" x:Name="FigurePanel">
+                        <StackPanel Grid.Row="1" x:Name="FigurePanel">
 
-                        <Label  Height="Auto" Content="Create figure" Foreground="DarkGray" FontSize="9"/>
+                            <Label  Height="Auto" Content="Create figure" Foreground="DarkGray" FontSize="9"/>
 
-                        <RadioButton
+                            <RadioButton
                             Style="{StaticResource ColorRadioButton}"
                             Tag="LINE"
                             Content="Line" 
@@ -294,9 +323,9 @@
                             }"
                             Margin="1,0,1,3"
                         >
-                        </RadioButton>
+                            </RadioButton>
 
-                        <RadioButton
+                            <RadioButton
                             Style="{StaticResource ColorRadioButton}"
                             Tag="RECT"
                             Content="Rect" 
@@ -308,7 +337,7 @@
                             Margin="1,0,1,3"
                         />
 
-                        <RadioButton
+                            <RadioButton
                             Style="{StaticResource ColorRadioButton}"
                             Tag="POLY_LINES"
                             Content="Poly lines" 
@@ -320,7 +349,7 @@
                             Margin="1,0,1,3"
                         />
 
-                        <RadioButton
+                            <RadioButton
                             Style="{StaticResource ColorRadioButton}"
                             Tag="CIRCLE"
                             Content="Circle" 
@@ -332,7 +361,7 @@
                             Margin="1,0,1,3"
                         />
 
-                        <RadioButton
+                            <RadioButton
                             Style="{StaticResource ColorRadioButton}"
                             Tag="POINT"
                             Content="Point" 
@@ -344,7 +373,7 @@
                             Margin="1,0,1,3"
                         />
 
-                        <RadioButton
+                            <RadioButton
                             Style="{StaticResource ColorRadioButton}"
                             Tag="DIMENTION_LINE"
                             Content="Dimention" 
@@ -356,9 +385,9 @@
                             Margin="1,0,1,3"
                         />
 
-                        <Label Height="4"/>
+                            <Label Height="4"/>
 
-                        <RadioButton
+                            <RadioButton
                             Style="{StaticResource ColorRadioButton}"
                             Tag="POLY_LINE"
                             Content="Measure" 
@@ -369,13 +398,13 @@
                             }"
                             Margin="1,0,1,3"
                         />
-                    </StackPanel>
+                        </StackPanel>
 
-                    <Label Grid.Row="2" Height="4"/>
-                </Grid>
-            </Border>
+                        <Label Grid.Row="2" Height="4"/>
+                    </Grid>
+                </Border>
 
-            <GridSplitter
+                <GridSplitter
                 Grid.Column="1"
                 Width="4"
                 HorizontalAlignment="Center"
@@ -383,18 +412,18 @@
                 Background="{StaticResource BoarderColor}" 
                 />
 
-            <!--Plotter view and Command view-->
-            <Grid Grid.Column="2" Background="{DynamicResource BGColor}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="100*"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="20*"/>
-                </Grid.RowDefinitions>
+                <!--Plotter view and Command view-->
+                <Grid Grid.Column="2" Background="{DynamicResource BGColor}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100*"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="20*"/>
+                    </Grid.RowDefinitions>
 
-                <WindowsFormsHost x:Name="viewContainer" Grid.Row="0">
-                </WindowsFormsHost>
+                    <WindowsFormsHost x:Name="viewContainer" Grid.Row="0">
+                    </WindowsFormsHost>
 
-                <GridSplitter Grid.Row="1"
+                    <GridSplitter Grid.Row="1"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     Background="{StaticResource BoarderColor}"
@@ -404,19 +433,19 @@
                     />
 
 
-                <Grid Grid.Row="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="100*"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="100*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
 
-                    <ScrollViewer
+                        <ScrollViewer
                         Grid.Row="0"
                         Style="{StaticResource CustomScrollViewerStyle}"
                         VerticalScrollBarVisibility = "Auto"
                         Focusable="True">
 
-                        <local:CadConsoleView
+                            <local:CadConsoleView
                             x:Name="MyConsole"
                             Foreground="{StaticResource MsgTextColor}"
                             Background="{StaticResource MsgBGColor}"
@@ -427,24 +456,24 @@
                             Focusable="True"
                             />
 
-                    </ScrollViewer>
-                    <Grid Grid.Row="1" Height="auto">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="100*"/>
-                        </Grid.ColumnDefinitions>
+                        </ScrollViewer>
+                        <Grid Grid.Row="1" Height="auto">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="100*"/>
+                            </Grid.ColumnDefinitions>
 
-                        <Border BorderBrush="{StaticResource BoarderColor}" BorderThickness="0,1,0,1">
-                            <Button Grid.Column="0"
+                            <Border BorderBrush="{StaticResource BoarderColor}" BorderThickness="0,1,0,1">
+                                <Button Grid.Column="0"
                                 x:Name="RunTextCommandButton"
                                 Tag="run_text_command"
                                 Content=" Enter > "
                                 Padding="2,2,2,2"
                                 Style="{StaticResource ButtonStyle}"
                                 />
-                        </Border>
+                            </Border>
 
-                        <local:AutoCompleteTextBox
+                            <local:AutoCompleteTextBox
                             Grid.Column="1"
                             x:Name="textCommand"
                             BorderThickness="1,1,1,1"
@@ -459,11 +488,11 @@
                             FontWeight="Thin"
                             />
 
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
 
-            <GridSplitter
+                <GridSplitter
                 Grid.Column="3"
                 Width="4"
                 HorizontalAlignment="Center"
@@ -471,25 +500,25 @@
                 Background="{StaticResource BoarderColor}" 
                 />
 
-            <Border Grid.Column="4" BorderBrush="{StaticResource BoarderColor}" BorderThickness="0">
-                <Grid
+                <Border Grid.Column="4" BorderBrush="{StaticResource BoarderColor}" BorderThickness="0">
+                    <Grid
                     x:Name="RightPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="100*"/>
-                    </Grid.RowDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="100*"/>
+                        </Grid.RowDefinitions>
 
-                    <!-- Layer list tool-->
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
+                        <!-- Layer list tool-->
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Content="Layer" Background="{StaticResource BaseColor}" Foreground="{StaticResource TextColor}"/>
+                            <Label Grid.Column="0" Content="Layer" Background="{StaticResource BaseColor}" Foreground="{StaticResource TextColor}"/>
 
-                        <Button Grid.Column="1"
+                            <Button Grid.Column="1"
                                 Name="AddLayerButton"
                                 Tag="add_layer"
                                 Width="20"
@@ -498,7 +527,7 @@
                                 FontSize="20"
                                 FontWeight="ExtraBold" />
 
-                        <Button Grid.Column="2"
+                            <Button Grid.Column="2"
                                 Name="RemoveLayerButton"
                                 Tag="remove_layer"
                                 Width="20"
@@ -506,21 +535,21 @@
                                 Template="{StaticResource MyButtonTemplate}"
                                 FontSize="20"
                                 FontWeight="ExtraBold" />
-                    </Grid>
-                    <Grid Grid.Row="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="100*"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="200*"/>
-                        </Grid.RowDefinitions>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="200*"/>
+                            </Grid.RowDefinitions>
 
-                        <ScrollViewer
+                            <ScrollViewer
                             Grid.Row="0"
                             Style="{StaticResource CustomScrollViewerStyle}"
                             VerticalScrollBarVisibility = "Auto"
                             HorizontalScrollBarVisibility="Hidden">
 
-                            <ListBox
+                                <ListBox
                                 x:Name="LayerListView"
                                 ItemsSource="{Binding}"
                                 SelectionMode="Single"
@@ -530,63 +559,63 @@
                                 >
 
 
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="auto"/>
-                                                <ColumnDefinition Width="100*"/>
-                                            </Grid.ColumnDefinitions>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="100*"/>
+                                                </Grid.ColumnDefinitions>
 
-                                            <StackPanel Margin="4,2,4,2" Grid.Column="0" Orientation="Horizontal"  VerticalAlignment="Center">
-                                                <CheckBox IsChecked="{Binding Path=Visible}"
+                                                <StackPanel Margin="4,2,4,2" Grid.Column="0" Orientation="Horizontal"  VerticalAlignment="Center">
+                                                    <CheckBox IsChecked="{Binding Path=Visible}"
                                                             Style="{StaticResource VisibleCheckBox}"
                                                             Foreground="White"/>
 
-                                                <CheckBox IsChecked="{Binding Path=Locked}"
+                                                    <CheckBox IsChecked="{Binding Path=Locked}"
                                                             Style="{StaticResource LockedCheckBox}"
                                                             Foreground="White"/>
-                                            </StackPanel>
-                                            <TextBlock Grid.Column="1" Margin="2" Text="{Binding Path=Name}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </ScrollViewer>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1" Margin="2" Text="{Binding Path=Name}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </ScrollViewer>
 
-                        <GridSplitter
+                            <GridSplitter
                             Grid.Row="1" Height="6" 
                             VerticalAlignment="Center"
                             HorizontalAlignment="Stretch"
                             Background="{StaticResource BoarderColor}"
                             />
-                        <Grid Grid.Row="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="100*"/>
-                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="100*"/>
+                                </Grid.RowDefinitions>
 
-                            <Border Grid.Row="0" BorderBrush="{StaticResource BoarderColor}" BorderThickness="0,1,0,1">
-                                <StackPanel
+                                <Border Grid.Row="0" BorderBrush="{StaticResource BoarderColor}" BorderThickness="0,1,0,1">
+                                    <StackPanel
                                     Orientation="Horizontal"
                                     x:Name="TreeViewToolBar"
                                     >
-                                    <ToggleButton
+                                        <ToggleButton
                                         Style="{StaticResource ToolToggleButton}"
                                         IsChecked="{Binding FilterTreeView}"
                                         Margin="2,2,2,2">
-                                        
-                                        <Border Padding="4">
-                                            <Image Source="{StaticResource filterDrawingImage}" Height="12" VerticalAlignment="Top"/>
-                                        </Border>
 
-                                    </ToggleButton>
+                                            <Border Padding="4">
+                                                <Image Source="{StaticResource filterDrawingImage}" Height="12" VerticalAlignment="Top"/>
+                                            </Border>
+
+                                        </ToggleButton>
 
 
-                                </StackPanel>
-                            </Border>
-                            
-                            <ScrollViewer
+                                    </StackPanel>
+                                </Border>
+
+                                <ScrollViewer
                                 Grid.Row="1"
                                 Style="{StaticResource CustomScrollViewerStyle}"
                                 VerticalAlignment="Stretch"
@@ -605,102 +634,103 @@
                                     TextSize="12.0"
                                     ItemHeight="16.0"
                                     />
-                            </ScrollViewer>
+                                </ScrollViewer>
+                            </Grid>
                         </Grid>
+
+
                     </Grid>
 
 
-                </Grid>
+                </Border>
 
+            </Grid>
 
-            </Border>
-
-        </Grid>
-
-        <!-- Status bar area -->
-        <Border Grid.Row="4"
+            <!-- Status bar area -->
+            <Border Grid.Row="4"
                 BorderBrush="{StaticResource BoarderColor}" BorderThickness="1">
-            
-            <StackPanel  Background="{StaticResource BGColor}" Height="20" HorizontalAlignment="Stretch"
+
+                <StackPanel  Background="{StaticResource BGColor}" Height="20" HorizontalAlignment="Stretch"
                     Orientation="Horizontal">
-                <Rectangle
+                    <Rectangle
                 VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="8"/>
 
-                <TextBlock x:Name="textBlockXYZ" TextWrapping="Wrap" Text="{Binding StrCursorPos}"
+                    <TextBlock x:Name="textBlockXYZ" TextWrapping="Wrap" Text="{Binding StrCursorPos}"
                 VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="136" Foreground="White">
-                </TextBlock>
-                <TextBlock x:Name="textBlockXYZ2" TextWrapping="Wrap" Text="{Binding StrCursorPos2}"
+                    </TextBlock>
+                    <TextBlock x:Name="textBlockXYZ2" TextWrapping="Wrap" Text="{Binding StrCursorPos2}"
                 VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="136" Foreground="White">
-                </TextBlock>
+                    </TextBlock>
 
-                <StackPanel x:Name="ViewModePanel"
+                    <StackPanel x:Name="ViewModePanel"
                 Background="{StaticResource BGColor}"
                 Orientation="Horizontal"
                 VerticalAlignment="Stretch" >
 
-                    <RadioButton
+                        <RadioButton
                         Style="{StaticResource ColorRadioButton}"
                         IsChecked="{Binding ViewMode,ConverterParameter=FRONT,Converter={StaticResource ViewModeConv}}"
                         Margin="1,1,1,1"
                         >
-                        <TextBlock Width="40" Text="Front" TextAlignment="Center"/>
-                    </RadioButton>
+                            <TextBlock Width="40" Text="Front" TextAlignment="Center"/>
+                        </RadioButton>
 
-                    <RadioButton
+                        <RadioButton
                         Style="{StaticResource ColorRadioButton}"
                         IsChecked="{Binding ViewMode,ConverterParameter=BACK,Converter={StaticResource ViewModeConv}}"
                         Margin="1,1,1,1"
                         >
-                        <TextBlock Width="40" Text="Back" TextAlignment="Center"/>
-                    </RadioButton>
+                            <TextBlock Width="40" Text="Back" TextAlignment="Center"/>
+                        </RadioButton>
 
-                    <RadioButton
+                        <RadioButton
                         Style="{StaticResource ColorRadioButton}"
                         IsChecked="{Binding ViewMode,ConverterParameter=TOP,Converter={StaticResource ViewModeConv}}"
                         Margin="1,1,1,1"
                         >
-                        <TextBlock Width="40" Text="Top" TextAlignment="Center"/>
-                    </RadioButton>
+                            <TextBlock Width="40" Text="Top" TextAlignment="Center"/>
+                        </RadioButton>
 
-                    <RadioButton
+                        <RadioButton
                         Style="{StaticResource ColorRadioButton}"
                         IsChecked="{Binding ViewMode,ConverterParameter=BOTTOM,Converter={StaticResource ViewModeConv}}"
                         Margin="1,1,1,1"
                         >
-                        <TextBlock Width="40" Text="Bottom" TextAlignment="Center"/>
-                    </RadioButton>
+                            <TextBlock Width="40" Text="Bottom" TextAlignment="Center"/>
+                        </RadioButton>
 
-                    <RadioButton
+                        <RadioButton
                         Style="{StaticResource ColorRadioButton}"
                         IsChecked="{Binding ViewMode,ConverterParameter=RIGHT,Converter={StaticResource ViewModeConv}}"
                         Margin="1,1,1,1"
                         >
-                        <TextBlock Width="40" Text="Right" TextAlignment="Center"/>
+                            <TextBlock Width="40" Text="Right" TextAlignment="Center"/>
 
-                    </RadioButton>
+                        </RadioButton>
 
-                    <RadioButton
+                        <RadioButton
                         Style="{StaticResource ColorRadioButton}"
                         IsChecked="{Binding ViewMode,ConverterParameter=LEFT,Converter={StaticResource ViewModeConv}}"
                         Margin="1,1,1,1"
                         >
 
-                        <TextBlock Width="40" Text="Left" TextAlignment="Center"/>
+                            <TextBlock Width="40" Text="Left" TextAlignment="Center"/>
 
-                    </RadioButton>
+                        </RadioButton>
 
-                    <RadioButton
+                        <RadioButton
                         Style="{StaticResource ColorRadioButton}"
                         Tag="axis_xyz"
                         IsChecked="{Binding ViewMode,ConverterParameter=FREE,Converter={StaticResource ViewModeConv}}"
                         Margin="1,1,1,1"
                         >
 
-                        <TextBlock Width="40" Text="3D" TextAlignment="Center"/>
+                            <TextBlock Width="40" Text="3D" TextAlignment="Center"/>
 
-                    </RadioButton>
+                        </RadioButton>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-        </Border>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

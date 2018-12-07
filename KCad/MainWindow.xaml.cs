@@ -83,6 +83,12 @@ namespace KCad
             ToolBar1.DataContext = ViewModel;
 
             TreeViewToolBar.DataContext = ViewModel;
+
+
+            //BtnCloseWindow.Click += (sender, e) => { Close(); };
+            //BtnMinWindow.Click += (sender, e) => { this.WindowState = WindowState.Minimized; };
+            //BtnMaxWindow.Click += (sender, e) => { this.WindowState = WindowState.Maximized; };
+            //BtnRestWindow.Click += (sender, e) => { this.WindowState = WindowState.Normal; };
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
