@@ -11,11 +11,16 @@
         Title="KCad" Height="732" Width="1177.667"
         Background="Black"
         Icon="ResDict/Images/compass_s.png"
+        BorderBrush="#FF14A9FF"
+        BorderThickness="1"
         >
-    <!--<WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"
-                          ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}" />
-    </WindowChrome.WindowChrome>-->
+    
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="26"
+            ResizeBorderThickness="4"
+            />
+    </WindowChrome.WindowChrome>
 
     <Window.Resources>
         <ResourceDictionary>
@@ -110,23 +115,39 @@
 
     </Window.Resources>
 
-    <!-- Client area -->
-    <Grid>
-        <!--<Grid.RowDefinitions>
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="100*"/>
-        </Grid.RowDefinitions>-->
+        </Grid.RowDefinitions>
 
-        <!--<Grid Grid.Row="0"
+        <!-- Caption area -->        
+        <Grid Grid.Row="0"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Stretch"
-                    Height="Auto"
+                    Height="26"
                     Background="{StaticResource BaseColor}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-            <StackPanel
-                Orientation="Horizontal" Margin="5"
+            <Image Grid.Column="0"
+                Source="ResDict/Images/compass_s.png"
+                Width="20"
+                VerticalAlignment="Center"
+                Margin="8,0,0,0"
+                />
+            <Label
+                VerticalAlignment="Center"
+                Grid.Column="1" Content="KCad" Foreground="White" FontSize="12" Margin="8,0,0,0"/>
+
+
+            <StackPanel Grid.Column="2"
+                Orientation="Horizontal" Margin="0,0,4,0"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Top"
+                VerticalAlignment="Center"
                 Height="26"
                 Background="{StaticResource BaseColor}">
 
@@ -136,9 +157,11 @@
                 <Button x:Name="BtnCloseWindow" Content="r" Style="{DynamicResource CaptionButtonStyleKey}" WindowChrome.IsHitTestVisibleInChrome="True"/>
 
             </StackPanel>
-        </Grid>-->
+        </Grid>
 
-        <Grid Grid.Row="0">
+                
+        <!-- Client area -->
+        <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -405,12 +428,12 @@
                 </Border>
 
                 <GridSplitter
-                Grid.Column="1"
-                Width="4"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Stretch"
-                Background="{StaticResource BoarderColor}" 
-                />
+                    Grid.Column="1"
+                    Width="4"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Stretch"
+                    Background="{StaticResource BoarderColor}" 
+                    />
 
                 <!--Plotter view and Command view-->
                 <Grid Grid.Column="2" Background="{DynamicResource BGColor}">
@@ -424,13 +447,13 @@
                     </WindowsFormsHost>
 
                     <GridSplitter Grid.Row="1"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    Background="{StaticResource BoarderColor}"
-                    BorderThickness="0"
-                    ShowsPreview="False"
-                    Height="3"
-                    />
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        Background="{StaticResource BoarderColor}"
+                        BorderThickness="0"
+                        ShowsPreview="False"
+                        Height="3"
+                        />
 
 
                     <Grid Grid.Row="2">
@@ -440,21 +463,21 @@
                         </Grid.RowDefinitions>
 
                         <ScrollViewer
-                        Grid.Row="0"
-                        Style="{StaticResource CustomScrollViewerStyle}"
-                        VerticalScrollBarVisibility = "Auto"
-                        Focusable="True">
+                            Grid.Row="0"
+                            Style="{StaticResource CustomScrollViewerStyle}"
+                            VerticalScrollBarVisibility = "Auto"
+                            Focusable="True">
 
                             <local:CadConsoleView
-                            x:Name="MyConsole"
-                            Foreground="{StaticResource MsgTextColor}"
-                            Background="{StaticResource MsgBGColor}"
-                            SelectedBackground="{StaticResource MsgSelectedBGColor}"
-                            SelectedForeground="{StaticResource MsgTextColor}"
-                            TextSize="12"
-                            VerticalAlignment="Top"
-                            Focusable="True"
-                            />
+                                x:Name="MyConsole"
+                                Foreground="{StaticResource MsgTextColor}"
+                                Background="{StaticResource MsgBGColor}"
+                                SelectedBackground="{StaticResource MsgSelectedBGColor}"
+                                SelectedForeground="{StaticResource MsgTextColor}"
+                                TextSize="12"
+                                VerticalAlignment="Top"
+                                Focusable="True"
+                                />
 
                         </ScrollViewer>
                         <Grid Grid.Row="1" Height="auto">
@@ -474,35 +497,35 @@
                             </Border>
 
                             <local:AutoCompleteTextBox
-                            Grid.Column="1"
-                            x:Name="textCommand"
-                            BorderThickness="1,1,1,1"
-                            Padding="2,2,2,2"
-                            BorderBrush="{StaticResource BoarderColor}"
-                            Foreground="{StaticResource TextColor}"
-                            Background="{StaticResource MsgBGColor}"
-                            CandidateListBackground ="{StaticResource BGColor}"
-                            CandidateListForeground ="{StaticResource TextColor}"
-                            CandidateListBorder ="Aqua"
-                            FontSize="16"
-                            FontWeight="Thin"
-                            />
+                                Grid.Column="1"
+                                x:Name="textCommand"
+                                BorderThickness="1,1,1,1"
+                                Padding="2,2,2,2"
+                                BorderBrush="{StaticResource BoarderColor}"
+                                Foreground="{StaticResource TextColor}"
+                                Background="{StaticResource MsgBGColor}"
+                                CandidateListBackground ="{StaticResource BGColor}"
+                                CandidateListForeground ="{StaticResource TextColor}"
+                                CandidateListBorder ="Aqua"
+                                FontSize="16"
+                                FontWeight="Thin"
+                                />
 
                         </Grid>
                     </Grid>
                 </Grid>
 
                 <GridSplitter
-                Grid.Column="3"
-                Width="4"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Stretch"
-                Background="{StaticResource BoarderColor}" 
-                />
+                    Grid.Column="3"
+                    Width="4"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Stretch"
+                    Background="{StaticResource BoarderColor}" 
+                    />
 
-                <Border Grid.Column="4" BorderBrush="{StaticResource BoarderColor}" BorderThickness="0">
+                <Border Grid.Column="4" BorderBrush="{StaticResource BoarderColor}" BorderThickness="2">
                     <Grid
-                    x:Name="RightPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
+                        x:Name="RightPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="100*"/>
@@ -556,9 +579,8 @@
                                 ItemContainerStyle="{StaticResource SimpleListBoxItem}"
                                 BorderBrush="{StaticResource BoarderColor}"
                                 Background="{StaticResource BaseColor}"
+                                BorderThickness="1"
                                 >
-
-
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Grid>

@@ -85,10 +85,25 @@ namespace KCad
             TreeViewToolBar.DataContext = ViewModel;
 
 
-            //BtnCloseWindow.Click += (sender, e) => { Close(); };
-            //BtnMinWindow.Click += (sender, e) => { this.WindowState = WindowState.Minimized; };
-            //BtnMaxWindow.Click += (sender, e) => { this.WindowState = WindowState.Maximized; };
-            //BtnRestWindow.Click += (sender, e) => { this.WindowState = WindowState.Normal; };
+            BtnCloseWindow.Click += (sender, e) => { Close(); };
+            BtnMinWindow.Click += (sender, e) => { this.WindowState = WindowState.Minimized; };
+            BtnMaxWindow.Click += (sender, e) => { this.WindowState = WindowState.Maximized; };
+            BtnRestWindow.Click += (sender, e) => { this.WindowState = WindowState.Normal; };
+
+            StateChanged += MainWindow_StateChanged;
+        }
+
+        private void MainWindow_StateChanged(object sender, EventArgs e)
+        {
+            switch (WindowState)
+            {
+                case WindowState.Maximized:
+                    LayoutRoot.Margin = new Thickness(9);
+                    break;
+                default:
+                    LayoutRoot.Margin = new Thickness(0);
+                    break;
+            }
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
