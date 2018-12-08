@@ -1,58 +1,57 @@
-﻿<Window x:Class="KCad.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:KCad"
-        xmlns:properties="clr-namespace:KCad.Properties"
-        xmlns:pl="clr-namespace:Plotter"
-        
-        mc:Ignorable="d"
-        Title="KCad" Height="732" Width="1177.667"
-        Background="Black"
-        Icon="ResDict/Images/compass_s.png"
-        BorderBrush="#FF14A9FF"
-        BorderThickness="1"
-        >
-    
+﻿<Window
+    x:Class="KCad.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:KCad"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pl="clr-namespace:Plotter"
+    xmlns:properties="clr-namespace:KCad.Properties"
+    Title="KCad"
+    Width="1177.667"
+    Height="732"
+    Background="Black"
+    BorderBrush="#FF14A9FF"
+    BorderThickness="1"
+    Icon="ResDict/Images/compass_s.png"
+    mc:Ignorable="d">
+
     <WindowChrome.WindowChrome>
-        <WindowChrome
-            CaptionHeight="26"
-            ResizeBorderThickness="4"
-            />
+        <WindowChrome CaptionHeight="26" ResizeBorderThickness="4" />
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ResDict/ToggleBtnRadio.xaml"/>
-                <ResourceDictionary Source="ResDict/Colors.xaml"/>
-                <ResourceDictionary Source="ResDict/Images.xaml"/>
-                <ResourceDictionary Source="ResDict/ButtonStyle.xaml"/>
-                <ResourceDictionary Source="ResDict/ImageCheckBoxs.xaml"/>
-                <ResourceDictionary Source="ResDict/MenuStyle.xaml"/>
-                <ResourceDictionary Source="ResDict/ScrollBarStyle.xaml"/>
-                <ResourceDictionary Source="ResDict/CaptionButtonStyle.xaml"/>
+                <ResourceDictionary Source="ResDict/ToggleBtnRadio.xaml" />
+                <ResourceDictionary Source="ResDict/Colors.xaml" />
+                <ResourceDictionary Source="ResDict/Images.xaml" />
+                <ResourceDictionary Source="ResDict/ButtonStyle.xaml" />
+                <ResourceDictionary Source="ResDict/ImageCheckBoxs.xaml" />
+                <ResourceDictionary Source="ResDict/MenuStyle.xaml" />
+                <ResourceDictionary Source="ResDict/ScrollBarStyle.xaml" />
+                <ResourceDictionary Source="ResDict/CaptionButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
 
-                <Setter Property="Background" Value="{StaticResource BaseColor}"/>
-                <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+                <Setter Property="Background" Value="{StaticResource BaseColor}" />
+                <Setter Property="Foreground" Value="{StaticResource TextColor}" />
 
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ListBoxItem">
-                            <Border Name="Border" Padding="0" SnapsToDevicePixels="true">
+                            <Border
+                                Name="Border"
+                                Padding="0"
+                                SnapsToDevicePixels="true">
                                 <ContentPresenter />
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsSelected" Value="true">
-                                    <Setter Property="Foreground" Value="White"/>
-                                    <Setter TargetName="Border"
-                                            Property="Background"
-                                            Value="{StaticResource ListBoxSelColor}"/>
+                                    <Setter Property="Foreground" Value="White" />
+                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource ListBoxSelColor}" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -62,22 +61,23 @@
 
             <Style x:Key="MsgListBoxItem" TargetType="ListBoxItem">
 
-                <Setter Property="Background" Value="{StaticResource MsgBGColor}"/>
-                <Setter Property="Foreground" Value="{StaticResource MsgTextColor}"/>
+                <Setter Property="Background" Value="{StaticResource MsgBGColor}" />
+                <Setter Property="Foreground" Value="{StaticResource MsgTextColor}" />
 
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ListBoxItem">
-                            <Border Name="Border" Padding="0" SnapsToDevicePixels="true">
+                            <Border
+                                Name="Border"
+                                Padding="0"
+                                SnapsToDevicePixels="true">
                                 <ContentPresenter />
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsSelected" Value="true">
-                                    <Setter Property="Foreground" Value="{StaticResource MsgTextColor}"/>
-                                    <Setter TargetName="Border"
-                                            Property="Background"
-                                            Value="{StaticResource MsgSelectedBGColor}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource MsgTextColor}" />
+                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource MsgSelectedBGColor}" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -86,10 +86,10 @@
             </Style>
 
 
-            <pl:SelectModeConverter x:Key="SelModeConv"/>
-            <pl:FigureTypeConverter x:Key="FigTypeConv"/>
-            <pl:ViewModeConverter x:Key="ViewModeConv"/>
-            <pl:MeasureModeConverter x:Key="MeasureModeConv"/>
+            <pl:SelectModeConverter x:Key="SelModeConv" />
+            <pl:FigureTypeConverter x:Key="FigTypeConv" />
+            <pl:ViewModeConverter x:Key="ViewModeConv" />
+            <pl:MeasureModeConverter x:Key="MeasureModeConv" />
 
 
             <!--<DataTemplate x:Key="AutoCompleteBoxItemTemplate">
@@ -100,15 +100,15 @@
 
 
             <Style TargetType="Menu">
-                <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
-                <Setter Property="Background" Value="{StaticResource MenuColor}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextColor}" />
+                <Setter Property="Background" Value="{StaticResource MenuColor}" />
             </Style>
 
-            <Style TargetType="MenuItem" BasedOn="{StaticResource MLB_MenuItem}">
-                <Setter Property="Background" Value="{StaticResource MenuColor}"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="BorderBrush" Value="{StaticResource MenuColor}"/>
-                <Setter Property="Padding" Value="0,0,0,0"/>
+            <Style BasedOn="{StaticResource MLB_MenuItem}" TargetType="MenuItem">
+                <Setter Property="Background" Value="{StaticResource MenuColor}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="{StaticResource MenuColor}" />
+                <Setter Property="Padding" Value="0,0,0,0" />
             </Style>
 
         </ResourceDictionary>
@@ -117,313 +117,423 @@
 
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="100*"/>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="100*" />
         </Grid.RowDefinitions>
 
-        <!-- Caption area -->        
-        <Grid Grid.Row="0"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Stretch"
-                    Height="26"
-                    Background="{StaticResource BaseColor}">
+        <!--  Caption area  -->
+        <Grid
+            Grid.Row="0"
+            Height="26"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            Background="{StaticResource BaseColor}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0"
-                Source="ResDict/Images/compass_s.png"
+            <Image
+                Grid.Column="0"
                 Width="20"
-                VerticalAlignment="Center"
                 Margin="8,0,0,0"
-                />
-            <Label
                 VerticalAlignment="Center"
-                Grid.Column="1" Content="KCad" Foreground="White" FontSize="12" Margin="8,0,0,0"/>
+                Source="ResDict/Images/compass_s.png" />
+            <Label
+                Grid.Column="1"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center"
+                Content="KCad"
+                FontSize="12"
+                Foreground="White" />
 
 
-            <StackPanel Grid.Column="2"
-                Orientation="Horizontal" Margin="0,0,4,0"
+            <StackPanel
+                Grid.Column="2"
+                Height="26"
+                Margin="0,0,4,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Height="26"
-                Background="{StaticResource BaseColor}">
+                Background="{StaticResource BaseColor}"
+                Orientation="Horizontal">
 
-                <Button x:Name="BtnMinWindow" Content="0" Style="{DynamicResource CaptionButtonStyleKey}" WindowChrome.IsHitTestVisibleInChrome="True"/>
-                <Button x:Name="BtnMaxWindow" Content="1" Style="{DynamicResource CaptionButtonStyleKey}" WindowChrome.IsHitTestVisibleInChrome="True"/>
-                <Button x:Name="BtnRestWindow" Content="2" Style="{DynamicResource CaptionButtonStyleKey}" WindowChrome.IsHitTestVisibleInChrome="True"/>
-                <Button x:Name="BtnCloseWindow" Content="r" Style="{DynamicResource CaptionButtonStyleKey}" WindowChrome.IsHitTestVisibleInChrome="True"/>
+                <Button
+                    x:Name="BtnMinWindow"
+                    Content="0"
+                    Style="{DynamicResource CaptionButtonStyleKey}"
+                    WindowChrome.IsHitTestVisibleInChrome="True" />
+                <Button
+                    x:Name="BtnMaxWindow"
+                    Content="1"
+                    Style="{DynamicResource CaptionButtonStyleKey}"
+                    WindowChrome.IsHitTestVisibleInChrome="True" />
+                <Button
+                    x:Name="BtnRestWindow"
+                    Content="2"
+                    Style="{DynamicResource CaptionButtonStyleKey}"
+                    WindowChrome.IsHitTestVisibleInChrome="True" />
+                <Button
+                    x:Name="BtnCloseWindow"
+                    Content="r"
+                    Style="{DynamicResource CaptionButtonStyleKey}"
+                    WindowChrome.IsHitTestVisibleInChrome="True" />
 
             </StackPanel>
         </Grid>
 
-                
-        <!-- Client area -->
+
+        <!--  Client area  -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="81*"/>
-                <RowDefinition Height="550*"/>
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="81*" />
+                <RowDefinition Height="550*" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
-            <!-- Menu area -->
-            <Menu Grid.Row="0" >
-                <MenuItem Header="{x:Static properties:Resources.menu_file}" >
-                    <MenuItem Tag="new_doc" Header="{x:Static properties:Resources.menu_new_doc}" Click="MenuItem_Click"/>
-                    <MenuItem Tag="load" Header="{x:Static properties:Resources.menu_load}" Click="MenuItem_Click" />
-                    <MenuItem Tag="save" Header="{x:Static properties:Resources.menu_save}" Click="MenuItem_Click"/>
-                    <MenuItem Tag="save_as" Header="{x:Static properties:Resources.menu_save_as}" Click="MenuItem_Click"/>
-                    <MenuItem Tag="print" Header="{x:Static properties:Resources.menu_print}" Click="MenuItem_Click"/>
-                    <MenuItem Tag="page_setting" Header="{x:Static properties:Resources.menu_page_settings}" Click="MenuItem_Click"/>
-                    <MenuItem Tag="doc_setting" Header="{x:Static properties:Resources.menu_doc_settings}" Click="MenuItem_Click"/>
-                </MenuItem>
-                <MenuItem Header="{x:Static properties:Resources.menu_edit}" >
-                    <MenuItem Tag="undo" Header="Undo" Click="MenuItem_Click"/>
-                    <MenuItem Tag="redo" Header="Redo" Click="MenuItem_Click"/>
-                    <MenuItem Tag="copy" Header="Copy" Click="MenuItem_Click"/>
-                    <MenuItem Tag="paste" Header="Paste" Click="MenuItem_Click"/>
-                    <MenuItem Tag="separate" Header="Separate" Click="MenuItem_Click"/>
-                    <MenuItem Tag="bond" Header="Bond" Click="MenuItem_Click"/>
-                    <MenuItem Tag="to_bezier" Header="To Bezier" Click="MenuItem_Click"/>
-                    <MenuItem Tag="cut_segment" Header="Cut Segment" Click="MenuItem_Click"/>
-                    <MenuItem Tag="ins_point" Header="Insert point" Click="MenuItem_Click"/>
-                    <MenuItem Tag="to_loop" Header="To Loop lines" Click="MenuItem_Click"/>
-                    <MenuItem Tag="to_unloop" Header="To Unloop lines" Click="MenuItem_Click"/>
-                    <MenuItem Header="Flip" >
-                        <MenuItem Tag="flip_x" Header="Flip X" Click="MenuItem_Click"/>
-                        <MenuItem Tag="flip_y" Header="Flip Y" Click="MenuItem_Click"/>
-                        <MenuItem Tag="flip_z" Header="Flip Z" Click="MenuItem_Click"/>
-                        <MenuItem Tag="flip_normal" Header="Flip Normal" Click="MenuItem_Click"/>
+            <!--  Menu area  -->
+            <Border Grid.Row="0" Background="{StaticResource MenuColor}">
+                <Menu Margin="4,0,0,0">
+                    <MenuItem Header="{x:Static properties:Resources.menu_file}">
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="{x:Static properties:Resources.menu_new_doc}"
+                            Tag="new_doc" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="{x:Static properties:Resources.menu_load}"
+                            Tag="load" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="{x:Static properties:Resources.menu_save}"
+                            Tag="save" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="{x:Static properties:Resources.menu_save_as}"
+                            Tag="save_as" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="{x:Static properties:Resources.menu_print}"
+                            Tag="print" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="{x:Static properties:Resources.menu_page_settings}"
+                            Tag="page_setting" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="{x:Static properties:Resources.menu_doc_settings}"
+                            Tag="doc_setting" />
                     </MenuItem>
-                    <MenuItem Tag="clear_layer" Header="Clear layer" Click="MenuItem_Click"/>
-                    <MenuItem Tag="centroid" Header="Centroid" Click="MenuItem_Click"/>
-                    <MenuItem Tag="select_all" Header="Select all" Click="MenuItem_Click"/>
-                </MenuItem>
-                <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
-                    <MenuItem Header="Snap to grid" IsCheckable="True" IsChecked="{Binding SnapToGrid}"/>
-                    <MenuItem Header="Snap to point" IsCheckable="True" IsChecked="{Binding SnapToPoint}"/>
-                    <MenuItem Header="Snap to segment" IsCheckable="True" IsChecked="{Binding SnapToSegment}"/>
-                    <MenuItem Header="Snap to Line" IsCheckable="True" IsChecked="{Binding SnapToLine}"/>
-                    <MenuItem Tag="grid_settings" Header="Grid Settings" Click="MenuItem_Click"/>
-                    <MenuItem Tag="snap_settings" Header="Snap Settings" Click="MenuItem_Click"/>
-                </MenuItem>
-                <MenuItem x:Name="DrawOptionMenu" Header="Draw">
-                    <MenuItem Header="Draw face outline" IsCheckable="True" IsChecked="{Binding DrawFaceOutline}"/>
-                    <MenuItem Header="Fill face" IsCheckable="True" IsChecked="{Binding FillFace}"/>
-                </MenuItem>
-                <MenuItem Header="Script" >
-                    <MenuItem Tag="show_editor" Header="Show editor" Click="MenuItem_Click"/>
-                </MenuItem>
+                    <MenuItem Header="{x:Static properties:Resources.menu_edit}">
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Undo"
+                            Tag="undo" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Redo"
+                            Tag="redo" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Copy"
+                            Tag="copy" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Paste"
+                            Tag="paste" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Separate"
+                            Tag="separate" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Bond"
+                            Tag="bond" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="To Bezier"
+                            Tag="to_bezier" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Cut Segment"
+                            Tag="cut_segment" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Insert point"
+                            Tag="ins_point" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="To Loop lines"
+                            Tag="to_loop" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="To Unloop lines"
+                            Tag="to_unloop" />
+                        <MenuItem Header="Flip">
+                            <MenuItem
+                                Click="MenuItem_Click"
+                                Header="Flip X"
+                                Tag="flip_x" />
+                            <MenuItem
+                                Click="MenuItem_Click"
+                                Header="Flip Y"
+                                Tag="flip_y" />
+                            <MenuItem
+                                Click="MenuItem_Click"
+                                Header="Flip Z"
+                                Tag="flip_z" />
+                            <MenuItem
+                                Click="MenuItem_Click"
+                                Header="Flip Normal"
+                                Tag="flip_normal" />
+                        </MenuItem>
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Clear layer"
+                            Tag="clear_layer" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Centroid"
+                            Tag="centroid" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Select all"
+                            Tag="select_all" />
+                    </MenuItem>
+                    <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
+                        <MenuItem
+                            Header="Snap to grid"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToGrid}" />
+                        <MenuItem
+                            Header="Snap to point"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToPoint}" />
+                        <MenuItem
+                            Header="Snap to segment"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToSegment}" />
+                        <MenuItem
+                            Header="Snap to Line"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToLine}" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Grid Settings"
+                            Tag="grid_settings" />
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Snap Settings"
+                            Tag="snap_settings" />
+                    </MenuItem>
+                    <MenuItem x:Name="DrawOptionMenu" Header="Draw">
+                        <MenuItem
+                            Header="Draw face outline"
+                            IsCheckable="True"
+                            IsChecked="{Binding DrawFaceOutline}" />
+                        <MenuItem
+                            Header="Fill face"
+                            IsCheckable="True"
+                            IsChecked="{Binding FillFace}" />
+                    </MenuItem>
+                    <MenuItem Header="Script">
+                        <MenuItem
+                            Click="MenuItem_Click"
+                            Header="Show editor"
+                            Tag="show_editor" />
+                    </MenuItem>
 
-            </Menu>
+                </Menu>
+            </Border>
 
-            <!-- Tool bar area -->
-            <StackPanel Grid.Row="1"
-            Background="{StaticResource BaseColor}"
-            Height="30"
-            HorizontalAlignment="Stretch"
-            Orientation="Vertical"
-            >
+            <!--  Tool bar area  -->
+            <StackPanel
+                Grid.Row="1"
+                Height="Auto"
+                HorizontalAlignment="Stretch"
+                Background="{StaticResource BaseColor}"
+                Orientation="Vertical">
 
                 <StackPanel
-                x:Name="ToolBar1"
-                Background="{StaticResource BaseColor}" Height="30" HorizontalAlignment="Stretch"
-                Orientation="Horizontal">
+                    x:Name="ToolBar1"
+                    Height="Auto"
+                    HorizontalAlignment="Stretch"
+                    Background="{StaticResource BaseColor}"
+                    Orientation="Horizontal">
 
-                    <Label Width="32"/>
+                    <Label Width="16" Height="16" />
 
                     <ToggleButton
-                    Style="{StaticResource ToolToggleButton}"
-                    IsChecked="{Binding SnapToPoint}"
-                    Margin="1,2,0,2"
-                    >
-                        <Border Padding="2">
-                            <Image Source="{StaticResource SnapToPointDrawingImage}"
-                               Width="24"
-                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        Margin="1,2,0,2"
+                        IsChecked="{Binding SnapToPoint}"
+                        Style="{StaticResource ToolToggleButton}">
+                        <Border
+                            Width="20"
+                            Height="20"
+                            Padding="2">
+                            <Image
+                                Width="16"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Source="{StaticResource SnapToPointDrawingImage}" />
                         </Border>
 
                     </ToggleButton>
 
                     <ToggleButton
-                    Style="{StaticResource ToolToggleButton}"
-                    IsChecked="{Binding SnapToSegment}"
-                    Margin="1,2,0,2"
-                    >
-                        <Border Padding="2">
-                            <Image Source="{StaticResource SnapToSegDrawingImage}"
-                               Width="24"
-                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        Margin="1,2,0,2"
+                        IsChecked="{Binding SnapToSegment}"
+                        Style="{StaticResource ToolToggleButton}">
+                        <Border
+                            Width="20"
+                            Height="20"
+                            Padding="2">
+                            <Image
+                                Width="16"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Source="{StaticResource SnapToSegDrawingImage}" />
                         </Border>
 
                     </ToggleButton>
 
                     <ToggleButton
-                    Style="{StaticResource ToolToggleButton}"
-                    IsChecked="{Binding SnapToLine}"
-                    Margin="1,2,0,2"
-                    >
-                        <Border Padding="2">
-                            <Image Source="{StaticResource SnapToLineDrawingImage}"
-                                Width="24"
-                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        Margin="1,2,0,2"
+                        IsChecked="{Binding SnapToLine}"
+                        Style="{StaticResource ToolToggleButton}">
+                        <Border
+                            Width="20"
+                            Height="20"
+                            Padding="2">
+                            <Image
+                                Width="16"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Source="{StaticResource SnapToLineDrawingImage}" />
                         </Border>
 
                     </ToggleButton>
 
                 </StackPanel>
 
-                <Label Height="3"
-                   HorizontalAlignment="Stretch" Background="{StaticResource BoarderColor}"/>
+                <Label
+                    Height="3"
+                    HorizontalAlignment="Stretch"
+                    Background="{StaticResource BoarderColor}" />
 
             </StackPanel>
 
-            <!-- Work area and Console area -->
+            <!--  Work area and Console area  -->
             <Grid Grid.Row="2" Grid.RowSpan="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="10*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="100*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="15*"/>
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="100*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="15*" />
                 </Grid.ColumnDefinitions>
 
-                <!--Left panel-->
-                <Border Grid.Column="0" BorderBrush="{StaticResource BoarderColor}" BorderThickness="0">
+                <!--  Left panel  -->
+                <Border
+                    Grid.Column="0"
+                    BorderBrush="{StaticResource BoarderColor}"
+                    BorderThickness="1">
                     <Grid
-                    x:Name="LeftPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
+                        x:Name="LeftPanel"
+                        Grid.Column="0"
+                        Background="{StaticResource BaseColor}">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="100*"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="100*" />
                         </Grid.RowDefinitions>
 
-                        <StackPanel Grid.Row="0" x:Name="SlsectModePanel">
-                            <Label Height="Auto" Content="Select mode" Foreground="DarkGray" FontSize="9"/>
+                        <StackPanel x:Name="SlsectModePanel" Grid.Row="0">
+                            <Label
+                                Height="Auto"
+                                Content="Select mode"
+                                FontSize="9"
+                                Foreground="DarkGray" />
                             <RadioButton
-                            Style="{StaticResource ColorRadioButton}"
-                            Tag="OBJECT"
-                            Content="Select Figure" 
-                            IsChecked="{
-                                Binding SelectMode,
-                                ConverterParameter=OBJECT,
-                                Converter={StaticResource SelModeConv}
-                            }"
-                            Margin="1,0,1,3"
-                            />
+                                Margin="1,0,1,3"
+                                Content="Select Figure"
+                                IsChecked="{Binding SelectMode, ConverterParameter=OBJECT, Converter={StaticResource SelModeConv}}"
+                                Style="{StaticResource ColorRadioButton}"
+                                Tag="OBJECT" />
 
                             <RadioButton
-                            Style="{StaticResource ColorRadioButton}"
-                            Tag="POINT"
-                            Content="Select Point" 
-                            IsChecked="{
-                                Binding SelectMode,
-                                ConverterParameter=POINT,
-                                Converter={StaticResource SelModeConv}
-                            }"
-                            Margin="1,0,1,3"
-                        />
+                                Margin="1,0,1,3"
+                                Content="Select Point"
+                                IsChecked="{Binding SelectMode, ConverterParameter=POINT, Converter={StaticResource SelModeConv}}"
+                                Style="{StaticResource ColorRadioButton}"
+                                Tag="POINT" />
                         </StackPanel>
 
-                        <StackPanel Grid.Row="1" x:Name="FigurePanel">
+                        <StackPanel x:Name="FigurePanel" Grid.Row="1">
 
-                            <Label  Height="Auto" Content="Create figure" Foreground="DarkGray" FontSize="9"/>
-
-                            <RadioButton
-                            Style="{StaticResource ColorRadioButton}"
-                            Tag="LINE"
-                            Content="Line" 
-                            IsChecked="{
-                                Binding CreatingFigureType,
-                                ConverterParameter=LINE,
-                                Converter={StaticResource FigTypeConv}
-                            }"
-                            Margin="1,0,1,3"
-                        >
-                            </RadioButton>
+                            <Label
+                                Height="Auto"
+                                Content="Create figure"
+                                FontSize="9"
+                                Foreground="DarkGray" />
 
                             <RadioButton
-                            Style="{StaticResource ColorRadioButton}"
-                            Tag="RECT"
-                            Content="Rect" 
-                            IsChecked="{
-                                Binding CreatingFigureType,
-                                ConverterParameter=RECT,
-                                Converter={StaticResource FigTypeConv}
-                            }"
-                            Margin="1,0,1,3"
-                        />
+                                Margin="1,0,1,3"
+                                Content="Line"
+                                IsChecked="{Binding CreatingFigureType, ConverterParameter=LINE, Converter={StaticResource FigTypeConv}}"
+                                Style="{StaticResource ColorRadioButton}"
+                                Tag="LINE" />
 
                             <RadioButton
-                            Style="{StaticResource ColorRadioButton}"
-                            Tag="POLY_LINES"
-                            Content="Poly lines" 
-                            IsChecked="{
-                                Binding CreatingFigureType,
-                                ConverterParameter=POLY_LINES,
-                                Converter={StaticResource FigTypeConv}
-                            }"
-                            Margin="1,0,1,3"
-                        />
+                                Margin="1,0,1,3"
+                                Content="Rect"
+                                IsChecked="{Binding CreatingFigureType, ConverterParameter=RECT, Converter={StaticResource FigTypeConv}}"
+                                Style="{StaticResource ColorRadioButton}"
+                                Tag="RECT" />
 
                             <RadioButton
-                            Style="{StaticResource ColorRadioButton}"
-                            Tag="CIRCLE"
-                            Content="Circle" 
-                            IsChecked="{
-                                Binding CreatingFigureType,
-                                ConverterParameter=CIRCLE,
-                                Converter={StaticResource FigTypeConv}
-                            }"
-                            Margin="1,0,1,3"
-                        />
+                                Margin="1,0,1,3"
+                                Content="Poly lines"
+                                IsChecked="{Binding CreatingFigureType, ConverterParameter=POLY_LINES, Converter={StaticResource FigTypeConv}}"
+                                Style="{StaticResource ColorRadioButton}"
+                                Tag="POLY_LINES" />
 
                             <RadioButton
-                            Style="{StaticResource ColorRadioButton}"
-                            Tag="POINT"
-                            Content="Point" 
-                            IsChecked="{
-                                Binding CreatingFigureType,
-                                ConverterParameter=POINT,
-                                Converter={StaticResource FigTypeConv}
-                            }"
-                            Margin="1,0,1,3"
-                        />
+                                Margin="1,0,1,3"
+                                Content="Circle"
+                                IsChecked="{Binding CreatingFigureType, ConverterParameter=CIRCLE, Converter={StaticResource FigTypeConv}}"
+                                Style="{StaticResource ColorRadioButton}"
+                                Tag="CIRCLE" />
 
                             <RadioButton
-                            Style="{StaticResource ColorRadioButton}"
-                            Tag="DIMENTION_LINE"
-                            Content="Dimention" 
-                            IsChecked="{
-                                Binding CreatingFigureType,
-                                ConverterParameter=DIMENTION_LINE,
-                                Converter={StaticResource FigTypeConv}
-                            }"
-                            Margin="1,0,1,3"
-                        />
-
-                            <Label Height="4"/>
+                                Margin="1,0,1,3"
+                                Content="Point"
+                                IsChecked="{Binding CreatingFigureType, ConverterParameter=POINT, Converter={StaticResource FigTypeConv}}"
+                                Style="{StaticResource ColorRadioButton}"
+                                Tag="POINT" />
 
                             <RadioButton
-                            Style="{StaticResource ColorRadioButton}"
-                            Tag="POLY_LINE"
-                            Content="Measure" 
-                            IsChecked="{
-                                Binding MeasureMode,
-                                ConverterParameter=POLY_LINE,
-                                Converter={StaticResource MeasureModeConv}
-                            }"
-                            Margin="1,0,1,3"
-                        />
+                                Margin="1,0,1,3"
+                                Content="Dimention"
+                                IsChecked="{Binding CreatingFigureType, ConverterParameter=DIMENTION_LINE, Converter={StaticResource FigTypeConv}}"
+                                Style="{StaticResource ColorRadioButton}"
+                                Tag="DIMENTION_LINE" />
+
+                            <Label Height="4" />
+
+                            <RadioButton
+                                Margin="1,0,1,3"
+                                Content="Measure"
+                                IsChecked="{Binding MeasureMode, ConverterParameter=POLY_LINE, Converter={StaticResource MeasureModeConv}}"
+                                Style="{StaticResource ColorRadioButton}"
+                                Tag="POLY_LINE" />
                         </StackPanel>
 
-                        <Label Grid.Row="2" Height="4"/>
+                        <Label Grid.Row="2" Height="4" />
                     </Grid>
                 </Border>
 
@@ -432,84 +542,80 @@
                     Width="4"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Stretch"
-                    Background="{StaticResource BoarderColor}" 
-                    />
+                    Background="{StaticResource BoarderColor}" />
 
-                <!--Plotter view and Command view-->
+                <!--  Plotter view and Command view  -->
                 <Grid Grid.Column="2" Background="{DynamicResource BGColor}">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="100*"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="20*"/>
+                        <RowDefinition Height="100*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="20*" />
                     </Grid.RowDefinitions>
 
-                    <WindowsFormsHost x:Name="viewContainer" Grid.Row="0">
-                    </WindowsFormsHost>
+                    <WindowsFormsHost x:Name="viewContainer" Grid.Row="0" />
 
-                    <GridSplitter Grid.Row="1"
+                    <GridSplitter
+                        Grid.Row="1"
+                        Height="3"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
                         Background="{StaticResource BoarderColor}"
                         BorderThickness="0"
-                        ShowsPreview="False"
-                        Height="3"
-                        />
+                        ShowsPreview="False" />
 
 
                     <Grid Grid.Row="2">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="100*"/>
-                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="100*" />
+                            <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
 
                         <ScrollViewer
                             Grid.Row="0"
+                            Focusable="True"
                             Style="{StaticResource CustomScrollViewerStyle}"
-                            VerticalScrollBarVisibility = "Auto"
-                            Focusable="True">
+                            VerticalScrollBarVisibility="Auto">
 
                             <local:CadConsoleView
                                 x:Name="MyConsole"
-                                Foreground="{StaticResource MsgTextColor}"
+                                VerticalAlignment="Top"
                                 Background="{StaticResource MsgBGColor}"
+                                Focusable="True"
+                                Foreground="{StaticResource MsgTextColor}"
                                 SelectedBackground="{StaticResource MsgSelectedBGColor}"
                                 SelectedForeground="{StaticResource MsgTextColor}"
-                                TextSize="12"
-                                VerticalAlignment="Top"
-                                Focusable="True"
-                                />
+                                TextSize="12" />
 
                         </ScrollViewer>
                         <Grid Grid.Row="1" Height="auto">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="100*"/>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="100*" />
                             </Grid.ColumnDefinitions>
 
                             <Border BorderBrush="{StaticResource BoarderColor}" BorderThickness="0,1,0,1">
-                                <Button Grid.Column="0"
-                                x:Name="RunTextCommandButton"
-                                Tag="run_text_command"
-                                Content=" Enter > "
-                                Padding="2,2,2,2"
-                                Style="{StaticResource ButtonStyle}"
-                                />
+                                <Button
+                                    x:Name="RunTextCommandButton"
+                                    Grid.Column="0"
+                                    Padding="2,2,2,2"
+                                    Content=" Enter &gt; "
+                                    Style="{StaticResource ButtonStyle}"
+                                    Tag="run_text_command" />
                             </Border>
 
                             <local:AutoCompleteTextBox
-                                Grid.Column="1"
                                 x:Name="textCommand"
-                                BorderThickness="1,1,1,1"
+                                Grid.Column="1"
                                 Padding="2,2,2,2"
-                                BorderBrush="{StaticResource BoarderColor}"
-                                Foreground="{StaticResource TextColor}"
                                 Background="{StaticResource MsgBGColor}"
-                                CandidateListBackground ="{StaticResource BGColor}"
-                                CandidateListForeground ="{StaticResource TextColor}"
-                                CandidateListBorder ="Aqua"
+                                BorderBrush="{StaticResource BoarderColor}"
+                                BorderThickness="1,1,1,1"
+                                CandidateListBackground="{StaticResource BGColor}"
+                                CandidateListBorder="Aqua"
+                                CandidateListForeground="{StaticResource TextColor}"
                                 FontSize="16"
                                 FontWeight="Thin"
-                                />
+                                Foreground="{StaticResource TextColor}" />
 
                         </Grid>
                     </Grid>
@@ -520,85 +626,109 @@
                     Width="4"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Stretch"
-                    Background="{StaticResource BoarderColor}" 
-                    />
+                    Background="{StaticResource BoarderColor}" />
 
-                <Border Grid.Column="4" BorderBrush="{StaticResource BoarderColor}" BorderThickness="2">
+                <Border
+                    Grid.Column="4"
+                    BorderBrush="{StaticResource BoarderColor}"
+                    BorderThickness="2">
                     <Grid
-                        x:Name="RightPanel" Grid.Column="0" Background="{StaticResource BaseColor}" >
+                        x:Name="RightPanel"
+                        Grid.Column="0"
+                        Background="{StaticResource BaseColor}">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="100*"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="100*" />
                         </Grid.RowDefinitions>
 
-                        <!-- Layer list tool-->
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
+                        <!--  Layer list tool  -->
+                        <Border
+                            Grid.Row="0"
+                            BorderBrush="{StaticResource BoarderColor}"
+                            BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="0" Content="Layer" Background="{StaticResource BaseColor}" Foreground="{StaticResource TextColor}"/>
+                                <Label
+                                    Grid.Column="0"
+                                    Background="{StaticResource BaseColor}"
+                                    Content="Layer"
+                                    Foreground="{StaticResource TextColor}" />
 
-                            <Button Grid.Column="1"
-                                Name="AddLayerButton"
-                                Tag="add_layer"
-                                Width="20"
-                                Content="+"
-                                Template="{StaticResource MyButtonTemplate}"
-                                FontSize="20"
-                                FontWeight="ExtraBold" />
+                                <Button
+                                    Name="AddLayerButton"
+                                    Grid.Column="1"
+                                    Width="20"
+                                    Content="+"
+                                    FontSize="20"
+                                    FontWeight="ExtraBold"
+                                    Tag="add_layer"
+                                    Template="{StaticResource MyButtonTemplate}" />
 
-                            <Button Grid.Column="2"
-                                Name="RemoveLayerButton"
-                                Tag="remove_layer"
-                                Width="20"
-                                Content="-"
-                                Template="{StaticResource MyButtonTemplate}"
-                                FontSize="20"
-                                FontWeight="ExtraBold" />
-                        </Grid>
+                                <Button
+                                    Name="RemoveLayerButton"
+                                    Grid.Column="2"
+                                    Width="20"
+                                    Content="-"
+                                    FontSize="20"
+                                    FontWeight="ExtraBold"
+                                    Tag="remove_layer"
+                                    Template="{StaticResource MyButtonTemplate}" />
+                            </Grid>
+                        </Border>
+
                         <Grid Grid.Row="1">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="100*"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="200*"/>
+                                <RowDefinition Height="100*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="200*" />
                             </Grid.RowDefinitions>
 
                             <ScrollViewer
-                            Grid.Row="0"
-                            Style="{StaticResource CustomScrollViewerStyle}"
-                            VerticalScrollBarVisibility = "Auto"
-                            HorizontalScrollBarVisibility="Hidden">
+                                Grid.Row="0"
+                                HorizontalScrollBarVisibility="Hidden"
+                                Style="{StaticResource CustomScrollViewerStyle}"
+                                VerticalScrollBarVisibility="Auto">
 
                                 <ListBox
-                                x:Name="LayerListView"
-                                ItemsSource="{Binding}"
-                                SelectionMode="Single"
-                                ItemContainerStyle="{StaticResource SimpleListBoxItem}"
-                                BorderBrush="{StaticResource BoarderColor}"
-                                Background="{StaticResource BaseColor}"
-                                BorderThickness="1"
-                                >
+                                    x:Name="LayerListView"
+                                    Background="{StaticResource BaseColor}"
+                                    BorderBrush="{StaticResource BoarderColor}"
+                                    BorderThickness="1"
+                                    ItemContainerStyle="{StaticResource SimpleListBoxItem}"
+                                    ItemsSource="{Binding}"
+                                    SelectionMode="Single">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="100*"/>
+                                                    <ColumnDefinition Width="auto" />
+                                                    <ColumnDefinition Width="100*" />
                                                 </Grid.ColumnDefinitions>
 
-                                                <StackPanel Margin="4,2,4,2" Grid.Column="0" Orientation="Horizontal"  VerticalAlignment="Center">
-                                                    <CheckBox IsChecked="{Binding Path=Visible}"
-                                                            Style="{StaticResource VisibleCheckBox}"
-                                                            Foreground="White"/>
+                                                <StackPanel
+                                                    Grid.Column="0"
+                                                    Margin="4,2,4,2"
+                                                    VerticalAlignment="Center"
+                                                    Orientation="Horizontal">
+                                                    <CheckBox
+                                                        Foreground="White"
+                                                        IsChecked="{Binding Path=Visible}"
+                                                        Style="{StaticResource VisibleCheckBox}" />
 
-                                                    <CheckBox IsChecked="{Binding Path=Locked}"
-                                                            Style="{StaticResource LockedCheckBox}"
-                                                            Foreground="White"/>
+                                                    <CheckBox
+                                                        Foreground="White"
+                                                        IsChecked="{Binding Path=Locked}"
+                                                        Style="{StaticResource LockedCheckBox}" />
                                                 </StackPanel>
-                                                <TextBlock Grid.Column="1" Margin="2" Text="{Binding Path=Name}" />
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    Margin="2"
+                                                    Text="{Binding Path=Name}" />
                                             </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
@@ -606,29 +736,32 @@
                             </ScrollViewer>
 
                             <GridSplitter
-                            Grid.Row="1" Height="6" 
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Stretch"
-                            Background="{StaticResource BoarderColor}"
-                            />
+                                Grid.Row="1"
+                                Height="6"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Background="{StaticResource BoarderColor}" />
                             <Grid Grid.Row="2">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="100*"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="100*" />
                                 </Grid.RowDefinitions>
 
-                                <Border Grid.Row="0" BorderBrush="{StaticResource BoarderColor}" BorderThickness="0,1,0,1">
-                                    <StackPanel
-                                    Orientation="Horizontal"
-                                    x:Name="TreeViewToolBar"
-                                    >
+                                <Border
+                                    Grid.Row="0"
+                                    BorderBrush="{StaticResource BoarderColor}"
+                                    BorderThickness="0,1,0,1">
+                                    <StackPanel x:Name="TreeViewToolBar" Orientation="Horizontal">
                                         <ToggleButton
-                                        Style="{StaticResource ToolToggleButton}"
-                                        IsChecked="{Binding FilterTreeView}"
-                                        Margin="2,2,2,2">
+                                            Margin="2,2,2,2"
+                                            IsChecked="{Binding FilterTreeView}"
+                                            Style="{StaticResource ToolToggleButton}">
 
                                             <Border Padding="4">
-                                                <Image Source="{StaticResource filterDrawingImage}" Height="12" VerticalAlignment="Top"/>
+                                                <Image
+                                                    Height="12"
+                                                    VerticalAlignment="Top"
+                                                    Source="{StaticResource filterDrawingImage}" />
                                             </Border>
 
                                         </ToggleButton>
@@ -638,24 +771,22 @@
                                 </Border>
 
                                 <ScrollViewer
-                                Grid.Row="1"
-                                Style="{StaticResource CustomScrollViewerStyle}"
-                                VerticalAlignment="Stretch"
-                                HorizontalScrollBarVisibility="Hidden"
-                                VerticalScrollBarVisibility = "Visible"
-                                BorderBrush="AliceBlue"
-                                >
+                                    Grid.Row="1"
+                                    VerticalAlignment="Stretch"
+                                    BorderBrush="AliceBlue"
+                                    HorizontalScrollBarVisibility="Hidden"
+                                    Style="{StaticResource CustomScrollViewerStyle}"
+                                    VerticalScrollBarVisibility="Visible">
 
                                     <local:CadObjectTreeView
-                                    x:Name="ObjTree"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Top"
-                                    Height="0"
-                                    Background="{StaticResource BaseColor}"
-                                    Foreground="White"
-                                    TextSize="12.0"
-                                    ItemHeight="16.0"
-                                    />
+                                        x:Name="ObjTree"
+                                        Height="0"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Top"
+                                        Background="{StaticResource BaseColor}"
+                                        Foreground="White"
+                                        ItemHeight="16.0"
+                                        TextSize="12.0" />
                                 </ScrollViewer>
                             </Grid>
                         </Grid>
@@ -668,86 +799,118 @@
 
             </Grid>
 
-            <!-- Status bar area -->
-            <Border Grid.Row="4"
-                BorderBrush="{StaticResource BoarderColor}" BorderThickness="1">
+            <!--  Status bar area  -->
+            <Border
+                Grid.Row="4"
+                BorderBrush="{StaticResource BoarderColor}"
+                BorderThickness="1">
 
-                <StackPanel  Background="{StaticResource BGColor}" Height="20" HorizontalAlignment="Stretch"
+                <StackPanel
+                    Height="20"
+                    HorizontalAlignment="Stretch"
+                    Background="{StaticResource BGColor}"
                     Orientation="Horizontal">
                     <Rectangle
-                VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="8"/>
+                        Width="8"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Stretch" />
 
-                    <TextBlock x:Name="textBlockXYZ" TextWrapping="Wrap" Text="{Binding StrCursorPos}"
-                VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="136" Foreground="White">
-                    </TextBlock>
-                    <TextBlock x:Name="textBlockXYZ2" TextWrapping="Wrap" Text="{Binding StrCursorPos2}"
-                VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="136" Foreground="White">
-                    </TextBlock>
+                    <TextBlock
+                        x:Name="textBlockXYZ"
+                        Width="136"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Stretch"
+                        Foreground="White"
+                        Text="{Binding StrCursorPos}"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        x:Name="textBlockXYZ2"
+                        Width="136"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Stretch"
+                        Foreground="White"
+                        Text="{Binding StrCursorPos2}"
+                        TextWrapping="Wrap" />
 
-                    <StackPanel x:Name="ViewModePanel"
-                Background="{StaticResource BGColor}"
-                Orientation="Horizontal"
-                VerticalAlignment="Stretch" >
+                    <StackPanel
+                        x:Name="ViewModePanel"
+                        VerticalAlignment="Stretch"
+                        Background="{StaticResource BGColor}"
+                        Orientation="Horizontal">
 
                         <RadioButton
-                        Style="{StaticResource ColorRadioButton}"
-                        IsChecked="{Binding ViewMode,ConverterParameter=FRONT,Converter={StaticResource ViewModeConv}}"
-                        Margin="1,1,1,1"
-                        >
-                            <TextBlock Width="40" Text="Front" TextAlignment="Center"/>
+                            Margin="1,1,1,1"
+                            IsChecked="{Binding ViewMode, ConverterParameter=FRONT, Converter={StaticResource ViewModeConv}}"
+                            Style="{StaticResource ColorRadioButton}">
+                            <TextBlock
+                                Width="40"
+                                Text="Front"
+                                TextAlignment="Center" />
                         </RadioButton>
 
                         <RadioButton
-                        Style="{StaticResource ColorRadioButton}"
-                        IsChecked="{Binding ViewMode,ConverterParameter=BACK,Converter={StaticResource ViewModeConv}}"
-                        Margin="1,1,1,1"
-                        >
-                            <TextBlock Width="40" Text="Back" TextAlignment="Center"/>
+                            Margin="1,1,1,1"
+                            IsChecked="{Binding ViewMode, ConverterParameter=BACK, Converter={StaticResource ViewModeConv}}"
+                            Style="{StaticResource ColorRadioButton}">
+                            <TextBlock
+                                Width="40"
+                                Text="Back"
+                                TextAlignment="Center" />
                         </RadioButton>
 
                         <RadioButton
-                        Style="{StaticResource ColorRadioButton}"
-                        IsChecked="{Binding ViewMode,ConverterParameter=TOP,Converter={StaticResource ViewModeConv}}"
-                        Margin="1,1,1,1"
-                        >
-                            <TextBlock Width="40" Text="Top" TextAlignment="Center"/>
+                            Margin="1,1,1,1"
+                            IsChecked="{Binding ViewMode, ConverterParameter=TOP, Converter={StaticResource ViewModeConv}}"
+                            Style="{StaticResource ColorRadioButton}">
+                            <TextBlock
+                                Width="40"
+                                Text="Top"
+                                TextAlignment="Center" />
                         </RadioButton>
 
                         <RadioButton
-                        Style="{StaticResource ColorRadioButton}"
-                        IsChecked="{Binding ViewMode,ConverterParameter=BOTTOM,Converter={StaticResource ViewModeConv}}"
-                        Margin="1,1,1,1"
-                        >
-                            <TextBlock Width="40" Text="Bottom" TextAlignment="Center"/>
+                            Margin="1,1,1,1"
+                            IsChecked="{Binding ViewMode, ConverterParameter=BOTTOM, Converter={StaticResource ViewModeConv}}"
+                            Style="{StaticResource ColorRadioButton}">
+                            <TextBlock
+                                Width="40"
+                                Text="Bottom"
+                                TextAlignment="Center" />
                         </RadioButton>
 
                         <RadioButton
-                        Style="{StaticResource ColorRadioButton}"
-                        IsChecked="{Binding ViewMode,ConverterParameter=RIGHT,Converter={StaticResource ViewModeConv}}"
-                        Margin="1,1,1,1"
-                        >
-                            <TextBlock Width="40" Text="Right" TextAlignment="Center"/>
-
-                        </RadioButton>
-
-                        <RadioButton
-                        Style="{StaticResource ColorRadioButton}"
-                        IsChecked="{Binding ViewMode,ConverterParameter=LEFT,Converter={StaticResource ViewModeConv}}"
-                        Margin="1,1,1,1"
-                        >
-
-                            <TextBlock Width="40" Text="Left" TextAlignment="Center"/>
+                            Margin="1,1,1,1"
+                            IsChecked="{Binding ViewMode, ConverterParameter=RIGHT, Converter={StaticResource ViewModeConv}}"
+                            Style="{StaticResource ColorRadioButton}">
+                            <TextBlock
+                                Width="40"
+                                Text="Right"
+                                TextAlignment="Center" />
 
                         </RadioButton>
 
                         <RadioButton
-                        Style="{StaticResource ColorRadioButton}"
-                        Tag="axis_xyz"
-                        IsChecked="{Binding ViewMode,ConverterParameter=FREE,Converter={StaticResource ViewModeConv}}"
-                        Margin="1,1,1,1"
-                        >
+                            Margin="1,1,1,1"
+                            IsChecked="{Binding ViewMode, ConverterParameter=LEFT, Converter={StaticResource ViewModeConv}}"
+                            Style="{StaticResource ColorRadioButton}">
 
-                            <TextBlock Width="40" Text="3D" TextAlignment="Center"/>
+                            <TextBlock
+                                Width="40"
+                                Text="Left"
+                                TextAlignment="Center" />
+
+                        </RadioButton>
+
+                        <RadioButton
+                            Margin="1,1,1,1"
+                            IsChecked="{Binding ViewMode, ConverterParameter=FREE, Converter={StaticResource ViewModeConv}}"
+                            Style="{StaticResource ColorRadioButton}"
+                            Tag="axis_xyz">
+
+                            <TextBlock
+                                Width="40"
+                                Text="3D"
+                                TextAlignment="Center" />
 
                         </RadioButton>
                     </StackPanel>
