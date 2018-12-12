@@ -46,6 +46,8 @@ namespace Plotter
         {
             Wnd = control;
 
+            SetViewSize(8, 1);  // Create dummy Image and Graphics
+
             SetUnitPerMilli(4); // 4 pix = 1mm
             mViewOrg.x = 0;
             mViewOrg.y = 0;
@@ -55,7 +57,6 @@ namespace Plotter
 
             mDrawing = new DrawingGDI(this);
         }
-
 
         public override void SetViewSize(double w, double h)
         {

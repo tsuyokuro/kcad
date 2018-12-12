@@ -529,7 +529,6 @@ namespace Plotter
 
         public override void DrawLine(int pen, CadVector a, CadVector b)
         {
-            if (DC.GdiGraphics == null) return;
             if (DC.Pen(pen) == null) return;
 
             CadVector pa = DC.WorldPointToDevPoint(a);
@@ -554,11 +553,6 @@ namespace Plotter
 
         public override void DrawDot(int pen, CadVector p)
         {
-            if (DC.GdiGraphics == null)
-            {
-                return;
-            }
- 
             CadVector p0 = DC.WorldPointToDevPoint(p);
             //CadVector p1 = p0;
             //p0.x = (int)p0.x;
@@ -608,7 +602,6 @@ namespace Plotter
 
         public override void DrawTextScrn(int font, int brush, CadVector a, CadVector direction, string s)
         {
-            if (DC.GdiGraphics == null) return;
             if (DC.Brush(brush) == null) return;
             if (DC.Font(font) == null) return;
 
@@ -678,7 +671,6 @@ namespace Plotter
 
         private void DrawLineScrn(int pen, CadVector a, CadVector b)
         {
-            if (DC.GdiGraphics == null) return;
             if (DC.Pen(pen) == null) return;
 
             DC.GdiGraphics.DrawLine(DC.Pen(pen), (int)a.x, (int)a.y, (int)b.x, (int)b.y);
@@ -686,7 +678,6 @@ namespace Plotter
 
         private void DrawLineScrn(int pen, double x1, double y1, double x2, double y2)
         {
-            if (DC.GdiGraphics == null) return;
             if (DC.Pen(pen) == null) return;
 
             DC.GdiGraphics.DrawLine(DC.Pen(pen), (int)x1, (int)y1, (int)x2, (int)y2);
@@ -694,7 +685,6 @@ namespace Plotter
 
         private void DrawRectangleScrn(int pen, double x0, double y0, double x1, double y1)
         {
-            if (DC.GdiGraphics == null) return;
             if (DC.Pen(pen) == null) return;
 
             int lx = (int)x0;
@@ -723,7 +713,6 @@ namespace Plotter
 
         private void DrawCircleScrn(int pen, CadVector cp, CadVector p1)
         {
-            if (DC.GdiGraphics == null) return;
             if (DC.Pen(pen) == null) return;
 
             double r = CadUtil.SegNorm(cp, p1);
@@ -732,7 +721,6 @@ namespace Plotter
 
         private void DrawCircleScrn(int pen, CadVector cp, double r)
         {
-            if (DC.GdiGraphics == null) return;
             if (DC.Pen(pen) == null) return;
 
             DC.GdiGraphics.DrawEllipse(
@@ -741,7 +729,6 @@ namespace Plotter
 
         private void FillRectangleScrn(int brush, double x0, double y0, double x1, double y1)
         {
-            if (DC.GdiGraphics == null) return;
             if (DC.Brush(brush) == null) return;
 
             int lx = (int)x0;
