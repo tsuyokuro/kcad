@@ -582,6 +582,7 @@
                                 Background="{StaticResource MsgBGColor}"
                                 Focusable="True"
                                 Foreground="{StaticResource MsgTextColor}"
+                                LineHeight="14"
                                 SelectedBackground="{StaticResource MsgSelectedBGColor}"
                                 SelectedForeground="{StaticResource MsgTextColor}"
                                 TextSize="12" />

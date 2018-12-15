@@ -36,7 +36,7 @@ namespace KCad
         protected Brush mSelectedBackground = new SolidColorBrush(Color.FromRgb(0x22, 0x8B, 0x22));
 
 
-        protected double mItemHeight = 14.0;
+        protected double mLineHeight = 14.0;
 
         protected double mTextSize = 10.0;
 
@@ -124,16 +124,16 @@ namespace KCad
             }
         }
 
-        public double ItemHeight
+        public double LineHeight
         {
             get
             {
-                return mItemHeight;
+                return mLineHeight;
             }
 
             set
             {
-                mItemHeight = value;
+                mLineHeight = value;
             }
         }
 
@@ -162,10 +162,7 @@ namespace KCad
 
         protected virtual void OnSelectionChanged(EventArgs e)
         {
-            if (SelectionChanged != null)
-            {
-                SelectionChanged(this, e);
-            }
+            SelectionChanged?.Invoke(this, e);
         }
         #endregion
 
@@ -273,7 +270,7 @@ namespace KCad
         {
             Point p = e.GetPosition(this);
 
-            int idx = (int)(p.Y / mItemHeight);
+            int idx = (int)(p.Y / mLineHeight);
 
             CleanSelection();
 
@@ -321,7 +318,7 @@ namespace KCad
 
         private void RecalcSize()
         {
-            Height = mItemHeight * (double)(mList.Count);
+            Height = mLineHeight * (double)(mList.Count);
 
             if (Scroll != null)
             {
@@ -503,17 +500,17 @@ namespace KCad
             Point tp = default(Point);
             Rect rect = default(Rect);
 
-            long topNumber = (long)offset / (long)mItemHeight;
+            long topNumber = (long)offset / (long)mLineHeight;
 
-            double textOffset = (mItemHeight - mTextSize) / 2.0 - 3;
+            double textOffset = (mLineHeight - mTextSize) / 2.0 - 3;
 
             p.X = 0;
-            p.Y = mItemHeight * topNumber;
+            p.Y = mLineHeight * topNumber;
 
             rect.X = 0;
             rect.Y = p.Y;
             rect.Width = ActualWidth;
-            rect.Height = mItemHeight + 1;
+            rect.Height = mLineHeight + 1;
 
             int n = (int)topNumber;
 
@@ -547,7 +544,7 @@ namespace KCad
 
                 DrawText(dc, item, tp);
 
-                p.Y += mItemHeight;
+                p.Y += mLineHeight;
             }
 
             if (p.Y < rangeY)
@@ -751,7 +748,7 @@ namespace KCad
                 dispHeight = Scroll.ActualHeight;
             }
 
-            int dispCnt = (int)(dispHeight / mItemHeight);
+            int dispCnt = (int)(dispHeight / mLineHeight);
 
             int topIndex = mList.Count - dispCnt;
 
