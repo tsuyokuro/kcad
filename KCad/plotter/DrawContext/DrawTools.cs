@@ -6,11 +6,6 @@ using System.Drawing.Drawing2D;
 
 namespace Plotter
 {
-    using PenHolder = ToolHolder<Pen>;
-    using BrushHolder = ToolHolder<Brush>;
-    //using ColorHolder = ToolHolder<Color>;
-    using FontHolder = ToolHolder<Font>;
-
     public class GLPen
     {
         public Color4 Color;
@@ -20,29 +15,6 @@ namespace Plotter
         {
             Color = color;
             LineWidth = w;
-        }
-    }
-
-    public class ToolHolder<T>
-    {
-        public T ToolObj;
-
-        public ToolHolder(T obj)
-        {
-            ToolObj = obj;
-        }
-
-        public ToolHolder()
-        {
-            ToolObj = default(T);
-        }
-
-        public void Dispose()
-        {
-            if (ToolObj != null)
-            {
-                ((IDisposable)ToolObj).Dispose();
-            }
         }
     }
 
@@ -97,46 +69,47 @@ namespace Plotter
 
     public class DrawTools : IDisposable
     {
-        public const int PEN_DEFAULT = 0;
-        public const int PEN_SELECT_POINT = 1;
-        public const int PEN_CURSOR = 2;
-        public const int PEN_CURSOR2 = 3;
-        public const int PEN_DEFAULT_FIGURE = 4;
-        public const int PEN_TEMP_FIGURE = 5;
-        public const int PEN_POINT_HIGHTLITE = 6;
-        public const int PEN_MATCH_FIGURE = 7;
-        public const int PEN_MATCH_SEG = 8;
-        public const int PEN_LAST_POINT_MARKER = 9;
-        public const int PEN_LAST_POINT_MARKER2 = 10;
-        public const int PEN_AXIS = 11;
-        public const int PEN_ARROW_AXIS = 12;
-        public const int PEN_PAGE_FRAME = 13;
-        public const int PEN_RELATIVE_POINT = 14;
-        public const int PEN_TEST_FIGURE = 15;
-        public const int PEN_GRID = 16;
-        public const int PEN_POINT_HIGHTLITE2 = 17;
-        public const int PEN_FIGURE_HIGHLIGHT = 18;
-        public const int PEN_AXIS2 = 19;
-        public const int PEN_PALE_FIGURE = 20;
-        public const int PEN_MEASURE_FIGURE = 21;
-        public const int PEN_DIMENTION = 22;
-        public const int PEN_BLACK = 23;
-        public const int PEN_MESH_LINE = 24;
-        public const int PEN_TEST = 25;
-        public const int PEN_NURBS_CTRL_LINE = 26;
-        public const int PEN_LINE_SNAP = 27;
-        public const int PEN_DRAG_LINE = 28;
-        public const int PEN_TBL_SIZE = 29;
+        public const int PEN_DEFAULT = 1;
+        public const int PEN_DEFAULT_FIGURE = 2;
 
-        public const int BRUSH_DEFAULT = 0;
-        public const int BRUSH_BACKGROUND = 1;
-        public const int BRUSH_TEXT = 2;
-        public const int BRUSH_TRANSPARENT = 3;
-        public const int BRUSH_TBL_SIZE = 4;
+        public const int PEN_SELECT_POINT = 3;
+        public const int PEN_CURSOR = 4;
+        public const int PEN_CURSOR2 = 5;
+        public const int PEN_TEMP_FIGURE = 6;
+        public const int PEN_POINT_HIGHTLITE = 7;
+        public const int PEN_MATCH_FIGURE = 8;
+        public const int PEN_MATCH_SEG = 9;
+        public const int PEN_LAST_POINT_MARKER = 10;
+        public const int PEN_LAST_POINT_MARKER2 = 11;
+        public const int PEN_AXIS = 12;
+        public const int PEN_ARROW_AXIS = 13;
+        public const int PEN_PAGE_FRAME = 14;
+        public const int PEN_RELATIVE_POINT = 15;
+        public const int PEN_TEST_FIGURE = 16;
+        public const int PEN_GRID = 17;
+        public const int PEN_POINT_HIGHTLITE2 = 18;
+        public const int PEN_FIGURE_HIGHLIGHT = 19;
+        public const int PEN_AXIS2 = 20;
+        public const int PEN_PALE_FIGURE = 21;
+        public const int PEN_MEASURE_FIGURE = 22;
+        public const int PEN_DIMENTION = 23;
+        public const int PEN_BLACK = 24;
+        public const int PEN_MESH_LINE = 25;
+        public const int PEN_TEST = 26;
+        public const int PEN_NURBS_CTRL_LINE = 27;
+        public const int PEN_LINE_SNAP = 28;
+        public const int PEN_DRAG_LINE = 29;
+        public const int PEN_TBL_SIZE = 30;
 
-        public const int FONT_DEFAULT = 0;
-        public const int FONT_SMALL = 1;
-        public const int FONT_TBL_SIZE = 2;
+        public const int BRUSH_DEFAULT = 1;
+        public const int BRUSH_BACKGROUND = 2;
+        public const int BRUSH_TEXT = 3;
+        public const int BRUSH_TRANSPARENT = 4;
+        public const int BRUSH_TBL_SIZE = 5;
+
+        public const int FONT_DEFAULT = 1;
+        public const int FONT_SMALL = 2;
+        public const int FONT_TBL_SIZE = 3;
 
         public enum ToolsType
         {
@@ -147,22 +120,22 @@ namespace Plotter
 
 
         public Color[] PenColorTbl;
-        PenHolder[] PenTbl = null;
+        Pen[] PenTbl = null;
 
         public Color[] BrushColorTbl;
-        BrushHolder[] BrushTbl = null;
+        Brush[] BrushTbl = null;
 
 
-        FontHolder[] FontTbl = null;
+        Font[] FontTbl = null;
 
         GLPen[] GLPenTbl = null;
         Color4[] GLColorTbl = null;
 
         private void AllocGDITbl()
         {
-            PenTbl = new PenHolder[PEN_TBL_SIZE];
-            BrushTbl = new BrushHolder[BRUSH_TBL_SIZE];
-            FontTbl = new FontHolder[FONT_TBL_SIZE];
+            PenTbl = new Pen[PEN_TBL_SIZE];
+            BrushTbl = new Brush[BRUSH_TBL_SIZE];
+            FontTbl = new Font[FONT_TBL_SIZE];
         }
 
         private void AllocGLTbl()
@@ -217,16 +190,16 @@ namespace Plotter
 
             for (int i=0; i<PEN_TBL_SIZE; i++)
             {
-                PenTbl[i] = new PenHolder(new Pen(DarkColors.PenColorTbl[i]));
+                PenTbl[i] = new Pen(DarkColors.PenColorTbl[i]);
             }
 
             for (int i = 0; i < BRUSH_TBL_SIZE; i++)
             {
-                BrushTbl[i] = new BrushHolder(new SolidBrush(DarkColors.BrushColorTbl[i]));
+                BrushTbl[i] = new SolidBrush(DarkColors.BrushColorTbl[i]);
             }
 
-            FontTbl[FONT_DEFAULT]           = new FontHolder(new Font("MS UI Gothic", 9));
-            FontTbl[FONT_SMALL]             = new FontHolder(new Font("MS UI Gothic", 9));
+            FontTbl[FONT_DEFAULT] = new Font("MS UI Gothic", 9);
+            FontTbl[FONT_SMALL]   = new Font("MS UI Gothic", 9);
         }
 
         private void SetupPrinterSet()
@@ -235,21 +208,21 @@ namespace Plotter
 
             for (int i = 0; i < PEN_TBL_SIZE; i++)
             {
-                PenTbl[i] = new PenHolder(null);
+                PenTbl[i] = null;
             }
 
-            PenTbl[PEN_DEFAULT]             = new PenHolder(new Pen(Brushes.Black, 0));
-            PenTbl[PEN_DEFAULT_FIGURE]      = new PenHolder(new Pen(Brushes.Black, 0));
-            PenTbl[PEN_PALE_FIGURE]         = new PenHolder(new Pen(Brushes.Black, 0));
-            PenTbl[PEN_DIMENTION]           = new PenHolder(new Pen(Brushes.Black, 0));
-            PenTbl[PEN_MESH_LINE]           = new PenHolder(new Pen(Brushes.LightGray, 0));
+            PenTbl[PEN_DEFAULT]             = new Pen(Color.Black, 1);
+            PenTbl[PEN_DEFAULT_FIGURE]      = new Pen(Color.Black, 1);
+            PenTbl[PEN_PALE_FIGURE]         = new Pen(Color.Black, 1);
+            PenTbl[PEN_DIMENTION]           = new Pen(Color.Black, 1);
+            PenTbl[PEN_MESH_LINE]           = new Pen(Color.LightGray, 1);
 
-            BrushTbl[BRUSH_DEFAULT]         = new BrushHolder(new SolidBrush(Color.Black));
-            BrushTbl[BRUSH_BACKGROUND]      = new BrushHolder(null);
-            BrushTbl[BRUSH_TEXT]            = new BrushHolder(new SolidBrush(Color.Black));
+            BrushTbl[BRUSH_DEFAULT]         = new SolidBrush(Color.Black);
+            BrushTbl[BRUSH_BACKGROUND]      = null;
+            BrushTbl[BRUSH_TEXT]            = new SolidBrush(Color.Black);
 
-            FontTbl[FONT_DEFAULT]           = new FontHolder(new Font("MS UI Gothic", 9));
-            FontTbl[FONT_SMALL]             = new FontHolder(new Font("MS UI Gothic", 9));
+            FontTbl[FONT_DEFAULT]           = new Font("MS UI Gothic", 9);
+            FontTbl[FONT_SMALL]             = new Font("MS UI Gothic", 9);
         }
 
         private void SetupDarkSetGL()
@@ -273,11 +246,11 @@ namespace Plotter
         {
             if (PenTbl != null)
             {
-                foreach (ToolHolder<Pen> penHolder in PenTbl)
+                foreach (Pen pen in PenTbl)
                 {
-                    if (penHolder != null)
+                    if (pen != null)
                     {
-                        penHolder.Dispose();
+                        pen.Dispose();
                     }
                 }
 
@@ -286,11 +259,11 @@ namespace Plotter
 
             if (BrushTbl != null)
             {
-                foreach (ToolHolder<Brush> brushHolder in BrushTbl)
+                foreach (Brush brush in BrushTbl)
                 {
-                    if (brushHolder != null)
+                    if (brush != null)
                     {
-                        brushHolder.Dispose();
+                        brush.Dispose();
                     }
                 }
 
@@ -299,11 +272,11 @@ namespace Plotter
 
             if (FontTbl != null)
             {
-                foreach (ToolHolder<Font> fontHolder in FontTbl)
+                foreach (Font font in FontTbl)
                 {
-                    if (fontHolder != null)
+                    if (font != null)
                     {
-                        fontHolder.Dispose();
+                        font.Dispose();
                     }
                 }
 
@@ -318,7 +291,7 @@ namespace Plotter
 
         public Pen pen(int id)
         {
-            return PenTbl[id].ToolObj;
+            return PenTbl[id];
         }
 
         public Color PenColor(int id)
@@ -328,7 +301,7 @@ namespace Plotter
 
         public Brush brush(int id)
         {
-            return BrushTbl[id].ToolObj;
+            return BrushTbl[id];
         }
 
         public Color BrushColor(int id)
@@ -338,7 +311,7 @@ namespace Plotter
 
         public Font font(int id)
         {
-            return FontTbl[id].ToolObj;
+            return FontTbl[id];
         }
 
         public GLPen glpen(int id)
