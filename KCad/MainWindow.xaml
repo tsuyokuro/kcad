@@ -127,7 +127,7 @@
             Height="26"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
-            Background="{StaticResource BaseColor}">
+            Background="{StaticResource CaptionColor}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10*" />
@@ -155,7 +155,7 @@
                 Margin="0,0,4,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Background="{StaticResource BaseColor}"
+                Background="{StaticResource CaptionColor}"
                 Orientation="Horizontal">
 
                 <Button
