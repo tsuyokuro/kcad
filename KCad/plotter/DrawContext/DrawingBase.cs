@@ -15,15 +15,11 @@ namespace Plotter
         {
         }
 
-        public virtual void Draw(CadLayer layer, int pen = DrawTools.PEN_DEFAULT_FIGURE)
-        {
-        }
-
         public virtual void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
         }
 
-        public virtual void DrawSelected(CadLayer layer)
+        public virtual void DrawSelected(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
         }
 

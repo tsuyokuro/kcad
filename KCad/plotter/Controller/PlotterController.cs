@@ -344,7 +344,7 @@ namespace Plotter.Controller
                         pen = DrawTools.PEN_PALE_FIGURE;
                     }
 
-                    dc.Drawing.Draw(layer, pen);
+                    dc.Drawing.Draw(layer.FigureList, pen);
                 }
             }
 
@@ -373,7 +373,7 @@ namespace Plotter.Controller
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                dc.Drawing.DrawSelected(layer);
+                dc.Drawing.DrawSelected(layer.FigureList);
             }
         }
 
@@ -429,7 +429,7 @@ namespace Plotter.Controller
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                dc.Drawing.Draw(layer);
+                dc.Drawing.Draw(layer.FigureList);
             }
         }
         #endregion

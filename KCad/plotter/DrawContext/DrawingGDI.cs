@@ -32,29 +32,6 @@ namespace Plotter
                 0, 0, (int)DC.ViewWidth, (int)DC.ViewHeight);
         }
 
-        public override void Draw(CadLayer layer, int pen = DrawTools.PEN_DEFAULT_FIGURE)
-        {
-            #if USE_LONG_TERM_LOCK_BITS
-                DC.LockBits();
-            #endif
-
-            layer.ForEachFig(fig =>
-            {
-                if (fig.Current)
-                {
-                    fig.Draw(DC, DrawTools.PEN_FIGURE_HIGHLIGHT);
-                }
-                else
-                {
-                    fig.Draw(DC, pen);
-                }
-            });
-
-            #if USE_LONG_TERM_LOCK_BITS
-                DC.UnlockBits();
-            #endif
-        }
-
         public override void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
             #if USE_LONG_TERM_LOCK_BITS
@@ -81,12 +58,23 @@ namespace Plotter
             #endif
         }
 
-        public override void DrawSelected(CadLayer layer)
+        public override void DrawSelected(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
-            layer.ForEachFig(fig =>
+#if USE_LONG_TERM_LOCK_BITS
+                DC.LockBits();
+#endif
+
+            foreach (CadFigure fig in list)
             {
-                fig.DrawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
-            });
+                fig.ForEachFig(a =>
+                {
+                    a.DrawSelected(DC, pen);
+                });
+            }
+
+#if USE_LONG_TERM_LOCK_BITS
+                DC.UnlockBits();
+#endif
         }
 
         #region "Draw base"
