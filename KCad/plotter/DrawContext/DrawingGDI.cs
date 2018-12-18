@@ -426,7 +426,7 @@ namespace Plotter
         #endregion
 
         #region "Draw marker"
-        public override void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHTLITE)
+        public override void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHLITE)
         {
             CadVector pp = DC.WorldPointToDevPoint(pt);
 

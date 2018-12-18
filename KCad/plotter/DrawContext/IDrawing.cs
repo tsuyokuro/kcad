@@ -24,7 +24,7 @@ namespace Plotter
 
         void DrawGrid(Gridding grid);
 
-        void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHTLITE);
+        void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHLITE);
 
         void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT);
 

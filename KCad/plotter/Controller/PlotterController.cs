@@ -411,7 +411,7 @@ namespace Plotter.Controller
             if (CursorLocked)
             {
                 dc.Drawing.DrawCrossScrn(
-                    DrawTools.PEN_POINT_HIGHTLITE,
+                    DrawTools.PEN_POINT_HIGHLITE,
                     CrossCursor.Pos,
                     ControllerConst.CURSOR_LOCK_MARK_SIZE);
             }

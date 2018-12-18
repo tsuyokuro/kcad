@@ -2,7 +2,6 @@
 using OpenTK.Graphics;
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 
 namespace Plotter
 {
@@ -33,7 +32,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_CURSOR2] = Color.FromArgb(128, 255, 128);
             PenColorTbl[DrawTools.PEN_DEFAULT_FIGURE] = Color.White;
             PenColorTbl[DrawTools.PEN_TEMP_FIGURE] = Color.CadetBlue;
-            PenColorTbl[DrawTools.PEN_POINT_HIGHTLITE] = Color.Orange;
+            PenColorTbl[DrawTools.PEN_POINT_HIGHLITE] = Color.Orange;
             PenColorTbl[DrawTools.PEN_MATCH_FIGURE] = Color.Red;
             PenColorTbl[DrawTools.PEN_MATCH_SEG] = Color.Green;
             PenColorTbl[DrawTools.PEN_LAST_POINT_MARKER] = Color.CornflowerBlue;
@@ -76,7 +75,7 @@ namespace Plotter
         public const int PEN_CURSOR = 4;
         public const int PEN_CURSOR2 = 5;
         public const int PEN_TEMP_FIGURE = 6;
-        public const int PEN_POINT_HIGHTLITE = 7;
+        public const int PEN_POINT_HIGHLITE = 7;
         public const int PEN_MATCH_FIGURE = 8;
         public const int PEN_MATCH_SEG = 9;
         public const int PEN_LAST_POINT_MARKER = 10;
