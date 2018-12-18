@@ -644,7 +644,7 @@ namespace Plotter.Controller
             {
                 tdc.Drawing.Clear(DrawTools.BRUSH_TRANSPARENT);
 
-                tdc.graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                tdc.GdiGraphics.SmoothingMode = SmoothingMode.AntiAlias;
 
                 foreach (CadFigure fig in figList)
                 {

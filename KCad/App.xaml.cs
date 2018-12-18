@@ -9,6 +9,7 @@
  *
  * 
  * Visual studio 2017 15.8.4では、Windowsアプリケーションのまま、普通にコンソールに出力される
+ * Visual studio 2017 15.9.4では、またこの手順が必要になった
  **/
 
 #define USE_CONSOLE

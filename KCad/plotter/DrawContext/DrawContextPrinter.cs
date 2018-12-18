@@ -12,7 +12,7 @@ namespace Plotter
     {
         public DrawContextPrinter(DrawContext currentDC, Graphics g, CadSize2D pageSize, CadSize2D deviceSize)
         {
-            graphics = g;
+            GdiGraphics = g;
             SetupTools(DrawTools.ToolsType.PRINTER);
 
             UnitPerMilli = deviceSize.Width / pageSize.Width;

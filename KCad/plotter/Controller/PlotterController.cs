@@ -344,7 +344,7 @@ namespace Plotter.Controller
                         pen = DrawTools.PEN_PALE_FIGURE;
                     }
 
-                    dc.Drawing.Draw(layer, pen);
+                    dc.Drawing.Draw(layer.FigureList, pen);
                 }
             }
 
@@ -373,7 +373,7 @@ namespace Plotter.Controller
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                dc.Drawing.DrawSelected(layer);
+                dc.Drawing.DrawSelected(layer.FigureList);
             }
         }
 
@@ -411,7 +411,7 @@ namespace Plotter.Controller
             if (CursorLocked)
             {
                 dc.Drawing.DrawCrossScrn(
-                    DrawTools.PEN_POINT_HIGHTLITE,
+                    DrawTools.PEN_POINT_HIGHLITE,
                     CrossCursor.Pos,
                     ControllerConst.CURSOR_LOCK_MARK_SIZE);
             }
@@ -429,7 +429,7 @@ namespace Plotter.Controller
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                dc.Drawing.Draw(layer);
+                dc.Drawing.Draw(layer.FigureList);
             }
         }
         #endregion

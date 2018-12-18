@@ -32,29 +32,6 @@ namespace Plotter
                 0, 0, (int)DC.ViewWidth, (int)DC.ViewHeight);
         }
 
-        public override void Draw(CadLayer layer, int pen = DrawTools.PEN_DEFAULT_FIGURE)
-        {
-            #if USE_LONG_TERM_LOCK_BITS
-                DC.LockBits();
-            #endif
-
-            layer.ForEachFig(fig =>
-            {
-                if (fig.Current)
-                {
-                    fig.Draw(DC, DrawTools.PEN_FIGURE_HIGHLIGHT);
-                }
-                else
-                {
-                    fig.Draw(DC, pen);
-                }
-            });
-
-            #if USE_LONG_TERM_LOCK_BITS
-                DC.UnlockBits();
-            #endif
-        }
-
         public override void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
             #if USE_LONG_TERM_LOCK_BITS
@@ -81,12 +58,23 @@ namespace Plotter
             #endif
         }
 
-        public override void DrawSelected(CadLayer layer)
+        public override void DrawSelected(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
-            layer.ForEachFig(fig =>
+#if USE_LONG_TERM_LOCK_BITS
+                DC.LockBits();
+#endif
+
+            foreach (CadFigure fig in list)
             {
-                fig.DrawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
-            });
+                fig.ForEachFig(a =>
+                {
+                    a.DrawSelected(DC, pen);
+                });
+            }
+
+#if USE_LONG_TERM_LOCK_BITS
+                DC.UnlockBits();
+#endif
         }
 
         #region "Draw base"
@@ -426,7 +414,7 @@ namespace Plotter
         #endregion
 
         #region "Draw marker"
-        public override void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHTLITE)
+        public override void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHLITE)
         {
             CadVector pp = DC.WorldPointToDevPoint(pt);
 
@@ -529,7 +517,6 @@ namespace Plotter
 
         public override void DrawLine(int pen, CadVector a, CadVector b)
         {
-            if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
 
             CadVector pa = DC.WorldPointToDevPoint(a);
@@ -539,7 +526,7 @@ namespace Plotter
 
             if (bd == null)
             {
-                DC.graphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
+                DC.GdiGraphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
             }
             else
             {
@@ -554,11 +541,6 @@ namespace Plotter
 
         public override void DrawDot(int pen, CadVector p)
         {
-            if (DC.graphics == null)
-            {
-                return;
-            }
- 
             CadVector p0 = DC.WorldPointToDevPoint(p);
             //CadVector p1 = p0;
             //p0.x = (int)p0.x;
@@ -608,7 +590,6 @@ namespace Plotter
 
         public override void DrawTextScrn(int font, int brush, CadVector a, CadVector direction, string s)
         {
-            if (DC.graphics == null) return;
             if (DC.Brush(brush) == null) return;
             if (DC.Font(font) == null) return;
 
@@ -627,13 +608,13 @@ namespace Plotter
                 DC.UnlockBits();
             }
 
-            DC.graphics.TranslateTransform((int)a.x, (int)a.y);
+            DC.GdiGraphics.TranslateTransform((int)a.x, (int)a.y);
 
-            DC.graphics.RotateTransform((float)angle);
+            DC.GdiGraphics.RotateTransform((float)angle);
 
-            DC.graphics.DrawString(s, DC.Font(font), DC.Brush(brush), 0, 0);
+            DC.GdiGraphics.DrawString(s, DC.Font(font), DC.Brush(brush), 0, 0);
 
-            DC.graphics.ResetTransform();
+            DC.GdiGraphics.ResetTransform();
 
 
             if (bd != null)
@@ -649,7 +630,7 @@ namespace Plotter
                 return CadVector.Zero;
             }
 
-            SizeF size = DC.graphics.MeasureString(s, DC.Font(font));
+            SizeF size = DC.GdiGraphics.MeasureString(s, DC.Font(font));
 
             CadVector v = CadVector.Create(size.Width, size.Height, 0);
 
@@ -678,23 +659,20 @@ namespace Plotter
 
         private void DrawLineScrn(int pen, CadVector a, CadVector b)
         {
-            if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
 
-            DC.graphics.DrawLine(DC.Pen(pen), (int)a.x, (int)a.y, (int)b.x, (int)b.y);
+            DC.GdiGraphics.DrawLine(DC.Pen(pen), (int)a.x, (int)a.y, (int)b.x, (int)b.y);
         }
 
         private void DrawLineScrn(int pen, double x1, double y1, double x2, double y2)
         {
-            if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
 
-            DC.graphics.DrawLine(DC.Pen(pen), (int)x1, (int)y1, (int)x2, (int)y2);
+            DC.GdiGraphics.DrawLine(DC.Pen(pen), (int)x1, (int)y1, (int)x2, (int)y2);
         }
 
         private void DrawRectangleScrn(int pen, double x0, double y0, double x1, double y1)
         {
-            if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
 
             int lx = (int)x0;
@@ -718,12 +696,11 @@ namespace Plotter
             int dx = rx - lx;
             int dy = by - ty;
 
-            DC.graphics.DrawRectangle(DC.Pen(pen), lx, ty, dx, dy);
+            DC.GdiGraphics.DrawRectangle(DC.Pen(pen), lx, ty, dx, dy);
         }
 
         private void DrawCircleScrn(int pen, CadVector cp, CadVector p1)
         {
-            if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
 
             double r = CadUtil.SegNorm(cp, p1);
@@ -732,16 +709,14 @@ namespace Plotter
 
         private void DrawCircleScrn(int pen, CadVector cp, double r)
         {
-            if (DC.graphics == null) return;
             if (DC.Pen(pen) == null) return;
 
-            DC.graphics.DrawEllipse(
+            DC.GdiGraphics.DrawEllipse(
                 DC.Pen(pen), (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
         }
 
         private void FillRectangleScrn(int brush, double x0, double y0, double x1, double y1)
         {
-            if (DC.graphics == null) return;
             if (DC.Brush(brush) == null) return;
 
             int lx = (int)x0;
@@ -765,7 +740,7 @@ namespace Plotter
             int dx = rx - lx;
             int dy = by - ty;
 
-            DC.graphics.FillRectangle(DC.Brush(brush), lx, ty, dx, dy);
+            DC.GdiGraphics.FillRectangle(DC.Brush(brush), lx, ty, dx, dy);
         }
 
         private void DrawAxis2()
