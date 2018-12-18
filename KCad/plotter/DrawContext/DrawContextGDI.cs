@@ -1,5 +1,4 @@
 ﻿using OpenTK;
-using OpenTK.Graphics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using CadDataTypes;
@@ -11,18 +10,18 @@ namespace Plotter
     {
         protected Control Wnd;
 
-        protected Graphics mGraphics = null;
+        private Graphics mGdiGraphics = null;
 
         private Bitmap mImage = null;
 
         private BitmapData LockedBitmapData = null;
 
-        public Rectangle Rect = default(Rectangle);
+        private Rectangle Rect = default(Rectangle);
 
-        public Graphics graphics
+        public Graphics GdiGraphics
         {
-            set { mGraphics = value; }
-            get { return mGraphics; }
+            protected set { mGdiGraphics = value; }
+            get { return mGdiGraphics; }
         }
 
         public Bitmap Image
@@ -47,6 +46,8 @@ namespace Plotter
         {
             Wnd = control;
 
+            SetViewSize(8, 1);  // Create dummy Image and Graphics
+
             SetUnitPerMilli(4); // 4 pix = 1mm
             mViewOrg.x = 0;
             mViewOrg.y = 0;
@@ -56,7 +57,6 @@ namespace Plotter
 
             mDrawing = new DrawingGDI(this);
         }
-
 
         public override void SetViewSize(double w, double h)
         {
@@ -72,7 +72,7 @@ namespace Plotter
 
 
             mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
-            mGraphics = Graphics.FromImage(mImage);
+            mGdiGraphics = Graphics.FromImage(mImage);
 
             Rect.X = 0;
             Rect.Y = 0;
@@ -82,10 +82,10 @@ namespace Plotter
 
         private void DisposeGraphics()
         {
-            if (mGraphics != null)
+            if (mGdiGraphics != null)
             {
-                mGraphics.Dispose();
-                mGraphics = null;
+                mGdiGraphics.Dispose();
+                mGdiGraphics = null;
             }
 
             if (mImage != null)

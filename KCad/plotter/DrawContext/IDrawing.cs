@@ -12,11 +12,9 @@ namespace Plotter
     {
         void Clear(int brush = DrawTools.BRUSH_BACKGROUND);
 
-        void Draw(CadLayer layer, int pen = DrawTools.PEN_DEFAULT_FIGURE);
-
         void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE);
 
-        void DrawSelected(CadLayer layer);
+        void DrawSelected(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE);
 
         void DrawAxis();
 
@@ -24,7 +22,7 @@ namespace Plotter
 
         void DrawGrid(Gridding grid);
 
-        void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHTLITE);
+        void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHLITE);
 
         void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT);
 

@@ -15,15 +15,11 @@ namespace Plotter
         {
         }
 
-        public virtual void Draw(CadLayer layer, int pen = DrawTools.PEN_DEFAULT_FIGURE)
-        {
-        }
-
         public virtual void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
         }
 
-        public virtual void DrawSelected(CadLayer layer)
+        public virtual void DrawSelected(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
         }
 
@@ -39,7 +35,7 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawHighlightPoint(CadVector pt, int pen=DrawTools.PEN_POINT_HIGHTLITE)
+        public virtual void DrawHighlightPoint(CadVector pt, int pen=DrawTools.PEN_POINT_HIGHLITE)
         {
         }
 

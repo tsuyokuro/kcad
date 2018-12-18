@@ -5,7 +5,6 @@
 using System.Collections.Generic;
 
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using FTGL;
 using System;
@@ -43,23 +42,6 @@ namespace Plotter
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
-        public override void Draw(CadLayer layer, int pen = DrawTools.PEN_DEFAULT_FIGURE)
-        {
-            Draw(layer.FigureList, pen);
-
-            layer.ForEachFig(fig =>
-            {
-                if (fig.Current)
-                {
-                    fig.Draw(DC, DrawTools.PEN_FIGURE_HIGHLIGHT);
-                }
-                else
-                {
-                    fig.Draw(DC, pen);
-                }
-            });
-        }
-
         public override void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
         {
             foreach (CadFigure fig in list)
@@ -76,6 +58,24 @@ namespace Plotter
                     }
                 });
             }
+        }
+
+        public override void DrawSelected(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
+        {
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
+
+            Start2D();
+
+            foreach (CadFigure fig in list)
+            {
+                fig.ForEachFig(a =>
+                {
+                    a.DrawSelected(DC, pen);
+                });
+            }
+
+            End2D();
         }
 
         public override void DrawLine(int pen, CadVector a, CadVector b)
@@ -423,21 +423,6 @@ namespace Plotter
         private void End2D()
         {
             PopMatrixes();
-        }
-
-        public override void DrawSelected(CadLayer layer)
-        {
-            GL.Disable(EnableCap.Lighting);
-            GL.Disable(EnableCap.Light0);
-
-            Start2D();
-
-            layer.ForEachFig(fig =>
-            {
-                fig.DrawSelected(DC, DrawTools.PEN_DEFAULT_FIGURE);
-            });
-
-            End2D();
         }
 
         public override void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT)

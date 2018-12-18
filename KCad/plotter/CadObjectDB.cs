@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Plotter
@@ -361,36 +360,4 @@ namespace Plotter
 
         #endregion
     }
-
-    //public static class DUtil
-    //{
-    //    public static Dictionary<uint, T> ListToDict<T>(List<T> list)
-    //    {
-    //        Dictionary<uint, T> dict = new Dictionary<uint, T>();
-
-    //        foreach (T item in list)
-    //        {
-    //            dynamic d = item;
-    //            dict.Add(d.ID, item);
-    //        }
-
-    //        return dict;
-    //    }
-
-    //    public static List<T> IdListToObjList<T>(List<uint> list, Dictionary<uint, T> dict)
-    //    {
-    //        var objList = new List<T>();
-
-    //        foreach (uint id in list)
-    //        {
-    //            T obj = dict[id];
-
-    //            if (obj == null) continue;
-
-    //            objList.Add(obj);
-    //        }
-
-    //        return objList;
-    //    }
-    //}
 }
