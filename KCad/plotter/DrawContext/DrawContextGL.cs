@@ -54,7 +54,7 @@ namespace Plotter
 
             InitCamera(ProjectionType.STANDERD);
 
-            mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
+            mViewMatrix.GLMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
             mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
 
             /*
@@ -95,53 +95,53 @@ namespace Plotter
                     // 望遠
                     a = 2.0;
 
-                    Eye = Vector3d.Zero;
-                    Eye.X = 0.0;
-                    Eye.Y = 0.0;
-                    Eye.Z = ez / a;
+                    mEye = Vector3d.Zero;
+                    mEye.X = 0.0;
+                    mEye.Y = 0.0;
+                    mEye.Z = ez / a;
 
-                    FovY = Math.PI / 4;
+                    mFovY = Math.PI / 4;
 
-                    ProjectionNear = near / a;
-                    ProjectionFar = far / a;
+                    mProjectionNear = near / a;
+                    mProjectionFar = far / a;
 
-                    LookAt = Vector3d.Zero;
-                    UpVector = Vector3d.UnitY;
+                    mLookAt = Vector3d.Zero;
+                    mUpVector = Vector3d.UnitY;
 
                     break;
                 case ProjectionType.STANDERD:
                     a = 4.0;
 
-                    Eye = Vector3d.Zero;
-                    Eye.X = 0.0;
-                    Eye.Y = 0.0;
-                    Eye.Z = ez / a;
+                    mEye = Vector3d.Zero;
+                    mEye.X = 0.0;
+                    mEye.Y = 0.0;
+                    mEye.Z = ez / a;
 
-                    FovY = Math.PI / 3;
+                    mFovY = Math.PI / 3;
 
-                    ProjectionNear = near / a;
-                    ProjectionFar = far / a;
+                    mProjectionNear = near / a;
+                    mProjectionFar = far / a;
 
-                    LookAt = Vector3d.Zero;
-                    UpVector = Vector3d.UnitY;
+                    mLookAt = Vector3d.Zero;
+                    mUpVector = Vector3d.UnitY;
 
                     break;
 
                 case ProjectionType.WIDE_ANGLE:
                     a = 4;
 
-                    Eye = Vector3d.Zero;
-                    Eye.X = 0.0;
-                    Eye.Y = 0.0;
-                    Eye.Z = ez / a;
+                    mEye = Vector3d.Zero;
+                    mEye.X = 0.0;
+                    mEye.Y = 0.0;
+                    mEye.Z = ez / a;
 
-                    FovY = Math.PI / 2;
+                    mFovY = Math.PI / 2;
 
-                    ProjectionNear = near / a;
-                    ProjectionFar = far / a;
+                    mProjectionNear = near / a;
+                    mProjectionFar = far / a;
 
-                    LookAt = Vector3d.Zero;
-                    UpVector = Vector3d.UnitY;
+                    mLookAt = Vector3d.Zero;
+                    mUpVector = Vector3d.UnitY;
 
                     break;
             }
@@ -230,7 +230,7 @@ namespace Plotter
             pt.x = pt.x / DeviceScaleX;
             pt.y = pt.y / DeviceScaleY;
 
-            Vector3d epv = pt.vector - Eye;
+            Vector3d epv = pt.vector - mEye;
 
             Vector4d wv;
 
@@ -310,10 +310,10 @@ namespace Plotter
             double aspect = mViewWidth / mViewHeight;
 
             mProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
-                                            FovY,
+                                            mFovY,
                                             aspect,
-                                            ProjectionNear,
-                                            ProjectionFar
+                                            mProjectionNear,
+                                            mProjectionFar
                                             );
 
             mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
@@ -321,7 +321,7 @@ namespace Plotter
 
         private void RecalcViewTransMatrix()
         {
-            mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
+            mViewMatrix.GLMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
             mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
         }
 
@@ -340,20 +340,20 @@ namespace Plotter
 
             r = q.Conjugate();
 
-            qp = CadQuaternion.FromVector(Eye);
+            qp = CadQuaternion.FromVector(mEye);
             qp = r * qp;
             qp = qp * q;
-            Eye = qp.ToVector3d();
+            mEye = qp.ToVector3d();
 
-            qp = CadQuaternion.FromVector(UpVector);
+            qp = CadQuaternion.FromVector(mUpVector);
             qp = r * qp;
             qp = qp * q;
-            UpVector = qp.ToVector3d();
+            mUpVector = qp.ToVector3d();
 
-            Vector3d ev = LookAt - Eye;
+            Vector3d ev = mLookAt - mEye;
 
             CadVector a = CadVector.Create(ev);
-            CadVector b = CadVector.Create(UpVector);
+            CadVector b = CadVector.Create(mUpVector);
 
             CadVector axis = CadMath.Normal(a, b);
 
@@ -364,16 +364,16 @@ namespace Plotter
 
                 r = q.Conjugate();
 
-                qp = CadQuaternion.FromVector(Eye);
+                qp = CadQuaternion.FromVector(mEye);
                 qp = r * qp;
                 qp = qp * q;
 
-                Eye = qp.ToVector3d();
+                mEye = qp.ToVector3d();
 
-                qp = CadQuaternion.FromVector(UpVector);
+                qp = CadQuaternion.FromVector(mUpVector);
                 qp = r * qp;
                 qp = qp * q;
-                UpVector = qp.ToVector3d();
+                mUpVector = qp.ToVector3d();
             }
 
             RecalcViewTransMatrix();
@@ -387,14 +387,14 @@ namespace Plotter
 
             if (withLookAt)
             {
-                Eye += dv;
-                LookAt += dv;                
+                mEye += dv;
+                mLookAt += dv;                
             }
             else
             {
-                Vector3d eye = Eye + dv;
+                Vector3d eye = mEye + dv;
 
-                Vector3d viewDir = LookAt - eye;
+                Vector3d viewDir = mLookAt - eye;
 
                 viewDir.Normalize();
 
@@ -403,7 +403,7 @@ namespace Plotter
                     return;
                 }
 
-                Eye += dv;
+                mEye += dv;
             }
 
             RecalcViewTransMatrix();

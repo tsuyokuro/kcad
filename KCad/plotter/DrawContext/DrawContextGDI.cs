@@ -48,7 +48,7 @@ namespace Plotter
 
             SetViewSize(8, 1);  // Create dummy Image and Graphics
 
-            SetUnitPerMilli(4); // 4 pix = 1mm
+            mUnitPerMilli = 4; // 4 pix = 1mm
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
@@ -125,8 +125,8 @@ namespace Plotter
 
             CadVector p = default(CadVector);
 
-            p.x = ptv.X * (UnitPerMilli * DeviceScaleX);
-            p.y = ptv.Y * (UnitPerMilli * DeviceScaleY);
+            p.x = ptv.X * (mUnitPerMilli * DeviceScaleX);
+            p.y = ptv.Y * (mUnitPerMilli * DeviceScaleY);
             //p.z = ptv.Z * UnitPerMilli;
             p.z = 0;
 
@@ -136,8 +136,8 @@ namespace Plotter
         public override CadVector DevVectorToWorldVector(CadVector pt)
         {
             Vector4d wv = default(Vector4d);
-            wv.X = pt.x / (UnitPerMilli * DeviceScaleX);
-            wv.Y = pt.y / (UnitPerMilli * DeviceScaleY);
+            wv.X = pt.x / (mUnitPerMilli * DeviceScaleX);
+            wv.Y = pt.y / (mUnitPerMilli * DeviceScaleY);
             //wv.Z = pt.z / UnitPerMilli;
             wv.Z = pt.z;
 

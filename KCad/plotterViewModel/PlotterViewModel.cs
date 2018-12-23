@@ -1151,7 +1151,7 @@ namespace Plotter
 
                 case ViewModes.FREE:
                     PlotterViewGL1.Size = PlotterView1.Size;
-                    PlotterViewGL1.DrawContext.SetUnitPerMilli(PlotterView1.DrawContext.UnitPerMilli);
+                    PlotterViewGL1.DrawContext.UnitPerMilli = PlotterView1.DrawContext.UnitPerMilli;
                     SetView(PlotterViewGL1);
                     Redraw();
                     break;

@@ -1493,6 +1493,19 @@ namespace Plotter
             return v.ToString("f2");
         }
 
+        // 1inchは何ミリ?
+        public const double MILLI_PER_INCH = 25.4;
+
+        public double MilliToInch(double mm)
+        {
+            return mm / MILLI_PER_INCH;
+        }
+
+        public double InchToMilli(double inchi)
+        {
+            return inchi * MILLI_PER_INCH;
+        }
+
         public static void Dump(Vector4d v, string prefix)
         {
             DOut.Begin();

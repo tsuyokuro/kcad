@@ -37,6 +37,9 @@ namespace Plotter
 
     public class PaperPageSize
     {
+        // 1inchは何ミリ?
+        public const double MILLI_PER_INCH = 25.4;
+
         // デフォルト A4縦
         public double Width = 210.0;
         public double Height = 297.0;
@@ -67,10 +70,14 @@ namespace Plotter
             // PageSettingsは、1/100 Inch単位で設定されているのでmmに変換
 
             Width =
-                Math.Round(settings.Bounds.Width * 25.4 / 100.0, MidpointRounding.AwayFromZero);
+                Math.Round(
+                        settings.Bounds.Width * MILLI_PER_INCH / 100.0,
+                        MidpointRounding.AwayFromZero);
 
             Height =
-                Math.Round(settings.Bounds.Height * 25.4 / 100.0, MidpointRounding.AwayFromZero);
+                Math.Round(
+                        settings.Bounds.Height * MILLI_PER_INCH / 100.0,
+                        MidpointRounding.AwayFromZero);
         }
 
         public bool IsLandscape()
@@ -94,16 +101,6 @@ namespace Plotter
             }
 
             return null;
-        }
-
-        public double MilliToInch(double mm)
-        {
-            return mm / 25.4;
-        }
-
-        public double InchToMilli(double inchi)
-        {
-            return inchi * 25.4;
         }
     }
 }

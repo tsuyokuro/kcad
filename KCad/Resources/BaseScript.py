@@ -11,14 +11,14 @@ import CadDataTypes.VectorList as VectorList
 def puts(s):
     SE.PutMsg(s)
 
-#[AC] rect(w=10, h=10, p="xy")
-def rect(w=10, h=10, p="xy"):
-    SE.Rect(w, h, p)
+#[AC] rect(w=10, h=10)
+def rect(w=10, h=10):
+    SE.Rect(w, h)
     SE.UpdateTV();
 
-#[AC] rectAt(pv=getldp(), w=10, h=10, p="xy")
-def rectAt(pv, w=10, h=10, p="xy"):
-    SE.RectAt(pv, w, h, p)
+#[AC] rectAt(pv=getldp(), w=10, h=10)
+def rectAt(pv, w=10, h=10):
+    SE.RectAt(pv, w, h)
     SE.UpdateTV();
 
 #[AC] area()
