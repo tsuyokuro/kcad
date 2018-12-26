@@ -10,26 +10,19 @@ namespace Plotter
     {
         protected Control Wnd;
 
-        private Graphics mGdiGraphics = null;
-
-        private Bitmap mImage = null;
-
         private BitmapData LockedBitmapData = null;
 
-        private Rectangle Rect = default(Rectangle);
-
+        private Graphics mGdiGraphics = null;
         public Graphics GdiGraphics
         {
-            protected set { mGdiGraphics = value; }
-            get { return mGdiGraphics; }
+            protected set => mGdiGraphics = value;
+            get => mGdiGraphics;
         }
 
+        private Bitmap mImage = null;
         public Bitmap Image
         {
-            get
-            {
-                return mImage;
-            }
+            get => mImage;
         }
 
         public DrawContextGDI()
@@ -70,14 +63,8 @@ namespace Plotter
 
             DisposeGraphics();
 
-
             mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
             mGdiGraphics = Graphics.FromImage(mImage);
-
-            Rect.X = 0;
-            Rect.Y = 0;
-            Rect.Width = (int)mViewWidth;
-            Rect.Height = (int)mViewHeight;
         }
 
         private void DisposeGraphics()
@@ -167,8 +154,10 @@ namespace Plotter
                 return LockedBitmapData;
             }
 
+            Rectangle r = new Rectangle(0, 0, mImage.Width, mImage.Height);
+
             LockedBitmapData = mImage.LockBits(
-                    Rect,
+                    r,
                     ImageLockMode.ReadWrite, mImage.PixelFormat);
 
             return LockedBitmapData;
