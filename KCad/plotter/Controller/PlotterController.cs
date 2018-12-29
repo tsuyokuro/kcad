@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using CadDataTypes;
 using System.Drawing.Printing;
+using Plotter.Controller.TaskRunner;
 
 namespace Plotter.Controller
 {
@@ -31,11 +32,20 @@ namespace Plotter.Controller
 
         private CadObjectDB mDB = new CadObjectDB();
 
+        States mState = States.SELECT;
         public States State
         {
-            private set;
-            get;
-        } = States.SELECT;
+            private set
+            {
+                mState = value;
+                if (mInteractCtrl.IsActive)
+                {
+                    mInteractCtrl.Cancel();
+                }
+            }
+
+            get => mState;
+        }
 
         public CadObjectDB DB
         {
@@ -120,6 +130,8 @@ namespace Plotter.Controller
 
         public ViewController ViewCtrl;
 
+        public PlotterTaskRunner mPlotterTaskRunner;
+
         #region Constructor
         public PlotterController()
         {
@@ -132,6 +144,8 @@ namespace Plotter.Controller
             HistoryMan = new HistoryManager(mDB);
 
             ScriptEnv = new ScriptEnvironment(this);
+
+            mPlotterTaskRunner = new PlotterTaskRunner(this);
 
             ObjDownPoint.Valid = false;
 

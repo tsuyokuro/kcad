@@ -469,6 +469,7 @@ namespace Plotter
                 { "flip_x", FlipX },
                 { "flip_y", FlipY },
                 { "flip_z", FlipZ },
+                { "flip_with_vector", FlipWithVector },
                 { "flip_normal", FlipNormal },
                 { "grid_settings", GridSettings },
                 { "add_layer", AddLayer },
@@ -609,6 +610,11 @@ namespace Plotter
             Redraw();
         }
 
+        public void FlipWithVector()
+        {
+            mController.FlipWithVector();
+        }
+
         public void FlipNormal()
         {
             mController.FlipNormal();
@@ -697,15 +703,15 @@ namespace Plotter
 
             dlg.Owner = mMainWindow;
 
-            dlg.PointSnapRange = mController.PointSnapRange;
-            dlg.LineSnapRange = mController.LineSnapRange;
+            dlg.PointSnapRange = SettingsHolder.Settings.PointSnapRange;
+            dlg.LineSnapRange = SettingsHolder.Settings.LineSnapRange;
 
             bool? result = dlg.ShowDialog();
 
             if (result.Value)
             {
-                mController.PointSnapRange = dlg.PointSnapRange;
-                mController.LineSnapRange = dlg.LineSnapRange;
+                SettingsHolder.Settings.PointSnapRange = dlg.PointSnapRange;
+                SettingsHolder.Settings.LineSnapRange = dlg.LineSnapRange;
 
                 Redraw();
             }
@@ -1183,9 +1189,9 @@ namespace Plotter
 
             mController.Grid.GridSize = settings.GridSize;
 
-            mController.PointSnapRange = settings.PointSnapRange;
+            //mController.PointSnapRange = settings.PointSnapRange;
 
-            mController.LineSnapRange = settings.LineSnapRange;
+            //mController.LineSnapRange = settings.LineSnapRange;
         }
 
         public void SaveSettings()
@@ -1193,10 +1199,6 @@ namespace Plotter
             PlotterSettings settings = SettingsHolder.Settings;
 
             settings.GridSize = mController.Grid.GridSize;
-
-            settings.PointSnapRange = mController.PointSnapRange;
-
-            settings.LineSnapRange = mController.LineSnapRange;
 
             settings.Save();
         }

@@ -268,6 +268,11 @@ namespace Plotter.Controller
             }
         }
 
+        public void FlipWithVector()
+        {
+            mPlotterTaskRunner.FlipWithInteractive(GetSelectedFigureList());
+        }
+
         private void RemoveSelectedPoints()
         {
             List<CadFigure> figList = DB.GetSelectedFigList();

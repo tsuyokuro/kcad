@@ -1087,10 +1087,10 @@ namespace Plotter.Controller
 
             ItConsole.println(AnsiEsc.Yellow + "Input point >>");
 
-            InteractCtrl.State ret = ctrl.WaitPoint();
+            InteractCtrl.States ret = ctrl.WaitPoint();
             ctrl.End();
 
-            if (ret != InteractCtrl.State.CONTINUE)
+            if (ret != InteractCtrl.States.CONTINUE)
             {
                 ItConsole.println("Cancel!");
                 return CadVector.InvalidValue;
@@ -1111,11 +1111,11 @@ namespace Plotter.Controller
 
             ItConsole.println(AnsiEsc.Yellow + "Input point 1 >>");
 
-            InteractCtrl.State ret;
+            InteractCtrl.States ret;
 
             ret = ctrl.WaitPoint();
 
-            if (ret != InteractCtrl.State.CONTINUE)
+            if (ret != InteractCtrl.States.CONTINUE)
             {
                 ctrl.End();
                 ItConsole.println("Cancel!");
@@ -1129,7 +1129,7 @@ namespace Plotter.Controller
 
             ret = ctrl.WaitPoint();
 
-            if (ret != InteractCtrl.State.CONTINUE)
+            if (ret != InteractCtrl.States.CONTINUE)
             {
                 ctrl.End();
                 ItConsole.println("Cancel!");

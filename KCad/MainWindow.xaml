@@ -286,6 +286,10 @@
                                 Tag="flip_z" />
                             <MenuItem
                                 Click="MenuItem_Click"
+                                Header="Flip with vector"
+                                Tag="flip_with_vector" />
+                            <MenuItem
+                                Click="MenuItem_Click"
                                 Header="Flip Normal"
                                 Tag="flip_normal" />
                         </MenuItem>
