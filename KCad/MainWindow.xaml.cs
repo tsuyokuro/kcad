@@ -1,12 +1,10 @@
 ﻿using Plotter;
 using Plotter.Controller;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -18,13 +16,9 @@ namespace KCad
 
         private bool KeyHandled = false;
 
-        //private LBConsole mLBConsole;
-
         public MainWindow()
         {
             InitializeComponent();
-
-            //FocusManager.SetIsFocusScope(this, true);
 
             if (App.UseConsole)
             {
@@ -37,7 +31,6 @@ namespace KCad
                 DOut.PrintLnFunc = MyConsole.PrintLn;
                 DOut.FormatPrintFunc = MyConsole.Printf;
             }
-
 
             ItConsole.PrintFunc = MyConsole.Print;
             ItConsole.PrintLnFunc = MyConsole.PrintLn;
@@ -91,14 +84,88 @@ namespace KCad
             BtnRestWindow.Click += (sender, e) => { this.WindowState = WindowState.Normal; };
 
             StateChanged += MainWindow_StateChanged;
+
+            PopupMessage.CustomPopupPlacementCallback = placeMessagePopup;
         }
+
+        public CustomPopupPlacement[] placeMessagePopup(Size popupSize,
+                                           Size targetSize,
+                                           Point offset)
+        {
+            Point p = new Point(targetSize.Width - popupSize.Width - 8, 8);
+
+            CustomPopupPlacement placement1 =
+                new CustomPopupPlacement(p, PopupPrimaryAxis.Horizontal);
+
+            CustomPopupPlacement[] ttplaces =
+                    new CustomPopupPlacement[] { placement1 };
+            return ttplaces;
+        }
+
+        public void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
+        {
+            Application.Current.Dispatcher.Invoke(() => {
+                PopupMessageIcon.Source = SelectPopupMessageIcon(messageType);
+
+                PopupMessageText.Text = text;
+                PopupMessage.IsOpen = true;
+            }); 
+        }
+
+        public void ClosePopupMessage()
+        {
+            if (Application.Current.Dispatcher.Thread.ManagedThreadId ==
+                System.Threading.Thread.CurrentThread.ManagedThreadId)
+            {
+                PopupMessage.IsOpen = false;
+                return;
+            }
+
+            Application.Current.Dispatcher.Invoke(() => {
+                PopupMessage.IsOpen = false;
+            });
+        }
+
+        ImageSource SelectPopupMessageIcon(PlotterObserver.MessageType type)
+        {
+            ImageSource di = null;
+
+            switch (type)
+            {
+                case PlotterObserver.MessageType.INFO:
+                    di = (ImageSource)TryFindResource("infoIconDrawingImage");
+                    break;
+                case PlotterObserver.MessageType.INPUT:
+                    di = (ImageSource)TryFindResource("inputIconDrawingImage");
+                    break;
+                case PlotterObserver.MessageType.ERROR:
+                    di = (ImageSource)TryFindResource("errorIconDrawingImage");
+                    break;
+            }
+
+            if (di == null)
+            {
+                di = (ImageSource)TryFindResource("infoIconDrawingImage");
+            }
+
+            return di;
+        }
+
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
         {
             switch (WindowState)
             {
                 case WindowState.Maximized:
-                    LayoutRoot.Margin = new Thickness(9);
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(50);
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            LayoutRoot.Margin = new Thickness(9);
+                        });
+                    });
+
                     break;
                 default:
                     LayoutRoot.Margin = new Thickness(0);

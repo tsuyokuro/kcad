@@ -31,6 +31,7 @@ namespace Plotter.Controller.TaskRunner
 
             ctrl.Start(InteractCtrl.Mode.LINE);
 
+            OpenPopupMessage("Input flip axis", PlotterObserver.MessageType.INPUT);
             ItConsole.println(AnsiEsc.BYellow + "<< Input point 1 >>");
 
             InteractCtrl.States ret;
@@ -40,6 +41,7 @@ namespace Plotter.Controller.TaskRunner
             if (ret != InteractCtrl.States.CONTINUE)
             {
                 ctrl.End();
+                ClosePopupMessage();
                 ItConsole.println("Cancel!");
                 return (
                     CadVector.InvalidValue,
@@ -57,6 +59,7 @@ namespace Plotter.Controller.TaskRunner
             if (ret != InteractCtrl.States.CONTINUE)
             {
                 ctrl.End();
+                ClosePopupMessage();
                 ItConsole.println("Cancel!");
                 return (
                     CadVector.InvalidValue,
@@ -68,6 +71,7 @@ namespace Plotter.Controller.TaskRunner
             ItConsole.println(p1.CoordString());
 
             ctrl.End();
+            ClosePopupMessage();
 
             return (p0, p1, InteractCtrl.States.END);
         }
@@ -117,6 +121,16 @@ namespace Plotter.Controller.TaskRunner
 
                 vl[i] = v;
             }
+        }
+
+        public void OpenPopupMessage(string text, PlotterObserver.MessageType type)
+        {
+            Controller.Observer.OpenPopupMessage(text, type);
+        }
+
+        public void ClosePopupMessage()
+        {
+            Controller.Observer.ClosePopupMessage();
         }
     }
 }

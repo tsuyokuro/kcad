@@ -338,7 +338,7 @@ namespace Plotter
             }
         }
 
-        private Window mMainWindow;
+        private MainWindow mMainWindow;
 
         private WindowsFormsHost mViewHost = null;
 
@@ -360,7 +360,7 @@ namespace Plotter
 
         Window mEditorWindow;
 
-        public PlotterViewModel(Window mainWindow, WindowsFormsHost viewHost)
+        public PlotterViewModel(MainWindow mainWindow, WindowsFormsHost viewHost)
         {
             mController = new PlotterController();
 
@@ -387,6 +387,9 @@ namespace Plotter
 
             mController.Observer.FindTreeViewItem = FindTreeViewItem;
 
+            mController.Observer.OpenPopupMessage = OpenPopupMessage;
+
+            mController.Observer.ClosePopupMessage = ClosePopupMessage;
 
             LayerListChanged(mController, mController.GetLayerListInfo());
 
@@ -395,6 +398,16 @@ namespace Plotter
 
             ViewMode = ViewModes.FREE;  // 一旦GL側を設定してViewをLoadしておく
             ViewMode = ViewModes.FRONT;
+        }
+
+        private void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
+        {
+            mMainWindow.OpenPopupMessage(text, messageType);
+        }
+
+        private void ClosePopupMessage()
+        {
+            mMainWindow.ClosePopupMessage();
         }
 
         private void SetView(IPlotterView view)
