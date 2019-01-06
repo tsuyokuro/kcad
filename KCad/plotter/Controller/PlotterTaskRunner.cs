@@ -76,7 +76,7 @@ namespace Plotter.Controller.TaskRunner
             return (p0, p1, InteractCtrl.States.END);
         }
 
-        public async void FlipWithInteractive(List<CadFigure> figList)
+        public async void FlipWithInteractive(List<CadFigure> rootFigList)
         {
             await Task.Run(() =>
             {
@@ -92,16 +92,19 @@ namespace Plotter.Controller.TaskRunner
                 CadVector normal = CadMath.Normal(
                     res.p1 - res.p0, (CadVector)(Controller.CurrentDC.ViewDir));
 
-                FlipWithPlane(figList, res.p0, normal);
+                FlipWithPlane(rootFigList, res.p0, normal);
                 Controller.EndEdit();
             });
         }
 
-        public void FlipWithPlane(List<CadFigure> figList, CadVector p0, CadVector normal)
+        public void FlipWithPlane(List<CadFigure> rootFigList, CadVector p0, CadVector normal)
         {
-            foreach (CadFigure fig in figList)
+            foreach (CadFigure fig in rootFigList)
             {
-                FlipWithPlane(fig, p0, normal);
+                fig.ForEachFig(f =>
+                {
+                    FlipWithPlane(f, p0, normal);
+                });
             }
         }
 
@@ -123,6 +126,55 @@ namespace Plotter.Controller.TaskRunner
             }
         }
 
+        public async void FlipAndCopyWithInteractive(List<CadFigure> rootFigList)
+        {
+            await Task.Run(() =>
+            {
+                var res = InputLine();
+
+                if (res.state != InteractCtrl.States.END)
+                {
+                    return;
+                }
+
+                CadVector normal = CadMath.Normal(
+                    res.p1 - res.p0, (CadVector)(Controller.CurrentDC.ViewDir));
+
+                FlipAndCopyWithPlane(rootFigList, res.p0, normal);
+            });
+        }
+
+        public void FlipAndCopyWithPlane(List<CadFigure> rootFigList, CadVector p0, CadVector normal)
+        {
+            List<CadFigure> cpy = PlotterClipboard.CopyFigures(rootFigList);
+
+            CadOpeList opeRoot = CadOpe.CreateListOpe();
+
+            CadLayer layer = Controller.CurrentLayer;
+
+            foreach (CadFigure fig in cpy)
+            {
+                fig.ForEachFig(d =>
+                {
+                    FlipWithPlane(d, p0, normal);
+                    Controller.DB.AddFigure(d);
+                });
+
+                layer.AddFigure(fig);
+
+                CadOpe ope = CadOpe.CreateAddFigureOpe(layer.ID, fig.ID);
+                opeRoot.OpeList.Add(ope);
+            }
+
+            Controller.HistoryMan.foward(opeRoot);
+
+            RunOnMainThread(() =>
+            {
+                Controller.UpdateTreeView(true);
+            });
+        }
+
+
         public void OpenPopupMessage(string text, PlotterObserver.MessageType type)
         {
             Controller.Observer.OpenPopupMessage(text, type);
@@ -131,6 +183,24 @@ namespace Plotter.Controller.TaskRunner
         public void ClosePopupMessage()
         {
             Controller.Observer.ClosePopupMessage();
+        }
+
+        public void RunOnMainThread(Action action)
+        {
+            if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
+            {
+                action();
+                return;
+            }
+
+            Task task = new Task(() =>
+            {
+                action();
+            }
+            );
+
+            task.Start(mMainThreadScheduler);
+            task.Wait();
         }
     }
 }

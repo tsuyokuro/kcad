@@ -16,6 +16,8 @@ namespace KCad
 
         private bool KeyHandled = false;
 
+        private ImageSource[] PopupMessageIcons = new ImageSource[3];
+
         public MainWindow()
         {
             InitializeComponent();
@@ -85,7 +87,21 @@ namespace KCad
 
             StateChanged += MainWindow_StateChanged;
 
+            InitPopupMessageIcons();
+
             PopupMessage.CustomPopupPlacementCallback = placeMessagePopup;
+        }
+
+        private void InitPopupMessageIcons()
+        {
+            PopupMessageIcons[(int)PlotterObserver.MessageType.INFO] =
+                (ImageSource)TryFindResource("infoIconDrawingImage");
+
+            PopupMessageIcons[(int)PlotterObserver.MessageType.INPUT] =
+                (ImageSource)TryFindResource("inputIconDrawingImage");
+
+            PopupMessageIcons[(int)PlotterObserver.MessageType.ERROR] =
+                (ImageSource)TryFindResource("errorIconDrawingImage");
         }
 
         public CustomPopupPlacement[] placeMessagePopup(Size popupSize,
@@ -128,27 +144,7 @@ namespace KCad
 
         ImageSource SelectPopupMessageIcon(PlotterObserver.MessageType type)
         {
-            ImageSource di = null;
-
-            switch (type)
-            {
-                case PlotterObserver.MessageType.INFO:
-                    di = (ImageSource)TryFindResource("infoIconDrawingImage");
-                    break;
-                case PlotterObserver.MessageType.INPUT:
-                    di = (ImageSource)TryFindResource("inputIconDrawingImage");
-                    break;
-                case PlotterObserver.MessageType.ERROR:
-                    di = (ImageSource)TryFindResource("errorIconDrawingImage");
-                    break;
-            }
-
-            if (di == null)
-            {
-                di = (ImageSource)TryFindResource("infoIconDrawingImage");
-            }
-
-            return di;
+            return PopupMessageIcons[(int)type];
         }
 
 

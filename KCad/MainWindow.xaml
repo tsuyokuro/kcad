@@ -304,20 +304,12 @@
                         <MenuItem Header="Flip">
                             <MenuItem
                                 Click="MenuItem_Click"
-                                Header="Flip X"
-                                Tag="flip_x" />
-                            <MenuItem
-                                Click="MenuItem_Click"
-                                Header="Flip Y"
-                                Tag="flip_y" />
-                            <MenuItem
-                                Click="MenuItem_Click"
-                                Header="Flip Z"
-                                Tag="flip_z" />
-                            <MenuItem
-                                Click="MenuItem_Click"
-                                Header="Flip with vector"
+                                Header="Flip"
                                 Tag="flip_with_vector" />
+                            <MenuItem
+                                Click="MenuItem_Click"
+                                Header="Flip and copy"
+                                Tag="flip_and_copy_with_vector" />
                             <MenuItem
                                 Click="MenuItem_Click"
                                 Header="Flip Normal"

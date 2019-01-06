@@ -479,10 +479,8 @@ namespace Plotter
                 { "to_loop", ToLoop },
                 { "to_unloop", ToUnloop },
                 { "clear_layer", ClearLayer },
-                { "flip_x", FlipX },
-                { "flip_y", FlipY },
-                { "flip_z", FlipZ },
                 { "flip_with_vector", FlipWithVector },
+                { "flip_and_copy_with_vector", FlipAndCopyWithVector },
                 { "flip_normal", FlipNormal },
                 { "grid_settings", GridSettings },
                 { "add_layer", AddLayer },
@@ -605,27 +603,14 @@ namespace Plotter
             Redraw();
         }
 
-        public void FlipX()
-        {
-            mController.FlipX();
-            Redraw();
-        }
-
-        public void FlipY()
-        {
-            mController.FlipY();
-            Redraw();
-        }
-
-        public void FlipZ()
-        {
-            mController.FlipZ();
-            Redraw();
-        }
-
         public void FlipWithVector()
         {
             mController.FlipWithVector();
+        }
+
+        public void FlipAndCopyWithVector()
+        {
+            mController.FlipAndCopyWithVector();
         }
 
         public void FlipNormal()

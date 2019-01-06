@@ -633,6 +633,24 @@ namespace Plotter.Controller
             {
                 layer.ForEachFig(fig =>
                 {
+                    if (fig.HasSelectedPoint())
+                    {
+                        figList.Add(fig);
+                    }
+                });
+            }
+
+            return figList;
+        }
+
+        public List<CadFigure> GetSelectedRootFigureList()
+        {
+            List<CadFigure> figList = new List<CadFigure>();
+
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                layer.ForEachRootFig(fig =>
+                {
                     if (fig.HasSelectedPointInclueChild())
                     {
                         figList.Add(fig);

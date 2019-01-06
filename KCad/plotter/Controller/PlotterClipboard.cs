@@ -22,9 +22,7 @@ namespace Plotter.Controller
 
         public static void CopyFiguresAsBin(PlotterController controller)
         {
-            var temp = controller.GetSelectedFigureList();
-
-            var figList = CadFigure.Util.GetRootFigList(temp);
+            var figList = controller.GetSelectedRootFigureList();
 
             if (figList.Count == 0)
             {
@@ -84,6 +82,63 @@ namespace Plotter.Controller
                     PasteFigure(controller, child, delta);
                 }
             }
+        }
+
+        private static void PasteFigure(PlotterController controller, CadFigure fig)
+        {
+            controller.DB.AddFigure(fig);
+
+            if (fig.ChildList != null)
+            {
+                foreach (CadFigure child in fig.ChildList)
+                {
+                    PasteFigure(controller, child);
+                }
+            }
+        }
+
+        public static byte[] FigureListToBin(List<CadFigure> figList)
+        {
+            List<MpFigure> mpfigList = MpUtil.FigureListToMp(figList, true);
+            byte[] bin = MessagePackSerializer.Serialize(mpfigList);
+
+            return bin;
+        }
+
+        public static List<CadFigure> FigureListFromBin(byte[] bin)
+        {
+            List<MpFigure> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure>>(bin);
+            List<CadFigure> figList = MpUtil.FigureListFromMp(mpfigList);
+
+            return figList;
+        }
+
+        public static List<CadFigure> CopyFigures(List<CadFigure> src)
+        {
+            byte[] bin = FigureListToBin(src);
+            List<CadFigure> dest = FigureListFromBin(bin);
+            return dest;
+        }
+
+        public static List<CadFigure> CopyFigures(PlotterController controller, List<CadFigure> src)
+        {
+            byte[] bin = FigureListToBin(src);
+            List<CadFigure> dest = FigureListFromBin(bin);
+
+            CadOpeList opeRoot = CadOpe.CreateListOpe();
+
+            foreach (CadFigure fig in dest)
+            {
+                PasteFigure(controller, fig);
+                controller.CurrentLayer.AddFigure(fig);    // 子ObjectはLayerに追加しない
+
+                CadOpe ope = CadOpe.CreateAddFigureOpe(controller.CurrentLayer.ID, fig.ID);
+                opeRoot.OpeList.Add(ope);
+            }
+
+            controller.HistoryMan.foward(opeRoot);
+
+            return dest;
         }
     }
 

@@ -216,61 +216,14 @@ namespace Plotter.Controller
             HistoryMan.foward(opeRoot);
         }
 
-        public void Flip(TargetCoord coord)
-        {
-            CadVector cp = PlotterUtil.GetSelectionCenter(this);
-
-            foreach (CadLayer layer in mDB.LayerList)
-            {
-                foreach (CadFigure fig in layer.FigureList)
-                {
-                    int num = fig.PointList.Count;
-                    int selnum = 0;
-
-                    for (int i = 0; i < num; i++)
-                    {
-                        CadVector p = fig.PointList[i];
-
-                        if (p.Selected)
-                        {
-                            selnum++;
-
-                            CadVector np = p;
-                            if ((coord & TargetCoord.X) != 0)
-                            {
-                                np.x -= cp.x;
-                                np.x = -np.x + cp.x;
-                            }
-
-                            if ((coord & TargetCoord.Y) != 0)
-                            {
-                                np.y -= cp.y;
-                                np.y = -np.y + cp.y;
-                            }
-
-                            if ((coord & TargetCoord.Z) != 0)
-                            {
-                                np.z -= cp.z;
-                                np.z = -np.z + cp.z;
-                            }
-
-                            fig.SetPointAt(i, np);
-                        }
-                    }
-
-                    /*
-                    if (selnum == num)
-                    {
-                        fig.PointList.Reverse();
-                    }
-                    */
-                }
-            }
-        }
-
         public void FlipWithVector()
         {
-            mPlotterTaskRunner.FlipWithInteractive(GetSelectedFigureList());
+            mPlotterTaskRunner.FlipWithInteractive(GetSelectedRootFigureList());
+        }
+
+        public void FlipAndCopyWithVector()
+        {
+            mPlotterTaskRunner.FlipAndCopyWithInteractive(GetSelectedRootFigureList());
         }
 
         private void RemoveSelectedPoints()
