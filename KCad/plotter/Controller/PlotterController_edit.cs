@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using CadDataTypes;
+using KCad;
+using KCad.Properties;
 
 namespace Plotter.Controller
 {
@@ -218,12 +220,28 @@ namespace Plotter.Controller
 
         public void FlipWithVector()
         {
-            mPlotterTaskRunner.FlipWithInteractive(GetSelectedRootFigureList());
+            List<CadFigure> target = GetSelectedRootFigureList();
+            if (target.Count <= 0)
+            {
+                ItConsole.printError(
+                    Resources.error_select_objects_before_flip);
+                return;
+            }
+
+            mPlotterTaskRunner.FlipWithInteractive(target);
         }
 
         public void FlipAndCopyWithVector()
         {
-            mPlotterTaskRunner.FlipAndCopyWithInteractive(GetSelectedRootFigureList());
+            List<CadFigure> target = GetSelectedRootFigureList();
+            if (target.Count <= 0)
+            {
+                ItConsole.printError(
+                    Resources.error_select_objects_before_flip_and_copy);
+                return;
+            }
+
+            mPlotterTaskRunner.FlipAndCopyWithInteractive(target);
         }
 
         private void RemoveSelectedPoints()

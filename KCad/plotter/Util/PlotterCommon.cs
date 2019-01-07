@@ -1,4 +1,6 @@
 ﻿using CadDataTypes;
+using KCad;
+using KCad.Properties;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -49,6 +51,14 @@ namespace Plotter
         public static void printf(string s, params object[] args)
         {
             FormatPrintFunc(s, args);
+        }
+
+        public static void printError(string s)
+        {
+            println(
+                    AnsiEsc.RedBG +
+                    Resources.error_title + ": " + s
+                    );
         }
     }
 

@@ -1,21 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
+﻿using System.Windows.Media;
 
 namespace KCad
 {
@@ -44,23 +27,23 @@ namespace KCad
         public const string BWhite = ESC + "97m";
 
 
-        public const string BalckB = ESC + "40m";
-        public const string RedB = ESC + "41m";
-        public const string GreenB = ESC + "42m";
-        public const string YellowB = ESC + "43m";
-        public const string BlueB = ESC + "44m";
-        public const string MagentaB = ESC + "45m";
-        public const string CyanB = ESC + "46m";
-        public const string WhiteB = ESC + "47m";
+        public const string BalckBG = ESC + "40m";
+        public const string RedBG = ESC + "41m";
+        public const string GreenBG = ESC + "42m";
+        public const string YellowBG = ESC + "43m";
+        public const string BlueBG = ESC + "44m";
+        public const string MagentaBG = ESC + "45m";
+        public const string CyanBG = ESC + "46m";
+        public const string WhiteBG = ESC + "47m";
 
-        public const string BBalckB = ESC + "100m";
-        public const string BRedB = ESC + "101m";
-        public const string BGreenB = ESC + "102m";
-        public const string BYellowB = ESC + "103m";
-        public const string BBlueB = ESC + "104m";
-        public const string BMagentaB = ESC + "105m";
-        public const string BCyanB = ESC + "106m";
-        public const string BWhiteB = ESC + "107m";
+        public const string BBalckBG = ESC + "100m";
+        public const string BRedBG = ESC + "101m";
+        public const string BGreenBG = ESC + "102m";
+        public const string BYellowBG = ESC + "103m";
+        public const string BBlueBG = ESC + "104m";
+        public const string BMagentaBG = ESC + "105m";
+        public const string BCyanBG = ESC + "106m";
+        public const string BWhiteBG = ESC + "107m";
 
 
         public Brush[] Palette;

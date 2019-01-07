@@ -130,6 +130,15 @@
   <data name="error_select_2_points" xml:space="preserve">
     <value>Please select 2 point</value>
   </data>
+  <data name="error_select_objects_before_flip" xml:space="preserve">
+    <value>Select objects before flip commnad</value>
+  </data>
+  <data name="error_select_objects_before_flip_and_copy" xml:space="preserve">
+    <value>Select objects before flip commnad</value>
+  </data>
+  <data name="error_title" xml:space="preserve">
+    <value>ERROR</value>
+  </data>
   <data name="menu_doc_settings" xml:space="preserve">
     <value>Document settings ...</value>
   </data>

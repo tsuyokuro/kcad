@@ -89,6 +89,13 @@ namespace Plotter.Controller.TaskRunner
                     return;
                 }
 
+                if ((res.p1 - res.p0).IsZero())
+                {
+                    Controller.AbendEdit();
+                    ItConsole.println("Error: Same point");
+                    return;
+                }
+
                 CadVector normal = CadMath.Normal(
                     res.p1 - res.p0, (CadVector)(Controller.CurrentDC.ViewDir));
 
@@ -134,6 +141,12 @@ namespace Plotter.Controller.TaskRunner
 
                 if (res.state != InteractCtrl.States.END)
                 {
+                    return;
+                }
+
+                if ((res.p1 - res.p0).IsZero())
+                {
+                    ItConsole.println("Error: Same point");
                     return;
                 }
 
