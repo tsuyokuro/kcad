@@ -17,11 +17,12 @@ namespace Plotter.Controller
             LINE,
         }
 
-        public enum State
+        public enum States
         {
             NONE,
             CANCEL,
             CONTINUE,
+            END,
         }
 
         private SemaphoreSlim Sem = new SemaphoreSlim(0, 1);
@@ -30,12 +31,18 @@ namespace Plotter.Controller
 
         public VectorList PointList = new VectorList();
 
-        public State mState = State.NONE;
+        public States mState = States.NONE;
+        public States State
+        {
+            get => mState;
+            set => mState = value;
+        }
 
+        public bool IsActive => (mState == States.CONTINUE);
 
         public void Cancel()
         {
-            mState = State.CANCEL;
+            mState = States.CANCEL;
             Sem.Release();
         }
 
@@ -52,7 +59,7 @@ namespace Plotter.Controller
         public void Start(Mode mode)
         {
             CurrentMode = mode;
-            mState = State.CONTINUE;
+            mState = States.CONTINUE;
 
             lock (PointList)
             {
@@ -62,10 +69,11 @@ namespace Plotter.Controller
 
         public void End()
         {
+            mState = States.END;
             CurrentMode = Mode.NONE;
         }
 
-        public State WaitPoint()
+        public States WaitPoint()
         {
             Sem.Wait();
             return mState;

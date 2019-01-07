@@ -10,26 +10,19 @@ namespace Plotter
     {
         protected Control Wnd;
 
-        private Graphics mGdiGraphics = null;
-
-        private Bitmap mImage = null;
-
         private BitmapData LockedBitmapData = null;
 
-        private Rectangle Rect = default(Rectangle);
-
+        private Graphics mGdiGraphics = null;
         public Graphics GdiGraphics
         {
-            protected set { mGdiGraphics = value; }
-            get { return mGdiGraphics; }
+            protected set => mGdiGraphics = value;
+            get => mGdiGraphics;
         }
 
+        private Bitmap mImage = null;
         public Bitmap Image
         {
-            get
-            {
-                return mImage;
-            }
+            get => mImage;
         }
 
         public DrawContextGDI()
@@ -48,7 +41,7 @@ namespace Plotter
 
             SetViewSize(8, 1);  // Create dummy Image and Graphics
 
-            SetUnitPerMilli(4); // 4 pix = 1mm
+            mUnitPerMilli = 4; // 4 pix = 1mm
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
@@ -70,14 +63,8 @@ namespace Plotter
 
             DisposeGraphics();
 
-
             mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
             mGdiGraphics = Graphics.FromImage(mImage);
-
-            Rect.X = 0;
-            Rect.Y = 0;
-            Rect.Width = (int)mViewWidth;
-            Rect.Height = (int)mViewHeight;
         }
 
         private void DisposeGraphics()
@@ -125,8 +112,8 @@ namespace Plotter
 
             CadVector p = default(CadVector);
 
-            p.x = ptv.X * (UnitPerMilli * DeviceScaleX);
-            p.y = ptv.Y * (UnitPerMilli * DeviceScaleY);
+            p.x = ptv.X * (mUnitPerMilli * DeviceScaleX);
+            p.y = ptv.Y * (mUnitPerMilli * DeviceScaleY);
             //p.z = ptv.Z * UnitPerMilli;
             p.z = 0;
 
@@ -136,8 +123,8 @@ namespace Plotter
         public override CadVector DevVectorToWorldVector(CadVector pt)
         {
             Vector4d wv = default(Vector4d);
-            wv.X = pt.x / (UnitPerMilli * DeviceScaleX);
-            wv.Y = pt.y / (UnitPerMilli * DeviceScaleY);
+            wv.X = pt.x / (mUnitPerMilli * DeviceScaleX);
+            wv.Y = pt.y / (mUnitPerMilli * DeviceScaleY);
             //wv.Z = pt.z / UnitPerMilli;
             wv.Z = pt.z;
 
@@ -167,8 +154,10 @@ namespace Plotter
                 return LockedBitmapData;
             }
 
+            Rectangle r = new Rectangle(0, 0, mImage.Width, mImage.Height);
+
             LockedBitmapData = mImage.LockBits(
-                    Rect,
+                    r,
                     ImageLockMode.ReadWrite, mImage.PixelFormat);
 
             return LockedBitmapData;

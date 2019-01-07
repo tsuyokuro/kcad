@@ -354,63 +354,34 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
         }
 
-        public int Rect(double w, double h, string plane)
+        public int Rect(double w, double h)
         {
-            return RectAt(Controller.LastDownPoint, w, h, plane);
+            return RectAt(Controller.LastDownPoint, w, h);
         }
 
-        public int RectAt(CadVector p, double w, double h, string plane)
+        public int RectAt(CadVector p, double w, double h)
         {
-            CadVector p0 = default(CadVector);
+            CadVector viewDir = (CadVector)Controller.CurrentDC.ViewDir;
+            CadVector upDir = (CadVector)Controller.CurrentDC.UpVector;
 
-            p0 = p;
+            CadVector wd = CadMath.Normal(viewDir, upDir) * w;
+            CadVector hd = upDir.UnitVector() * h;
+
+            CadVector p0 = p;
+            CadVector p1 = p;
 
             CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.RECT);
 
-            CadVector p1 = p0;
-
             fig.AddPoint(p0);
 
-            if (plane == "xy")
-            {
-                p1 = p0;
+            p1 = p0 + wd;
+            fig.AddPoint(p1);
 
-                p1.x = p0.x + w;
-                fig.AddPoint(p1);
+            p1 = p0 + wd + hd;
+            fig.AddPoint(p1);
 
-                p1.y = p0.y + h;
-                fig.AddPoint(p1);
-
-                p1.x = p0.x;
-                fig.AddPoint(p1);
-            }
-            else if (plane == "xz")
-            {
-                p1.x = p0.x + w;
-                fig.AddPoint(p1);
-
-                p1.z = p0.z - h;
-                fig.AddPoint(p1);
-
-                p1.x = p0.x;
-                fig.AddPoint(p1);
-            }
-            else if (plane == "zy")
-            {
-                p1.z = p0.z + w;
-                fig.AddPoint(p1);
-
-                p1.y = p0.y + h;
-                fig.AddPoint(p1);
-
-                p1.z = p0.z;
-                fig.AddPoint(p1);
-            }
-            else
-            {
-                ItConsole.println("error! \"xy\" or \"xz\" or \"zy\"");
-                return 0;
-            }
+            p1 = p0 + hd;
+            fig.AddPoint(p1);
 
             fig.IsLoop = true;
 
@@ -1116,10 +1087,10 @@ namespace Plotter.Controller
 
             ItConsole.println(AnsiEsc.Yellow + "Input point >>");
 
-            InteractCtrl.State ret = ctrl.WaitPoint();
+            InteractCtrl.States ret = ctrl.WaitPoint();
             ctrl.End();
 
-            if (ret != InteractCtrl.State.CONTINUE)
+            if (ret != InteractCtrl.States.CONTINUE)
             {
                 ItConsole.println("Cancel!");
                 return CadVector.InvalidValue;
@@ -1140,11 +1111,11 @@ namespace Plotter.Controller
 
             ItConsole.println(AnsiEsc.Yellow + "Input point 1 >>");
 
-            InteractCtrl.State ret;
+            InteractCtrl.States ret;
 
             ret = ctrl.WaitPoint();
 
-            if (ret != InteractCtrl.State.CONTINUE)
+            if (ret != InteractCtrl.States.CONTINUE)
             {
                 ctrl.End();
                 ItConsole.println("Cancel!");
@@ -1158,7 +1129,7 @@ namespace Plotter.Controller
 
             ret = ctrl.WaitPoint();
 
-            if (ret != InteractCtrl.State.CONTINUE)
+            if (ret != InteractCtrl.States.CONTINUE)
             {
                 ctrl.End();
                 ItConsole.println("Cancel!");

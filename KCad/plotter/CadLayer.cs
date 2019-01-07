@@ -210,6 +210,16 @@ namespace Plotter
             }
         }
 
+        public void ForEachRootFig(Action<CadFigure> d)
+        {
+            int i;
+            for (i = 0; i < mFigureList.Count; i++)
+            {
+                CadFigure fig = mFigureList[i];
+                d(fig);
+            }
+        }
+
         public void ForEachFigRev(Action<CadFigure> d)
         {
             int i = mFigureList.Count - 1;

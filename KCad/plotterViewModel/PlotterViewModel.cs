@@ -338,7 +338,7 @@ namespace Plotter
             }
         }
 
-        private Window mMainWindow;
+        private MainWindow mMainWindow;
 
         private WindowsFormsHost mViewHost = null;
 
@@ -360,7 +360,7 @@ namespace Plotter
 
         Window mEditorWindow;
 
-        public PlotterViewModel(Window mainWindow, WindowsFormsHost viewHost)
+        public PlotterViewModel(MainWindow mainWindow, WindowsFormsHost viewHost)
         {
             mController = new PlotterController();
 
@@ -387,6 +387,9 @@ namespace Plotter
 
             mController.Observer.FindTreeViewItem = FindTreeViewItem;
 
+            mController.Observer.OpenPopupMessage = OpenPopupMessage;
+
+            mController.Observer.ClosePopupMessage = ClosePopupMessage;
 
             LayerListChanged(mController, mController.GetLayerListInfo());
 
@@ -395,6 +398,16 @@ namespace Plotter
 
             ViewMode = ViewModes.FREE;  // 一旦GL側を設定してViewをLoadしておく
             ViewMode = ViewModes.FRONT;
+        }
+
+        private void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
+        {
+            mMainWindow.OpenPopupMessage(text, messageType);
+        }
+
+        private void ClosePopupMessage()
+        {
+            mMainWindow.ClosePopupMessage();
         }
 
         private void SetView(IPlotterView view)
@@ -466,9 +479,8 @@ namespace Plotter
                 { "to_loop", ToLoop },
                 { "to_unloop", ToUnloop },
                 { "clear_layer", ClearLayer },
-                { "flip_x", FlipX },
-                { "flip_y", FlipY },
-                { "flip_z", FlipZ },
+                { "flip_with_vector", FlipWithVector },
+                { "flip_and_copy_with_vector", FlipAndCopyWithVector },
                 { "flip_normal", FlipNormal },
                 { "grid_settings", GridSettings },
                 { "add_layer", AddLayer },
@@ -591,22 +603,14 @@ namespace Plotter
             Redraw();
         }
 
-        public void FlipX()
+        public void FlipWithVector()
         {
-            mController.FlipX();
-            Redraw();
+            mController.FlipWithVector();
         }
 
-        public void FlipY()
+        public void FlipAndCopyWithVector()
         {
-            mController.FlipY();
-            Redraw();
-        }
-
-        public void FlipZ()
-        {
-            mController.FlipZ();
-            Redraw();
+            mController.FlipAndCopyWithVector();
         }
 
         public void FlipNormal()
@@ -697,15 +701,15 @@ namespace Plotter
 
             dlg.Owner = mMainWindow;
 
-            dlg.PointSnapRange = mController.PointSnapRange;
-            dlg.LineSnapRange = mController.LineSnapRange;
+            dlg.PointSnapRange = SettingsHolder.Settings.PointSnapRange;
+            dlg.LineSnapRange = SettingsHolder.Settings.LineSnapRange;
 
             bool? result = dlg.ShowDialog();
 
             if (result.Value)
             {
-                mController.PointSnapRange = dlg.PointSnapRange;
-                mController.LineSnapRange = dlg.LineSnapRange;
+                SettingsHolder.Settings.PointSnapRange = dlg.PointSnapRange;
+                SettingsHolder.Settings.LineSnapRange = dlg.LineSnapRange;
 
                 Redraw();
             }
@@ -1151,7 +1155,7 @@ namespace Plotter
 
                 case ViewModes.FREE:
                     PlotterViewGL1.Size = PlotterView1.Size;
-                    PlotterViewGL1.DrawContext.SetUnitPerMilli(PlotterView1.DrawContext.UnitPerMilli);
+                    PlotterViewGL1.DrawContext.UnitPerMilli = PlotterView1.DrawContext.UnitPerMilli;
                     SetView(PlotterViewGL1);
                     Redraw();
                     break;
@@ -1183,9 +1187,9 @@ namespace Plotter
 
             mController.Grid.GridSize = settings.GridSize;
 
-            mController.PointSnapRange = settings.PointSnapRange;
+            //mController.PointSnapRange = settings.PointSnapRange;
 
-            mController.LineSnapRange = settings.LineSnapRange;
+            //mController.LineSnapRange = settings.LineSnapRange;
         }
 
         public void SaveSettings()
@@ -1193,10 +1197,6 @@ namespace Plotter
             PlotterSettings settings = SettingsHolder.Settings;
 
             settings.GridSize = mController.Grid.GridSize;
-
-            settings.PointSnapRange = mController.PointSnapRange;
-
-            settings.LineSnapRange = mController.LineSnapRange;
 
             settings.Save();
         }

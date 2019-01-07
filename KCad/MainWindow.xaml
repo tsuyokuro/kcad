@@ -121,6 +121,32 @@
             <RowDefinition Height="100*" />
         </Grid.RowDefinitions>
 
+        <local:PopupEx
+            x:Name="PopupMessage"
+            Focusable="false"
+            IsOpen="False"
+            Placement="Custom"
+            PlacementTarget="{Binding ElementName=viewContainer}"
+            StaysOpen="true">
+
+            <Border Background="GreenYellow">
+                <StackPanel Orientation="Horizontal">
+                    <Image
+                        x:Name="PopupMessageIcon"
+                        Width="24"
+                        Margin="4,8,0,8"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Source="{DynamicResource infoIconDrawingImage}" />
+
+                    <TextBlock
+                        x:Name="PopupMessageText"
+                        Padding="8,0,8,0"
+                        VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+        </local:PopupEx>
+
         <!--  Caption area  -->
         <Grid
             Grid.Row="0"
@@ -161,21 +187,25 @@
                 <Button
                     x:Name="BtnMinWindow"
                     Content="0"
+                    FontSize="16"
                     Style="{DynamicResource CaptionButtonStyleKey}"
                     WindowChrome.IsHitTestVisibleInChrome="True" />
                 <Button
                     x:Name="BtnMaxWindow"
                     Content="1"
+                    FontSize="16"
                     Style="{DynamicResource CaptionButtonStyleKey}"
                     WindowChrome.IsHitTestVisibleInChrome="True" />
                 <Button
                     x:Name="BtnRestWindow"
                     Content="2"
+                    FontSize="16"
                     Style="{DynamicResource CaptionButtonStyleKey}"
                     WindowChrome.IsHitTestVisibleInChrome="True" />
                 <Button
                     x:Name="BtnCloseWindow"
                     Content="r"
+                    FontSize="16"
                     Style="{DynamicResource CaptionButtonStyleKey}"
                     WindowChrome.IsHitTestVisibleInChrome="True" />
 
@@ -274,16 +304,12 @@
                         <MenuItem Header="Flip">
                             <MenuItem
                                 Click="MenuItem_Click"
-                                Header="Flip X"
-                                Tag="flip_x" />
+                                Header="Flip"
+                                Tag="flip_with_vector" />
                             <MenuItem
                                 Click="MenuItem_Click"
-                                Header="Flip Y"
-                                Tag="flip_y" />
-                            <MenuItem
-                                Click="MenuItem_Click"
-                                Header="Flip Z"
-                                Tag="flip_z" />
+                                Header="Flip and copy"
+                                Tag="flip_and_copy_with_vector" />
                             <MenuItem
                                 Click="MenuItem_Click"
                                 Header="Flip Normal"

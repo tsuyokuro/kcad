@@ -5,6 +5,13 @@ namespace Plotter.Controller
 {
     public class PlotterObserver
     {
+        public enum MessageType
+        {
+            INFO,
+            INPUT,
+            ERROR,
+        }
+
         public Action<PlotterController, PlotterStateInfo> StateChanged = (controller, state) => { };
 
         public Action<PlotterController, MenuInfo, int, int> RequestContextMenu = (controller, state, x, y) => { };
@@ -20,5 +27,9 @@ namespace Plotter.Controller
         public Action<int> SetTreeViewPos = (index) => { };
 
         public Func<uint, int> FindTreeViewItem = (id) => { return 0; /* idx */ };
+
+        public Action<string, MessageType> OpenPopupMessage = (text, messageType) => { };
+
+        public Action ClosePopupMessage = () => { };
     }
 }

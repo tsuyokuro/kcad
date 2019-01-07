@@ -1,135 +1,88 @@
 ﻿using OpenTK;
 using System;
-using System.Drawing;
-
-using static System.Math;
 using CadDataTypes;
 
 namespace Plotter
 {
     public abstract class DrawContext : IDisposable
     {
-        Action<DrawContext> mOnPush;
+        protected Action<DrawContext> mOnPush;
 
         public Action<DrawContext> OnPush
         {
-            set
-            {
-                mOnPush = value;
-            }
+            set => mOnPush = value;
+            get => mOnPush;
         }
-
-        // 用紙サイズ
-        //public PaperPageSize PageSize = new PaperPageSize();
 
         // 画素/Milli
         // 1ミリあたりの画素数
-        public double UnitPerMilli = 1;
-
-        // 1inchは何ミリ?
-        public const double MILLI_PER_INCH = 25.4;
+        protected double mUnitPerMilli = 1;
+        public double UnitPerMilli
+        {
+            set => mUnitPerMilli = value;
+            get => mUnitPerMilli;
+        }
 
         // 視点
-        protected Vector3d Eye = Vector3d.UnitZ * 1000.0;
+        protected Vector3d mEye = Vector3d.UnitZ * 1000.0;
+        Vector3d Eye => mEye;
 
         // 注視点
-        protected Vector3d LookAt = Vector3d.Zero;
-
-        // 上を示す Vector
-        protected Vector3d UpVector = Vector3d.UnitY;
+        protected Vector3d mLookAt = Vector3d.Zero;
+        Vector3d LookAt => mLookAt;
 
         // 投影面までの距離
-        protected double ProjectionNear = 500.0;
+        protected double mProjectionNear = 500.0;
+        public double ProjectionNear => mProjectionNear;
 
         // 視野空間の遠方側クリップ面までの距離
-        protected double ProjectionFar = 1500.0;
+        protected double mProjectionFar = 1500.0;
+        public double ProjectionFar => mProjectionFar;
 
         // 視野角　大きければ広角レンズ、小さければ望遠レンズ
-        protected double FovY = Math.PI / 4;
+        protected double mFovY = Math.PI / 4;
+        public double FovY => mFovY;
 
+        // 上を示す Vector
+        protected Vector3d mUpVector = Vector3d.UnitY;
+        public Vector3d UpVector => mUpVector;
 
         // 投影スクリーンの向き
         protected Vector3d mViewDir = default(Vector3d);
-
-        public virtual Vector3d ViewDir
-        {
-            get
-            {
-                return mViewDir;
-            }
-        }
+        public virtual Vector3d ViewDir => mViewDir;
 
         // ワールド座標系から視点座標系への変換(ビュー変換)行列
         protected UMatrix4 mViewMatrix = new UMatrix4();
-
-        public UMatrix4 ViewMatrix
-        {
-            get { return mViewMatrix; }
-        }
+        public UMatrix4 ViewMatrix => mViewMatrix;
 
         // 視点座標系からワールド座標系への変換行列
         protected UMatrix4 mViewMatrixInv = new UMatrix4();
-
-        public UMatrix4 ViewMatrixInv
-        {
-            get { return mViewMatrixInv; }
-        }
-
+        public UMatrix4 ViewMatrixInv => mViewMatrixInv;
 
         // 視点座標系から投影座標系への変換行列
         protected UMatrix4 mProjectionMatrix = new UMatrix4();
-
-        public UMatrix4 ProjectionMatrix
-        {
-            get { return mProjectionMatrix; }
-        }
-
+        public UMatrix4 ProjectionMatrix => mProjectionMatrix;
 
         // 投影座標系から視点座標系への変換行列
         protected UMatrix4 mProjectionMatrixInv = new UMatrix4();
-
-        public UMatrix4 ProjectionMatrixInv
-        {
-            get { return mProjectionMatrixInv; }
-        }
+        public UMatrix4 ProjectionMatrixInv => mProjectionMatrixInv;
 
 
         // Screen 座標系の原点 
-        protected CadVector mViewOrg;
-
         // 座標系の原点がView座標上で何処にあるかを示す
+        protected CadVector mViewOrg;
         public CadVector ViewOrg
         {
-            set
-            {
-                mViewOrg = value;
-            }
-
-            get
-            {
-                return mViewOrg;
-            }
+            set => mViewOrg = value;
+            get => mViewOrg;
         }
 
         public double mViewWidth = 32;
         public double mViewHeight = 32;
 
         // Screenのサイズ
-        public double ViewWidth
-        {
-            get
-            {
-                return mViewWidth;
-            }
-        }
-
-        public double ViewHeight
-        {
-            get
-            {
-                return mViewHeight;
-            }
-        }
+        public double ViewWidth => mViewWidth;
+        public double ViewHeight => mViewHeight;
 
         // 縮尺
         public double WorldScale = 1.0;
@@ -141,14 +94,7 @@ namespace Plotter
         public DrawTools Tools = new DrawTools();
 
         protected IDrawing mDrawing;
-
-        public IDrawing Drawing
-        {
-            get
-            {
-                return mDrawing;
-            }
-        }
+        public IDrawing Drawing => mDrawing;
 
         public virtual void CopyFrom(DrawContext dc)
         {
@@ -159,13 +105,13 @@ namespace Plotter
         public virtual void CopyMetrics(DrawContext dc)
         {
             //PageSize = dc.PageSize.clone();
-            UnitPerMilli = dc.UnitPerMilli;
-            Eye = dc.Eye;
-            LookAt = dc.LookAt;
-            UpVector = dc.UpVector;
-            ProjectionNear = dc.ProjectionNear;
-            ProjectionFar = dc.ProjectionFar;
-            FovY = dc.FovY;
+            mUnitPerMilli = dc.mUnitPerMilli;
+            mEye = dc.mEye;
+            mLookAt = dc.mLookAt;
+            mUpVector = dc.mUpVector;
+            mProjectionNear = dc.mProjectionNear;
+            mProjectionFar = dc.mProjectionFar;
+            mFovY = dc.mFovY;
             mViewDir = dc.mViewDir;
 
             mViewMatrix = dc.mViewMatrix;
@@ -202,22 +148,7 @@ namespace Plotter
 
         public void Push()
         {
-            if (mOnPush != null)
-            {
-                mOnPush(this);
-            }
-        }
-
-        // set dots per milli.
-        public virtual void SetUnitPerMilli(double upm)
-        {
-            UnitPerMilli = upm;
-        }
-
-        // Calc inch units per milli.
-        public virtual void SetUnitPerInch(double unit)
-        {
-            UnitPerMilli = unit / MILLI_PER_INCH;
+            mOnPush?.Invoke(this);
         }
 
         public abstract CadVector WorldPointToDevPoint(CadVector pt);
@@ -230,35 +161,35 @@ namespace Plotter
 
         public virtual double UnitToMilli(double d)
         {
-            return d / UnitPerMilli;
+            return d / mUnitPerMilli;
         }
 
         public virtual double MilliToUnit(double d)
         {
-            return d * UnitPerMilli;
+            return d * mUnitPerMilli;
         }
 
         public virtual void RecalcViewDirFromCameraDirection()
         {
-            Vector3d ret = LookAt - Eye;
+            Vector3d ret = mLookAt - mEye;
             ret.Normalize();
             mViewDir = ret;
         }
 
         public virtual void CopyCamera(DrawContext dc)
         {
-            SetCamera(dc.Eye, dc.LookAt, dc.UpVector);
+            SetCamera(dc.mEye, dc.mLookAt, dc.mUpVector);
             mProjectionMatrix = dc.mProjectionMatrix;
             mProjectionMatrixInv = dc.mProjectionMatrixInv;
         }
 
         public virtual void SetCamera(Vector3d eye, Vector3d lookAt, Vector3d upVector)
         {
-            Eye = eye;
-            LookAt = lookAt;
-            UpVector = upVector;
+            mEye = eye;
+            mLookAt = lookAt;
+            mUpVector = upVector;
 
-            mViewMatrix.GLMatrix = Matrix4d.LookAt(Eye, LookAt, UpVector);
+            mViewMatrix.GLMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
 
             mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
 

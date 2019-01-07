@@ -55,7 +55,7 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>KCad.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -196,6 +196,8 @@
     </ApplicationDefinition>
     <Compile Include="Controls\CadConsole\AnsiEsc.cs" />
     <Compile Include="Controls\CadConsole\TextLine.cs" />
+    <Compile Include="Controls\PopupEx.cs" />
+    <Compile Include="Controls\WindowsAPI.cs" />
     <Compile Include="Dialogs\DocumentSettingsDialog.xaml.cs">
       <DependentUpon>DocumentSettingsDialog.xaml</DependentUpon>
     </Compile>
@@ -211,6 +213,7 @@
     <Compile Include="plotter\Controller\InteractCtrl.cs" />
     <Compile Include="plotter\Controller\PlotterController_action.cs" />
     <Compile Include="plotter\Controller\PlotterController_context_menu.cs" />
+    <Compile Include="plotter\Controller\PlotterTaskRunner.cs" />
     <Compile Include="plotter\Controller\PlotterUtil.cs" />
     <Compile Include="plotter\Controller\PlotterClipboard.cs" />
     <Compile Include="plotter\Controller\PlotterObserver.cs" />

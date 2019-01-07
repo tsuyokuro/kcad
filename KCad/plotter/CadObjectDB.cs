@@ -331,7 +331,7 @@ namespace Plotter
                 DOut.Indent++;
                 foreach (CadLayer layer in mLayerList)
                 {
-                    layer.sdump();
+                    layer.dump();
                 }
                 DOut.Indent--;
                 DOut.pl("}");

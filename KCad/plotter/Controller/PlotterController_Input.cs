@@ -2,10 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using System.Windows.Forms;
 using CadDataTypes;
 using KCad;
@@ -17,18 +13,6 @@ namespace Plotter.Controller
         public GideLineManager GideLines = new GideLineManager();
 
         public InteractCtrl mInteractCtrl = new InteractCtrl();
-
-        public double PointSnapRange
-        {
-            set;
-            get;
-        } = 6;
-
-        public double LineSnapRange
-        {
-            set;
-            get;
-        } = 8;
 
         public CadMouse Mouse { get; } = new CadMouse();
 
@@ -235,7 +219,7 @@ namespace Plotter.Controller
         private SelectContext PointSelectNearest(SelectContext sc)
         {
             mPointSearcher.Clean();
-            mPointSearcher.SetRangePixel(sc.DC, PointSnapRange);
+            mPointSearcher.SetRangePixel(sc.DC, SettingsHolder.Settings.PointSnapRange);
 
             if (CurrentFigure != null)
             {
@@ -303,7 +287,7 @@ namespace Plotter.Controller
         private SelectContext SegSelectNearest(SelectContext sc)
         {
             mSegSearcher.Clean();
-            mSegSearcher.SetRangePixel(sc.DC, LineSnapRange);
+            mSegSearcher.SetRangePixel(sc.DC, SettingsHolder.Settings.LineSnapRange);
             mSegSearcher.SetTargetPoint(sc.Cursor);
 
             mSegSearcher.SearchAllLayer(sc.DC, mDB);
@@ -327,7 +311,7 @@ namespace Plotter.Controller
 
             CadVector t = sc.DC.WorldPointToDevPoint(center);
 
-            if ((t - sc.CursorScrPt).Norm() < LineSnapRange)
+            if ((t - sc.CursorScrPt).Norm() < SettingsHolder.Settings.LineSnapRange)
             {
                 ObjDownPoint = center;
             }
@@ -672,8 +656,16 @@ namespace Plotter.Controller
                 }
             }
 
+            if (mInteractCtrl.IsActive)
+            {
+                foreach (CadVector v in mInteractCtrl.PointList)
+                {
+                    mPointSearcher.Check(dc, v);
+                }
+            }
+
             // 計測用オブジェクトの点のチェック
-            if (MeasureFigureCreator != null)
+                if (MeasureFigureCreator != null)
             {
                 mPointSearcher.Check(dc, MeasureFigureCreator.Figure.PointList);
             }
@@ -746,7 +738,7 @@ namespace Plotter.Controller
 
                     CadVector t = dc.WorldPointToDevPoint(center);
 
-                    if ((t - CrossCursor.Pos).Norm() < LineSnapRange)
+                    if ((t - CrossCursor.Pos).Norm() < SettingsHolder.Settings.LineSnapRange)
                     {
                         HighlightPointList.Add(new HighlightPointListItem(center));
 
@@ -826,7 +818,7 @@ namespace Plotter.Controller
                 cursor.Pos.y = mPointSearcher.GetYMatch().PointScrn.y;
             }
 
-            RulerInfo ri = RulerSet.Capture(dc, cursor, LineSnapRange);
+            RulerInfo ri = RulerSet.Capture(dc, cursor, SettingsHolder.Settings.LineSnapRange);
 
             if (ri.IsValid)
             {
@@ -859,7 +851,7 @@ namespace Plotter.Controller
             HighlightPointList.Clear();
 
             mPointSearcher.Clean();
-            mPointSearcher.SetRangePixel(dc, PointSnapRange);
+            mPointSearcher.SetRangePixel(dc, SettingsHolder.Settings.PointSnapRange);
             mPointSearcher.SetTargetPoint(CrossCursor);
 
             // (0, 0, 0)にスナップするようにする
@@ -882,7 +874,7 @@ namespace Plotter.Controller
             EvalPointSearcher(dc);
 
             mSegSearcher.Clean();
-            mSegSearcher.SetRangePixel(dc, LineSnapRange);
+            mSegSearcher.SetRangePixel(dc, SettingsHolder.Settings.LineSnapRange);
             mSegSearcher.SetTargetPoint(CrossCursor);
 
             if (SettingsHolder.Settings.SnapToSegment)
