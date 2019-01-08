@@ -691,7 +691,7 @@ namespace KCad
             FormattedText ft = GetFormattedText(s, fgb);
 
             Point pt2 = pt;
-            pt2.X += ft.Width;
+            pt2.X += ft.WidthIncludingTrailingWhitespace; // 末尾のspaceも含む幅
             pt2.Y += ft.Height;
 
             Brush bgb;

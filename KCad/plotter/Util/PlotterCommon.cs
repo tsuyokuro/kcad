@@ -57,7 +57,15 @@ namespace Plotter
         {
             println(
                     AnsiEsc.RedBG +
-                    Resources.error_title + ": " + s
+                    " " + Resources.error_title + ": " + s + " "
+                    );
+        }
+
+        public static void printFaile(string s)
+        {
+            println(
+                    AnsiEsc.Yellow +
+                    Resources.faile_title + ": " + s
                     );
         }
     }
