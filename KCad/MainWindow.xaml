@@ -129,12 +129,12 @@
             PlacementTarget="{Binding ElementName=viewContainer}"
             StaysOpen="true">
 
-            <Border Background="GreenYellow">
+            <Border Background="GreenYellow" CornerRadius="8" Padding="8">
                 <StackPanel Orientation="Horizontal">
                     <Image
                         x:Name="PopupMessageIcon"
                         Width="24"
-                        Margin="4,8,0,8"
+                        Margin="4,0,0,0"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Source="{DynamicResource infoIconDrawingImage}" />

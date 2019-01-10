@@ -160,7 +160,9 @@
                         Name="CustomBorder"
                         Background="{StaticResource ButtonColor}"
                         BorderBrush="{StaticResource ButtonColor}"
-                        BorderThickness="1">
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        >
 
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
 
@@ -174,8 +176,8 @@
                         </Trigger>
 
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="CustomBorder" Property="BorderBrush" Value="GreenYellow" />
-                            <Setter TargetName="CustomBorder" Property="Background" Value="{StaticResource ButtonColor}" />
+                            <Setter TargetName="CustomBorder" Property="BorderBrush" Value="{StaticResource ToggleButtonCheckedBGColor}" />
+                            <Setter TargetName="CustomBorder" Property="Background" Value="{StaticResource ToggleButtonCheckedBGColor}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -233,7 +235,9 @@
                         Padding="2"
                         Background="{StaticResource ButtonColor}"
                         BorderBrush="{StaticResource ButtonColor}"
-                        BorderThickness="0">
+                        BorderThickness="0"
+                        CornerRadius="3"
+                        >
 
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
 
