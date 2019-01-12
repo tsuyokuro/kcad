@@ -453,6 +453,38 @@
 
                     </ToggleButton>
 
+                    <ToggleButton
+                        Margin="1,2,0,2"
+                        IsChecked="{Binding SnapToZero}"
+                        Style="{StaticResource ToolToggleButton}">
+                        <Border
+                            Width="20"
+                            Height="20"
+                            Padding="2">
+                            <Image
+                                Width="16"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Source="{StaticResource SnapToZeroDrawingImage}" />
+                        </Border>
+                    </ToggleButton>
+
+                    <ToggleButton
+                        Margin="1,2,0,2"
+                        IsChecked="{Binding SnapToLastDownPoint}"
+                        Style="{StaticResource ToolToggleButton}">
+                        <Border
+                            Width="20"
+                            Height="20"
+                            Padding="2">
+                            <Image
+                                Width="16"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Source="{StaticResource SnapToLastDownDrawingImage}" />
+                        </Border>
+                    </ToggleButton>
+
                 </StackPanel>
 
                 <Label
