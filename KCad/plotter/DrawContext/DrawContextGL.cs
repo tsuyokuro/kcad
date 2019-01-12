@@ -45,8 +45,6 @@ namespace Plotter
         {
             Wnd = control;
 
-            //WoldScale = 0.2f;
-
             WorldScale = 1.0f;
             Tools.Setup(DrawTools.ToolsType.DARK_GL);
 

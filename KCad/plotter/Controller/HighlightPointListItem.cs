@@ -12,7 +12,7 @@ namespace Plotter
         public CadVector Point;
         public int Pen;
 
-        public HighlightPointListItem(CadVector p, int pen = DrawTools.PEN_POINT_HIGHLITE)
+        public HighlightPointListItem(CadVector p, int pen = DrawTools.PEN_POINT_HIGHLIGHT)
         {
             Point = p;
             Pen = pen;

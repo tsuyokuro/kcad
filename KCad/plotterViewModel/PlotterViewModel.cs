@@ -914,13 +914,13 @@ namespace Plotter
 
             dlg.Owner = mMainWindow;
 
-            dlg.WoldScale = PlotterView1.DrawContext.WorldScale;
+            dlg.WorldScale = PlotterView1.DrawContext.WorldScale;
 
             bool? result = dlg.ShowDialog();
 
             if (result ?? false)
             {
-                SetWorldScale(dlg.WoldScale);
+                SetWorldScale(dlg.WorldScale);
                 Redraw();
             }
         }

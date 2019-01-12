@@ -32,7 +32,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_CURSOR2] = Color.FromArgb(128, 255, 128);
             PenColorTbl[DrawTools.PEN_DEFAULT_FIGURE] = Color.White;
             PenColorTbl[DrawTools.PEN_TEMP_FIGURE] = Color.CadetBlue;
-            PenColorTbl[DrawTools.PEN_POINT_HIGHLITE] = Color.Orange;
+            PenColorTbl[DrawTools.PEN_POINT_HIGHLIGHT] = Color.Orange;
             PenColorTbl[DrawTools.PEN_MATCH_FIGURE] = Color.Red;
             PenColorTbl[DrawTools.PEN_MATCH_SEG] = Color.Green;
             PenColorTbl[DrawTools.PEN_LAST_POINT_MARKER] = Color.CornflowerBlue;
@@ -43,7 +43,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_RELATIVE_POINT] = Color.CornflowerBlue;
             PenColorTbl[DrawTools.PEN_TEST_FIGURE] = Color.Yellow;
             PenColorTbl[DrawTools.PEN_GRID] = Color.FromArgb(192, 128, 92);
-            PenColorTbl[DrawTools.PEN_POINT_HIGHTLITE2] = Color.SpringGreen;
+            PenColorTbl[DrawTools.PEN_POINT_HIGHLIGHT2] = Color.SpringGreen;
             PenColorTbl[DrawTools.PEN_FIGURE_HIGHLIGHT] = Color.HotPink;
             PenColorTbl[DrawTools.PEN_AXIS2] = Color.LightSeaGreen;
             PenColorTbl[DrawTools.PEN_PALE_FIGURE] = Color.FromArgb(0x7E, 0x7E, 0x7E);
@@ -75,7 +75,7 @@ namespace Plotter
         public const int PEN_CURSOR = 4;
         public const int PEN_CURSOR2 = 5;
         public const int PEN_TEMP_FIGURE = 6;
-        public const int PEN_POINT_HIGHLITE = 7;
+        public const int PEN_POINT_HIGHLIGHT = 7;
         public const int PEN_MATCH_FIGURE = 8;
         public const int PEN_MATCH_SEG = 9;
         public const int PEN_LAST_POINT_MARKER = 10;
@@ -86,7 +86,7 @@ namespace Plotter
         public const int PEN_RELATIVE_POINT = 15;
         public const int PEN_TEST_FIGURE = 16;
         public const int PEN_GRID = 17;
-        public const int PEN_POINT_HIGHTLITE2 = 18;
+        public const int PEN_POINT_HIGHLIGHT2 = 18;
         public const int PEN_FIGURE_HIGHLIGHT = 19;
         public const int PEN_AXIS2 = 20;
         public const int PEN_PALE_FIGURE = 21;
