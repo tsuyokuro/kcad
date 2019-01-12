@@ -19,7 +19,7 @@ namespace KCad.Dialogs
     /// </summary>
     public partial class DocumentSettingsDialog : Window
     {
-        public double WoldScale = 1.0;
+        public double WorldScale = 1.0;
 
         public DocumentSettingsDialog()
         {
@@ -36,7 +36,7 @@ namespace KCad.Dialogs
 
         private void DocumentSettingsDialog_Loaded(object sender, RoutedEventArgs e)
         {
-            reduced_scale.Text = WoldScale.ToString();
+            reduced_scale.Text = WorldScale.ToString();
         }
 
         private void Cancel_button_Click(object sender, RoutedEventArgs e)
@@ -51,7 +51,7 @@ namespace KCad.Dialogs
 
             ret = Double.TryParse(reduced_scale.Text, out v);
 
-            WoldScale = v;
+            WorldScale = v;
 
             DialogResult = ret;
         }

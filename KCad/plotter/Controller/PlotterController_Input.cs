@@ -34,10 +34,10 @@ namespace Plotter.Controller
         // 生のL button down point (デバイス座標系)
         private CadVector RawDownPoint = default;
 
-        // Snap等で補正された L button down point (Wold座標系)
+        // Snap等で補正された L button down point (World座標系)
         public CadVector LastDownPoint = default;
 
-        // 選択したObjectの点の座標 (Wold座標系)
+        // 選択したObjectの点の座標 (World座標系)
         private CadVector ObjDownPoint = default;
         private CadVector SObjDownPoint = default;
 
@@ -710,7 +710,7 @@ namespace Plotter.Controller
 
             if (mxy.IsValid)
             {
-                HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHTLITE2));
+                HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHLIGHT2));
                 tp = dc.WorldPointToDevPoint(mx.Point);
 
                 SnapPoint = mxy.Point;
