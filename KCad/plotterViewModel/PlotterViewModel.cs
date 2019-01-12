@@ -127,84 +127,14 @@ namespace Plotter
             }
         }
 
-        #region Snap settings
-        public bool SnapToGrid
+        private SettingsVeiwModel mSettingsVeiwModel;
+
+        public SettingsVeiwModel Settings
         {
-            set
-            {
-                SettingsHolder.Settings.SnapToGrid = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
-            }
-
-            get
-            {
-                return SettingsHolder.Settings.SnapToGrid;
-            }
+            get => mSettingsVeiwModel;
         }
-
-        public bool SnapToPoint
-        {
-            set
-            {
-                SettingsHolder.Settings.SnapToPoint = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
-            }
-
-            get
-            {
-                return SettingsHolder.Settings.SnapToPoint;
-            }
-        }
-
-        public bool SnapToSegment
-        {
-            set
-            {
-                SettingsHolder.Settings.SnapToSegment = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
-            }
-
-            get
-            {
-                return SettingsHolder.Settings.SnapToSegment;
-            }
-        }
-
-        public bool SnapToLine
-        {
-            set
-            {
-                SettingsHolder.Settings.SnapToLine = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
-            }
-
-            get
-            {
-                return SettingsHolder.Settings.SnapToLine;
-            }
-        }
-        #endregion
 
         #region Tree view
-        public bool FilterTreeView
-        {
-            set
-            {
-                SettingsHolder.Settings.FilterTreeView = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
-
-                if (Controller != null)
-                {
-                    Controller.UpdateTreeView(true);
-                }
-            }
-
-            get
-            {
-                return SettingsHolder.Settings.FilterTreeView;
-            }
-        }
-
         private void UpdateTreeView(bool remakeTree)
         {
             if (mCadObjectTreeView == null)
@@ -271,44 +201,6 @@ namespace Plotter
         #endregion
 
 
-
-        #region 表示設定
-
-        public bool DrawFaceOutline
-        {
-            set
-            {
-                SettingsHolder.Settings.DrawFaceOutline = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawFaceOutline)));
-
-                Redraw();
-            }
-
-            get
-            {
-                return SettingsHolder.Settings.DrawFaceOutline;
-            }
-        }
-
-        public bool FillFace
-        {
-            set
-            {
-                SettingsHolder.Settings.FillFace = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillFace)));
-
-                Redraw();
-            }
-
-            get
-            {
-                return SettingsHolder.Settings.FillFace;
-            }
-        }
-
-        #endregion
-
-
         ListBox mLayerListView;
 
         public ListBox LayerListView
@@ -340,9 +232,6 @@ namespace Plotter
 
         private MainWindow mMainWindow;
 
-        private WindowsFormsHost mViewHost = null;
-
-
         private PlotterView PlotterView1 = null;
 
         private PlotterViewGL PlotterViewGL1 = null;
@@ -360,12 +249,13 @@ namespace Plotter
 
         Window mEditorWindow;
 
-        public PlotterViewModel(MainWindow mainWindow, WindowsFormsHost viewHost)
+        public PlotterViewModel(MainWindow mainWindow)
         {
             mController = new PlotterController();
 
+            mSettingsVeiwModel = new SettingsVeiwModel(mController);
+
             mMainWindow = mainWindow;
-            mViewHost = viewHost;
 
             InitCommandMap();
             InitKeyMap();
@@ -428,7 +318,7 @@ namespace Plotter
 
             mController.CurrentDC = view.DrawContext;
 
-            mViewHost.Child = view.FromsControl;
+            mMainWindow.SetMainView(view);
         }
 
         CadObjectTreeView mCadObjectTreeView;
@@ -681,7 +571,7 @@ namespace Plotter
         {
             GridSettingsDialog dlg = new GridSettingsDialog();
 
-            dlg.GridSize = mController.Grid.GridSize;
+            dlg.GridSize = Settings.GridSize;
 
             dlg.Owner = mMainWindow;
 
@@ -689,7 +579,7 @@ namespace Plotter
 
             if (result.Value)
             {
-                mController.Grid.GridSize = dlg.GridSize;
+                Settings.GridSize = dlg.GridSize;
 
                 Redraw();
             }
@@ -701,15 +591,15 @@ namespace Plotter
 
             dlg.Owner = mMainWindow;
 
-            dlg.PointSnapRange = SettingsHolder.Settings.PointSnapRange;
-            dlg.LineSnapRange = SettingsHolder.Settings.LineSnapRange;
+            dlg.PointSnapRange = Settings.PointSnapRange;
+            dlg.LineSnapRange = Settings.LineSnapRange;
 
             bool? result = dlg.ShowDialog();
 
             if (result.Value)
             {
-                SettingsHolder.Settings.PointSnapRange = dlg.PointSnapRange;
-                SettingsHolder.Settings.LineSnapRange = dlg.LineSnapRange;
+                Settings.PointSnapRange = dlg.PointSnapRange;
+                Settings.LineSnapRange = dlg.LineSnapRange;
 
                 Redraw();
             }
@@ -1169,6 +1059,7 @@ namespace Plotter
             textBox.CandidateList = Controller.ScriptEnv.AutoCompleteList;
         }
 
+        /*
         public void LoadSettings()
         {
             PlotterSettings settings = SettingsHolder.Settings;
@@ -1200,15 +1091,16 @@ namespace Plotter
 
             settings.Save();
         }
+        */
 
         public void Open()
         {
-            LoadSettings();
+            Settings.Load();
         }
 
         public void Close()
         {
-            SaveSettings();
+            Settings.Save();
 
             if (mEditorWindow != null)
             {

@@ -223,8 +223,8 @@ namespace Plotter.Controller
             List<CadFigure> target = GetSelectedRootFigureList();
             if (target.Count <= 0)
             {
-                ItConsole.printError(
-                    Resources.error_select_objects_before_flip);
+                ItConsole.printFaile(
+                    Resources.warning_select_objects_before_flip);
                 return;
             }
 
@@ -236,8 +236,8 @@ namespace Plotter.Controller
             List<CadFigure> target = GetSelectedRootFigureList();
             if (target.Count <= 0)
             {
-                ItConsole.printError(
-                    Resources.error_select_objects_before_flip_and_copy);
+                ItConsole.printFaile(
+                    Resources.warning_select_objects_before_flip_and_copy);
                 return;
             }
 

@@ -98,29 +98,20 @@ namespace KCad.Properties {
         }
         
         /// <summary>
-        ///   Select objects before flip commnad に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string error_select_objects_before_flip {
-            get {
-                return ResourceManager.GetString("error_select_objects_before_flip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Select objects before flip commnad に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string error_select_objects_before_flip_and_copy {
-            get {
-                return ResourceManager.GetString("error_select_objects_before_flip_and_copy", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   ERROR に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string error_title {
             get {
                 return ResourceManager.GetString("error_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Failed に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string faile_title {
+            get {
+                return ResourceManager.GetString("faile_title", resourceCulture);
             }
         }
         
@@ -238,6 +229,24 @@ namespace KCad.Properties {
         public static string notice_was_ungrouped {
             get {
                 return ResourceManager.GetString("notice_was_ungrouped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Select objects before flip commnad に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string warning_select_objects_before_flip {
+            get {
+                return ResourceManager.GetString("warning_select_objects_before_flip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Select objects before flip commnad に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string warning_select_objects_before_flip_and_copy {
+            get {
+                return ResourceManager.GetString("warning_select_objects_before_flip_and_copy", resourceCulture);
             }
         }
     }

@@ -83,7 +83,7 @@ def getldp():
 def moveCursor(x, y, z):
     SE.MoveCursor(x, y, z)
 
-#[AC] setCursor(x, y, z)
+#[AC] setCursor(x=0, y=0, z=0)
 def setCursor(x, y, z):
     SE.SetCursor(x, y, z)
 
@@ -211,23 +211,23 @@ def currentFigID():
     return SE.GetCurrentFigureID()
 
 
-#[AC] addMoveGide(dir=unitVX)
-def addMoveGide(dir):
-    SE.AddMoveGide(dir)
-    SE.EnableMoveGide(True)
+#[AC] addMoveGuide(dir=unitVX)
+def addMoveGuide(dir):
+    SE.AddMoveGuide(dir)
+    SE.EnableMoveGuide(True)
 
-#[AC] resetMoveGide()
-def clearMoveGide():
-    SE.ClearMoveGide()
-    SE.EnableMoveGide(False);
+#[AC] resetMoveGuide()
+def clearMoveGuide():
+    SE.ClearMoveGuide()
+    SE.EnableMoveGuide(False);
 
-#[AC] enableMoveGide()
-def enableMoveGide():
-    SE.EnableMoveGide(True)
+#[AC] enableMoveGuide()
+def enableMoveGuide():
+    SE.EnableMoveGuide(True)
 
-#[AC] disableMoveGide()
-def disableMoveGide():
-    SE.EnableMoveGide(False)
+#[AC] disableMoveGuide()
+def disableMoveGuide():
+    SE.EnableMoveGuide(False)
 
 
 #[AC] rotatev(v=unitVX, axis=unitVZ, deg=45.0)

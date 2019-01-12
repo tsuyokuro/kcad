@@ -129,12 +129,15 @@
             PlacementTarget="{Binding ElementName=viewContainer}"
             StaysOpen="true">
 
-            <Border Background="GreenYellow">
+            <Border
+                Padding="8"
+                Background="GreenYellow"
+                CornerRadius="8">
                 <StackPanel Orientation="Horizontal">
                     <Image
                         x:Name="PopupMessageIcon"
                         Width="24"
-                        Margin="4,8,0,8"
+                        Margin="4,0,0,0"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Source="{DynamicResource infoIconDrawingImage}" />
@@ -346,12 +349,20 @@
                             IsCheckable="True"
                             IsChecked="{Binding SnapToLine}" />
                         <MenuItem
+                            Header="Snap to zero"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToZero}" />
+                        <MenuItem
+                            Header="Snap to last down"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToLastDownPoint}" />
+                        <MenuItem
                             Click="MenuItem_Click"
-                            Header="Grid Settings"
+                            Header="Grid Settings..."
                             Tag="grid_settings" />
                         <MenuItem
                             Click="MenuItem_Click"
-                            Header="Snap Settings"
+                            Header="Snap Settings..."
                             Tag="snap_settings" />
                     </MenuItem>
                     <MenuItem x:Name="DrawOptionMenu" Header="Draw">
