@@ -39,7 +39,7 @@ namespace KCad
             ItConsole.FormatPrintFunc = MyConsole.Printf;
             ItConsole.clear = MyConsole.Clear;
 
-            ViewModel = new PlotterViewModel(this, viewContainer);
+            ViewModel = new PlotterViewModel(this);
 
             viewContainer.Focusable = true;
 
@@ -71,13 +71,13 @@ namespace KCad
 
             ViewModePanel.DataContext = ViewModel;
 
-            SnapMenu.DataContext = ViewModel;
+            SnapMenu.DataContext = ViewModel.Settings;
 
-            DrawOptionMenu.DataContext = ViewModel;
+            DrawOptionMenu.DataContext = ViewModel.Settings;
 
-            ToolBar1.DataContext = ViewModel;
+            ToolBar1.DataContext = ViewModel.Settings;
 
-            TreeViewToolBar.DataContext = ViewModel;
+            TreeViewToolBar.DataContext = ViewModel.Settings;
 
 
             BtnCloseWindow.Click += (sender, e) => { Close(); };
@@ -236,5 +236,10 @@ namespace KCad
             }
         }
         #endregion
+
+        public void SetMainView(IPlotterView view)
+        {
+            viewContainer.Child = view.FromsControl;
+        }
     }
 }

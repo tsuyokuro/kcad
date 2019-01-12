@@ -7,24 +7,24 @@ using System.Threading.Tasks;
 
 namespace Plotter.Controller
 {
-    public class GideLineManager
+    public class GuideLineManager
     {
         public bool Enabled = false;
 
-        public VectorList GideVectors = new VectorList(2);
+        public VectorList GuideVectors = new VectorList(2);
 
         public void Add(CadVector v)
         {
-            GideVectors.Add(v);
+            GuideVectors.Add(v);
         }
 
         public void Clear()
         {
-            GideVectors.Clear();
+            GuideVectors.Clear();
             Enabled = false;
         }
 
-        public CadVector GetOnGideLine(CadVector sp, CadVector p)
+        public CadVector GetOnGuideLine(CadVector sp, CadVector p)
         {
             double min = Double.MaxValue;
 
@@ -32,9 +32,9 @@ namespace Plotter.Controller
 
             match.IsCross = false;
 
-            for (int i = 0; i < GideVectors.Count; i++)
+            for (int i = 0; i < GuideVectors.Count; i++)
             {
-                CrossInfo ci = CadUtil.PerpendicularCrossLine(sp, sp + GideVectors[i], p);
+                CrossInfo ci = CadUtil.PerpendicularCrossLine(sp, sp + GuideVectors[i], p);
 
                 if (!ci.IsCross)
                 {

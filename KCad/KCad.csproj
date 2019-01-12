@@ -208,7 +208,7 @@
     <Compile Include="plotterViewModel\PlotterViewModel_serialize.cs" />
     <Compile Include="plotter\Controller\ContextMenuInfo.cs" />
     <Compile Include="plotter\Controller\ControllerConst.cs" />
-    <Compile Include="plotter\Controller\GideLineManager.cs" />
+    <Compile Include="plotter\Controller\GuideLineManager.cs" />
     <Compile Include="plotter\Controller\HighlightPointListItem.cs" />
     <Compile Include="plotter\Controller\InteractCtrl.cs" />
     <Compile Include="plotter\Controller\PlotterController_action.cs" />

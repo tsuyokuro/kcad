@@ -5,12 +5,246 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using CadDataTypes;
+using System.ComponentModel;
+using Plotter.Controller;
 
 namespace Plotter
 {
     public static class SettingsHolder
     {
         public static PlotterSettings Settings = new PlotterSettings();
+    }
+
+    public class SettingsVeiwModel : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public PlotterController Controller;
+
+        public bool SnapToGrid
+        {
+            set
+            {
+                SettingsHolder.Settings.SnapToGrid = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.SnapToGrid;
+            }
+        }
+
+        public bool SnapToPoint
+        {
+            set
+            {
+                SettingsHolder.Settings.SnapToPoint = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.SnapToPoint;
+            }
+        }
+
+        public bool SnapToSegment
+        {
+            set
+            {
+                SettingsHolder.Settings.SnapToSegment = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.SnapToSegment;
+            }
+        }
+
+        public bool SnapToLine
+        {
+            set
+            {
+                SettingsHolder.Settings.SnapToLine = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.SnapToLine;
+            }
+        }
+
+        public bool FilterTreeView
+        {
+            set
+            {
+                SettingsHolder.Settings.FilterTreeView = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
+
+                if (Controller != null)
+                {
+                    Controller.UpdateTreeView(true);
+                }
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.FilterTreeView;
+            }
+        }
+
+        public bool DrawFaceOutline
+        {
+            set
+            {
+                SettingsHolder.Settings.DrawFaceOutline = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawFaceOutline)));
+
+                Redraw();
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.DrawFaceOutline;
+            }
+        }
+
+        public bool FillFace
+        {
+            set
+            {
+                SettingsHolder.Settings.FillFace = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillFace)));
+
+                Redraw();
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.FillFace;
+            }
+        }
+
+        public double InitialMoveLimit
+        {
+            set
+            {
+                SettingsHolder.Settings.InitialMoveLimit = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InitialMoveLimit)));
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.InitialMoveLimit;
+            }
+        }
+
+        public bool SnapToZero
+        {
+            set
+            {
+                SettingsHolder.Settings.SnapToZero = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToZero)));
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.SnapToZero;
+            }
+        }
+
+        public bool SnapToLastDownPoint
+        {
+            set
+            {
+                SettingsHolder.Settings.SnapToLastDownPoint = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLastDownPoint)));
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.SnapToLastDownPoint;
+            }
+        }
+
+        public CadVector GridSize
+        {
+            set
+            {
+                SettingsHolder.Settings.GridSize = value;
+                Controller.Grid.GridSize = value;
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.GridSize;
+            }
+        }
+
+        public double PointSnapRange
+        {
+            set
+            {
+                SettingsHolder.Settings.PointSnapRange = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PointSnapRange)));
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.PointSnapRange;
+            }
+        }
+
+        public double LineSnapRange
+        {
+            set
+            {
+                SettingsHolder.Settings.LineSnapRange = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LineSnapRange)));
+            }
+
+            get
+            {
+                return SettingsHolder.Settings.LineSnapRange;
+            }
+        }
+
+        public SettingsVeiwModel(PlotterController controller)
+        {
+            Controller = controller;
+        }
+
+        private void Redraw()
+        {
+            Controller.Redraw(Controller.CurrentDC);
+        }
+
+        public void Load()
+        {
+            SettingsHolder.Settings.Load();
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawFaceOutline)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillFace)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
+
+            Controller.Grid.GridSize = SettingsHolder.Settings.GridSize;
+        }
+
+        public void Save()
+        {
+            PlotterSettings settings = SettingsHolder.Settings;
+
+            settings.GridSize = Controller.Grid.GridSize;
+
+            settings.Save();
+        }
     }
 
     public class PlotterSettings

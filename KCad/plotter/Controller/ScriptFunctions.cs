@@ -1028,22 +1028,22 @@ namespace Plotter.Controller
             }
         }
 
-        public void AddMoveGide(CadVector dir)
+        public void AddMoveGuide(CadVector dir)
         {
-            Controller.GideLines.Add(dir);
+            Controller.GuideLines.Add(dir);
 
             //CadVector v2 = RotateVector(dir, (CadVector)(Controller.CurrentDC.ViewDir), 90.0);
-            //Controller.GideLines.Add(v2);
+            //Controller.GuideLines.Add(v2);
         }
 
-        public void ClearMoveGide()
+        public void ClearMoveGuide()
         {
-            Controller.GideLines.Clear();
+            Controller.GuideLines.Clear();
         }
 
-        public void EnableMoveGide(bool enable)
+        public void EnableMoveGuide(bool enable)
         {
-            Controller.GideLines.Enabled = enable;
+            Controller.GuideLines.Enabled = enable;
         }
 
         public CadVector RotateVector(CadVector v, CadVector axis, double angle)

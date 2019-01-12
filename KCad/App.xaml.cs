@@ -17,11 +17,7 @@
 
 using Plotter.Serializer;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -167,8 +163,8 @@ namespace KCad
             // 紛れさせる
             MpInitializer.Init();
 
-            this.MainWindow = new MainWindow();
-            this.MainWindow.Show();
+            MainWindow = new MainWindow();
+            MainWindow.Show();
 
             sw.Stop();
 

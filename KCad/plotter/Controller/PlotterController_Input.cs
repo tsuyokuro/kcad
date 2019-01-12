@@ -10,7 +10,7 @@ namespace Plotter.Controller
 {
     public partial class PlotterController
     {
-        public GideLineManager GideLines = new GideLineManager();
+        public GuideLineManager GuideLines = new GuideLineManager();
 
         public InteractCtrl mInteractCtrl = new InteractCtrl();
 
@@ -909,6 +909,10 @@ namespace Plotter.Controller
                 y = CrossCursor.Pos.y;
             }
 
+            CadVector pixp = CadVector.Create(x, y, 0) - OffsetScreen;
+            CadVector cp = dc.DevPointToWorldPoint(pixp);
+
+
             if (State == States.START_DRAGING_POINTS)
             {
                 //
@@ -925,16 +929,11 @@ namespace Plotter.Controller
                 }
             }
 
-            CadVector pixp = CadVector.Create(x, y, 0) - OffsetScreen;
-            CadVector cp = dc.DevPointToWorldPoint(pixp);
-
             if (State == States.DRAGING_POINTS)
             {
-                //mOffsetScreen.dump("Offset");
-
-                if (GideLines.Enabled)
+                if (GuideLines.Enabled)
                 {
-                    cp = GideLines.GetOnGideLine(LastDownPoint, cp);
+                    cp = GuideLines.GetOnGuideLine(LastDownPoint, cp);
                     pixp = dc.WorldPointToDevPoint(cp);
 
                     OffsetScreen = CadVector.Zero;
@@ -948,21 +947,16 @@ namespace Plotter.Controller
 
             SnapCursor(dc);
 
-            switch (State)
+            if (State == States.DRAGING_POINTS)
             {
-                case States.DRAGING_POINTS:
-                    {
-                        CadVector p0 = dc.DevPointToWorldPoint(MoveOrgScrnPoint);
-                        CadVector p1 = dc.DevPointToWorldPoint(CrossCursor.Pos);
+                CadVector p0 = dc.DevPointToWorldPoint(MoveOrgScrnPoint);
+                CadVector p1 = dc.DevPointToWorldPoint(CrossCursor.Pos);
 
-                        CadVector delta = p1 - p0;
+                CadVector delta = p1 - p0;
 
-                        MoveSelectedPoints(dc, delta);
+                MoveSelectedPoints(dc, delta);
 
-                        ObjDownPoint = SObjDownPoint + delta;
-
-                        break;
-                    }
+                ObjDownPoint = SObjDownPoint + delta;
             }
 
             Observer.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);
