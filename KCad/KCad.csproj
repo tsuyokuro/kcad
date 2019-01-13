@@ -382,7 +382,6 @@
     <Compile Include="plotter\undo\CadOpe.cs" />
     <Compile Include="plotter\CadSelection.cs" />
     <Compile Include="plotter\Util\CadUtil.cs" />
-    <Compile Include="plotter\undo\DiffData.cs" />
     <Compile Include="plotter\DrawContext\DrawContext.cs" />
     <Compile Include="plotter\undo\HistoryManager.cs" />
     <Compile Include="plotter\Util\CadConst.cs" />

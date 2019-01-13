@@ -349,7 +349,7 @@ namespace Plotter
 
         public virtual void InsertPointAt(int index, CadVector pt)
         {
-            if (index >= mPointList.Count - 1)
+            if (index > mPointList.Count - 1)
             {
                 mPointList.Add(pt);
                 return;

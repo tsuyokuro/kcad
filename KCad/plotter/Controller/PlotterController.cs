@@ -488,7 +488,7 @@ namespace Plotter.Controller
         {
             EditFigList = DB.GetSelectedFigList();
 
-            mSnapShotList = new CadOpeFigureSnapShotList();
+            mSnapShotList = CadOpe.CreateCadOpeFigureSnapShotList();
 
             mSnapShotList.StoreBefore(EditFigList);
 
