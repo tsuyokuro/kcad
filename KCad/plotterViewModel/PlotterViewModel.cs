@@ -5,21 +5,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using System.Drawing;
 using KCad;
 using System.Drawing.Printing;
-using System.Collections;
-using static System.Drawing.Printing.PrinterSettings;
 using CadDataTypes;
 using Plotter.Controller;
 using KCad.Dialogs;
-using System.IO;
-using Newtonsoft.Json.Linq;
-using Plotter.Serializer;
-using System.Threading.Tasks;
-using MessagePack;
 
 namespace Plotter
 {

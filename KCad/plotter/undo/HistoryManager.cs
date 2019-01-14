@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Plotter
 {
-    using Plotter;
-
     public class HistoryManager
     {
         private CadObjectDB mDB;

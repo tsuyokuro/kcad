@@ -3,7 +3,6 @@ using Plotter.Serializer;
 using System;
 using System.IO;
 using System.Reflection;
-using System.Xml;
 using CadDataTypes;
 using System.ComponentModel;
 using Plotter.Controller;

@@ -498,50 +498,6 @@ namespace Plotter
             DrawLine(pen, pz0, pz1);
         }
 
-        /*
-        public override void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb)
-        {
-            CadVector va = pa - cp;
-            CadVector vb = pb - cp;
-
-            if (va.Norm() < 0.01)
-            {
-                return;
-            }
-
-            CadVector normal = CadMath.Normal(va, vb);
-
-            int div = 64;
-
-            double dt = (double)(2.0 * Math.PI) / (double)div;
-
-            CadQuaternion q = CadQuaternion.RotateQuaternion(normal, dt);
-            CadQuaternion r = q.Conjugate();
-
-            CadVector p = va;
-            CadVector tp1 = pa;
-            CadVector tp2 = pa;
-
-
-            int i = 0;
-            for (; i < div - 1; i++)
-            {
-                CadQuaternion qp = CadQuaternion.FromPoint(p);
-                qp = r * qp;
-                qp = qp * q;
-
-                p = qp.ToPoint();
-
-                tp2 = p + cp;
-
-                DrawLine(pen, tp1, tp2);
-                tp1 = tp2;
-            }
-
-            DrawLine(pen, tp1, pa);
-        }
-        */
-
         private CadVector GetShiftForOutLine()
         {
             CadVector v = DC.DevVectorToWorldVector(CadVector.UnitX);

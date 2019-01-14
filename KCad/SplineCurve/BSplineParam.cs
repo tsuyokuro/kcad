@@ -1,7 +1,4 @@
-﻿using CadDataTypes;
-using Plotter;
-using System;
-
+﻿
 namespace SplineCurve
 {
     public class BSplineParam

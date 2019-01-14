@@ -2,7 +2,6 @@ using System.Collections.Generic;
 
 namespace Plotter
 {
-    using Newtonsoft.Json.Linq;
     using System;
     using System.Linq;
 

@@ -1,13 +1,6 @@
-﻿using KCad;
-using MessagePack;
-using Newtonsoft.Json.Linq;
+﻿using MessagePack;
 using Plotter.Serializer;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using CadDataTypes;
 

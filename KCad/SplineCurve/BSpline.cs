@@ -1,5 +1,4 @@
 using CadDataTypes;
-using System;
 
 namespace SplineCurve
 {

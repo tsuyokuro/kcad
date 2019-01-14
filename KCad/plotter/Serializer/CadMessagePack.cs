@@ -3,8 +3,6 @@ using MessagePack;
 using MyCollections;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CadDataTypes;
 using SplineCurve;
 using System.Drawing.Printing;

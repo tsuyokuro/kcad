@@ -2,8 +2,6 @@
 using KCad;
 using KCad.Properties;
 using System;
-using System.Diagnostics;
-using System.Threading;
 
 namespace Plotter
 {

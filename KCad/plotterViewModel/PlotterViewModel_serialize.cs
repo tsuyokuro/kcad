@@ -1,9 +1,7 @@
-﻿using MessagePack;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Plotter.Serializer;
 using System.ComponentModel;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace Plotter
 {

@@ -1,9 +1,4 @@
-﻿using OpenTK;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using static Plotter.CadFigure;
-using CadDataTypes;
+﻿using CadDataTypes;
 using SplineCurve;
 using Plotter.Serializer;
 using Newtonsoft.Json.Linq;

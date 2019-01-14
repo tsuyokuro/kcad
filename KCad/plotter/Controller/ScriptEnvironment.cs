@@ -1,27 +1,13 @@
 ﻿using KCad.Properties;
-using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
-using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using CadDataTypes;
-using HalfEdgeNS;
-using CarveWapper;
-using MeshUtilNS;
-using MeshMakerNS;
 using System.Threading.Tasks;
 using KCad;
-using System.Threading;
 
 namespace Plotter.Controller
 {
@@ -101,40 +87,6 @@ namespace Plotter.Controller
                 HelpMap[key] = s;
             }
         }
-
-        /*
-        Regex FigPtn = new Regex(@"fig[ ]*{[ ]*id\:[ ]*([0-9]+)[ ]*;[ ]*idx\:[ ]*([0-9]+)[ ]*;[ ]*}[ ]*");
-
-        public void MessageSelected(List<string> messages)
-        {
-            if (messages.Count == 0)
-            {
-                return;
-            }
-
-            string s = messages[messages.Count - 1];
-
-            Match match = FigPtn.Match(s);
-
-            if (match.Success && match.Groups.Count==3)
-            {
-                string sId = match.Groups[1].Value;
-                string sIdx = match.Groups[2].Value;
-
-                uint id = UInt32.Parse(sId);
-                int idx = Int32.Parse(sIdx);
-
-                if (Controller.SelectMode == PlotterController.SelectModes.POINT)
-                {
-                    Controller.SelectById(id, idx);
-                }
-                else
-                {
-                    Controller.SelectById(id, -1);
-                }
-            }
-        }
-        */
 
         public dynamic ExecScript(string fname)
         {
