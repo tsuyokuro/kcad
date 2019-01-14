@@ -16,7 +16,7 @@ def rect(w=10, h=10):
     SE.Rect(w, h)
     SE.UpdateTV();
 
-#[AC] rectAt(pv=getldp(), w=10, h=10)
+#[AC] rectAt(pv=getLastDown(), w=10, h=10)
 def rectAt(pv, w=10, h=10):
     SE.RectAt(pv, w, h)
     SE.UpdateTV();
@@ -49,7 +49,7 @@ def ungroup():
 def addPoint(x, y, z):
     SE.AddPoint(x, y, z)
 
-#[AC] addPointV(getldp())
+#[AC] addPointV(getLastDown())
 def addPointV(p):
     SE.AddPoint(p)
 
@@ -74,8 +74,8 @@ def insPoint():
 def createVector(x, y, z):
     return SE.CreateVector(x, y, z)
 
-#[AC] getldp()
-def getldp():
+#[AC] getLastDown()
+def getLastDown():
     pt = SE.GetLastDownPoint()
     return pt
 
