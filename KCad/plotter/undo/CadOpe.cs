@@ -82,6 +82,12 @@ namespace Plotter
             return ope;
         }
 
+        public static CadOpeFigureSnapShotList CreateCadOpeFigureSnapShotList()
+        {
+            CadOpeFigureSnapShotList ope = new CadOpeFigureSnapShotList();
+            return ope;
+        }
+
         public abstract void Undo(CadObjectDB db);
         public abstract void Redo(CadObjectDB db);
 

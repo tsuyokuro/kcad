@@ -66,11 +66,10 @@ namespace Plotter
 
             mDrawContext.OnPush = OnPushDraw;
 
-            MouseMove += mouseMove;
-            MouseDown += mouseDown;
-            MouseUp += mouseUp;
-
-            MouseWheel += mouseWheel;
+            MouseMove += OnMouseMove;
+            MouseDown += OnMouseDown;
+            MouseUp += OnMouseUp;
+            MouseWheel += OnMouseWheel;
 
             //StreamResourceInfo si = System.Windows.Application.GetResourceStream(
             //    new Uri("/KCad;component/Resources/mini_cross.cur", UriKind.Relative));
@@ -126,7 +125,7 @@ namespace Plotter
             }
         }
 
-        private void mouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
 #if MOUSE_THREAD
             // Mouse eventを別スレッドで処理
@@ -147,7 +146,7 @@ namespace Plotter
 #endif
         }
 
-        private void mouseWheel(object sender, MouseEventArgs e)
+        private void OnMouseWheel(object sender, MouseEventArgs e)
         {
 #if MOUSE_THREAD
             mMessageHandler.RemoveAll(MyMessageHandler.MOUSE_WHEEL);
@@ -165,7 +164,7 @@ namespace Plotter
 #endif
         }
 
-        private void mouseDown(Object sender, MouseEventArgs e)
+        private void OnMouseDown(Object sender, MouseEventArgs e)
         {
             if (mCurrentContextMenu != null)
             {
@@ -181,7 +180,7 @@ namespace Plotter
             Redraw();
         }
 
-        private void mouseUp(Object sender, MouseEventArgs e)
+        private void OnMouseUp(Object sender, MouseEventArgs e)
         {
             mController.Mouse.MouseUp(mDrawContext, e.Button, e.X, e.Y);
 

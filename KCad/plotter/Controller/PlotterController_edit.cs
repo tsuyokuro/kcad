@@ -302,8 +302,6 @@ namespace Plotter.Controller
                 return false;
             }
 
-            int ins = 0;
-
             bool handle = false;
 
             handle |= fig.GetPointAt(seg.PtIndexA).IsHandle;
@@ -314,16 +312,26 @@ namespace Plotter.Controller
                 return false;
             }
 
-            if (seg.PtIndexA < seg.PtIndexB)
+            int ins = 0;
+            int ins0 = Math.Min(seg.PtIndexA, seg.PtIndexB);
+            int ins1 = Math.Max(seg.PtIndexA, seg.PtIndexB);
+
+            if (ins0 == 0 && ins1==fig.PointCount-1)
             {
-                ins = seg.PtIndexB;
+                ins = ins1 + 1;
             }
             else
             {
-                ins = seg.PtIndexA;
+                ins = ins1;
             }
 
+            DOut.pl($"ins={ins} pcnt={fig.PointCount}");
+
             fig.InsertPointAt(ins, LastDownPoint);
+
+            ClearSelection();
+
+            fig.SelectPointAt(ins, true);
 
             return true;
         }

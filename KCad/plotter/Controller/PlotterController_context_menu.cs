@@ -32,12 +32,20 @@ namespace Plotter.Controller
             }
             else
             {
-                if (HasSelect())
+                if (SegSelected())
+                {
+                    mContextMenuInfo.Items.Add(MenuInfo.InsertPoint);
+                }
+
+                bool hasSelect = HasSelect();
+                bool hasCopyData = PlotterClipboard.HasCopyData();
+
+                if (hasSelect)
                 {
                     mContextMenuInfo.Items.Add(MenuInfo.Copy);
                 }
 
-                if (PlotterClipboard.HasCopyData())
+                if (hasCopyData)
                 {
                     mContextMenuInfo.Items.Add(MenuInfo.Paste);
                 }
@@ -48,6 +56,41 @@ namespace Plotter.Controller
                 Observer.RequestContextMenu(this, mContextMenuInfo, (int)x, (int)y);
             }
         }
+
+        private bool SegSelected()
+        {
+            if (LastSelSegment == null)
+            {
+                return false;
+            }
+
+            MarkSegment seg = LastSelSegment.Value;
+
+            CadFigure fig = DB.GetFigure(seg.FigureID);
+
+            if (fig == null)
+            {
+                return false;
+            }
+
+            if (fig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return false;
+            }
+
+            bool handle = false;
+
+            handle |= fig.GetPointAt(seg.PtIndexA).IsHandle;
+            handle |= fig.GetPointAt(seg.PtIndexB).IsHandle;
+
+            if (handle)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
 
         public void ContextMenuEvent(MenuInfo.Item menuItem)
         {
@@ -73,6 +116,10 @@ namespace Plotter.Controller
 
                 case MenuInfo.Commands.PASTE:
                     Paste();
+                    break;
+
+                case MenuInfo.Commands.INSERT_POINT:
+                    InsPoint();
                     break;
             }
         }

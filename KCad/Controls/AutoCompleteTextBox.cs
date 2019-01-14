@@ -178,7 +178,14 @@ namespace KCad
         {
             TextEventArgs ea = new TextEventArgs();
 
-            ea.Text = Text;
+            string v = Text.Trim('\r', '\n', ' ', '\t');
+
+            if (v.Length == 0)
+            {
+                return;
+            }
+
+            ea.Text = v;
 
             History.Add(Text);
 

@@ -11,6 +11,7 @@ namespace Plotter.Controller
             CREATING_FIGURE_CLOSE,
             COPY,
             PASTE,
+            INSERT_POINT,
         }
 
         public class Item
@@ -33,10 +34,11 @@ namespace Plotter.Controller
 
         public List<Item> Items = new List<Item>(20);
 
-        public static Item CreatingFigureQuit = new Item(Commands.CREATING_FIGURE_QUIT, "QUIT");
-        public static Item CreatingFigureEnd = new Item(Commands.CREATING_FIGURE_END, "END");
-        public static Item CreatingFigureClose = new Item(Commands.CREATING_FIGURE_CLOSE, "TO LOOP");
-        public static Item Copy = new Item(Commands.COPY, "COPY");
-        public static Item Paste = new Item(Commands.PASTE, "PASTE");
+        public static Item CreatingFigureQuit = new Item(Commands.CREATING_FIGURE_QUIT, "Quit create");
+        public static Item CreatingFigureEnd = new Item(Commands.CREATING_FIGURE_END, "End create");
+        public static Item CreatingFigureClose = new Item(Commands.CREATING_FIGURE_CLOSE, "To loop");
+        public static Item Copy = new Item(Commands.COPY, "Copy");
+        public static Item Paste = new Item(Commands.PASTE, "Paste");
+        public static Item InsertPoint = new Item(Commands.INSERT_POINT, "Insert point");
     }
 }
