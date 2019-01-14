@@ -323,14 +323,24 @@ namespace Plotter
 
         CadObjectTreeView mCadObjectTreeView;
 
-        public void SetObjectTreeView(CadObjectTreeView treeView)
+        public CadObjectTreeView ObjectTreeView
         {
-            mCadObjectTreeView = treeView;
-
-            if (mCadObjectTreeView != null)
+            set
             {
-                mCadObjectTreeView.CheckChanged += ObjectTreeView_CheckChanged;
+                if (mCadObjectTreeView != null)
+                {
+                    mCadObjectTreeView.CheckChanged -= ObjectTreeView_CheckChanged;
+                }
+
+                mCadObjectTreeView = value;
+
+                if (mCadObjectTreeView != null)
+                {
+                    mCadObjectTreeView.CheckChanged += ObjectTreeView_CheckChanged;
+                }
             }
+
+            get => mCadObjectTreeView;
         }
 
         private void ObjectTreeView_CheckChanged(object sender, EventArgs e)
@@ -820,27 +830,6 @@ namespace Plotter
         }
         #endregion
 
-
-        // Menu handler
-        public void MenuItemClicked(object sender, RoutedEventArgs e)
-        {
-            MenuItem menuitem = (MenuItem)sender;
-
-            string cmd = menuitem.Tag.ToString();
-
-            ExecCommand(cmd);
-        }
-
-        // Button handler
-        public void ButtonClicked(object sender, RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-
-            string cmd = btn.Tag.ToString();
-
-            ExecCommand(cmd);
-        }
-
         #region helper
         private void Redraw()
         {
@@ -1058,40 +1047,6 @@ namespace Plotter
         {
             textBox.CandidateList = Controller.ScriptEnv.AutoCompleteList;
         }
-
-        /*
-        public void LoadSettings()
-        {
-            PlotterSettings settings = SettingsHolder.Settings;
-
-            //PlotterSettings settings = new PlotterSettings();
-
-            settings.Load();
-
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawFaceOutline)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillFace)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
-
-            mController.Grid.GridSize = settings.GridSize;
-
-            //mController.PointSnapRange = settings.PointSnapRange;
-
-            //mController.LineSnapRange = settings.LineSnapRange;
-        }
-
-        public void SaveSettings()
-        {
-            PlotterSettings settings = SettingsHolder.Settings;
-
-            settings.GridSize = mController.Grid.GridSize;
-
-            settings.Save();
-        }
-        */
 
         public void Open()
         {

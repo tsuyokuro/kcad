@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -22,32 +23,18 @@ namespace KCad
         {
             InitializeComponent();
 
-            if (App.UseConsole)
-            {
-                // DOutの出力はデフォルトでConsoleになっているので、UseConsoleの場合は、
-                // あらためて設定する必要はない
-                DOut.pl("DOut's output setting is Console");
-            }
-            else {
-                DOut.PrintFunc = MyConsole.Print;
-                DOut.PrintLnFunc = MyConsole.PrintLn;
-                DOut.FormatPrintFunc = MyConsole.Printf;
-            }
-
-            ItConsole.PrintFunc = MyConsole.Print;
-            ItConsole.PrintLnFunc = MyConsole.PrintLn;
-            ItConsole.FormatPrintFunc = MyConsole.Printf;
-            ItConsole.clear = MyConsole.Clear;
+            SetupDebugConsole();
+            SetupInteractionConsole();
 
             ViewModel = new PlotterViewModel(this);
 
             viewContainer.Focusable = true;
 
             ViewModel.LayerListView = LayerListView;
-            ViewModel.SetObjectTreeView(ObjTree);
+            ViewModel.ObjectTreeView = ObjTree;
 
             ViewModel.SetupTextCommandView(textCommand);
-            textCommand.Determine += TextCommand_Determine;
+            textCommand.Determine += TextCommand_OnDetermine;
 
             KeyDown += onKeyDown;
             KeyUp += onKeyUp;
@@ -55,12 +42,41 @@ namespace KCad
             Loaded += MainWindow_Loaded;
             Closed += MainWindow_Closed;
 
-            AddLayerButton.Click += ViewModel.ButtonClicked;
-            RemoveLayerButton.Click += ViewModel.ButtonClicked;
             RunTextCommandButton.Click += RunTextCommandButtonClicked;
 
+            SetupDataContext();
 
-            // Setup Data Context
+            InitWindowChrome();
+
+            InitPopup();
+        }
+
+        private void SetupDebugConsole()
+        {
+            if (App.UseConsole)
+            {
+                // DOutの出力はデフォルトでConsoleになっているので、UseConsoleの場合は、
+                // あらためて設定する必要はない
+                DOut.pl("DOut's output setting is Console");
+            }
+            else
+            {
+                DOut.PrintFunc = MyConsole.Print;
+                DOut.PrintLnFunc = MyConsole.PrintLn;
+                DOut.FormatPrintFunc = MyConsole.Printf;
+            }
+        }
+
+        private void SetupInteractionConsole()
+        {
+            ItConsole.PrintFunc = MyConsole.Print;
+            ItConsole.PrintLnFunc = MyConsole.PrintLn;
+            ItConsole.FormatPrintFunc = MyConsole.Printf;
+            ItConsole.clear = MyConsole.Clear;
+        }
+
+        private void SetupDataContext()
+        {
             LayerListView.DataContext = ViewModel.LayerList;
 
             SlsectModePanel.DataContext = ViewModel;
@@ -78,18 +94,22 @@ namespace KCad
             ToolBar1.DataContext = ViewModel.Settings;
 
             TreeViewToolBar.DataContext = ViewModel.Settings;
+        }
 
-
+        private void InitWindowChrome()
+        {
             BtnCloseWindow.Click += (sender, e) => { Close(); };
             BtnMinWindow.Click += (sender, e) => { this.WindowState = WindowState.Minimized; };
             BtnMaxWindow.Click += (sender, e) => { this.WindowState = WindowState.Maximized; };
             BtnRestWindow.Click += (sender, e) => { this.WindowState = WindowState.Normal; };
 
             StateChanged += MainWindow_StateChanged;
+        }
 
+        private void InitPopup()
+        {
             InitPopupMessageIcons();
-
-            PopupMessage.CustomPopupPlacementCallback = placeMessagePopup;
+            PopupMessage.CustomPopupPlacementCallback = PlaceMessagePopup;
         }
 
         private void InitPopupMessageIcons()
@@ -104,7 +124,7 @@ namespace KCad
                 (ImageSource)TryFindResource("errorIconDrawingImage");
         }
 
-        public CustomPopupPlacement[] placeMessagePopup(Size popupSize,
+        public CustomPopupPlacement[] PlaceMessagePopup(Size popupSize,
                                            Size targetSize,
                                            Point offset)
         {
@@ -179,9 +199,13 @@ namespace KCad
             ViewModel.Open();
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void Command_Clicked(object sender, RoutedEventArgs e)
         {
-            ViewModel.MenuItemClicked(sender, e);
+            Control control = (Control)sender;
+
+            String command = control.Tag.ToString();
+
+            ViewModel.ExecCommand(command);
         }
 
         #region TextCommand
@@ -199,7 +223,7 @@ namespace KCad
             }
         }
 
-        private void TextCommand_Determine(object sender, AutoCompleteTextBox.TextEventArgs e)
+        private void TextCommand_OnDetermine(object sender, AutoCompleteTextBox.TextEventArgs e)
         {
             var s = e.Text;
 
@@ -208,7 +232,6 @@ namespace KCad
             if (s.Length > 0)
             {
                 ViewModel.TextCommand(s);
-                //viewContainer.Focus();
             }
         }
         #endregion
