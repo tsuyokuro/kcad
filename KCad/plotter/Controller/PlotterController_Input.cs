@@ -380,6 +380,9 @@ namespace Plotter.Controller
             {
                 mInteractCtrl.Draw(dc, SnapPoint);
                 mInteractCtrl.SetPoint(SnapPoint);
+
+                LastDownPoint = SnapPoint;
+
                 return;
             }
 
