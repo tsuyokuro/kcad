@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CadDataTypes;
-using KCad;
 using KCad.Properties;
 
 namespace Plotter.Controller

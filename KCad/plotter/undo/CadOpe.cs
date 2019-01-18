@@ -3,8 +3,6 @@ using Plotter.Serializer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CadDataTypes;
 
 namespace Plotter
@@ -50,12 +48,6 @@ namespace Plotter
             return ope;
         }
 
-        //public static CadOpe CreateSetThickOpe(uint layerID, uint figureID, double oldThick, double newThick)
-        //{
-        //    CadOpe ope = new CadOpeSetThickness(layerID, figureID, oldThick, newThick);
-        //    return ope;
-        //}
-
         public static CadOpe CreateAddFigureOpe(uint layerID, uint figureID)
         {
             CadOpe ope = new CadOpeAddFigure(layerID, figureID);
@@ -67,14 +59,6 @@ namespace Plotter
             CadOpe ope = new CadOpeRemoveFigure(layer, figureID);
             return ope;
         }
-
-        /*
-        public static CadOpe CreateDiffOpe(DiffDataList diffList)
-        {
-            CadOpe ope = new CadOpeDiff(diffList);
-            return ope;
-        }
-        */
 
         public static CadOpe CreateChangeNormalOpe(uint figID, CadVector oldNormal, CadVector newNormal)
         {

@@ -1,25 +1,13 @@
-﻿using KCad.Properties;
-using Microsoft.Scripting;
-using Microsoft.Scripting.Hosting;
-using OpenTK;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using CadDataTypes;
 using HalfEdgeNS;
 using CarveWapper;
 using MeshUtilNS;
 using MeshMakerNS;
-using System.Threading.Tasks;
 using KCad;
 using System.Threading;
 

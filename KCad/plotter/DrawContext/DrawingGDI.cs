@@ -6,10 +6,8 @@
 //#define USE_LONG_TERM_LOCK_BITS // ある程度長い期間LockBitsし続ける
 
 using HalfEdgeNS;
-using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using CadDataTypes;
@@ -127,109 +125,6 @@ namespace Plotter
 
             DrawAxis2();
         }
-
-        /*
-        public override void DrawGrid(Gridding grid)
-        {
-            CadVector lt = CadVector.Zero;
-            CadVector rb = CadVector.Create(DC.ViewWidth, DC.ViewHeight, 0);
-
-            CadVector ltw = DC.UnitPointToCadPoint(lt);
-            CadVector rbw = DC.UnitPointToCadPoint(rb);
-
-            double minx = Math.Min(ltw.x, rbw.x);
-            double maxx = Math.Max(ltw.x, rbw.x);
-
-            double miny = Math.Min(ltw.y, rbw.y);
-            double maxy = Math.Max(ltw.y, rbw.y);
-
-            double minz = Math.Min(ltw.z, rbw.z);
-            double maxz = Math.Max(ltw.z, rbw.z);
-
-
-            int pen = DrawTools.PEN_GRID;
-
-            CadVector p = default(CadVector);
-
-
-            double n = grid.Decimate(DC, grid, 8);
-
-            double x, y, z;
-            double sx, sy, sz;
-            double szx = grid.GridSize.x * n;
-            double szy = grid.GridSize.y * n;
-            double szz = grid.GridSize.z * n;
-
-            sx = Math.Round(minx / szx) * szx;
-            sy = Math.Round(miny / szy) * szy;
-            sz = Math.Round(minz / szz) * szz;
-
-
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-            x = sx;
-            while (x < maxx)
-            {
-                p.x = x;
-                p.z = 0;
-
-                y = sy;
-
-                while (y < maxy)
-                {
-                    p.y = y;
-                    DrawDot(pen, p);
-                    y += szy;
-                }
-
-                x += szx;
-            }
-
-            z = sz;
-            y = sy;
-
-            while (z < maxz)
-            {
-                p.z = z;
-                p.x = 0;
-
-                y = sy;
-
-                while (y < maxy)
-                {
-                    p.y = y;
-                    DrawDot(pen, p);
-                    y += szy;
-                }
-
-                z += szz;
-            }
-
-            z = sz;
-            x = sx;
-
-            while (x < maxx)
-            {
-                p.x = x;
-                p.y = 0;
-
-                z = sz;
-
-                while (z < maxz)
-                {
-                    p.z = z;
-                    DrawDot(pen, p);
-                    z += szz;
-                }
-
-                x += szx;
-            }
-
-            sw.Stop();
-            DebugOut.StdPrintLn(sw.ElapsedMilliseconds.ToString());
-        }
-        */
 
         public override void DrawGrid(Gridding grid)
         {
@@ -802,62 +697,5 @@ namespace Plotter
             DrawLine(DrawTools.PEN_AXIS2, p0, p1);
             DrawText(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, p1, "z");
         }
-
-        /*
-        public override void DrawCircle(int pen, CadVector cp, CadVector pa, CadVector pb)
-        {
-            CadVector va = pa - cp;
-            CadVector vb = pb - cp;
-
-            if (va.Norm() < 0.01)
-            {
-                return;
-            }
-
-            CadVector uva = DC.CadVectorToUnitVector(va);
-            CadVector uvb = DC.CadVectorToUnitVector(vb);
-
-            double uva_n = uva.Norm();
-            double uvb_n = uvb.Norm();
-
-            double max_n = Math.Max(uva_n, uvb_n);
-
-            double dt = Math.Atan2(4.0, max_n);
-
-            if (dt > Math.PI/4.0)
-            {
-                dt = Math.PI / 4.0;
-            }
-
-            int div = (int)((2.0 * Math.PI) / dt);
-
-            CadVector normal = CadMath.Normal(va, vb);
-
-            CadQuaternion q = CadQuaternion.RotateQuaternion(normal, dt);
-            CadQuaternion r = q.Conjugate();
-
-            CadVector p = va;
-            CadVector tp1 = pa;
-            CadVector tp2 = pa;
-
-
-            int i = 0;
-            for (; i < div - 1; i++)
-            {
-                CadQuaternion qp = CadQuaternion.FromPoint(p);
-                qp = r * qp;
-                qp = qp * q;
-
-                p = qp.ToPoint();
-
-                tp2 = p + cp;
-
-                DrawLine(pen, tp1, tp2);
-                tp1 = tp2;
-            }
-
-            DrawLine(pen, tp1, pa);
-        }
-        */
     }
 }

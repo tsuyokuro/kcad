@@ -26,7 +26,7 @@ namespace Plotter.Controller
 
         public Action<int> SetTreeViewPos = (index) => { };
 
-        public Func<uint, int> FindTreeViewItem = (id) => { return 0; /* idx */ };
+        public Func<uint, int> FindTreeViewItem = (id) => { return 0; /* index. It can be used with SetTreeViewPos */ };
 
         public Action<string, MessageType> OpenPopupMessage = (text, messageType) => { };
 

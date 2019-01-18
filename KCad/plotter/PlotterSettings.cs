@@ -3,7 +3,6 @@ using Plotter.Serializer;
 using System;
 using System.IO;
 using System.Reflection;
-using System.Xml;
 using CadDataTypes;
 using System.ComponentModel;
 using Plotter.Controller;
@@ -233,6 +232,8 @@ namespace Plotter
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawFaceOutline)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillFace)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToZero)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLastDownPoint)));
 
             Controller.Grid.GridSize = SettingsHolder.Settings.GridSize;
         }
@@ -318,6 +319,15 @@ namespace Plotter
             root.Add("LineSnap", jo);
 
             jo = new JObject();
+            jo.Add("enable", SnapToZero);
+            root.Add("ZeroSnap", jo);
+
+            jo = new JObject();
+            jo.Add("enable", SnapToLastDownPoint);
+            root.Add("LastDownSnap", jo);
+
+
+            jo = new JObject();
             jo.Add("enable", SnapToGrid);
             jo.Add("size_x", GridSize.x);
             jo.Add("size_y", GridSize.z);
@@ -367,6 +377,18 @@ namespace Plotter
             jo = (JObject)root["LineSnap"];
             SnapToLine = jo.GetBool("enable", SnapToLine);
             LineSnapRange = jo.GetDouble("range", LineSnapRange);
+
+            jo = (JObject)root["ZeroSnap"];
+            if (jo != null)
+            {
+                SnapToZero = jo.GetBool("enable", SnapToZero);
+            }
+
+            jo = (JObject)root["LastDownSnap"];
+            if (jo != null)
+            {
+                SnapToLastDownPoint = jo.GetBool("enable", SnapToLastDownPoint);
+            }
 
             jo = (JObject)root["DrawSettings"];
             DrawFaceOutline = jo.GetBool("DrawFaceOutline", DrawFaceOutline);

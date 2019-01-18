@@ -1,6 +1,5 @@
 ﻿// 4行4列の行列
 using OpenTK;
-using System;
 using CadDataTypes;
 
 namespace Plotter

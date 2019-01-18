@@ -1,11 +1,6 @@
 ﻿using CadDataTypes;
 using Newtonsoft.Json.Linq;
 using Plotter.Serializer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SplineCurve
 {

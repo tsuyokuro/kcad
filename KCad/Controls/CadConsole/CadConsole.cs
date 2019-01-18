@@ -1,21 +1,9 @@
-﻿using Plotter;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace KCad
@@ -439,35 +427,6 @@ namespace KCad
 
             return lines;
         }
-
-        /*
-        public string GetStringAll()
-        {
-            string s = "";
-
-            foreach (ListItem line in mList)
-            {
-                // エスケープシーケンスを取り除く
-                string ps = Regex.Replace(line.Data, "\x1b\\[[0-9]+m", "");
-                s += ps + "\n";
-            }
-
-            return s;
-        }
-
-        // エスケープシーケンスを取り除かない版
-        public string GetStringAllRaw()
-        {
-            string s = "";
-
-            foreach (ListItem line in mList)
-            {
-                s += line.Data + "\n";
-            }
-
-            return s;
-        }
-        */
 
         public string GetSelectedString()
         {
