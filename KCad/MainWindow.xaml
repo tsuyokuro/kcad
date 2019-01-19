@@ -17,7 +17,7 @@
     mc:Ignorable="d">
 
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="26" ResizeBorderThickness="6" />
+        <WindowChrome CaptionHeight="26" ResizeBorderThickness="4" />
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
@@ -117,7 +117,7 @@
 
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="26" />
             <RowDefinition Height="100*" />
         </Grid.RowDefinitions>
 
@@ -157,6 +157,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             Background="{StaticResource CaptionColor}">
+            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10*" />
@@ -1021,7 +1022,8 @@
                             Content="p"
                             FontFamily="Marlett"
                             FontSize="16"
-                            Foreground="White" />
+                            Foreground="White"
+                            WindowChrome.ResizeGripDirection="BottomRight" />
                     </StackPanel>
 
                 </Grid>
