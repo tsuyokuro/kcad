@@ -198,6 +198,9 @@
     <Compile Include="Controls\CadConsole\TextLine.cs" />
     <Compile Include="Controls\PopupEx.cs" />
     <Compile Include="Controls\WindowsAPI.cs" />
+    <Compile Include="Dialogs\AngleInputDialog.xaml.cs">
+      <DependentUpon>AngleInputDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DocumentSettingsDialog.xaml.cs">
       <DependentUpon>DocumentSettingsDialog.xaml</DependentUpon>
     </Compile>
@@ -270,6 +273,10 @@
     <Compile Include="Controls\TreeView\CadObjTreeItem.cs" />
     <Compile Include="SplineCurve\NurbsSurface.cs" />
     <Compile Include="Util\ColorUtil.cs" />
+    <Page Include="Dialogs\AngleInputDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\DocumentSettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

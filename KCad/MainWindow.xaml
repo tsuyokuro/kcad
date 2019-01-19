@@ -300,10 +300,17 @@
                             Click="Command_Clicked"
                             Header="To Loop lines"
                             Tag="to_loop" />
+
                         <MenuItem
                             Click="Command_Clicked"
                             Header="To Unloop lines"
                             Tag="to_unloop" />
+
+                        <MenuItem
+                            Click="Command_Clicked"
+                            Header="Rotate"
+                            Tag="rotate_with_point" />
+
                         <MenuItem Header="Flip">
                             <MenuItem
                                 Click="Command_Clicked"

@@ -374,6 +374,7 @@ namespace Plotter
                 { "flip_with_vector", FlipWithVector },
                 { "flip_and_copy_with_vector", FlipAndCopyWithVector },
                 { "flip_normal", FlipNormal },
+                { "rotate_with_point", RotateWithPoint },
                 { "grid_settings", GridSettings },
                 { "add_layer", AddLayer },
                 { "remove_layer", RemoveLayer },
@@ -503,6 +504,11 @@ namespace Plotter
         public void FlipAndCopyWithVector()
         {
             mController.FlipAndCopyWithVector();
+        }
+
+        public void RotateWithPoint()
+        {
+            mController.RotateWithPoint();
         }
 
         public void FlipNormal()

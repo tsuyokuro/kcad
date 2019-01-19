@@ -1071,7 +1071,7 @@ namespace Plotter.Controller
         {
             InteractCtrl ctrl = Controller.mInteractCtrl;
 
-            ctrl.Start(InteractCtrl.Mode.POINT);
+            ctrl.Start();
 
             ItConsole.println(AnsiEsc.Yellow + "Input point >>");
 
@@ -1095,7 +1095,7 @@ namespace Plotter.Controller
         {
             InteractCtrl ctrl = Controller.mInteractCtrl;
 
-            ctrl.Start(InteractCtrl.Mode.LINE);
+            ctrl.Start();
 
             ItConsole.println(AnsiEsc.Yellow + "Input point 1 >>");
 

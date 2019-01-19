@@ -243,6 +243,18 @@ namespace Plotter.Controller
             mPlotterTaskRunner.FlipAndCopyWithInteractive(target);
         }
 
+        public void RotateWithPoint()
+        {
+            List<CadFigure> target = GetSelectedRootFigureList();
+            if (target.Count <= 0)
+            {
+                ItConsole.printFaile("No target figure.");
+                return;
+            }
+
+            mPlotterTaskRunner.RotateWithInteractive(target);
+        }
+
         private void RemoveSelectedPoints()
         {
             List<CadFigure> figList = DB.GetSelectedFigList();
