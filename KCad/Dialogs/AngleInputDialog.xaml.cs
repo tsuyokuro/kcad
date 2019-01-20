@@ -8,9 +8,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace KCad.Dialogs
 {
@@ -28,6 +25,27 @@ namespace KCad.Dialogs
 
             cancel_button.Click += Cancel_button_Click;
             ok_button.Click += Ok_button_Click;
+
+            LayoutRoot.MouseLeftButtonDown += LayoutRoot_MouseLeftButtonDown;
+
+            PreviewKeyDown += AngleInputDialog_PreviewKeyDown;
+        }
+
+        private void AngleInputDialog_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.DialogResult = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                this.DialogResult = false;
+            }
+        }
+
+        private void LayoutRoot_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
         }
 
         private void Ok_button_Click(object sender, RoutedEventArgs e)
