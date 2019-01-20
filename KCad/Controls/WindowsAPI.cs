@@ -5,7 +5,6 @@ namespace KCad
 {
     class WinAPI
     {
-        #region P/Invoke imports & definitions
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
         {
@@ -44,6 +43,13 @@ namespace KCad
 
         public const UInt32 TOPMOST_FLAGS =
           SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOSIZE | SWP_NOMOVE | SWP_NOREDRAW | SWP_NOSENDCHANGING;
-        #endregion
+
+
+        public const int WM_SIZE = 0x0005;
+        public const int WM_ENTERSIZEMOVE = 0x0231;
+        public const int WM_EXITSIZEMOVE = 0x0232;
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        public static extern bool PostMessage(IntPtr hWnd, Int32 Msg, IntPtr wParam, IntPtr lParam);
     }
 }

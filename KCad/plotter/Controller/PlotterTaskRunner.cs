@@ -1,5 +1,6 @@
 ﻿using CadDataTypes;
 using KCad;
+using KCad.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,56 +24,6 @@ namespace Plotter.Controller.TaskRunner
             mMainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
         }
 
-        public (CadVector p0, CadVector p1, InteractCtrl.States state) InputLine()
-        {
-            InteractCtrl ctrl = Controller.mInteractCtrl;
-
-            ctrl.Start(InteractCtrl.Mode.LINE);
-
-            OpenPopupMessage("Input flip axis", PlotterObserver.MessageType.INPUT);
-            ItConsole.println(AnsiEsc.BYellow + "<< Input point 1 >>");
-
-            InteractCtrl.States ret;
-
-            ret = ctrl.WaitPoint();
-
-            if (ret != InteractCtrl.States.CONTINUE)
-            {
-                ctrl.End();
-                ClosePopupMessage();
-                ItConsole.println("Cancel!");
-                return (
-                    CadVector.InvalidValue,
-                    CadVector.InvalidValue,
-                    InteractCtrl.States.CANCEL);
-            }
-
-            CadVector p0 = ctrl.PointList[0];
-            ItConsole.println(p0.CoordString());
-
-            ItConsole.println(AnsiEsc.BYellow + "<< Input point 2 >>");
-
-            ret = ctrl.WaitPoint();
-
-            if (ret != InteractCtrl.States.CONTINUE)
-            {
-                ctrl.End();
-                ClosePopupMessage();
-                ItConsole.println("Cancel!");
-                return (
-                    CadVector.InvalidValue,
-                    CadVector.InvalidValue,
-                    InteractCtrl.States.CANCEL);
-            }
-
-            CadVector p1 = ctrl.PointList[1];
-            ItConsole.println(p1.CoordString());
-
-            ctrl.End();
-            ClosePopupMessage();
-
-            return (p0, p1, InteractCtrl.States.END);
-        }
 
         public async void FlipWithInteractive(List<CadFigure> rootFigList)
         {
@@ -185,6 +136,149 @@ namespace Plotter.Controller.TaskRunner
             });
         }
 
+        public async void RotateWithInteractive(List<CadFigure> rootFigList)
+        {
+            await Task.Run(() =>
+            {
+                Controller.StartEdit();
+                var res = InputPoint();
+
+                if (res.state != InteractCtrl.States.END)
+                {
+                    Controller.AbendEdit();
+                    return;
+                }
+
+                CadVector p0 = res.p0;
+
+                double angle = 0;
+
+                bool ok = false;
+
+                RunOnMainThread(() =>
+                {
+                    AngleInputDialog dlg = new AngleInputDialog();
+                    bool? dlgRet = dlg.ShowDialog();
+
+                    ok = dlgRet.Value;
+
+                    if (ok)
+                    {
+                        angle = dlg.GetDouble();
+                    }
+                });
+
+                if (!ok)
+                {
+                    ItConsole.println("Cancel!");
+
+                    Controller.AbendEdit();
+                    return;
+                }
+
+                RotateWithAxis(
+                    rootFigList,
+                    p0,
+                    (CadVector)Controller.CurrentDC.ViewDir,
+                    CadMath.Deg2Rad(angle));
+
+                Controller.EndEdit();
+            });
+        }
+
+        public void RotateWithAxis(List<CadFigure> rootFigList, CadVector org, CadVector axisDir, double angle)
+        {
+            foreach (CadFigure fig in rootFigList)
+            {
+                fig.ForEachFig(f =>
+                {
+                    CadUtil.RotateFigure(fig, org, axisDir, angle);
+                });
+            }
+        }
+
+        public (CadVector p0, InteractCtrl.States state) InputPoint()
+        {
+            InteractCtrl ctrl = Controller.mInteractCtrl;
+
+            ctrl.Start();
+
+            OpenPopupMessage("Input rotate origin", PlotterObserver.MessageType.INPUT);
+            ItConsole.println(AnsiEsc.BYellow + "<< Input point >>");
+
+            InteractCtrl.States ret;
+
+            ret = ctrl.WaitPoint();
+
+            if (ret != InteractCtrl.States.CONTINUE)
+            {
+                ctrl.End();
+                ClosePopupMessage();
+                ItConsole.println("Cancel!");
+                return (
+                    CadVector.InvalidValue,
+                    InteractCtrl.States.CANCEL);
+            }
+
+            CadVector p0 = ctrl.PointList[0];
+            ItConsole.println(p0.CoordString());
+            ctrl.End();
+            ClosePopupMessage();
+
+            return (p0, ctrl.State);
+        }
+
+
+        public (CadVector p0, CadVector p1, InteractCtrl.States state) InputLine()
+        {
+            InteractCtrl ctrl = Controller.mInteractCtrl;
+
+            ctrl.Start();
+
+            OpenPopupMessage("Input flip axis", PlotterObserver.MessageType.INPUT);
+            ItConsole.println(AnsiEsc.BYellow + "<< Input point 1 >>");
+
+            InteractCtrl.States ret;
+
+            ret = ctrl.WaitPoint();
+
+            if (ret != InteractCtrl.States.CONTINUE)
+            {
+                ctrl.End();
+                ClosePopupMessage();
+                ItConsole.println("Cancel!");
+                return (
+                    CadVector.InvalidValue,
+                    CadVector.InvalidValue,
+                    InteractCtrl.States.CANCEL);
+            }
+
+            CadVector p0 = ctrl.PointList[0];
+            ItConsole.println(p0.CoordString());
+
+            ItConsole.println(AnsiEsc.BYellow + "<< Input point 2 >>");
+
+            ret = ctrl.WaitPoint();
+
+            if (ret != InteractCtrl.States.CONTINUE)
+            {
+                ctrl.End();
+                ClosePopupMessage();
+                ItConsole.println("Cancel!");
+                return (
+                    CadVector.InvalidValue,
+                    CadVector.InvalidValue,
+                    InteractCtrl.States.CANCEL);
+            }
+
+            CadVector p1 = ctrl.PointList[1];
+            ItConsole.println(p1.CoordString());
+
+            ctrl.End();
+            ClosePopupMessage();
+
+            return (p0, p1, InteractCtrl.States.END);
+        }
 
         public void OpenPopupMessage(string text, PlotterObserver.MessageType type)
         {

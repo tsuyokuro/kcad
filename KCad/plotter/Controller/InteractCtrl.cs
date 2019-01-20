@@ -5,13 +5,6 @@ namespace Plotter.Controller
 {
     public class InteractCtrl
     {
-        public enum Mode
-        {
-            NONE,
-            POINT,
-            LINE,
-        }
-
         public enum States
         {
             NONE,
@@ -21,8 +14,6 @@ namespace Plotter.Controller
         }
 
         private SemaphoreSlim Sem = new SemaphoreSlim(0, 1);
-
-        public Mode CurrentMode = Mode.NONE;
 
         public VectorList PointList = new VectorList();
 
@@ -51,9 +42,8 @@ namespace Plotter.Controller
             Sem.Release();
         }
 
-        public void Start(Mode mode)
+        public void Start()
         {
-            CurrentMode = mode;
             mState = States.CONTINUE;
 
             lock (PointList)
@@ -65,7 +55,6 @@ namespace Plotter.Controller
         public void End()
         {
             mState = States.END;
-            CurrentMode = Mode.NONE;
         }
 
         public States WaitPoint()

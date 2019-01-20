@@ -17,7 +17,7 @@
     mc:Ignorable="d">
 
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="26" ResizeBorderThickness="6" />
+        <WindowChrome CaptionHeight="26" ResizeBorderThickness="4" />
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
@@ -117,7 +117,7 @@
 
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="26" />
             <RowDefinition Height="100*" />
         </Grid.RowDefinitions>
 
@@ -157,6 +157,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             Background="{StaticResource CaptionColor}">
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10*" />
@@ -300,10 +301,17 @@
                             Click="Command_Clicked"
                             Header="To Loop lines"
                             Tag="to_loop" />
+
                         <MenuItem
                             Click="Command_Clicked"
                             Header="To Unloop lines"
                             Tag="to_unloop" />
+
+                        <MenuItem
+                            Click="Command_Clicked"
+                            Header="Rotate"
+                            Tag="rotate_with_point" />
+
                         <MenuItem Header="Flip">
                             <MenuItem
                                 Click="Command_Clicked"
@@ -614,7 +622,10 @@
                     Background="{StaticResource BoarderColor}" />
 
                 <!--  Plotter view and Command view  -->
-                <Grid Grid.Column="2" Background="{DynamicResource BGColor}">
+                <Grid
+                    x:Name="viewRoot"
+                    Grid.Column="2"
+                    Background="{DynamicResource BGColor}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="100*" />
                         <RowDefinition Height="auto" />
@@ -1014,7 +1025,8 @@
                             Content="p"
                             FontFamily="Marlett"
                             FontSize="16"
-                            Foreground="White" />
+                            Foreground="White"
+                            WindowChrome.ResizeGripDirection="BottomRight" />
                     </StackPanel>
 
                 </Grid>

@@ -376,7 +376,7 @@ namespace Plotter.Controller
 
             OffsetScreen = pixp - CrossCursor.Pos;
 
-            if (mInteractCtrl.CurrentMode != InteractCtrl.Mode.NONE)
+            if (mInteractCtrl.IsActive)
             {
                 mInteractCtrl.Draw(dc, SnapPoint);
                 mInteractCtrl.SetPoint(SnapPoint);
@@ -559,11 +559,11 @@ namespace Plotter.Controller
 
                 if (delta > 0)
                 {
-                    f = 1.2;
+                    f = 1.05;
                 }
                 else
                 {
-                    f = 0.8;
+                    f = 0.95;
                 }
 
                 ViewCtrl.DpiUpDown(dc, f);
@@ -1008,7 +1008,7 @@ namespace Plotter.Controller
                     break;
             }
 
-            if (mInteractCtrl.CurrentMode != InteractCtrl.Mode.NONE)
+            if (mInteractCtrl.IsActive)
             {
                 mInteractCtrl.Draw(dc, SnapPoint);
             }

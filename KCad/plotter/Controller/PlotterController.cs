@@ -734,7 +734,7 @@ namespace Plotter.Controller
                 CursorLocked = false;
             }
 
-            if (mInteractCtrl.CurrentMode != InteractCtrl.Mode.NONE)
+            if (mInteractCtrl.IsActive)
             {
                 mInteractCtrl.Cancel();
             }
