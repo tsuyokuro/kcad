@@ -147,7 +147,10 @@ namespace Plotter
 
         private void OnPaint(object sender, PaintEventArgs e)
         {
-            // NOP
+            if (mController != null)
+            {
+                Redraw();
+            }
         }
 
         private void OnResize(object sender, EventArgs e)

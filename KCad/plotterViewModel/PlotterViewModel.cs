@@ -119,6 +119,8 @@ namespace Plotter
             }
         }
 
+        public DrawContext CurrentDC => mController?.CurrentDC;
+
         private SettingsVeiwModel mSettingsVeiwModel;
 
         public SettingsVeiwModel Settings

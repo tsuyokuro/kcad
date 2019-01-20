@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 
 namespace KCad
@@ -201,7 +202,14 @@ namespace KCad
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            var hsrc = HwndSource.FromVisual(this) as HwndSource;
+            hsrc.AddHook(WndProc);
+
+
             ViewModel.Open();
+
+            System.Drawing.Color c = ViewModel.CurrentDC.Tools.BrushColor(DrawTools.BRUSH_BACKGROUND);
+            viewRoot.Background = new SolidColorBrush(Color.FromRgb(c.R, c.G, c.B));
         }
 
         private void Command_Clicked(object sender, RoutedEventArgs e)
@@ -268,6 +276,26 @@ namespace KCad
         public void SetMainView(IPlotterView view)
         {
             viewContainer.Child = view.FromsControl;
+        }
+
+        IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            switch (msg)
+            {
+                case WinAPI.WM_ENTERSIZEMOVE:
+                    {
+                        MainWindow wnd = (MainWindow)Application.Current.MainWindow;
+                        wnd.viewContainer.Visibility = Visibility.Hidden;
+                    }
+                    break;
+                case WinAPI.WM_EXITSIZEMOVE:
+                    {
+                        MainWindow wnd = (MainWindow)Application.Current.MainWindow;
+                        wnd.viewContainer.Visibility = Visibility.Visible;
+                    }
+                    break;
+            }
+            return IntPtr.Zero;
         }
     }
 }
