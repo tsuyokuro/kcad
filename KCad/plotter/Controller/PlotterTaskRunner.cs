@@ -153,16 +153,22 @@ namespace Plotter.Controller.TaskRunner
 
                 double angle = 0;
 
-                bool? dlgRet = false;
+                bool ok = false;
 
                 RunOnMainThread(() =>
                 {
                     AngleInputDialog dlg = new AngleInputDialog();
-                    dlgRet = dlg.ShowDialog();
-                    angle = dlg.GetDouble();
+                    bool? dlgRet = dlg.ShowDialog();
+
+                    ok = dlgRet.Value;
+
+                    if (ok)
+                    {
+                        angle = dlg.GetDouble();
+                    }
                 });
 
-                if (!dlgRet.Value)
+                if (!ok)
                 {
                     ItConsole.println("Cancel!");
 

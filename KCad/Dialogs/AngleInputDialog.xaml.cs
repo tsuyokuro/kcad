@@ -19,7 +19,12 @@ namespace KCad.Dialogs
         public AngleInputDialog()
         {
             InitializeComponent();
-            Owner = Application.Current.MainWindow;
+            MainWindow wnd = (MainWindow)Application.Current.MainWindow;
+
+            Point p = wnd.viewContainer.PointToScreen(new Point(0,0));
+
+            this.Left = p.X;
+            this.Top = p.Y;
 
             cancel_button.Click += Cancel_button_Click;
             ok_button.Click += Ok_button_Click;
@@ -38,7 +43,10 @@ namespace KCad.Dialogs
         public double GetDouble()
         {
             String s = input.Text;
-            return Double.Parse(s);
+            double v;
+            Double.TryParse(s, out v);
+
+            return v;
         }
 
         public string GetInputString()
