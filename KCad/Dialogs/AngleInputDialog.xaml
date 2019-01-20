@@ -7,10 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Input angle"
     Width="246.285"
-    Height="147.489"
+    Height="88.489"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner"
-    WindowStyle="ToolWindow"
+    WindowStyle="None"
     mc:Ignorable="d">
 
     <Window.Resources>
@@ -21,15 +21,26 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid Width="Auto" Height="Auto">
+    <Grid
+        x:Name="LayoutRoot"
+        Width="Auto"
+        Height="Auto">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="100*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Border
             Grid.Row="0"
-            Padding="16"
+            Height="8"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            Background="#FF007ACC" />
+
+        <Border
+            Grid.Row="1"
+            Padding="8,8,8,0"
             Background="{StaticResource DialogBaseColor}">
             <StackPanel
                 Height="Auto"
@@ -57,7 +68,7 @@
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="1" Padding="8,8,8,8">
+        <Border Grid.Row="2" Padding="8,8,8,8">
 
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button
@@ -65,19 +76,18 @@
                     Width="75"
                     Height="Auto"
                     Margin="0,0,8,0"
-                    Padding="4"
+                    Padding="2"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     BorderThickness="0"
                     Content="Cancel" />
-
 
                 <Button
                     x:Name="ok_button"
                     Width="75"
                     Height="Auto"
                     Margin="0,0,0,0"
-                    Padding="4"
+                    Padding="2"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     BorderThickness="0"
