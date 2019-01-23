@@ -40,7 +40,7 @@ namespace Plotter
             }
         }
 
-        public Control FromsControl
+        public Control FormsControl
         {
             get
             {
@@ -92,6 +92,7 @@ namespace Plotter
 
         override protected void OnPaintBackground(PaintEventArgs pevent)
         {
+            mController.Redraw();
         }
 
         private void onSizeChanged(object sender, System.EventArgs e)
@@ -119,7 +120,8 @@ namespace Plotter
         {
             if (dc == mDrawContext)
             {
-                Image = mDrawContext.Image;
+                //Image = mDrawContext.Image;
+                mDrawContext.Refresh();
             }
         }
 

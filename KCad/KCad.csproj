@@ -222,6 +222,8 @@
     <Compile Include="plotter\Controller\PlotterObserver.cs" />
     <Compile Include="plotter\Controller\ScriptFunctions.cs" />
     <Compile Include="plotter\Controller\ControllerTypes.cs" />
+    <Compile Include="plotter\DrawContext\DrawContextGDIBmp.cs" />
+    <Compile Include="plotter\DrawContext\DrawingGDIBmp.cs" />
     <Compile Include="plotter\Figure\CircleExpander.cs" />
     <Compile Include="plotter\Figure\PolyLineExpander.cs" />
     <Compile Include="plotter\Serializer\MpCadFile.cs" />

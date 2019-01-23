@@ -26,7 +26,7 @@ namespace Plotter
             }
         }
 
-        public Control FromsControl
+        public Control FormsControl
         {
             get
             {

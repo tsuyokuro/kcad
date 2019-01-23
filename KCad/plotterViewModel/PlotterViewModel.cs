@@ -237,7 +237,7 @@ namespace Plotter
         {
             get
             {
-                return mPlotterView.FromsControl;
+                return mPlotterView.FormsControl;
             }
         }
 
@@ -831,9 +831,9 @@ namespace Plotter
         #endregion
 
         #region helper
-        private void Redraw()
+        public void Redraw()
         {
-            mController.Redraw(mController.CurrentDC);
+            mController.Redraw();
         }
         #endregion
 

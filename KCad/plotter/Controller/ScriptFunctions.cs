@@ -569,7 +569,7 @@ namespace Plotter.Controller
             wr.p0 = dc.DevPointToWorldPoint(r.p0);
             wr.p1 = dc.DevPointToWorldPoint(r.p1);
 
-            DrawContextGDI tdc = new DrawContextGDI(null);
+            DrawContextGDIBmp tdc = new DrawContextGDIBmp();
 
             tdc.CopyMetrics(dc);
 

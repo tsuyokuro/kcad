@@ -181,7 +181,7 @@ namespace KCad
                 case WindowState.Maximized:
                     Task.Run(() =>
                     {
-                        Thread.Sleep(50);
+                        Thread.Sleep(10);
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             LayoutRoot.Margin = new Thickness(9);
@@ -275,7 +275,7 @@ namespace KCad
 
         public void SetMainView(IPlotterView view)
         {
-            viewContainer.Child = view.FromsControl;
+            viewContainer.Child = view.FormsControl;
         }
 
         IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -292,6 +292,8 @@ namespace KCad
                     {
                         MainWindow wnd = (MainWindow)Application.Current.MainWindow;
                         wnd.viewContainer.Visibility = Visibility.Visible;
+
+                        ViewModel.Redraw();
                     }
                     break;
             }

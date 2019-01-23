@@ -283,6 +283,10 @@ namespace Plotter
             }
         }
 
+        public DrawTools()
+        {
+        }
+
         ~DrawTools()
         {
             Dispose();

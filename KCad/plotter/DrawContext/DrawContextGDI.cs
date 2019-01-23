@@ -8,26 +8,19 @@ namespace Plotter
 {
     public class DrawContextGDI : DrawContext
     {
-        protected Control Wnd;
+        protected Control ViewCtrl;
 
-        private BitmapData LockedBitmapData = null;
+        BufferedGraphics Buffer;
 
-        private Graphics mGdiGraphics = null;
+        protected Graphics mGdiGraphics = null;
         public Graphics GdiGraphics
         {
             protected set => mGdiGraphics = value;
             get => mGdiGraphics;
         }
 
-        private Bitmap mImage = null;
-        public Bitmap Image
-        {
-            get => mImage;
-        }
-
         public DrawContextGDI()
         {
-            Init(null);
         }
 
         public DrawContextGDI(Control control)
@@ -37,9 +30,9 @@ namespace Plotter
 
         private void Init(Control control)
         {
-            Wnd = control;
+            ViewCtrl = control;
 
-            SetViewSize(8, 1);  // Create dummy Image and Graphics
+            SetViewSize(1, 1);  // Create dummy Graphics
 
             mUnitPerMilli = 4; // 4 pix = 1mm
             mViewOrg.x = 0;
@@ -63,22 +56,20 @@ namespace Plotter
 
             DisposeGraphics();
 
-            mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
-            mGdiGraphics = Graphics.FromImage(mImage);
+            BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current;
+
+            Buffer = currentContext.Allocate(ViewCtrl.CreateGraphics(),
+                               ViewCtrl.DisplayRectangle);
+
+            mGdiGraphics = Buffer.Graphics;
         }
 
         private void DisposeGraphics()
         {
-            if (mGdiGraphics != null)
+            if (Buffer != null)
             {
-                mGdiGraphics.Dispose();
-                mGdiGraphics = null;
-            }
-
-            if (mImage != null)
-            {
-                mImage.Dispose();
-                mImage = null;
+                Buffer.Dispose();
+                Buffer = null;
             }
         }
 
@@ -137,55 +128,12 @@ namespace Plotter
             return CadVector.Create(wv);
         }
 
-        public BitmapData GetLockedBits()
-        {
-            return LockedBitmapData;
-        }
-
-        public BitmapData LockBits()
-        {
-            if (mImage == null)
-            {
-                return null;
-            }
-
-            if (LockedBitmapData != null)
-            {
-                return LockedBitmapData;
-            }
-
-            Rectangle r = new Rectangle(0, 0, mImage.Width, mImage.Height);
-
-            LockedBitmapData = mImage.LockBits(
-                    r,
-                    ImageLockMode.ReadWrite, mImage.PixelFormat);
-
-            return LockedBitmapData;
-        }
-
-        public void UnlockBits()
-        {
-            if (mImage == null)
-            {
-                return;
-            }
-
-            if (LockedBitmapData == null)
-            {
-                return;
-            }
-
-            mImage.UnlockBits(LockedBitmapData);
-            LockedBitmapData = null;
-        }
-
         public override void Dispose()
         {
             DisposeGraphics();
             Tools.Dispose();
         }
 
-        #region Depend GDI Graphics
         public Pen Pen(int id)
         {
             return Tools.pen(id);
@@ -210,6 +158,11 @@ namespace Plotter
         {
             return Tools.BrushColorTbl[id];
         }
-        #endregion
+
+        public void Refresh()
+        {
+            if (Buffer != null)
+                Buffer.Render();
+        }
     }
 }

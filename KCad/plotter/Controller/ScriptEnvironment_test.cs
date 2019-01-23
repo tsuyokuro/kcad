@@ -143,34 +143,6 @@ namespace Plotter.Controller
             }
         }
 
-        private void test007()
-        {
-            if (!(Controller.CurrentDC is DrawContextGDI))
-            {
-                return;
-            }
-
-            DrawContextGDI dc = (DrawContextGDI)Controller.CurrentDC;
-
-            BitmapData bitmapData = dc.LockBits();
-
-            CadVector p0 = CadVector.Create(50, 50, 0);
-            CadVector p1 = CadVector.Create(300, 150, 0);
-
-            CadSegment seg = CadUtil.Clipping2D(10, 10, 210, 110, p0, p1);
-
-            seg.dump();
-
-            if (seg.Valid)
-            {
-                BitmapUtil.BresenhamLine(bitmapData, seg.P0, seg.P1, 0xff00ffff);
-            }
-
-            dc.UnlockBits();
-
-            dc.Push();
-        }
-
         private void test008()
         {
             var dc = Controller.CurrentDC;

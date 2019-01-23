@@ -9,7 +9,7 @@ namespace Plotter
             get;
         }
 
-        System.Windows.Forms.Control FromsControl
+        System.Windows.Forms.Control FormsControl
         {
             get;
         }
