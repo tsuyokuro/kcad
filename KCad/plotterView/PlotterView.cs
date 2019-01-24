@@ -12,10 +12,33 @@ namespace Plotter
 {
     public class ContextMenuEx : ContextMenuStrip
     {
+        public enum State
+        {
+            OPENED,
+            CLOSED,
+        }
+
+        public Action<State> StateChanged = (a)=>{};
+
+        public ContextMenuEx(Action<State> stateChanged)
+        {
+            StateChanged = stateChanged==null ? (a)=>{} : stateChanged;
+        }
+
         protected override void OnItemClicked(ToolStripItemClickedEventArgs e)
         {
             Close();
             base.OnItemClicked(e);
+        }
+
+        protected override void OnOpened(EventArgs e)
+        {
+            StateChanged(State.OPENED);
+        }
+
+        protected override void OnClosed(ToolStripDropDownClosedEventArgs e)
+        {
+            StateChanged(State.CLOSED);
         }
     }
 
@@ -26,11 +49,13 @@ namespace Plotter
         private bool firstSizeChange = true;
 
         ContextMenuEx mCurrentContextMenu = null;
-        ContextMenuEx mContextMenu = new ContextMenuEx();
+        ContextMenuEx mContextMenu = null;
 
         MyMessageHandler mMessageHandler;
 
         private DrawContextGDI mDrawContext = null;
+
+        private Cursor DefaultCursor; 
 
         public DrawContext DrawContext
         {
@@ -52,6 +77,18 @@ namespace Plotter
         {
             mDrawContext = new DrawContextGDI(this);
 
+            mContextMenu = new ContextMenuEx((s) =>
+            {
+                if (s == ContextMenuEx.State.OPENED)
+                {
+                    base.Cursor = Cursors.Arrow;
+                }
+                else if (s == ContextMenuEx.State.CLOSED)
+                {
+                    base.Cursor = DefaultCursor;
+                }
+            });
+
             DoubleBuffered = false;
 
             SizeChanged += onSizeChanged;
@@ -69,18 +106,12 @@ namespace Plotter
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
 
-            //StreamResourceInfo si = System.Windows.Application.GetResourceStream(
-            //    new Uri("/KCad;component/Resources/mini_cross.cur", UriKind.Relative));
-
             StreamResourceInfo si = System.Windows.Application.GetResourceStream(
                 new Uri("/KCad;component/Resources/dot.cur", UriKind.Relative));
 
-            //StreamResourceInfo si = System.Windows.Application.GetResourceStream(
-            //    new Uri("/KCad;component/Resources/null.cur", UriKind.Relative));
+            DefaultCursor = new Cursor(si.Stream);
 
-            Cursor cc = new Cursor(si.Stream);
-
-            base.Cursor = cc;
+            base.Cursor = DefaultCursor;
         }
 
         protected override void Dispose(bool disposing)
