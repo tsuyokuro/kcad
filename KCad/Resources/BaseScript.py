@@ -1,6 +1,7 @@
 # coding: cp932
+from datetime import datetime as dt
 import time
-import math
+import math as m
 import clr
 clr.AddReference('CadDataTypes')
 
