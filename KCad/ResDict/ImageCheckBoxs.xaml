@@ -12,22 +12,27 @@
                 <ControlTemplate TargetType="CheckBox">
                     <BulletDecorator>
                         <BulletDecorator.Bullet>
-                            <!--  off image  -->
-                            <Image
-                                Name="TickImage"
-                                Grid.Column="0"
-                                Source="{StaticResource invisible_icon}" />
+                            <Border Padding="4">
+                                <Image
+                                    Name="TickImage"
+                                    Grid.Column="0"
+                                    Width="18"
+                                    Height="18"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Source="{StaticResource baseline_visible_off_DrawingImage}" />
+                            </Border>
                         </BulletDecorator.Bullet>
                         <ContentPresenter Grid.Column="1" VerticalAlignment="Center" />
                     </BulletDecorator>
                     <ControlTemplate.Triggers>
                         <!--  on image  -->
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="TickImage" Property="Source" Value="{StaticResource visible_icon}" />
+                            <Setter TargetName="TickImage" Property="Source" Value="{StaticResource baseline_visible_DrawingImage}" />
                         </Trigger>
                         <!--  other image  -->
                         <Trigger Property="IsChecked" Value="{x:Null}">
-                            <Setter TargetName="TickImage" Property="Source" Value="{StaticResource visible_icon}" />
+                            <Setter TargetName="TickImage" Property="Source" Value="{StaticResource baseline_visible_DrawingImage}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -42,21 +47,27 @@
                     <BulletDecorator>
                         <BulletDecorator.Bullet>
                             <!--  off image  -->
-                            <Image
-                                Name="TickImage"
-                                Grid.Column="0"
-                                Source="{StaticResource unlocked_icon}" />
+                            <Border Padding="4">
+                                <Image
+                                    Name="TickImage"
+                                    Grid.Column="0"
+                                    Width="18"
+                                    Height="18"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Source="{StaticResource baseline_lock_open_DrawingImage}" />
+                            </Border>
                         </BulletDecorator.Bullet>
                         <ContentPresenter Grid.Column="1" VerticalAlignment="Center" />
                     </BulletDecorator>
                     <ControlTemplate.Triggers>
                         <!--  on image  -->
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="TickImage" Property="Source" Value="{StaticResource locked_icon}" />
+                            <Setter TargetName="TickImage" Property="Source" Value="{StaticResource baseline_lock_DrawingImage}" />
                         </Trigger>
                         <!--  other image  -->
                         <Trigger Property="IsChecked" Value="{x:Null}">
-                            <Setter TargetName="TickImage" Property="Source" Value="{StaticResource unlocked_icon}" />
+                            <Setter TargetName="TickImage" Property="Source" Value="{StaticResource baseline_lock_open_DrawingImage}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

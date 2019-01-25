@@ -790,7 +790,7 @@
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="auto" />
-                                                    <ColumnDefinition Width="100*" />
+                                                    <ColumnDefinition Width="100*"/>
                                                 </Grid.ColumnDefinitions>
 
                                                 <StackPanel
@@ -808,10 +808,14 @@
                                                         IsChecked="{Binding Path=Locked}"
                                                         Style="{StaticResource LockedCheckBox}" />
                                                 </StackPanel>
-                                                <TextBlock
+                                                <Label
                                                     Grid.Column="1"
-                                                    Margin="2"
-                                                    Text="{Binding Path=Name}" />
+                                                    Padding="8"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    Foreground="White"
+                                                    Content="{Binding Path=Name}"
+                                                    />
                                             </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
