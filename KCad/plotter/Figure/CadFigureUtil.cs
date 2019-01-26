@@ -11,7 +11,7 @@ namespace Plotter
     {
         public class Util
         {
-            public static void MoveSelectedPoint(CadFigure fig, DrawContext dc, CadVector delta)
+            public static void MoveSelectedPointsFromStored(CadFigure fig, DrawContext dc, CadVector delta)
             {
                 if (fig.StoreList == null)
                 {

@@ -178,7 +178,7 @@ namespace Plotter
             return;
         }
 
-        public override void MoveSelectedPoints(DrawContext dc, CadVector delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVector delta)
         {
             CadVector cp = StoreList[0];
 

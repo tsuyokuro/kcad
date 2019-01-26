@@ -254,18 +254,12 @@ namespace KCad
         {
             if (!textCommand.IsFocused)
             {
-                ViewModel.OnKeyDown(sender, e);
+                e.Handled = ViewModel.OnKeyDown(sender, e);
             }
         }
 
         private void onKeyUp(object sender, KeyEventArgs e)
         {
-            if (KeyHandled)
-            {
-                KeyHandled = false;
-                return;
-            }
-
             if (!textCommand.IsFocused && !MyConsole.IsFocused)
             {
                e.Handled = ViewModel.OnKeyUp(sender, e);

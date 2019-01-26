@@ -172,6 +172,17 @@ namespace Plotter
             get => SettingsHolder.Settings.LineSnapRange;
         }
 
+        public double KeyMoveUnit
+        {
+            set
+            {
+                SettingsHolder.Settings.KeyMoveUnit = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(KeyMoveUnit)));
+            }
+
+            get => SettingsHolder.Settings.KeyMoveUnit;
+        }
+
         public SettingsVeiwModel(PlotterController controller)
         {
             Controller = controller;
@@ -225,6 +236,7 @@ namespace Plotter
 
         public double LineSnapRange = 8;
 
+        public double KeyMoveUnit = 1.0;
 
         public bool DrawFaceOutline = true;
 
@@ -278,6 +290,10 @@ namespace Plotter
             jo.Add("enable", SnapToLine);
             jo.Add("range", LineSnapRange);
             root.Add("LineSnap", jo);
+
+            jo = new JObject();
+            jo.Add("unit", KeyMoveUnit);
+            root.Add("KeyMove", jo);
 
             jo = new JObject();
             jo.Add("enable", SnapToZero);
@@ -338,6 +354,12 @@ namespace Plotter
             jo = (JObject)root["LineSnap"];
             SnapToLine = jo.GetBool("enable", SnapToLine);
             LineSnapRange = jo.GetDouble("range", LineSnapRange);
+
+            jo = (JObject)root["KeyMove"];
+            if (jo != null)
+            {
+                KeyMoveUnit = jo.GetDouble("unit", KeyMoveUnit);
+            }
 
             jo = (JObject)root["ZeroSnap"];
             if (jo != null)

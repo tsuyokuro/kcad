@@ -117,7 +117,7 @@ namespace Plotter
             PointList.Add(seg.P0);
         }
 
-        public override void MoveSelectedPoints(DrawContext dc, CadVector delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVector delta)
         {
             if (PointList[0].Selected && PointList[1].Selected &&
                 PointList[2].Selected && PointList[3].Selected)

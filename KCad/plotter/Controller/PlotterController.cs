@@ -453,7 +453,7 @@ namespace Plotter.Controller
 
         private CadOpeFigureSnapShotList mSnapShotList;
 
-        public void StartEdit()
+        public List<CadFigure> StartEdit()
         {
             EditFigList = DB.GetSelectedFigList();
 
@@ -468,6 +468,8 @@ namespace Plotter.Controller
                     fig.StartEdit();
                 }
             }
+
+            return EditFigList;
         }
 
         public void AbendEdit()
@@ -565,7 +567,7 @@ namespace Plotter.Controller
                 CadFigure fig = mDB.GetFigure(id);
                 if (fig != null)
                 {
-                    fig.MoveSelectedPoints(dc, delta);
+                    fig.MoveSelectedPointsFromStored(dc, delta);
                 }
             }
         }
@@ -861,6 +863,24 @@ namespace Plotter.Controller
         {
             PlotterClipboard.PasteFiguresAsBin(this);
             UpdateTreeView(true);
+        }
+
+        public void MovePointsFromStored(List<CadFigure> figList, CadVector d)
+        {
+            if (figList == null)
+            {
+                return;
+            }
+
+            if (figList.Count == 0)
+            {
+                return;
+            }
+
+            foreach (CadFigure fig in figList)
+            {
+                fig.MoveSelectedPointsFromStored(CurrentDC, d);
+            }
         }
     }
 }

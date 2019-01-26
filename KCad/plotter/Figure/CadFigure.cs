@@ -617,7 +617,7 @@ namespace Plotter
 
         #endregion
 
-        public virtual void MoveSelectedPoints(DrawContext dc, CadVector delta)
+        public virtual void MoveSelectedPointsFromStored(DrawContext dc, CadVector delta)
         {
             if (Locked) return;
 
@@ -627,11 +627,11 @@ namespace Plotter
             //    " dz=" + delta.z.ToString()
             //    );
 
-            Util.MoveSelectedPoint(this, dc, delta);
+            Util.MoveSelectedPointsFromStored(this, dc, delta);
 
             mChildList.ForEach(c =>
             {
-               c.MoveSelectedPoints(dc, delta);
+               c.MoveSelectedPointsFromStored(dc, delta);
             });
         }
 
