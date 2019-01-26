@@ -8,14 +8,12 @@ namespace Plotter
     public class CadLayer
     {
         private uint mId = 0;
-
         public uint ID {
-            get { return mId; }
-            set { mId = value; }
+            get => mId;
+            set => mId = value;
         }
 
         private String mName = null;
-
         public String Name
         {
             get
@@ -28,14 +26,10 @@ namespace Plotter
                 return "layer" + mId;
             }
 
-            set
-            {
-                mName = value;
-            }
+            set => mName = value;
         }
 
         private bool mLocked = false;
-
         public bool Locked
         {
             set
@@ -44,43 +38,22 @@ namespace Plotter
                 mFigureList.ForEach(a => a.Locked = value);
             }
 
-            get
-            {
-                return mLocked;
-            }
+            get => mLocked;
         }
 
         private bool mVisible = true;
-
         public bool Visible
         {
-            set
-            {
-                mVisible = value;
-            }
-
-            get
-            {
-                return mVisible;
-            }
+            set => mVisible = value;
+            get => mVisible;
         }
 
         private List<CadFigure> mFigureList = new List<CadFigure>();
-
-
-
         public List<CadFigure> FigureList
         {
-            get
-            {
-                return mFigureList;
-            }
-            set
-            {
-                mFigureList = value;
-            }
+            get => mFigureList;
+            set => mFigureList = value;
         }
-
 
         public CadLayer()
         {

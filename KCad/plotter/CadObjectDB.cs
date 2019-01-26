@@ -17,76 +17,36 @@ namespace Plotter
 
         public uint CurrentLayerID
         {
-            get
-            {
-                if (mCurrentLayer == null)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return mCurrentLayer.ID;
-                }
-            }
-
-            set
-            {
-                mCurrentLayer = GetLayer(value);
-            }
+            get => mCurrentLayer == null ? 0 : mCurrentLayer.ID;
+            set => mCurrentLayer = GetLayer(value);
         }
 
         private CadLayer mCurrentLayer;
-
         public CadLayer CurrentLayer
         {
-            get
-            {
-                return mCurrentLayer;
-            }
-
-            set
-            {
-                mCurrentLayer = value;
-            }
+            get => mCurrentLayer;
+            set => mCurrentLayer = value;
         }
 
         private Dictionary<uint, CadLayer> mLayerIdMap = new Dictionary<uint, CadLayer>();
         public Dictionary<uint, CadLayer> LayerMap
         {
-            get
-            {
-                return mLayerIdMap;
-            }
-
-            set
-            {
-                mLayerIdMap = value;
-            }
+            get => mLayerIdMap;
+            set => mLayerIdMap = value;
         }
-
 
         private IdProvider mLayerIdProvider = new IdProvider();
         public IdProvider LayerIdProvider
         {
-            get
-            {
-                return mLayerIdProvider;
-            }
+            get => mLayerIdProvider;
         }
 
 
         private List<CadLayer> mLayerList = new List<CadLayer>();
         public List<CadLayer> LayerList
         {
-            get
-            {
-                return mLayerList;
-            }
-
-            set
-            {
-                mLayerList = value;
-            }
+            get => mLayerList;
+            set => mLayerList = value;
         }
 
 
@@ -144,24 +104,14 @@ namespace Plotter
         private Dictionary<uint, CadFigure> mFigureIdMap = new Dictionary<uint, CadFigure>();
         public Dictionary<uint, CadFigure> FigureMap
         {
-            get
-            {
-                return mFigureIdMap;
-            }
-
-            set
-            {
-                mFigureIdMap = value;
-            }
+            get => mFigureIdMap;
+            set => mFigureIdMap = value;
         }
 
         IdProvider mFigIdProvider = new IdProvider();
         public IdProvider FigIdProvider
         {
-            get
-            {
-                return mFigIdProvider;
-            }
+            get => mFigIdProvider;
         }
 
 
@@ -293,10 +243,12 @@ namespace Plotter
         public void ClearAll()
         {
             LayerMap.Clear();
-            mLayerIdProvider.Reset();
+            LayerIdProvider.Reset();
             LayerList.Clear();
             FigureMap.Clear();
             FigIdProvider.Reset();
+
+            GC.Collect();
 
             CadLayer layer = NewLayer();
 

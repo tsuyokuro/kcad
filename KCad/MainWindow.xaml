@@ -790,7 +790,7 @@
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="auto" />
-                                                    <ColumnDefinition Width="100*"/>
+                                                    <ColumnDefinition Width="100*" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <StackPanel
@@ -813,9 +813,8 @@
                                                     Padding="8"
                                                     HorizontalAlignment="Stretch"
                                                     VerticalAlignment="Stretch"
-                                                    Foreground="White"
                                                     Content="{Binding Path=Name}"
-                                                    />
+                                                    Foreground="White" />
                                             </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
@@ -844,11 +843,12 @@
                                             IsChecked="{Binding FilterTreeView}"
                                             Style="{StaticResource ToolToggleButton}">
 
-                                            <Border Padding="4">
+                                            <Border>
                                                 <Image
-                                                    Height="12"
+                                                    Width="18"
+                                                    Height="18"
                                                     VerticalAlignment="Top"
-                                                    Source="{StaticResource filterDrawingImage}" />
+                                                    Source="{StaticResource baseline_filter_listDrawingImage}" />
                                             </Border>
 
                                         </ToggleButton>

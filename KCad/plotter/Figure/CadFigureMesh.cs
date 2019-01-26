@@ -26,21 +26,9 @@ namespace Plotter
             EDGE_THRESHOLD = Math.Cos(CadMath.Deg2Rad(30));
         }
 
-        public override VectorList PointList
-        {
-            get
-            {
-                return mPointList;
-            }
-        }
+        public override VectorList PointList => mPointList;
 
-        public override int PointCount
-        {
-            get
-            {
-                return PointList.Count;
-            }
-        }
+        public override int PointCount => PointList.Count;
 
         public CadFigureMesh()
         {

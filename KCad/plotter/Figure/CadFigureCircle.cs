@@ -9,10 +9,7 @@ namespace Plotter
     {
         public override int SegmentCount
         {
-            get
-            {
-                return 0;
-            }
+            get => 0;
         }
 
         public override void InvertDir()

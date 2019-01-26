@@ -77,29 +77,11 @@ namespace Plotter
 
         public CadVector Normal;
 
-        public virtual VectorList PointList
-        {
-            get
-            {
-                return mPointList;
-            }
-        }
+        public virtual VectorList PointList => mPointList;
 
-        public virtual int PointCount
-        {
-            get
-            {
-                return PointList.Count;
-            }
-        }
+        public virtual int PointCount => PointList.Count;
 
-        public VectorList StoreList
-        {
-            get
-            {
-                return mStoreList;
-            }
-        }
+        public VectorList StoreList => mStoreList;
 
         public bool Locked  { set; get; } = false;
 
@@ -123,8 +105,8 @@ namespace Plotter
 
         public CadFigure Parent
         {
-            set { mParent = value; }
-            get { return mParent; }
+            set => mParent = value;
+            get => mParent;
         }
 
 
@@ -132,15 +114,8 @@ namespace Plotter
 
         public List<CadFigure> ChildList
         {
-            get
-            {
-                return mChildList;
-            }
-
-            set
-            {
-                mChildList = value;
-            }
+            get => mChildList;
+            set => mChildList = value;
         }
 
         /// <summary>

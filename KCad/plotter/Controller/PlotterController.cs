@@ -37,26 +37,14 @@ namespace Plotter.Controller
             get => mState;
         }
 
-        public CadObjectDB DB
-        {
-            get
-            {
-                return mDB;
-            }
-        }
+        public CadObjectDB DB => mDB;
 
         private PaperPageSize mPageSize = new PaperPageSize(PaperKind.A4, false);
 
         public PaperPageSize PageSize
         {
-            get
-            {
-                return mPageSize;
-            }
-            set
-            {
-                mPageSize = value;
-            }
+            get => mPageSize;
+            set => mPageSize = value;
         }
 
         public SelectModes SelectMode
@@ -67,10 +55,7 @@ namespace Plotter.Controller
 
         public CadLayer CurrentLayer
         {
-            get
-            {
-                return mDB.CurrentLayer;
-            }
+            get => mDB.CurrentLayer;
 
             set
             {
@@ -84,14 +69,8 @@ namespace Plotter.Controller
 
         public CadFigure.Types CreatingFigType
         {
-            private set
-            {
-                mCreatingFigType = value;
-            }
-            get
-            {
-                return mCreatingFigType;
-            }
+            private set => mCreatingFigType = value;
+            get => mCreatingFigType;
         }
 
         public MeasureModes MeasureMode = MeasureModes.NONE;

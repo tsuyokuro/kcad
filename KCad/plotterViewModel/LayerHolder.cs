@@ -10,7 +10,7 @@ namespace Plotter
 
         public uint ID
         {
-            get { return mLayer.ID; }
+            get => mLayer.ID;
         }
 
         public bool Locked
@@ -21,7 +21,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Locked)));
             }
 
-            get { return mLayer.Locked; }
+            get => mLayer.Locked;
         }
 
         public bool Visible
@@ -32,7 +32,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Visible)));
             }
 
-            get { return mLayer.Visible; }
+            get => mLayer.Visible;
         }
 
         public string Name
@@ -43,7 +43,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
             }
 
-            get { return mLayer.Name; }
+            get => mLayer.Name;
         }
 
         public LayerHolder(CadLayer layer)

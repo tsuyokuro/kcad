@@ -28,10 +28,7 @@ namespace Plotter
 
         public PlotterController Controller
         {
-            get
-            {
-                return mController;
-            }
+            get => mController;
         }
 
         private Dictionary<string, Action> CommandMap;
@@ -54,10 +51,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectMode)));
             }
 
-            get
-            {
-                return mSelectMode;
-            }
+            get => mSelectMode;
         }
 
 
@@ -75,10 +69,7 @@ namespace Plotter
                 }
             }
 
-            get
-            {
-                return mCreatingFigureType;
-            }
+            get => mCreatingFigureType;
         }
 
         private MeasureModes mMeasureMode = MeasureModes.NONE;
@@ -95,10 +86,7 @@ namespace Plotter
                 }
             }
 
-            get
-            {
-                return mMeasureMode;
-            }
+            get => mMeasureMode;
         }
 
 
@@ -113,10 +101,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewMode)));
             }
 
-            get
-            {
-                return mViewMode;
-            }
+            get => mViewMode;
         }
 
         public DrawContext CurrentDC => mController?.CurrentDC;
@@ -218,10 +203,7 @@ namespace Plotter
                 mLayerListView = value;
             }
 
-            get
-            {
-                return mLayerListView;
-            }
+            get => mLayerListView;
         }
 
         private MainWindow mMainWindow;
@@ -235,10 +217,7 @@ namespace Plotter
 
         public System.Windows.Forms.Control CurrentView
         {
-            get
-            {
-                return mPlotterView.FormsControl;
-            }
+            get => mPlotterView.FormsControl;
         }
 
         Window mEditorWindow;
@@ -773,9 +752,6 @@ namespace Plotter
 
                     Redraw();
                 }
-            }
-            else
-            {
             }
         }
         #endregion
