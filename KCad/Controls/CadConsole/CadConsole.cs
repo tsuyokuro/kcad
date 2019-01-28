@@ -10,8 +10,7 @@ namespace KCad
 {
     public partial class CadConsoleView : FrameworkElement
     {
-        #region Properties
-        protected FontFamily mFontFamily;
+        protected FontFamily mFontFamily = new FontFamily("ＭＳ ゴシック");
 
         protected Typeface mTypeface;
 
@@ -38,6 +37,8 @@ namespace KCad
 
         protected bool mIsLoaded = false;
 
+
+        #region Properties
         public Brush Background
         {
             get
@@ -142,17 +143,16 @@ namespace KCad
                 return mMaxLine;
             }
         }
-
         #endregion
 
-        #region Event
+
         public event EventHandler SelectionChanged;
 
         protected virtual void OnSelectionChanged(EventArgs e)
         {
             SelectionChanged?.Invoke(this, e);
         }
-        #endregion
+
 
         protected ScrollViewer Scroll;
 
@@ -171,7 +171,6 @@ namespace KCad
         {
             Focusable = true;
 
-            mFontFamily = new FontFamily("メイリオ");
             mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
 
             Loaded += CadConsoleView_Loaded;
@@ -520,107 +519,6 @@ namespace KCad
         }
 
         #region draw text
-        /*
-        public void DrawText(DrawingContext dc, string s, Point pt, bool selected)
-        {
-            TextAttr attr = DefaultAttr;
-
-            StringBuilder sb = new StringBuilder();
-
-            int state = 0;
-
-            int x = 0;
-
-            for (int i = 0; i < s.Length; i++)
-            {
-                if (s[i] == '\x1b')
-                {
-                    state = 1;
-                    pt = RenderText(dc, attr, sb.ToString(), pt, selected);
-                    sb.Clear();
-                    continue;
-                }
-
-                switch (state)
-                {
-                    case 0:
-                        sb.Append(s[i]);
-                        break;
-                    case 1:
-                        if (s[i] == '[')
-                        {
-                            state = 2;
-                        }
-                        break;
-                    case 2:
-                        if (s[i] >= '0' && s[i] <= '9')
-                        {
-                            state = 3;
-                            x = s[i] - '0';
-                        }
-                        else if (s[i] == 'm')
-                        {
-                            if (x == 0)
-                            {
-                                attr.BColor = 0;
-                                attr.FColor = 7;
-                            }
-
-                            state = 0;
-                        }
-                        else
-                        {
-                            sb.Append(s[i]);
-                            state = 0;
-                        }
-                        break;
-                    case 3:
-                        if (s[i] >= '0' && s[i] <= '9')
-                        {
-                            x = x * 10 + (s[i] - '0');
-                        }
-                        else if (s[i] == 'm')
-                        {
-                            if (x == 0)
-                            {
-                                attr.BColor = 0;
-                                attr.FColor = 7;
-                            }
-                            else if (x >= 30 && x <= 37) // front std
-                            {
-                                attr.FColor = (byte)(x - 30);
-                            }
-                            else if (x >= 40 && x <= 47) // back std
-                            {
-                                attr.BColor = (byte)(x - 40);
-                            }
-                            else if (x >= 90 && x <= 97) // front strong
-                            {
-                                attr.FColor = (byte)(x - 90 + 8);
-                            }
-                            else if (x >= 100 && x <= 107) // back std
-                            {
-                                attr.BColor = (byte)(x - 100 + 8);
-                            }
-                            state = 0;
-                        }
-                        else
-                        {
-                            sb.Append(s[i]);
-                            state = 0;
-                        }
-
-                        break;
-                }
-            }
-
-            if (sb.Length > 0)
-            {
-                pt = RenderText(dc, attr, sb.ToString(), pt, selected);
-                sb.Clear();
-            }
-        }
-        */
 
         protected void DrawText(DrawingContext dc, TextLine line, Point pt)
         {
@@ -651,7 +549,7 @@ namespace KCad
 
             Point pt2 = pt;
             pt2.X += ft.WidthIncludingTrailingWhitespace; // 末尾のspaceも含む幅
-            pt2.Y += ft.Height;
+            pt2.Y += mLineHeight;
 
             Brush bgb;
 
@@ -666,7 +564,11 @@ namespace KCad
 
             dc.DrawRectangle(bgb, null, new Rect(pt, pt2));
 
-            dc.DrawText(ft, pt);
+            Point tpt = pt;
+
+            tpt.Y = pt.Y + ((pt2.Y - pt.Y) - ft.Height) / 2;
+
+            dc.DrawText(ft, tpt);
             pt.X += ft.Width;
             return pt;
         }

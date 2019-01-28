@@ -52,11 +52,6 @@ namespace KCad
             InitPopup();
         }
 
-        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            DOut.pl("sc");
-        }
-
         private void SetupDebugConsole()
         {
             if (App.UseConsole)
