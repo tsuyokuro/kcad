@@ -678,7 +678,7 @@
                                 LineHeight="18"
                                 SelectedBackground="{StaticResource MsgSelectedBGColor}"
                                 SelectedForeground="{StaticResource MsgTextColor}"
-                                TextSize="12" />
+                                TextSize="14" />
 
                         </ScrollViewer>
                         <Grid Grid.Row="1" Height="auto">
@@ -705,7 +705,7 @@
                                 BorderBrush="{StaticResource BoarderColor}"
                                 BorderThickness="1,1,1,1"
                                 CandidateListBackground="{StaticResource BGColor}"
-                                CandidateListBorder="Aqua"
+                                CandidateListBorder="#FF707070"
                                 CandidateListForeground="{StaticResource TextColor}"
                                 FontSize="16"
                                 FontWeight="Thin"
