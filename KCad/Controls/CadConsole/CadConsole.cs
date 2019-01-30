@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plotter;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -167,11 +168,16 @@ namespace KCad
         protected Pen FocusedBorderPen = new Pen(
                 new SolidColorBrush(Color.FromRgb(0x56, 0x9D, 0xE5)), 1);
 
+        protected double CW = 1;
+
+        protected double CH = 1;
+
+
         public CadConsoleView()
         {
             Focusable = true;
 
-            mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
+            mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.UltraLight, FontStretches.Normal);
 
             Loaded += CadConsoleView_Loaded;
 
@@ -233,16 +239,16 @@ namespace KCad
             Esc.Palette[Esc.DefaultFColor] = mForeground;
             Esc.Palette[Esc.DefaultBColor] = mBackground;
 
-            Esc.SelPalette[Esc.DefaultFColor] = mSelectedForeground;
-            Esc.SelPalette[Esc.DefaultBColor] = mSelectedBackground;
-
-
             DefaultAttr.FColor = Esc.DefaultFColor;
             DefaultAttr.BColor = Esc.DefaultBColor;
 
             CurrentAttr = DefaultAttr;
 
-            //RecalcSize();
+            FormattedText ft = GetFormattedText("A", mForeground);
+
+            CW = ft.Width;
+            CH = ft.Height;
+
             NewLine();
 
             UpdateView();
@@ -258,6 +264,10 @@ namespace KCad
             Point p = e.GetPosition(this);
 
             int idx = (int)(p.Y / mLineHeight);
+
+            int col = (int)(p.X / CW);
+
+            //DOut.pl($"line:{idx} col:{col}");
 
             CleanSelection();
 
@@ -534,35 +544,35 @@ namespace KCad
 
         protected Point RenderText(DrawingContext dc, TextAttr attr, string s, Point pt, bool selected)
         {
-            Brush fgb;
+            Brush foreground;
 
             if (selected)
             {
-                fgb = Esc.SelPalette[attr.FColor];
+                foreground = Esc.Palette[Esc.DefaultFColor];
             }
             else
             {
-                fgb = Esc.Palette[attr.FColor];
+                foreground = Esc.Palette[attr.FColor];
             }
 
-            FormattedText ft = GetFormattedText(s, fgb);
+            FormattedText ft = GetFormattedText(s, foreground);
 
             Point pt2 = pt;
             pt2.X += ft.WidthIncludingTrailingWhitespace; // 末尾のspaceも含む幅
             pt2.Y += mLineHeight;
 
-            Brush bgb;
+            Brush background;
 
             if (selected)
             {
-                bgb = Esc.SelPalette[attr.BColor];
+                background = mSelectedBackground;
             }
             else
             {
-                bgb = Esc.Palette[attr.BColor];
+                background = Esc.Palette[attr.BColor];
             }
 
-            dc.DrawRectangle(bgb, null, new Rect(pt, pt2));
+            dc.DrawRectangle(background, null, new Rect(pt, pt2));
 
             Point tpt = pt;
 

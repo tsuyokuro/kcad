@@ -47,7 +47,7 @@ namespace KCad
 
 
         public Brush[] Palette;
-        public Brush[] SelPalette;
+        public Brush[] BrightPalette;
 
         public byte DefaultFColor = 7;
         public byte DefaultBColor = 0;
@@ -73,30 +73,6 @@ namespace KCad
             Palette[13] = Brushes.MediumOrchid;
             Palette[14] = Brushes.Turquoise;
             Palette[15] = Brushes.White;
-
-
-
-            SelPalette = new Brush[16];
-
-            float b = 1.4f;
-
-            SelPalette[0] = Brigahtness(Palette[0], b);
-            SelPalette[1] = Brigahtness(Palette[1], b);
-            SelPalette[2] = Brigahtness(Palette[2], b);
-            SelPalette[3] = Brigahtness(Palette[3], b);
-            SelPalette[4] = Brigahtness(Palette[4], b);
-            SelPalette[5] = Brigahtness(Palette[5], b);
-            SelPalette[6] = Brigahtness(Palette[6], b);
-            SelPalette[7] = Brigahtness(Palette[7], b);
-
-            SelPalette[8] = Brigahtness(Palette[8], b);
-            SelPalette[9] = Brigahtness(Palette[9], b);
-            SelPalette[10] = Brigahtness(Palette[10], b);
-            SelPalette[11] = Brigahtness(Palette[11], b);
-            SelPalette[12] = Brigahtness(Palette[12], b);
-            SelPalette[13] = Brigahtness(Palette[13], b);
-            SelPalette[14] = Brigahtness(Palette[14], b);
-            SelPalette[15] = Brigahtness(Palette[15], b);
         }
 
         public Brush Brigahtness(Brush brush, float a)
