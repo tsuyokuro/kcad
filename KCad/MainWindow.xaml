@@ -59,6 +59,37 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="AutoCompListBoxStyle" TargetType="ListBox">
+                <Setter Property="Padding" Value="4" />
+                <Setter Property="Background" Value="{StaticResource BGColor}" />
+                <Setter Property="BorderBrush" Value="Black" />
+            </Style>
+
+            <Style x:Key="AutoCompListBoxItem" TargetType="ListBoxItem">
+                <Setter Property="Background" Value="{StaticResource BaseColor}" />
+                <Setter Property="Foreground" Value="{StaticResource TextColor}" />
+
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Border
+                                Name="Border"
+                                Padding="4"
+                                SnapsToDevicePixels="true">
+                                <ContentPresenter />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="true">
+                                    <Setter Property="Foreground" Value="White" />
+                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource ListBoxSelColor}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <Style x:Key="MsgListBoxItem" TargetType="ListBoxItem">
 
                 <Setter Property="Background" Value="{StaticResource MsgBGColor}" />
@@ -704,9 +735,8 @@
                                 Background="{StaticResource MsgBGColor}"
                                 BorderBrush="{StaticResource BoarderColor}"
                                 BorderThickness="1,1,1,1"
-                                CandidateListBackground="{StaticResource BGColor}"
-                                CandidateListBorder="#FF707070"
-                                CandidateListForeground="{StaticResource TextColor}"
+                                CandidateListItemContainerStyle="{StaticResource AutoCompListBoxItem}"
+                                CandidateListStyle="{StaticResource AutoCompListBoxStyle}"
                                 FontSize="16"
                                 FontWeight="Thin"
                                 Foreground="{StaticResource TextColor}" />

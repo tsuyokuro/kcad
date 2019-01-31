@@ -23,8 +23,21 @@ namespace KCad
             public string Text;
         }
 
-        private Popup CandidatePopup;
-        private ListBox CandidateListBox;
+        private Popup mCandidatePopup = new Popup();
+
+        private ListBox mCandidateListBox = new ListBox();
+
+        public Style CandidateListItemContainerStyle
+        {
+            get => mCandidateListBox.ItemContainerStyle;
+            set => mCandidateListBox.ItemContainerStyle = value;
+        }
+
+        public Style CandidateListStyle
+        {
+            get => mCandidateListBox.Style;
+            set => mCandidateListBox.Style = value;
+        }
 
         private bool DisableCandidateList = false;
 
@@ -44,70 +57,36 @@ namespace KCad
         {
             get
             {
-                if (CandidatePopup == null)
+                if (mCandidatePopup == null)
                 {
                     return false;
                 }
 
-                return CandidatePopup.IsOpen;
+                return mCandidatePopup.IsOpen;
             }
         }
 
-        public Brush CandidateListBackground
+        public int CandidateWordMin
         {
-            get
-            {
-                return CandidateListBox.Background;
-            }
-            set
-            {
-                CandidateListBox.Background = value;
-            }
-        }
-
-        public Brush CandidateListForeground
-        {
-            get
-            {
-                return CandidateListBox.Foreground;
-            }
-            set
-            {
-                CandidateListBox.Foreground = value;
-            }
-        }
-
-        public Brush CandidateListBorder
-        {
-            get
-            {
-                return CandidateListBox.BorderBrush;
-            }
-            set
-            {
-                CandidateListBox.BorderBrush = value;
-            }
-        }
-
+            get;
+            set;
+        } = 3;
 
         public event Action<object, TextEventArgs> Determine;
 
         public AutoCompleteTextBox()
         {
-            CandidatePopup = new Popup();
-            CandidateListBox = new ListBox();
-
-            CandidatePopup.Child = CandidateListBox;
+            mCandidatePopup.Child = mCandidateListBox;
         }
 
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
 
-            CandidateListBox.MouseUp += CandidateListBox_MouseUp;
-            CandidateListBox.PreviewKeyDown += CandidateListBox_PreviewKeyDown;
+            mCandidateListBox.MouseUp += CandidateListBox_MouseUp;
+            mCandidateListBox.PreviewKeyDown += CandidateListBox_PreviewKeyDown;
 
-            CandidateListBox.PreviewLostKeyboardFocus += CandidateListBox_PreviewLostKeyboardFocus;
+            mCandidateListBox.PreviewLostKeyboardFocus += CandidateListBox_PreviewLostKeyboardFocus;
 
             if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             {
@@ -124,19 +103,19 @@ namespace KCad
         {
             base.OnPreviewKeyDown(e);
 
-            if (CandidatePopup.IsOpen)
+            if (mCandidatePopup.IsOpen)
             {
                 if (e.Key == Key.Down)
                 {
-                    CandidateListBox.Focus();
+                    mCandidateListBox.Focus();
                 }
                 else if (e.Key == Key.Up)
                 {
-                    CandidateListBox.Focus();
+                    mCandidateListBox.Focus();
                 }
                 else if (e.Key == Key.Escape)
                 {
-                    CandidatePopup.IsOpen = false;
+                    mCandidatePopup.IsOpen = false;
                 }
                 else if (e.Key == Key.Enter)
                 {
@@ -198,25 +177,25 @@ namespace KCad
                     return;
                 }
 
-                CandidatePopup.PlacementTarget = this;
-                CandidatePopup.IsOpen = true;
+                mCandidatePopup.PlacementTarget = this;
+                mCandidatePopup.IsOpen = true;
             }
             else
             {
-                CandidatePopup.IsOpen = false;
+                mCandidatePopup.IsOpen = false;
             }
         }
 
         private void CandidateListBox_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (!CandidatePopup.IsOpen)
+            if (!mCandidatePopup.IsOpen)
             {
                 return;
             }
 
             bool focus = false;
 
-            foreach (ListBoxItem item in CandidateListBox.Items)
+            foreach (ListBoxItem item in mCandidateListBox.Items)
             {
                 if (item.Equals(e.NewFocus))
                 {
@@ -238,7 +217,7 @@ namespace KCad
 
         private void CandidateListBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (CandidatePopup.IsOpen)
+            if (mCandidatePopup.IsOpen)
             {
                 if (e.Key == Key.Enter)
                 {
@@ -254,19 +233,19 @@ namespace KCad
 
         private void ClosePopup()
         {
-            CandidatePopup.IsOpen = false;
+            mCandidatePopup.IsOpen = false;
             Focus();
             CaretIndex = Text.Length;
         }
 
         private bool SetTextFromListBox()
         {
-            if (CandidateListBox.SelectedItem == null)
+            if (mCandidateListBox.SelectedItem == null)
             {
                 return false;
             }
 
-            ListBoxItem item = (ListBoxItem)(CandidateListBox.SelectedItem);
+            ListBoxItem item = (ListBoxItem)(mCandidateListBox.SelectedItem);
 
             string s = (string)(item.Content);
 
@@ -322,7 +301,12 @@ namespace KCad
                 s = currentText;
             }
 
-            CandidateListBox.Items.Clear();
+            if (s.Length < CandidateWordMin)
+            {
+                return false;
+            }
+
+            mCandidateListBox.Items.Clear();
 
             foreach (var str in CandidateList)
             {
@@ -334,11 +318,16 @@ namespace KCad
 
                     item.Content = str;
 
-                    CandidateListBox.Items.Add(item);
+                    mCandidateListBox.Items.Add(item);
+
+                    //if (mCandidateListBox.Items.Count > 8)
+                    //{
+                    //    break;
+                    //}
                 }
             }
 
-            return CandidateListBox.Items.Count > 0;
+            return mCandidateListBox.Items.Count > 0;
         }
 
 
