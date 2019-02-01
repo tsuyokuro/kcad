@@ -55,7 +55,7 @@ namespace Plotter
 
         private DrawContextGDI mDrawContext = null;
 
-        private Cursor DefaultCursor; 
+        private Cursor PointCursor; 
 
         public DrawContext DrawContext
         {
@@ -85,7 +85,7 @@ namespace Plotter
                 }
                 else if (s == ContextMenuEx.State.CLOSED)
                 {
-                    base.Cursor = DefaultCursor;
+                    base.Cursor = PointCursor;
                 }
             });
 
@@ -109,9 +109,9 @@ namespace Plotter
             StreamResourceInfo si = System.Windows.Application.GetResourceStream(
                 new Uri("/KCad;component/Resources/dot.cur", UriKind.Relative));
 
-            DefaultCursor = new Cursor(si.Stream);
+            PointCursor = new Cursor(si.Stream);
 
-            base.Cursor = DefaultCursor;
+            base.Cursor = PointCursor;
         }
 
         protected override void Dispose(bool disposing)
@@ -264,6 +264,18 @@ namespace Plotter
             if (controller != null)
             {
                 mController.Observer.RequestContextMenu += ShowContextMenu;
+            }
+        }
+
+        public void CursorLocked(bool locked)
+        {
+            if (locked)
+            {
+                base.Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                base.Cursor = PointCursor;
             }
         }
 

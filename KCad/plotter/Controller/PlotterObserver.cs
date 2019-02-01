@@ -31,5 +31,7 @@ namespace Plotter.Controller
         public Action<string, MessageType> OpenPopupMessage = (text, messageType) => { };
 
         public Action ClosePopupMessage = () => { };
+
+        public Action<bool> CursorLocked = (a) => {}; 
     }
 }

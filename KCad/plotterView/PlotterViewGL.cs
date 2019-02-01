@@ -174,6 +174,11 @@ namespace Plotter
             {
                 SwapBuffers();
             }
-        } 
+        }
+
+        public void CursorLocked(bool locked)
+        {
+            // NOP
+        }
     }
 }

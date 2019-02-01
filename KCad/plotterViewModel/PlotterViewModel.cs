@@ -256,6 +256,8 @@ namespace Plotter
 
             mController.Observer.ClosePopupMessage = ClosePopupMessage;
 
+            mController.Observer.CursorLocked = CursorLocked;
+
             LayerListChanged(mController, mController.GetLayerListInfo());
 
             PlotterView1 = new PlotterView();
@@ -398,7 +400,8 @@ namespace Plotter
                 { "escape", new KeyAction(Cancel , null)},
                 { "ctrl+p", new KeyAction(InsPoint , null)},
                 //{ "ctrl+oemplus", new KeyAction(SearchNearestPoint , null)},
-                { "f2", new KeyAction(SearchNearestPoint , null)},
+                { "f3", new KeyAction(SearchNearestPoint , null)},
+                { "f2", new KeyAction(CursorLock , null)},
                 { "left", new KeyAction(MoveKeyDown, MoveKeyUp)},
                 { "right", new KeyAction(MoveKeyDown, MoveKeyUp)},
                 { "up", new KeyAction(MoveKeyDown, MoveKeyUp)},
@@ -676,6 +679,11 @@ namespace Plotter
             Redraw();
         }
 
+        public void CursorLock()
+        {
+            mController.CursorLock();
+        }
+
         public void MoveKeyDown()
         {
             mMoveKeyHandler.MoveKeyDown();
@@ -761,6 +769,11 @@ namespace Plotter
             {
                 CursorPosVM.CursorPos2 = pt;
             }
+        }
+
+        private void CursorLocked(bool locked)
+        {
+            mPlotterView.CursorLocked(locked);
         }
 
         #endregion

@@ -78,10 +78,19 @@ namespace Plotter.Controller
             }
         }
 
-        private bool CursorLocked = false;
+        private bool mCursorLocked = false;
+        private bool CursorLocked
+        {
+            set
+            {
+                mCursorLocked = value;
+                Observer.CursorLocked(mCursorLocked);
+            }
+
+            get => mCursorLocked;
+        }
 
         private List<HighlightPointListItem> HighlightPointList = new List<HighlightPointListItem>();
-
 
         private Gridding mGridding = new Gridding();
 
@@ -1082,9 +1091,18 @@ namespace Plotter.Controller
         {
             CursorLocked = true;
 
-            CrossCursor.Pos = p;
             SnapPoint = CurrentDC.DevPointToWorldPoint(p);
             CrossCursor.Pos = p;
+        }
+
+        public void CursorLock()
+        {
+            CursorLocked = true;
+        }
+
+        public void CursorUnlock()
+        {
+            CursorLocked = false;
         }
     }
 }

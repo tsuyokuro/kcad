@@ -15,5 +15,7 @@ namespace Plotter
         }
 
         void SetController(PlotterController controller);
+
+        void CursorLocked(bool locked);
     }
 }
