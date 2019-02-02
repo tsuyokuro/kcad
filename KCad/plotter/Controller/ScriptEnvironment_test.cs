@@ -507,7 +507,10 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(nfig);
 
-            Controller.UpdateTreeView(true);
+            RunOnMainThread(() =>
+            {
+                Controller.UpdateTreeView(true);
+            });
         }
 
         private void testNus2()
@@ -524,7 +527,10 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(nfig);
 
-            Controller.UpdateTreeView(true);
+            RunOnMainThread(() =>
+            {
+                Controller.UpdateTreeView(true);
+            });
         }
 
         public CadFigure GetTargetFigure()

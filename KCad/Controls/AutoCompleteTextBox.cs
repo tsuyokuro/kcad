@@ -25,7 +25,11 @@ namespace KCad
 
         private Popup mCandidatePopup = new Popup();
 
+        private Border mCandidateBorder = new Border();
+
         private ListBox mCandidateListBox = new ListBox();
+
+        private ScrollViewer mCandidateScrollViewer = new ScrollViewer();
 
         public Style CandidateListItemContainerStyle
         {
@@ -37,6 +41,12 @@ namespace KCad
         {
             get => mCandidateListBox.Style;
             set => mCandidateListBox.Style = value;
+        }
+
+        public Style CandidateScrollViewerStyle
+        {
+            get => mCandidateScrollViewer.Style;
+            set => mCandidateScrollViewer.Style = value;
         }
 
         private bool DisableCandidateList = false;
@@ -76,12 +86,17 @@ namespace KCad
 
         public AutoCompleteTextBox()
         {
-            mCandidatePopup.Child = mCandidateListBox;
+            mCandidatePopup.MaxHeight = 200;
+            mCandidatePopup.Child = mCandidateBorder;
+            mCandidateBorder.Child = mCandidateScrollViewer;
+            mCandidateScrollViewer.Content = mCandidateListBox;
         }
 
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
+
+            mCandidateBorder.Background = mCandidateScrollViewer.Background;
 
             mCandidateListBox.MouseUp += CandidateListBox_MouseUp;
             mCandidateListBox.PreviewKeyDown += CandidateListBox_PreviewKeyDown;
