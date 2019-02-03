@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using CadDataTypes;
 using SplineCurve;
 using System.Drawing.Printing;
+using System.Linq;
+
 
 namespace Plotter.Serializer
 {
@@ -162,6 +164,42 @@ namespace Plotter.Serializer
             return ret;
         }
 
+        public void GarbageCollect()
+        {
+            var idMap = new Dictionary<uint, MpFigure>();
+
+            foreach (MpFigure fig in FigureList)
+            {
+                idMap.Add(fig.ID, fig);
+            }
+
+            var activeSet = new HashSet<uint>();
+
+            foreach (MpLayer layer in LayerList)
+            {
+                foreach (uint id in layer.FigureIdList)
+                {
+                    MpFigure fig = idMap[id];
+
+                    fig.ForEachFig((f) => {
+                        activeSet.Add(f.ID);
+                    });
+                }
+            }
+
+            int i = FigureList.Count - 1;
+
+            for (;i>=0;i--)
+            {
+                MpFigure fig = FigureList[i];
+
+                if (!activeSet.Contains(fig.ID))
+                {
+                    FigureList.RemoveAt(i);
+                }
+            }
+        }
+
         public CadObjectDB Restore()
         {
             CadObjectDB ret = new CadObjectDB();
@@ -315,6 +353,23 @@ namespace Plotter.Serializer
             return ret;
         }
 
+        public virtual void ForEachFig(Action<MpFigure> d)
+        {
+            d(this);
+
+            if (ChildList == null)
+            {
+                return;
+            }
+
+            int i;
+            for (i = 0; i < ChildList.Count; i++)
+            {
+                MpFigure c = ChildList[i];
+                c.ForEachFig(d);
+            }
+        }
+
         public void StoreCommon(CadFigure fig)
         {
             ID = fig.ID;
@@ -325,6 +380,7 @@ namespace Plotter.Serializer
 
             GeoData = fig.GeometricDataToMp();
         }
+
         public void StoreChildIdList(CadFigure fig)
         {
             ChildIdList = MpUtil.FigureListToIdList(fig.ChildList);
