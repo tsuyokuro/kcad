@@ -74,11 +74,11 @@ namespace Plotter
             });
         }
 
-        public override void MoveAllPoints(DrawContext dc, CadVector delta)
+        public override void MoveAllPoints(CadVector delta)
         {
             if (Locked) return;
 
-            Util.MoveAllPoints(this, dc, delta);
+            Util.MoveAllPoints(this, delta);
         }
         #endregion
 

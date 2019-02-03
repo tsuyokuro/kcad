@@ -774,60 +774,72 @@ namespace Plotter.Controller
             CurrentFigure = fig;
         }
 
-        public void ScaleSelectedFigure(CadVector org, double scale)
-        {
-            StartEdit();
+        //public void ScaleSelectedFigure(CadVector org, double scale)
+        //{
+        //    StartEdit();
 
-            List<uint> idlist = DB.GetSelectedFigIDList();
+        //    List<uint> idlist = DB.GetSelectedFigIDList();
 
-            foreach (uint id in idlist)
-            {
-                CadFigure fig = DB.GetFigure(id);
+        //    foreach (uint id in idlist)
+        //    {
+        //        CadFigure fig = DB.GetFigure(id);
 
-                if (fig == null)
-                {
-                    continue;
-                }
+        //        if (fig == null)
+        //        {
+        //            continue;
+        //        }
 
-                ScaleFugure(org, scale, fig);
-            }
+        //        ScaleFugure(org, scale, fig);
+        //    }
 
-            EndEdit();
-        }
+        //    EndEdit();
+        //}
 
-        public void ScaleFugure(CadVector org, double scale, CadFigure fig)
-        {
-            int n = fig.PointList.Count;
+        //public void ScaleFugure(CadVector org, double scale, CadFigure fig)
+        //{
+        //    int n = fig.PointList.Count;
 
-            for (int i = 0; i < n; i++)
-            {
-                CadVector p = fig.PointList[i];
-                p -= org;
-                p *= scale;
-                p += org;
+        //    for (int i = 0; i < n; i++)
+        //    {
+        //        CadVector p = fig.PointList[i];
+        //        p -= org;
+        //        p *= scale;
+        //        p += org;
 
-                fig.SetPointAt(i, p);
-            }
-        }
+        //        fig.SetPointAt(i, p);
+        //    }
+        //}
 
         //
         // p0 を原点として単位ベクトル v を軸に t ラジアン回転する
         //
-        public void RotateSelectedFigure(CadVector org, CadVector axisDir, double t)
+        //public void RotateSelectedFigure(CadVector org, CadVector axisDir, double t)
+        //{
+        //    List<uint> idlist = DB.GetSelectedFigIDList();
+
+        //    foreach (uint id in idlist)
+        //    {
+        //        CadFigure fig = DB.GetFigure(id);
+
+        //        if (fig == null)
+        //        {
+        //            continue;
+        //        }
+
+        //        CadUtil.RotateFigure(fig, org, axisDir, t);
+        //    }
+        //}
+
+        public void SelectFigure(uint figID)
         {
-            List<uint> idlist = DB.GetSelectedFigIDList();
+            CadFigure fig = DB.GetFigure(figID);
 
-            foreach (uint id in idlist)
+            if (fig == null)
             {
-                CadFigure fig = DB.GetFigure(id);
-
-                if (fig == null)
-                {
-                    continue;
-                }
-
-                CadUtil.RotateFigure(fig, org, axisDir, t);
+                return;
             }
+
+            fig.Select();
         }
 
         public void ClearAll()

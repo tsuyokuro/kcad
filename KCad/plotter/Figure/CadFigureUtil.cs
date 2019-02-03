@@ -34,7 +34,7 @@ namespace Plotter
                 }
             }
 
-            public static void MoveAllPoints(CadFigure fig, DrawContext dc, CadVector delta)
+            public static void MoveAllPoints(CadFigure fig, CadVector delta)
             {
                 CadUtil.MovePoints(fig.mPointList, delta);
             }

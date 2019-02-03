@@ -423,6 +423,16 @@ namespace Plotter
 
         public virtual void Select()
         {
+            SelectAllPoints();
+
+            mChildList.ForEach(c =>
+            {
+                c.Select();
+            });
+        }
+
+        public virtual void SelectAllPoints()
+        {
             // Set select flag to all points
             int i;
             for (i = 0; i < mPointList.Count; i++)
@@ -508,16 +518,6 @@ namespace Plotter
         {
             CadFigure root = GetGroupRoot();
             root.Select();
-            root.SelectChildren();
-        }
-
-        public void SelectChildren()
-        {
-            foreach (CadFigure fig in mChildList)
-            {
-                fig.Select();
-                fig.SelectChildren();
-            }
         }
 
         public void SetParent(CadFigure fig)
@@ -635,11 +635,11 @@ namespace Plotter
             });
         }
 
-        public virtual void MoveAllPoints(DrawContext dc, CadVector delta)
+        public virtual void MoveAllPoints(CadVector delta)
         {
             if (Locked) return;
 
-            Util.MoveAllPoints(this, dc, delta);
+            Util.MoveAllPoints(this, delta);
         }
 
         public virtual void AddPoint(CadVector p)

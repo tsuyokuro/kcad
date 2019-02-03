@@ -85,6 +85,21 @@ namespace Plotter
             }
         }
 
+        public static void ScaleFigure(CadFigure fig, CadVector org, double scale)
+        {
+            int n = fig.PointList.Count;
+
+            for (int i = 0; i < n; i++)
+            {
+                CadVector p = fig.PointList[i];
+                p -= org;
+                p *= scale;
+                p += org;
+
+                fig.SetPointAt(i, p);
+            }
+        }
+
         // 三角形の面積 3D対応
         public static double TriangleArea(CadVector p0, CadVector p1, CadVector p2)
         {

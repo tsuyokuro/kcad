@@ -149,10 +149,26 @@ namespace Plotter.Controller
             fig.Select();
         }
 
-        public void Scale(double scale)
+        public void Scale(uint id, CadVector org, double scale)
         {
-            CadVector org = Controller.LastDownPoint;
-            Controller.ScaleSelectedFigure(org, scale);
+            CadFigure fig = Controller.DB.GetFigure(id);
+
+            if (fig == null)
+            {
+                return;
+            }
+
+            fig.Select();
+
+            Controller.StartEdit();
+
+            fig.ForEachFig((f) => {
+                CadUtil.ScaleFigure(f, org, scale);
+            });
+
+            Controller.EndEdit();
+
+            UpdateViews(true, false);
         }
 
         public List<CadFigure> GetRootFigList(List<CadFigure> srcList)
@@ -231,41 +247,47 @@ namespace Plotter.Controller
         {
             List<uint> idlist = Controller.DB.GetSelectedFigIDList();
 
-            var idSet = new HashSet<uint>();
+            var rootSet = new HashSet<uint>();
 
             foreach (uint id in idlist)
             {
                 CadFigure fig = Controller.DB.GetFigure(id);
 
-                if (fig.Parent != null)
+                CadFigure root = fig.GetGroupRoot();
+
+                if (root == null)
                 {
-                    idSet.Add(fig.ID);
+                    continue;
                 }
+
+                rootSet.Add(root.ID);
             }
 
             CadOpeList opeList = new CadOpeList();
 
             CadOpe ope;
 
-            foreach (uint id in idSet)
+            foreach (uint rootId in rootSet)
             {
-                CadFigure fig = Controller.DB.GetFigure(id);
+                CadFigure root = Controller.DB.GetFigure(rootId);
 
-                CadFigure parent = fig.Parent;
+                root.ForEachFig((fig) => {
+                    if (fig.Parent == null)
+                    {
+                        return;
+                    }
 
-                if (parent == null)
-                {
-                    continue;
-                }
+                    if (fig.PointCount > 0)
+                    {
+                        ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
+                        opeList.Add(ope);
+                        Controller.CurrentLayer.AddFigure(fig);
+                    }
+                });
 
-                ope = new CadOpeRemoveChild(parent, fig);
+                ope = new CadOpeRemoveFigure(Controller.CurrentLayer, root.ID);
                 opeList.Add(ope);
-                parent.ChildList.Remove(fig);
-                fig.Parent = null;
-
-                ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-                opeList.Add(ope);
-                Controller.CurrentLayer.AddFigure(fig);
+                Controller.CurrentLayer.RemoveFigureByID(root.ID);
             }
 
             Controller.HistoryMan.foward(opeList);
@@ -434,11 +456,29 @@ namespace Plotter.Controller
             Controller.AddLayer(name);
         }
 
-        public void Move(double x, double y, double z)
+        public void Move(uint figID, double x, double y, double z)
         {
             CadVector delta = CadVector.Create(x, y, z);
 
-            Controller.MoveSelectedPoints(delta);
+            CadFigure fig = Controller.DB.GetFigure(figID);
+
+            if (fig == null)
+            {
+                return;
+            }
+
+            Controller.SelectFigure(figID);
+
+            Controller.StartEdit();
+
+            fig.ForEachFig((f) =>
+            {
+                f.MoveAllPoints(delta);
+            });
+
+            Controller.EndEdit();
+
+            UpdateViews(true, false);
         }
 
         public void SegLen(double len)
@@ -535,17 +575,39 @@ namespace Plotter.Controller
             return fig;
         }
 
-        public void Rotate(CadVector org, CadVector axisDir, double angle)
+        public void Rotate(uint figID, CadVector org, CadVector axisDir, double angle)
         {
+            CadFigure fig = Controller.DB.GetFigure(figID);
+
+            if (fig == null)
+            {
+                return;
+            }
+
+            if (axisDir.IsZero())
+            {
+                return;
+            }
+
+            Controller.SelectFigure(figID);
+
             axisDir = axisDir.UnitVector();
 
             Controller.StartEdit();
 
-            Controller.RotateSelectedFigure(org, axisDir, CadMath.Deg2Rad(angle));
+            RotateWithAxis(fig, org, axisDir, CadMath.Deg2Rad(angle));
 
             Controller.EndEdit();
 
-            Controller.NotifyDataChanged(true);
+            UpdateViews(true, false);
+        }
+
+        public void RotateWithAxis(CadFigure fig, CadVector org, CadVector axisDir, double angle)
+        {
+            fig.ForEachFig(f =>
+            {
+                CadUtil.RotateFigure(f, org, axisDir, angle);
+            });
         }
 
         public void CreateBitmap(int w, int h, uint argb, int lineW, string fname)
@@ -662,64 +724,6 @@ namespace Plotter.Controller
             CadUtil.RotateFigure(fig, org, rv, t);
         }
 
-        public void SwapXZ(double ax, double az)
-        {
-            var figlist = Controller.DB.GetSelectedFigList();
-
-            int i = 0;
-            int j = 0;
-
-            for (; i < figlist.Count; i++)
-            {
-                CadFigure fig = figlist[i];
-
-                for (j = 0; j < fig.PointCount; j++)
-                {
-                    CadVector v = fig.GetPointAt(j);
-                    CadVector rv = v;
-
-                    rv.x = az * v.z;
-                    rv.z = ax * v.x;
-
-                    fig.SetPointAt(j, rv);
-                }
-
-                CadVector nv = fig.Normal;
-
-                fig.Normal.x = az * nv.z;
-                fig.Normal.z = ax * nv.x;
-            }
-        }
-
-        public void SwapYZ(double ay, double az)
-        {
-            var figlist = Controller.DB.GetSelectedFigList();
-
-            int j = 0;
-            int i = 0;
-
-            for (; i < figlist.Count; i++)
-            {
-                CadFigure fig = figlist[i];
-
-                for (j = 0; j < fig.PointCount; j++)
-                {
-                    CadVector v = fig.GetPointAt(j);
-                    CadVector rv = v;
-
-                    rv.y = az * v.z;
-                    rv.z = ay * v.y;
-
-                    fig.SetPointAt(j, rv);
-                }
-
-                CadVector nv = fig.Normal;
-
-                fig.Normal.y = az * nv.z;
-                fig.Normal.z = ay * nv.y;
-            }
-        }
-
         // 押し出し
         public void Extrude(uint id, CadVector v, double d, int divide)
         {
@@ -813,8 +817,6 @@ namespace Plotter.Controller
 
         public void ToMesh(uint id)
         {
-            var figlist = Controller.DB.GetSelectedFigList();
-
             CadOpeList opeRoot = new CadOpeList();
 
             CadOpe ope;
@@ -1067,6 +1069,11 @@ namespace Plotter.Controller
             return fig.ID;
         }
 
+        public CadFigure GetCurrentFigure()
+        {
+            return Controller.CurrentFigure;
+        }
+
         public CadVector InputPoint()
         {
             InteractCtrl ctrl = Controller.mInteractCtrl;
@@ -1147,6 +1154,14 @@ namespace Plotter.Controller
         {
             Env.RunOnMainThread(()=>{
                 Controller.UpdateTreeView(true);
+            });
+        }
+
+        public void UpdateViews(bool redraw, bool remakeTree)
+        {
+            Env.RunOnMainThread(() => {
+                Controller.NotifyDataChanged(redraw);
+                Controller.UpdateTreeView(remakeTree);
             });
         }
 
