@@ -18,8 +18,10 @@
 using Plotter.Serializer;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -57,6 +59,10 @@ namespace KCad
 
         public App()
         {
+            //CultureInfo ci = new CultureInfo("en-US");
+            //Thread.CurrentThread.CurrentCulture = ci;
+            //Thread.CurrentThread.CurrentUICulture = ci;
+
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
