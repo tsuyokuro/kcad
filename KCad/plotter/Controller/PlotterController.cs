@@ -456,12 +456,16 @@ namespace Plotter.Controller
         public List<CadFigure> StartEdit()
         {
             EditFigList = DB.GetSelectedFigList();
+            return StartEdit(EditFigList);
+        }
 
+        public List<CadFigure> StartEdit(List<CadFigure> targetList)
+        {
             mSnapShotList = CadOpe.CreateCadOpeFigureSnapShotList();
 
-            mSnapShotList.StoreBefore(EditFigList);
+            mSnapShotList.StoreBefore(targetList);
 
-            foreach (CadFigure fig in EditFigList)
+            foreach (CadFigure fig in targetList)
             {
                 if (fig != null)
                 {
@@ -469,7 +473,7 @@ namespace Plotter.Controller
                 }
             }
 
-            return EditFigList;
+            return targetList;
         }
 
         public void AbendEdit()
@@ -479,7 +483,12 @@ namespace Plotter.Controller
 
         public void EndEdit()
         {
-            foreach (CadFigure fig in EditFigList)
+            EndEdit(EditFigList);
+        }
+
+        public void EndEdit(List<CadFigure> targetList)
+        {
+            foreach (CadFigure fig in targetList)
             {
                 if (fig != null)
                 {
@@ -497,7 +506,6 @@ namespace Plotter.Controller
             root.Add(mSnapShotList);
 
             HistoryMan.foward(root);
-
 
             mSnapShotList = null;
         }

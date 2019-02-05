@@ -467,16 +467,18 @@ namespace Plotter.Controller
                 return;
             }
 
-            Controller.SelectFigure(figID);
+            //Controller.SelectFigure(figID);
 
-            Controller.StartEdit();
+            var list = new List<CadFigure>() { fig };
+
+            Controller.StartEdit(list);
 
             fig.ForEachFig((f) =>
             {
                 f.MoveAllPoints(delta);
             });
 
-            Controller.EndEdit();
+            Controller.EndEdit(list);
 
             UpdateViews(true, false);
         }
@@ -589,15 +591,17 @@ namespace Plotter.Controller
                 return;
             }
 
-            Controller.SelectFigure(figID);
+            //Controller.SelectFigure(figID);
 
             axisDir = axisDir.UnitVector();
 
-            Controller.StartEdit();
+            var list = new List<CadFigure>() { fig };
+
+            Controller.StartEdit(list);
 
             RotateWithAxis(fig, org, axisDir, CadMath.Deg2Rad(angle));
 
-            Controller.EndEdit();
+            Controller.EndEdit(list);
 
             UpdateViews(true, false);
         }
