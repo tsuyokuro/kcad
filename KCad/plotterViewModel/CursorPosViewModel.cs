@@ -18,10 +18,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StrCursorPos)));
             }
 
-            get
-            {
-                return mStrCursorPos;
-            }
+            get => mStrCursorPos;
         }
 
         private string mStrCursorPos2 = "";
@@ -34,10 +31,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StrCursorPos2)));
             }
 
-            get
-            {
-                return mStrCursorPos2;
-            }
+            get => mStrCursorPos2;
         }
 
         private CadVector mCursorPos;
@@ -59,10 +53,7 @@ namespace Plotter
                 StrCursorPos = s;
             }
 
-            get
-            {
-                return mCursorPos;
-            }
+            get => mCursorPos;
         }
 
         private CadVector mCursorPos2;
@@ -84,10 +75,7 @@ namespace Plotter
                 StrCursorPos2 = s;
             }
 
-            get
-            {
-                return mCursorPos2;
-            }
+            get => mCursorPos2;
         }
     }
 }

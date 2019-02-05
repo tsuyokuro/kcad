@@ -18,6 +18,10 @@ namespace Plotter
     {
         public DrawContextGDI DC;
 
+        public DrawingGDI()
+        {
+        }
+
         public DrawingGDI(DrawContextGDI dc)
         {
             DC = dc;
@@ -144,12 +148,14 @@ namespace Plotter
             double maxz = Math.Max(ltw.z, rbw.z);
 
 
-            Color c = DC.PenColor(DrawTools.PEN_GRID);
+            int pen = DrawTools.PEN_GRID;
 
-            int argb = c.ToArgb();
+            CadVector p = default(CadVector);
+
 
             double n = grid.Decimate(DC, grid, 8);
 
+            double x, y, z;
             double sx, sy, sz;
             double szx = grid.GridSize.x * n;
             double szy = grid.GridSize.y * n;
@@ -159,123 +165,63 @@ namespace Plotter
             sy = Math.Round(miny / szy) * szy;
             sz = Math.Round(minz / szz) * szz;
 
-
-            //Stopwatch sw = new Stopwatch();
-            //sw.Start();
-
-            DrawDots(sx, sy, sz, szx, szy, szz, maxx, maxy, maxz, argb);
-
-            //sw.Stop();
-            //DebugOut.StdPrintLn(sw.ElapsedMilliseconds.ToString());
-        }
-
-        private void DrawDots(
-            double sx,
-            double sy,
-            double sz,
-            double szx,
-            double szy,
-            double szz,
-            double maxx,
-            double maxy,
-            double maxz,
-            int argb
-            )
-        {
-            double x;
-            double y;
-            double z;
-
-            CadVector p = default(CadVector);
-            CadVector up = default(CadVector);
-
-
-            Bitmap tgt = DC.Image;
-
-            BitmapData bitmapData = DC.LockBits();
-
-            unsafe
+            x = sx;
+            while (x < maxx)
             {
-                int* srcPixels = (int*)bitmapData.Scan0;
+                p.x = x;
+                p.z = 0;
 
-                x = sx;
-                while (x < maxx)
+                y = sy;
+
+                while (y < maxy)
                 {
-                    p.x = x;
-                    p.z = 0;
-
-                    y = sy;
-
-                    while (y < maxy)
-                    {
-                        p.y = y;
-                        up = DC.WorldPointToDevPoint(p);
-
-                        if (up.x >= 0 && up.x < tgt.Width && up.y >= 0 && up.y < tgt.Height)
-                        {
-                            *(srcPixels + ((int)up.y * tgt.Width) + (int)up.x) = argb;
-                        }
-
-                        y += szy;
-                    }
-
-                    x += szx;
+                    p.y = y;
+                    DrawDot(pen, p);
+                    y += szy;
                 }
 
+                x += szx;
+            }
+
+            z = sz;
+            y = sy;
+
+            while (z < maxz)
+            {
+                p.z = z;
+                p.x = 0;
+
+                y = sy;
+
+                while (y < maxy)
+                {
+                    p.y = y;
+                    DrawDot(pen, p);
+                    y += szy;
+                }
+
+                z += szz;
+            }
+
+            z = sz;
+            x = sx;
+
+            while (x < maxx)
+            {
+                p.x = x;
+                p.y = 0;
+
                 z = sz;
+
                 while (z < maxz)
                 {
                     p.z = z;
-                    p.x = 0;
-
-                    y = sy;
-
-                    while (y < maxy)
-                    {
-                        p.y = y;
-
-                        up = DC.WorldPointToDevPoint(p);
-
-                        if (up.x >= 0 && up.x < tgt.Width && up.y >= 0 && up.y < tgt.Height)
-                        {
-                            *(srcPixels + ((int)up.y * tgt.Width) + (int)up.x) = argb;
-                        }
-
-                        y += szy;
-                    }
-
+                    DrawDot(pen, p);
                     z += szz;
                 }
 
-                x = sx;
-                while (x < maxx)
-                {
-                    p.x = x;
-                    p.y = 0;
-
-                    z = sz;
-
-                    while (z < maxz)
-                    {
-                        p.z = z;
-
-                        up = DC.WorldPointToDevPoint(p);
-
-                        if (up.x >= 0 && up.x < tgt.Width && up.y >= 0 && up.y < tgt.Height)
-                        {
-                            *(srcPixels + ((int)up.y * tgt.Width) + (int)up.x) = argb;
-                        }
-
-                        z += szz;
-                    }
-
-                    x += szx;
-                }
+                x += szx;
             }
-
-            DC.UnlockBits();
-
-            //tgt.UnlockBits(bitmapData);
         }
 
         public override void DrawPageFrame(double w, double h, CadVector center)
@@ -417,36 +363,22 @@ namespace Plotter
             CadVector pa = DC.WorldPointToDevPoint(a);
             CadVector pb = DC.WorldPointToDevPoint(b);
 
-           BitmapData bd = DC.GetLockedBits();
-
-            if (bd == null)
-            {
-                DC.GdiGraphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
-            }
-            else
-            {
-                CadSegment seg = CadUtil.Clipping2D(0, 0, DC.ViewWidth, DC.ViewHeight, pa, pb);
-
-                if (seg.Valid)
-                {
-                    BitmapUtil.BresenhamLine(bd, seg.P0, seg.P1, (uint)(DC.Pen(pen).Color.ToArgb()));
-                }
-            }
+            DC.GdiGraphics.DrawLine(DC.Pen(pen), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
         }
 
         public override void DrawDot(int pen, CadVector p)
         {
             CadVector p0 = DC.WorldPointToDevPoint(p);
-            //CadVector p1 = p0;
-            //p0.x = (int)p0.x;
-            //p1.x = p0.x + 0.1;
+            CadVector p1 = p0;
+            p0.x = (int)p0.x;
+            p1.x = p0.x + 0.1;
 
-            //DC.graphics.DrawLine(DC.Pen(pen), (float)p0.x, (float)p0.y, (float)p1.x, (float)p1.y);
+            DC.GdiGraphics.DrawLine(DC.Pen(pen), (float)p0.x, (float)p0.y, (float)p1.x, (float)p1.y);
 
-            if (p0.x >= 0 && p0.y >= 0 && p0.x < DC.ViewWidth && p0.y < DC.ViewHeight)
-            {
-                DC.Image.SetPixel((int)p0.x, (int)p0.y, DC.PenColor(pen));
-            }
+            //if (p0.x >= 0 && p0.y >= 0 && p0.x < DC.ViewWidth && p0.y < DC.ViewHeight)
+            //{
+            //    DC.Image.SetPixel((int)p0.x, (int)p0.y, DC.PenColor(pen));
+            //}
         }
 
         public override void DrawFace(int pen, VectorList pointList, CadVector Normal, bool drawOutline)
@@ -497,12 +429,6 @@ namespace Plotter
 
             angle = CadMath.Rad2Deg(angle);
 
-            BitmapData bd = DC.GetLockedBits();
-            if (bd != null)
-            {
-                DC.UnlockBits();
-            }
-
             DC.GdiGraphics.TranslateTransform((int)a.x, (int)a.y);
 
             DC.GdiGraphics.RotateTransform((float)angle);
@@ -510,12 +436,6 @@ namespace Plotter
             DC.GdiGraphics.DrawString(s, DC.Font(font), DC.Brush(brush), 0, 0);
 
             DC.GdiGraphics.ResetTransform();
-
-
-            if (bd != null)
-            {
-                DC.LockBits();
-            }
         }
 
         public override CadVector MeasureText(int font, string s)
@@ -552,21 +472,21 @@ namespace Plotter
             DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
         }
 
-        private void DrawLineScrn(int pen, CadVector a, CadVector b)
+        protected void DrawLineScrn(int pen, CadVector a, CadVector b)
         {
             if (DC.Pen(pen) == null) return;
 
             DC.GdiGraphics.DrawLine(DC.Pen(pen), (int)a.x, (int)a.y, (int)b.x, (int)b.y);
         }
 
-        private void DrawLineScrn(int pen, double x1, double y1, double x2, double y2)
+        protected void DrawLineScrn(int pen, double x1, double y1, double x2, double y2)
         {
             if (DC.Pen(pen) == null) return;
 
             DC.GdiGraphics.DrawLine(DC.Pen(pen), (int)x1, (int)y1, (int)x2, (int)y2);
         }
 
-        private void DrawRectangleScrn(int pen, double x0, double y0, double x1, double y1)
+        protected void DrawRectangleScrn(int pen, double x0, double y0, double x1, double y1)
         {
             if (DC.Pen(pen) == null) return;
 
@@ -594,7 +514,7 @@ namespace Plotter
             DC.GdiGraphics.DrawRectangle(DC.Pen(pen), lx, ty, dx, dy);
         }
 
-        private void DrawCircleScrn(int pen, CadVector cp, CadVector p1)
+        protected void DrawCircleScrn(int pen, CadVector cp, CadVector p1)
         {
             if (DC.Pen(pen) == null) return;
 
@@ -602,7 +522,7 @@ namespace Plotter
             DrawCircleScrn(pen, cp, r);
         }
 
-        private void DrawCircleScrn(int pen, CadVector cp, double r)
+        protected void DrawCircleScrn(int pen, CadVector cp, double r)
         {
             if (DC.Pen(pen) == null) return;
 
@@ -610,7 +530,7 @@ namespace Plotter
                 DC.Pen(pen), (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
         }
 
-        private void FillRectangleScrn(int brush, double x0, double y0, double x1, double y1)
+        protected void FillRectangleScrn(int brush, double x0, double y0, double x1, double y1)
         {
             if (DC.Brush(brush) == null) return;
 
@@ -638,7 +558,7 @@ namespace Plotter
             DC.GdiGraphics.FillRectangle(DC.Brush(brush), lx, ty, dx, dy);
         }
 
-        private void DrawAxis2()
+        protected void DrawAxis2()
         {
             double size = 20;
 

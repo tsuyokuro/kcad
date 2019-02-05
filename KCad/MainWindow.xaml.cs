@@ -52,11 +52,6 @@ namespace KCad
             InitPopup();
         }
 
-        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            DOut.pl("sc");
-        }
-
         private void SetupDebugConsole()
         {
             if (App.UseConsole)
@@ -181,7 +176,7 @@ namespace KCad
                 case WindowState.Maximized:
                     Task.Run(() =>
                     {
-                        Thread.Sleep(50);
+                        Thread.Sleep(10);
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             LayoutRoot.Margin = new Thickness(9);
@@ -254,18 +249,12 @@ namespace KCad
         {
             if (!textCommand.IsFocused)
             {
-                ViewModel.OnKeyDown(sender, e);
+                e.Handled = ViewModel.OnKeyDown(sender, e);
             }
         }
 
         private void onKeyUp(object sender, KeyEventArgs e)
         {
-            if (KeyHandled)
-            {
-                KeyHandled = false;
-                return;
-            }
-
             if (!textCommand.IsFocused && !MyConsole.IsFocused)
             {
                e.Handled = ViewModel.OnKeyUp(sender, e);
@@ -275,7 +264,7 @@ namespace KCad
 
         public void SetMainView(IPlotterView view)
         {
-            viewContainer.Child = view.FromsControl;
+            viewContainer.Child = view.FormsControl;
         }
 
         IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -292,6 +281,8 @@ namespace KCad
                     {
                         MainWindow wnd = (MainWindow)Application.Current.MainWindow;
                         wnd.viewContainer.Visibility = Visibility.Visible;
+
+                        ViewModel.Redraw();
                     }
                     break;
             }

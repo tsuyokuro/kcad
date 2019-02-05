@@ -208,6 +208,7 @@
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="plotterViewModel\CursorPosViewModel.cs" />
+    <Compile Include="plotterViewModel\MoveKeyHandler.cs" />
     <Compile Include="plotterViewModel\PlotterViewModel_serialize.cs" />
     <Compile Include="plotter\Controller\ContextMenuInfo.cs" />
     <Compile Include="plotter\Controller\ControllerConst.cs" />
@@ -222,6 +223,8 @@
     <Compile Include="plotter\Controller\PlotterObserver.cs" />
     <Compile Include="plotter\Controller\ScriptFunctions.cs" />
     <Compile Include="plotter\Controller\ControllerTypes.cs" />
+    <Compile Include="plotter\DrawContext\DrawContextGDIBmp.cs" />
+    <Compile Include="plotter\DrawContext\DrawingGDIBmp.cs" />
     <Compile Include="plotter\Figure\CircleExpander.cs" />
     <Compile Include="plotter\Figure\PolyLineExpander.cs" />
     <Compile Include="plotter\Serializer\MpCadFile.cs" />
@@ -294,6 +297,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MySplashWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ResDict\AutoCompTextBoxStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

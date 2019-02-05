@@ -31,6 +31,7 @@
                 <ResourceDictionary Source="ResDict/MenuStyle.xaml" />
                 <ResourceDictionary Source="ResDict/ScrollBarStyle.xaml" />
                 <ResourceDictionary Source="ResDict/CaptionButtonStyle.xaml" />
+                <ResourceDictionary Source="ResDict/AutoCompTextBoxStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
@@ -109,6 +110,16 @@
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="BorderBrush" Value="{StaticResource MenuColor}" />
                 <Setter Property="Padding" Value="0,0,0,0" />
+            </Style>
+
+            <Style x:Key="GridSplitterPreviewStyle">
+                <Setter Property="Control.Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Rectangle Fill="#FFFFFFFF" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
 
         </ResourceDictionary>
@@ -619,7 +630,8 @@
                     Width="4"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Stretch"
-                    Background="{StaticResource BoarderColor}" />
+                    Background="{StaticResource BoarderColor}"
+                    ShowsPreview="false" />
 
                 <!--  Plotter view and Command view  -->
                 <Grid
@@ -635,13 +647,15 @@
                     <WindowsFormsHost x:Name="viewContainer" Grid.Row="0" />
 
                     <GridSplitter
+                        x:Name="viewBottom"
                         Grid.Row="1"
-                        Height="3"
+                        Height="4"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
                         Background="{StaticResource BoarderColor}"
                         BorderThickness="0"
-                        ShowsPreview="False" />
+                        PreviewStyle="{StaticResource GridSplitterPreviewStyle}"
+                        ShowsPreview="false" />
 
 
                     <Grid Grid.Row="2">
@@ -662,10 +676,10 @@
                                 Background="{StaticResource MsgBGColor}"
                                 Focusable="True"
                                 Foreground="{StaticResource MsgTextColor}"
-                                LineHeight="14"
+                                LineHeight="18"
                                 SelectedBackground="{StaticResource MsgSelectedBGColor}"
                                 SelectedForeground="{StaticResource MsgTextColor}"
-                                TextSize="12" />
+                                TextSize="14" />
 
                         </ScrollViewer>
                         <Grid Grid.Row="1" Height="auto">
@@ -691,9 +705,9 @@
                                 Background="{StaticResource MsgBGColor}"
                                 BorderBrush="{StaticResource BoarderColor}"
                                 BorderThickness="1,1,1,1"
-                                CandidateListBackground="{StaticResource BGColor}"
-                                CandidateListBorder="Aqua"
-                                CandidateListForeground="{StaticResource TextColor}"
+                                CandidateListItemContainerStyle="{StaticResource AutoCompListBoxItem}"
+                                CandidateListStyle="{StaticResource AutoCompListBoxStyle}"
+                                CandidateScrollViewerStyle="{StaticResource AutoCompScrollViewerStyle}"
                                 FontSize="16"
                                 FontWeight="Thin"
                                 Foreground="{StaticResource TextColor}" />
@@ -707,7 +721,8 @@
                     Width="4"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Stretch"
-                    Background="{StaticResource BoarderColor}" />
+                    Background="{StaticResource BoarderColor}"
+                    ShowsPreview="false" />
 
                 <Border
                     Grid.Column="4"
@@ -808,10 +823,13 @@
                                                         IsChecked="{Binding Path=Locked}"
                                                         Style="{StaticResource LockedCheckBox}" />
                                                 </StackPanel>
-                                                <TextBlock
+                                                <Label
                                                     Grid.Column="1"
-                                                    Margin="2"
-                                                    Text="{Binding Path=Name}" />
+                                                    Padding="8"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    Content="{Binding Path=Name}"
+                                                    Foreground="White" />
                                             </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
@@ -823,7 +841,9 @@
                                 Height="6"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Center"
-                                Background="{StaticResource BoarderColor}" />
+                                Background="{StaticResource BoarderColor}"
+                                ShowsPreview="False" />
+
                             <Grid Grid.Row="2">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -840,11 +860,12 @@
                                             IsChecked="{Binding FilterTreeView}"
                                             Style="{StaticResource ToolToggleButton}">
 
-                                            <Border Padding="4">
+                                            <Border>
                                                 <Image
-                                                    Height="12"
+                                                    Width="18"
+                                                    Height="18"
                                                     VerticalAlignment="Top"
-                                                    Source="{StaticResource filterDrawingImage}" />
+                                                    Source="{StaticResource baseline_filter_listDrawingImage}" />
                                             </Border>
 
                                         </ToggleButton>

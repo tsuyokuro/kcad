@@ -62,6 +62,8 @@ namespace Plotter.Serializer
         {
             MpCadData mpcd = CreateMpCadData(cd);
 
+            mpcd.MpDB.GarbageCollect();
+
             byte[] data = MessagePackSerializer.Serialize(mpcd);
 
             FileStream fs = new FileStream(fname, FileMode.Create, FileAccess.Write);

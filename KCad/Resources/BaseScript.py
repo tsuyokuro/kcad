@@ -1,6 +1,7 @@
 # coding: cp932
+from datetime import datetime as dt
 import time
-import math
+import math as m
 import clr
 clr.AddReference('CadDataTypes')
 
@@ -58,9 +59,9 @@ def addLayer(name):
     SE.AddLayer(name)
 
 
-#[AC] move(x=0, y=0, z=0)
-def move(x=0, y=0, z=0):
-    SE.Move(x, y, z)
+#[AC] move(currentFigID(), x=0, y=0, z=0)
+def move(id, x=0, y=0, z=0):
+    SE.Move(id, x, y, z)
 
 #[AC] segLen(len)
 def segLen(len):
@@ -99,21 +100,13 @@ def selFig(id):
 def execScript(fname):
     return SE.ExecScript(fname)
 
-#[AC] scale(ratio)
-def scale(ratio):
-    SE.Scale(ratio)
+#[AC] scale(id=currentFigID(), org=lastDown(), ratio=1.5)
+def scale(id, org, ratio):
+    SE.Scale(id, org, ratio)
 
-#[AC] rotate(lastDown(), unitVZ, 45)
-def rotate(p0, v, t):
-    SE.Rotate(p0, v, t)
-
-#[AC] cursorAngleX(d)
-def cursorAngleX(d):
-    SE.CursorAngleX(d)
-
-#[AC] cursorAngleY(d)
-def cursorAngleY(d):
-    SE.CursorAngleY(d)
+#[AC] rotate(currentFigID(), lastDown(), unitVZ, 45)
+def rotate(id, p0, v, t):
+    SE.Rotate(id, p0, v, t)
 
 #[AC] toBmp(32, 32)
 #[AC] toBmp(32, 32, 0xffffffff, 1, "")
@@ -123,14 +116,6 @@ def toBmp(bw, bh, argb=0xffffffff, linew=1, fname=""):
 #[AC] faceTo(dir=unitVZ)
 def faceTo(dir):
     SE.FaceToDirection(dir)
-
-#[AC] swapXZ(ax, az)
-def swapXZ(ax, az):
-    SE.SwapXZ(ax, az)
-
-#[AC] swapYZ(ay, az)
-def swapYZ(ay, az):
-    SE.SwapYZ(ay, az)
 
 #[AC] projDir()
 def projDir():
@@ -210,6 +195,9 @@ def extrude(id, dir, d, div):
 def currentFigID():
     return SE.GetCurrentFigureID()
 
+#[AC] currentFig()
+def currentFig():
+    return SE.GetCurrentFigure()
 
 #[AC] addMoveGuide(dir=unitVX)
 def addMoveGuide(dir):

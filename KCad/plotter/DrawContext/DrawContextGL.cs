@@ -10,7 +10,7 @@ namespace Plotter
 {
     class DrawContextGL : DrawContext
     {
-        protected Control Wnd;
+        protected Control ViewCtrl;
 
         Vector4 LightPosition;
         Color4 LightAmbient;    // 環境光
@@ -43,7 +43,7 @@ namespace Plotter
 
         public void Init(Control control)
         {
-            Wnd = control;
+            ViewCtrl = control;
 
             WorldScale = 1.0f;
             Tools.Setup(DrawTools.ToolsType.DARK_GL);

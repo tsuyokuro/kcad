@@ -9,10 +9,7 @@ namespace Plotter
     {
         public override int SegmentCount
         {
-            get
-            {
-                return 0;
-            }
+            get => 0;
         }
 
         public override void InvertDir()
@@ -181,7 +178,7 @@ namespace Plotter
             return;
         }
 
-        public override void MoveSelectedPoints(DrawContext dc, CadVector delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVector delta)
         {
             CadVector cp = StoreList[0];
 

@@ -28,10 +28,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
             }
 
-            get
-            {
-                return SettingsHolder.Settings.SnapToGrid;
-            }
+            get => SettingsHolder.Settings.SnapToGrid;
         }
 
         public bool SnapToPoint
@@ -42,10 +39,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
             }
 
-            get
-            {
-                return SettingsHolder.Settings.SnapToPoint;
-            }
+            get => SettingsHolder.Settings.SnapToPoint;
         }
 
         public bool SnapToSegment
@@ -56,10 +50,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
             }
 
-            get
-            {
-                return SettingsHolder.Settings.SnapToSegment;
-            }
+            get => SettingsHolder.Settings.SnapToSegment;
         }
 
         public bool SnapToLine
@@ -70,10 +61,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
             }
 
-            get
-            {
-                return SettingsHolder.Settings.SnapToLine;
-            }
+            get => SettingsHolder.Settings.SnapToLine;
         }
 
         public bool FilterTreeView
@@ -89,10 +77,7 @@ namespace Plotter
                 }
             }
 
-            get
-            {
-                return SettingsHolder.Settings.FilterTreeView;
-            }
+            get => SettingsHolder.Settings.FilterTreeView;
         }
 
         public bool DrawFaceOutline
@@ -105,10 +90,7 @@ namespace Plotter
                 Redraw();
             }
 
-            get
-            {
-                return SettingsHolder.Settings.DrawFaceOutline;
-            }
+            get => SettingsHolder.Settings.DrawFaceOutline;
         }
 
         public bool FillFace
@@ -121,10 +103,7 @@ namespace Plotter
                 Redraw();
             }
 
-            get
-            {
-                return SettingsHolder.Settings.FillFace;
-            }
+            get => SettingsHolder.Settings.FillFace;
         }
 
         public double InitialMoveLimit
@@ -135,10 +114,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InitialMoveLimit)));
             }
 
-            get
-            {
-                return SettingsHolder.Settings.InitialMoveLimit;
-            }
+            get => SettingsHolder.Settings.InitialMoveLimit;
         }
 
         public bool SnapToZero
@@ -149,10 +125,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToZero)));
             }
 
-            get
-            {
-                return SettingsHolder.Settings.SnapToZero;
-            }
+            get => SettingsHolder.Settings.SnapToZero;
         }
 
         public bool SnapToLastDownPoint
@@ -163,10 +136,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLastDownPoint)));
             }
 
-            get
-            {
-                return SettingsHolder.Settings.SnapToLastDownPoint;
-            }
+            get => SettingsHolder.Settings.SnapToLastDownPoint;
         }
 
         public CadVector GridSize
@@ -177,10 +147,7 @@ namespace Plotter
                 Controller.Grid.GridSize = value;
             }
 
-            get
-            {
-                return SettingsHolder.Settings.GridSize;
-            }
+            get => SettingsHolder.Settings.GridSize;
         }
 
         public double PointSnapRange
@@ -191,10 +158,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PointSnapRange)));
             }
 
-            get
-            {
-                return SettingsHolder.Settings.PointSnapRange;
-            }
+            get => SettingsHolder.Settings.PointSnapRange;
         }
 
         public double LineSnapRange
@@ -205,10 +169,18 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LineSnapRange)));
             }
 
-            get
+            get => SettingsHolder.Settings.LineSnapRange;
+        }
+
+        public double KeyMoveUnit
+        {
+            set
             {
-                return SettingsHolder.Settings.LineSnapRange;
+                SettingsHolder.Settings.KeyMoveUnit = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(KeyMoveUnit)));
             }
+
+            get => SettingsHolder.Settings.KeyMoveUnit;
         }
 
         public SettingsVeiwModel(PlotterController controller)
@@ -264,6 +236,7 @@ namespace Plotter
 
         public double LineSnapRange = 8;
 
+        public double KeyMoveUnit = 1.0;
 
         public bool DrawFaceOutline = true;
 
@@ -317,6 +290,10 @@ namespace Plotter
             jo.Add("enable", SnapToLine);
             jo.Add("range", LineSnapRange);
             root.Add("LineSnap", jo);
+
+            jo = new JObject();
+            jo.Add("unit", KeyMoveUnit);
+            root.Add("KeyMove", jo);
 
             jo = new JObject();
             jo.Add("enable", SnapToZero);
@@ -377,6 +354,12 @@ namespace Plotter
             jo = (JObject)root["LineSnap"];
             SnapToLine = jo.GetBool("enable", SnapToLine);
             LineSnapRange = jo.GetDouble("range", LineSnapRange);
+
+            jo = (JObject)root["KeyMove"];
+            if (jo != null)
+            {
+                KeyMoveUnit = jo.GetDouble("unit", KeyMoveUnit);
+            }
 
             jo = (JObject)root["ZeroSnap"];
             if (jo != null)

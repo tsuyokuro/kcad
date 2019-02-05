@@ -111,7 +111,7 @@
                                     x:Name="SubMenuBorder"
                                     Padding="0,0,0,0"
                                     Background="{TemplateBinding Background}"
-                                    BorderBrush="Aqua"
+                                    BorderBrush="#FF707070"
                                     BorderThickness="1.5">
 
                                     <Grid x:Name="SubMenu" Grid.IsSharedSizeScope="True">

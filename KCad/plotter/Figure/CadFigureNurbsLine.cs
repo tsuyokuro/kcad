@@ -34,16 +34,16 @@ namespace Plotter
 
 
         #region Point Move
-        public override void MoveSelectedPoints(DrawContext dc, CadVector delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVector delta)
         {
-            base.MoveSelectedPoints(dc, delta);
+            base.MoveSelectedPointsFromStored(dc, delta);
         }
 
-        public override void MoveAllPoints(DrawContext dc, CadVector delta)
+        public override void MoveAllPoints(CadVector delta)
         {
             if (Locked) return;
 
-            Util.MoveAllPoints(this, dc, delta);
+            Util.MoveAllPoints(this, delta);
         }
         #endregion
 

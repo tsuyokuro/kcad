@@ -11,11 +11,12 @@ namespace Plotter
         {
             get
             {
-                return HasSelectedPoint();
+                return HasSelectedPoint() || Fig.IsSelected;
             }
 
             set
             {
+                Fig.IsSelected = value;
                 SelectAllPoints(value);
             }
         }

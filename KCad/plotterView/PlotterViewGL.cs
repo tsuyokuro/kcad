@@ -26,7 +26,7 @@ namespace Plotter
             }
         }
 
-        public Control FromsControl
+        public Control FormsControl
         {
             get
             {
@@ -174,6 +174,11 @@ namespace Plotter
             {
                 SwapBuffers();
             }
-        } 
+        }
+
+        public void CursorLocked(bool locked)
+        {
+            // NOP
+        }
     }
 }

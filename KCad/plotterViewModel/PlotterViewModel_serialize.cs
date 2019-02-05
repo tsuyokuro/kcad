@@ -11,10 +11,7 @@ namespace Plotter
 
         public string CurrentFileName
         {
-            get
-            {
-                return mCurrentFileName;
-            }
+            get => mCurrentFileName;
 
             private set
             {
@@ -141,55 +138,6 @@ namespace Plotter
 
 
         #region "MessagePack file access"
-        //private MpCadData ToMpCadData()
-        //{
-        //    MpCadData data = MpCadData.Create(mController.DB);
-
-        //    data.ViewInfo.WorldScale = mController.CurrentDC.WorldScale;
-
-        //    data.ViewInfo.PaperSettings.Set(mController.PageSize);
-
-        //    return data;
-        //}
-
-        //private void FromMpCadData(MpCadData mpdata)
-        //{
-        //    MpViewInfo viewInfo = mpdata.ViewInfo;
-
-        //    double worldScale = 0;
-
-        //    PaperPageSize pps = null;
-
-        //    if (viewInfo != null)
-        //    {
-        //        worldScale = viewInfo.WorldScale;
-
-        //        if (viewInfo.PaperSettings != null)
-        //        {
-        //            pps = viewInfo.PaperSettings.GetPaperPageSize();
-        //        }
-        //    }
-
-
-        //    if (worldScale == 0)
-        //    {
-        //        worldScale = 1.0;
-        //    }
-
-        //    SetWorldScale(worldScale);
-
-
-        //    if (pps == null)
-        //    {
-        //        pps = new PaperPageSize();
-        //    }
-
-        //    mController.PageSize = pps;
-
-
-        //    mController.SetDB(mpdata.GetDB());
-        //}
-
 
         private void SaveToMsgPackFile(string fname)
         {

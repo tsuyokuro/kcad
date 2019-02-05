@@ -28,15 +28,12 @@ namespace Plotter
 
         public PlotterController Controller
         {
-            get
-            {
-                return mController;
-            }
+            get => mController;
         }
 
         private Dictionary<string, Action> CommandMap;
 
-        private Dictionary<string, Action> KeyMap;
+        private Dictionary<string, KeyAction> KeyMap;
 
         private SelectModes mSelectMode = SelectModes.POINT;
 
@@ -54,10 +51,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectMode)));
             }
 
-            get
-            {
-                return mSelectMode;
-            }
+            get => mSelectMode;
         }
 
 
@@ -75,10 +69,7 @@ namespace Plotter
                 }
             }
 
-            get
-            {
-                return mCreatingFigureType;
-            }
+            get => mCreatingFigureType;
         }
 
         private MeasureModes mMeasureMode = MeasureModes.NONE;
@@ -95,10 +86,7 @@ namespace Plotter
                 }
             }
 
-            get
-            {
-                return mMeasureMode;
-            }
+            get => mMeasureMode;
         }
 
 
@@ -113,10 +101,7 @@ namespace Plotter
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewMode)));
             }
 
-            get
-            {
-                return mViewMode;
-            }
+            get => mViewMode;
         }
 
         public DrawContext CurrentDC => mController?.CurrentDC;
@@ -218,10 +203,7 @@ namespace Plotter
                 mLayerListView = value;
             }
 
-            get
-            {
-                return mLayerListView;
-            }
+            get => mLayerListView;
         }
 
         private MainWindow mMainWindow;
@@ -235,13 +217,12 @@ namespace Plotter
 
         public System.Windows.Forms.Control CurrentView
         {
-            get
-            {
-                return mPlotterView.FromsControl;
-            }
+            get => mPlotterView.FormsControl;
         }
 
         Window mEditorWindow;
+
+        MoveKeyHandler mMoveKeyHandler;
 
         public PlotterViewModel(MainWindow mainWindow)
         {
@@ -275,6 +256,8 @@ namespace Plotter
 
             mController.Observer.ClosePopupMessage = ClosePopupMessage;
 
+            mController.Observer.CursorLocked = CursorLocked;
+
             LayerListChanged(mController, mController.GetLayerListInfo());
 
             PlotterView1 = new PlotterView();
@@ -282,6 +265,8 @@ namespace Plotter
 
             ViewMode = ViewModes.FREE;  // 一旦GL側を設定してViewをLoadしておく
             ViewMode = ViewModes.FRONT;
+
+            mMoveKeyHandler = new MoveKeyHandler(Controller);
         }
 
         private void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
@@ -387,23 +372,40 @@ namespace Plotter
             };
         }
 
+        struct KeyAction
+        {
+            public Action Down;
+            public Action Up;
+
+            public KeyAction(Action down, Action up)
+            {
+                Down = down;
+                Up = up;
+            }
+        }
+
         private void InitKeyMap()
         {
-            KeyMap = new Dictionary<string, Action>
+            KeyMap = new Dictionary<string, KeyAction>
             {
-                { "ctrl+z", Undo },
-                { "ctrl+y", Redo },
-                { "ctrl+c", Copy },
-                { "ctrl+insert", Copy },
-                { "ctrl+v", Paste },
-                { "shift+insert", Paste },
-                { "delete", Remove },
-                { "ctrl+s", Save },
-                { "ctrl+a", SelectAll },
-                { "escape", Cancel },
-                { "ctrl+p", InsPoint },
-                //{ "ctrl+oemplus", SearchNearestPoint },
-                { "f2", SearchNearestPoint },
+                { "ctrl+z", new KeyAction(Undo , null)},
+                { "ctrl+y", new KeyAction(Redo , null)},
+                { "ctrl+c", new KeyAction(Copy , null)},
+                { "ctrl+insert", new KeyAction(Copy , null)},
+                { "ctrl+v", new KeyAction(Paste , null)},
+                { "shift+insert", new KeyAction(Paste , null)},
+                { "delete", new KeyAction(Remove , null)},
+                { "ctrl+s", new KeyAction(Save , null)},
+                { "ctrl+a", new KeyAction(SelectAll , null)},
+                { "escape", new KeyAction(Cancel , null)},
+                { "ctrl+p", new KeyAction(InsPoint , null)},
+                //{ "ctrl+oemplus", new KeyAction(SearchNearestPoint , null)},
+                { "f3", new KeyAction(SearchNearestPoint , null)},
+                { "f2", new KeyAction(CursorLock , null)},
+                { "left", new KeyAction(MoveKeyDown, MoveKeyUp)},
+                { "right", new KeyAction(MoveKeyDown, MoveKeyUp)},
+                { "up", new KeyAction(MoveKeyDown, MoveKeyUp)},
+                { "down", new KeyAction(MoveKeyDown, MoveKeyUp)},
             };
         }
 
@@ -419,16 +421,23 @@ namespace Plotter
             action?.Invoke();
         }
 
-        public bool ExecShortcutKey(string keyCmd)
+        public bool ExecShortcutKey(string keyCmd, bool down)
         {
             if (!KeyMap.ContainsKey(keyCmd))
             {
                 return false;
             }
 
-            Action action = KeyMap[keyCmd];
+            KeyAction ka = KeyMap[keyCmd];
 
-            action?.Invoke();
+            if (down)
+            {
+                ka.Down?.Invoke();
+            }
+            else
+            {
+                ka.Up?.Invoke();
+            }
 
             return true;
         }
@@ -670,9 +679,22 @@ namespace Plotter
             Redraw();
         }
 
+        public void CursorLock()
+        {
+            mController.CursorLock();
+        }
+
+        public void MoveKeyDown()
+        {
+            mMoveKeyHandler.MoveKeyDown();
+        }
+
+        public void MoveKeyUp()
+        {
+            mMoveKeyHandler.MoveKeyUp();
+        }
+
         #endregion
-
-
 
         // Handle events from PlotterController
         #region Event From PlotterController
@@ -749,6 +771,11 @@ namespace Plotter
             }
         }
 
+        private void CursorLocked(bool locked)
+        {
+            mPlotterView.CursorLocked(locked);
+        }
+
         #endregion
 
 
@@ -773,9 +800,6 @@ namespace Plotter
 
                     Redraw();
                 }
-            }
-            else
-            {
             }
         }
         #endregion
@@ -820,20 +844,20 @@ namespace Plotter
         public bool OnKeyDown(object sender, KeyEventArgs e)
         {
             string ks = KeyString(e);
-            return KeyMap.ContainsKey(ks);
+            return ExecShortcutKey(ks, true);
         }
 
         public bool OnKeyUp(object sender, KeyEventArgs e)
         {
             string ks = KeyString(e);
-            return ExecShortcutKey(ks);
+            return ExecShortcutKey(ks, false);
         }
         #endregion
 
         #region helper
-        private void Redraw()
+        public void Redraw()
         {
-            mController.Redraw(mController.CurrentDC);
+            mController.Redraw();
         }
         #endregion
 

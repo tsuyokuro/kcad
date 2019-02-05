@@ -65,7 +65,7 @@ namespace Plotter.Controller
 
         private static void PasteFigure(PlotterController controller, CadFigure fig, CadVector delta)
         {
-            fig.MoveAllPoints(controller.CurrentDC, delta);
+            fig.MoveAllPoints(delta);
             controller.DB.AddFigure(fig);
 
             if (fig.ChildList != null)

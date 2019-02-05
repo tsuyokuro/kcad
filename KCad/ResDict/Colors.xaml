@@ -25,7 +25,7 @@
 
 
     <SolidColorBrush x:Key="MsgBGColor" Color="#FF101010" />
-    <SolidColorBrush x:Key="MsgSelectedBGColor" Color="#FF303030" />
+    <SolidColorBrush x:Key="MsgSelectedBGColor" Color="#FF2B537D" />
     <SolidColorBrush x:Key="MsgTextColor" Color="#FFDDDDDD" />
 
     <SolidColorBrush x:Key="DialogBaseColor" Color="#FFEBEBEB" />
