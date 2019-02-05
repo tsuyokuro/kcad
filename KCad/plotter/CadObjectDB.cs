@@ -74,6 +74,19 @@ namespace Plotter
             return layer.ID;
         }
 
+        public uint InserLayer(CadLayer layer, int index)
+        {
+            if (layer.ID == 0)
+            {
+                layer.ID = mLayerIdProvider.getNew();
+            }
+
+            mLayerIdMap.Add(layer.ID, layer);
+            mLayerList.Insert(index, layer);
+
+            return layer.ID;
+        }
+
         public void RemoveLayer(uint id)
         {
             mLayerIdMap.Remove(id);

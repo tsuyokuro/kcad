@@ -612,4 +612,26 @@ namespace Plotter
             fig.InvertDir();
         }
     }
+
+    public class CadOpeRemoveLayer : CadOpe
+    {
+        private CadLayer Layer;
+        private int Index;
+
+        public CadOpeRemoveLayer(CadLayer layer, int index)
+        {
+            Layer = layer;
+            Index = index;
+        }
+
+        public override void Redo(CadObjectDB db)
+        {
+            db.RemoveLayer(Layer.ID);
+        }
+
+        public override void Undo(CadObjectDB db)
+        {
+            db.InserLayer(Layer, Index);
+        }
+    }
 }

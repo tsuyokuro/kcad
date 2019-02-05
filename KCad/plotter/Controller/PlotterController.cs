@@ -146,13 +146,9 @@ namespace Plotter.Controller
             Observer.DataChanged(this, redraw);
         }
 
-        private void NotifyLayerInfo()
+        private void UpdateLayerList()
         {
-            LayerListInfo layerInfo = default(LayerListInfo);
-            layerInfo.LayerList = mDB.LayerList;
-            layerInfo.CurrentID = CurrentLayer.ID;
-
-            Observer.LayerListChanged(this, layerInfo);
+            Observer.LayerListChanged(this, GetLayerListInfo());
         }
 
         public LayerListInfo GetLayerListInfo()
@@ -252,6 +248,7 @@ namespace Plotter.Controller
             ClearSelection();
             HistoryMan.undo();
             UpdateTreeView(true);
+            UpdateLayerList();
         }
 
         public void Redo()
@@ -259,10 +256,11 @@ namespace Plotter.Controller
             ClearSelection();
             HistoryMan.redo();
             UpdateTreeView(true);
+            UpdateLayerList();
         }
-    #endregion
+        #endregion
 
-    #region "Draw methods"
+        #region "Draw methods"
         public void Redraw(DrawContext dc = null)
         {
             if (dc == null)
@@ -666,7 +664,7 @@ namespace Plotter.Controller
 
             mDB.LayerList.Add(layer);
 
-            NotifyLayerInfo();
+            UpdateLayerList();
 
             ItConsole.println("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
         }
@@ -685,12 +683,17 @@ namespace Plotter.Controller
                 return;
             }
 
-            int nextCurrentIdx = -1;
+            int index = mDB.LayerIndex(id);
 
+            int nextCurrentIdx = -1;
+                       
             if (CurrentLayer.ID == id)
             {
                 nextCurrentIdx = mDB.LayerIndex(CurrentLayer.ID);
             }
+
+            CadOpeRemoveLayer ope = new CadOpeRemoveLayer(layer, index);
+            HistoryMan.foward(ope);
 
             mDB.RemoveLayer(id);
 
@@ -704,7 +707,7 @@ namespace Plotter.Controller
                 CurrentLayer = mDB.LayerList[nextCurrentIdx];
             }
 
-            NotifyLayerInfo();
+            UpdateLayerList();
             ItConsole.println("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
         }
 
@@ -857,7 +860,7 @@ namespace Plotter.Controller
             mDB.ClearAll();
             HistoryMan.Clear();
 
-            NotifyLayerInfo();
+            UpdateLayerList();
             UpdateTreeView(true);
         }
 
@@ -867,7 +870,7 @@ namespace Plotter.Controller
 
             HistoryMan = new HistoryManager(mDB);
 
-            NotifyLayerInfo();
+            UpdateLayerList();
 
             UpdateTreeView(true);
 
