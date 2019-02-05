@@ -93,6 +93,8 @@ namespace Plotter
 
         public int BrushID { set; get; } = DrawTools.BRUSH_TEXT;
 
+        public bool IsSelected { get; set; } = false;
+
         #endregion
 
         protected VectorList mPointList = new VectorList();
@@ -419,6 +421,8 @@ namespace Plotter
             {
                 SelectPointAt(i, false);
             }
+
+            IsSelected = false;
         }
 
         public virtual void Select()

@@ -203,7 +203,7 @@ namespace Plotter
             {
                 layer.ForEachFig(fig =>
                 {
-                    if (fig.HasSelectedPoint())
+                    if (fig.HasSelectedPoint() || fig.IsSelected)
                     {
                         idList.Add(fig.ID);
                     }
@@ -223,7 +223,7 @@ namespace Plotter
             {
                 layer.ForEachFig(fig =>
                 {
-                    if (fig.HasSelectedPoint())
+                    if (fig.HasSelectedPoint() || fig.IsSelected)
                     {
                         fset.Add(fig);
                         if (fig.Parent != null)
