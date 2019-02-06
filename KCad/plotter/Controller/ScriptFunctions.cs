@@ -215,7 +215,7 @@ namespace Plotter.Controller
                     continue;
                 }
 
-                ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, fig.ID);
+                ope = new CadOpeRemoveFigure(Controller.CurrentLayer, fig.ID);
 
                 opeRoot.Add(ope);
 
@@ -230,7 +230,7 @@ namespace Plotter.Controller
 
             opeRoot.Add(ope);
 
-            ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, parent.ID);
+            ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, parent.ID);
 
             opeRoot.Add(ope);
 
@@ -335,7 +335,7 @@ namespace Plotter.Controller
 
             fig.EndCreate(Controller.CurrentDC);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
@@ -359,7 +359,7 @@ namespace Plotter.Controller
 
             fig.EndCreate(Controller.CurrentDC);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
@@ -397,7 +397,7 @@ namespace Plotter.Controller
 
             fig.EndCreate(Controller.CurrentDC);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
@@ -416,7 +416,7 @@ namespace Plotter.Controller
 
             fig.SetMesh(hem);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
@@ -431,7 +431,7 @@ namespace Plotter.Controller
 
             fig.SetMesh(hem);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
@@ -446,7 +446,7 @@ namespace Plotter.Controller
 
             fig.SetMesh(hem);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
@@ -752,13 +752,13 @@ namespace Plotter.Controller
 
             fig.SetMesh(hem);
 
-            CadOpeList root = CadOpe.CreateListOpe();
+            CadOpeList root = new CadOpeList();
             CadOpe ope;
 
-            ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             root.Add(ope);
 
-            ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, tfig.ID);
+            ope = new CadOpeRemoveFigure(Controller.CurrentLayer, tfig.ID);
             root.Add(ope);
 
             Controller.HistoryMan.foward(root);
@@ -799,13 +799,13 @@ namespace Plotter.Controller
             CadOpeList opeRoot = new CadOpeList();
             CadOpe ope;
 
-            ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, figPoly.ID);
+            ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, figPoly.ID);
             opeRoot.Add(ope);
 
             Controller.CurrentLayer.AddFigure(figPoly);
 
 
-            ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, fig.ID);
+            ope = new CadOpeRemoveFigure(Controller.CurrentLayer, fig.ID);
             opeRoot.Add(ope);
 
             Controller.CurrentLayer.RemoveFigureByID(fig.ID);
@@ -843,12 +843,12 @@ namespace Plotter.Controller
             mesh.CreateModel(fig);
 
 
-            ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, mesh.ID);
+            ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, mesh.ID);
             opeRoot.Add(ope);
             Controller.CurrentLayer.AddFigure(mesh);
 
 
-            ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, fig.ID);
+            ope = new CadOpeRemoveFigure(Controller.CurrentLayer, fig.ID);
             opeRoot.Add(ope);
             Controller.CurrentLayer.RemoveFigureByID(fig.ID);
 
@@ -917,7 +917,7 @@ namespace Plotter.Controller
 
             fig.SetMesh(hem);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
@@ -950,7 +950,7 @@ namespace Plotter.Controller
 
             fig.SetMesh(hem);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
@@ -983,7 +983,7 @@ namespace Plotter.Controller
 
             fig.SetMesh(hem);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
@@ -1211,7 +1211,7 @@ namespace Plotter.Controller
 
             fig.AddPoints(vl);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
 

@@ -229,7 +229,7 @@ namespace Plotter.Controller
 
             FigureCreator.EndCreate(CurrentDC);
 
-            CadOpe ope = CadOpe.CreateSetCloseOpe(CurrentLayer.ID, FigureCreator.Figure.ID, true);
+            CadOpe ope = new CadOpeSetClose(CurrentLayer.ID, FigureCreator.Figure.ID, true);
             HistoryMan.foward(ope);
 
             NextState();
@@ -459,7 +459,7 @@ namespace Plotter.Controller
 
         public List<CadFigure> StartEdit(List<CadFigure> targetList)
         {
-            mSnapShotList = CadOpe.CreateCadOpeFigureSnapShotList();
+            mSnapShotList = new CadOpeFigureSnapShotList();
 
             mSnapShotList.StoreBefore(targetList);
 
@@ -537,7 +537,7 @@ namespace Plotter.Controller
 
                     if (fig.IsGarbage())
                     {
-                        CadOpe ope = CadOpe.CreateRemoveFigureOpe(layer, fig.ID);
+                        CadOpe ope = new CadOpeRemoveFigure(layer, fig.ID);
                         opeList.OpeList.Add(ope);
 
                         layer.RemoveFigureByIndex(i);
