@@ -299,22 +299,22 @@ namespace Plotter.Controller
             UpdateTV();
         }
 
-        public void MoveCursor(double x, double y, double z)
+        public void MoveLastDownPoint(double x, double y, double z)
         {
-            Controller.LastDownPoint.x += x;
-            Controller.LastDownPoint.y += y;
-            Controller.LastDownPoint.z += z;
+            CadVector p = Controller.GetLastDownPoint();
 
-            Controller.NotifyDataChanged(true);
+            CadVector delta = CadVector.Create(x, y, z);
+
+            p += delta;
+
+            Env.RunOnMainThread(()=>Controller.SetLastDownPoint(p));
         }
 
-        public void SetCursor(double x, double y, double z)
+        public void SetLastDownPoint(double x, double y, double z)
         {
-            Controller.LastDownPoint.x = x;
-            Controller.LastDownPoint.y = y;
-            Controller.LastDownPoint.z = z;
+            CadVector p = CadVector.Create(x, y, z);
 
-            Controller.NotifyDataChanged(true);
+            Env.RunOnMainThread(()=>Controller.SetLastDownPoint(p));
         }
 
         public void Line(double x, double y, double z)

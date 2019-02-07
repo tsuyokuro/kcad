@@ -1104,5 +1104,35 @@ namespace Plotter.Controller
         {
             CursorLocked = false;
         }
+
+        public CadVector GetCursorPos()
+        {
+            return SnapPoint;
+        }
+
+        public void SetCursorPos(CadVector v)
+        {
+            SnapPoint = v;
+            CrossCursor.Pos = CurrentDC.WorldPointToDevPoint(SnapPoint);
+
+            Observer.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);
+
+            Redraw();
+        }
+
+
+        public CadVector GetLastDownPoint()
+        {
+            return LastDownPoint;
+        }
+
+        public void SetLastDownPoint(CadVector v)
+        {
+            LastDownPoint = v;
+
+            Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
+
+            Redraw();
+        }
     }
 }

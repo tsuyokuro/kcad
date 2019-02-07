@@ -80,13 +80,13 @@ def getLastDown():
     pt = SE.GetLastDownPoint()
     return pt
 
-#[AC] moveCursor(x=10, y=0, z=0)
-def moveCursor(x, y, z):
-    SE.MoveCursor(x, y, z)
+#[AC] moveLastDown(x=10, y=0, z=0)
+def moveLastDown(x, y, z):
+    SE.MoveLastDownPoint(x, y, z)
 
-#[AC] setCursor(x=0, y=0, z=0)
-def setCursor(x, y, z):
-    SE.SetCursor(x, y, z)
+#[AC] setLastDown(x=0, y=0, z=0)
+def setLastDown(x, y, z):
+    SE.SetLastDownPoint(x, y, z)
 
 #[AC] line(x, y, z)
 def line(x, y, z):
