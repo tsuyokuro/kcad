@@ -180,12 +180,6 @@ def addSphere(slices, r):
     SE.AddSphere(slices, r)
     SE.UpdateTV();
 
-
-#[help]<‰Ÿ‚µo‚µ>extrude(id, dir, d, div)
-#[help]<Œú‚Ý>extrude(id, dir, d, div)
-#[help]<Œú‚³>extrude(id, dir, d, div)
-#[help]<tick>extrude(id, dir, d, div)
-
 #[AC] extrude(id=currentFigID(), dir=unitVZ, d=20, div=0)
 def extrude(id, dir, d, div):
     SE.Extrude(id, dir, d, div)

@@ -323,23 +323,33 @@ namespace KCad
 
             mCandidateListBox.Items.Clear();
 
+            var tempList = new List<string>();
+
             foreach (var str in CandidateList)
             {
                 string text = str as String;
 
                 if (text.Contains(s))
                 {
-                    ListBoxItem item = new ListBoxItem();
-
-                    item.Content = str;
-
-                    mCandidateListBox.Items.Add(item);
-
-                    //if (mCandidateListBox.Items.Count > 8)
-                    //{
-                    //    break;
-                    //}
+                    tempList.Add(text);
                 }
+            }
+
+            tempList.Sort((a, b) =>
+            {
+                MatchCollection mca = WordPtn.Matches(a);
+                MatchCollection mcb = WordPtn.Matches(a);
+
+                return mca[0].Length - mcb[0].Length;
+            });
+
+            foreach (var str in tempList)
+            {
+                ListBoxItem item = new ListBoxItem();
+
+                item.Content = str;
+
+                mCandidateListBox.Items.Add(item);
             }
 
             return mCandidateListBox.Items.Count > 0;

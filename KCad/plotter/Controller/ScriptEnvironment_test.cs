@@ -582,13 +582,6 @@ namespace Plotter.Controller
             {
                 ItConsole.clear();
             }
-            else if (cmd == "@h" || cmd == "@help")
-            {
-                if (ss.Length > 1)
-                {
-                    mScriptFunctions.MyHelp(ss[1]);
-                }
-            }
 
             else if (cmd == "@dump")
             {

@@ -34,30 +34,6 @@ namespace Plotter.Controller
 
             //mMainThreadScheduler = env.mMainThreadScheduler;
         }
-
-        public void MyHelp(string s)
-        {
-            if (s == null || s.Length == 0)
-            {
-                return;
-            }
-
-            string help = null;
-
-            foreach (string key in Env.HelpMap.Keys)
-            {
-                if (key.Contains(s))
-                {
-                    help = Env.HelpMap[key];
-                    break;
-                }
-            }
-
-            if (help != null)
-            {
-                ItConsole.println(help);
-            }
-        }
         
         public void PutMsg(string s)
         {
