@@ -110,7 +110,7 @@ namespace Plotter.Controller.TaskRunner
         {
             List<CadFigure> cpy = PlotterClipboard.CopyFigures(rootFigList);
 
-            CadOpeList opeRoot = CadOpe.CreateListOpe();
+            CadOpeList opeRoot = new CadOpeList();
 
             CadLayer layer = Controller.CurrentLayer;
 
@@ -124,7 +124,7 @@ namespace Plotter.Controller.TaskRunner
 
                 layer.AddFigure(fig);
 
-                CadOpe ope = CadOpe.CreateAddFigureOpe(layer.ID, fig.ID);
+                CadOpe ope = new CadOpeAddFigure(layer.ID, fig.ID);
                 opeRoot.OpeList.Add(ope);
             }
 

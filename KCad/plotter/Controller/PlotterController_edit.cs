@@ -31,7 +31,7 @@ namespace Plotter.Controller
 
             if (num > 0)
             {
-                CadOpe ope = CadOpe.CreateInsertPointsOpe(
+                CadOpe ope = new CadOpeInsertPoints(
                     fig.LayerID, fig.ID, seg.PtIndexA + 1, num);
 
                 HistoryMan.foward(ope);
@@ -60,14 +60,14 @@ namespace Plotter.Controller
                 return;
             }
 
-            CadOpeList opeRoot = CadOpe.CreateListOpe();
+            CadOpeList opeRoot = new CadOpeList();
             CadOpe ope;
 
             foreach (EditResult.Item ri in res.AddList)
             {
                 CadLayer layer = mDB.GetLayer(ri.LayerID);
 
-                ope = CadOpe.CreateAddFigureOpe(ri.LayerID, ri.FigureID);
+                ope = new CadOpeAddFigure(ri.LayerID, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
                 layer.AddFigure(ri.Figure);
@@ -77,7 +77,7 @@ namespace Plotter.Controller
             {
                 CadLayer layer = mDB.GetLayer(ri.LayerID);
 
-                ope = CadOpe.CreateRemoveFigureOpe(layer, ri.FigureID);
+                ope = new CadOpeRemoveFigure(layer, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
                 layer.RemoveFigureByID(ri.FigureID);
@@ -101,14 +101,14 @@ namespace Plotter.Controller
                 return;
             }
 
-            CadOpeList opeRoot = CadOpe.CreateListOpe();
+            CadOpeList opeRoot = new CadOpeList();
             CadOpe ope;
 
             foreach (EditResult.Item ri in res.AddList)
             {
                 CadLayer layer = mDB.GetLayer(ri.LayerID);
 
-                ope = CadOpe.CreateAddFigureOpe(ri.LayerID, ri.FigureID);
+                ope = new CadOpeAddFigure(ri.LayerID, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
                 layer.AddFigure(ri.Figure);
@@ -118,7 +118,7 @@ namespace Plotter.Controller
             {
                 CadLayer layer = mDB.GetLayer(ri.LayerID);
 
-                ope = CadOpe.CreateRemoveFigureOpe(layer, ri.FigureID);
+                ope = new CadOpeRemoveFigure(layer, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
                 layer.RemoveFigureByID(ri.FigureID);
@@ -158,14 +158,14 @@ namespace Plotter.Controller
                 return;
             }
 
-            CadOpeList opeRoot = CadOpe.CreateListOpe();
+            CadOpeList opeRoot = new CadOpeList();
             CadOpe ope;
 
             foreach (EditResult.Item ri in res.AddList)
             {
                 CadLayer layer = mDB.GetLayer(ri.LayerID);
 
-                ope = CadOpe.CreateAddFigureOpe(ri.LayerID, ri.FigureID);
+                ope = new CadOpeAddFigure(ri.LayerID, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
                 layer.AddFigure(ri.Figure);
@@ -175,7 +175,7 @@ namespace Plotter.Controller
             {
                 CadLayer layer = mDB.GetLayer(ri.LayerID);
 
-                ope = CadOpe.CreateRemoveFigureOpe(layer, ri.FigureID);
+                ope = new CadOpeRemoveFigure(layer, ri.FigureID);
                 opeRoot.OpeList.Add(ope);
 
                 layer.RemoveFigureByID(ri.FigureID);
@@ -188,7 +188,7 @@ namespace Plotter.Controller
         {
             List<uint> list = DB.GetSelectedFigIDList();
 
-            CadOpeList opeRoot = CadOpe.CreateListOpe();
+            CadOpeList opeRoot = new CadOpeList();
             CadOpe ope;
 
             foreach (uint id in list)
@@ -209,7 +209,7 @@ namespace Plotter.Controller
                         fig.Normal = CadUtil.Normal(fig);
                     }
 
-                    ope = CadOpe.CreateSetCloseOpe(CurrentLayer.ID, id, isLoop);
+                    ope = new CadOpeSetClose(CurrentLayer.ID, id, isLoop);
                     opeRoot.OpeList.Add(ope);
                 }
             }
@@ -275,7 +275,7 @@ namespace Plotter.Controller
         {
             List<uint> ids = DB.GetSelectedFigIDList();
 
-            CadOpeList opeList = CadOpe.CreateListOpe();
+            CadOpeList opeList = new CadOpeList();
 
             foreach (uint id in ids)
             {
@@ -284,7 +284,7 @@ namespace Plotter.Controller
 
                 fig.Normal *= -1;
 
-                CadOpe ope = CadOpe.CreateChangeNormalOpe(id, old, fig.Normal);
+                CadOpe ope = new CadOpeChangeNormal(id, old, fig.Normal);
                 opeList.Add(ope);
             }
 
@@ -361,7 +361,7 @@ namespace Plotter.Controller
 
             pointFig.EndCreate(CurrentDC);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, pointFig.ID);
+            CadOpe ope = new CadOpeAddFigure(CurrentLayer.ID, pointFig.ID);
             HistoryMan.foward(ope);
             CurrentLayer.AddFigure(pointFig);
 

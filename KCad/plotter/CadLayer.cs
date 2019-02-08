@@ -130,7 +130,7 @@ namespace Plotter
 
         public CadOpeList Clear()
         {
-            CadOpeList opeList = CadOpe.CreateListOpe();
+            CadOpeList opeList = new CadOpeList();
 
             CadOpe ope;
 
@@ -139,7 +139,7 @@ namespace Plotter
 
             foreach (CadFigure fig in revFig)
             {
-                ope = CadOpe.CreateRemoveFigureOpe(this, fig.ID);
+                ope = new CadOpeRemoveFigure(this, fig.ID);
                 opeList.OpeList.Add(ope);
             }
 

@@ -1042,7 +1042,7 @@ namespace Plotter.Controller
             {
                 FigureCreator.EndCreate(dc);
 
-                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, FigureCreator.Figure.ID);
+                CadOpe ope = new CadOpeAddFigure(CurrentLayer.ID, FigureCreator.Figure.ID);
                 HistoryMan.foward(ope);
                 CurrentLayer.AddFigure(FigureCreator.Figure);
 
@@ -1050,13 +1050,13 @@ namespace Plotter.Controller
             }
             else if (state == CadFigure.Creator.State.ENOUGH)
             {
-                CadOpe ope = CadOpe.CreateAddFigureOpe(CurrentLayer.ID, FigureCreator.Figure.ID);
+                CadOpe ope = new CadOpeAddFigure(CurrentLayer.ID, FigureCreator.Figure.ID);
                 HistoryMan.foward(ope);
                 CurrentLayer.AddFigure(FigureCreator.Figure);
             }
             else if (state == CadFigure.Creator.State.WAIT_NEXT_POINT)
             {
-                CadOpe ope = CadOpe.CreateAddPointOpe(
+                CadOpe ope = new CadOpeAddPoint(
                     CurrentLayer.ID,
                     FigureCreator.Figure.ID,
                     FigureCreator.Figure.PointCount - 1,
@@ -1103,6 +1103,36 @@ namespace Plotter.Controller
         public void CursorUnlock()
         {
             CursorLocked = false;
+        }
+
+        public CadVector GetCursorPos()
+        {
+            return SnapPoint;
+        }
+
+        public void SetCursorPos(CadVector v)
+        {
+            SnapPoint = v;
+            CrossCursor.Pos = CurrentDC.WorldPointToDevPoint(SnapPoint);
+
+            Observer.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);
+
+            Redraw();
+        }
+
+
+        public CadVector GetLastDownPoint()
+        {
+            return LastDownPoint;
+        }
+
+        public void SetLastDownPoint(CadVector v)
+        {
+            LastDownPoint = v;
+
+            Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
+
+            Redraw();
         }
     }
 }

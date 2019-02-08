@@ -676,10 +676,10 @@
                                 Background="{StaticResource MsgBGColor}"
                                 Focusable="True"
                                 Foreground="{StaticResource MsgTextColor}"
-                                LineHeight="18"
+                                LineHeight="14"
                                 SelectedBackground="{StaticResource MsgSelectedBGColor}"
                                 SelectedForeground="{StaticResource MsgTextColor}"
-                                TextSize="14" />
+                                TextSize="12" />
 
                         </ScrollViewer>
                         <Grid Grid.Row="1" Height="auto">
@@ -889,8 +889,8 @@
                                         VerticalAlignment="Top"
                                         Background="{StaticResource BaseColor}"
                                         Foreground="White"
-                                        ItemHeight="16.0"
-                                        TextSize="12.0" />
+                                        ItemHeight="13.0"
+                                        TextSize="11.0" />
                                 </ScrollViewer>
                             </Grid>
                         </Grid>

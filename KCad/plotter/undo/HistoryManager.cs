@@ -33,15 +33,16 @@ namespace Plotter
         {
             mUndoStack.Push(ope);
 
-            cleanObjectsInStack(mRedoStack);
+            DisposeStackItems(mRedoStack);
+
             mRedoStack.Clear();
         }
 
-        private void cleanObjectsInStack(Stack<CadOpe> stack)
+        private void DisposeStackItems(Stack<CadOpe> stack)
         {
             foreach (CadOpe ope in stack)
             {
-                ope.ReleaseResource(mDB);
+                ope.Dispose(mDB);
             }
         }
 

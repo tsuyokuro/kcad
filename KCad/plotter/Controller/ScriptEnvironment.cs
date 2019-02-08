@@ -31,8 +31,6 @@ namespace Plotter.Controller
             }
         }
 
-        public Dictionary<string, string> HelpMap = new Dictionary<string, string>();
-
         public TaskScheduler mMainThreadScheduler;
 
         public int mMainThreadID = -1;
@@ -56,9 +54,6 @@ namespace Plotter.Controller
 
         Regex AutoCompPtn = new Regex(@"#\[AC\][ \t]*(.+)\n");
 
-        Regex HelpPtn = new Regex(@"#\[help\][ \t]*<(.+)>(.+)\n");
-
-
         private void InitScriptingEngine()
         {
             string script = System.Text.Encoding.GetEncoding("Shift_JIS").GetString(Resources.BaseScript);
@@ -76,15 +71,6 @@ namespace Plotter.Controller
             {
                 string s = m.Groups[1].Value.TrimEnd('\r', '\n');
                 mAutoCompleteList.Add(s);
-            }
-
-            matches = HelpPtn.Matches(script);
-
-            foreach (Match m in matches)
-            {
-                string key = m.Groups[1].Value;
-                string s = m.Groups[2].Value.TrimEnd('\r', '\n');
-                HelpMap[key] = s;
             }
         }
 

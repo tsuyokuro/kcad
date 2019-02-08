@@ -38,7 +38,7 @@ namespace Plotter.Controller
 
             fig.SetMesh(hem);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
             Controller.UpdateTreeView(true);
@@ -54,7 +54,7 @@ namespace Plotter.Controller
 
             fig.SetMesh(hem);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
             Controller.UpdateTreeView(true);
@@ -78,7 +78,7 @@ namespace Plotter.Controller
 
             fig.SetMesh(hem);
 
-            CadOpe ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, fig.ID);
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
             Controller.UpdateTreeView(true);
@@ -311,13 +311,13 @@ namespace Plotter.Controller
                 mesh.CreateModel(fig);
 
 
-                ope = CadOpe.CreateAddFigureOpe(Controller.CurrentLayer.ID, mesh.ID);
+                ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, mesh.ID);
                 opeRoot.Add(ope);
 
                 Controller.CurrentLayer.AddFigure(mesh);
 
 
-                ope = CadOpe.CreateRemoveFigureOpe(Controller.CurrentLayer, fig.ID);
+                ope = new CadOpeRemoveFigure(Controller.CurrentLayer, fig.ID);
                 opeRoot.Add(ope);
 
                 Controller.CurrentLayer.RemoveFigureByID(fig.ID);
@@ -581,13 +581,6 @@ namespace Plotter.Controller
             if (cmd == "@clear" || s == "@cls")
             {
                 ItConsole.clear();
-            }
-            else if (cmd == "@h" || cmd == "@help")
-            {
-                if (ss.Length > 1)
-                {
-                    mScriptFunctions.MyHelp(ss[1]);
-                }
             }
 
             else if (cmd == "@dump")

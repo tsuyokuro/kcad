@@ -80,13 +80,13 @@ def getLastDown():
     pt = SE.GetLastDownPoint()
     return pt
 
-#[AC] moveCursor(x=10, y=0, z=0)
-def moveCursor(x, y, z):
-    SE.MoveCursor(x, y, z)
+#[AC] moveLastDown(x=10, y=0, z=0)
+def moveLastDown(x, y, z):
+    SE.MoveLastDownPoint(x, y, z)
 
-#[AC] setCursor(x=0, y=0, z=0)
-def setCursor(x, y, z):
-    SE.SetCursor(x, y, z)
+#[AC] setLastDown(x=0, y=0, z=0)
+def setLastDown(x, y, z):
+    SE.SetLastDownPoint(x, y, z)
 
 #[AC] line(x, y, z)
 def line(x, y, z):
@@ -179,12 +179,6 @@ def addCylinder(slices, r, len):
 def addSphere(slices, r):
     SE.AddSphere(slices, r)
     SE.UpdateTV();
-
-
-#[help]<‰Ÿ‚µo‚µ>extrude(id, dir, d, div)
-#[help]<Œú‚Ý>extrude(id, dir, d, div)
-#[help]<Œú‚³>extrude(id, dir, d, div)
-#[help]<tick>extrude(id, dir, d, div)
 
 #[AC] extrude(id=currentFigID(), dir=unitVZ, d=20, div=0)
 def extrude(id, dir, d, div):

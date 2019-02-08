@@ -17,90 +17,14 @@ namespace Plotter
         {
         }
 
-        public static CadOpeList CreateListOpe()
-        {
-            CadOpeList ope = new CadOpeList();
-            return ope;
-        }
-
-        public static CadOpeList CreateListOpe(List<CadOpe> list)
-        {
-            CadOpeList ope = new CadOpeList(list);
-            return ope;
-        }
-
-        public static CadOpe CreateAddPointOpe(uint layerID, uint figureID, int pointIndex, ref CadVector pt)
-        {
-            CadVector t = pt;
-            CadOpe ope = new CadOpeAddPoint(layerID, figureID, pointIndex, ref t);
-            return ope;
-        }
-
-        public static CadOpe CreateInsertPointsOpe(uint layerID, uint figureID, int startIndex, int insertNum)
-        {
-            CadOpe ope = new CadOpeInsertPoints(layerID, figureID, startIndex, insertNum);
-            return ope;
-        }
-
-        public static CadOpe CreateSetCloseOpe(uint layerID, uint figureID, bool on)
-        {
-            CadOpe ope = new CadOpeSetClose(layerID, figureID, on);
-            return ope;
-        }
-
-        public static CadOpe CreateAddFigureOpe(uint layerID, uint figureID)
-        {
-            CadOpe ope = new CadOpeAddFigure(layerID, figureID);
-            return ope;
-        }
-
-        public static CadOpe CreateRemoveFigureOpe(CadLayer layer, uint figureID)
-        {
-            CadOpe ope = new CadOpeRemoveFigure(layer, figureID);
-            return ope;
-        }
-
-        public static CadOpe CreateChangeNormalOpe(uint figID, CadVector oldNormal, CadVector newNormal)
-        {
-            CadOpe ope = new CadOpeChangeNormal(figID, oldNormal, newNormal);
-            return ope;
-        }
-
-        public static CadOpeFigureSnapShotList CreateCadOpeFigureSnapShotList()
-        {
-            CadOpeFigureSnapShotList ope = new CadOpeFigureSnapShotList();
-            return ope;
-        }
-
         public abstract void Undo(CadObjectDB db);
         public abstract void Redo(CadObjectDB db);
 
-        public virtual void ReleaseResource(CadObjectDB db)
+        public virtual void Dispose(CadObjectDB db)
         {
         }
     }
 
-    /*
-    public class CadOpeDiff : CadOpe
-    {
-        DiffDataList Diffs;
-
-        public CadOpeDiff(DiffDataList diffs)
-        {
-            Diffs = diffs;
-        }
-
-        public override void Undo(CadObjectDB db)
-        {
-            Diffs.undo(db);
-        }
-
-        public override void Redo(CadObjectDB db)
-        {
-            Diffs.redo(db);
-        }
-    }
-    */
 
     public class CadOpeFigureSnapShot : CadOpe
     {
@@ -382,31 +306,6 @@ namespace Plotter
         }
     }
 
-    //public class CadOpeSetThickness : CadOpeFigureBase
-    //{
-    //    double NewThick = 0;
-    //    double OldThick = 0;
-
-    //    public CadOpeSetThickness(uint layerID, uint figureID, double oldThick, double newThick)
-    //        : base(layerID, figureID)
-    //    {
-    //        OldThick = oldThick;
-    //        NewThick = newThick;
-    //    }
-
-    //    public override void Undo(CadObjectDB db)
-    //    {
-    //        CadFigure fig = db.GetFigure(FigureID);
-    //        fig.Thickness = OldThick;
-    //    }
-
-    //    public override void Redo(CadObjectDB db)
-    //    {
-    //        CadFigure fig = db.GetFigure(FigureID);
-    //        fig.Thickness = NewThick;
-    //    }
-    //}
-
     public class CadOpeAddFigure : CadOpeFigureBase
     {
         public CadOpeAddFigure(uint layerID, uint figureID)
@@ -427,7 +326,7 @@ namespace Plotter
             layer.AddFigure(fig);
         }
 
-        public override void ReleaseResource(CadObjectDB db)
+        public override void Dispose(CadObjectDB db)
         {
             db.RelaseFigure(FigureID);
         }

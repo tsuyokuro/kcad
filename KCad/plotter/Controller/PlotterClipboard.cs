@@ -49,14 +49,14 @@ namespace Plotter.Controller
 
             CadVector d = pp - mm3d.GetMinAsVector();
 
-            CadOpeList opeRoot = CadOpe.CreateListOpe();
+            CadOpeList opeRoot = new CadOpeList();
 
             foreach (CadFigure fig in figList)
             {
                 PasteFigure(controller, fig, d);
                 controller.CurrentLayer.AddFigure(fig);    // 子ObjectはLayerに追加しない
 
-                CadOpe ope = CadOpe.CreateAddFigureOpe(controller.CurrentLayer.ID, fig.ID);
+                CadOpe ope = new CadOpeAddFigure(controller.CurrentLayer.ID, fig.ID);
                 opeRoot.OpeList.Add(ope);
             }
 
@@ -118,14 +118,14 @@ namespace Plotter.Controller
             byte[] bin = FigureListToBin(src);
             List<CadFigure> dest = FigureListFromBin(bin);
 
-            CadOpeList opeRoot = CadOpe.CreateListOpe();
+            CadOpeList opeRoot = new CadOpeList();
 
             foreach (CadFigure fig in dest)
             {
                 PasteFigure(controller, fig);
                 controller.CurrentLayer.AddFigure(fig);    // 子ObjectはLayerに追加しない
 
-                CadOpe ope = CadOpe.CreateAddFigureOpe(controller.CurrentLayer.ID, fig.ID);
+                CadOpe ope = new CadOpeAddFigure(controller.CurrentLayer.ID, fig.ID);
                 opeRoot.OpeList.Add(ope);
             }
 

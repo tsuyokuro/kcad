@@ -69,9 +69,19 @@ namespace Plotter
                 Delta += wy;
             }
 
-            Controller.MovePointsFromStored(EditFigList, Delta);
-
-            Controller.Redraw();
+            if (Controller.State == PlotterController.States.SELECT)
+            {
+                if (Controller.CurrentFigure != null)
+                {
+                    Controller.MovePointsFromStored(EditFigList, Delta);
+                    Controller.Redraw();
+                }
+                else
+                {
+                    CadVector p = Controller.GetCursorPos();
+                    Controller.SetCursorPos(p + Delta);
+                }
+            }
         }
     }
 }
