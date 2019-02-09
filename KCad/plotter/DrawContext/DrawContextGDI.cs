@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using CadDataTypes;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace Plotter
 {
@@ -17,6 +18,22 @@ namespace Plotter
         {
             protected set => mGdiGraphics = value;
             get => mGdiGraphics;
+        }
+
+        private SmoothingMode mSmoothingMode = SmoothingMode.HighSpeed;
+
+        public SmoothingMode SmoothingMode
+        {
+            set
+            {
+                mSmoothingMode = value;
+                if (mGdiGraphics != null)
+                {
+                    mGdiGraphics.SmoothingMode = mSmoothingMode;
+                }
+            }
+
+            get => mSmoothingMode;
         }
 
         public DrawContextGDI()
@@ -62,6 +79,8 @@ namespace Plotter
                                ViewCtrl.DisplayRectangle);
 
             mGdiGraphics = Buffer.Graphics;
+
+            mGdiGraphics.SmoothingMode = mSmoothingMode;
         }
 
         private void DisposeGraphics()

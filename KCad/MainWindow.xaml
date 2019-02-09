@@ -679,6 +679,8 @@
                                 LineHeight="14"
                                 SelectedBackground="{StaticResource MsgSelectedBGColor}"
                                 SelectedForeground="{StaticResource MsgTextColor}"
+                                SnapsToDevicePixels="True"
+                                TextOptions.TextFormattingMode="Display"
                                 TextSize="12" />
 
                         </ScrollViewer>
@@ -889,7 +891,7 @@
                                         VerticalAlignment="Top"
                                         Background="{StaticResource BaseColor}"
                                         Foreground="White"
-                                        ItemHeight="13.0"
+                                        ItemHeight="15.0"
                                         TextSize="11.0" />
                                 </ScrollViewer>
                             </Grid>
