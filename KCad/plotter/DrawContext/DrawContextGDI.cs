@@ -36,6 +36,22 @@ namespace Plotter
             get => mSmoothingMode;
         }
 
+        private PixelOffsetMode mPixelOffsetMode = PixelOffsetMode.HighSpeed;
+
+        public PixelOffsetMode PixelOffsetMode
+        {
+            set
+            {
+                mPixelOffsetMode = value;
+                if (mGdiGraphics != null)
+                {
+                    mGdiGraphics.PixelOffsetMode = mPixelOffsetMode;
+                }
+            }
+
+            get => PixelOffsetMode;
+        }
+
         public DrawContextGDI()
         {
         }
@@ -81,6 +97,7 @@ namespace Plotter
             mGdiGraphics = Buffer.Graphics;
 
             mGdiGraphics.SmoothingMode = mSmoothingMode;
+            mGdiGraphics.PixelOffsetMode = mPixelOffsetMode;
         }
 
         private void DisposeGraphics()

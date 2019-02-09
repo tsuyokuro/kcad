@@ -10,38 +10,6 @@ using Plotter.Controller;
 
 namespace Plotter
 {
-    public class ContextMenuEx : ContextMenuStrip
-    {
-        public enum State
-        {
-            OPENED,
-            CLOSED,
-        }
-
-        public Action<State> StateChanged = (a)=>{};
-
-        public ContextMenuEx(Action<State> stateChanged)
-        {
-            StateChanged = stateChanged==null ? (a)=>{} : stateChanged;
-        }
-
-        protected override void OnItemClicked(ToolStripItemClickedEventArgs e)
-        {
-            Close();
-            base.OnItemClicked(e);
-        }
-
-        protected override void OnOpened(EventArgs e)
-        {
-            StateChanged(State.OPENED);
-        }
-
-        protected override void OnClosed(ToolStripDropDownClosedEventArgs e)
-        {
-            StateChanged(State.CLOSED);
-        }
-    }
-
     public partial class PlotterView : PictureBox, IPlotterView
     {
         private PlotterController mController = null;
@@ -59,25 +27,21 @@ namespace Plotter
 
         public DrawContext DrawContext
         {
-            get
-            {
-                return mDrawContext;
-            }
+            get => mDrawContext;
         }
 
         public Control FormsControl
         {
-            get
-            {
-                return this;
-            }
+            get => this;
         }
 
         public PlotterView()
         {
             mDrawContext = new DrawContextGDI(this);
 
-            mContextMenu = new ContextMenuEx((s) =>
+            mContextMenu = new ContextMenuEx();
+
+            mContextMenu.StateChanged = (s) =>
             {
                 if (s == ContextMenuEx.State.OPENED)
                 {
@@ -87,7 +51,7 @@ namespace Plotter
                 {
                     base.Cursor = PointCursor;
                 }
-            });
+            };
 
             DoubleBuffered = false;
 
