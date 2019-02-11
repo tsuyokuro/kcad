@@ -263,6 +263,7 @@ namespace Plotter
             PlotterView1 = new PlotterView();
             PlotterViewGL1 = PlotterViewGL.Create();
 
+            ViewMode = ViewModes.FRONT;
             ViewMode = ViewModes.FREE;  // 一旦GL側を設定してViewをLoadしておく
             ViewMode = ViewModes.FRONT;
 

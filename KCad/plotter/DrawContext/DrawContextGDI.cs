@@ -71,10 +71,17 @@ namespace Plotter
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
-            mProjectionMatrix = UMatrix4.Unit;
-            mProjectionMatrixInv = UMatrix4.Unit;
+            RecalcProjectionMatrix();
 
             mDrawing = new DrawingGDI(this);
+        }
+
+        private void RecalcProjectionMatrix()
+        {
+            double aspect = mViewWidth / mViewHeight;
+
+            mProjectionMatrix = UMatrix4.Unit;
+            mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
         }
 
         public override void SetViewSize(double w, double h)
@@ -126,43 +133,54 @@ namespace Plotter
         {
             pt *= WorldScale;
 
-            Vector4d ptv = (Vector4d)pt;
+            Vector4d wv = (Vector4d)pt;
 
-            ptv.W = 1.0f;
+            wv.W = 1.0f;
 
-            ptv = ptv * mViewMatrix;
-            ptv = ptv * mProjectionMatrix;
+            Vector4d sv = wv * mViewMatrix;
+            Vector4d pv = sv * mProjectionMatrix;
 
-            ptv.X /= ptv.W;
-            ptv.Y /= ptv.W;
-            ptv.Z /= ptv.W;
+            Vector4d dv;
 
-            CadVector p = default(CadVector);
+            dv.X = pv.X / pv.W;
+            dv.Y = pv.Y / pv.W;
+            dv.Z = pv.Z / pv.W;
+            dv.W = pv.W;
 
-            p.x = ptv.X * (mUnitPerMilli * DeviceScaleX);
-            p.y = ptv.Y * (mUnitPerMilli * DeviceScaleY);
-            //p.z = ptv.Z * UnitPerMilli;
-            p.z = 0;
+            dv.X = dv.X * (mUnitPerMilli * DeviceScaleX);
+            dv.Y = dv.Y * (mUnitPerMilli * DeviceScaleY);
+            dv.Z = 0;
 
-            return p;
+            return CadVector.Create(dv);
         }
 
         public override CadVector DevVectorToWorldVector(CadVector pt)
         {
-            Vector4d wv = default(Vector4d);
-            wv.X = pt.x / (mUnitPerMilli * DeviceScaleX);
-            wv.Y = pt.y / (mUnitPerMilli * DeviceScaleY);
-            //wv.Z = pt.z / UnitPerMilli;
+            pt.x = pt.x / (mUnitPerMilli * DeviceScaleX);
+            pt.y = pt.y / (mUnitPerMilli * DeviceScaleY);
+
+            //Vector3d epv = pt.vector - mEye;
+
+            Vector4d wv;
+
+            //wv.W = epv.Length;
+            wv.W = 1;
+
+            // mProjectionMatrixInvに掛けて wv.W=1.0 となる z を求める
+            //wv.Z = (1.0 - (wv.W * mProjectionMatrixInv.M44)) / mProjectionMatrixInv.M34;
             wv.Z = pt.z;
 
-            wv = wv * mProjectionMatrixInv;
+            wv.X = pt.x * wv.W;
+            wv.Y = pt.y * wv.W;
 
+            wv = wv * mProjectionMatrixInv;
             wv = wv * mViewMatrixInv;
 
             wv /= WorldScale;
 
             return CadVector.Create(wv);
         }
+
 
         public override void Dispose()
         {

@@ -201,7 +201,6 @@ namespace Plotter
         {
             pt *= WorldScale;
 
-            // 透視変換用にWが必要なので、Vector4に変換
             Vector4d wv = (Vector4d)pt;
 
             wv.W = 1.0f;
@@ -235,7 +234,6 @@ namespace Plotter
             wv.W = epv.Length;
 
             // mProjectionMatrixInvに掛けて wv.W=1.0 となる z を求める
-            //wv.Z = (ProjectionMatrix.M33 * (-wv.W)) + (ProjectionMatrix.M43);
             wv.Z = (1.0 - (wv.W * mProjectionMatrixInv.M44)) / mProjectionMatrixInv.M34;
 
             wv.X = pt.x * wv.W;
@@ -289,16 +287,6 @@ namespace Plotter
             DeviceScaleY = -h / 2.0;
 
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
-
-            //double aspect = mViewWidth / mViewHeight;
-
-            //mProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
-            //                                FovY,
-            //                                aspect,
-            //                                ProjectionNear,
-            //                                ProjectionFar
-            //                                );
-            //mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
 
             RecalcProjectionMatrix();
         }
