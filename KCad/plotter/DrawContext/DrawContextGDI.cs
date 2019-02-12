@@ -78,10 +78,17 @@ namespace Plotter
 
         private void RecalcProjectionMatrix()
         {
-            double aspect = mViewWidth / mViewHeight;
-
-            mProjectionMatrix = UMatrix4.Unit;
+            mProjectionMatrix.GLMatrix = Matrix4d.CreateOrthographic(mViewWidth, mViewHeight, mProjectionNear, mProjectionFar);
             mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
+
+            Vector4d wv = Vector4d.Zero;
+            wv.W = 1.0f;
+            wv.Z = -mEye.Length;
+
+            Vector4d pv = wv * mProjectionMatrix;
+
+            mProjectionW = pv.W;
+            mProjectionZ = pv.Z;
         }
 
         public override void SetViewSize(double w, double h)
@@ -159,16 +166,10 @@ namespace Plotter
             pt.x = pt.x / (mUnitPerMilli * DeviceScaleX);
             pt.y = pt.y / (mUnitPerMilli * DeviceScaleY);
 
-            //Vector3d epv = pt.vector - mEye;
-
             Vector4d wv;
 
-            //wv.W = epv.Length;
-            wv.W = 1;
-
-            // mProjectionMatrixInvに掛けて wv.W=1.0 となる z を求める
-            //wv.Z = (1.0 - (wv.W * mProjectionMatrixInv.M44)) / mProjectionMatrixInv.M34;
-            wv.Z = pt.z;
+            wv.W = mProjectionW;
+            wv.Z = mProjectionZ;
 
             wv.X = pt.x * wv.W;
             wv.Y = pt.y * wv.W;

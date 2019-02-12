@@ -23,8 +23,10 @@ namespace Plotter
             get => mUnitPerMilli;
         }
 
+        public const double STD_EYE_DIST = 250.0;
+
         // 視点
-        protected Vector3d mEye = Vector3d.UnitZ * 1000.0;
+        protected Vector3d mEye = Vector3d.UnitZ * STD_EYE_DIST;
         Vector3d Eye => mEye;
 
         // 注視点
@@ -32,11 +34,11 @@ namespace Plotter
         Vector3d LookAt => mLookAt;
 
         // 投影面までの距離
-        protected double mProjectionNear = 500.0;
+        protected double mProjectionNear = 0.1;
         public double ProjectionNear => mProjectionNear;
 
         // 視野空間の遠方側クリップ面までの距離
-        protected double mProjectionFar = 1500.0;
+        protected double mProjectionFar = 2000.0;
         public double ProjectionFar => mProjectionFar;
 
         // 視野角　大きければ広角レンズ、小さければ望遠レンズ
@@ -67,6 +69,8 @@ namespace Plotter
         protected UMatrix4 mProjectionMatrixInv = new UMatrix4();
         public UMatrix4 ProjectionMatrixInv => mProjectionMatrixInv;
 
+        protected double mProjectionW = 1.0;
+        protected double mProjectionZ = 0;
 
         // Screen 座標系の原点 
         // 座標系の原点がView座標上で何処にあるかを示す

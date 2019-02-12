@@ -1023,37 +1023,49 @@ namespace Plotter
             {
                 case ViewModes.FRONT:
                     SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(Vector3d.UnitZ, Vector3d.Zero, Vector3d.UnitY);
+                    mPlotterView.DrawContext.SetCamera(
+                        Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitY);
                     Redraw();
                     break;
 
                 case ViewModes.BACK:
                     SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(-Vector3d.UnitZ, Vector3d.Zero, Vector3d.UnitY);
+                    mPlotterView.DrawContext.SetCamera(
+                        -Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitY);
                     Redraw();
                     break;
 
                 case ViewModes.TOP:
                     SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(Vector3d.UnitY, Vector3d.Zero, -Vector3d.UnitZ);
+                    mPlotterView.DrawContext.SetCamera(
+                        Vector3d.UnitY * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, -Vector3d.UnitZ);
                     Redraw();
                     break;
 
                 case ViewModes.BOTTOM:
                     SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(-Vector3d.UnitY, Vector3d.Zero, Vector3d.UnitZ);
+                    mPlotterView.DrawContext.SetCamera(
+                        -Vector3d.UnitY * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitZ);
                     Redraw();
                     break;
 
                 case ViewModes.RIGHT:
                     SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(Vector3d.UnitX, Vector3d.Zero, Vector3d.UnitY);
+                    mPlotterView.DrawContext.SetCamera(
+                        Vector3d.UnitX * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitY);
                     Redraw();
                     break;
 
                 case ViewModes.LEFT:
                     SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(-Vector3d.UnitX, Vector3d.Zero, Vector3d.UnitY);
+                    mPlotterView.DrawContext.SetCamera(
+                        -Vector3d.UnitX * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitY);
                     Redraw();
                     break;
 
