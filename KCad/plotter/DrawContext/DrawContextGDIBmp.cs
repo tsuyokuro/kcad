@@ -33,6 +33,9 @@ namespace Plotter
             mProjectionMatrixInv = UMatrix4.Unit;
 
             mDrawing = new DrawingGDIBmp(this);
+
+            CalcProjectionMatrix(ProjectionType.Orthographic);
+            CalcProjectionZW();
         }
 
         public override void SetViewSize(double w, double h)
@@ -49,6 +52,9 @@ namespace Plotter
 
             mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
             mGdiGraphics = Graphics.FromImage(mImage);
+
+            CalcProjectionMatrix(ProjectionType.Orthographic);
+            CalcProjectionZW();
         }
 
         private void DisposeGraphics()

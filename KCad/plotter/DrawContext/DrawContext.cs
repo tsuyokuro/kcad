@@ -8,6 +8,12 @@ namespace Plotter
     {
         protected Action<DrawContext> mOnPush;
 
+        public enum ProjectionType
+        {
+            Orthographic,
+            Perspective,
+        }
+
         public Action<DrawContext> OnPush
         {
             set => mOnPush = value;
@@ -23,9 +29,8 @@ namespace Plotter
             get => mUnitPerMilli;
         }
 
-        public const double STD_EYE_DIST = 250.0;
-
         // 視点
+        public const double STD_EYE_DIST = 250.0;
         protected Vector3d mEye = Vector3d.UnitZ * STD_EYE_DIST;
         Vector3d Eye => mEye;
 
@@ -41,7 +46,7 @@ namespace Plotter
         protected double mProjectionFar = 2000.0;
         public double ProjectionFar => mProjectionFar;
 
-        // 視野角　大きければ広角レンズ、小さければ望遠レンズ
+        // 画角 大きければ広角レンズ、小さければ望遠レンズ
         protected double mFovY = Math.PI / 4;
         public double FovY => mFovY;
 
@@ -173,11 +178,54 @@ namespace Plotter
             return d * mUnitPerMilli;
         }
 
-        public virtual void RecalcViewDirFromCameraDirection()
+        public virtual void CalcViewDir()
         {
             Vector3d ret = mLookAt - mEye;
             ret.Normalize();
             mViewDir = ret;
+        }
+
+        public virtual void CalcProjectionMatrix(ProjectionType type)
+        {
+            if (type == ProjectionType.Orthographic)
+            {
+                // Projection volume -1.0 -> 1.0 なので 2.0
+                mProjectionMatrix.GLMatrix = Matrix4d.CreateOrthographic(
+                                                2.0, 2.0,
+                                                mProjectionNear,
+                                                mProjectionFar
+                                                );
+            }
+            else if (type == ProjectionType.Perspective)
+            {
+                double aspect = mViewWidth / mViewHeight;
+                mProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
+                                                mFovY,
+                                                aspect,
+                                                mProjectionNear,
+                                                mProjectionFar
+                                                );
+            }
+
+            mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
+        }
+
+        public virtual void CalcProjectionZW()
+        {
+            Vector4d wv = Vector4d.Zero;
+            wv.W = 1.0f;
+            wv.Z = -((mEye - mLookAt).Length);
+
+            Vector4d pv = wv * mProjectionMatrix;
+
+            mProjectionW = pv.W;
+            mProjectionZ = pv.Z;
+        }
+
+        public virtual void CalcViewMatrix()
+        {
+            mViewMatrix.GLMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
+            mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
         }
 
         public virtual void CopyCamera(DrawContext dc)
@@ -193,14 +241,12 @@ namespace Plotter
             mLookAt = lookAt;
             mUpVector = upVector;
 
-            mViewMatrix.GLMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
-
-            mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
-
-            RecalcViewDirFromCameraDirection();
+            CalcViewMatrix();
+            CalcViewDir();
+            CalcProjectionZW();
         }
 
-        public virtual void dump(string prefix)
+        public virtual void dump()
         {
             ViewOrg.dump("ViewOrg");
 
@@ -208,6 +254,15 @@ namespace Plotter
 
             CadVector t = CadVector.Create(mViewDir);
             t.dump("ViewDir");
+
+            DOut.pl("ViewMatrix");
+            mViewMatrix.dump();
+
+            DOut.pl("ProjectionMatrix");
+            mProjectionMatrix.dump();
+
+            DOut.pl($"ProjectionW={mProjectionW}");
+            DOut.pl($"ProjectionZ={mProjectionZ}");
         }
 
         public abstract void Dispose();

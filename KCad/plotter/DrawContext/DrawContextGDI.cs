@@ -1,6 +1,5 @@
 ﻿using OpenTK;
 using System.Drawing;
-using System.Drawing.Imaging;
 using CadDataTypes;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
@@ -49,7 +48,7 @@ namespace Plotter
                 }
             }
 
-            get => PixelOffsetMode;
+            get => mPixelOffsetMode;
         }
 
         public DrawContextGDI()
@@ -71,24 +70,13 @@ namespace Plotter
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
-            RecalcProjectionMatrix();
+            CalcProjectionMatrix(ProjectionType.Orthographic);
+            CalcProjectionZW();
 
             mDrawing = new DrawingGDI(this);
-        }
 
-        private void RecalcProjectionMatrix()
-        {
-            mProjectionMatrix.GLMatrix = Matrix4d.CreateOrthographic(mViewWidth, mViewHeight, mProjectionNear, mProjectionFar);
-            mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
-
-            Vector4d wv = Vector4d.Zero;
-            wv.W = 1.0f;
-            wv.Z = -mEye.Length;
-
-            Vector4d pv = wv * mProjectionMatrix;
-
-            mProjectionW = pv.W;
-            mProjectionZ = pv.Z;
+            CalcProjectionMatrix(ProjectionType.Orthographic);
+            CalcProjectionZW();
         }
 
         public override void SetViewSize(double w, double h)
@@ -181,7 +169,6 @@ namespace Plotter
 
             return CadVector.Create(wv);
         }
-
 
         public override void Dispose()
         {
