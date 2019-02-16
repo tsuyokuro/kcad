@@ -51,7 +51,7 @@ namespace KCad
 
         private bool DisableCandidateList = false;
 
-        public IEnumerable CandidateList
+        public List<string> CandidateList
         {
             get;
             set;
@@ -80,7 +80,7 @@ namespace KCad
         {
             get;
             set;
-        } = 3;
+        } = 2;
 
         public event Action<object, TextEventArgs> Determine;
 
@@ -274,7 +274,7 @@ namespace KCad
             return true;
         }
 
-        Regex WordPtn = new Regex("[a-zA-Z_0-9]+");
+        Regex WordPattern = new Regex(@"[a-zA-Z_0-9]+[\(]*");
 
         int mReplacePos = -1;
 
@@ -295,9 +295,9 @@ namespace KCad
                 return false;
             }
 
-            string s = null;
+            string targetWord = null;
 
-            MatchCollection mc = WordPtn.Matches(currentText);
+            MatchCollection mc = WordPattern.Matches(currentText);
             
             foreach(Match m in mc)
             {
@@ -305,18 +305,18 @@ namespace KCad
                 {
                     mReplacePos = m.Index;
                     mReplaceLen = m.Length;
-                    s = m.Value;
+                    targetWord = m.Value;
 
                     break;
                 }
             }
 
-            if (s == null)
+            if (targetWord == null)
             {
-                s = currentText;
+                targetWord = currentText;
             }
 
-            if (s.Length < CandidateWordMin)
+            if (targetWord.Length < CandidateWordMin)
             {
                 return false;
             }
@@ -325,11 +325,9 @@ namespace KCad
 
             var tempList = new List<string>();
 
-            foreach (var str in CandidateList)
+            foreach (string text in CandidateList)
             {
-                string text = str as String;
-
-                if (text.Contains(s))
+                if (text.IndexOf(targetWord, StringComparison.CurrentCultureIgnoreCase) >= 0)
                 {
                     tempList.Add(text);
                 }
@@ -337,8 +335,8 @@ namespace KCad
 
             tempList.Sort((a, b) =>
             {
-                MatchCollection mca = WordPtn.Matches(a);
-                MatchCollection mcb = WordPtn.Matches(a);
+                MatchCollection mca = WordPattern.Matches(a);
+                MatchCollection mcb = WordPattern.Matches(a);
 
                 return mca[0].Length - mcb[0].Length;
             });

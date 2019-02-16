@@ -106,7 +106,7 @@ namespace Plotter.Controller
         public void ExecuteCommandSync(string s)
         {
             s = s.Trim();
-            ItConsole.println("> " + s);
+            ItConsole.println(AnsiEsc.White + s);
 
             if (s.StartsWith("@"))
             {
@@ -129,7 +129,7 @@ namespace Plotter.Controller
         public async void ExecuteCommandAsync(string s)
         {
             s = s.Trim();
-            ItConsole.println("> " + s);
+            ItConsole.println(s);
 
             if (s.StartsWith("@"))
             {
@@ -166,7 +166,7 @@ namespace Plotter.Controller
 
                 if (ret != null)
                 {
-                    ItConsole.println(AnsiEsc.Blue + ret.ToString());
+                    ItConsole.println(AnsiEsc.BGreen + ret.ToString());
                 }
             }
             catch (Exception e)

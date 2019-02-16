@@ -67,7 +67,7 @@ namespace KCad
 
             Palette[8] = Brushes.Black;
             Palette[9] = Brushes.LightCoral;
-            Palette[10] = Brushes.SpringGreen;
+            Palette[10] = Brushes.GreenYellow;
             Palette[11] = Brushes.Yellow;
             Palette[12] = Brushes.CornflowerBlue;
             Palette[13] = Brushes.MediumOrchid;

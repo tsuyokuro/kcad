@@ -675,7 +675,7 @@
                                 VerticalAlignment="Top"
                                 Background="{StaticResource MsgBGColor}"
                                 Focusable="True"
-                                Foreground="{StaticResource MsgTextColor}"
+                                Foreground="#FFAAAAAA"
                                 LineHeight="14"
                                 SelectedBackground="{StaticResource MsgSelectedBGColor}"
                                 SelectedForeground="{StaticResource MsgTextColor}"
