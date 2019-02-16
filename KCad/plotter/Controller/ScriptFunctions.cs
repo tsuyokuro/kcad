@@ -1178,20 +1178,27 @@ namespace Plotter.Controller
             fig.SetPointAt(idx, p);
         }
 
-        public uint AddLines(IList<CadVector> vlist)
+        public CadFigure CreatePolyLines(IList<CadVector> vlist)
         {
-            VectorList vl = new VectorList(vlist.Count);
-            vl.AddRange(vlist);
-
             CadFigurePolyLines fig = (CadFigurePolyLines)Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
 
-            fig.AddPoints(vl);
+            if (vlist != null)
+            {
+                VectorList vl = new VectorList(vlist.Count);
+                vl.AddRange(vlist);
+                fig.AddPoints(vl);
+            }
+
+            return fig;
+        }
+
+        public void AddFigure(CadFigure fig)
+        {
+            Controller.DB.AddFigure(fig);
+            Controller.CurrentLayer.AddFigure(fig);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
-            Controller.CurrentLayer.AddFigure(fig);
-
-            return fig.ID;
         }
 
         public void Test()
