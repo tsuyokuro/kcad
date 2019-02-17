@@ -13,28 +13,63 @@ using System.Threading;
 
 namespace Plotter.Controller
 {
+    public class ScriptSession
+    {
+        private bool IsActive = false; 
+        private CadOpeList mCadOpeList = new CadOpeList();
+
+        public CadOpeList OpeList
+        {
+            get => mCadOpeList;
+        }
+
+        public void AddOpe(CadOpe ope)
+        {
+            mCadOpeList.Add(ope);
+        }
+
+        public void Start()
+        {
+            IsActive = true;
+            mCadOpeList.Clear();
+        }
+
+        public void End()
+        {
+            IsActive = false;
+        }
+    }
+
+
     public class ScriptFunctions
     {
         PlotterController Controller;
 
         ScriptEnvironment Env;
 
-        //TaskScheduler mMainThreadScheduler;
-
-        //int mMainThreadID = -1;
-
-        private SemaphoreSlim Sem = new SemaphoreSlim(1, 1);
+        public ScriptSession Session = new ScriptSession();
 
         public ScriptFunctions(ScriptEnvironment env)
         {
             Env = env;
             Controller = env.Controller;
-
-            //mMainThreadID = env.mMainThreadID;
-
-            //mMainThreadScheduler = env.mMainThreadScheduler;
         }
         
+        public void StartSession()
+        {
+            Session.Start();
+        }
+
+        public void EndSession()
+        {
+            Session.End();
+
+            if (Session.OpeList.Count() > 0)
+            {
+                Controller.HistoryMan.foward(Session.OpeList);
+            }
+        }
+
         public void PutMsg(string s)
         {
             ItConsole.println(s);
@@ -210,7 +245,7 @@ namespace Plotter.Controller
 
             opeRoot.Add(ope);
 
-            Controller.HistoryMan.foward(opeRoot);
+            Session.AddOpe(opeRoot);
 
             ItConsole.println(
                     global::KCad.Properties.Resources.notice_was_grouped
@@ -266,7 +301,7 @@ namespace Plotter.Controller
                 Controller.CurrentLayer.RemoveFigureByID(root.ID);
             }
 
-            Controller.HistoryMan.foward(opeList);
+            Session.AddOpe(opeList);
 
             ItConsole.println(
                 global::KCad.Properties.Resources.notice_was_ungrouped
@@ -312,7 +347,7 @@ namespace Plotter.Controller
             fig.EndCreate(Controller.CurrentDC);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryMan.foward(ope);
+            Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
 
@@ -336,7 +371,7 @@ namespace Plotter.Controller
             fig.EndCreate(Controller.CurrentDC);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryMan.foward(ope);
+            Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
 
@@ -374,7 +409,7 @@ namespace Plotter.Controller
             fig.EndCreate(Controller.CurrentDC);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryMan.foward(ope);
+            Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
             return (int)fig.ID;
@@ -393,7 +428,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryMan.foward(ope);
+            Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
 
@@ -408,7 +443,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryMan.foward(ope);
+            Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
 
@@ -423,7 +458,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryMan.foward(ope);
+            Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
         }
 
@@ -737,7 +772,7 @@ namespace Plotter.Controller
             ope = new CadOpeRemoveFigure(Controller.CurrentLayer, tfig.ID);
             root.Add(ope);
 
-            Controller.HistoryMan.foward(root);
+            Session.AddOpe(root);
 
             Controller.CurrentLayer.AddFigure(fig);
             Controller.CurrentLayer.RemoveFigureByID(tfig.ID);
@@ -787,7 +822,7 @@ namespace Plotter.Controller
             Controller.CurrentLayer.RemoveFigureByID(fig.ID);
 
 
-            Controller.HistoryMan.foward(opeRoot);
+            Session.AddOpe(opeRoot);
 
             Env.RunOnMainThread(() =>
             {
@@ -828,7 +863,7 @@ namespace Plotter.Controller
             opeRoot.Add(ope);
             Controller.CurrentLayer.RemoveFigureByID(fig.ID);
 
-            Controller.HistoryMan.foward(opeRoot);
+            Session.AddOpe(opeRoot);
 
             Env.RunOnMainThread(() =>
             {
@@ -854,7 +889,7 @@ namespace Plotter.Controller
                 opeRoot.Add(ope);
             }
 
-            Controller.HistoryMan.foward(opeRoot);
+            Session.AddOpe(opeRoot);
         }
 
         private CadFigureMesh GetCadFigureMesh(uint id)
@@ -894,7 +929,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryMan.foward(ope);
+            Session.AddOpe(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
         }
@@ -927,7 +962,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryMan.foward(ope);
+            Session.AddOpe(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
         }
@@ -960,7 +995,7 @@ namespace Plotter.Controller
             fig.SetMesh(hem);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryMan.foward(ope);
+            Session.AddOpe(ope);
 
             Controller.CurrentLayer.AddFigure(fig);
         }
@@ -1125,11 +1160,6 @@ namespace Plotter.Controller
             return v;
         }
 
-        public dynamic ExecScript(string fname)
-        {
-            return Env.ExecScript(fname);
-        }
-
         public void UpdateTV()
         {
             Env.RunOnMainThread(()=>{
@@ -1198,7 +1228,7 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryMan.foward(ope);
+            Session.AddOpe(ope);
         }
 
         public void Test()

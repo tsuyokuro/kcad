@@ -145,6 +145,16 @@ namespace Plotter
             OpeList = new List<CadOpe>(list);
         }
 
+        public void Clear()
+        {
+            OpeList.Clear();
+        }
+
+        public int Count()
+        {
+            return OpeList.Count();
+        }
+
         public void Add(CadOpe ope)
         {
             OpeList.Add(ope);

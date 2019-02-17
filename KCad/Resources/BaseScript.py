@@ -96,10 +96,6 @@ def line(x, y, z):
 def selFig(id):
     SE.SelectFigure(id)
 
-#[AC] execScript(fname)
-def execScript(fname):
-    return SE.ExecScript(fname)
-
 #[AC] scale(id=currentFigID(), org=lastDown(), ratio=1.5)
 def scale(id, org, ratio):
     SE.Scale(id, org, ratio)
