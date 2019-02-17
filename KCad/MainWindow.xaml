@@ -1043,15 +1043,14 @@
                         Grid.Column="3"
                         VerticalAlignment="Bottom"
                         Orientation="Horizontal">
-                        <Label
-                            Padding="1"
-                            Content="p"
-                            FontFamily="Marlett"
-                            FontSize="16"
-                            Foreground="White"
+                        <Image
+                            Width="12"
+                            Margin="4,0,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Source="{DynamicResource ResizeGripDrawingImage}"
                             WindowChrome.ResizeGripDirection="BottomRight" />
                     </StackPanel>
-
                 </Grid>
             </Border>
         </Grid>

@@ -7,6 +7,16 @@
     <BitmapImage x:Key="xz_icon" UriSource="Images/xz.png" />
     <BitmapImage x:Key="zy_icon" UriSource="Images/zy.png" />
 
+    <DrawingImage x:Key="ResizeGripDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V16 H16 V0 H0 Z">
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M16,16z M0,0z M12,12L15,12 15,15 12,15z M12,7L15,7 15,10 12,10z M7,12L10,12 10,15 7,15z M2,12L5,12 5,15 2,15z M7,7L10,7 10,10 7,10z M12,2L15,2 15,5 12,5z" />
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
     <DrawingImage x:Key="baseline_filter_listDrawingImage">
         <DrawingImage.Drawing>
             <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">
