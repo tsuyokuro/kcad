@@ -10,6 +10,7 @@
     Width="442.5"
     Height="440"
     Icon="ResDict/Images/script_icon.png"
+    ResizeMode="CanResizeWithGrip"
     mc:Ignorable="d">
 
     <Window.Resources>
@@ -101,10 +102,17 @@
             </avalonEdit:TextEditor.ContextMenu>
         </avalonEdit:TextEditor>
 
-        <StatusBar Grid.Row="2" Background="#FF1E1E1E">
-            <StatusBarItem>
+        <Border Grid.Row="2" Background="#FF1E1E1E">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="120" />
+                </Grid.ColumnDefinitions>
+
                 <Button
                     x:Name="BtnRun"
+                    Grid.Column="0"
                     Width="Auto"
                     Height="Auto"
                     Margin="8,1,4,1"
@@ -152,14 +160,15 @@
 
                     </Button.Template>
                 </Button>
-            </StatusBarItem>
-            <StatusBarItem>
+
+                <Label Grid.Column="1" />
+
                 <Label
                     x:Name="LblCaretPos"
+                    Grid.Column="2"
                     Content=""
                     Foreground="#FFE6E6E6" />
-
-            </StatusBarItem>
-        </StatusBar>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
