@@ -13,7 +13,7 @@
     Background="Black"
     BorderBrush="#FF14A9FF"
     BorderThickness="1"
-    Icon="ResDict/Images/compass_s.png"
+    Icon="ResDict/Images/triangle2.png"
     mc:Ignorable="d">
 
     <WindowChrome.WindowChrome>
@@ -180,7 +180,7 @@
                 Width="20"
                 Margin="8,0,0,0"
                 VerticalAlignment="Center"
-                Source="ResDict/Images/compass_s.png" />
+                Source="ResDict/Images/triangle2.png" />
             <Label
                 Grid.Column="1"
                 Margin="8,0,0,0"

@@ -1,11 +1,4 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <BitmapImage x:Key="invisible_icon" UriSource="Images/invisible.png" />
-    <BitmapImage x:Key="visible_icon" UriSource="Images/visible.png" />
-    <BitmapImage x:Key="locked_icon" UriSource="Images/locked.png" />
-    <BitmapImage x:Key="unlocked_icon" UriSource="Images/unlocked.png" />
-    <BitmapImage x:Key="xy_icon" UriSource="Images/xy.png" />
-    <BitmapImage x:Key="xz_icon" UriSource="Images/xz.png" />
-    <BitmapImage x:Key="zy_icon" UriSource="Images/zy.png" />
 
     <DrawingImage x:Key="ResizeGripDrawingImage">
         <DrawingImage.Drawing>

@@ -447,20 +447,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ResDict\Images\invisible.png" />
-    <Resource Include="ResDict\Images\locked.png" />
-    <Resource Include="ResDict\Images\unlocked.png" />
-    <Resource Include="ResDict\Images\visible.png" />
     <Resource Include="Resources\BaseScript.py" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="ResDict\Images\xy.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="ResDict\Images\xz.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="ResDict\Images\zy.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -480,19 +467,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ResDict\Images\SnapToLine.png" />
-    <Resource Include="ResDict\Images\SnapToPoint.png" />
-    <Resource Include="ResDict\Images\SnapToSeg.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="ftgl\ftgl_x64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Resource Include="ResDict\Images\filter.png" />
+    <Resource Include="ResDict\Images\triangle2.png" />
     <Resource Include="Resources\null.cur" />
     <Resource Include="Resources\dot.cur" />
     <Resource Include="Resources\mini_cross.cur" />
-    <Resource Include="ResDict\Images\compass_s.png" />
     <Resource Include="ResDict\Images\script_icon.png" />
   </ItemGroup>
   <ItemGroup>
