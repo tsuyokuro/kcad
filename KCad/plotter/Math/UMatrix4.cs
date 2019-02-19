@@ -4,8 +4,6 @@ using CadDataTypes;
 
 namespace Plotter
 {
-    using static System.Math;
-
     public struct UMatrix4
     {
         public Matrix4d GLMatrix;
