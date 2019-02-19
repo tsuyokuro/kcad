@@ -13,7 +13,7 @@
     Background="Black"
     BorderBrush="#FF14A9FF"
     BorderThickness="1"
-    Icon="ResDict/Images/compass_s.png"
+    Icon="ResDict/Images/triangle2.png"
     mc:Ignorable="d">
 
     <WindowChrome.WindowChrome>
@@ -180,7 +180,7 @@
                 Width="20"
                 Margin="8,0,0,0"
                 VerticalAlignment="Center"
-                Source="ResDict/Images/compass_s.png" />
+                Source="ResDict/Images/triangle2.png" />
             <Label
                 Grid.Column="1"
                 Margin="8,0,0,0"
@@ -675,10 +675,12 @@
                                 VerticalAlignment="Top"
                                 Background="{StaticResource MsgBGColor}"
                                 Focusable="True"
-                                Foreground="{StaticResource MsgTextColor}"
+                                Foreground="#FFAAAAAA"
                                 LineHeight="14"
                                 SelectedBackground="{StaticResource MsgSelectedBGColor}"
                                 SelectedForeground="{StaticResource MsgTextColor}"
+                                SnapsToDevicePixels="True"
+                                TextOptions.TextFormattingMode="Display"
                                 TextSize="12" />
 
                         </ScrollViewer>
@@ -889,7 +891,7 @@
                                         VerticalAlignment="Top"
                                         Background="{StaticResource BaseColor}"
                                         Foreground="White"
-                                        ItemHeight="13.0"
+                                        ItemHeight="15.0"
                                         TextSize="11.0" />
                                 </ScrollViewer>
                             </Grid>
@@ -1041,15 +1043,14 @@
                         Grid.Column="3"
                         VerticalAlignment="Bottom"
                         Orientation="Horizontal">
-                        <Label
-                            Padding="1"
-                            Content="p"
-                            FontFamily="Marlett"
-                            FontSize="16"
-                            Foreground="White"
+                        <Image
+                            Width="12"
+                            Margin="4,0,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Source="{DynamicResource ResizeGripDrawingImage}"
                             WindowChrome.ResizeGripDirection="BottomRight" />
                     </StackPanel>
-
                 </Grid>
             </Border>
         </Grid>

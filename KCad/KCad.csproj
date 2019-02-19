@@ -210,6 +210,9 @@
     <Compile Include="plotterViewModel\CursorPosViewModel.cs" />
     <Compile Include="plotterViewModel\MoveKeyHandler.cs" />
     <Compile Include="plotterViewModel\PlotterViewModel_serialize.cs" />
+    <Compile Include="plotterView\ContextMenuEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="plotter\Controller\ContextMenuInfo.cs" />
     <Compile Include="plotter\Controller\ControllerConst.cs" />
     <Compile Include="plotter\Controller\GuideLineManager.cs" />
@@ -227,12 +230,14 @@
     <Compile Include="plotter\DrawContext\DrawingGDIBmp.cs" />
     <Compile Include="plotter\Figure\CircleExpander.cs" />
     <Compile Include="plotter\Figure\PolyLineExpander.cs" />
+    <Compile Include="plotter\Controller\CadCursor.cs" />
     <Compile Include="plotter\Serializer\MpCadFile.cs" />
     <Compile Include="plotter\Serializer\MpInitializer.cs" />
     <Compile Include="plotter\TreeViewItem\CadFigTreeItem.cs" />
     <Compile Include="plotter\TreeViewItem\CadLayerTreeItem.cs" />
     <Compile Include="plotter\TreeViewItem\CadPointTreeItem.cs" />
     <Compile Include="plotter\Util\DebugOut.cs" />
+    <Compile Include="plotter\Math\MatrixMN.cs" />
     <Compile Include="SplineCurve\BSplineJson.cs" />
     <Compile Include="SplineCurve\BSplineParam.cs" />
     <Compile Include="SplineCurve\NurbsLine.cs" />
@@ -386,15 +391,14 @@
     <Compile Include="plotter\Figure\CadFigureCircle.cs" />
     <Compile Include="plotter\Figure\CadFigurePolyLines.cs" />
     <Compile Include="plotter\CadLayer.cs" />
-    <Compile Include="plotter\Util\Quaternion.cs" />
+    <Compile Include="plotter\Math\Quaternion.cs" />
     <Compile Include="plotter\Controller\Gridding.cs" />
     <Compile Include="plotter\searcher\SegSearcher.cs" />
-    <Compile Include="plotter\Util\UMatrix4.cs" />
-    <Compile Include="plotter\Util\CadMath.cs" />
+    <Compile Include="plotter\Math\UMatrix4.cs" />
+    <Compile Include="plotter\Math\CadMath.cs" />
     <Compile Include="plotter\HID\CadMouse.cs" />
     <Compile Include="plotter\CadObjectDB.cs" />
     <Compile Include="plotter\undo\CadOpe.cs" />
-    <Compile Include="plotter\CadSelection.cs" />
     <Compile Include="plotter\Util\CadUtil.cs" />
     <Compile Include="plotter\DrawContext\DrawContext.cs" />
     <Compile Include="plotter\undo\HistoryManager.cs" />
@@ -444,20 +448,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ResDict\Images\invisible.png" />
-    <Resource Include="ResDict\Images\locked.png" />
-    <Resource Include="ResDict\Images\unlocked.png" />
-    <Resource Include="ResDict\Images\visible.png" />
     <Resource Include="Resources\BaseScript.py" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="ResDict\Images\xy.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="ResDict\Images\xz.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="ResDict\Images\zy.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -477,19 +468,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ResDict\Images\SnapToLine.png" />
-    <Resource Include="ResDict\Images\SnapToPoint.png" />
-    <Resource Include="ResDict\Images\SnapToSeg.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="ftgl\ftgl_x64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Resource Include="ResDict\Images\filter.png" />
+    <Resource Include="ResDict\Images\triangle2.png" />
     <Resource Include="Resources\null.cur" />
     <Resource Include="Resources\dot.cur" />
     <Resource Include="Resources\mini_cross.cur" />
-    <Resource Include="ResDict\Images\compass_s.png" />
     <Resource Include="ResDict\Images\script_icon.png" />
   </ItemGroup>
   <ItemGroup>

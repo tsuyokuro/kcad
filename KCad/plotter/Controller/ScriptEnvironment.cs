@@ -74,39 +74,10 @@ namespace Plotter.Controller
             }
         }
 
-        public dynamic ExecScript(string fname)
-        {
-            try
-            {
-                Assembly myAssembly = Assembly.GetEntryAssembly();
-
-                string str = "";
-
-                string path = myAssembly.Location;
-
-                path = Path.GetDirectoryName(path) + @"\script\" + fname;
-
-
-                StreamReader sr = new StreamReader(
-                        path, Encoding.GetEncoding("Shift_JIS"));
-
-                str = sr.ReadToEnd();
-
-                sr.Close();
-
-                return Engine.Execute(str, Scope);
-            }
-            catch (Exception e)
-            {
-                ItConsole.println("error: " + e.Message);
-                return null;
-            }
-        }
-
         public void ExecuteCommandSync(string s)
         {
             s = s.Trim();
-            ItConsole.println("> " + s);
+            ItConsole.println(AnsiEsc.White + s);
 
             if (s.StartsWith("@"))
             {
@@ -129,7 +100,7 @@ namespace Plotter.Controller
         public async void ExecuteCommandAsync(string s)
         {
             s = s.Trim();
-            ItConsole.println("> " + s);
+            ItConsole.println(s);
 
             if (s.StartsWith("@"))
             {
@@ -160,20 +131,24 @@ namespace Plotter.Controller
 
         public Exception RunScript(string s)
         {
+            mScriptFunctions.StartSession();
+
             try
             {
                 dynamic ret = Engine.Execute(s, Scope);
 
                 if (ret != null)
                 {
-                    ItConsole.println(AnsiEsc.Blue + ret.ToString());
+                    ItConsole.println(AnsiEsc.BGreen + ret.ToString());
                 }
             }
             catch (Exception e)
             {
+                mScriptFunctions.EndSession();
                 return e;
             }
 
+            mScriptFunctions.EndSession();
             return null;
         }
 

@@ -42,71 +42,37 @@ namespace KCad
         #region Properties
         public Brush Background
         {
-            get
-            {
-                return mBackground;
-            }
-            set
-            {
-                mBackground = value;
-            }
+            get => mBackground;
+            set => mBackground = value;
         }
 
         public Brush Foreground
         {
-            get
-            {
-                return mForeground;
-            }
-            set
-            {
-                mForeground = value;
-            }
+            get => mForeground;
+            set => mForeground = value;
         }
 
         public Brush SelectedBackground
         {
-            get
-            {
-                return mSelectedBackground;
-            }
-            set
-            {
-                mSelectedBackground = value;
-            }
+            get => mSelectedBackground;
+            set => mSelectedBackground = value;
         }
 
         public Brush SelectedForeground
         {
-            get
-            {
-                return mSelectedForeground;
-            }
-            set
-            {
-                mSelectedForeground = value;
-            }
+            get => mSelectedForeground;
+            set => mSelectedForeground = value;
         }
 
         public double TextSize
         {
-            get
-            {
-                return mTextSize;
-            }
-
-            set
-            {
-                mTextSize = value;
-            }
+            get => mTextSize;
+            set => mTextSize = value;
         }
 
         public double TextLeftMargin
         {
-            get
-            {
-                return mTextLeftMargin;
-            }
+            get => mTextLeftMargin;
             set
             {
                 mTextLeftMargin = value;
@@ -116,15 +82,8 @@ namespace KCad
 
         public double LineHeight
         {
-            get
-            {
-                return mLineHeight;
-            }
-
-            set
-            {
-                mLineHeight = value;
-            }
+            get => mLineHeight;
+            set => mLineHeight = value;
         }
 
         public int MaxLine
@@ -139,10 +98,7 @@ namespace KCad
                 }
             }
 
-            get
-            {
-                return mMaxLine;
-            }
+            get => mMaxLine;
         }
         #endregion
 

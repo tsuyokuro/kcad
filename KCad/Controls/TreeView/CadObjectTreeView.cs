@@ -358,7 +358,6 @@ namespace KCad
                     bbrush = bbrush ?? mBackground;
                 }
 
-                ft = GetText(item.Text, fbrush);
                 dc.DrawRectangle(bbrush, null, rect);
 
                 if (item.Children != null)
@@ -390,6 +389,9 @@ namespace KCad
                     }
                 }
 
+                tp.X += 2;
+
+                ft = GetText(item.Text, fbrush);
                 dc.DrawText(ft, tp);
 
                 p.Y += mItemHeight;
@@ -421,13 +423,13 @@ namespace KCad
             return formattedText;
         }
 
-        protected FormattedText GetText(string s, Brush brush, Typeface typeFace)
+        protected FormattedText GetText(string s, Brush brush, Typeface typeFace, double size)
         {
             FormattedText formattedText = new FormattedText(s,
                                                       System.Globalization.CultureInfo.CurrentCulture,
                                                       System.Windows.FlowDirection.LeftToRight,
                                                       typeFace,
-                                                      mTextSize,
+                                                      size,
                                                       brush,
                                                       VisualTreeHelper.GetDpi(this).PixelsPerDip);
             return formattedText;
@@ -435,8 +437,8 @@ namespace KCad
 
         protected void CreateParts()
         {
-            mExpand = GetText("4", mForeground, mPartsTypeface);
-            mContract = GetText("6", mForeground, mPartsTypeface);
+            mExpand = GetText("4", mForeground, mPartsTypeface, mTextSize + 2);
+            mContract = GetText("6", mForeground, mPartsTypeface, mTextSize + 2);
         }
 
         public void AttachRoot(CadObjTreeItem root)

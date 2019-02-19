@@ -585,7 +585,14 @@ namespace Plotter.Controller
 
             else if (cmd == "@dump")
             {
-                Controller.DB.dump();
+                if (ss[1] == "db")
+                {
+                    Controller.DB.dump();
+                }
+                else if (ss[1] == "dc")
+                {
+                    Controller.CurrentDC.dump();
+                }
             }
 
             else if (cmd == "@clearTemp")

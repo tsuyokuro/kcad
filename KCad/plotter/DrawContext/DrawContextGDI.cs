@@ -1,8 +1,8 @@
 ﻿using OpenTK;
 using System.Drawing;
-using System.Drawing.Imaging;
 using CadDataTypes;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace Plotter
 {
@@ -17,6 +17,38 @@ namespace Plotter
         {
             protected set => mGdiGraphics = value;
             get => mGdiGraphics;
+        }
+
+        private SmoothingMode mSmoothingMode = SmoothingMode.HighSpeed;
+
+        public SmoothingMode SmoothingMode
+        {
+            set
+            {
+                mSmoothingMode = value;
+                if (mGdiGraphics != null)
+                {
+                    mGdiGraphics.SmoothingMode = mSmoothingMode;
+                }
+            }
+
+            get => mSmoothingMode;
+        }
+
+        private PixelOffsetMode mPixelOffsetMode = PixelOffsetMode.HighSpeed;
+
+        public PixelOffsetMode PixelOffsetMode
+        {
+            set
+            {
+                mPixelOffsetMode = value;
+                if (mGdiGraphics != null)
+                {
+                    mGdiGraphics.PixelOffsetMode = mPixelOffsetMode;
+                }
+            }
+
+            get => mPixelOffsetMode;
         }
 
         public DrawContextGDI()
@@ -38,10 +70,13 @@ namespace Plotter
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
-            mProjectionMatrix = UMatrix4.Unit;
-            mProjectionMatrixInv = UMatrix4.Unit;
+            CalcProjectionMatrix(ProjectionType.Orthographic);
+            CalcProjectionZW();
 
             mDrawing = new DrawingGDI(this);
+
+            CalcProjectionMatrix(ProjectionType.Orthographic);
+            CalcProjectionZW();
         }
 
         public override void SetViewSize(double w, double h)
@@ -62,6 +97,9 @@ namespace Plotter
                                ViewCtrl.DisplayRectangle);
 
             mGdiGraphics = Buffer.Graphics;
+
+            mGdiGraphics.SmoothingMode = mSmoothingMode;
+            mGdiGraphics.PixelOffsetMode = mPixelOffsetMode;
         }
 
         private void DisposeGraphics()
@@ -90,37 +128,41 @@ namespace Plotter
         {
             pt *= WorldScale;
 
-            Vector4d ptv = (Vector4d)pt;
+            Vector4d wv = (Vector4d)pt;
 
-            ptv.W = 1.0f;
+            wv.W = 1.0f;
 
-            ptv = ptv * mViewMatrix;
-            ptv = ptv * mProjectionMatrix;
+            Vector4d sv = wv * mViewMatrix;
+            Vector4d pv = sv * mProjectionMatrix;
 
-            ptv.X /= ptv.W;
-            ptv.Y /= ptv.W;
-            ptv.Z /= ptv.W;
+            Vector4d dv;
 
-            CadVector p = default(CadVector);
+            dv.X = pv.X / pv.W;
+            dv.Y = pv.Y / pv.W;
+            dv.Z = pv.Z / pv.W;
+            dv.W = pv.W;
 
-            p.x = ptv.X * (mUnitPerMilli * DeviceScaleX);
-            p.y = ptv.Y * (mUnitPerMilli * DeviceScaleY);
-            //p.z = ptv.Z * UnitPerMilli;
-            p.z = 0;
+            dv.X = dv.X * (mUnitPerMilli * DeviceScaleX);
+            dv.Y = dv.Y * (mUnitPerMilli * DeviceScaleY);
+            dv.Z = 0;
 
-            return p;
+            return CadVector.Create(dv);
         }
 
         public override CadVector DevVectorToWorldVector(CadVector pt)
         {
-            Vector4d wv = default(Vector4d);
-            wv.X = pt.x / (mUnitPerMilli * DeviceScaleX);
-            wv.Y = pt.y / (mUnitPerMilli * DeviceScaleY);
-            //wv.Z = pt.z / UnitPerMilli;
-            wv.Z = pt.z;
+            pt.x = pt.x / (mUnitPerMilli * DeviceScaleX);
+            pt.y = pt.y / (mUnitPerMilli * DeviceScaleY);
+
+            Vector4d wv;
+
+            wv.W = mProjectionW;
+            wv.Z = mProjectionZ;
+
+            wv.X = pt.x * wv.W;
+            wv.Y = pt.y * wv.W;
 
             wv = wv * mProjectionMatrixInv;
-
             wv = wv * mViewMatrixInv;
 
             wv /= WorldScale;

@@ -24,7 +24,7 @@ namespace Plotter
 
         public bool LightingEnable = true;
 
-        public enum ProjectionType
+        public enum ViewingAngleType
         {
             TELESCOPE,
             STANDERD,
@@ -50,10 +50,10 @@ namespace Plotter
 
             mDrawing = new DrawingGL(this);
 
-            InitCamera(ProjectionType.STANDERD);
+            InitCamera(ViewingAngleType.STANDERD);
 
-            mViewMatrix.GLMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
-            mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
+            CalcViewMatrix();
+            CalcViewDir();
 
             /*
             LightPosition = new Vector4(150f, 150f, 150f, 0.0f);
@@ -71,76 +71,42 @@ namespace Plotter
             MaterialDiffuse = new Color4(0.7f, 0.7f, 0.7f, 1.0f);
             MaterialSpecular = new Color4(0.0f, 0.0f, 0.0f, 1.0f);
             MaterialShininess = new Color4(0.1f, 0.1f, 0.1f, 1.0f);
-
-            RecalcViewDirFromCameraDirection();
         }
 
-        public void InitCamera(ProjectionType type)
+        public void InitCamera(ViewingAngleType type)
         {
-            double a = 1.0;
+            double ez = 250;
+            double near = 0.1;
+            double far = 2000;
 
-            double ez = 1000.0;
-            double near = 1.0;
-            double far = 15000.0;
+            mLookAt = Vector3d.Zero;
+            mUpVector = Vector3d.UnitY;
 
+            mProjectionNear = near;
+            mProjectionFar = far;
 
-            // FovY 視野角を指定
-            // 視野角に合わせて視点、視錐台の近遠を調整
+            mEye = Vector3d.Zero;
 
+            // FovY 画角を指定
+            // 初期カメラ位置を調整
             switch (type)
             {
-                case ProjectionType.TELESCOPE:
+                case ViewingAngleType.TELESCOPE:
                     // 望遠
-                    a = 2.0;
-
-                    mEye = Vector3d.Zero;
-                    mEye.X = 0.0;
-                    mEye.Y = 0.0;
-                    mEye.Z = ez / a;
-
+                    mEye.Z = ez;
                     mFovY = Math.PI / 4;
-
-                    mProjectionNear = near / a;
-                    mProjectionFar = far / a;
-
-                    mLookAt = Vector3d.Zero;
-                    mUpVector = Vector3d.UnitY;
-
                     break;
-                case ProjectionType.STANDERD:
-                    a = 4.0;
 
-                    mEye = Vector3d.Zero;
-                    mEye.X = 0.0;
-                    mEye.Y = 0.0;
-                    mEye.Z = ez / a;
-
+                case ViewingAngleType.STANDERD:
+                    // 標準
+                    mEye.Z = ez;
                     mFovY = Math.PI / 3;
-
-                    mProjectionNear = near / a;
-                    mProjectionFar = far / a;
-
-                    mLookAt = Vector3d.Zero;
-                    mUpVector = Vector3d.UnitY;
-
                     break;
 
-                case ProjectionType.WIDE_ANGLE:
-                    a = 4;
-
-                    mEye = Vector3d.Zero;
-                    mEye.X = 0.0;
-                    mEye.Y = 0.0;
-                    mEye.Z = ez / a;
-
+                case ViewingAngleType.WIDE_ANGLE:
+                    // 広角
+                    mEye.Z = ez * 0.75;
                     mFovY = Math.PI / 2;
-
-                    mProjectionNear = near / a;
-                    mProjectionFar = far / a;
-
-                    mLookAt = Vector3d.Zero;
-                    mUpVector = Vector3d.UnitY;
-
                     break;
             }
         }
@@ -201,7 +167,6 @@ namespace Plotter
         {
             pt *= WorldScale;
 
-            // 透視変換用にWが必要なので、Vector4に変換
             Vector4d wv = (Vector4d)pt;
 
             wv.W = 1.0f;
@@ -228,15 +193,10 @@ namespace Plotter
             pt.x = pt.x / DeviceScaleX;
             pt.y = pt.y / DeviceScaleY;
 
-            Vector3d epv = pt.vector - mEye;
-
             Vector4d wv;
 
-            wv.W = epv.Length;
-
-            // mProjectionMatrixInvに掛けて wv.W=1.0 となる z を求める
-            //wv.Z = (ProjectionMatrix.M33 * (-wv.W)) + (ProjectionMatrix.M43);
-            wv.Z = (1.0 - (wv.W * mProjectionMatrixInv.M44)) / mProjectionMatrixInv.M34;
+            wv.W = mProjectionW;
+            wv.Z = mProjectionZ;
 
             wv.X = pt.x * wv.W;
             wv.Y = pt.y * wv.W;
@@ -290,38 +250,15 @@ namespace Plotter
 
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 
-            //double aspect = mViewWidth / mViewHeight;
-
-            //mProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
-            //                                FovY,
-            //                                aspect,
-            //                                ProjectionNear,
-            //                                ProjectionFar
-            //                                );
-            //mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
-
-            RecalcProjectionMatrix();
+            CalcProjectionMatrix(ProjectionType.Perspective);
+            CalcProjectionZW();
         }
 
-        private void RecalcProjectionMatrix()
-        {
-            double aspect = mViewWidth / mViewHeight;
-
-            mProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
-                                            mFovY,
-                                            aspect,
-                                            mProjectionNear,
-                                            mProjectionFar
-                                            );
-
-            mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
-        }
-
-        private void RecalcViewTransMatrix()
-        {
-            mViewMatrix.GLMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
-            mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
-        }
+        //private void RecalcViewTransMatrix()
+        //{
+        //    mViewMatrix.GLMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
+        //    mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
+        //}
 
         public void RotateEyePoint(Vector2 prev, Vector2 current)
         {
@@ -374,9 +311,9 @@ namespace Plotter
                 mUpVector = qp.ToVector3d();
             }
 
-            RecalcViewTransMatrix();
-
-            RecalcViewDirFromCameraDirection();
+            CalcViewMatrix();
+            CalcViewDir();
+            CalcProjectionZW();
         }
 
         public void MoveForwardEyePoint(double d, bool withLookAt = false)
@@ -404,9 +341,10 @@ namespace Plotter
                 mEye += dv;
             }
 
-            RecalcViewTransMatrix();
-
-            RecalcProjectionMatrix();
+            CalcViewMatrix();
+            CalcProjectionMatrix(ProjectionType.Perspective);
+            CalcViewDir();
+            CalcProjectionZW();
         }
 
         public override void Dispose()
