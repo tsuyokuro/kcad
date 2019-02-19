@@ -207,10 +207,10 @@
     <Compile Include="EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="plotterViewModel\CursorPosViewModel.cs" />
-    <Compile Include="plotterViewModel\MoveKeyHandler.cs" />
-    <Compile Include="plotterViewModel\PlotterViewModel_serialize.cs" />
-    <Compile Include="plotterView\ContextMenuEx.cs">
+    <Compile Include="ViewModel\CursorPosViewModel.cs" />
+    <Compile Include="ViewModel\MoveKeyHandler.cs" />
+    <Compile Include="ViewModel\PlotterViewModel_serialize.cs" />
+    <Compile Include="MainView\ContextMenuEx.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="plotter\Controller\ContextMenuInfo.cs" />
@@ -363,14 +363,14 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="plotterViewModel\EnumBoolConverter.cs" />
-    <Compile Include="plotterViewModel\LayerHolder.cs" />
-    <Compile Include="plotterViewModel\PlotterViewModel.cs" />
-    <Compile Include="plotterView\IPlotterView.cs" />
-    <Compile Include="plotterView\PlotterView.cs">
+    <Compile Include="ViewModel\EnumBoolConverter.cs" />
+    <Compile Include="ViewModel\LayerHolder.cs" />
+    <Compile Include="ViewModel\PlotterViewModel.cs" />
+    <Compile Include="MainView\IPlotterView.cs" />
+    <Compile Include="MainView\PlotterView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="plotterView\PlotterViewGL.cs">
+    <Compile Include="MainView\PlotterViewGL.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="plotter\Assembler\TriangleSplitter.cs" />
