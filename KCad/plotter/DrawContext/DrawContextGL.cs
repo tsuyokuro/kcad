@@ -142,10 +142,10 @@ namespace Plotter
             GL.LoadIdentity();
 
             GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref mViewMatrix.GLMatrix);
+            GL.LoadMatrix(ref mViewMatrix.Matrix);
 
             GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref mProjectionMatrix.GLMatrix);
+            GL.LoadMatrix(ref mProjectionMatrix.Matrix);
 
             SetupLight();
         }
@@ -253,12 +253,6 @@ namespace Plotter
             CalcProjectionMatrix(ProjectionType.Perspective);
             CalcProjectionZW();
         }
-
-        //private void RecalcViewTransMatrix()
-        //{
-        //    mViewMatrix.GLMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
-        //    mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
-        //}
 
         public void RotateEyePoint(Vector2 prev, Vector2 current)
         {

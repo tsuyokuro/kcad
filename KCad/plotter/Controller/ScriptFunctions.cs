@@ -1208,17 +1208,9 @@ namespace Plotter.Controller
             fig.SetPointAt(idx, p);
         }
 
-        public CadFigure CreatePolyLines(IList<CadVector> vlist)
+        public CadFigure CreatePolyLines()
         {
             CadFigurePolyLines fig = (CadFigurePolyLines)Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
-
-            if (vlist != null)
-            {
-                VectorList vl = new VectorList(vlist.Count);
-                vl.AddRange(vlist);
-                fig.AddPoints(vl);
-            }
-
             return fig;
         }
 
