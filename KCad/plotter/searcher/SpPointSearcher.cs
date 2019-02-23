@@ -6,33 +6,22 @@ namespace Plotter
 {
     public class SpPointSearcher
     {
-        enum Types
+        public class Result
         {
-            NONE,
-            POINT,
-            CENTER_POINT,
-            CROSS_POINT,
-        }
-
-        Types Type = Types.NONE;
-
-        struct PointItem
-        {
-            public CadLayer Layer;
-            public CadFigure Fig;
-            public int PointIndex;
-            public double Distance;
+            public double Dist = double.MaxValue;
             public CadVector ScrPoint;
+            public CadVector WoldPoint;
+            public CadFigure Fig = null;
+
+            public Result(CadVector sp, CadVector wp, double dist)
+            {
+                ScrPoint = sp;
+                WoldPoint = wp;
+                Dist = dist;
+            }
         }
 
-        struct CenterItem
-        {
-            public CadLayer Layer;
-            public CadFigure Fig;
-            public int SegIndex;
-            public double Distance;
-            public CadVector ScrPoint;
-        }
+        List<Result> ResultList = new List<Result>();
 
         struct SegmentItem
         {
@@ -42,41 +31,28 @@ namespace Plotter
             public CadSegment ScrSegment;
         }
 
-        struct CrossItem
-        {
-            public SegmentItem Seg0;
-            public SegmentItem Seg1;
-            public CadVector ScrPoint;
-            public double Distance;
-        }
-
-
         private PlotterController Controller;
 
         private DrawContext DC;
 
-        PointItem Point = default(PointItem);
-
-        CenterItem Center = default(CenterItem);
-
-        CrossItem Cross = default(CrossItem);
-
         List<SegmentItem> SegList = new List<SegmentItem>();
-
-        double MinDist;
 
         public CadVector TargetPoint = CadVector.InvalidValue;
 
-        public double Range = 64;
+        public double Range = 128;
 
-        public CadVector Search(PlotterController controller, CadVector p)
+        public SpPointSearcher(PlotterController controller)
         {
             Controller = controller;
             DC = Controller.CurrentDC;
+        }
 
+        public List<Result> Search(CadVector p, double range)
+        {
             TargetPoint = p;
+            Range = range;
 
-            MinDist = CadConst.MaxValue;
+            ResultList.Clear();
 
             SegList.Clear();
 
@@ -86,20 +62,14 @@ namespace Plotter
 
             CheckCross();
 
-            if (Type == Types.POINT)
+            ResultList.Sort((a, b) =>
             {
-                return Point.ScrPoint;
-            }
-            else if (Type == Types.CENTER_POINT)
-            {
-                return Center.ScrPoint;
-            }
-            else if (Type == Types.CROSS_POINT)
-            {
-                return Cross.ScrPoint;
-            }
+                return (int)(a.Dist * 1000 - b.Dist * 1000);
+            });
 
-            return CadVector.InvalidValue;
+            DOut.pl($"ResultList.Count:{ResultList.Count}");
+
+            return ResultList;
         }
 
         void CheckZeroPoint()
@@ -115,17 +85,8 @@ namespace Plotter
                 return;
             }
 
-            if (dist < MinDist)
-            {
-                Point.Layer = null;
-                Point.Fig = null;
-                Point.PointIndex = 0;
-                Point.Distance = dist;
-                Point.ScrPoint = p;
-
-                Type = Types.POINT;
-                MinDist = dist;
-            }
+            Result res = new Result(p, CadVector.Zero, dist);
+            ResultList.Add(res);
         }
 
         void CheckFig(CadLayer layer, CadFigure fig)
@@ -135,10 +96,10 @@ namespace Plotter
             {
                 CadVector cp = fig.PointList[i];
 
-                if (cp.Selected)
-                {
-                    continue;
-                }
+                //if (cp.Selected)
+                //{
+                //    continue;
+                //}
 
                 CadVector p = DC.WorldPointToDevPoint(cp);
 
@@ -151,17 +112,9 @@ namespace Plotter
                     continue;
                 }
 
-                if (dist < MinDist)
-                {
-                    Point.Layer = layer;
-                    Point.Fig = fig;
-                    Point.PointIndex = i;
-                    Point.Distance = dist;
-                    Point.ScrPoint = p;
-
-                    Type = Types.POINT;
-                    MinDist = dist;
-                }
+                Result res = new Result(p, cp, dist);
+                res.Fig = fig;
+                ResultList.Add(res);
             }
 
             // 範囲内の線分リスト作成
@@ -172,31 +125,27 @@ namespace Plotter
             {
                 CadSegment seg = fig.GetSegmentAt(i);
 
-                if (seg.P0.Selected || seg.P1.Selected)
-                {
-                    continue;
-                }
+                //if (seg.P0.Selected || seg.P1.Selected)
+                //{
+                //    continue;
+                //}
 
                 //CadVector cpc = (seg.P1 - seg.P0) / 2 + seg.P0;
 
+                CadVector pw = (seg.P1 - seg.P0) / 2 + seg.P0;
+                CadVector ps = DC.WorldPointToDevPoint(pw);
+
+                double dist = (ps - TargetPoint).Norm2D();
+
+                if (dist <= Range)
+                {
+                    Result res = new Result(ps, pw, dist);
+                    res.Fig = fig;
+                    ResultList.Add(res);
+                }
+
                 CadVector p0 = DC.WorldPointToDevPoint(seg.P0);
                 CadVector p1 = DC.WorldPointToDevPoint(seg.P1);
-
-                CadVector pc = (p1 - p0) / 2 + p0;
-
-                double dist = (pc - TargetPoint).Norm2D();
-
-                if (dist < Range && dist < MinDist)
-                {
-                    Center.Layer = layer;
-                    Center.Fig = fig;
-                    Center.SegIndex = i;
-                    Center.Distance = dist;
-                    Center.ScrPoint = pc;
-
-                    Type = Types.CENTER_POINT;
-                    MinDist = dist;
-                }
 
                 double d = CadUtil.DistancePointToSeg(p0, p1, TargetPoint);
 
@@ -249,16 +198,8 @@ namespace Plotter
                         continue;
                     }
 
-                    if (dist < MinDist)
-                    {
-                        Cross.Distance = dist;
-                        Cross.Seg0 = seg0;
-                        Cross.Seg1 = seg1;
-                        Cross.ScrPoint = cv;
-
-                        Type = Types.CROSS_POINT;
-                        MinDist = dist;
-                    }
+                    Result res = new Result(cv, CadVector.InvalidValue, dist);
+                    ResultList.Add(res);
                 }
             }
         }

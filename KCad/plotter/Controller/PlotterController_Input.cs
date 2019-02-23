@@ -22,6 +22,8 @@ namespace Plotter.Controller
 
         private SegSearcher mSegSearcher = new SegSearcher();
 
+        private ItemCursor<SpPointSearcher.Result> mSpPointList = null;
+
         private CadRulerSet RulerSet = new CadRulerSet();
 
 
@@ -85,6 +87,10 @@ namespace Plotter.Controller
             {
                 mCursorLocked = value;
                 Observer.CursorLocked(mCursorLocked);
+                if (!mCursorLocked)
+                {
+                    mSpPointList = null;
+                }
             }
 
             get => mCursorLocked;
@@ -536,6 +542,7 @@ namespace Plotter.Controller
         private void MButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
             StoreViewOrg = dc.ViewOrg;
+            CursorLocked = false;
         }
 
         private void MButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
@@ -564,6 +571,8 @@ namespace Plotter.Controller
         {
             if (CadKeyboard.IsCtrlKeyDown())
             {
+                CursorLocked = false;
+
                 double f = 1.0;
 
                 if (delta > 0)
@@ -957,7 +966,10 @@ namespace Plotter.Controller
             CrossCursor.Pos = pixp;
             SnapPoint = cp;
 
-            SnapCursor(dc);
+            if (!CursorLocked)
+            {
+                SnapCursor(dc);
+            }
 
             if (State == States.DRAGING_POINTS)
             {
@@ -1072,15 +1084,25 @@ namespace Plotter.Controller
             MeasureFigureCreator.AddPointInCreating(dc, p);
         }
 
-        public void MoveCursorNearestPoint(DrawContext dc)
+        public void MoveCursorToNearPoint(DrawContext dc)
         {
-            SpPointSearcher sps = new SpPointSearcher();
-            CadVector sv = sps.Search(this, CrossCursor.Pos);
-
-            if (sv.Invalid)
+            if (mSpPointList == null)
             {
-                return;
+                SpPointSearcher searcher = new SpPointSearcher(this);
+
+                var resList = searcher.Search(CrossCursor.Pos, 64);
+
+                if (resList.Count == 0)
+                {
+                    return;
+                }
+
+                mSpPointList = new ItemCursor<SpPointSearcher.Result>(resList);
             }
+
+            SpPointSearcher.Result res = mSpPointList.LoopNext();
+
+            CadVector sv = res.ScrPoint;
 
             LockCursorScrn(sv);
 

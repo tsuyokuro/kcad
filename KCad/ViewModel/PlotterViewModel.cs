@@ -401,7 +401,7 @@ namespace Plotter
                 { "escape", new KeyAction(Cancel , null)},
                 { "ctrl+p", new KeyAction(InsPoint , null)},
                 //{ "ctrl+oemplus", new KeyAction(SearchNearestPoint , null)},
-                { "f3", new KeyAction(SearchNearestPoint , null)},
+                { "f3", new KeyAction(SearchNearPoint , null)},
                 { "f2", new KeyAction(CursorLock , null)},
                 { "left", new KeyAction(MoveKeyDown, MoveKeyUp)},
                 { "right", new KeyAction(MoveKeyDown, MoveKeyUp)},
@@ -674,9 +674,9 @@ namespace Plotter
             Redraw();
         }
 
-        public void SearchNearestPoint()
+        public void SearchNearPoint()
         {
-            mController.MoveCursorNearestPoint(mPlotterView.DrawContext);
+            mController.MoveCursorToNearPoint(mPlotterView.DrawContext);
             Redraw();
         }
 
