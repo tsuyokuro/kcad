@@ -90,6 +90,11 @@ namespace Plotter.Controller
                 if (!mCursorLocked)
                 {
                     mSpPointList = null;
+                    Observer.ClosePopupMessage();
+                }
+                else
+                {
+                    Observer.OpenPopupMessage("Cursor locked", PlotterObserver.MessageType.INFO);
                 }
             }
 
