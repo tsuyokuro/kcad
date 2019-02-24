@@ -383,8 +383,9 @@ namespace Plotter.Controller
             {
                 x = CrossCursor.Pos.x;
                 y = CrossCursor.Pos.y;
-                CursorLocked = false;
             }
+
+            DOut.pl($"LButtonDown {x}, {y}");
 
             CadVector pixp = CadVector.Create(x, y, 0);
             CadVector cp = dc.DevPointToWorldPoint(pixp);
@@ -411,7 +412,10 @@ namespace Plotter.Controller
                 case States.SELECT:
                     if (SelectNearest(dc, CrossCursor.Pos))
                     {
-                        State = States.START_DRAGING_POINTS;
+                        if (!CursorLocked)
+                        {
+                            State = States.START_DRAGING_POINTS;
+                        }
 
                         OffsetScreen = pixp - CrossCursor.Pos;
 
@@ -422,11 +426,11 @@ namespace Plotter.Controller
                         State = States.RUBBER_BAND_SELECT;
                     }
 
-                    return;
+                    break;
 
                 case States.RUBBER_BAND_SELECT:
 
-                    return;
+                    break;
 
                 case States.START_CREATE:
                     {
@@ -472,30 +476,12 @@ namespace Plotter.Controller
 
             }
 
+            if (CursorLocked)
+            {
+                CursorLocked = false;
+            }
+
             Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
-        }
-
-        private void DebugPrintLastSel()
-        {
-            if (LastSelPoint != null)
-            {
-                MarkPoint mp = LastSelPoint.Value;
-                DOut.pl("LastSelPoint FigID:" + mp.FigureID.ToString() + " Point:" + mp.PointIndex.ToString());
-            }
-            else
-            {
-                DOut.pl("LastSelPoint = null");
-            }
-
-            if (LastSelSegment != null)
-            {
-                MarkSegment ms = LastSelSegment.Value;
-                DOut.pl("LastSelSegment FigID:" + ms.FigureID.ToString() + " PointA:" + ms.PtIndexA.ToString() + " PointB:" + ms.PtIndexB.ToString());
-            }
-            else
-            {
-                DOut.pl("LastSelSegment = null");
-            }
         }
 
         private void PutMeasure()
@@ -790,7 +776,6 @@ namespace Plotter.Controller
             }
         }
 
-
         private void SnapGrid(DrawContext dc, CadVector pixp)
         {
             if (mPointSearcher.IsXYMatch || mSegSearcher.IsMatch)
@@ -934,6 +919,8 @@ namespace Plotter.Controller
                 x = CrossCursor.Pos.x;
                 y = CrossCursor.Pos.y;
             }
+
+            //DOut.pl($"MouseMove {x}, {y}");
 
             CadVector pixp = CadVector.Create(x, y, 0) - OffsetScreen;
             CadVector cp = dc.DevPointToWorldPoint(pixp);
@@ -1107,7 +1094,7 @@ namespace Plotter.Controller
 
             SpPointSearcher.Result res = mSpPointList.LoopNext();
 
-            CadVector sv = res.ScrPoint;
+            CadVector sv = CurrentDC.WorldPointToDevPoint(res.WoldPoint);
 
             LockCursorScrn(sv);
 

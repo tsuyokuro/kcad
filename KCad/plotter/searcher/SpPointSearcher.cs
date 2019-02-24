@@ -9,13 +9,11 @@ namespace Plotter
         public class Result
         {
             public double Dist = double.MaxValue;
-            public CadVector ScrPoint;
             public CadVector WoldPoint;
             public CadFigure Fig = null;
 
-            public Result(CadVector sp, CadVector wp, double dist)
+            public Result(CadVector wp, double dist)
             {
-                ScrPoint = sp;
                 WoldPoint = wp;
                 Dist = dist;
             }
@@ -85,7 +83,7 @@ namespace Plotter
                 return;
             }
 
-            Result res = new Result(p, CadVector.Zero, dist);
+            Result res = new Result(CadVector.Zero, dist);
             ResultList.Add(res);
         }
 
@@ -112,7 +110,7 @@ namespace Plotter
                     continue;
                 }
 
-                Result res = new Result(p, cp, dist);
+                Result res = new Result(cp, dist);
                 res.Fig = fig;
                 ResultList.Add(res);
             }
@@ -139,7 +137,7 @@ namespace Plotter
 
                 if (dist <= Range)
                 {
-                    Result res = new Result(ps, pw, dist);
+                    Result res = new Result(pw, dist);
                     res.Fig = fig;
                     ResultList.Add(res);
                 }
@@ -198,7 +196,7 @@ namespace Plotter
                         continue;
                     }
 
-                    Result res = new Result(cv, CadVector.InvalidValue, dist);
+                    Result res = new Result(DC.DevPointToWorldPoint(cv), dist);
                     ResultList.Add(res);
                 }
             }
