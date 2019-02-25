@@ -190,7 +190,7 @@ namespace Plotter
             if (type == ProjectionType.Orthographic)
             {
                 // Projection volume -1.0 -> 1.0 なので 2.0
-                mProjectionMatrix.GLMatrix = Matrix4d.CreateOrthographic(
+                mProjectionMatrix = Matrix4d.CreateOrthographic(
                                                 2.0, 2.0,
                                                 mProjectionNear,
                                                 mProjectionFar
@@ -199,7 +199,7 @@ namespace Plotter
             else if (type == ProjectionType.Perspective)
             {
                 double aspect = mViewWidth / mViewHeight;
-                mProjectionMatrix.GLMatrix = Matrix4d.CreatePerspectiveFieldOfView(
+                mProjectionMatrix = Matrix4d.CreatePerspectiveFieldOfView(
                                                 mFovY,
                                                 aspect,
                                                 mProjectionNear,
@@ -207,7 +207,7 @@ namespace Plotter
                                                 );
             }
 
-            mProjectionMatrixInv.GLMatrix = Matrix4d.Invert(mProjectionMatrix.GLMatrix);
+            mProjectionMatrixInv = mProjectionMatrix.Invert();
         }
 
         public virtual void CalcProjectionZW()
@@ -224,8 +224,8 @@ namespace Plotter
 
         public virtual void CalcViewMatrix()
         {
-            mViewMatrix.GLMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
-            mViewMatrixInv.GLMatrix = Matrix4d.Invert(mViewMatrix.GLMatrix);
+            mViewMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
+            mViewMatrixInv = mViewMatrix.Invert();
         }
 
         public virtual void CopyCamera(DrawContext dc)

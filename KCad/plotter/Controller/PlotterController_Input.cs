@@ -22,6 +22,8 @@ namespace Plotter.Controller
 
         private SegSearcher mSegSearcher = new SegSearcher();
 
+        private ItemCursor<SpPointSearcher.Result> mSpPointList = null;
+
         private CadRulerSet RulerSet = new CadRulerSet();
 
 
@@ -85,6 +87,15 @@ namespace Plotter.Controller
             {
                 mCursorLocked = value;
                 Observer.CursorLocked(mCursorLocked);
+                if (!mCursorLocked)
+                {
+                    mSpPointList = null;
+                    Observer.ClosePopupMessage();
+                }
+                else
+                {
+                    Observer.OpenPopupMessage("Cursor locked", PlotterObserver.MessageType.INFO);
+                }
             }
 
             get => mCursorLocked;
@@ -372,8 +383,9 @@ namespace Plotter.Controller
             {
                 x = CrossCursor.Pos.x;
                 y = CrossCursor.Pos.y;
-                CursorLocked = false;
             }
+
+            DOut.pl($"LButtonDown {x}, {y}");
 
             CadVector pixp = CadVector.Create(x, y, 0);
             CadVector cp = dc.DevPointToWorldPoint(pixp);
@@ -400,7 +412,10 @@ namespace Plotter.Controller
                 case States.SELECT:
                     if (SelectNearest(dc, CrossCursor.Pos))
                     {
-                        State = States.START_DRAGING_POINTS;
+                        if (!CursorLocked)
+                        {
+                            State = States.START_DRAGING_POINTS;
+                        }
 
                         OffsetScreen = pixp - CrossCursor.Pos;
 
@@ -411,11 +426,11 @@ namespace Plotter.Controller
                         State = States.RUBBER_BAND_SELECT;
                     }
 
-                    return;
+                    break;
 
                 case States.RUBBER_BAND_SELECT:
 
-                    return;
+                    break;
 
                 case States.START_CREATE:
                     {
@@ -461,30 +476,12 @@ namespace Plotter.Controller
 
             }
 
+            if (CursorLocked)
+            {
+                CursorLocked = false;
+            }
+
             Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
-        }
-
-        private void DebugPrintLastSel()
-        {
-            if (LastSelPoint != null)
-            {
-                MarkPoint mp = LastSelPoint.Value;
-                DOut.pl("LastSelPoint FigID:" + mp.FigureID.ToString() + " Point:" + mp.PointIndex.ToString());
-            }
-            else
-            {
-                DOut.pl("LastSelPoint = null");
-            }
-
-            if (LastSelSegment != null)
-            {
-                MarkSegment ms = LastSelSegment.Value;
-                DOut.pl("LastSelSegment FigID:" + ms.FigureID.ToString() + " PointA:" + ms.PtIndexA.ToString() + " PointB:" + ms.PtIndexB.ToString());
-            }
-            else
-            {
-                DOut.pl("LastSelSegment = null");
-            }
         }
 
         private void PutMeasure()
@@ -536,6 +533,7 @@ namespace Plotter.Controller
         private void MButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
             StoreViewOrg = dc.ViewOrg;
+            CursorLocked = false;
         }
 
         private void MButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
@@ -564,6 +562,8 @@ namespace Plotter.Controller
         {
             if (CadKeyboard.IsCtrlKeyDown())
             {
+                CursorLocked = false;
+
                 double f = 1.0;
 
                 if (delta > 0)
@@ -776,7 +776,6 @@ namespace Plotter.Controller
             }
         }
 
-
         private void SnapGrid(DrawContext dc, CadVector pixp)
         {
             if (mPointSearcher.IsXYMatch || mSegSearcher.IsMatch)
@@ -921,6 +920,8 @@ namespace Plotter.Controller
                 y = CrossCursor.Pos.y;
             }
 
+            //DOut.pl($"MouseMove {x}, {y}");
+
             CadVector pixp = CadVector.Create(x, y, 0) - OffsetScreen;
             CadVector cp = dc.DevPointToWorldPoint(pixp);
 
@@ -957,7 +958,10 @@ namespace Plotter.Controller
             CrossCursor.Pos = pixp;
             SnapPoint = cp;
 
-            SnapCursor(dc);
+            if (!CursorLocked)
+            {
+                SnapCursor(dc);
+            }
 
             if (State == States.DRAGING_POINTS)
             {
@@ -1072,15 +1076,25 @@ namespace Plotter.Controller
             MeasureFigureCreator.AddPointInCreating(dc, p);
         }
 
-        public void MoveCursorNearestPoint(DrawContext dc)
+        public void MoveCursorToNearPoint(DrawContext dc)
         {
-            SpPointSearcher sps = new SpPointSearcher();
-            CadVector sv = sps.Search(this, CrossCursor.Pos);
-
-            if (sv.Invalid)
+            if (mSpPointList == null)
             {
-                return;
+                SpPointSearcher searcher = new SpPointSearcher(this);
+
+                var resList = searcher.Search(CrossCursor.Pos, 64);
+
+                if (resList.Count == 0)
+                {
+                    return;
+                }
+
+                mSpPointList = new ItemCursor<SpPointSearcher.Result>(resList);
             }
+
+            SpPointSearcher.Result res = mSpPointList.LoopNext();
+
+            CadVector sv = CurrentDC.WorldPointToDevPoint(res.WoldPoint);
 
             LockCursorScrn(sv);
 

@@ -31,9 +31,7 @@ namespace Plotter.Controller
             }
         }
 
-        public TaskScheduler mMainThreadScheduler;
-
-        public int mMainThreadID = -1;
+        ThreadUtil mThreadUtil;
 
         private ScriptFunctions mScriptFunctions;
 
@@ -41,11 +39,7 @@ namespace Plotter.Controller
         {
             Controller = controller;
 
-
-            mMainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-
-            mMainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
-
+            mThreadUtil = new ThreadUtil();
 
             mScriptFunctions = new ScriptFunctions(this);
 
@@ -189,20 +183,7 @@ namespace Plotter.Controller
 
         public void RunOnMainThread(Action action)
         {
-            if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
-            {
-                action();
-                return;
-            }
-
-            Task task = new Task(() =>
-            {
-                action();
-            }
-            );
-
-            task.Start(mMainThreadScheduler);
-            task.Wait();
+            mThreadUtil.RunOnMainThread(action, true);
         }
     }
 }

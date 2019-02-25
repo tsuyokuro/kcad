@@ -16,8 +16,6 @@ namespace KCad
     {
         public PlotterViewModel ViewModel;
 
-        private bool KeyHandled = false;
-
         private ImageSource[] PopupMessageIcons = new ImageSource[3];
 
         public MainWindow()
@@ -142,6 +140,11 @@ namespace KCad
         public void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
         {
             Application.Current.Dispatcher.Invoke(() => {
+                if (PopupMessage.IsOpen)
+                {
+                    return;
+                }
+
                 PopupMessageIcon.Source = SelectPopupMessageIcon(messageType);
 
                 PopupMessageText.Text = text;

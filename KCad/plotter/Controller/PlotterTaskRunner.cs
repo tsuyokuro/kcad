@@ -11,17 +11,13 @@ namespace Plotter.Controller.TaskRunner
     {
         public PlotterController Controller;
 
-        public TaskScheduler mMainThreadScheduler;
-
-        public int mMainThreadID = -1;
+        private ThreadUtil mThreadUtil;
 
         public PlotterTaskRunner(PlotterController controller)
         {
             Controller = controller;
 
-            mMainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-
-            mMainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            mThreadUtil = new ThreadUtil();
         }
 
 
@@ -50,6 +46,7 @@ namespace Plotter.Controller.TaskRunner
 
                 FlipWithPlane(rootFigList, res.p0, normal);
                 Controller.EndEdit();
+                Controller.Redraw();
             });
         }
 
@@ -132,6 +129,7 @@ namespace Plotter.Controller.TaskRunner
 
             RunOnMainThread(() =>
             {
+                Controller.Redraw();
                 Controller.UpdateTreeView(true);
             });
         }
@@ -183,6 +181,7 @@ namespace Plotter.Controller.TaskRunner
                     CadMath.Deg2Rad(angle));
 
                 Controller.EndEdit();
+                Controller.Redraw();
             });
         }
 
@@ -290,22 +289,9 @@ namespace Plotter.Controller.TaskRunner
             Controller.Observer.ClosePopupMessage();
         }
 
-        public void RunOnMainThread(Action action)
+        private void RunOnMainThread(Action action)
         {
-            if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
-            {
-                action();
-                return;
-            }
-
-            Task task = new Task(() =>
-            {
-                action();
-            }
-            );
-
-            task.Start(mMainThreadScheduler);
-            task.Wait();
+            mThreadUtil.RunOnMainThread(action, true);
         }
     }
 }
