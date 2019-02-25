@@ -208,6 +208,7 @@
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="plotter\searcher\ItemCursor.cs" />
+    <Compile Include="plotter\Util\ThreadUtil.cs" />
     <Compile Include="ViewModel\CursorPosViewModel.cs" />
     <Compile Include="ViewModel\MoveKeyHandler.cs" />
     <Compile Include="ViewModel\PlotterViewModel_serialize.cs" />

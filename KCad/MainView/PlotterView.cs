@@ -23,7 +23,9 @@ namespace Plotter
 
         private DrawContextGDI mDrawContext = null;
 
-        private Cursor PointCursor; 
+        private Cursor PointCursor;
+
+        private ThreadUtil mThreadUtil;
 
         public DrawContext DrawContext
         {
@@ -37,6 +39,8 @@ namespace Plotter
 
         public PlotterView()
         {
+            mThreadUtil = new ThreadUtil();
+
             mDrawContext = new DrawContextGDI(this);
 
             mContextMenu = new ContextMenuEx();
@@ -275,7 +279,7 @@ namespace Plotter
             {
                 Exception exp = null;
 
-                mPlotterView.Invoke(new Action(() =>
+                mPlotterView.mThreadUtil.RunOnMainThread(() =>
                 {
                     try
                     {
@@ -286,7 +290,7 @@ namespace Plotter
                     {
                         exp = ex;
                     }
-                }));
+                }, true);
 
                 if (exp != null)
                 {
@@ -298,7 +302,7 @@ namespace Plotter
             {
                 Exception exp = null;
 
-                mPlotterView.Invoke(new Action(() =>
+                mPlotterView.mThreadUtil.RunOnMainThread(() =>
                 {
                     try
                     {
@@ -310,7 +314,7 @@ namespace Plotter
                         exp = ex;
                     }
 
-                }));
+                }, true);
 
                 if (exp != null)
                 {
