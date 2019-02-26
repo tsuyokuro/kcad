@@ -11,15 +11,10 @@ namespace Plotter.Controller.TaskRunner
     {
         public PlotterController Controller;
 
-        private ThreadUtil mThreadUtil;
-
         public PlotterTaskRunner(PlotterController controller)
         {
             Controller = controller;
-
-            mThreadUtil = new ThreadUtil();
         }
-
 
         public async void FlipWithInteractive(List<CadFigure> rootFigList)
         {
@@ -291,7 +286,7 @@ namespace Plotter.Controller.TaskRunner
 
         private void RunOnMainThread(Action action)
         {
-            mThreadUtil.RunOnMainThread(action, true);
+            ThreadUtil.RunOnMainThread(action, true);
         }
     }
 }

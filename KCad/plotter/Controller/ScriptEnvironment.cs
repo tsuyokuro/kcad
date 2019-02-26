@@ -31,15 +31,11 @@ namespace Plotter.Controller
             }
         }
 
-        ThreadUtil mThreadUtil;
-
         private ScriptFunctions mScriptFunctions;
 
         public ScriptEnvironment(PlotterController controller)
         {
             Controller = controller;
-
-            mThreadUtil = new ThreadUtil();
 
             mScriptFunctions = new ScriptFunctions(this);
 
@@ -183,7 +179,7 @@ namespace Plotter.Controller
 
         public void RunOnMainThread(Action action)
         {
-            mThreadUtil.RunOnMainThread(action, true);
+            ThreadUtil.RunOnMainThread(action, true);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Plotter
 {
     public abstract class DrawContext : IDisposable
     {
-        protected Action<DrawContext> mOnPush;
+        protected Action<DrawContext> mPushDraw;
 
         public enum ProjectionType
         {
@@ -14,10 +14,10 @@ namespace Plotter
             Perspective,
         }
 
-        public Action<DrawContext> OnPush
+        public Action<DrawContext> PushDraw
         {
-            set => mOnPush = value;
-            get => mOnPush;
+            set => mPushDraw = value;
+            get => mPushDraw;
         }
 
         // 画素/Milli
@@ -157,7 +157,7 @@ namespace Plotter
 
         public void Push()
         {
-            mOnPush?.Invoke(this);
+            mPushDraw?.Invoke(this);
         }
 
         public abstract CadVector WorldPointToDevPoint(CadVector pt);

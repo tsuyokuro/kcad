@@ -25,8 +25,6 @@ namespace Plotter
 
         private Cursor PointCursor;
 
-        private ThreadUtil mThreadUtil;
-
         public DrawContext DrawContext
         {
             get => mDrawContext;
@@ -39,8 +37,6 @@ namespace Plotter
 
         public PlotterView()
         {
-            mThreadUtil = new ThreadUtil();
-
             mDrawContext = new DrawContextGDI(this);
 
             mContextMenu = new ContextMenuEx();
@@ -67,7 +63,7 @@ namespace Plotter
 
             mDrawContext.SetupTools(DrawTools.ToolsType.DARK);
 
-            mDrawContext.OnPush = OnPushDraw;
+            mDrawContext.PushDraw = PushDraw;
 
             MouseMove += OnMouseMove;
             MouseDown += OnMouseDown;
@@ -115,7 +111,7 @@ namespace Plotter
             }
         }
 
-        public void OnPushDraw(DrawContext dc)
+        public void PushDraw(DrawContext dc)
         {
             if (dc == mDrawContext)
             {
@@ -155,7 +151,7 @@ namespace Plotter
             msg.What = MyMessageHandler.MOUSE_WHEEL;
             msg.Obj = e;
 
-            mMessageHandler.SendMessage(msg, 2);
+            mMessageHandler.SendMessage(msg, 0);
 #else
             // 直接描画
             mController.Mouse.MouseWheel(mDrawContext, e.X, e.Y, e.Delta);
@@ -174,16 +170,36 @@ namespace Plotter
                 }
             }
 
-            mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
+#if MOUSE_THREAD
+            mMessageHandler.RemoveAll(MyMessageHandler.MOUSE_DOWN);
 
+            MessageHandler.Message msg = mMessageHandler.ObtainMessage();
+
+            msg.What = MyMessageHandler.MOUSE_DOWN;
+            msg.Obj = e;
+
+            mMessageHandler.SendMessage(msg, 0);
+#else
+            mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
             Redraw();
+#endif
         }
 
         private void OnMouseUp(Object sender, MouseEventArgs e)
         {
-            mController.Mouse.MouseUp(mDrawContext, e.Button, e.X, e.Y);
+#if MOUSE_THREAD
+            mMessageHandler.RemoveAll(MyMessageHandler.MOUSE_UP);
 
+            MessageHandler.Message msg = mMessageHandler.ObtainMessage();
+
+            msg.What = MyMessageHandler.MOUSE_UP;
+            msg.Obj = e;
+
+            mMessageHandler.SendMessage(msg, 0);
+#else
+            mController.Mouse.MouseUp(mDrawContext, e.Button, e.X, e.Y);
             Redraw();
+#endif
         }
 
         public void ShowContextMenu(PlotterController sender, MenuInfo menuInfo, int x, int y)
@@ -251,6 +267,8 @@ namespace Plotter
         {
             public const int MOUSE_MOVE = 1;
             public const int MOUSE_WHEEL = 2;
+            public const int MOUSE_DOWN = 3;
+            public const int MOUSE_UP = 4;
 
             private PlotterView mPlotterView;
 
@@ -273,13 +291,24 @@ namespace Plotter
                     MouseEventArgs e = (MouseEventArgs)msg.Obj;
                     handleMouseWheel(e);
                 }
+                else if (msg.What == MOUSE_DOWN)
+                {
+                    MouseEventArgs e = (MouseEventArgs)msg.Obj;
+                    handleMouseDown(e);
+                }
+                else if (msg.What == MOUSE_UP)
+                {
+                    MouseEventArgs e = (MouseEventArgs)msg.Obj;
+                    handleMouseUp(e);
+                }
+
             }
 
             public void handleMouseMove(int x, int y)
             {
                 Exception exp = null;
 
-                mPlotterView.mThreadUtil.RunOnMainThread(() =>
+                ThreadUtil.RunOnMainThread(() =>
                 {
                     try
                     {
@@ -302,11 +331,59 @@ namespace Plotter
             {
                 Exception exp = null;
 
-                mPlotterView.mThreadUtil.RunOnMainThread(() =>
+                ThreadUtil.RunOnMainThread(() =>
                 {
                     try
                     {
                         mPlotterView.mController.Mouse.MouseWheel(mPlotterView.mDrawContext, e.X, e.Y, e.Delta);
+                        mPlotterView.Redraw();
+                    }
+                    catch (Exception ex)
+                    {
+                        exp = ex;
+                    }
+
+                }, true);
+
+                if (exp != null)
+                {
+                    App.ThrowException(exp);
+                }
+            }
+
+            public void handleMouseDown(MouseEventArgs e)
+            {
+                Exception exp = null;
+
+                ThreadUtil.RunOnMainThread(() =>
+                {
+                    try
+                    {
+                        mPlotterView.mController.Mouse.MouseDown(mPlotterView.mDrawContext, e.Button, e.X, e.Y);
+                        mPlotterView.Redraw();
+                    }
+                    catch (Exception ex)
+                    {
+                        exp = ex;
+                    }
+
+                }, true);
+
+                if (exp != null)
+                {
+                    App.ThrowException(exp);
+                }
+            }
+
+            public void handleMouseUp(MouseEventArgs e)
+            {
+                Exception exp = null;
+
+                ThreadUtil.RunOnMainThread(() =>
+                {
+                    try
+                    {
+                        mPlotterView.mController.Mouse.MouseUp(mPlotterView.mDrawContext, e.Button, e.X, e.Y);
                         mPlotterView.Redraw();
                     }
                     catch (Exception ex)

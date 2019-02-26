@@ -15,6 +15,7 @@
 #define USE_CONSOLE
 //#define USE_CONSOL_INPUT
 
+using Plotter;
 using Plotter.Serializer;
 using System;
 using System.Diagnostics;
@@ -145,6 +146,7 @@ namespace KCad
 
             mMainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
+            ThreadUtil.Init();
 
             OpenTK.Toolkit.Init();
 
