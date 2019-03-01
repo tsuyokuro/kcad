@@ -15,13 +15,11 @@
 #define USE_CONSOLE
 //#define USE_CONSOL_INPUT
 
+using Plotter;
 using Plotter.Serializer;
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -143,13 +141,8 @@ namespace KCad
         {
             base.OnStartup(e);
 
-            mMainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-
-
-            OpenTK.Toolkit.Init();
-
 #if USE_CONSOLE
-            NativeMethods.AllocConsole();
+            WinAPI.AllocConsole();
             Console.WriteLine("App OnStartup USE_CONSOLE");
 #endif
 
@@ -157,6 +150,12 @@ namespace KCad
             InputThread = new DebugInputThread();
             InputThread.start();
 #endif
+
+            mMainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+
+            ThreadUtil.Init();
+
+            OpenTK.Toolkit.Init();
 
             SplashWindow = new MySplashWindow();
             SplashWindow.Show();
@@ -183,24 +182,9 @@ namespace KCad
         protected override void OnExit(ExitEventArgs e)
         {
 #if USE_CONSOLE
-            NativeMethods.FreeConsole();
+            WinAPI.FreeConsole();
 #endif
             base.OnExit(e);
         }
     }
-
-#if USE_CONSOLE
-    internal static class NativeMethods
-    {
-        [DllImport("kernel32.dll")]
-        public static extern bool AttachConsole(uint dwProcessId);
-
-        [DllImport("kernel32.dll")]
-        public static extern bool FreeConsole();
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool AllocConsole();
-    }
-#endif
 }

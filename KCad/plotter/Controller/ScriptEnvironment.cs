@@ -31,15 +31,11 @@ namespace Plotter.Controller
             }
         }
 
-        ThreadUtil mThreadUtil;
-
         private ScriptFunctions mScriptFunctions;
 
         public ScriptEnvironment(PlotterController controller)
         {
             Controller = controller;
-
-            mThreadUtil = new ThreadUtil();
 
             mScriptFunctions = new ScriptFunctions(this);
 
@@ -79,12 +75,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            Exception e = RunScript(s);
-
-            if (e != null)
-            {
-                ItConsole.println("error: " + e.Message);
-            }
+            RunScript(s);
 
             Controller.Clear();
             Controller.DrawAll();
@@ -106,44 +97,40 @@ namespace Plotter.Controller
                 return;
             }
 
-            Exception e = null;
-
             await Task.Run( () =>
             {
-                e = RunScript(s);
+                RunScript(s);
             });
-
-            if (e != null)
-            {
-                ItConsole.println("error: " + e.Message);
-            }
 
             Controller.Clear();
             Controller.DrawAll();
             Controller.PushCurrent();
         }
 
-        public Exception RunScript(string s)
+        public dynamic RunScript(string s)
         {
             mScriptFunctions.StartSession();
 
+            dynamic ret = null;
+
             try
             {
-                dynamic ret = Engine.Execute(s, Scope);
+                ret = Engine.Execute(s, Scope);
 
                 if (ret != null)
                 {
-                    ItConsole.println(AnsiEsc.BGreen + ret.ToString());
+                    ItConsole.println(AnsiEsc.BGreen + ret.ToString() + " (" + ret.GetType().Name + ")" );
                 }
             }
             catch (Exception e)
             {
                 mScriptFunctions.EndSession();
-                return e;
+                ItConsole.println(AnsiEsc.BRed + "Error: " + e.Message);
             }
 
             mScriptFunctions.EndSession();
-            return null;
+
+            return ret;
         }
 
         public async void RunScriptAsync(string s, RunCallback callback)
@@ -153,17 +140,10 @@ namespace Plotter.Controller
                 callback.OnStart();
             }
 
-            Exception e = null;
-
             await Task.Run(() =>
             {
-                e = RunScript(s);
+                RunScript(s);
             });
-
-            if (e != null)
-            {
-                ItConsole.println("error: " + e.Message);
-            }
 
             Controller.Clear();
             Controller.DrawAll();
@@ -183,7 +163,17 @@ namespace Plotter.Controller
 
         public void RunOnMainThread(Action action)
         {
-            mThreadUtil.RunOnMainThread(action, true);
+            ThreadUtil.RunOnMainThread(action, true);
+        }
+
+        public void OpenPopupMessage(string text, PlotterObserver.MessageType type)
+        {
+            Controller.Observer.OpenPopupMessage(text, type);
+        }
+
+        public void ClosePopupMessage()
+        {
+            Controller.Observer.ClosePopupMessage();
         }
     }
 }

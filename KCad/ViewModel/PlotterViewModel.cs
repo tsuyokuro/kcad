@@ -945,10 +945,9 @@ namespace Plotter
             PlotterViewGL1.DrawContext.WorldScale = scale;
         }
 
-        public void TextCommand(string s)
+        public void TextLine(string s)
         {
-            //mController.ScriptEnv.ExecuteCommandSync(s);
-            mController.ScriptEnv.ExecuteCommandAsync(s);
+            mController.TextLine(s);
         }
 
         private bool ChangeFigureType(CadFigure.Types newType)

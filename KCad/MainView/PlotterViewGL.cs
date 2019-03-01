@@ -59,7 +59,7 @@ namespace Plotter
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
 
-            mDrawContext.OnPush = OnPushDraw;
+            mDrawContext.PushDraw = OnPushDraw;
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)

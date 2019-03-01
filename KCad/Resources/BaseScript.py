@@ -100,7 +100,7 @@ def selFig(id):
 def scale(id, org, ratio):
     SE.Scale(id, org, ratio)
 
-#[AC] rotate(currentFigID(), lastDown(), unitVZ, 45)
+#[AC] rotate(currentFigID(), inputPoint(), viewDir(), 45)
 def rotate(id, p0, v, t):
     SE.Rotate(id, p0, v, t)
 
@@ -228,6 +228,9 @@ def inputUnitV():
 def updateTV():
     SE.UpdateTV()
 
+#[AC] viewDir()
+def viewDir():
+	return SE.ViewDir()
 
 #[AC] test()
 def test():

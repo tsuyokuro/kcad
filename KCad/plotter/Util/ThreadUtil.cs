@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
-    class ThreadUtil
+    public static class ThreadUtil
     {
-        public TaskScheduler MainThreadScheduler;
+        public static TaskScheduler MainThreadScheduler = null;
 
-        public int MainThreadID;
+        public static int MainThreadID = 0;
 
-        public ThreadUtil()
+        public static void Init()
         {
             MainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             MainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
         }
 
-        public void RunOnMainThread(Action action, bool wait)
+        public static void RunOnMainThread(Action action, bool wait)
         {
             if (MainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
             {

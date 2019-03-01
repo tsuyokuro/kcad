@@ -228,7 +228,7 @@ namespace KCad
 
             if (s.Length > 0)
             {
-                ViewModel.TextCommand(s);
+                ViewModel.TextLine(s);
                 textCommand.History.Add(s);
                 textCommand.Focus();
             }
@@ -242,7 +242,7 @@ namespace KCad
 
             if (s.Length > 0)
             {
-                ViewModel.TextCommand(s);
+                ViewModel.TextLine(s);
             }
         }
         #endregion

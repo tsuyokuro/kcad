@@ -905,5 +905,11 @@ namespace Plotter.Controller
                 fig.MoveSelectedPointsFromStored(CurrentDC, d);
             }
         }
+
+        public void TextLine(string s)
+        {
+            //ScriptEnv.ExecuteCommandSync(s);
+            ScriptEnv.ExecuteCommandAsync(s);
+        }
     }
 }

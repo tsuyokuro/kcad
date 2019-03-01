@@ -22,7 +22,7 @@ namespace Plotter.Controller
 
         private SegSearcher mSegSearcher = new SegSearcher();
 
-        private ItemCursor<SpPointSearcher.Result> mSpPointList = null;
+        private ItemCursor<NearPointSearcher.Result> mSpPointList = null;
 
         private CadRulerSet RulerSet = new CadRulerSet();
 
@@ -1080,7 +1080,7 @@ namespace Plotter.Controller
         {
             if (mSpPointList == null)
             {
-                SpPointSearcher searcher = new SpPointSearcher(this);
+                NearPointSearcher searcher = new NearPointSearcher(this);
 
                 var resList = searcher.Search(CrossCursor.Pos, 64);
 
@@ -1089,10 +1089,12 @@ namespace Plotter.Controller
                     return;
                 }
 
-                mSpPointList = new ItemCursor<SpPointSearcher.Result>(resList);
+                mSpPointList = new ItemCursor<NearPointSearcher.Result>(resList);
             }
 
-            SpPointSearcher.Result res = mSpPointList.LoopNext();
+            NearPointSearcher.Result res = mSpPointList.LoopNext();
+
+            ItConsole.println(res.ToInfoString());
 
             CadVector sv = CurrentDC.WorldPointToDevPoint(res.WoldPoint);
 
@@ -1124,7 +1126,7 @@ namespace Plotter.Controller
             return SnapPoint;
         }
 
-        public void SetCursorPos(CadVector v)
+        public void SetCursorWoldPos(CadVector v)
         {
             SnapPoint = v;
             CrossCursor.Pos = CurrentDC.WorldPointToDevPoint(SnapPoint);

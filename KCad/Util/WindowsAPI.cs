@@ -51,5 +51,16 @@ namespace KCad
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern bool PostMessage(IntPtr hWnd, Int32 Msg, IntPtr wParam, IntPtr lParam);
+
+
+        [DllImport("kernel32.dll")]
+        public static extern bool AttachConsole(uint dwProcessId);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool FreeConsole();
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool AllocConsole();
     }
 }

@@ -1091,6 +1091,8 @@ namespace Plotter.Controller
 
         public CadVector InputPoint()
         {
+            Env.OpenPopupMessage("Input point", PlotterObserver.MessageType.INPUT);
+
             InteractCtrl ctrl = Controller.mInteractCtrl;
 
             ctrl.Start();
@@ -1102,6 +1104,7 @@ namespace Plotter.Controller
 
             if (ret != InteractCtrl.States.CONTINUE)
             {
+                Env.ClosePopupMessage();
                 ItConsole.println("Cancel!");
                 return CadVector.InvalidValue;
             }
@@ -1110,7 +1113,14 @@ namespace Plotter.Controller
 
             ItConsole.println(p.CoordString());
 
+            Env.ClosePopupMessage();
+
             return p;
+        }
+
+        public CadVector ViewDir()
+        {
+            return (CadVector)(Controller.CurrentDC.ViewDir);
         }
 
         public CadVector InputUnitVector()
