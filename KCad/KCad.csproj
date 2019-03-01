@@ -197,7 +197,7 @@
     <Compile Include="Controls\CadConsole\AnsiEsc.cs" />
     <Compile Include="Controls\CadConsole\TextLine.cs" />
     <Compile Include="Controls\PopupEx.cs" />
-    <Compile Include="Controls\WindowsAPI.cs" />
+    <Compile Include="Util\WindowsAPI.cs" />
     <Compile Include="Dialogs\AngleInputDialog.xaml.cs">
       <DependentUpon>AngleInputDialog.xaml</DependentUpon>
     </Compile>

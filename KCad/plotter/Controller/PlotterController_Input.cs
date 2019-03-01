@@ -1126,7 +1126,7 @@ namespace Plotter.Controller
             return SnapPoint;
         }
 
-        public void SetCursorPos(CadVector v)
+        public void SetCursorWoldPos(CadVector v)
         {
             SnapPoint = v;
             CrossCursor.Pos = CurrentDC.WorldPointToDevPoint(SnapPoint);

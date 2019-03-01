@@ -104,6 +104,10 @@ namespace Plotter
 
                     mDrawContext.ViewOrg = org;
 
+                    //DOut.pl($"{GetType().Name} onSizeChanged firstChange {Width}, {Height}");
+
+                    mController.SetCursorWoldPos(CadVector.Zero);
+
                     firstSizeChange = false;
                 }
 
