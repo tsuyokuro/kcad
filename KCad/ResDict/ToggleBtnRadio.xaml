@@ -161,8 +161,7 @@
                         Background="{StaticResource ButtonColor}"
                         BorderBrush="{StaticResource ButtonColor}"
                         BorderThickness="1"
-                        CornerRadius="4"
-                        >
+                        CornerRadius="4">
 
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
 
@@ -236,8 +235,7 @@
                         Background="{StaticResource ButtonColor}"
                         BorderBrush="{StaticResource ButtonColor}"
                         BorderThickness="0"
-                        CornerRadius="3"
-                        >
+                        CornerRadius="3">
 
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
 

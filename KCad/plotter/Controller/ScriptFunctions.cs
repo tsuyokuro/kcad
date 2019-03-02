@@ -15,8 +15,7 @@ namespace Plotter.Controller
 {
     public class ScriptSession
     {
-        private bool IsActive = false; 
-        private CadOpeList mCadOpeList = new CadOpeList();
+        private CadOpeList mCadOpeList = null;
 
         public CadOpeList OpeList
         {
@@ -30,13 +29,11 @@ namespace Plotter.Controller
 
         public void Start()
         {
-            IsActive = true;
-            mCadOpeList.Clear();
+            mCadOpeList = new CadOpeList();
         }
 
         public void End()
         {
-            IsActive = false;
         }
     }
 

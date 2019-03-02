@@ -676,12 +676,12 @@
                                 Background="{StaticResource MsgBGColor}"
                                 Focusable="True"
                                 Foreground="#FFAAAAAA"
-                                LineHeight="14"
+                                LineHeight="16"
                                 SelectedBackground="{StaticResource MsgSelectedBGColor}"
                                 SelectedForeground="{StaticResource MsgTextColor}"
                                 SnapsToDevicePixels="True"
                                 TextOptions.TextFormattingMode="Display"
-                                TextSize="12" />
+                                TextSize="14" />
 
                         </ScrollViewer>
                         <Grid Grid.Row="1" Height="auto">
