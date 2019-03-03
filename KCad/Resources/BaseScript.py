@@ -63,6 +63,10 @@ def addLayer(name):
 def move(id, x=0, y=0, z=0):
     SE.Move(id, x, y, z)
 
+#[AC] moveSelectedPoint(x=0, y=0, z=0)
+def moveSelectedPoint(x=0, y=0, z=0):
+    SE.MoveSelectedPoint(x, y, z)
+
 #[AC] segLen(len)
 def segLen(len):
     SE.SegLen(len)

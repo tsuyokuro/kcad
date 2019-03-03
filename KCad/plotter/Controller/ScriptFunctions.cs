@@ -10,6 +10,7 @@ using MeshUtilNS;
 using MeshMakerNS;
 using KCad;
 using System.Threading;
+using static Plotter.CadFigure;
 
 namespace Plotter.Controller
 {
@@ -489,6 +490,31 @@ namespace Plotter.Controller
             Controller.EndEdit(list);
 
             UpdateViews(true, false);
+        }
+
+        public void MoveSelectedPoint(double x, double y, double z)
+        {
+            var figList = Controller.GetSelectedFigureList();
+
+            Controller.StartEdit(figList);
+
+            CadVector d = CadVector.Create(x, y, z);
+
+            foreach (CadFigure fig in figList)
+            {
+                int i;
+                for (i=0; i<fig.PointCount; i++)
+                {
+                    CadVector v = fig.PointList[i];
+                    if (v.Selected)
+                    {
+                        v += d;
+                        fig.PointList[i] = v;
+                    }
+                }
+            }
+
+            Controller.EndEdit(figList);
         }
 
         public void SegLen(double len)
