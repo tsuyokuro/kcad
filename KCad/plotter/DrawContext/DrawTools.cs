@@ -2,6 +2,10 @@
 using OpenTK.Graphics;
 using System;
 using System.Drawing;
+using System.Drawing.Text;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Resources;
 
 namespace Plotter
 {
@@ -197,8 +201,11 @@ namespace Plotter
                 BrushTbl[i] = new SolidBrush(DarkColors.BrushColorTbl[i]);
             }
 
-            FontTbl[FONT_DEFAULT] = new Font("MS UI Gothic", 9);
-            FontTbl[FONT_SMALL]   = new Font("MS UI Gothic", 9);
+            //FontFamily fontFamily = LoadFontFamily("/Fonts/mplus-1m-thin.ttf");
+            FontFamily fontFamily = new FontFamily("MS UI Gothic");
+
+            FontTbl[FONT_DEFAULT] = new Font(fontFamily, 9);
+            FontTbl[FONT_SMALL]   = new Font(fontFamily, 9);
         }
 
         private void SetupPrinterSet()
@@ -220,8 +227,10 @@ namespace Plotter
             BrushTbl[BRUSH_BACKGROUND]      = null;
             BrushTbl[BRUSH_TEXT]            = new SolidBrush(Color.Black);
 
-            FontTbl[FONT_DEFAULT]           = new Font("MS UI Gothic", 9);
-            FontTbl[FONT_SMALL]             = new Font("MS UI Gothic", 9);
+            FontFamily fontFamily = new FontFamily("MS UI Gothic");
+
+            FontTbl[FONT_DEFAULT]           = new Font(fontFamily, 9);
+            FontTbl[FONT_SMALL]             = new Font(fontFamily, 9);
         }
 
         private void SetupDarkSetGL()
@@ -291,6 +300,44 @@ namespace Plotter
         {
             Dispose();
         }
+
+        #region Utilities
+        public static FontFamily LoadFontFamily(string fname)
+        {
+            StreamResourceInfo si = System.Windows.Application.GetResourceStream(
+                new Uri(fname, UriKind.Relative));
+
+            return LoadFontFamily(si.Stream);
+        }
+
+        // Load font family from stream
+        public static FontFamily LoadFontFamily(Stream stream)
+        {
+            var buffer = new byte[stream.Length];
+            stream.Read(buffer, 0, buffer.Length);
+            return LoadFontFamily(buffer);
+        }
+
+        // load font family from byte array
+        public static FontFamily LoadFontFamily(byte[] buffer)
+        {
+            var handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            try
+            {
+                var ptr = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, 0);
+                using (var pvc = new PrivateFontCollection())
+                {
+                    pvc.AddMemoryFont(ptr, buffer.Length);
+                    return pvc.Families[0];
+                }
+            }
+            finally
+            {
+                handle.Free();
+            }
+        }
+
+        #endregion
 
         public Pen pen(int id)
         {

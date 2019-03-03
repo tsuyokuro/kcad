@@ -100,6 +100,13 @@ namespace KCad
 
             get => mMaxLine;
         }
+
+        public FontFamily FontFamily
+        {
+            get => mFontFamily;
+            set => mFontFamily = value;
+        }
+
         #endregion
 
 
@@ -132,8 +139,6 @@ namespace KCad
         public CadConsoleView()
         {
             Focusable = true;
-
-            mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.UltraLight, FontStretches.Normal);
 
             Loaded += CadConsoleView_Loaded;
 
@@ -179,6 +184,8 @@ namespace KCad
         private void CadConsoleView_Loaded(object sender, RoutedEventArgs e)
         {
             mIsLoaded = true;
+
+            mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.UltraLight, FontStretches.Normal);
 
             FrameworkElement parent = (FrameworkElement)Parent;
 
