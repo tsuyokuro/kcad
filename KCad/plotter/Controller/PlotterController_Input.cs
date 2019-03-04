@@ -385,7 +385,7 @@ namespace Plotter.Controller
                 y = CrossCursor.Pos.y;
             }
 
-            DOut.pl($"LButtonDown {x}, {y}");
+            //DOut.pl($"LButtonDown {x}, {y}");
 
             CadVector pixp = CadVector.Create(x, y, 0);
             CadVector cp = dc.DevPointToWorldPoint(pixp);

@@ -675,13 +675,14 @@
                                 VerticalAlignment="Top"
                                 Background="{StaticResource MsgBGColor}"
                                 Focusable="True"
+                                FontFamily="Fonts/mplus-1m-thin.ttf#M+ 1m thin"
                                 Foreground="#FFAAAAAA"
-                                LineHeight="14"
+                                LineHeight="16"
                                 SelectedBackground="{StaticResource MsgSelectedBGColor}"
                                 SelectedForeground="{StaticResource MsgTextColor}"
                                 SnapsToDevicePixels="True"
                                 TextOptions.TextFormattingMode="Display"
-                                TextSize="12" />
+                                TextSize="14" />
 
                         </ScrollViewer>
                         <Grid Grid.Row="1" Height="auto">
@@ -710,6 +711,7 @@
                                 CandidateListItemContainerStyle="{StaticResource AutoCompListBoxItem}"
                                 CandidateListStyle="{StaticResource AutoCompListBoxStyle}"
                                 CandidateScrollViewerStyle="{StaticResource AutoCompScrollViewerStyle}"
+                                FontFamily="Fonts/mplus-1m-thin.ttf#M+ 1m thin"
                                 FontSize="16"
                                 FontWeight="Thin"
                                 Foreground="{StaticResource TextColor}" />

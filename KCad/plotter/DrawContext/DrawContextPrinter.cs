@@ -24,8 +24,10 @@ namespace Plotter
 
             org.x = deviceSize.Width / 2.0;
             org.y = deviceSize.Height / 2.0;
-
+            
             ViewOrg = org;
+
+            mDrawing = new DrawingGDI(this);
         }
     }
 }

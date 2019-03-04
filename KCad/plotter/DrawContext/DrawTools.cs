@@ -2,6 +2,10 @@
 using OpenTK.Graphics;
 using System;
 using System.Drawing;
+using System.Drawing.Text;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Resources;
 
 namespace Plotter
 {
@@ -110,6 +114,9 @@ namespace Plotter
         public const int FONT_SMALL = 2;
         public const int FONT_TBL_SIZE = 3;
 
+        public const int FONT_SIZE_DEFAULT = 9;
+        public const int FONT_SIZE_SMALL = 9;
+
         public enum ToolsType
         {
             DARK,
@@ -197,8 +204,11 @@ namespace Plotter
                 BrushTbl[i] = new SolidBrush(DarkColors.BrushColorTbl[i]);
             }
 
-            FontTbl[FONT_DEFAULT] = new Font("MS UI Gothic", 9);
-            FontTbl[FONT_SMALL]   = new Font("MS UI Gothic", 9);
+            FontFamily fontFamily = LoadFontFamily("/Fonts/mplus-1m-thin.ttf");
+            //FontFamily fontFamily = new FontFamily("MS UI Gothic");
+
+            FontTbl[FONT_DEFAULT] = new Font(fontFamily, FONT_SIZE_DEFAULT);
+            FontTbl[FONT_SMALL]   = new Font(fontFamily, FONT_SIZE_SMALL);
         }
 
         private void SetupPrinterSet()
@@ -220,8 +230,10 @@ namespace Plotter
             BrushTbl[BRUSH_BACKGROUND]      = null;
             BrushTbl[BRUSH_TEXT]            = new SolidBrush(Color.Black);
 
-            FontTbl[FONT_DEFAULT]           = new Font("MS UI Gothic", 9);
-            FontTbl[FONT_SMALL]             = new Font("MS UI Gothic", 9);
+            FontFamily fontFamily = new FontFamily("MS UI Gothic");
+
+            FontTbl[FONT_DEFAULT]           = new Font(fontFamily, FONT_SIZE_DEFAULT);
+            FontTbl[FONT_SMALL]             = new Font(fontFamily, FONT_SIZE_SMALL);
         }
 
         private void SetupDarkSetGL()
@@ -291,6 +303,44 @@ namespace Plotter
         {
             Dispose();
         }
+
+        #region Utilities
+        public static FontFamily LoadFontFamily(string fname)
+        {
+            StreamResourceInfo si = System.Windows.Application.GetResourceStream(
+                new Uri(fname, UriKind.Relative));
+
+            return LoadFontFamily(si.Stream);
+        }
+
+        // Load font family from stream
+        public static FontFamily LoadFontFamily(Stream stream)
+        {
+            var buffer = new byte[stream.Length];
+
+            stream.Read(buffer, 0, buffer.Length);
+
+            return LoadFontFamily(buffer);
+        }
+        
+
+        static PrivateFontCollection PrivateFonts = new PrivateFontCollection();
+
+        // load font family from byte array
+        public static FontFamily LoadFontFamily(byte[] buffer)
+        {
+            IntPtr data = Marshal.AllocCoTaskMem(buffer.Length);
+
+            Marshal.Copy(buffer, 0, data, buffer.Length);
+
+            PrivateFonts.AddMemoryFont(data, buffer.Length);
+
+            Marshal.FreeCoTaskMem(data);
+
+            return PrivateFonts.Families[0];
+        }
+
+        #endregion
 
         public Pen pen(int id)
         {

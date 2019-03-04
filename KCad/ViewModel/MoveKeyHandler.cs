@@ -71,7 +71,7 @@ namespace Plotter
 
             if (Controller.State == PlotterController.States.SELECT)
             {
-                if (Controller.CurrentFigure != null)
+                if (EditFigList != null && EditFigList.Count > 0)
                 {
                     Controller.MovePointsFromStored(EditFigList, Delta);
                     Controller.Redraw();

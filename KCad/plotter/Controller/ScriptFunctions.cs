@@ -10,13 +10,13 @@ using MeshUtilNS;
 using MeshMakerNS;
 using KCad;
 using System.Threading;
+using static Plotter.CadFigure;
 
 namespace Plotter.Controller
 {
     public class ScriptSession
     {
-        private bool IsActive = false; 
-        private CadOpeList mCadOpeList = new CadOpeList();
+        private CadOpeList mCadOpeList = null;
 
         public CadOpeList OpeList
         {
@@ -30,13 +30,11 @@ namespace Plotter.Controller
 
         public void Start()
         {
-            IsActive = true;
-            mCadOpeList.Clear();
+            mCadOpeList = new CadOpeList();
         }
 
         public void End()
         {
-            IsActive = false;
         }
     }
 
@@ -492,6 +490,31 @@ namespace Plotter.Controller
             Controller.EndEdit(list);
 
             UpdateViews(true, false);
+        }
+
+        public void MoveSelectedPoint(double x, double y, double z)
+        {
+            var figList = Controller.GetSelectedFigureList();
+
+            Controller.StartEdit(figList);
+
+            CadVector d = CadVector.Create(x, y, z);
+
+            foreach (CadFigure fig in figList)
+            {
+                int i;
+                for (i=0; i<fig.PointCount; i++)
+                {
+                    CadVector v = fig.PointList[i];
+                    if (v.Selected)
+                    {
+                        v += d;
+                        fig.PointList[i] = v;
+                    }
+                }
+            }
+
+            Controller.EndEdit(figList);
         }
 
         public void SegLen(double len)

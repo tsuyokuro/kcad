@@ -173,7 +173,7 @@ namespace KCad
 
             sw.Stop();
 
-            Console.WriteLine("MainWindow startup. Start up time: " + sw.ElapsedMilliseconds.ToString());
+            Console.WriteLine($"MainWindow startup. Start up time: {sw.ElapsedMilliseconds} (milli sec)");
 
             SplashWindow.Close();
             SplashWindow = null;
