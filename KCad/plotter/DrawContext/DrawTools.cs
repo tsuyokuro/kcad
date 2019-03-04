@@ -114,6 +114,9 @@ namespace Plotter
         public const int FONT_SMALL = 2;
         public const int FONT_TBL_SIZE = 3;
 
+        public const int FONT_SIZE_DEFAULT = 9;
+        public const int FONT_SIZE_SMALL = 9;
+
         public enum ToolsType
         {
             DARK,
@@ -201,11 +204,11 @@ namespace Plotter
                 BrushTbl[i] = new SolidBrush(DarkColors.BrushColorTbl[i]);
             }
 
-            //FontFamily fontFamily = LoadFontFamily("/Fonts/mplus-1m-thin.ttf");
-            FontFamily fontFamily = new FontFamily("MS UI Gothic");
+            FontFamily fontFamily = LoadFontFamily("/Fonts/mplus-1m-thin.ttf");
+            //FontFamily fontFamily = new FontFamily("MS UI Gothic");
 
-            FontTbl[FONT_DEFAULT] = new Font(fontFamily, 9);
-            FontTbl[FONT_SMALL]   = new Font(fontFamily, 9);
+            FontTbl[FONT_DEFAULT] = new Font(fontFamily, FONT_SIZE_DEFAULT);
+            FontTbl[FONT_SMALL]   = new Font(fontFamily, FONT_SIZE_SMALL);
         }
 
         private void SetupPrinterSet()
@@ -229,8 +232,8 @@ namespace Plotter
 
             FontFamily fontFamily = new FontFamily("MS UI Gothic");
 
-            FontTbl[FONT_DEFAULT]           = new Font(fontFamily, 9);
-            FontTbl[FONT_SMALL]             = new Font(fontFamily, 9);
+            FontTbl[FONT_DEFAULT]           = new Font(fontFamily, FONT_SIZE_DEFAULT);
+            FontTbl[FONT_SMALL]             = new Font(fontFamily, FONT_SIZE_SMALL);
         }
 
         private void SetupDarkSetGL()
@@ -314,27 +317,27 @@ namespace Plotter
         public static FontFamily LoadFontFamily(Stream stream)
         {
             var buffer = new byte[stream.Length];
+
             stream.Read(buffer, 0, buffer.Length);
+
             return LoadFontFamily(buffer);
         }
+        
+
+        static PrivateFontCollection PrivateFonts = new PrivateFontCollection();
 
         // load font family from byte array
         public static FontFamily LoadFontFamily(byte[] buffer)
         {
-            var handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-            try
-            {
-                var ptr = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, 0);
-                using (var pvc = new PrivateFontCollection())
-                {
-                    pvc.AddMemoryFont(ptr, buffer.Length);
-                    return pvc.Families[0];
-                }
-            }
-            finally
-            {
-                handle.Free();
-            }
+            IntPtr data = Marshal.AllocCoTaskMem(buffer.Length);
+
+            Marshal.Copy(buffer, 0, data, buffer.Length);
+
+            PrivateFonts.AddMemoryFont(data, buffer.Length);
+
+            Marshal.FreeCoTaskMem(data);
+
+            return PrivateFonts.Families[0];
         }
 
         #endregion
