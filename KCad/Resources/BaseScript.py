@@ -17,7 +17,7 @@ def rect(w=10, h=10):
     SE.Rect(w, h)
     SE.UpdateTV();
 
-#[AC] rectAt(pv=getLastDown(), w=10, h=10)
+#[AC] rectAt(pv=lastDown(), w=10, h=10)
 def rectAt(pv, w=10, h=10):
     SE.RectAt(pv, w, h)
     SE.UpdateTV();
@@ -50,7 +50,7 @@ def ungroup():
 def addPoint(x, y, z):
     SE.AddPoint(x, y, z)
 
-#[AC] addPointV(getLastDown())
+#[AC] addPointV(lastDown())
 def addPointV(p):
     SE.AddPoint(p)
 
@@ -192,25 +192,6 @@ def currentFigID():
 #[AC] currentFig()
 def currentFig():
     return SE.GetCurrentFigure()
-
-#[AC] addMoveGuide(dir=unitVX)
-def addMoveGuide(dir):
-    SE.AddMoveGuide(dir)
-    SE.EnableMoveGuide(True)
-
-#[AC] resetMoveGuide()
-def clearMoveGuide():
-    SE.ClearMoveGuide()
-    SE.EnableMoveGuide(False);
-
-#[AC] enableMoveGuide()
-def enableMoveGuide():
-    SE.EnableMoveGuide(True)
-
-#[AC] disableMoveGuide()
-def disableMoveGuide():
-    SE.EnableMoveGuide(False)
-
 
 #[AC] rotatev(v=unitVX, axis=unitVZ, deg=45.0)
 def rotatev(v, axis, deg):

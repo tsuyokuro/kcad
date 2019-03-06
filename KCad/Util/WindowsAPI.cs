@@ -62,5 +62,13 @@ namespace KCad
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool AllocConsole();
+
+        public const UInt32 STD_OUTPUT_HANDLE = 0xFFFFFFF5;
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetStdHandle(UInt32 nStdHandle);
+
+        [DllImport("kernel32.dll")]
+        public static extern void SetStdHandle(UInt32 nStdHandle, IntPtr handle);
     }
 }

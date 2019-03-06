@@ -10,8 +10,6 @@ namespace Plotter.Controller
 {
     public partial class PlotterController
     {
-        public GuideLineManager GuideLines = new GuideLineManager();
-
         public InteractCtrl mInteractCtrl = new InteractCtrl();
 
         public CadMouse Mouse { get; } = new CadMouse();
@@ -939,17 +937,6 @@ namespace Plotter.Controller
                 {
                     State = States.DRAGING_POINTS;
                     StartEdit();
-                }
-            }
-
-            if (State == States.DRAGING_POINTS)
-            {
-                if (GuideLines.Enabled)
-                {
-                    cp = GuideLines.GetOnGuideLine(LastDownPoint, cp);
-                    pixp = dc.WorldPointToDevPoint(cp);
-
-                    OffsetScreen = CadVector.Zero;
                 }
             }
 
