@@ -532,15 +532,19 @@ namespace Plotter.Controller
         {
             StoreViewOrg = dc.ViewOrg;
             CursorLocked = false;
+
+            CrossCursor.Store();
         }
 
         private void MButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
         {
-            if (pointer.MDownPoint.x == x && pointer.MDownPoint.y == y)
-            {
-                ViewCtrl.AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
-                Redraw();
-            }
+            //if (pointer.MDownPoint.x == x && pointer.MDownPoint.y == y)
+            //{
+            //    ViewCtrl.AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
+            //    Redraw();
+            //}
+
+            CrossCursor.Pos = CadVector.Create(x, y, 0);
         }
 
         private void MDrag(CadMouse pointer, DrawContext dc, double x, double y)
@@ -553,6 +557,9 @@ namespace Plotter.Controller
             CadVector op = StoreViewOrg + d;
 
             ViewCtrl.SetOrigin(dc, (int)op.x, (int)op.y);
+
+            CrossCursor.Pos = CrossCursor.StorePos + d;
+
             Redraw();
         }
 
