@@ -268,7 +268,7 @@ namespace Plotter
         {
             CadVector pp = DC.WorldPointToDevPoint(pt);
 
-            int size = 3;
+            int size = 2;
 
             DrawRectangleScrn(
                 pen,
