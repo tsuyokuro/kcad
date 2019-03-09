@@ -206,6 +206,7 @@ namespace Plotter
 
             FontFamily fontFamily = LoadFontFamily("/Fonts/mplus-1m-thin.ttf");
             //FontFamily fontFamily = new FontFamily("MS UI Gothic");
+            //FontFamily fontFamily = new FontFamily("ＭＳ ゴシック");
 
             FontTbl[FONT_DEFAULT] = new Font(fontFamily, FONT_SIZE_DEFAULT);
             FontTbl[FONT_SMALL]   = new Font(fontFamily, FONT_SIZE_SMALL);
@@ -230,7 +231,9 @@ namespace Plotter
             BrushTbl[BRUSH_BACKGROUND]      = null;
             BrushTbl[BRUSH_TEXT]            = new SolidBrush(Color.Black);
 
-            FontFamily fontFamily = new FontFamily("MS UI Gothic");
+            //FontFamily fontFamily = LoadFontFamily("/Fonts/mplus-1m-thin.ttf");
+            //FontFamily fontFamily = new FontFamily("MS UI Gothic");
+            FontFamily fontFamily = new FontFamily("ＭＳ ゴシック");
 
             FontTbl[FONT_DEFAULT]           = new Font(fontFamily, FONT_SIZE_DEFAULT);
             FontTbl[FONT_SMALL]             = new Font(fontFamily, FONT_SIZE_SMALL);

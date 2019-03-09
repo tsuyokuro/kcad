@@ -896,6 +896,9 @@ namespace Plotter
 
             DrawContextPrinter dc = new DrawContextPrinter(mController.CurrentDC, g, pageSize, deviceSize);
 
+            //Font f = new Font("Arial", 10);
+            //e.Graphics.DrawString("TEST", f, Brushes.Black, 10, 10, StringFormat.GenericDefault);
+
             mController.Print(dc);
         }
 
