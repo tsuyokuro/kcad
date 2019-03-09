@@ -5,36 +5,38 @@ using System.Timers;
 
 namespace Plotter
 {
-    public abstract class MessageHandler
+    public abstract class EventSequencer
     {
-        public class Message
+        public class Event
         {
             public int What;
             public Object Obj;
             public int Arg1;
             public int Arg2;
+
             public long ExpireTime;
 
-            public void clean()
+            public void Clean()
             {
                 What = 0;
+                ExpireTime = 0;
+
                 Obj = null;
                 Arg1 = 0;
                 Arg2 = 0;
-                ExpireTime = 0;
             }
 
-            public Message(int what)
+            public Event(int what)
             {
                 What = what;
             }
 
-            public Message() { }
+            public Event() { }
 
 
             public new String ToString()
             {
-                return "Message What=" + What.ToString();
+                return "Event What=" + What.ToString();
             }
         }
 
@@ -42,30 +44,30 @@ namespace Plotter
 
         private bool ContinueLoop;
 
-        private FlexBlockingQueue<Message> Messages;
+        private FlexBlockingQueue<Event> Events;
 
-        private List<Message> DelayedMessages;
+        private List<Event> DelayedEvents;
 
-        private FlexBlockingQueue<Message> FreeMessages;
+        private FlexBlockingQueue<Event> FreeEvents;
 
         private int QueueSize = 5;
 
-        private System.Timers.Timer CheckTimer;
+        private Timer CheckTimer;
 
         private Object LockObj = new Object();
 
-        public MessageHandler(int maxMessage)
+        public EventSequencer(int queueSize)
         {
-            QueueSize = maxMessage;
+            QueueSize = queueSize;
 
-            Messages = new FlexBlockingQueue<Message>(QueueSize);
-            FreeMessages = new FlexBlockingQueue<Message>(QueueSize);
+            Events = new FlexBlockingQueue<Event>(QueueSize);
+            FreeEvents = new FlexBlockingQueue<Event>(QueueSize);
 
-            DelayedMessages = new List<Message>();
+            DelayedEvents = new List<Event>();
 
             for (int i = 0; i < QueueSize; i++)
             {
-                FreeMessages.Push(new Message());
+                FreeEvents.Push(new Event());
             }
 
             CheckTimer = new System.Timers.Timer();
@@ -73,21 +75,21 @@ namespace Plotter
 
             //CheckTimer = new System.Threading.Timer(TimerCallback);
 
-            Looper = new Task(loop);
+            Looper = new Task(Loop);
         }
 
-        public Message ObtainMessage()
+        public Event ObtainEvent()
         {
-            Message msg = FreeMessages.Pop();
-            msg.clean();
-            return msg;
+            Event evt = FreeEvents.Pop();
+            evt.Clean();
+            return evt;
         }
 
-        public void SendMessage(Message msg)
+        public void Post(Event evt)
         {
             lock (LockObj)
             {
-                Messages.Push(msg);
+                Events.Push(evt);
             }
         }
 
@@ -97,40 +99,36 @@ namespace Plotter
         }
 
 
-        public void SendMessage(Message msg, int delay)
+        public void Post(Event evt, int delay)
         {
-            //Console.WriteLine("SendMessage cnt=" + FreeMessages.Count.ToString());
-
             lock (LockObj)
             {
-                msg.ExpireTime = GetCurrentMilliSec() + delay;
-                DelayedMessages.Add(msg);
+                evt.ExpireTime = GetCurrentMilliSec() + delay;
+                DelayedEvents.Add(evt);
                 UpdateTimer();
             }
         }
 
-        public abstract void HandleMessage(Message msg);
+        public abstract void HandleEvent(Event evt);
 
-        public void loop()
+        public void Loop()
         {
             while (ContinueLoop)
             {
-                Message msg = Messages.Pop();
+                Event evt = Events.Pop();
 
-                //Console.WriteLine("HandleMessage " + GetCurrentMilliSec().ToString());
+                HandleEvent(evt);
 
-                HandleMessage(msg);
-
-                FreeMessages.Push(msg);
+                FreeEvents.Push(evt);
             }
         }
 
-        public void stop()
+        public void Stop()
         {
             ContinueLoop = false;
         }
 
-        public void start()
+        public void Start()
         {
             ContinueLoop = true;
             Looper.Start();
@@ -155,21 +153,21 @@ namespace Plotter
 
                 long minDt = long.MaxValue;
 
-                if (DelayedMessages.Count > 0)
+                if (DelayedEvents.Count > 0)
                 {
-                    foreach (Message msg in DelayedMessages)
+                    foreach (Event evt in DelayedEvents)
                     {
-                        if (msg.ExpireTime == 0)
+                        if (evt.ExpireTime == 0)
                         {
                             continue;
                         }
 
-                        long t = msg.ExpireTime - now;
+                        long t = evt.ExpireTime - now;
 
                         if (t <= 0)
                         {
-                            msg.ExpireTime = 0;
-                            Messages.Push(msg);
+                            evt.ExpireTime = 0;
+                            Events.Push(evt);
                         }
                         else
                         {
@@ -180,12 +178,10 @@ namespace Plotter
                         }
                     }
                 }
-                DelayedMessages.RemoveAll(m => m.ExpireTime == 0);
+                DelayedEvents.RemoveAll(m => m.ExpireTime == 0);
 
                 if (minDt != long.MaxValue)
                 {
-                    //CheckTimer.Change(minDt, Timeout.Infinite);
-
                     CheckTimer.Stop();
                     CheckTimer.Interval = minDt;
                     CheckTimer.Start();
@@ -193,19 +189,19 @@ namespace Plotter
             }
         }
 
-        public void RemoveAll(Predicate<Message> match)
+        public void RemoveAll(Predicate<Event> match)
         {
             lock (LockObj)
             {
-                Messages.RemoveAll(match, Removed);
+                Events.RemoveAll(match, Removed);
 
-                for (int i = DelayedMessages.Count - 1; i >= 0; i--)
+                for (int i = DelayedEvents.Count - 1; i >= 0; i--)
                 {
-                    Message item = DelayedMessages[i];
+                    Event item = DelayedEvents[i];
 
                     if (match(item))
                     {
-                        DelayedMessages.RemoveAt(i);
+                        DelayedEvents.RemoveAt(i);
                         Removed(item);
                     }
                 }
@@ -214,13 +210,13 @@ namespace Plotter
 
         public void RemoveAll(int what)
         {
-            RemoveAll(m => m.What == what);
+            RemoveAll(e => e.What == what);
 
         }
 
-        private void Removed(Message msg)
+        private void Removed(Event ev)
         {
-            FreeMessages.Push(msg);
+            FreeEvents.Push(ev);
         }
     }
 }

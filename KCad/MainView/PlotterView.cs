@@ -19,7 +19,7 @@ namespace Plotter
         ContextMenuEx mCurrentContextMenu = null;
         ContextMenuEx mContextMenu = null;
 
-        MyMessageHandler mMessageHandler;
+        MyEventSequencer mEventSequencer;
 
         private DrawContextGDI mDrawContext = null;
 
@@ -57,9 +57,9 @@ namespace Plotter
 
             SizeChanged += onSizeChanged;
 
-            mMessageHandler = new MyMessageHandler(this, 100);
+            mEventSequencer = new MyEventSequencer(this, 100);
 
-            mMessageHandler.start();
+            mEventSequencer.Start();
 
             mDrawContext.SetupTools(DrawTools.ToolsType.DARK);
 
@@ -129,15 +129,15 @@ namespace Plotter
 #if MOUSE_THREAD
             // Mouse eventを別スレッドで処理
             // 未処理のEventは破棄
-            mMessageHandler.RemoveAll(MyMessageHandler.MOUSE_MOVE);
+            mEventSequencer.RemoveAll(MyEventSequencer.MOUSE_MOVE);
 
-            MessageHandler.Message msg = mMessageHandler.ObtainMessage();
+            EventSequencer.Event evt = mEventSequencer.ObtainEvent();
 
-            msg.What = MyMessageHandler.MOUSE_MOVE;
-            msg.Arg1 = e.X;
-            msg.Arg2 = e.Y;
+            evt.What = MyEventSequencer.MOUSE_MOVE;
+            evt.Arg1 = e.X;
+            evt.Arg2 = e.Y;
 
-            mMessageHandler.SendMessage(msg, 0);
+            mEventSequencer.Post(evt);
 #else
             // Mouse eventを直接処理
             mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
@@ -148,14 +148,14 @@ namespace Plotter
         private void OnMouseWheel(object sender, MouseEventArgs e)
         {
 #if MOUSE_THREAD
-            mMessageHandler.RemoveAll(MyMessageHandler.MOUSE_WHEEL);
+            mEventSequencer.RemoveAll(MyEventSequencer.MOUSE_WHEEL);
 
-            MessageHandler.Message msg = mMessageHandler.ObtainMessage();
+            EventSequencer.Event evt = mEventSequencer.ObtainEvent();
 
-            msg.What = MyMessageHandler.MOUSE_WHEEL;
-            msg.Obj = e;
+            evt.What = MyEventSequencer.MOUSE_WHEEL;
+            evt.Obj = e;
 
-            mMessageHandler.SendMessage(msg, 0);
+            mEventSequencer.Post(evt);
 #else
             // 直接描画
             mController.Mouse.MouseWheel(mDrawContext, e.X, e.Y, e.Delta);
@@ -175,14 +175,14 @@ namespace Plotter
             }
 
 #if MOUSE_THREAD
-            mMessageHandler.RemoveAll(MyMessageHandler.MOUSE_DOWN);
+            mEventSequencer.RemoveAll(MyEventSequencer.MOUSE_DOWN);
 
-            MessageHandler.Message msg = mMessageHandler.ObtainMessage();
+            EventSequencer.Event evt = mEventSequencer.ObtainEvent();
 
-            msg.What = MyMessageHandler.MOUSE_DOWN;
-            msg.Obj = e;
+            evt.What = MyEventSequencer.MOUSE_DOWN;
+            evt.Obj = e;
 
-            mMessageHandler.SendMessage(msg, 0);
+            mEventSequencer.Post(evt);
 #else
             mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
             Redraw();
@@ -192,14 +192,14 @@ namespace Plotter
         private void OnMouseUp(Object sender, MouseEventArgs e)
         {
 #if MOUSE_THREAD
-            mMessageHandler.RemoveAll(MyMessageHandler.MOUSE_UP);
+            mEventSequencer.RemoveAll(MyEventSequencer.MOUSE_UP);
 
-            MessageHandler.Message msg = mMessageHandler.ObtainMessage();
+            EventSequencer.Event evt = mEventSequencer.ObtainEvent();
 
-            msg.What = MyMessageHandler.MOUSE_UP;
-            msg.Obj = e;
+            evt.What = MyEventSequencer.MOUSE_UP;
+            evt.Obj = e;
 
-            mMessageHandler.SendMessage(msg, 0);
+            mEventSequencer.Post(evt);
 #else
             mController.Mouse.MouseUp(mDrawContext, e.Button, e.X, e.Y);
             Redraw();
@@ -267,7 +267,7 @@ namespace Plotter
             }
         }
 
-        class MyMessageHandler : MessageHandler
+        class MyEventSequencer : EventSequencer
         {
             public const int MOUSE_MOVE = 1;
             public const int MOUSE_WHEEL = 2;
@@ -276,12 +276,12 @@ namespace Plotter
 
             private PlotterView mPlotterView;
 
-            public MyMessageHandler(PlotterView view, int maxMessage) : base(maxMessage)
+            public MyEventSequencer(PlotterView view, int queueSize) : base(queueSize)
             {
                 mPlotterView = view;
             }
 
-            public override void HandleMessage(Message msg)
+            public override void HandleEvent(Event msg)
             {
                 if (msg.What == MOUSE_MOVE)
                 {

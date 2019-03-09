@@ -15,6 +15,7 @@ namespace Plotter.Controller
             RUBBER_BAND_SELECT,
             START_DRAGING_POINTS,
             DRAGING_POINTS,
+            DRAGING_VIEW_ORG,
             START_CREATE,
             CREATING,
             MEASURING,

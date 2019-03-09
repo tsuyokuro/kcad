@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows;
 using System.Text.RegularExpressions;
+using Plotter;
 
 namespace KCad
 {
@@ -311,6 +312,8 @@ namespace KCad
                 }
             }
 
+            DOut.pl(targetWord);
+
             if (targetWord == null)
             {
                 targetWord = currentText;
@@ -327,7 +330,8 @@ namespace KCad
 
             foreach (string text in CandidateList)
             {
-                if (text.IndexOf(targetWord, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                //if (text.IndexOf(targetWord, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                if (text.StartsWith(targetWord))
                 {
                     tempList.Add(text);
                 }

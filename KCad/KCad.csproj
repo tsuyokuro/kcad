@@ -217,7 +217,6 @@
     </Compile>
     <Compile Include="plotter\Controller\ContextMenuInfo.cs" />
     <Compile Include="plotter\Controller\ControllerConst.cs" />
-    <Compile Include="plotter\Controller\GuideLineManager.cs" />
     <Compile Include="plotter\Controller\HighlightPointListItem.cs" />
     <Compile Include="plotter\Controller\InteractCtrl.cs" />
     <Compile Include="plotter\Controller\PlotterController_action.cs" />
@@ -406,7 +405,7 @@
     <Compile Include="plotter\undo\HistoryManager.cs" />
     <Compile Include="plotter\Util\CadConst.cs" />
     <Compile Include="plotter\Util\FlexBlockingQueue.cs" />
-    <Compile Include="plotter\Util\MessageHandler.cs" />
+    <Compile Include="plotter\Util\EventSequencer.cs" />
     <Compile Include="plotter\Util\PlotterCommon.cs" />
     <Compile Include="plotter\Controller\PlotterController.cs" />
     <Compile Include="plotter\Controller\PlotterController_edit.cs" />

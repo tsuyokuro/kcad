@@ -10,6 +10,8 @@ namespace Plotter
             GdiGraphics = g;
             SetupTools(DrawTools.ToolsType.PRINTER);
 
+            WorldScale = currentDC.WorldScale;
+
             mUnitPerMilli = deviceSize.Width / pageSize.Width;
 
             CopyCamera(currentDC);

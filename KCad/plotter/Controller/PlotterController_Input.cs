@@ -10,8 +10,6 @@ namespace Plotter.Controller
 {
     public partial class PlotterController
     {
-        public GuideLineManager GuideLines = new GuideLineManager();
-
         public InteractCtrl mInteractCtrl = new InteractCtrl();
 
         public CadMouse Mouse { get; } = new CadMouse();
@@ -532,8 +530,12 @@ namespace Plotter.Controller
 
         private void MButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
+            State = States.DRAGING_VIEW_ORG;
+
             StoreViewOrg = dc.ViewOrg;
             CursorLocked = false;
+
+            CrossCursor.Store();
         }
 
         private void MButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
@@ -543,9 +545,13 @@ namespace Plotter.Controller
                 ViewCtrl.AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
                 Redraw();
             }
+
+            State = States.SELECT;
+
+            CrossCursor.Pos = CadVector.Create(x, y, 0);
         }
 
-        private void MDrag(CadMouse pointer, DrawContext dc, double x, double y)
+        private void ViewOrgDrag(CadMouse pointer, DrawContext dc, double x, double y)
         {
             CadVector cp = default;
             cp.Set(x, y, 0);
@@ -555,6 +561,9 @@ namespace Plotter.Controller
             CadVector op = StoreViewOrg + d;
 
             ViewCtrl.SetOrigin(dc, (int)op.x, (int)op.y);
+
+            CrossCursor.Pos = CrossCursor.StorePos + d;
+
             Redraw();
         }
 
@@ -568,11 +577,11 @@ namespace Plotter.Controller
 
                 if (delta > 0)
                 {
-                    f = 1.05;
+                    f = 1.2;
                 }
                 else
                 {
-                    f = 0.95;
+                    f = 0.8;
                 }
 
                 ViewCtrl.DpiUpDown(dc, f);
@@ -908,9 +917,9 @@ namespace Plotter.Controller
 
         private void MouseMove(CadMouse pointer, DrawContext dc, double x, double y)
         {
-            if ((Control.MouseButtons & MouseButtons.Middle) != 0)
+            if (State == States.DRAGING_VIEW_ORG)
             {
-                MDrag(pointer, dc, x, y);
+                ViewOrgDrag(pointer, dc, x, y);
                 return;
             }
 
@@ -939,17 +948,6 @@ namespace Plotter.Controller
                 {
                     State = States.DRAGING_POINTS;
                     StartEdit();
-                }
-            }
-
-            if (State == States.DRAGING_POINTS)
-            {
-                if (GuideLines.Enabled)
-                {
-                    cp = GuideLines.GetOnGuideLine(LastDownPoint, cp);
-                    pixp = dc.WorldPointToDevPoint(cp);
-
-                    OffsetScreen = CadVector.Zero;
                 }
             }
 

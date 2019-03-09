@@ -127,7 +127,7 @@ namespace Plotter
 
             DrawLine(DrawTools.PEN_AXIS, p0, p1);
 
-            DrawAxis2();
+            //DrawAxis2();
         }
 
         public override void DrawGrid(Gridding grid)
@@ -268,7 +268,7 @@ namespace Plotter
         {
             CadVector pp = DC.WorldPointToDevPoint(pt);
 
-            int size = 3;
+            int size = 2;
 
             DrawRectangleScrn(
                 pen,
@@ -433,7 +433,10 @@ namespace Plotter
 
             DC.GdiGraphics.RotateTransform((float)angle);
 
-            DC.GdiGraphics.DrawString(s, DC.Font(font), DC.Brush(brush), 0, 0);
+            Font f = DC.Font(font);
+            Brush b = DC.Brush(brush);
+
+            DC.GdiGraphics.DrawString(s, f, b, 0, 0);
 
             DC.GdiGraphics.ResetTransform();
         }

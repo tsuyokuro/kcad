@@ -8,6 +8,8 @@ namespace Plotter
         public CadVector DirX;
         public CadVector DirY;
 
+        public CadVector StorePos;
+
         public static CadCursor Create()
         {
             CadCursor cc = default(CadCursor);
@@ -27,6 +29,11 @@ namespace Plotter
             cc.DirY = CadVector.UnitY;
 
             return cc;
+        }
+
+        public void Store()
+        {
+            StorePos = Pos;
         }
 
         public CadVector DistanceX(CadVector pixp)
