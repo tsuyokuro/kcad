@@ -244,11 +244,15 @@ namespace Plotter.Controller
                 mPointSearcher.CheckFigure(sc.DC, CurrentLayer, CurrentFigure);
             }
 
+            //sc.Cursor.Pos.dump("CursorPos");
+
             mPointSearcher.SetTargetPoint(sc.Cursor);
 
             mPointSearcher.SearchAllLayer(sc.DC, mDB);
 
             sc.MarkPt = mPointSearcher.GetXYMatch();
+
+            sc.MarkPt.dump();
 
             if (sc.MarkPt.FigureID == 0)
             {
@@ -536,6 +540,8 @@ namespace Plotter.Controller
             CursorLocked = false;
 
             CrossCursor.Store();
+
+            Observer.ChangeMouseCursor(PlotterObserver.MouseCursorType.HAND);
         }
 
         private void MButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
@@ -549,6 +555,8 @@ namespace Plotter.Controller
             State = States.SELECT;
 
             CrossCursor.Pos = CadVector.Create(x, y, 0);
+
+            Observer.ChangeMouseCursor(PlotterObserver.MouseCursorType.CROSS);
         }
 
         private void ViewOrgDrag(CadMouse pointer, DrawContext dc, double x, double y)
@@ -891,11 +899,13 @@ namespace Plotter.Controller
                 PointSnap(dc);
             }
 
+            CadCursor temCursor = CrossCursor;
+
             EvalPointSearcher(dc);
 
             mSegSearcher.Clean();
             mSegSearcher.SetRangePixel(dc, SettingsHolder.Settings.LineSnapRange);
-            mSegSearcher.SetTargetPoint(CrossCursor);
+            mSegSearcher.SetTargetPoint(temCursor);
 
             if (SettingsHolder.Settings.SnapToSegment)
             {

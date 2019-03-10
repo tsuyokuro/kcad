@@ -235,7 +235,10 @@ namespace Plotter
 
             if (dx <= Range && dy <= Range)
             {
-                if (dx <= XYMatch.DistanceX || dy <= XYMatch.DistanceY)
+                double minDist = (XYMatch.DistanceX * XYMatch.DistanceX) + (XYMatch.DistanceY * XYMatch.DistanceY);
+                double curDist = (dx * dx) + (dy * dy);
+
+                if (curDist <= minDist)
                 {
                     MarkPoint t = default(MarkPoint);
 
@@ -247,6 +250,8 @@ namespace Plotter
                     t.PointScrn = ppt;
                     t.DistanceX = dx;
                     t.DistanceY = dy;
+
+                    //t.dump();
 
                     XYMatch = t;
 
