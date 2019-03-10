@@ -94,6 +94,19 @@ namespace Plotter
 
             return true;
         }
+
+        public void dump(string name = "MarkPoint")
+        {
+            DOut.pl(name + " {");
+            if (Figure != null)
+            {
+                DOut.pl($"FigID:{Figure.ID}");
+            }
+            DOut.pl($"PointIndex:{PointIndex}");
+            Point.dump("Point");
+            PointScrn.dump("PointScrn");
+            DOut.pl("}");
+        }
     }
 
     public struct MarkSegment

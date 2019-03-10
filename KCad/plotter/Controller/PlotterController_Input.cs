@@ -244,11 +244,15 @@ namespace Plotter.Controller
                 mPointSearcher.CheckFigure(sc.DC, CurrentLayer, CurrentFigure);
             }
 
+            //sc.Cursor.Pos.dump("CursorPos");
+
             mPointSearcher.SetTargetPoint(sc.Cursor);
 
             mPointSearcher.SearchAllLayer(sc.DC, mDB);
 
             sc.MarkPt = mPointSearcher.GetXYMatch();
+
+            sc.MarkPt.dump();
 
             if (sc.MarkPt.FigureID == 0)
             {
@@ -895,11 +899,13 @@ namespace Plotter.Controller
                 PointSnap(dc);
             }
 
+            CadCursor temCursor = CrossCursor;
+
             EvalPointSearcher(dc);
 
             mSegSearcher.Clean();
             mSegSearcher.SetRangePixel(dc, SettingsHolder.Settings.LineSnapRange);
-            mSegSearcher.SetTargetPoint(CrossCursor);
+            mSegSearcher.SetTargetPoint(temCursor);
 
             if (SettingsHolder.Settings.SnapToSegment)
             {

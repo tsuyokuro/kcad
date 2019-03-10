@@ -312,7 +312,7 @@ namespace KCad
                 }
             }
 
-            DOut.pl(targetWord);
+            //DOut.pl(targetWord);
 
             if (targetWord == null)
             {
