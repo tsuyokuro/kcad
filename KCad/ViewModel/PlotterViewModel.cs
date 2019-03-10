@@ -258,6 +258,8 @@ namespace Plotter
 
             mController.Observer.CursorLocked = CursorLocked;
 
+            mController.Observer.ChangeMouseCursor = ChangeMouseCursor;
+
             LayerListChanged(mController, mController.GetLayerListInfo());
 
             PlotterView1 = new PlotterView();
@@ -775,6 +777,12 @@ namespace Plotter
         private void CursorLocked(bool locked)
         {
             mPlotterView.CursorLocked(locked);
+        }
+
+        private void ChangeMouseCursor(PlotterObserver.MouseCursorType cursorType)
+        {
+            //DOut.pl("ViewModel: ChangeMouseCursor");
+            mPlotterView.ChangeMouseCursor(cursorType);
         }
 
         #endregion

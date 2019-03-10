@@ -536,6 +536,8 @@ namespace Plotter.Controller
             CursorLocked = false;
 
             CrossCursor.Store();
+
+            Observer.ChangeMouseCursor(PlotterObserver.MouseCursorType.HAND);
         }
 
         private void MButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
@@ -549,6 +551,8 @@ namespace Plotter.Controller
             State = States.SELECT;
 
             CrossCursor.Pos = CadVector.Create(x, y, 0);
+
+            Observer.ChangeMouseCursor(PlotterObserver.MouseCursorType.CROSS);
         }
 
         private void ViewOrgDrag(CadMouse pointer, DrawContext dc, double x, double y)

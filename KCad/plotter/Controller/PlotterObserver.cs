@@ -12,6 +12,13 @@ namespace Plotter.Controller
             ERROR,
         }
 
+        public enum MouseCursorType
+        {
+            NORMAL_ARROW,
+            CROSS,
+            HAND,
+        }
+
         public Action<PlotterController, PlotterStateInfo> StateChanged = (controller, state) => { };
 
         public Action<PlotterController, MenuInfo, int, int> RequestContextMenu = (controller, state, x, y) => { };
@@ -32,6 +39,8 @@ namespace Plotter.Controller
 
         public Action ClosePopupMessage = () => { };
 
-        public Action<bool> CursorLocked = (a) => {}; 
+        public Action<bool> CursorLocked = (locked) => {}; 
+
+        public Action<MouseCursorType> ChangeMouseCursor = (cursorType) => {};
     }
 }

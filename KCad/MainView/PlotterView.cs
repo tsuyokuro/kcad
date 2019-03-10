@@ -267,6 +267,22 @@ namespace Plotter
             }
         }
 
+        public void ChangeMouseCursor(PlotterObserver.MouseCursorType cursorType)
+        {
+            switch (cursorType)
+            {
+                case PlotterObserver.MouseCursorType.CROSS:
+                    base.Cursor = PointCursor;
+                    break;
+                case PlotterObserver.MouseCursorType.NORMAL_ARROW:
+                    base.Cursor = Cursors.Arrow;
+                    break;
+                case PlotterObserver.MouseCursorType.HAND:
+                    base.Cursor = Cursors.Hand;
+                    break;
+            }
+        }
+
         class MyEventSequencer : EventSequencer
         {
             public const int MOUSE_MOVE = 1;

@@ -180,5 +180,10 @@ namespace Plotter
         {
             // NOP
         }
+
+        public void ChangeMouseCursor(PlotterObserver.MouseCursorType cursorType)
+        {
+            // NOP
+        }
     }
 }
