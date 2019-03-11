@@ -5,34 +5,20 @@ using System.Timers;
 
 namespace Plotter
 {
-    public abstract class EventSequencer
+    public abstract class EventSequencer<EventT> where EventT : EventSequencer<EventT>.Event, new()
     {
         public class Event
         {
-            public int What;
-            public Object Obj;
-            public int Arg1;
-            public int Arg2;
+            public int What = 0;
+            public long ExpireTime = 0;
 
-            public long ExpireTime;
-
-            public void Clean()
+            public virtual void Clean()
             {
                 What = 0;
                 ExpireTime = 0;
-
-                Obj = null;
-                Arg1 = 0;
-                Arg2 = 0;
-            }
-
-            public Event(int what)
-            {
-                What = what;
             }
 
             public Event() { }
-
 
             public new String ToString()
             {
@@ -44,11 +30,11 @@ namespace Plotter
 
         private bool ContinueLoop;
 
-        private FlexBlockingQueue<Event> Events;
+        private FlexBlockingQueue<EventT> Events;
 
-        private List<Event> DelayedEvents;
+        private List<EventT> DelayedEvents;
 
-        private FlexBlockingQueue<Event> FreeEvents;
+        private FlexBlockingQueue<EventT> FreeEvents;
 
         private int QueueSize = 5;
 
@@ -60,14 +46,14 @@ namespace Plotter
         {
             QueueSize = queueSize;
 
-            Events = new FlexBlockingQueue<Event>(QueueSize);
-            FreeEvents = new FlexBlockingQueue<Event>(QueueSize);
+            Events = new FlexBlockingQueue<EventT>(QueueSize);
+            FreeEvents = new FlexBlockingQueue<EventT>(QueueSize);
 
-            DelayedEvents = new List<Event>();
+            DelayedEvents = new List<EventT>();
 
             for (int i = 0; i < QueueSize; i++)
             {
-                FreeEvents.Push(new Event());
+                FreeEvents.Push(new EventT());
             }
 
             CheckTimer = new System.Timers.Timer();
@@ -78,14 +64,14 @@ namespace Plotter
             Looper = new Task(Loop);
         }
 
-        public Event ObtainEvent()
+        public EventT ObtainEvent()
         {
-            Event evt = FreeEvents.Pop();
+            EventT evt = FreeEvents.Pop();
             evt.Clean();
             return evt;
         }
 
-        public void Post(Event evt)
+        public void Post(EventT evt)
         {
             lock (LockObj)
             {
@@ -99,7 +85,7 @@ namespace Plotter
         }
 
 
-        public void Post(Event evt, int delay)
+        public void Post(EventT evt, int delay)
         {
             lock (LockObj)
             {
@@ -109,13 +95,13 @@ namespace Plotter
             }
         }
 
-        public abstract void HandleEvent(Event evt);
+        public abstract void HandleEvent(EventT evt);
 
         public void Loop()
         {
             while (ContinueLoop)
             {
-                Event evt = Events.Pop();
+                EventT evt = Events.Pop();
 
                 HandleEvent(evt);
 
@@ -155,7 +141,7 @@ namespace Plotter
 
                 if (DelayedEvents.Count > 0)
                 {
-                    foreach (Event evt in DelayedEvents)
+                    foreach (EventT evt in DelayedEvents)
                     {
                         if (evt.ExpireTime == 0)
                         {
@@ -197,7 +183,7 @@ namespace Plotter
 
                 for (int i = DelayedEvents.Count - 1; i >= 0; i--)
                 {
-                    Event item = DelayedEvents[i];
+                    EventT item = DelayedEvents[i];
 
                     if (match(item))
                     {
@@ -211,10 +197,9 @@ namespace Plotter
         public void RemoveAll(int what)
         {
             RemoveAll(e => e.What == what);
-
         }
 
-        private void Removed(Event ev)
+        private void Removed(EventT ev)
         {
             FreeEvents.Push(ev);
         }

@@ -252,7 +252,7 @@ namespace Plotter.Controller
 
             sc.MarkPt = mPointSearcher.GetXYMatch();
 
-            sc.MarkPt.dump();
+            //sc.MarkPt.dump();
 
             if (sc.MarkPt.FigureID == 0)
             {
