@@ -119,11 +119,14 @@ namespace Plotter
         {
             //DOut.tpl("PushDraw");
 
-            if (dc == mDrawContext)
+            ThreadUtil.RunOnMainThread(() =>
             {
-                //Image = mDrawContext.Image;
-                mDrawContext.Refresh();
-            }
+                if (dc == mDrawContext)
+                {
+                    //Image = mDrawContext.Image;
+                    mDrawContext.Refresh();
+                }
+            }, true);
         }
 
         private void OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -329,100 +332,70 @@ namespace Plotter
 
             public void HandleMouseMove(int x, int y)
             {
-                //DOut.tpl("HandleMouseMove");
-
-                mPlotterView.mController.Mouse.MouseMove(mPlotterView.mDrawContext, x, y);
-
-                Exception exp = null;
+                try
+                {
+                    mPlotterView.mController.Mouse.MouseMove(mPlotterView.mDrawContext, x, y);
+                }
+                catch (Exception ex)
+                {
+                    App.ThrowException(ex);
+                }
 
                 ThreadUtil.RunOnMainThread(() =>
                 {
-                    try
-                    {
-                        mPlotterView.Redraw();
-                    }
-                    catch (Exception ex)
-                    {
-                        exp = ex;
-                    }
+                    mPlotterView.Redraw();
                 }, true);
-
-                if (exp != null)
-                {
-                    App.ThrowException(exp);
-                }
             }
 
             public void HandleMouseWheel(MouseEventArgs e)
             {
-                Exception exp = null;
+                try
+                {
+                    mPlotterView.mController.Mouse.MouseWheel(mPlotterView.mDrawContext, e.X, e.Y, e.Delta);
+                }
+                catch (Exception ex)
+                {
+                    App.ThrowException(ex);
+                }
 
                 ThreadUtil.RunOnMainThread(() =>
                 {
-                    try
-                    {
-                        mPlotterView.mController.Mouse.MouseWheel(mPlotterView.mDrawContext, e.X, e.Y, e.Delta);
-                        mPlotterView.Redraw();
-                    }
-                    catch (Exception ex)
-                    {
-                        exp = ex;
-                    }
-
+                    mPlotterView.Redraw();
                 }, true);
-
-                if (exp != null)
-                {
-                    App.ThrowException(exp);
-                }
             }
 
             public void HandleMouseDown(MouseEventArgs e)
             {
-                Exception exp = null;
+                try
+                {
+                    mPlotterView.mController.Mouse.MouseDown(mPlotterView.mDrawContext, e.Button, e.X, e.Y);
+                } catch (Exception ex)
+                {
+                    App.ThrowException(ex);
+                }
 
                 ThreadUtil.RunOnMainThread(() =>
                 {
-                    try
-                    {
-                        mPlotterView.mController.Mouse.MouseDown(mPlotterView.mDrawContext, e.Button, e.X, e.Y);
-                        mPlotterView.Redraw();
-                    }
-                    catch (Exception ex)
-                    {
-                        exp = ex;
-                    }
-
+                    mPlotterView.Redraw();
                 }, true);
-
-                if (exp != null)
-                {
-                    App.ThrowException(exp);
-                }
             }
 
             public void HandleMouseUp(MouseEventArgs e)
             {
-                Exception exp = null;
+                try
+                {
+                    mPlotterView.mController.Mouse.MouseUp(mPlotterView.mDrawContext, e.Button, e.X, e.Y);
+                }
+                catch (Exception ex)
+                {
+                    App.ThrowException(ex);
+                }
 
                 ThreadUtil.RunOnMainThread(() =>
                 {
-                    try
-                    {
-                        mPlotterView.mController.Mouse.MouseUp(mPlotterView.mDrawContext, e.Button, e.X, e.Y);
-                        mPlotterView.Redraw();
-                    }
-                    catch (Exception ex)
-                    {
-                        exp = ex;
-                    }
-
+                    mPlotterView.Redraw();
                 }, true);
 
-                if (exp != null)
-                {
-                    App.ThrowException(exp);
-                }
             }
         }
     }

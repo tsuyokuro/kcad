@@ -316,14 +316,17 @@ namespace Plotter.Controller
 
             p += delta;
 
-            Env.RunOnMainThread(()=>Controller.SetLastDownPoint(p));
+            Controller.SetLastDownPoint(p);
+
+            Redraw();
         }
 
         public void SetLastDownPoint(double x, double y, double z)
         {
             CadVector p = CadVector.Create(x, y, z);
 
-            Env.RunOnMainThread(()=>Controller.SetLastDownPoint(p));
+            Controller.SetLastDownPoint(p);
+            Redraw();
         }
 
         public void Line(double x, double y, double z)

@@ -549,7 +549,7 @@ namespace Plotter.Controller
             if (pointer.MDownPoint.x == x && pointer.MDownPoint.y == y)
             {
                 ViewCtrl.AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
-                Redraw();
+                //Redraw();
             }
 
             State = States.SELECT;
@@ -572,7 +572,7 @@ namespace Plotter.Controller
 
             CrossCursor.Pos = CrossCursor.StorePos + d;
 
-            Redraw();
+            //Redraw();
         }
 
         private void Wheel(CadMouse pointer, DrawContext dc, double x, double y, int delta)
@@ -593,7 +593,7 @@ namespace Plotter.Controller
                 }
 
                 ViewCtrl.DpiUpDown(dc, f);
-                Redraw();
+                //Redraw();
             }
         }
 
@@ -1140,8 +1140,6 @@ namespace Plotter.Controller
             CrossCursor.Pos = CurrentDC.WorldPointToDevPoint(SnapPoint);
 
             Observer.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);
-
-            Redraw();
         }
 
 
@@ -1153,10 +1151,7 @@ namespace Plotter.Controller
         public void SetLastDownPoint(CadVector v)
         {
             LastDownPoint = v;
-
             Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
-
-            Redraw();
         }
     }
 }
