@@ -243,6 +243,9 @@ namespace Plotter
         public void Redraw()
         {
             //DOut.tpl("Redraw");
+
+            // PushDraw is called to redraw
+            // PushDrawが呼ばれて再描画が行われる
             mController.Redraw(mController.CurrentDC);
         }
 
@@ -335,16 +338,12 @@ namespace Plotter
                 try
                 {
                     mPlotterView.mController.Mouse.MouseMove(mPlotterView.mDrawContext, x, y);
+                    mPlotterView.Redraw();
                 }
                 catch (Exception ex)
                 {
                     App.ThrowException(ex);
                 }
-
-                ThreadUtil.RunOnMainThread(() =>
-                {
-                    mPlotterView.Redraw();
-                }, true);
             }
 
             public void HandleMouseWheel(MouseEventArgs e)
@@ -352,16 +351,12 @@ namespace Plotter
                 try
                 {
                     mPlotterView.mController.Mouse.MouseWheel(mPlotterView.mDrawContext, e.X, e.Y, e.Delta);
+                    mPlotterView.Redraw();
                 }
                 catch (Exception ex)
                 {
                     App.ThrowException(ex);
                 }
-
-                ThreadUtil.RunOnMainThread(() =>
-                {
-                    mPlotterView.Redraw();
-                }, true);
             }
 
             public void HandleMouseDown(MouseEventArgs e)
@@ -369,15 +364,12 @@ namespace Plotter
                 try
                 {
                     mPlotterView.mController.Mouse.MouseDown(mPlotterView.mDrawContext, e.Button, e.X, e.Y);
-                } catch (Exception ex)
+                    mPlotterView.Redraw();
+                }
+                catch (Exception ex)
                 {
                     App.ThrowException(ex);
                 }
-
-                ThreadUtil.RunOnMainThread(() =>
-                {
-                    mPlotterView.Redraw();
-                }, true);
             }
 
             public void HandleMouseUp(MouseEventArgs e)
@@ -385,17 +377,12 @@ namespace Plotter
                 try
                 {
                     mPlotterView.mController.Mouse.MouseUp(mPlotterView.mDrawContext, e.Button, e.X, e.Y);
+                    mPlotterView.Redraw();
                 }
                 catch (Exception ex)
                 {
                     App.ThrowException(ex);
                 }
-
-                ThreadUtil.RunOnMainThread(() =>
-                {
-                    mPlotterView.Redraw();
-                }, true);
-
             }
         }
     }
