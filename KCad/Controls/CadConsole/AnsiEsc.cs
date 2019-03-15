@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using Plotter;
+using System.Windows.Media;
 
 namespace KCad
 {
@@ -73,25 +74,6 @@ namespace KCad
             Palette[13] = Brushes.MediumOrchid;
             Palette[14] = Brushes.Turquoise;
             Palette[15] = Brushes.White;
-        }
-
-        public Brush Brigahtness(Brush brush, float a)
-        {
-            if (!(brush is SolidColorBrush))
-            {
-                return brush;
-            }
-
-            SolidColorBrush src = (SolidColorBrush)brush;
-            Color c = src.Color;
-
-            RGB rgb = new RGB(c.R / 255f, c.G / 255f, c.B / 255f);
-
-            rgb = ColorUtil.Brightness(rgb, a);
-
-            Color cc = Color.FromArgb(0xff, (byte)(rgb.R * 255f), (byte)(rgb.G * 255f), (byte)(rgb.B * 255f));
-
-            return new SolidColorBrush(cc);
         }
     }
 }

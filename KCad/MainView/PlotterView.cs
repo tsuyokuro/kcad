@@ -117,11 +117,16 @@ namespace Plotter
 
         public void PushDraw(DrawContext dc)
         {
-            if (dc == mDrawContext)
+            //DOut.tpl("PushDraw");
+
+            ThreadUtil.RunOnMainThread(() =>
             {
-                //Image = mDrawContext.Image;
-                mDrawContext.Refresh();
-            }
+                if (dc == mDrawContext)
+                {
+                    //Image = mDrawContext.Image;
+                    mDrawContext.Refresh();
+                }
+            }, true);
         }
 
         private void OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -131,11 +136,11 @@ namespace Plotter
             // 未処理のEventは破棄
             mEventSequencer.RemoveAll(MyEventSequencer.MOUSE_MOVE);
 
-            EventSequencer.Event evt = mEventSequencer.ObtainEvent();
+            MyEvent evt = mEventSequencer.ObtainEvent();
 
             evt.What = MyEventSequencer.MOUSE_MOVE;
-            evt.Arg1 = e.X;
-            evt.Arg2 = e.Y;
+            evt.x = e.X;
+            evt.y = e.Y;
 
             mEventSequencer.Post(evt);
 #else
@@ -150,10 +155,10 @@ namespace Plotter
 #if MOUSE_THREAD
             mEventSequencer.RemoveAll(MyEventSequencer.MOUSE_WHEEL);
 
-            EventSequencer.Event evt = mEventSequencer.ObtainEvent();
+            MyEvent evt = mEventSequencer.ObtainEvent();
 
             evt.What = MyEventSequencer.MOUSE_WHEEL;
-            evt.Obj = e;
+            evt.EventArgs = e;
 
             mEventSequencer.Post(evt);
 #else
@@ -177,10 +182,10 @@ namespace Plotter
 #if MOUSE_THREAD
             mEventSequencer.RemoveAll(MyEventSequencer.MOUSE_DOWN);
 
-            EventSequencer.Event evt = mEventSequencer.ObtainEvent();
+            MyEvent evt = mEventSequencer.ObtainEvent();
 
             evt.What = MyEventSequencer.MOUSE_DOWN;
-            evt.Obj = e;
+            evt.EventArgs = e;
 
             mEventSequencer.Post(evt);
 #else
@@ -194,10 +199,10 @@ namespace Plotter
 #if MOUSE_THREAD
             mEventSequencer.RemoveAll(MyEventSequencer.MOUSE_UP);
 
-            EventSequencer.Event evt = mEventSequencer.ObtainEvent();
+            MyEvent evt = mEventSequencer.ObtainEvent();
 
             evt.What = MyEventSequencer.MOUSE_UP;
-            evt.Obj = e;
+            evt.EventArgs = e;
 
             mEventSequencer.Post(evt);
 #else
@@ -237,6 +242,10 @@ namespace Plotter
 
         public void Redraw()
         {
+            //DOut.tpl("Redraw");
+
+            // PushDraw is called to redraw
+            // PushDrawが呼ばれて再描画が行われる
             mController.Redraw(mController.CurrentDC);
         }
 
@@ -283,7 +292,14 @@ namespace Plotter
             }
         }
 
-        class MyEventSequencer : EventSequencer
+        class MyEvent : EventSequencer<MyEvent>.Event
+        {
+            public int x;
+            public int y;
+            public MouseEventArgs EventArgs;
+        }
+
+        class MyEventSequencer : EventSequencer<MyEvent>
         {
             public const int MOUSE_MOVE = 1;
             public const int MOUSE_WHEEL = 2;
@@ -297,125 +313,75 @@ namespace Plotter
                 mPlotterView = view;
             }
 
-            public override void HandleEvent(Event msg)
+            public override void HandleEvent(MyEvent msg)
             {
                 if (msg.What == MOUSE_MOVE)
                 {
-                    int x = msg.Arg1;
-                    int y = msg.Arg2;
-
-                    handleMouseMove(x, y);
+                    HandleMouseMove(msg.x, msg.y);
                 }
                 else if (msg.What == MOUSE_WHEEL)
                 {
-                    MouseEventArgs e = (MouseEventArgs)msg.Obj;
-                    handleMouseWheel(e);
+                    HandleMouseWheel(msg.EventArgs);
                 }
                 else if (msg.What == MOUSE_DOWN)
                 {
-                    MouseEventArgs e = (MouseEventArgs)msg.Obj;
-                    handleMouseDown(e);
+                    HandleMouseDown(msg.EventArgs);
                 }
                 else if (msg.What == MOUSE_UP)
                 {
-                    MouseEventArgs e = (MouseEventArgs)msg.Obj;
-                    handleMouseUp(e);
-                }
-
-            }
-
-            public void handleMouseMove(int x, int y)
-            {
-                Exception exp = null;
-
-                ThreadUtil.RunOnMainThread(() =>
-                {
-                    try
-                    {
-                        mPlotterView.mController.Mouse.MouseMove(mPlotterView.mDrawContext, x, y);
-                        mPlotterView.Redraw();
-                    }
-                    catch (Exception ex)
-                    {
-                        exp = ex;
-                    }
-                }, true);
-
-                if (exp != null)
-                {
-                    App.ThrowException(exp);
+                    HandleMouseUp(msg.EventArgs);
                 }
             }
 
-            public void handleMouseWheel(MouseEventArgs e)
+            public void HandleMouseMove(int x, int y)
             {
-                Exception exp = null;
-
-                ThreadUtil.RunOnMainThread(() =>
+                try
                 {
-                    try
-                    {
-                        mPlotterView.mController.Mouse.MouseWheel(mPlotterView.mDrawContext, e.X, e.Y, e.Delta);
-                        mPlotterView.Redraw();
-                    }
-                    catch (Exception ex)
-                    {
-                        exp = ex;
-                    }
-
-                }, true);
-
-                if (exp != null)
+                    mPlotterView.mController.Mouse.MouseMove(mPlotterView.mDrawContext, x, y);
+                    mPlotterView.Redraw();
+                }
+                catch (Exception ex)
                 {
-                    App.ThrowException(exp);
+                    App.ThrowException(ex);
                 }
             }
 
-            public void handleMouseDown(MouseEventArgs e)
+            public void HandleMouseWheel(MouseEventArgs e)
             {
-                Exception exp = null;
-
-                ThreadUtil.RunOnMainThread(() =>
+                try
                 {
-                    try
-                    {
-                        mPlotterView.mController.Mouse.MouseDown(mPlotterView.mDrawContext, e.Button, e.X, e.Y);
-                        mPlotterView.Redraw();
-                    }
-                    catch (Exception ex)
-                    {
-                        exp = ex;
-                    }
-
-                }, true);
-
-                if (exp != null)
+                    mPlotterView.mController.Mouse.MouseWheel(mPlotterView.mDrawContext, e.X, e.Y, e.Delta);
+                    mPlotterView.Redraw();
+                }
+                catch (Exception ex)
                 {
-                    App.ThrowException(exp);
+                    App.ThrowException(ex);
                 }
             }
 
-            public void handleMouseUp(MouseEventArgs e)
+            public void HandleMouseDown(MouseEventArgs e)
             {
-                Exception exp = null;
-
-                ThreadUtil.RunOnMainThread(() =>
+                try
                 {
-                    try
-                    {
-                        mPlotterView.mController.Mouse.MouseUp(mPlotterView.mDrawContext, e.Button, e.X, e.Y);
-                        mPlotterView.Redraw();
-                    }
-                    catch (Exception ex)
-                    {
-                        exp = ex;
-                    }
-
-                }, true);
-
-                if (exp != null)
+                    mPlotterView.mController.Mouse.MouseDown(mPlotterView.mDrawContext, e.Button, e.X, e.Y);
+                    mPlotterView.Redraw();
+                }
+                catch (Exception ex)
                 {
-                    App.ThrowException(exp);
+                    App.ThrowException(ex);
+                }
+            }
+
+            public void HandleMouseUp(MouseEventArgs e)
+            {
+                try
+                {
+                    mPlotterView.mController.Mouse.MouseUp(mPlotterView.mDrawContext, e.Button, e.X, e.Y);
+                    mPlotterView.Redraw();
+                }
+                catch (Exception ex)
+                {
+                    App.ThrowException(ex);
                 }
             }
         }

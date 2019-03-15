@@ -80,6 +80,7 @@ namespace Plotter
                 {
                     CadVector p = Controller.GetCursorPos();
                     Controller.SetCursorWoldPos(p + Delta);
+                    Controller.Redraw();
                 }
             }
         }

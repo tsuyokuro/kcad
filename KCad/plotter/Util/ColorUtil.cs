@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace KCad
+namespace Plotter
 {
     public struct HSV
     {

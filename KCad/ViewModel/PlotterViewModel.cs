@@ -116,6 +116,14 @@ namespace Plotter
         #region Tree view
         private void UpdateTreeView(bool remakeTree)
         {
+            ThreadUtil.RunOnMainThread(() =>
+            {
+                UpdateTreeViewProc(remakeTree);
+            }, true);
+        }
+
+        private void UpdateTreeViewProc(bool remakeTree)
+        {
             if (mCadObjectTreeView == null)
             {
                 return;
@@ -154,7 +162,9 @@ namespace Plotter
                 return;
             }
 
-            mCadObjectTreeView.SetVPos(index);
+            ThreadUtil.RunOnMainThread(() => {
+                mCadObjectTreeView.SetVPos(index);
+            }, true);
         }
 
         private int FindTreeViewItem(uint id)
@@ -776,13 +786,20 @@ namespace Plotter
 
         private void CursorLocked(bool locked)
         {
-            mPlotterView.CursorLocked(locked);
+            ThreadUtil.RunOnMainThread(() =>
+            {
+                mPlotterView.CursorLocked(locked);
+            }, true);
         }
 
         private void ChangeMouseCursor(PlotterObserver.MouseCursorType cursorType)
         {
             //DOut.pl("ViewModel: ChangeMouseCursor");
-            mPlotterView.ChangeMouseCursor(cursorType);
+
+            ThreadUtil.RunOnMainThread(() =>
+            {
+                mPlotterView.ChangeMouseCursor(cursorType);
+            }, true);
         }
 
         #endregion
@@ -866,7 +883,10 @@ namespace Plotter
         #region helper
         public void Redraw()
         {
-            mController.Redraw();
+            ThreadUtil.RunOnMainThread(() =>
+            {
+                mController.Redraw();
+            }, true);
         }
         #endregion
 
