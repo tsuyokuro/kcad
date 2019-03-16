@@ -213,6 +213,13 @@ namespace Plotter
 
         public void ShowContextMenu(PlotterController sender, MenuInfo menuInfo, int x, int y)
         {
+            ThreadUtil.RunOnMainThread(() => {
+                ShowContextMenuProc(sender, menuInfo, x, y);
+            }, true);
+        }
+
+        private void ShowContextMenuProc(PlotterController sender, MenuInfo menuInfo, int x, int y)
+        {
             mContextMenu.Items.Clear();
 
             foreach (MenuInfo.Item item in menuInfo.Items)
