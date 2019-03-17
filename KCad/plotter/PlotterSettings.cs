@@ -24,8 +24,13 @@ namespace Plotter
         {
             set
             {
-                SettingsHolder.Settings.SnapToGrid = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
+                if (SettingsHolder.Settings.SnapToGrid != value)
+                {
+                    SettingsHolder.Settings.SnapToGrid = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
+
+                    Redraw();
+                }
             }
 
             get => SettingsHolder.Settings.SnapToGrid;
