@@ -197,6 +197,8 @@
     <Compile Include="Controls\CadConsole\AnsiEsc.cs" />
     <Compile Include="Controls\CadConsole\TextLine.cs" />
     <Compile Include="Controls\PopupEx.cs" />
+    <Compile Include="plotter\HalfEdge\HeModelBuilder.cs" />
+    <Compile Include="plotter\HalfEdge\HeModelConverter.cs" />
     <Compile Include="WIndowsAPI\WindowsAPI.cs" />
     <Compile Include="Dialogs\AngleInputDialog.xaml.cs">
       <DependentUpon>AngleInputDialog.xaml</DependentUpon>

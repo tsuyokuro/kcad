@@ -91,10 +91,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CadDataTypes\CadDataTypes.cs" />
+    <Compile Include="CadDataTypes\CadMesh.cs" />
     <Compile Include="CadDataTypes\CadVector.cs" />
+    <Compile Include="CadDataTypes\CadFace.cs" />
     <Compile Include="FlexArray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CadDataTypes\VectorList.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
