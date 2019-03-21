@@ -11,6 +11,11 @@ namespace CadDataTypes
             VList = new FlexArray<int>(3);
         }
 
+        public CadFace(FlexArray<int> vl)
+        {
+            VList = new FlexArray<int>(vl);
+        }
+
         public CadFace(params int[] args)
         {
             VList = new FlexArray<int>(args.Length);

@@ -224,5 +224,32 @@ namespace MeshUtilNS
 
             return false;
         }
+
+        public static CadMesh CreateFrom(VectorList vl)
+        {
+            if (vl.Count < 2)
+            {
+                return null;
+            }
+
+            CadMesh m = new CadMesh(vl.Count, 1);
+
+            m.VertexStore.AddRange(vl);
+
+            int i;
+
+            FlexArray<int> nl = new FlexArray<int>(vl.Count);
+
+            for (i=0; i<vl.Count; i++)
+            {
+                nl.Add(i);
+            }
+
+            CadFace face = new CadFace(nl);
+
+            m.FaceStore.Add(face);
+
+            return m;
+        }
     }
 }
