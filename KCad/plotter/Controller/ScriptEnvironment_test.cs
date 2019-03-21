@@ -571,6 +571,27 @@ namespace Plotter.Controller
             s = jo.ToString();
         }
 
+        private void testTriangulate()
+        {
+            CadFigure tfig = GetTargetFigure();
+            if (tfig == null || tfig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return;
+            }
+
+            VectorList vl = tfig.GetPoints(12);
+
+            CadMesh m = IglW.Triangulate(vl, "a1000q");
+
+            HeModel hem = HeModelConverter.ToHeModel(m);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            Controller.CurrentLayer.AddFigure(fig);
+        }
+
         private void SimpleCommand(string s)
         {
             string[] ss = Regex.Split(s, @"[ \t]+");
@@ -604,6 +625,11 @@ namespace Plotter.Controller
                 testLoadOff();
 
             }
+            else if (cmd == "@triangle")
+            {
+                testTriangulate();
+            }
+
             else if (cmd == "@nu")
             {
                 testNu();

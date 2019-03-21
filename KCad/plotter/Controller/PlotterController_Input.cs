@@ -10,6 +10,20 @@ namespace Plotter.Controller
 {
     public partial class PlotterController
     {
+        public struct SnapInfo
+        {
+            public CadCursor Cursor;
+            public CadVector SnapPoint;
+            public double Distance;
+
+            public SnapInfo(CadCursor cursor, CadVector snapPoint, double dist = Double.MaxValue)
+            {
+                Cursor = cursor;
+                SnapPoint = snapPoint;
+                Distance = dist;
+            }
+        }
+
         public InteractCtrl mInteractCtrl = new InteractCtrl();
 
         public CadMouse Mouse { get; } = new CadMouse();
@@ -703,7 +717,7 @@ namespace Plotter.Controller
             mPointSearcher.SearchAllLayer(dc, mDB);
         }
 
-        private void EvalPointSearcher(DrawContext dc)
+        private SnapInfo EvalPointSearcher(DrawContext dc, SnapInfo si)
         {
             MarkPoint mxy = mPointSearcher.GetXYMatch();
             MarkPoint mx = mPointSearcher.GetXMatch();
@@ -717,11 +731,11 @@ namespace Plotter.Controller
 
                 tp = dc.WorldPointToDevPoint(mx.Point);
 
-                CadVector distanceX = CrossCursor.DistanceX(tp);
+                CadVector distanceX = si.Cursor.DistanceX(tp);
 
-                CrossCursor.Pos += distanceX;
+                si.Cursor.Pos += distanceX;
 
-                SnapPoint = dc.DevPointToWorldPoint(CrossCursor.Pos);
+                si.SnapPoint = dc.DevPointToWorldPoint(si.Cursor.Pos);
             }
 
             if (my.IsValid)
@@ -730,11 +744,11 @@ namespace Plotter.Controller
 
                 tp = dc.WorldPointToDevPoint(my.Point);
 
-                CadVector distanceY = CrossCursor.DistanceY(tp);
+                CadVector distanceY = si.Cursor.DistanceY(tp);
 
-                CrossCursor.Pos += distanceY;
+                si.Cursor.Pos += distanceY;
 
-                SnapPoint = dc.DevPointToWorldPoint(CrossCursor.Pos);
+                si.SnapPoint = dc.DevPointToWorldPoint(si.Cursor.Pos);
             }
 
             if (mxy.IsValid)
@@ -742,9 +756,12 @@ namespace Plotter.Controller
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHLIGHT2));
                 tp = dc.WorldPointToDevPoint(mx.Point);
 
-                SnapPoint = mxy.Point;
-                CrossCursor.Pos = dc.WorldPointToDevPoint(SnapPoint);
+                si.Cursor.Pos = dc.WorldPointToDevPoint(si.SnapPoint);
+
+                si.SnapPoint = mxy.Point;
             }
+
+            return si;
         }
 
         private void SegSnap(DrawContext dc)
@@ -752,13 +769,13 @@ namespace Plotter.Controller
             mSegSearcher.SearchAllLayer(dc, mDB);
         }
 
-        private void EvalSegSeracher(DrawContext dc, double dist)
+        private SnapInfo EvalSegSeracher(DrawContext dc, SnapInfo si)
         {
             MarkSegment markSeg = mSegSearcher.GetMatch();
 
             if (mSegSearcher.IsMatch)
             {
-                if (markSeg.Distance < dist)
+                if (markSeg.Distance < si.Distance)
                 {
                     CadFigure fig = mDB.GetFigure(markSeg.FigureID);
                     fig.DrawSeg(dc, DrawTools.PEN_MATCH_SEG, markSeg.PtIndexA, markSeg.PtIndexB);
@@ -767,21 +784,21 @@ namespace Plotter.Controller
 
                     CadVector t = dc.WorldPointToDevPoint(center);
 
-                    if ((t - CrossCursor.Pos).Norm() < SettingsHolder.Settings.LineSnapRange)
+                    if ((t - si.Cursor.Pos).Norm() < SettingsHolder.Settings.LineSnapRange)
                     {
                         HighlightPointList.Add(new HighlightPointListItem(center));
 
-                        SnapPoint = center;
+                        si.SnapPoint = center;
 
-                        CrossCursor.Pos = t;
-                        CrossCursor.Pos.z = 0;
+                        si.Cursor.Pos = t;
+                        si.Cursor.Pos.z = 0;
                     }
                     else
                     {
-                        SnapPoint = markSeg.CrossPoint;
+                        si.SnapPoint = markSeg.CrossPoint;
 
-                        CrossCursor.Pos = markSeg.CrossPointScrn;
-                        CrossCursor.Pos.z = 0;
+                        si.Cursor.Pos = markSeg.CrossPointScrn;
+                        si.Cursor.Pos.z = 0;
 
                         HighlightPointList.Add(new HighlightPointListItem(SnapPoint, DrawTools.PEN_LINE_SNAP));
                     }
@@ -791,67 +808,58 @@ namespace Plotter.Controller
                     mSegSearcher.Clean();
                 }
             }
+
+            return si;
         }
 
-        private void SnapGrid(DrawContext dc, CadVector pixp)
+        private SnapInfo SnapGrid(DrawContext dc, SnapInfo si)
         {
-            if (mPointSearcher.IsXYMatch || mSegSearcher.IsMatch)
-            {
-                return;
-            }
-
-
             mGridding.Clear();
-            mGridding.Check(dc, pixp);
+            mGridding.Check(dc, si.Cursor.Pos);
 
             bool snapx = false;
             bool snapy = false;
 
             if (!mPointSearcher.IsXMatch && mGridding.XMatchU.Valid)
             {
-                CrossCursor.Pos.x = mGridding.XMatchU.x;
+                si.Cursor.Pos.x = mGridding.XMatchU.x;
                 snapx = true;
             }
 
             if (!mPointSearcher.IsYMatch && mGridding.YMatchU.Valid)
             {
-                CrossCursor.Pos.y = mGridding.YMatchU.y;
+                si.Cursor.Pos.y = mGridding.YMatchU.y;
                 snapy = true;
             }
 
-            SnapPoint = dc.DevPointToWorldPoint(CrossCursor.Pos);
+            si.SnapPoint = dc.DevPointToWorldPoint(si.Cursor.Pos);
 
             if (snapx && snapy)
             {
-                HighlightPointList.Add(new HighlightPointListItem(SnapPoint));
+                HighlightPointList.Add(new HighlightPointListItem(si.SnapPoint));
             }
+
+            return si;
         }
 
-        private void SnapLine(DrawContext dc)
+        private SnapInfo SnapLine(DrawContext dc, SnapInfo si)
         {
-            if (mPointSearcher.IsXYMatch)
-            {
-                return;
-            }
-
-            CadCursor cursor = CrossCursor;
-
             if (mPointSearcher.IsXMatch)
             {
-                cursor.Pos.x = mPointSearcher.GetXMatch().PointScrn.x;
+                si.Cursor.Pos.x = mPointSearcher.GetXMatch().PointScrn.x;
             }
 
             if (mPointSearcher.IsYMatch)
             {
-                cursor.Pos.y = mPointSearcher.GetYMatch().PointScrn.y;
+                si.Cursor.Pos.y = mPointSearcher.GetYMatch().PointScrn.y;
             }
 
-            RulerInfo ri = RulerSet.Capture(dc, cursor, SettingsHolder.Settings.LineSnapRange);
+            RulerInfo ri = RulerSet.Capture(dc, si.Cursor, SettingsHolder.Settings.LineSnapRange);
 
             if (ri.IsValid)
             {
-                SnapPoint = ri.CrossPoint;
-                CrossCursor.Pos = dc.WorldPointToDevPoint(SnapPoint);
+                si.SnapPoint = ri.CrossPoint;
+                si.Cursor.Pos = dc.WorldPointToDevPoint(si.SnapPoint);
 
                 if (mSegSearcher.IsMatch)
                 {
@@ -863,8 +871,8 @@ namespace Plotter.Controller
 
                         if (cp.Valid)
                         {
-                            SnapPoint = dc.DevPointToWorldPoint(cp);
-                            CrossCursor.Pos = cp;
+                            si.SnapPoint = dc.DevPointToWorldPoint(cp);
+                            si.Cursor.Pos = cp;
                         }
                     }
                 }
@@ -872,11 +880,22 @@ namespace Plotter.Controller
                 HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1));
                 HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint));
             }
+
+            return si;
         }
 
         private void SnapCursor(DrawContext dc)
         {
             HighlightPointList.Clear();
+
+            SnapInfo si =
+                new SnapInfo(
+                    CrossCursor,
+                    SnapPoint,
+                    mPointSearcher.Distance()
+                    );
+
+            #region Point search
 
             mPointSearcher.Clean();
             mPointSearcher.SetRangePixel(dc, SettingsHolder.Settings.PointSnapRange);
@@ -897,32 +916,46 @@ namespace Plotter.Controller
             if (SettingsHolder.Settings.SnapToPoint)
             {
                 PointSnap(dc);
+                si = EvalPointSearcher(dc, si);
             }
 
-            CadCursor temCursor = CrossCursor;
+            #endregion
 
-            EvalPointSearcher(dc);
+            #region Segment search
 
             mSegSearcher.Clean();
             mSegSearcher.SetRangePixel(dc, SettingsHolder.Settings.LineSnapRange);
-            mSegSearcher.SetTargetPoint(temCursor);
+            mSegSearcher.SetTargetPoint(CrossCursor);
 
             if (SettingsHolder.Settings.SnapToSegment)
             {
-                SegSnap(dc);
+                if (!mPointSearcher.IsXYMatch)
+                {
+                    SegSnap(dc);
+                    si = EvalSegSeracher(dc, si);
+                }
             }
 
-            EvalSegSeracher(dc, mPointSearcher.Distance());
+            #endregion
 
             if (SettingsHolder.Settings.SnapToGrid)
             {
-                SnapGrid(dc, CrossCursor.Pos);
+                if (!mPointSearcher.IsXYMatch && !mSegSearcher.IsMatch)
+                {
+                    si = SnapGrid(dc, si);
+                }
             }
 
             if (SettingsHolder.Settings.SnapToLine)
             {
-                SnapLine(dc);
+                if (!mPointSearcher.IsXYMatch)
+                {
+                    si = SnapLine(dc, si);
+                }
             }
+
+            CrossCursor = si.Cursor;
+            SnapPoint = si.SnapPoint;
         }
 
         private void MouseMove(CadMouse pointer, DrawContext dc, double x, double y)

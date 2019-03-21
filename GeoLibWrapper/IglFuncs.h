@@ -13,5 +13,14 @@ public:
 
 
 	static void Test();
+
+	static void triangulate(
+		const Eigen::MatrixXd & V,
+		const Eigen::MatrixXi & E,
+		const Eigen::MatrixXd & H,
+		const std::string flags,
+		Eigen::MatrixXd & V2,
+		Eigen::MatrixXi & F2);
+	
 };
 
