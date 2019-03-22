@@ -25,7 +25,7 @@ namespace Plotter.Controller
 
         public Action<PlotterController, LayerListInfo> LayerListChanged = (controller, layerListInfo) => { };
 
-        public Action<PlotterController, bool> DataChanged = (controller, redraw) => { };
+        //public Action<PlotterController, bool> DataChanged = (controller, redraw) => { };
 
         public Action<PlotterController, CadVector, CursorType> CursorPosChanged = (controller, pos, cursorType) => { };
 

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CadDataTypes;
+using MessagePack;
+using Plotter.Serializer;
 
 namespace Plotter
 {
@@ -173,6 +175,36 @@ namespace Plotter
                 ret.AddRange(set);
 
                 return ret;
+            }
+
+            public static CadFigure Clone(CadFigure src)
+            {
+                MpFigure mpf = MpFigure.Create(src, false);
+
+                byte[] data = MessagePackSerializer.Serialize(mpf);
+
+                MpFigure mpfCopy = MessagePackSerializer.Deserialize<MpFigure>(data);
+
+                CadFigure fig = mpfCopy.Restore();
+
+                fig.ID = 0;
+
+                return fig;
+            }
+
+            public static void CopyTo(CadFigure src, CadFigure dst)
+            {
+                MpFigure mpf = MpFigure.Create(src, false);
+
+                byte[] data = MessagePackSerializer.Serialize(mpf);
+
+                MpFigure mpfCopy = MessagePackSerializer.Deserialize<MpFigure>(data);
+
+                uint id = dst.ID;
+
+                mpfCopy.RestoreTo(dst);
+
+                dst.ID = id;
             }
         }
     }

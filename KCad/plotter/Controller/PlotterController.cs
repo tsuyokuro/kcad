@@ -142,10 +142,10 @@ namespace Plotter.Controller
         #endregion TreeView
 
         #region Notify
-        public void NotifyDataChanged(bool redraw)
-        {
-            Observer.DataChanged(this, redraw);
-        }
+        //public void NotifyDataChanged(bool redraw)
+        //{
+        //    Observer.DataChanged(this, redraw);
+        //}
 
         private void UpdateLayerList()
         {
