@@ -846,6 +846,12 @@ namespace Plotter.Controller
             CadUtil.RotateFigure(fig, org, rv, t);
         }
 
+        public void Triangulate(uint figID, double minArea, double maxDegree)
+        {
+            string option = $"a{minArea}q{maxDegree}";
+
+            Triangulate(figID, option);
+        }
 
         // option:
         // e.g.
