@@ -205,8 +205,12 @@ def updateTV():
 def viewDir():
 	return SE.ViewDir()
 
-#[AC] triangulate(id=currentFigID(), option="a10000q")
-def triangulate(id, option):
+#[AC] triangulate(id=currentFigID(), area=10000, deg=20)
+def triangulate(id, area, deg):
+    SE.Triangulate(id, area, deg)
+
+#[AC] triangulateOpt(id=currentFigID(), option="a10000q")
+def triangulateOpt(id, option):
     SE.Triangulate(id, option)
 
 
