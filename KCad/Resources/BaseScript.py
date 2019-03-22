@@ -15,12 +15,10 @@ def puts(s):
 #[AC] rect(w=10, h=10)
 def rect(w=10, h=10):
     SE.Rect(w, h)
-    SE.UpdateTV();
 
 #[AC] rectAt(pv=lastDown(), w=10, h=10)
 def rectAt(pv, w=10, h=10):
     SE.RectAt(pv, w, h)
-    SE.UpdateTV();
 
 #[AC] area()
 def area():
@@ -128,12 +126,10 @@ def printVector(v):
 #[AC] toMesh(currentFigID())
 def toMesh(id):
     SE.ToMesh(id)
-    SE.UpdateTV()
 
 #[AC] toPoly(currentFigID())
 def toPoly(id):
     SE.ToPolyLine(id)
-    SE.UpdateTV()
 
 #[AC] invertDir()
 def invertDir():
@@ -142,18 +138,15 @@ def invertDir():
 #[AC] sub(l_id=1, r_id=2)
 def sub(l_id, r_id):
     SE.AsubB(l_id, r_id)
-    SE.UpdateTV();
 
 
 #[AC] union(id1=1, id2=2)
 def union(id1, id2):
     SE.Union(id1, id2)
-    SE.UpdateTV();
 
 #[AC] intersection(id1=1, id2=2)
 def intersection(id1, id2):
     SE.Intersection(id1, id2)
-    SE.UpdateTV();
 
 #[AC] dumpMesh(id=currentFigID())
 def dumpMesh(id):
@@ -162,28 +155,23 @@ def dumpMesh(id):
 #[AC] addBox(x=40,y=40,z=20)
 def addBox(x, y, z):
     SE.AddBox(x, y, z)
-    SE.UpdateTV();
 
 #[AC] spf(x=w_1x4, y=40, z=t_1x4)
 def spf(x, y, z):
     SE.AddBox(x, y, z)
-    SE.UpdateTV();
 
 #[AC] addCylinder(slices=16, r=10, len=40)
 def addCylinder(slices, r, len):
     SE.AddCylinder(slices, r, len)
-    SE.UpdateTV();
 
 
 #[AC] addSphere(slices=16, r=20)
 def addSphere(slices, r):
     SE.AddSphere(slices, r)
-    SE.UpdateTV();
 
 #[AC] extrude(id=currentFigID(), dir=unitVZ, d=20, div=0)
 def extrude(id, dir, d, div):
     SE.Extrude(id, dir, d, div)
-    SE.UpdateTV();
 
 #[AC] currentFigID()
 def currentFigID():
@@ -216,6 +204,11 @@ def updateTV():
 #[AC] viewDir()
 def viewDir():
 	return SE.ViewDir()
+
+#[AC] triangulate(id=currentFigID(), option="a10000q")
+def triangulate(id, option):
+    SE.Triangulate(id, option)
+
 
 #[AC] test()
 def test():

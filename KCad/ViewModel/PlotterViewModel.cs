@@ -252,7 +252,7 @@ namespace Plotter
 
             mController.Observer.LayerListChanged =  LayerListChanged;
 
-            mController.Observer.DataChanged = DataChanged;
+            //mController.Observer.DataChanged = DataChanged;
 
             mController.Observer.CursorPosChanged = CursorPosChanged;
 
@@ -712,13 +712,13 @@ namespace Plotter
         // Handle events from PlotterController
         #region Event From PlotterController
 
-        public void DataChanged(PlotterController sender, bool redraw)
-        {
-            if (redraw)
-            {
-                Redraw();
-            }
-        }
+        //public void DataChanged(PlotterController sender, bool redraw)
+        //{
+        //    if (redraw)
+        //    {
+        //        Redraw();
+        //    }
+        //}
 
         public void StateChanged(PlotterController sender, PlotterStateInfo si)
         {

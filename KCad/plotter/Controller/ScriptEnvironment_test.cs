@@ -579,6 +579,11 @@ namespace Plotter.Controller
                 return;
             }
 
+            if (tfig.PointCount < 3)
+            {
+                return;
+            }
+
             VectorList vl = tfig.GetPoints(12);
 
             CadMesh m = IglW.Triangulate(vl, "a1000q");
