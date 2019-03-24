@@ -119,7 +119,10 @@ namespace Plotter.Controller
 
                 if (ret != null)
                 {
-                    ItConsole.println(AnsiEsc.BGreen + ret.ToString() + " (" + ret.GetType().Name + ")" );
+                    if (ret is Double || ret is Int32)
+                    {
+                        ItConsole.println(AnsiEsc.BGreen + ret.ToString());
+                    }
                 }
             }
             catch (Exception e)

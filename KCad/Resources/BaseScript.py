@@ -2,6 +2,11 @@
 from datetime import datetime as dt
 import time
 import math
+import sys
+from System.Collections import *
+from System.Collections.Generic import List
+from System import UInt32 as uint
+
 import clr
 clr.AddReference('CadDataTypes')
 
@@ -36,13 +41,29 @@ def layerList():
 def lastDown():
     return SE.GetLastDownPoint()
 
-#[AC] group()
-def group():
-    SE.Group()
+#[AC] getSelectedFigList()
+def getSelectedFigList():
+	return SE.GetSelectedFigList()
 
-#[AC] ungroup()
-def ungroup():
-    SE.Ungroup()
+#[AC] toFigList([1,2])
+def toFigList(idList):
+	return SE.ToFigList(idList)
+
+#[AC] toFigIdArray(list)
+def toFigIdArray(list):
+	ret = []
+	for i in range(list.Count):
+		f = list[i]
+		ret = ret + [int(f.ID)]
+	return ret
+
+#[AC] group(list=getSelectedFigList())
+def group(list):
+    SE.Group(list)
+
+#[AC] ungroup(list=getSelectedFigList())
+def ungroup(list):
+    SE.Ungroup(list)
 
 #[AC] addPoint(x=0, y=0, z=0)
 def addPoint(x, y, z):
@@ -216,11 +237,21 @@ def triangulateOpt(id, option):
 
 #[AC] test()
 def test():
-    SE.Test()
+	SE.ToFigList([1,2])
 
 def help(s):
     SE.Help(s)
 
+
+class MyConsoleOut:
+	def write(self, s):
+		puts(s)
+	def ToString(self):
+		return "MyConsoleOut"	
+
+cout = MyConsoleOut()
+
+sys.stdout = cout
 
 #[AC] point0
 point0 = SE.CreateVector(0,0,0)
