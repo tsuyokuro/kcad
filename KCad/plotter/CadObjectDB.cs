@@ -212,16 +212,25 @@ namespace Plotter
         {
             List<uint> idList = new List<uint>();
 
+            HashSet<uint> idSet = new HashSet<uint>();
+
             foreach (CadLayer layer in LayerList)
             {
                 layer.ForEachFig(fig =>
                 {
                     if (fig.HasSelectedPoint() || fig.IsSelected)
                     {
-                        idList.Add(fig.ID);
+                        idSet.Add(fig.ID);
+                        if (fig.Parent != null)
+                        {
+                            idSet.Add(fig.Parent.ID);
+                        }
                     }
                 });
             }
+
+            idList.AddRange(idSet);
+
             return idList;
         }
 
@@ -230,7 +239,6 @@ namespace Plotter
             List<CadFigure> list = new List<CadFigure>();
 
             HashSet<CadFigure> fset = new HashSet<CadFigure>();
-
 
             foreach (CadLayer layer in LayerList)
             {

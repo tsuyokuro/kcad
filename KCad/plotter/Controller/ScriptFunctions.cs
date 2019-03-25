@@ -246,7 +246,7 @@ namespace Plotter.Controller
             Session.PostRedraw();
         }
 
-        public List<CadFigure> GetRootFigList(List<CadFigure> srcList)
+        public List<CadFigure> FilterRootFigure(List<CadFigure> srcList)
         {
             HashSet<CadFigure> set = new HashSet<CadFigure>();
 
@@ -262,9 +262,38 @@ namespace Plotter.Controller
             return ret;
         }
 
-        public void Group()
+        // Scriptから使いやすいようにintで受ける
+        public List<CadFigure> ToFigList(IList<int> idList)
         {
-            List<CadFigure> list = GetRootFigList(Controller.DB.GetSelectedFigList());
+            var figList = new List<CadFigure>();
+
+            foreach (uint id in idList)
+            {
+                CadFigure fig = Controller.DB.GetFigure(id);
+
+                if (fig != null)
+                {
+                    figList.Add(fig);
+                }
+            }
+
+            return figList;
+        }
+
+        public List<CadFigure> GetSelectedFigList()
+        {
+            return Controller.DB.GetSelectedFigList();
+        }
+
+        public void Group(IList<int> idList)
+        {
+            List<CadFigure> figList = ToFigList(idList);
+            Group(figList);
+        }
+
+        public void Group(List<CadFigure> targetList)
+        {
+            List<CadFigure> list = FilterRootFigure(targetList);
 
             if (list.Count < 2)
             {
@@ -318,40 +347,46 @@ namespace Plotter.Controller
             Session.PostRemakeTreeView();
         }
 
-        public void Ungroup()
+        public void Ungroup(IList<int> idList)
         {
-            List<uint> idlist = Controller.DB.GetSelectedFigIDList();
+            List<CadFigure> figList = ToFigList(idList);
+            Ungroup(figList);
+        }
 
-            var rootSet = new HashSet<uint>();
+        public void Ungroup(int id)
+        {
+            List<CadFigure> figList = new List<CadFigure>();
 
-            foreach (uint id in idlist)
+            CadFigure fig = Controller.DB.GetFigure((uint)id);
+
+            if (fig == null)
             {
-                CadFigure fig = Controller.DB.GetFigure(id);
-
-                CadFigure root = fig.GetGroupRoot();
-
-                if (root == null)
-                {
-                    continue;
-                }
-
-                rootSet.Add(root.ID);
+                return;
             }
+
+            figList.Add(fig);
+
+            Ungroup(figList);
+        }
+
+        public void Ungroup(List<CadFigure> targetList)
+        {
+            List<CadFigure> list = FilterRootFigure(targetList);
 
             CadOpeList opeList = new CadOpeList();
 
             CadOpe ope;
 
-            foreach (uint rootId in rootSet)
+            foreach (CadFigure root in list)
             {
-                CadFigure root = Controller.DB.GetFigure(rootId);
-
                 root.ForEachFig((fig) => {
                     if (fig.Parent == null)
                     {
                         return;
                     }
 
+                    fig.Parent = null;
+                    
                     if (fig.PointCount > 0)
                     {
                         ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
@@ -396,30 +431,17 @@ namespace Plotter.Controller
             Session.PostRedraw();
         }
 
-        public void Line(double x, double y, double z)
+        public void AddLine(CadVector v0, CadVector v1)
         {
-            CadVector p0 = Controller.LastDownPoint;
-
-            CadVector p1 = default(CadVector);
-
-            p1 = p0;
-
-            p1.x += x;
-            p1.y += y;
-            p1.z += z;
-
             CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
-            fig.AddPoint(p0);
-            fig.AddPoint(p1);
+            fig.AddPoint(v0);
+            fig.AddPoint(v1);
 
             fig.EndCreate(Controller.CurrentDC);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
-
-
-            Controller.LastDownPoint = p1;
         }
 
         public void AddPoint(double x, double y, double z)
@@ -595,7 +617,7 @@ namespace Plotter.Controller
             Controller.EndEdit(figList);
         }
 
-        public void SegLen(double len)
+        public void SetSelectedSegLen(double len)
         {
             if (Controller.LastSelSegment == null)
             {
