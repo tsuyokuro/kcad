@@ -431,30 +431,17 @@ namespace Plotter.Controller
             Session.PostRedraw();
         }
 
-        public void Line(double x, double y, double z)
+        public void AddLine(CadVector v0, CadVector v1)
         {
-            CadVector p0 = Controller.LastDownPoint;
-
-            CadVector p1 = default(CadVector);
-
-            p1 = p0;
-
-            p1.x += x;
-            p1.y += y;
-            p1.z += z;
-
             CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
-            fig.AddPoint(p0);
-            fig.AddPoint(p1);
+            fig.AddPoint(v0);
+            fig.AddPoint(v1);
 
             fig.EndCreate(Controller.CurrentDC);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
-
-
-            Controller.LastDownPoint = p1;
         }
 
         public void AddPoint(double x, double y, double z)
@@ -630,7 +617,7 @@ namespace Plotter.Controller
             Controller.EndEdit(figList);
         }
 
-        public void SegLen(double len)
+        public void SetSelectedSegLen(double len)
         {
             if (Controller.LastSelSegment == null)
             {

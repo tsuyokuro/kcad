@@ -17,143 +17,130 @@ import CadDataTypes.VectorList as VectorList
 def puts(s):
     SE.PutMsg(s)
 
-#[AC] rect(w=10, h=10)
-def rect(w=10, h=10):
+#[AC] add_rect(w=10, h=10)
+def add_rect(w=10, h=10):
     SE.Rect(w, h)
 
-#[AC] rectAt(pv=lastDown(), w=10, h=10)
-def rectAt(pv, w=10, h=10):
+#[AC] add_rect_at(pv=lastDown(), w=10, h=10)
+def add_rect_at(pv, w=10, h=10):
     SE.RectAt(pv, w, h)
 
 #[AC] area()
 def area():
     return SE.Area()
 
-#[AC] findFigId(id=currentFigID())
-def findFigId(id):
+#[AC] find_fig_id(id=current_fig_id())
+def find_fig_id(id):
     SE.FindFigureById(id)
 
-#[AC] layerList()
-def layerList():
+#[AC] layer_list()
+def layer_list():
     SE.LayerList()
 
-#[AC] lastDown()
-def lastDown():
+#[AC] last_down()
+def last_down():
     return SE.GetLastDownPoint()
 
-#[AC] getSelectedFigList()
-def getSelectedFigList():
+#[AC] get_selected_fig_list()
+def get_selected_fig_list():
 	return SE.GetSelectedFigList()
 
-#[AC] toFigList([1,2])
-def toFigList(idList):
-	return SE.ToFigList(idList)
+#[AC] to_fig_list(id_list=[1,2])
+def to_fig_list(id_list):
+	return SE.ToFigList(id_list)
 
-#[AC] toFigIdArray(list)
-def toFigIdArray(list):
+#[AC] to_fig_id_array(list)
+def to_fig_id_array(list):
 	ret = []
 	for i in range(list.Count):
 		f = list[i]
 		ret = ret + [int(f.ID)]
 	return ret
 
-#[AC] group(list=getSelectedFigList())
+#[AC] group(list=get_selected_fig_list())
+#[AC] group(list=[1,2])
 def group(list):
     SE.Group(list)
 
-#[AC] ungroup(list=getSelectedFigList())
+#[AC] ungroup(list=get_selected_fig_list())
+#[AC] ungroup(list=[1,2])
+#[AC] ungroup(1)
 def ungroup(list):
     SE.Ungroup(list)
 
-#[AC] addPoint(x=0, y=0, z=0)
-def addPoint(x, y, z):
+#[AC] add_point(x=0, y=0, z=0)
+def add_point(x, y, z):
     SE.AddPoint(x, y, z)
 
-#[AC] addPointV(lastDown())
-def addPointV(p):
+#[AC] add_point_v(last_down())
+def add_point_v(p):
     SE.AddPoint(p)
 
-#[AC] addLayer(name)
-def addLayer(name):
+#[AC] add_layer(name)
+def add_layer(name):
     SE.AddLayer(name)
 
 
-#[AC] move(currentFigID(), x=0, y=0, z=0)
+#[AC] move(id=current_fig_id(), x=0, y=0, z=0)
 def move(id, x=0, y=0, z=0):
     SE.Move(id, x, y, z)
 
-#[AC] moveSelectedPoint(x=0, y=0, z=0)
-def moveSelectedPoint(x=0, y=0, z=0):
+#[AC] move_selected_point(x=0, y=0, z=0)
+def move_selected_point(x=0, y=0, z=0):
     SE.MoveSelectedPoint(x, y, z)
 
-#[AC] segLen(len)
-def segLen(len):
-    SE.SegLen(len)
-
-#[AC] insPoint()
-def insPoint():
+#[AC] ins_point()
+def ins_point():
     SE.InsPoint()
 
-#[AC] createVector(x, y, z)
-def createVector(x, y, z):
+#[AC] create_vector(x, y, z)
+def create_vector(x, y, z):
     return SE.CreateVector(x, y, z)
 
-#[AC] getLastDown()
-def getLastDown():
+#[AC] get_last_down()
+def get_last_down():
     pt = SE.GetLastDownPoint()
     return pt
 
-#[AC] moveLastDown(x=10, y=0, z=0)
-def moveLastDown(x, y, z):
+#[AC] move_last_down(x=10, y=0, z=0)
+def move_last_down(x, y, z):
     SE.MoveLastDownPoint(x, y, z)
 
-#[AC] setLastDown(x=0, y=0, z=0)
-def setLastDown(x, y, z):
+#[AC] set_last_down(x=0, y=0, z=0)
+def set_last_down(x, y, z):
     SE.SetLastDownPoint(x, y, z)
 
-#[AC] line(x, y, z)
-def line(x, y, z):
-    SE.Line(x, y, z)
-
-#[AC] selFig(id)
-def selFig(id):
+#[AC] sel_fig(id)
+def sel_fig(id):
     SE.SelectFigure(id)
 
-#[AC] scale(id=currentFigID(), org=lastDown(), ratio=1.5)
+#[AC] scale(id=current_fig_id(), org=lastDown(), ratio=1.5)
 def scale(id, org, ratio):
     SE.Scale(id, org, ratio)
 
-#[AC] rotate(currentFigID(), inputPoint(), viewDir(), 45)
+#[AC] rotate(current_fig_id(), inputPoint(), viewDir(), 45)
 def rotate(id, p0, v, t):
     SE.Rotate(id, p0, v, t)
 
-#[AC] toBmp(32, 32)
-#[AC] toBmp(32, 32, 0xffffffff, 1, "")
-def toBmp(bw, bh, argb=0xffffffff, linew=1, fname=""):
-    SE.CreateBitmap(bw, bh, argb, linew, fname)
 
-#[AC] faceTo(dir=unitVZ)
-def faceTo(dir):
-    SE.FaceToDirection(dir)
-
-#[AC] projDir()
-def projDir():
+#[AC] proj_dir()
+def proj_dir():
     return SE.GetProjectionDir()
 
-#[AC] printVector(v)
-def printVector(v):
+#[AC] print_vector(v)
+def print_vector(v):
     SE.PrintVector(v)
 
-#[AC] toMesh(currentFigID())
-def toMesh(id):
+#[AC] to_mesh(current_fig_id())
+def to_mesh(id):
     SE.ToMesh(id)
 
-#[AC] toPoly(currentFigID())
-def toPoly(id):
+#[AC] to_poly(current_fig_id())
+def to_poly(id):
     SE.ToPolyLine(id)
 
-#[AC] invertDir()
-def invertDir():
+#[AC] invert_dir()
+def invert_dir():
     SE.InvertDir()
 
 #[AC] sub(l_id=1, r_id=2)
@@ -169,33 +156,33 @@ def union(id1, id2):
 def intersection(id1, id2):
     SE.Intersection(id1, id2)
 
-#[AC] dumpMesh(id=currentFigID())
-def dumpMesh(id):
+#[AC] dump_mesh(id=current_fig_id())
+def dump_mesh(id):
     SE.DumpMesh(id)
 
-#[AC] addBox(x=40,y=40,z=20)
-def addBox(x, y, z):
+#[AC] add_box(x=40,y=40,z=20)
+def add_box(x, y, z):
     SE.AddBox(x, y, z)
 
 #[AC] spf(x=w_1x4, y=40, z=t_1x4)
 def spf(x, y, z):
     SE.AddBox(x, y, z)
 
-#[AC] addCylinder(slices=16, r=10, len=40)
-def addCylinder(slices, r, len):
+#[AC] add_cylinder(slices=16, r=10, len=40)
+def add_cylinder(slices, r, len):
     SE.AddCylinder(slices, r, len)
 
 
-#[AC] addSphere(slices=16, r=20)
-def addSphere(slices, r):
+#[AC] add_sphere(slices=16, r=20)
+def add_sphere(slices, r):
     SE.AddSphere(slices, r)
 
-#[AC] extrude(id=currentFigID(), dir=unitVZ, d=20, div=0)
+#[AC] extrude(id=current_fig_id(), dir=unitVZ, d=20, div=0)
 def extrude(id, dir, d, div):
     SE.Extrude(id, dir, d, div)
 
-#[AC] currentFigID()
-def currentFigID():
+#[AC] current_fig_id()
+def current_fig_id():
     return SE.GetCurrentFigureID()
 
 #[AC] currentFig()
@@ -210,44 +197,60 @@ def rotatev(v, axis, deg):
 def dumpv(v):
     return SE.DumpVector(v)
 
-#[AC] inputPoint()
-def inputPoint():
+#[AC] input_point()
+def input_point():
     return SE.InputPoint()
 
-#[AC] inputUnitV()
-def inputUnitV():
+#[AC] input_unit_v()
+def input_unit_v():
     return SE.InputUnitVector()
 
-#[AC] updateTV()
-def updateTV():
+#[AC] update_tree()
+def update_tree():
     SE.UpdateTV()
 
-#[AC] viewDir()
-def viewDir():
+#[AC] view_dir()
+def view_dir():
 	return SE.ViewDir()
 
-#[AC] triangulate(id=currentFigID(), area=10000, deg=20)
+#[AC] triangulate(id=current_fig_id(), area=10000, deg=20)
 def triangulate(id, area, deg):
     SE.Triangulate(id, area, deg)
 
-#[AC] triangulateOpt(id=currentFigID(), option="a10000q")
-def triangulateOpt(id, option):
+#[AC] triangulate_opt(id=current_fig_id(), option="a10000q")
+def triangulate_opt(id, option):
     SE.Triangulate(id, option)
 
+#[AC] add_line(create_vector(0, 0, 0), create_vector(10, 20, 0))
+def add_line(v0, v1):
+    SE.AddLine(v0, v1)
+
+
+# Need to consider >>>>
+
+#[AC] set_seg_len(len)
+def set_seg_len(len):
+    SE.SetSelectedSegLen(len)
+
+#[AC] to_bmp(32, 32)
+#[AC] to_bmp(32, 32, 0xffffffff, 1, "")
+def to_bmp(bw, bh, argb=0xffffffff, linew=1, fname=""):
+    SE.CreateBitmap(bw, bh, argb, linew, fname)
+
+#[AC] faceTo(dir=unitVZ)
+def face_to(dir):
+    SE.FaceToDirection(dir)
+
+# <<<< Need to consider
 
 #[AC] test()
 def test():
 	SE.ToFigList([1,2])
 
-def help(s):
-    SE.Help(s)
-
 
 class MyConsoleOut:
 	def write(self, s):
-		puts(s)
-	def ToString(self):
-		return "MyConsoleOut"	
+		SE.PutMsg(s)
 
 cout = MyConsoleOut()
 
@@ -256,36 +259,57 @@ sys.stdout = cout
 #[AC] point0
 point0 = SE.CreateVector(0,0,0)
 
-#[AC] unitVX
-#[AC] unitVY
-#[AC] unitVZ
-unitVX = SE.CreateVector(1,0,0)
-unitVY = SE.CreateVector(0,1,0)
-unitVZ = SE.CreateVector(0,0,1)
+#[AC] unit_vx
+#[AC] unit_vy
+#[AC] unit_vz
+unit_vx = SE.CreateVector(1,0,0)
+unit_vy = SE.CreateVector(0,1,0)
+unit_vz = SE.CreateVector(0,0,1)
 
-w_1x4 = 8.9
-t_1x4 = 1.9
+w_1x4 = 89
+t_1x4 = 19
 
-EscReset = "\x1b[0m"
 
-EscBalck = "\x1b[30m"
-EscRed = "\x1b[31m"
-EscGreen = "\x1b[32m"
-EscYellow = "\x1b[33m"
-EscBlue = "\x1b[34m"
-EscMagenta = "\x1b[35m"
-EscCyan = "\x1b[36m"
-EscWhite = "\x1b[37m"
+# Text color escape sequence
+#[AC] esc_balck
+#[AC] esc_red
+#[AC] esc_green
+#[AC] esc_yellow 
+#[AC] esc_blue 
+#[AC] esc_magenta
+#[AC] esc_cyan 
+#[AC] esc_white
 
-EscBBalck = "\x1b[90m"
-EscBRed = "\x1b[91m"
-EscBGreen = "\x1b[92m"
-EscBYellow = "\x1b[93m"
-EscBBlue = "\x1b[94m"
-EscBMagenta = "\x1b[95m"
-EscBCyan = "\x1b[96m"
-EscBWhite = "\x1b[97m"
+#[AC] esc_b_balck
+#[AC] esc_b_red
+#[AC] esc_b_green
+#[AC] esc_b_yellow 
+#[AC] esc_b_blue 
+#[AC] esc_b_magenta
+#[AC] esc_b_cyan
+#[AC] esc_b_white
 
+esc_reset = "\x1b[0m"
+
+# Normal color
+esc_balck = "\x1b[30m"
+esc_red = "\x1b[31m"
+esc_green = "\x1b[32m"
+esc_yellow = "\x1b[33m"
+esc_blue = "\x1b[34m"
+esc_magenta = "\x1b[35m"
+esc_cyan = "\x1b[36m"
+esc_white = "\x1b[37m"
+
+# Bright color
+esc_b_balck = "\x1b[90m"
+esc_b_red = "\x1b[91m"
+esc_b_green = "\x1b[92m"
+esc_b_yellow = "\x1b[93m"
+esc_b_blue = "\x1b[94m"
+esc_b_magenta = "\x1b[95m"
+esc_b_cyan = "\x1b[96m"
+esc_b_white = "\x1b[97m"
 
 
 #test !!
