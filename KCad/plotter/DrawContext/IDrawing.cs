@@ -40,7 +40,7 @@ namespace Plotter
 
         void DrawHarfEdgeModel(int pen, int edgePen, double edgeThreshold, HeModel model);
 
-        void DrawText(int font, int brush, CadVector a, string s);
+        void DrawText(int font, int brush, CadVector a, CadVector direction, string s);
 
         void DrawTextScrn(int font, int brush, CadVector a, CadVector direction, string s);
 

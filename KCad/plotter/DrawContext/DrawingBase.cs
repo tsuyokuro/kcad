@@ -101,7 +101,7 @@ namespace Plotter
             DrawHarfEdgeModel(pen, model);
         }
 
-        public virtual void DrawText(int font, int brush, CadVector a, string s)
+        public virtual void DrawText(int font, int brush, CadVector a, CadVector direction, string s)
         {
         }
 
