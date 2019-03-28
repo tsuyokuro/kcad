@@ -4,6 +4,18 @@ using CadDataTypes;
 
 namespace Plotter
 {
+    public struct DrawTextOption
+    {
+        public const uint H_CENTER = 1;
+
+        public uint Option;
+
+        public DrawTextOption(uint option)
+        {
+            Option = option;
+        }
+    }
+
     public interface IDrawing
     {
         void Clear(int brush = DrawTools.BRUSH_BACKGROUND);
@@ -40,9 +52,9 @@ namespace Plotter
 
         void DrawHarfEdgeModel(int pen, int edgePen, double edgeThreshold, HeModel model);
 
-        void DrawText(int font, int brush, CadVector a, CadVector direction, string s);
+        void DrawText(int font, int brush, CadVector a, CadVector direction, CadVector normal, DrawTextOption opt, string s);
 
-        void DrawTextScrn(int font, int brush, CadVector a, CadVector direction, string s);
+        void DrawTextScrn(int font, int brush, CadVector a, CadVector direction, DrawTextOption opt, string s);
 
         CadVector MeasureText(int font, string s);
 

@@ -281,31 +281,13 @@ namespace Plotter
 
             String s = CadUtil.ValToString(len);
 
+            CadVector p = PointList[3] + (d / 2);
 
-            CadVector p0 = dc.WorldPointToDevPoint(PointList[3]);
-            CadVector p1 = dc.WorldPointToDevPoint(PointList[2]);
+            CadVector n = CadMath.Normal(PointList[0], PointList[2], PointList[3]);
 
-            d = p1 - p0;
-
-            len = d.Norm();
-
-            CadVector sv = dc.Drawing.MeasureText(FontID, s);
-            double sl = sv.Norm();
-
-            CadVector sp;
-
-            if (len > CadMath.R0Max)
-            {
-                double a = ((len - sl) / 2) / len;
-                sp = (d * a) + p0;
-            }
-            else
-            {
-                sp = p0;
-                d = CadVector.UnitX;
-            }
-
-            dc.Drawing.DrawTextScrn(FontID, BrushID, sp, d.UnitVector(), s);
+            dc.Drawing.DrawText(FontID, BrushID, p, d, n,
+                new DrawTextOption(DrawTextOption.H_CENTER),
+                s);
         }
     }
 

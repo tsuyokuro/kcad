@@ -114,8 +114,8 @@ namespace Plotter
         public const int FONT_SMALL = 2;
         public const int FONT_TBL_SIZE = 3;
 
-        public const int FONT_SIZE_DEFAULT = 9;
-        public const int FONT_SIZE_SMALL = 9;
+        public const int FONT_SIZE_DEFAULT = 11;
+        public const int FONT_SIZE_SMALL = 11;
 
         public enum ToolsType
         {
@@ -204,8 +204,8 @@ namespace Plotter
                 BrushTbl[i] = new SolidBrush(DarkColors.BrushColorTbl[i]);
             }
 
-            FontFamily fontFamily = LoadFontFamily("/Fonts/mplus-1m-thin.ttf");
-            //FontFamily fontFamily = new FontFamily("MS UI Gothic");
+            //FontFamily fontFamily = LoadFontFamily("/Fonts/mplus-1m-thin.ttf");
+            FontFamily fontFamily = new FontFamily("MS UI Gothic");
             //FontFamily fontFamily = new FontFamily("ＭＳ ゴシック");
 
             FontTbl[FONT_DEFAULT] = new Font(fontFamily, FONT_SIZE_DEFAULT);
@@ -308,7 +308,7 @@ namespace Plotter
         }
 
         #region Utilities
-        public static FontFamily LoadFontFamily(string fname)
+        public static FontFamily LoadFontFamilyFromResource(string fname)
         {
             StreamResourceInfo si = System.Windows.Application.GetResourceStream(
                 new Uri(fname, UriKind.Relative));

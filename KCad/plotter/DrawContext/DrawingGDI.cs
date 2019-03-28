@@ -127,7 +127,7 @@ namespace Plotter
 
             DrawLine(DrawTools.PEN_AXIS, p0, p1);
 
-            DrawAxis2();
+            //DrawAxis2();
         }
 
         public override void DrawGrid(Gridding grid)
@@ -409,22 +409,43 @@ namespace Plotter
             base.DrawHarfEdgeModel(pen, model);
         }
 
-        public override void DrawText(int font, int brush, CadVector a, CadVector direction, string s)
+        public override void DrawText(int font, int brush, CadVector a, CadVector dir, CadVector normal, DrawTextOption opt, string s)
         {
             CadVector pa = DC.WorldPointToDevPoint(a);
-            DrawTextScrn(font, brush, pa, CadVector.UnitX, s);
+            CadVector d = DC.WorldVectorToDevVector(dir);
+
+            DrawTextScrn(font, brush, pa, d, opt, s);
         }
 
-        public override void DrawTextScrn(int font, int brush, CadVector a, CadVector direction, string s)
+        public override void DrawTextScrn(int font, int brush, CadVector a, CadVector dir, DrawTextOption opt, string s)
         {
             if (DC.Brush(brush) == null) return;
             if (DC.Font(font) == null) return;
 
+            if (opt.Option != 0)
+            {
+                CadVector sz = MeasureText(font, s);
+
+                if ((opt.Option | DrawTextOption.H_CENTER) != 0)
+                {
+                    double slen = sz.x / 2;
+
+                    CadVector ud = CadVector.UnitX;
+
+                    if (!dir.IsZero())
+                    {
+                        ud = dir.UnitVector();
+                    }
+
+                    a = a - (ud * slen);
+                }
+            }
+
             double angle = 0;
 
-            if (direction.x != 0 || direction.y != 0)
+            if (!(dir.x == 0 && dir.y == 0))
             {
-                angle = CadUtil.Angle2D(direction);
+                angle = CadUtil.Angle2D(dir);
             }
 
             angle = CadMath.Rad2Deg(angle);
@@ -652,9 +673,9 @@ namespace Plotter
             yp.y -= 7;
             zp.y -= 7;
 
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, xp, CadVector.UnitX, "x");
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, yp, CadVector.UnitX, "y");
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, zp, CadVector.UnitX, "z");
+            DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, xp, CadVector.UnitX, default(DrawTextOption), "x");
+            DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, yp, CadVector.UnitX, default(DrawTextOption), "y");
+            DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, zp, CadVector.UnitX, default(DrawTextOption), "z");
         }
     }
 }

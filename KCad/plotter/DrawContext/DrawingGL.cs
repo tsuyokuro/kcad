@@ -10,6 +10,7 @@ using FTGL;
 using System;
 using HalfEdgeNS;
 using CadDataTypes;
+using System.Drawing;
 
 namespace Plotter
 {
@@ -28,12 +29,21 @@ namespace Plotter
 #endif
 
         FontWrapper FontW;
+        Font mFont;
+
+        protected Bitmap mDummyBmp;
+        protected Graphics mDummyGdiGraphics;
 
         public DrawingGL(DrawContextGL dc)
         {
             DC = dc;
             FontW = FontWrapper.LoadFile("C:\\Windows\\Fonts\\msgothic.ttc");
             FontW.FontSize = 20;
+
+            mDummyBmp = new Bitmap(8, 8);
+            mDummyGdiGraphics = Graphics.FromImage(mDummyBmp);
+
+            mFont = new Font("C:\\Windows\\Fonts\\msgothic.ttc", 20);
         }
 
         public override void Clear(int brush)
@@ -375,16 +385,11 @@ namespace Plotter
 
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
-            /*
-            GL.PushMatrix();
 
-            GL.Translate(0, 0, 0);
-            GL.Color4(Color4.White);
+            //GL.Translate(20, 0, 0);
+            //GL.Color4(Color.White);
 
-            FontW.RenderW("黒木", RenderMode.All);
-
-            GL.PopMatrix();
-            */
+            //FontW.RenderW("123", RenderMode.All);
         }
 
         private void PushMatrixes()
@@ -504,6 +509,20 @@ namespace Plotter
             Vector3d vv = -DC.ViewDir * v.Norm();
 
             return (CadVector)vv;
+        }
+
+        public override CadVector MeasureText(int font, string s)
+        {
+            if (mFont == null)
+            {
+                return CadVector.Zero;
+            }
+
+            SizeF size = mDummyGdiGraphics.MeasureString(s, mFont);
+
+            CadVector v = CadVector.Create(size.Width, size.Height, 0);
+
+            return v;
         }
     }
 }
