@@ -74,8 +74,6 @@ namespace Plotter
 
         public override void DrawSelected(DrawContext dc, int pen)
         {
-            Draw(dc, pen);
-
             foreach (CadVector p in PointList)
             {
                 if (p.Selected)

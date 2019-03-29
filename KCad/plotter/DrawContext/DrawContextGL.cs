@@ -24,6 +24,8 @@ namespace Plotter
 
         public bool LightingEnable = true;
 
+        public Matrix4d OrthographicMatrix;
+
         public enum ViewingAngleType
         {
             TELESCOPE,
@@ -252,6 +254,11 @@ namespace Plotter
 
             CalcProjectionMatrix(ProjectionType.Perspective);
             CalcProjectionZW();
+
+            OrthographicMatrix = Matrix4d.CreateOrthographicOffCenter(
+                                        0, mViewWidth,
+                                        mViewHeight, 0,
+                                        0, mProjectionFar);
         }
 
         public void RotateEyePoint(Vector2 prev, Vector2 current)

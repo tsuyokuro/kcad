@@ -418,11 +418,13 @@ namespace Plotter
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
-            Matrix4d view = Matrix4d.CreateOrthographicOffCenter(
-                                        0, DC.ViewWidth,
-                                        DC.ViewHeight, 0,
-                                        0, 1000);
-            GL.MultMatrix(ref view);
+            //Matrix4d view = Matrix4d.CreateOrthographicOffCenter(
+            //                            0, DC.ViewWidth,
+            //                            DC.ViewHeight, 0,
+            //                            0, 1000);
+            //GL.MultMatrix(ref view);
+
+            GL.MultMatrix(ref DC.OrthographicMatrix);
         }
 
         private void End2D()
@@ -523,6 +525,18 @@ namespace Plotter
             CadVector v = CadVector.Create(size.Width, size.Height, 0);
 
             return v;
+        }
+
+        public override void DrawText(int font, int brush, CadVector a, CadVector direction, CadVector normal, DrawTextOption opt, string s)
+        {
+            /*
+            a = a * DC.ViewMatrix; 
+
+            GL.Translate(a.x, a.y, a.z);
+            GL.Color4(Color.White);
+
+            FontW.RenderW(s, RenderMode.Front);
+            */
         }
     }
 }
