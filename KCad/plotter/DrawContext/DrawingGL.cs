@@ -38,12 +38,12 @@ namespace Plotter
         {
             DC = dc;
             FontW = FontWrapper.LoadFile("C:\\Windows\\Fonts\\msgothic.ttc");
-            FontW.FontSize = 20;
+            FontW.FontSize = 8;
 
             mDummyBmp = new Bitmap(8, 8);
             mDummyGdiGraphics = Graphics.FromImage(mDummyBmp);
 
-            mFont = new Font("C:\\Windows\\Fonts\\msgothic.ttc", 20);
+            mFont = new Font("C:\\Windows\\Fonts\\msgothic.ttc", 9);
         }
 
         public override void Clear(int brush)
@@ -418,12 +418,6 @@ namespace Plotter
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
-            //Matrix4d view = Matrix4d.CreateOrthographicOffCenter(
-            //                            0, DC.ViewWidth,
-            //                            DC.ViewHeight, 0,
-            //                            0, 1000);
-            //GL.MultMatrix(ref view);
-
             GL.MultMatrix(ref DC.OrthographicMatrix);
         }
 
@@ -527,16 +521,56 @@ namespace Plotter
             return v;
         }
 
+        private void DumpGLMatrix()
+        {
+            GL.MatrixMode(MatrixMode.Modelview);
+
+            double[] model = new double[16];
+            double[] projection = new double[16];
+
+            GL.GetDouble(GetPName.ProjectionMatrix, projection);
+
+            UMatrix4 m4 = new UMatrix4(projection);
+
+
+            m4.dump("Get");
+
+            DC.ProjectionMatrix.dump("Set");
+        }
+
         public override void DrawText(int font, int brush, CadVector a, CadVector direction, CadVector normal, DrawTextOption opt, string s)
         {
-            /*
-            a = a * DC.ViewMatrix; 
+            DumpGLMatrix();
+
+            GL.PushMatrix();
+
+            FontBoundaries bbox = FontW.GetBoundaries(s);
+
+            direction = direction.UnitVector();
+
+            double angle_n = CadMath.AngleOfVector(CadVector.UnitX, direction);
+
+            CadVector n = -normal;
+            n = n.UnitVector();
+
+            Matrix4d rm = Matrix4d.Rotate(n.vector, angle_n);
+
+            CadVector shift = direction * bbox.Upper / 2;
+            a -= shift;
+
+            // MatrixMode.Modelviewに対象を切り替えておかないと、
+            // ややこしいことになるので、注意
+            GL.MatrixMode(MatrixMode.Modelview);
 
             GL.Translate(a.x, a.y, a.z);
-            GL.Color4(Color.White);
 
-            FontW.RenderW(s, RenderMode.Front);
-            */
+            GL.MultMatrix(ref rm);
+
+            GL.Color4(DC.Color(brush));
+
+            FontW.RenderW(s, RenderMode.All);
+
+            GL.PopMatrix();
         }
     }
 }
