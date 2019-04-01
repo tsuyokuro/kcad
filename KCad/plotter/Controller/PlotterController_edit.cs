@@ -206,7 +206,7 @@ namespace Plotter.Controller
 
                     if (isLoop)
                     {
-                        fig.Normal = CadUtil.Normal(fig);
+                        fig.RecalcNormal();
                     }
 
                     ope = new CadOpeSetClose(CurrentLayer.ID, id, isLoop);

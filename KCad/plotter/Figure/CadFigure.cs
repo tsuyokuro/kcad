@@ -631,7 +631,7 @@ namespace Plotter
             //    " dz=" + delta.z.ToString()
             //    );
 
-            Util.MoveSelectedPointsFromStored(this, dc, delta);
+            FigUtil.MoveSelectedPointsFromStored(this, dc, delta);
 
             mChildList.ForEach(c =>
             {
@@ -643,7 +643,7 @@ namespace Plotter
         {
             if (Locked) return;
 
-            Util.MoveAllPoints(this, delta);
+            FigUtil.MoveAllPoints(this, delta);
         }
 
         public virtual void AddPoint(CadVector p)
@@ -694,17 +694,17 @@ namespace Plotter
 
         public virtual CadRect GetContainsRect()
         {
-            return Util.GetContainsRect(this);
+            return FigUtil.GetContainsRect(this);
         }
 
         public virtual CadRect GetContainsRectScrn(DrawContext dc)
         {
-            return Util.GetContainsRectScrn(this, dc);
+            return FigUtil.GetContainsRectScrn(this, dc);
         }
 
         public virtual VectorList GetPoints(int curveSplitNum)
         {
-            return Util.GetPoints(this, curveSplitNum);
+            return FigUtil.GetPoints(this, curveSplitNum);
         }
 
         public virtual Centroid GetCentroid()
@@ -714,17 +714,17 @@ namespace Plotter
 
         public virtual void RecalcNormal()
         {
-            Normal = Util.CalcNormal(this);
+            Normal = CadUtil.RepresentativeNormal(PointList);
         }
 
         public virtual CadSegment GetSegmentAt(int n)
         {
-            return Util.GetSegmentAt(this, n);
+            return FigUtil.GetSegmentAt(this, n);
         }
 
         public virtual FigureSegment GetFigSegmentAt(int n)
         {
-            return Util.GetFigSegmentAt(this, n);
+            return FigUtil.GetFigSegmentAt(this, n);
         }
 
 
@@ -732,7 +732,7 @@ namespace Plotter
         {
             get
             {
-                return Util.SegmentCount(this);
+                return FigUtil.SegmentCount(this);
             }
         }
 

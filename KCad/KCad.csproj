@@ -257,7 +257,7 @@
     <Compile Include="plotter\Figure\CadFigureNurbsLine.cs" />
     <Compile Include="plotter\Figure\CadFigureNurbsSurface.cs" />
     <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
-    <Compile Include="plotter\Figure\CadFigureUtil.cs" />
+    <Compile Include="plotter\Figure\FigUtil.cs" />
     <Compile Include="plotter\HalfEdge\HeJson.cs" />
     <Compile Include="plotter\Serializer\CadMessagePack.cs" />
     <Compile Include="plotter\Serializer\JsonExtends.cs" />

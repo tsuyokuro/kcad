@@ -51,7 +51,7 @@ namespace Plotter
         {
             if (Locked) return;
 
-            Util.MoveAllPoints(this, delta);
+            FigUtil.MoveAllPoints(this, delta);
         }
 
         public override int PointCount

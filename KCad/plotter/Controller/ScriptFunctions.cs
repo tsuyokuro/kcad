@@ -252,7 +252,7 @@ namespace Plotter.Controller
 
             foreach (CadFigure fig in srcList)
             {
-                set.Add(CadFigure.Util.GetRootFig(fig));
+                set.Add(FigUtil.GetRootFig(fig));
             }
 
             List<CadFigure> ret = new List<CadFigure>();
@@ -897,7 +897,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            CadFigure cfig = CadFigure.Util.Clone(tfig);
+            CadFigure cfig = FigUtil.Clone(tfig);
 
             CadVector org = cfig.PointList[0];
             CadVector dir = CadVector.UnitZ;
