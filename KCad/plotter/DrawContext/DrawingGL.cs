@@ -28,22 +28,15 @@ namespace Plotter
         private const BeginMode LINE_STRIP = BeginMode.LineStrip;
 #endif
 
-        FontWrapper FontW;
-        Font mFont;
+        private FontWrapper FontW;
 
-        protected Bitmap mDummyBmp;
-        protected Graphics mDummyGdiGraphics;
+        private double FontScale = 0.5;
 
         public DrawingGL(DrawContextGL dc)
         {
             DC = dc;
             FontW = FontWrapper.LoadFile("C:\\Windows\\Fonts\\msgothic.ttc");
-            FontW.FontSize = 8;
-
-            mDummyBmp = new Bitmap(8, 8);
-            mDummyGdiGraphics = Graphics.FromImage(mDummyBmp);
-
-            mFont = new Font("C:\\Windows\\Fonts\\msgothic.ttc", 9);
+            FontW.FontSize = (uint)(9.0 / FontScale);
         }
 
         public override void Clear(int brush)
@@ -507,20 +500,6 @@ namespace Plotter
             return (CadVector)vv;
         }
 
-        public override CadVector MeasureText(int font, string s)
-        {
-            if (mFont == null)
-            {
-                return CadVector.Zero;
-            }
-
-            SizeF size = mDummyGdiGraphics.MeasureString(s, mFont);
-
-            CadVector v = CadVector.Create(size.Width, size.Height, 0);
-
-            return v;
-        }
-
         private void DumpGLMatrix()
         {
             GL.MatrixMode(MatrixMode.Modelview);
@@ -540,8 +519,7 @@ namespace Plotter
 
         public override void DrawText(int font, int brush, CadVector a, CadVector direction, CadVector normal, DrawTextOption opt, string s)
         {
-            DumpGLMatrix();
-
+            GL.MatrixMode(MatrixMode.Modelview);
             GL.PushMatrix();
 
             FontBoundaries bbox = FontW.GetBoundaries(s);
@@ -555,21 +533,23 @@ namespace Plotter
 
             Matrix4d rm = Matrix4d.Rotate(n.vector, angle_n);
 
-            CadVector shift = direction * bbox.Upper / 2;
+            CadVector shift = direction * (bbox.Upper * FontScale) / 2;
+
             a -= shift;
 
-            // MatrixMode.Modelviewに対象を切り替えておかないと、
-            // ややこしいことになるので、注意
             GL.MatrixMode(MatrixMode.Modelview);
 
             GL.Translate(a.x, a.y, a.z);
 
             GL.MultMatrix(ref rm);
 
+            GL.Scale(FontScale, FontScale, 1.0);
+
             GL.Color4(DC.Color(brush));
 
             FontW.RenderW(s, RenderMode.All);
 
+            GL.MatrixMode(MatrixMode.Modelview);
             GL.PopMatrix();
         }
     }
