@@ -409,10 +409,10 @@ namespace Plotter
             base.DrawHarfEdgeModel(pen, model);
         }
 
-        public override void DrawText(int font, int brush, CadVector a, CadVector dir, CadVector normal, DrawTextOption opt, string s)
+        public override void DrawText(int font, int brush, CadVector a, CadVector xdir, CadVector ydir, DrawTextOption opt, string s)
         {
             CadVector pa = DC.WorldPointToDevPoint(a);
-            CadVector d = DC.WorldVectorToDevVector(dir);
+            CadVector d = DC.WorldVectorToDevVector(xdir);
 
             DrawTextScrn(font, brush, pa, d, opt, s);
         }

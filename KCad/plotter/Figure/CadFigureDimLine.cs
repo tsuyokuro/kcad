@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using CadDataTypes;
+﻿using CadDataTypes;
+using System;
 
 namespace Plotter
 {
@@ -273,19 +272,25 @@ namespace Plotter
             dc.Drawing.DrawArrow(pen, cp, PointList[2], ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
 
 
-            CadVector d = PointList[2] - PointList[3];
+            CadVector lineV = PointList[2] - PointList[3];
 
-            double len = d.Norm();
+            double len = lineV.Norm();
 
-            String s = CadUtil.ValToString(len);
+            string lenStr = CadUtil.ValToString(len);
 
-            CadVector p = PointList[3] + (d / 2);
+            CadVector p = PointList[3] + (lineV / 2);
 
-            CadVector n = CadMath.Normal(PointList[0], PointList[2], PointList[3]);
+            CadVector up = PointList[3] - PointList[0];
 
-            dc.Drawing.DrawText(FontID, BrushID, p, d, n,
+            //             --- lineV ---> 
+            //    3<------------ p ----------->2
+            // ^  |                            |
+            // |  |                            |
+            // up 0                            1 
+            // 
+            dc.Drawing.DrawText(FontID, BrushID, p, lineV, up,
                 new DrawTextOption(DrawTextOption.H_CENTER),
-                s);
+                lenStr);
         }
     }
 

@@ -517,23 +517,30 @@ namespace Plotter
             DC.ProjectionMatrix.dump("Set");
         }
 
-        public override void DrawText(int font, int brush, CadVector a, CadVector direction, CadVector normal, DrawTextOption opt, string s)
+        public override void DrawText(int font, int brush, CadVector a, CadVector xdir, CadVector ydir, DrawTextOption opt, string s)
         {
             GL.MatrixMode(MatrixMode.Modelview);
             GL.PushMatrix();
 
             FontBoundaries bbox = FontW.GetBoundaries(s);
 
-            direction = direction.UnitVector();
+            xdir = xdir.UnitVector();
 
-            double angle_n = CadMath.AngleOfVector(CadVector.UnitX, direction);
+            CadVector n = CadMath.Normal(CadVector.UnitX, xdir);
 
-            CadVector n = -normal;
-            n = n.UnitVector();
+            Matrix4d rm;
 
-            Matrix4d rm = Matrix4d.Rotate(n.vector, angle_n);
+            if (n.IsZero())
+            {
+                rm = Matrix4d.Identity;
+            }
+            else
+            {
+                double pos_angle = CadMath.AngleOfVector(CadVector.UnitX, xdir);
+                rm = Matrix4d.Rotate(n.vector, pos_angle);
+            }
 
-            CadVector shift = direction * (bbox.Upper * FontScale) / 2;
+            CadVector shift = xdir * (bbox.Upper * FontScale) / 2;
 
             a -= shift;
 
