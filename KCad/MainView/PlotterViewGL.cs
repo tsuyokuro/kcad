@@ -49,8 +49,6 @@ namespace Plotter
 
         private PlotterViewGL(GraphicsMode mode) : base(mode)
         {
-            mDrawContext = new DrawContextGL(this);
-
             Load += OnLoad;
             Resize += OnResize;
             Paint += OnPaint;
@@ -58,8 +56,6 @@ namespace Plotter
             MouseDown += OnMouseDown;
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
-
-            mDrawContext.PushDraw = OnPushDraw;
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)
@@ -103,6 +99,10 @@ namespace Plotter
         {
             GL.ClearColor(Color4.Black);
             GL.Enable(EnableCap.DepthTest);
+
+            mDrawContext = new DrawContextGL(this);
+            mDrawContext.PushDraw = OnPushDraw;
+
             SwapBuffers();
         }
 
@@ -155,6 +155,11 @@ namespace Plotter
 
         private void OnResize(object sender, EventArgs e)
         {
+            if (mDrawContext == null)
+            {
+                return;
+            }
+
             mDrawContext.SetViewSize(Size.Width, Size.Height);
 
             if (mController != null)

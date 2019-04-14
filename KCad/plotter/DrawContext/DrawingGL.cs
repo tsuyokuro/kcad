@@ -6,11 +6,11 @@ using System.Collections.Generic;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using FTGL;
 using System;
 using HalfEdgeNS;
 using CadDataTypes;
 using System.Drawing;
+using GLFont;
 
 namespace Plotter
 {
@@ -28,15 +28,19 @@ namespace Plotter
         private const BeginMode LINE_STRIP = BeginMode.LineStrip;
 #endif
 
-        private FontWrapper FontW;
-
-        private double FontScale = 0.5;
+        private FontFaceW mFontFaceW;
+        private FontRenderer mFontRenderer;
 
         public DrawingGL(DrawContextGL dc)
         {
             DC = dc;
-            FontW = FontWrapper.LoadFile("C:\\Windows\\Fonts\\msgothic.ttc");
-            FontW.FontSize = (uint)(9.0 / FontScale);
+
+            mFontFaceW = new FontFaceW();
+            mFontFaceW.SetFont(@"C:\Windows\Fonts\msgothic.ttc", 0);
+            mFontFaceW.SetSize(20);
+
+            mFontRenderer = new FontRenderer();
+            mFontRenderer.Init();
         }
 
         public override void Clear(int brush)
@@ -522,7 +526,9 @@ namespace Plotter
             GL.MatrixMode(MatrixMode.Modelview);
             GL.PushMatrix();
 
-            FontBoundaries bbox = FontW.GetBoundaries(s);
+            FontTex tex = mFontFaceW.CreateTexture(s);
+
+            /// TODO mFontRenderer.Renderに四角形を渡せるようにして、そこにそこにマッピングするようにした方が簡単かつ高速
 
             xdir = xdir.UnitVector();
 
@@ -540,9 +546,9 @@ namespace Plotter
                 rm = Matrix4d.Rotate(n.vector, pos_angle);
             }
 
-            CadVector shift = xdir * (bbox.Upper * FontScale) / 2;
+            CadVector shift = xdir * tex.ImgW / 2;
 
-            a -= shift;
+            a -= shift * 0.25;
 
             GL.MatrixMode(MatrixMode.Modelview);
 
@@ -550,11 +556,11 @@ namespace Plotter
 
             GL.MultMatrix(ref rm);
 
-            GL.Scale(FontScale, FontScale, 1.0);
+            GL.Scale(0.25, 0.25, 1.0);
 
             GL.Color4(DC.Color(brush));
-
-            FontW.RenderW(s, RenderMode.All);
+            
+            mFontRenderer.Render(tex);
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.PopMatrix();
