@@ -19,9 +19,11 @@ using Plotter;
 using Plotter.Serializer;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Resources;
 using System.Windows.Threading;
 
 namespace KCad
@@ -177,6 +179,19 @@ namespace KCad
 
             SplashWindow.Close();
             SplashWindow = null;
+        }
+
+        // e.g. ReadResourceText("/Shader/font_fragment.shader")
+        public static string ReadResourceText(string path)
+        {
+            Uri fileUri = new Uri(path, UriKind.Relative);
+            StreamResourceInfo info = Application.GetResourceStream(fileUri);
+            StreamReader sr = new StreamReader(info.Stream);
+
+            string s = sr.ReadToEnd();
+            sr.Close();
+
+            return s;
         }
 
         protected override void OnExit(ExitEventArgs e)

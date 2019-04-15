@@ -457,19 +457,16 @@ void main()
             FontShaderProgram = shaderProgram;
         }
 
-        private string ReadResourceText(string path)
+        public void Render(FontTex tex)
         {
-            Uri fileUri = new Uri(path, UriKind.Relative);
-            StreamResourceInfo info = Application.GetResourceStream(fileUri);
-            StreamReader sr = new StreamReader(info.Stream);
+            Vector3d p = Vector3d.Zero;
+            Vector3d xv = Vector3d.UnitX * tex.ImgW;
+            Vector3d yv = Vector3d.UnitY * tex.ImgH;
 
-            string s = sr.ReadToEnd();
-            sr.Close();
-
-            return s;
+            Render(tex, p, xv, yv);
         }
 
-        public void Render(FontTex tex)
+        public void Render(FontTex tex, Vector3d p, Vector3d xv, Vector3d yv)
         {
             GL.ActiveTexture(TextureUnit.Texture0);
 
@@ -506,16 +503,16 @@ void main()
             GL.Begin(PrimitiveType.Quads);
 
             GL.TexCoord2(1.0, 1.0);
-            GL.Vertex3(w, h, z);
+            GL.Vertex3(p + xv + yv);
 
             GL.TexCoord2(0.0, 1.0);
-            GL.Vertex3(0, h, z);
+            GL.Vertex3(p + yv);
 
             GL.TexCoord2(0.0, 0.0);
-            GL.Vertex3(0, 0, z);
+            GL.Vertex3(p);
 
             GL.TexCoord2(1.0, 0.0);
-            GL.Vertex3(w, 0, z);
+            GL.Vertex3(p + xv);
 
             GL.End();
 

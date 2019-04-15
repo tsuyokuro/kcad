@@ -528,42 +528,22 @@ namespace Plotter
 
             FontTex tex = mFontFaceW.CreateTexture(s);
 
-            /// TODO mFontRenderer.Renderに四角形を渡せるようにして、そこにそこにマッピングするようにした方が簡単かつ高速
+            CadVector xv = xdir.UnitVector() * tex.ImgW * 0.3;
+            CadVector yv = ydir.UnitVector() * tex.ImgH * 0.3;
 
-            xdir = xdir.UnitVector();
-
-            CadVector n = CadMath.Normal(CadVector.UnitX, xdir);
-
-            Matrix4d rm;
-
-            if (n.IsZero())
+            if (xv.IsZero() || yv.IsZero())
             {
-                rm = Matrix4d.Identity;
-            }
-            else
-            {
-                double pos_angle = CadMath.AngleOfVector(CadVector.UnitX, xdir);
-                rm = Matrix4d.Rotate(n.vector, pos_angle);
+                return;
             }
 
-            CadVector shift = xdir * tex.ImgW / 2;
-
-            a -= shift * 0.25;
-
-            GL.MatrixMode(MatrixMode.Modelview);
-
-            GL.Translate(a.x, a.y, a.z);
-
-            GL.MultMatrix(ref rm);
-
-            GL.Scale(0.25, 0.25, 1.0);
+            if ((opt.Option & DrawTextOption.H_CENTER)!=0)
+            {
+                a -= (xv / 2);
+            }
 
             GL.Color4(DC.Color(brush));
             
-            mFontRenderer.Render(tex);
-
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.PopMatrix();
+            mFontRenderer.Render(tex, a.vector, xv.vector, yv.vector);
         }
     }
 }
