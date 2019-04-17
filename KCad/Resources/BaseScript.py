@@ -241,6 +241,22 @@ def to_bmp(bw, bh, argb=0xffffffff, linew=1, fname=""):
 def face_to(dir):
     SE.FaceToDirection(dir)
 
+#[AC] devPToWorldP(p)
+def devPToWorldP(p):
+    return SE.DevPToWorldP(p)
+
+#[AC] worldPToDevP(p)
+def worldPToDevP(p):
+    return SE.WorldPToDevP(p)
+
+#[AC] devVToWorldV(v)
+def devPToWorldP(v):
+    return SE.DevVToWorldV(v)
+
+#[AC] worldVToDevV(v)
+def worldVToDevV(v):
+    return SE.WorldVToDevV(v)
+
 # <<<< Need to consider
 
 #[AC] test()

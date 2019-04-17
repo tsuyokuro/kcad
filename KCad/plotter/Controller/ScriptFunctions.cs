@@ -168,6 +168,26 @@ namespace Plotter.Controller
             ItConsole.println(sb.ToString());
         }
 
+        public CadVector WorldVToDevV(CadVector w)
+        {
+            return Controller.CurrentDC.WorldVectorToDevVector(w);
+        }
+
+        public CadVector DevVToWorldV(CadVector d)
+        {
+            return Controller.CurrentDC.DevVectorToWorldVector(d);
+        }
+
+        public CadVector WorldPToDevP(CadVector w)
+        {
+            return Controller.CurrentDC.WorldVectorToDevVector(w);
+        }
+
+        public CadVector DevPToWorldP(CadVector d)
+        {
+            return Controller.CurrentDC.DevVectorToWorldVector(d);
+        }
+
         public void DumpVector(CadVector v)
         {
             string s = v.CoordString();
