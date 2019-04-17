@@ -415,7 +415,7 @@ namespace Plotter
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
-            GL.MultMatrix(ref DC.OrthographicMatrix);
+            GL.MultMatrix(ref DC.Matrix2D);
         }
 
         private void End2D()

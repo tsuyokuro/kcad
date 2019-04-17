@@ -70,7 +70,7 @@ namespace Plotter
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
-            CalcProjectionMatrix(ProjectionType.Orthographic);
+            CalcProjectionMatrix();
             CalcProjectionZW();
 
             mDrawing = new DrawingGDI(this);

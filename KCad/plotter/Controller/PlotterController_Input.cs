@@ -575,6 +575,8 @@ namespace Plotter.Controller
 
         private void ViewOrgDrag(CadMouse pointer, DrawContext dc, double x, double y)
         {
+            DOut.tpl("ViewOrgDrag");
+
             CadVector cp = default;
             cp.Set(x, y, 0);
 

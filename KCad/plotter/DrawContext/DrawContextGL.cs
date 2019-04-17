@@ -24,7 +24,7 @@ namespace Plotter
 
         public bool LightingEnable = true;
 
-        public Matrix4d OrthographicMatrix;
+        public Matrix4d Matrix2D = Matrix4d.Identity;
 
         public ProjectionType mProjectionType = ProjectionType.Perspective;
 
@@ -38,11 +38,13 @@ namespace Plotter
         public DrawContextGL()
         {
             Init(null);
+            mUnitPerMilli = 1;
         }
 
         public DrawContextGL(Control control)
         {
             Init(control);
+            mUnitPerMilli = 1;
         }
 
         public void Init(Control control)
@@ -254,10 +256,10 @@ namespace Plotter
 
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 
-            CalcProjectionMatrix(mProjectionType);
+            CalcProjectionMatrix();
             CalcProjectionZW();
 
-            OrthographicMatrix = Matrix4d.CreateOrthographicOffCenter(
+            Matrix2D = Matrix4d.CreateOrthographicOffCenter(
                                         0, mViewWidth,
                                         mViewHeight, 0,
                                         0, mProjectionFar);
@@ -345,7 +347,7 @@ namespace Plotter
             }
 
             CalcViewMatrix();
-            CalcProjectionMatrix(mProjectionType);
+            CalcProjectionMatrix();
             CalcProjectionZW();
             CalcViewDir();
         }
@@ -355,26 +357,15 @@ namespace Plotter
             Tools.Dispose();
         }
 
-        public override void CalcProjectionMatrix(ProjectionType type)
+        public override void CalcProjectionMatrix()
         {
-            if (type == ProjectionType.Orthographic)
-            {
-                mProjectionMatrix = Matrix4d.CreateOrthographic(
-                                                ViewWidth / 2, ViewHeight / 2,
-                                                mProjectionNear,
-                                                mProjectionFar
-                                                );
-            }
-            else if (type == ProjectionType.Perspective)
-            {
-                double aspect = mViewWidth / mViewHeight;
-                mProjectionMatrix = Matrix4d.CreatePerspectiveFieldOfView(
-                                                mFovY,
-                                                aspect,
-                                                mProjectionNear,
-                                                mProjectionFar
-                                                );
-            }
+            double aspect = mViewWidth / mViewHeight;
+            mProjectionMatrix = Matrix4d.CreatePerspectiveFieldOfView(
+                                            mFovY,
+                                            aspect,
+                                            mProjectionNear,
+                                            mProjectionFar
+                                            );
 
             mProjectionMatrixInv = mProjectionMatrix.Invert();
         }

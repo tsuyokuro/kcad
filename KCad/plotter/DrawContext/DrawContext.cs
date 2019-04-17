@@ -110,6 +110,16 @@ namespace Plotter
         protected IDrawing mDrawing;
         public IDrawing Drawing => mDrawing;
 
+        public virtual void Active()
+        {
+
+        }
+
+        public virtual void Deactive()
+        {
+
+        }
+
         public virtual void CopyFrom(DrawContext dc)
         {
             CopyMetrics(dc);
@@ -190,27 +200,14 @@ namespace Plotter
             mViewDir = ret;
         }
 
-        public virtual void CalcProjectionMatrix(ProjectionType type)
+        public virtual void CalcProjectionMatrix()
         {
-            if (type == ProjectionType.Orthographic)
-            {
-                // Projection volume -1.0 -> 1.0 なので 2.0
-                mProjectionMatrix = Matrix4d.CreateOrthographic(
-                                                2.0, 2.0,
-                                                mProjectionNear,
-                                                mProjectionFar
-                                                );
-            }
-            else if (type == ProjectionType.Perspective)
-            {
-                double aspect = mViewWidth / mViewHeight;
-                mProjectionMatrix = Matrix4d.CreatePerspectiveFieldOfView(
-                                                mFovY,
-                                                aspect,
-                                                mProjectionNear,
-                                                mProjectionFar
-                                                );
-            }
+            // Projection volume -1.0 -> 1.0 なので 2.0
+            mProjectionMatrix = Matrix4d.CreateOrthographic(
+                                            2.0, 2.0,
+                                            mProjectionNear,
+                                            mProjectionFar
+                                            );
 
             mProjectionMatrixInv = mProjectionMatrix.Invert();
         }

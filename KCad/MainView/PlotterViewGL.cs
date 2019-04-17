@@ -100,7 +100,9 @@ namespace Plotter
             GL.ClearColor(Color4.Black);
             GL.Enable(EnableCap.DepthTest);
 
-            mDrawContext = new DrawContextGL(this);
+            mDrawContext = new DrawContextGLOrtho(this);
+            //mDrawContext = new DrawContextGL(this);
+
             mDrawContext.PushDraw = OnPushDraw;
 
             SwapBuffers();
@@ -108,6 +110,16 @@ namespace Plotter
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
+            if (mDrawContext is DrawContextGLOrtho)
+            {
+                mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
+
+                Redraw();
+
+                return;
+            }
+
+
             if (DownButton == MouseButtons.Middle)
             {
                 CadVector t = CadVector.Create(e.X, e.Y, 0);

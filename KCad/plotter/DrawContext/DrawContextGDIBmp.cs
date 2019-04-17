@@ -34,7 +34,7 @@ namespace Plotter
 
             mDrawing = new DrawingGDIBmp(this);
 
-            CalcProjectionMatrix(ProjectionType.Orthographic);
+            CalcProjectionMatrix();
             CalcProjectionZW();
         }
 
@@ -53,7 +53,7 @@ namespace Plotter
             mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
             mGdiGraphics = Graphics.FromImage(mImage);
 
-            CalcProjectionMatrix(ProjectionType.Orthographic);
+            CalcProjectionMatrix();
             CalcProjectionZW();
         }
 

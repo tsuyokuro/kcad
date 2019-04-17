@@ -1049,64 +1049,83 @@ namespace Plotter
 
             mViewMode = newMode;
 
+            DrawContext currentDC = PlotterView1.DrawContext;
+            DrawContext nextDC = PlotterView1.DrawContext;
+            IPlotterView view = mPlotterView;
+
             switch (mViewMode)
             {
                 case ViewModes.FRONT:
-                    SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(
+                    view = PlotterView1;
+                    view.DrawContext.SetCamera(
                         Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
-                    Redraw();
+                    nextDC = view.DrawContext;
                     break;
 
                 case ViewModes.BACK:
-                    SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(
+                    view = PlotterView1;
+                    view.DrawContext.SetCamera(
                         -Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
-                    Redraw();
+
+                    nextDC = view.DrawContext;
                     break;
 
                 case ViewModes.TOP:
-                    SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(
+                    view = PlotterView1;
+                    view.DrawContext.SetCamera(
                         Vector3d.UnitY * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, -Vector3d.UnitZ);
-                    Redraw();
+
+                    nextDC = view.DrawContext;
                     break;
 
                 case ViewModes.BOTTOM:
-                    SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(
+                    view = PlotterView1;
+                    view.DrawContext.SetCamera(
                         -Vector3d.UnitY * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitZ);
-                    Redraw();
+
+                    nextDC = view.DrawContext;
                     break;
 
                 case ViewModes.RIGHT:
-                    SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(
+                    view = PlotterView1;
+                    view.DrawContext.SetCamera(
                         Vector3d.UnitX * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
-                    Redraw();
+
+                    nextDC = view.DrawContext;
                     break;
 
                 case ViewModes.LEFT:
-                    SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(
+                    view = PlotterView1;
+                    view.DrawContext.SetCamera(
                         -Vector3d.UnitX * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
-                    Redraw();
+
+                    nextDC = view.DrawContext;
                     break;
 
                 case ViewModes.FREE:
+                    view = PlotterViewGL1;
+
                     PlotterViewGL1.Size = PlotterView1.Size;
-                    PlotterViewGL1.DrawContext.UnitPerMilli = PlotterView1.DrawContext.UnitPerMilli;
-                    SetView(PlotterViewGL1);
-                    Redraw();
+                    if (PlotterViewGL1.DrawContext is DrawContextGLOrtho)
+                    {
+                        PlotterViewGL1.DrawContext.UnitPerMilli = PlotterView1.DrawContext.UnitPerMilli;
+                    }
+
+                    nextDC = view.DrawContext;
                     break;
             }
 
+            currentDC.Deactive();
+            nextDC.Active();
+
+            SetView(view);
+            Redraw();
             return true;
         }
 
