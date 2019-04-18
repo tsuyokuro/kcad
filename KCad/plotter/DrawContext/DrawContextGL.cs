@@ -51,6 +51,7 @@ namespace Plotter
         {
             ViewCtrl = control;
 
+            mUnitPerMilli = 1.0;
             WorldScale = 1.0f;
             Tools.Setup(DrawTools.ToolsType.DARK_GL);
 

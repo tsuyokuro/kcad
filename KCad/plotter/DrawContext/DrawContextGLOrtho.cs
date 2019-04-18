@@ -10,6 +10,8 @@ namespace Plotter
 {
     class DrawContextGLOrtho : DrawContextGL
     {
+        CadVector Center = default;
+
         public DrawContextGLOrtho()
         {
             Init(null);
@@ -28,13 +30,13 @@ namespace Plotter
         public override CadVector WorldPointToDevPoint(CadVector pt)
         {
             CadVector p = WorldVectorToDevVector(pt);
-            p = p + mViewOrg;
+            p = p + Center;
             return p;
         }
 
         public override CadVector DevPointToWorldPoint(CadVector pt)
         {
-            pt = pt - mViewOrg;
+            pt = pt - Center;
             return DevVectorToWorldVector(pt);
         }
 
@@ -100,6 +102,9 @@ namespace Plotter
             CalcProjectionMatrix();
             CalcProjectionZW();
 
+            Center.x = w / 2;
+            Center.y = h / 2;
+
             Matrix2D = Matrix4d.CreateOrthographicOffCenter(
                                         0, mViewWidth,
                                         mViewHeight, 0,
@@ -113,6 +118,13 @@ namespace Plotter
                                             mProjectionNear,
                                             mProjectionFar
                                             );
+
+            double dx = ViewOrg.x - (ViewWidth / 2.0);
+            double dy = ViewOrg.y - (ViewHeight / 2.0);
+
+            mProjectionMatrix.M41 = dx / (ViewWidth / 2.0);
+            mProjectionMatrix.M42 = -dy / (ViewHeight / 2.0);
+
             mProjectionMatrixInv = mProjectionMatrix.Invert();
         }
     }
