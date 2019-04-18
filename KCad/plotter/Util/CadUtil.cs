@@ -170,8 +170,7 @@ namespace Plotter
 
             return c0;
         }
-
-
+        
         // 二つの重心情報から重心を求める
         public static Centroid MergeCentroid(Centroid c0, Centroid c1)
         {
@@ -461,13 +460,6 @@ namespace Plotter
             return ret;
         }
 
-        public static void SetNormal(CadFigure fig)
-        {
-            CadVector nv = CadUtil.Normal(fig);
-            fig.Normal = nv;
-        }
-
-
         // 法線の代表値を求める
         public static CadVector RepresentativeNormal(VectorList points)
         {
@@ -495,7 +487,6 @@ namespace Plotter
 
             return normal;
         }
-
 
         // 図形は凸である
         public static bool IsConvex(VectorList points)

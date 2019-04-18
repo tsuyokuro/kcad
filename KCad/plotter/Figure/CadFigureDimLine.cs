@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using CadDataTypes;
+﻿using CadDataTypes;
+using System;
 
 namespace Plotter
 {
@@ -74,8 +73,6 @@ namespace Plotter
 
         public override void DrawSelected(DrawContext dc, int pen)
         {
-            Draw(dc, pen);
-
             foreach (CadVector p in PointList)
             {
                 if (p.Selected)
@@ -275,37 +272,25 @@ namespace Plotter
             dc.Drawing.DrawArrow(pen, cp, PointList[2], ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
 
 
-            CadVector d = PointList[2] - PointList[3];
+            CadVector lineV = PointList[2] - PointList[3];
 
-            double len = d.Norm();
+            double len = lineV.Norm();
 
-            String s = CadUtil.ValToString(len);
+            string lenStr = CadUtil.ValToString(len);
 
+            CadVector p = PointList[3] + (lineV / 2);
 
-            CadVector p0 = dc.WorldPointToDevPoint(PointList[3]);
-            CadVector p1 = dc.WorldPointToDevPoint(PointList[2]);
+            CadVector up = PointList[3] - PointList[0];
 
-            d = p1 - p0;
-
-            len = d.Norm();
-
-            CadVector sv = dc.Drawing.MeasureText(FontID, s);
-            double sl = sv.Norm();
-
-            CadVector sp;
-
-            if (len > CadMath.R0Max)
-            {
-                double a = ((len - sl) / 2) / len;
-                sp = (d * a) + p0;
-            }
-            else
-            {
-                sp = p0;
-                d = CadVector.UnitX;
-            }
-
-            dc.Drawing.DrawTextScrn(FontID, BrushID, sp, d.UnitVector(), s);
+            //             --- lineV ---> 
+            //    3<------------ p ----------->2
+            // ^  |                            |
+            // |  |                            |
+            // up 0                            1 
+            // 
+            dc.Drawing.DrawText(FontID, BrushID, p, lineV, up,
+                new DrawTextOption(DrawTextOption.H_CENTER),
+                lenStr);
         }
     }
 

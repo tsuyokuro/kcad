@@ -409,22 +409,43 @@ namespace Plotter
             base.DrawHarfEdgeModel(pen, model);
         }
 
-        public override void DrawText(int font, int brush, CadVector a, string s)
+        public override void DrawText(int font, int brush, CadVector a, CadVector xdir, CadVector ydir, DrawTextOption opt, string s)
         {
             CadVector pa = DC.WorldPointToDevPoint(a);
-            DrawTextScrn(font, brush, pa, CadVector.UnitX, s);
+            CadVector d = DC.WorldVectorToDevVector(xdir);
+
+            DrawTextScrn(font, brush, pa, d, opt, s);
         }
 
-        public override void DrawTextScrn(int font, int brush, CadVector a, CadVector direction, string s)
+        public override void DrawTextScrn(int font, int brush, CadVector a, CadVector dir, DrawTextOption opt, string s)
         {
             if (DC.Brush(brush) == null) return;
             if (DC.Font(font) == null) return;
 
+            if (opt.Option != 0)
+            {
+                CadVector sz = MeasureText(font, s);
+
+                if ((opt.Option | DrawTextOption.H_CENTER) != 0)
+                {
+                    double slen = sz.x / 2;
+
+                    CadVector ud = CadVector.UnitX;
+
+                    if (!dir.IsZero())
+                    {
+                        ud = dir.UnitVector();
+                    }
+
+                    a = a - (ud * slen);
+                }
+            }
+
             double angle = 0;
 
-            if (direction.x != 0 || direction.y != 0)
+            if (!(dir.x == 0 && dir.y == 0))
             {
-                angle = CadUtil.Angle2D(direction);
+                angle = CadUtil.Angle2D(dir);
             }
 
             angle = CadMath.Rad2Deg(angle);
@@ -578,10 +599,16 @@ namespace Plotter
             CadVector cp = DC.DevPointToWorldPoint(up);
 
 
-            CadVector p0 = default(CadVector);
-            CadVector p1 = default(CadVector);
+            CadVector p0 = default;
+            CadVector p1 = default;
 
+            CadVector tp = default;
 
+            MinMax2D minMax2D = MinMax2D.Create();
+
+            CadVector xp = default;
+            CadVector yp = default;
+            CadVector zp = default;
 
             // X軸
             p0.x = -len + cp.x;
@@ -594,7 +621,11 @@ namespace Plotter
 
             DrawLine(DrawTools.PEN_AXIS2, p0, p1);
 
-            DrawText(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, p1, "x");
+            tp = DC.WorldPointToDevPoint(p0);
+            minMax2D.Check(tp);
+            tp = DC.WorldPointToDevPoint(p1);
+            minMax2D.Check(tp);
+            xp = tp;
 
             // Y軸
             p0.x = 0 + cp.x;
@@ -606,7 +637,13 @@ namespace Plotter
             p1.z = 0 + cp.z;
 
             DrawLine(DrawTools.PEN_AXIS2, p0, p1);
-            DrawText(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, p1, "y");
+
+            tp = DC.WorldPointToDevPoint(p0);
+            minMax2D.Check(tp);
+            tp = DC.WorldPointToDevPoint(p1);
+            minMax2D.Check(tp);
+
+            yp = tp;
 
             // Z軸
             p0.x = 0 + cp.x;
@@ -618,7 +655,27 @@ namespace Plotter
             p1.z = len + cp.z;
 
             DrawLine(DrawTools.PEN_AXIS2, p0, p1);
-            DrawText(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, p1, "z");
+
+            tp = DC.WorldPointToDevPoint(p0);
+            minMax2D.Check(tp);
+            tp = DC.WorldPointToDevPoint(p1);
+            minMax2D.Check(tp);
+            zp = tp;
+
+            minMax2D.MaxX -= 8;
+            minMax2D.MaxY -= 8;
+
+            xp = minMax2D.Inner(xp);
+            yp = minMax2D.Inner(yp);
+            zp = minMax2D.Inner(zp);
+
+            xp.y -= 7;
+            yp.y -= 7;
+            zp.y -= 7;
+
+            DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, xp, CadVector.UnitX, default(DrawTextOption), "x");
+            DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, yp, CadVector.UnitX, default(DrawTextOption), "y");
+            DrawTextScrn(DrawTools.FONT_SMALL, DrawTools.BRUSH_TEXT, zp, CadVector.UnitX, default(DrawTextOption), "z");
         }
     }
 }

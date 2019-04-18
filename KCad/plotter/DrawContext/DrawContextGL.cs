@@ -24,6 +24,10 @@ namespace Plotter
 
         public bool LightingEnable = true;
 
+        public Matrix4d OrthographicMatrix;
+
+        public ProjectionType mProjectionType = ProjectionType.Perspective;
+
         public enum ViewingAngleType
         {
             TELESCOPE,
@@ -250,8 +254,13 @@ namespace Plotter
 
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 
-            CalcProjectionMatrix(ProjectionType.Perspective);
+            CalcProjectionMatrix(mProjectionType);
             CalcProjectionZW();
+
+            OrthographicMatrix = Matrix4d.CreateOrthographicOffCenter(
+                                        0, mViewWidth,
+                                        mViewHeight, 0,
+                                        0, mProjectionFar);
         }
 
         public void RotateEyePoint(Vector2 prev, Vector2 current)
@@ -336,14 +345,38 @@ namespace Plotter
             }
 
             CalcViewMatrix();
-            CalcProjectionMatrix(ProjectionType.Perspective);
-            CalcViewDir();
+            CalcProjectionMatrix(mProjectionType);
             CalcProjectionZW();
+            CalcViewDir();
         }
 
         public override void Dispose()
         {
             Tools.Dispose();
+        }
+
+        public override void CalcProjectionMatrix(ProjectionType type)
+        {
+            if (type == ProjectionType.Orthographic)
+            {
+                mProjectionMatrix = Matrix4d.CreateOrthographic(
+                                                ViewWidth / 2, ViewHeight / 2,
+                                                mProjectionNear,
+                                                mProjectionFar
+                                                );
+            }
+            else if (type == ProjectionType.Perspective)
+            {
+                double aspect = mViewWidth / mViewHeight;
+                mProjectionMatrix = Matrix4d.CreatePerspectiveFieldOfView(
+                                                mFovY,
+                                                aspect,
+                                                mProjectionNear,
+                                                mProjectionFar
+                                                );
+            }
+
+            mProjectionMatrixInv = mProjectionMatrix.Invert();
         }
     }
 }

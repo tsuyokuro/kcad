@@ -66,7 +66,7 @@ namespace Plotter
                 d = delta;
             }
 
-            Util.MoveSelectedPointsFromStored(this, dc, d);
+            FigUtil.MoveSelectedPointsFromStored(this, dc, d);
 
             mChildList.ForEach(c =>
             {
@@ -78,7 +78,7 @@ namespace Plotter
         {
             if (Locked) return;
 
-            Util.MoveAllPoints(this, delta);
+            FigUtil.MoveAllPoints(this, delta);
         }
         #endregion
 

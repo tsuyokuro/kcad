@@ -6,10 +6,11 @@ using System.Collections.Generic;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using FTGL;
 using System;
 using HalfEdgeNS;
 using CadDataTypes;
+using System.Drawing;
+using GLFont;
 
 namespace Plotter
 {
@@ -27,13 +28,19 @@ namespace Plotter
         private const BeginMode LINE_STRIP = BeginMode.LineStrip;
 #endif
 
-        FontWrapper FontW;
+        private FontFaceW mFontFaceW;
+        private FontRenderer mFontRenderer;
 
         public DrawingGL(DrawContextGL dc)
         {
             DC = dc;
-            FontW = FontWrapper.LoadFile("C:\\Windows\\Fonts\\msgothic.ttc");
-            FontW.FontSize = 20;
+
+            mFontFaceW = new FontFaceW();
+            mFontFaceW.SetFont(@"C:\Windows\Fonts\msgothic.ttc", 0);
+            mFontFaceW.SetSize(20);
+
+            mFontRenderer = new FontRenderer();
+            mFontRenderer.Init();
         }
 
         public override void Clear(int brush)
@@ -375,16 +382,11 @@ namespace Plotter
 
             DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
-            /*
-            GL.PushMatrix();
 
-            GL.Translate(0, 0, 0);
-            GL.Color4(Color4.White);
+            //GL.Translate(20, 0, 0);
+            //GL.Color4(Color.White);
 
-            FontW.RenderW("黒木", RenderMode.All);
-
-            GL.PopMatrix();
-            */
+            //FontW.RenderW("123", RenderMode.All);
         }
 
         private void PushMatrixes()
@@ -413,11 +415,7 @@ namespace Plotter
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
-            Matrix4d view = Matrix4d.CreateOrthographicOffCenter(
-                                        0, DC.ViewWidth,
-                                        DC.ViewHeight, 0,
-                                        0, 1000);
-            GL.MultMatrix(ref view);
+            GL.MultMatrix(ref DC.OrthographicMatrix);
         }
 
         private void End2D()
@@ -504,6 +502,48 @@ namespace Plotter
             Vector3d vv = -DC.ViewDir * v.Norm();
 
             return (CadVector)vv;
+        }
+
+        private void DumpGLMatrix()
+        {
+            GL.MatrixMode(MatrixMode.Modelview);
+
+            double[] model = new double[16];
+            double[] projection = new double[16];
+
+            GL.GetDouble(GetPName.ProjectionMatrix, projection);
+
+            UMatrix4 m4 = new UMatrix4(projection);
+
+
+            m4.dump("Get");
+
+            DC.ProjectionMatrix.dump("Set");
+        }
+
+        public override void DrawText(int font, int brush, CadVector a, CadVector xdir, CadVector ydir, DrawTextOption opt, string s)
+        {
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.PushMatrix();
+
+            FontTex tex = mFontFaceW.CreateTexture(s);
+
+            CadVector xv = xdir.UnitVector() * tex.ImgW * 0.3;
+            CadVector yv = ydir.UnitVector() * tex.ImgH * 0.3;
+
+            if (xv.IsZero() || yv.IsZero())
+            {
+                return;
+            }
+
+            if ((opt.Option & DrawTextOption.H_CENTER)!=0)
+            {
+                a -= (xv / 2);
+            }
+
+            GL.Color4(DC.Color(brush));
+            
+            mFontRenderer.Render(tex, a.vector, xv.vector, yv.vector);
         }
     }
 }

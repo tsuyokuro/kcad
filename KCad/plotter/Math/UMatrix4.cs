@@ -127,6 +127,23 @@ namespace Plotter
             Matrix = m4d;
         }
 
+        public UMatrix4(double [] data)
+        {
+            // Row-major
+            //Matrix = new Matrix4d(
+            //    data[0], data[4], data[8], data[12],
+            //    data[1], data[5], data[9], data[13],
+            //    data[2], data[6], data[10], data[14],
+            //    data[3], data[7], data[11], data[15]);
+
+            // Column-major
+            Matrix = new Matrix4d(
+                data[0], data[1], data[2], data[3],
+                data[4], data[5], data[6], data[7],
+                data[8], data[9], data[10], data[11],
+                data[12], data[13], data[14], data[15]);
+        }
+
         public static UMatrix4 operator *(UMatrix4 m1, UMatrix4 m2)
         {
             return product(m1, m2);
@@ -196,9 +213,9 @@ namespace Plotter
                 0, 0, 0, 1
             );
 
-        public void dump()
+        public void dump(string name = "")
         {
-            DOut.pl(nameof(UMatrix4) + "{");
+            DOut.pl(nameof(UMatrix4) + " " + name + " {");
             DOut.Indent++;
             DOut.pl(M11.ToString() + ", " + M12.ToString() + ", " + M13.ToString() + ", " + M14.ToString());
             DOut.pl(M21.ToString() + ", " + M22.ToString() + ", " + M23.ToString() + ", " + M24.ToString());

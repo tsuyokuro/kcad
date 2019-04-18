@@ -74,9 +74,6 @@ namespace Plotter
             CalcProjectionZW();
 
             mDrawing = new DrawingGDI(this);
-
-            CalcProjectionMatrix(ProjectionType.Orthographic);
-            CalcProjectionZW();
         }
 
         public override void SetViewSize(double w, double h)

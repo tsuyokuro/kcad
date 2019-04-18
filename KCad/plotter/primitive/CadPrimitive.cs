@@ -270,6 +270,16 @@ namespace Plotter
         {
             return CadVector.Create(MaxX, MaxY, 0);
         }
+
+        public CadVector Inner(CadVector v)
+        {
+            if (v.x > MaxX) v.x = MaxX;
+            if (v.y > MaxY) v.y = MaxY;
+            if (v.x < MinX) v.x = MinX;
+            if (v.y < MinY) v.y = MinY;
+
+            return v;
+        }
     }
 
     public struct MinMax3D
