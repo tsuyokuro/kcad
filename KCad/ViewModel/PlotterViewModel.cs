@@ -1115,7 +1115,6 @@ namespace Plotter
                     if (PlotterViewGL1.DrawContext is DrawContextGLOrtho)
                     {
                         PlotterViewGL1.DrawContext.UnitPerMilli = PlotterView1.DrawContext.UnitPerMilli;
-                        PlotterViewGL1.DrawContext.ViewOrg = PlotterView1.DrawContext.ViewOrg;
                     }
 
                     nextDC = view.DrawContext;

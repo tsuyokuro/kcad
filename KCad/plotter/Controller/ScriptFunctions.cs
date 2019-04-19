@@ -795,7 +795,7 @@ namespace Plotter.Controller
 
             tdc.SetViewSize(w, h);
 
-            tdc.ViewOrg = CadVector.Create(w / 2, h / 2, 0);
+            tdc.SetViewOrg(CadVector.Create(w / 2, h / 2, 0));
 
             tdc.SetupTools(DrawTools.ToolsType.DARK);
 
@@ -817,7 +817,7 @@ namespace Plotter.Controller
 
             CadVector d = trcp - tdc.ViewOrg;
 
-            tdc.ViewOrg -= d;
+            tdc.SetViewOrg(tdc.ViewOrg - d);
 
             Env.RunOnMainThread(() =>
             {

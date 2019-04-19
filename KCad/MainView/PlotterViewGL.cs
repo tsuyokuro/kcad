@@ -68,13 +68,19 @@ namespace Plotter
 
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
-            PrevMousePos.Set(e.X, e.Y, 0);
-            DownButton = e.Button;
-
-            if (DownButton != MouseButtons.Middle)
+            if (mDrawContext is DrawContextGLOrtho)
             {
                 mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
+            }
+            else
+            {
+                PrevMousePos.Set(e.X, e.Y, 0);
+                DownButton = e.Button;
 
+                if (DownButton != MouseButtons.Middle)
+                {
+                    mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
+                }
             }
         }
 

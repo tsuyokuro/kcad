@@ -9,14 +9,14 @@ namespace Plotter.Controller
             CadVector op = default(CadVector);
             op.Set(pixX, pixY, 0);
 
-            dc.ViewOrg = op;
+            dc.SetViewOrg(op);
         }
 
         public void MoveOrigin(DrawContext dc, double pixDx, double pixDy)
         {
             CadVector d = CadVector.Create(pixDx, pixDy, 0);
 
-            dc.ViewOrg += d;
+            dc.SetViewOrg(dc.ViewOrg + d);
         }
 
         public void AdjustOrigin(DrawContext dc, double pixX, double pixY, int vw, int vh)
@@ -42,7 +42,7 @@ namespace Plotter.Controller
             op = center - d;
 
 
-            dc.ViewOrg = op;
+            dc.SetViewOrg(op);
 
             dc.UnitPerMilli *= f;
         }

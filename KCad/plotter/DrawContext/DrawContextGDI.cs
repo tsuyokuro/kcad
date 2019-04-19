@@ -76,6 +76,11 @@ namespace Plotter
             mDrawing = new DrawingGDI(this);
         }
 
+        public override void SetViewOrg(CadVector org)
+        {
+            mViewOrg = org;
+        }
+
         public override void SetViewSize(double w, double h)
         {
             mViewWidth = w;

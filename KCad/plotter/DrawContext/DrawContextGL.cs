@@ -140,6 +140,8 @@ namespace Plotter
         {
             //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+            GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
+
             GL.Enable(EnableCap.DepthTest);
 
             GL.MatrixMode(MatrixMode.Projection);

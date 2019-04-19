@@ -85,9 +85,8 @@ namespace Plotter
         // Screen 座標系の原点 
         // 座標系の原点がView座標上で何処にあるかを示す
         protected CadVector mViewOrg;
-        public CadVector ViewOrg
+        public virtual CadVector ViewOrg
         {
-            set => mViewOrg = value;
             get => mViewOrg;
         }
 
@@ -118,6 +117,11 @@ namespace Plotter
         public virtual void Deactive()
         {
 
+        }
+
+        public virtual void SetViewOrg(CadVector org)
+        {
+            mViewOrg = org;
         }
 
         public virtual void CopyFrom(DrawContext dc)

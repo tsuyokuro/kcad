@@ -493,7 +493,6 @@ void main()
 
             float w = tex.W;
             float h = tex.H;
-            float z = 0;
 
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);

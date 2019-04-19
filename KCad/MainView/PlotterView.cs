@@ -102,7 +102,7 @@ namespace Plotter
                     org.x = Width / 2;
                     org.y = Height / 2;
 
-                    mDrawContext.ViewOrg = org;
+                    mDrawContext.SetViewOrg(org);
 
                     //DOut.pl($"{GetType().Name} onSizeChanged firstChange {Width}, {Height}");
 
