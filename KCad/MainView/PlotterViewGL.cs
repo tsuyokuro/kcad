@@ -34,6 +34,12 @@ namespace Plotter
             }
         }
 
+        private DrawContextGLOrtho mDrawContextOrtho;
+
+        private DrawContextGL mDrawContextPers;
+
+        private bool mEnablePerse = false;
+
         public static PlotterViewGL Create()
         {
             GraphicsMode mode = GraphicsMode.Default;
@@ -50,7 +56,7 @@ namespace Plotter
         private PlotterViewGL(GraphicsMode mode) : base(mode)
         {
             Load += OnLoad;
-            Resize += OnResize;
+            SizeChanged += OnResize;
             Paint += OnPaint;
             MouseMove += OnMouseMove;
             MouseDown += OnMouseDown;
@@ -86,18 +92,26 @@ namespace Plotter
 
         private void OnMouseWheel(object sender, MouseEventArgs e)
         {
-            if (CadKeyboard.IsCtrlKeyDown())
+            if (mDrawContext is DrawContextGLOrtho)
             {
-                if (e.Delta > 0)
-                {
-                    mDrawContext.MoveForwardEyePoint(3);
-                }
-                else if (e.Delta < 0)
-                {
-                    mDrawContext.MoveForwardEyePoint(-3);
-                }
-
+                mController.Mouse.MouseWheel(mDrawContext, e.X, e.Y, e.Delta);
                 Redraw();
+            }
+            else
+            {
+                if (CadKeyboard.IsCtrlKeyDown())
+                {
+                    if (e.Delta > 0)
+                    {
+                        mDrawContext.MoveForwardEyePoint(3);
+                    }
+                    else if (e.Delta < 0)
+                    {
+                        mDrawContext.MoveForwardEyePoint(-3);
+                    }
+
+                    Redraw();
+                }
             }
         }
 
@@ -106,10 +120,13 @@ namespace Plotter
             GL.ClearColor(Color4.Black);
             GL.Enable(EnableCap.DepthTest);
 
-            mDrawContext = new DrawContextGLOrtho(this);
-            //mDrawContext = new DrawContextGL(this);
+            mDrawContextOrtho = new DrawContextGLOrtho(this);
+            mDrawContextPers = new DrawContextGL(this);
 
-            mDrawContext.PushDraw = OnPushDraw;
+            mDrawContext = mDrawContextOrtho;
+
+            mDrawContextOrtho.PushDraw = OnPushDraw;
+            mDrawContextPers.PushDraw = OnPushDraw;
 
             SwapBuffers();
         }
@@ -171,6 +188,8 @@ namespace Plotter
             }
         }
 
+        private int sizeChangeCnt = 0;
+
         private void OnResize(object sender, EventArgs e)
         {
             if (mDrawContext == null)
@@ -178,12 +197,50 @@ namespace Plotter
                 return;
             }
 
+            if (sizeChangeCnt == 2)
+            {
+                CadVector org = default(CadVector);
+                org.x = Width / 2;
+                org.y = Height / 2;
+
+                mDrawContext.SetViewOrg(org);
+
+                mController.SetCursorWoldPos(CadVector.Zero);
+            }
+
+            sizeChangeCnt++;
+
             mDrawContext.SetViewSize(Size.Width, Size.Height);
 
             if (mController != null)
             {
                 Redraw();
             }
+        }
+
+        public void EnablePerse(bool enable)
+        {
+            if (enable)
+            {
+                if (mDrawContext != mDrawContextPers)
+                {
+                    mDrawContext = mDrawContextPers;
+                }
+            }
+            else
+            {
+                if (mDrawContext != mDrawContextOrtho)
+                {
+                    mDrawContext = mDrawContextOrtho;
+                }
+            }
+
+            if (mDrawContext == null)
+            {
+                return;
+            }
+
+            mDrawContext.SetViewSize(Size.Width, Size.Height);
         }
 
         public void SetController(PlotterController controller)

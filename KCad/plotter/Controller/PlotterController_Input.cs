@@ -356,7 +356,6 @@ namespace Plotter.Controller
                 ObjDownPoint = sc.MarkSeg.CrossPoint;
             }
 
-
             CadFigure fig = mDB.GetFigure(sc.MarkSeg.FigureID);
 
             ClearSelectionConditional(sc.MarkSeg);
@@ -400,8 +399,6 @@ namespace Plotter.Controller
                 x = CrossCursor.Pos.x;
                 y = CrossCursor.Pos.y;
             }
-
-            //DOut.pl($"LButtonDown {x}, {y}");
 
             CadVector pixp = CadVector.Create(x, y, 0);
             CadVector cp = dc.DevPointToWorldPoint(pixp);
@@ -548,6 +545,8 @@ namespace Plotter.Controller
 
         private void MButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
+            mBackState = State;
+
             State = States.DRAGING_VIEW_ORG;
 
             StoreViewOrg = dc.ViewOrg;
@@ -566,7 +565,7 @@ namespace Plotter.Controller
                 //Redraw();
             }
 
-            State = States.SELECT;
+            State = mBackState;
 
             CrossCursor.Pos = CadVector.Create(x, y, 0);
 

@@ -12,14 +12,30 @@ namespace Plotter
     {
         CadVector Center = default;
 
+        UMatrix4 ConvProjectionMatrix;
+        UMatrix4 ConvProjectionMatrixInv;
+
+        public override double UnitPerMilli
+        {
+            set
+            {
+                mUnitPerMilli = value;
+                CalcProjectionMatrix();
+            }
+
+            get => mUnitPerMilli;
+        }
+
         public DrawContextGLOrtho()
         {
             Init(null);
+            mUnitPerMilli = 4;
         }
 
         public DrawContextGLOrtho(Control control)
         {
             Init(control);
+            mUnitPerMilli = 4;
         }
 
         public override void Active()
@@ -27,17 +43,44 @@ namespace Plotter
             CalcProjectionMatrix();
         }
 
+        public override void StartDraw()
+        {
+            //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
+
+            //GL.Disable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.DepthTest);
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadMatrix(ref mViewMatrix.Matrix);
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref mProjectionMatrix.Matrix);
+
+            SetupLight();
+        }
+
         public override CadVector WorldPointToDevPoint(CadVector pt)
         {
             CadVector p = WorldVectorToDevVector(pt);
-            p = p + Center;
+            p = p + mViewOrg;
+
             return p;
         }
 
         public override CadVector DevPointToWorldPoint(CadVector pt)
         {
-            pt = pt - Center;
-            return DevVectorToWorldVector(pt);
+            pt = pt - mViewOrg;
+            CadVector p = DevVectorToWorldVector(pt);
+
+            return p;
         }
 
         public override CadVector WorldVectorToDevVector(CadVector pt)
@@ -49,7 +92,7 @@ namespace Plotter
             wv.W = 1.0f;
 
             Vector4d sv = wv * mViewMatrix;
-            Vector4d pv = sv * mProjectionMatrix;
+            Vector4d pv = sv * ConvProjectionMatrix;
 
             Vector4d dv;
 
@@ -78,7 +121,7 @@ namespace Plotter
             wv.X = pt.x * wv.W;
             wv.Y = pt.y * wv.W;
 
-            wv = wv * mProjectionMatrixInv;
+            wv = wv * ConvProjectionMatrixInv;
             wv = wv * mViewMatrixInv;
 
             wv /= WorldScale;
@@ -97,8 +140,8 @@ namespace Plotter
             mViewWidth = w;
             mViewHeight = h;
 
-            mViewOrg.x = w / 2.0;
-            mViewOrg.y = h / 2.0;
+            //mViewOrg.x = w / 2.0;
+            //mViewOrg.y = h / 2.0;
 
             DeviceScaleX = w / 2.0;
             DeviceScaleY = -h / 2.0;
@@ -124,6 +167,9 @@ namespace Plotter
                                             mProjectionNear,
                                             mProjectionFar
                                             );
+
+            ConvProjectionMatrix = mProjectionMatrix;
+            ConvProjectionMatrixInv = mProjectionMatrix.Invert();
 
             double dx = ViewOrg.x - (ViewWidth / 2.0);
             double dy = ViewOrg.y - (ViewHeight / 2.0);

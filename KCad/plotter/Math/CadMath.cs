@@ -7,11 +7,29 @@ namespace Plotter
     {
         public const double Epsilon = 0.0000005;
 
-        public const double R1Min = 1.0 - Epsilon;
-        public const double R1Max = 1.0 + Epsilon;
+        public const double RP1Min = 1.0 - Epsilon;
+        public const double RP1Max = 1.0 + Epsilon;
+
+        public const double RM1Min = -1.0 - Epsilon;
+        public const double RM1Max = -1.0 + Epsilon;
 
         public const double R0Min = -Epsilon;
         public const double R0Max = Epsilon;
+
+        public static bool Near_P1(double v)
+        {
+            return (v > RP1Min && v < RP1Max);
+        }
+
+        public static bool Near_M1(double v)
+        {
+            return (v > RM1Min && v < RM1Max);
+        }
+
+        public static bool Near_0(double v)
+        {
+            return (v > R0Min && v < R0Max);
+        }
 
 
         // 内積
@@ -115,6 +133,15 @@ namespace Plotter
             normal = normal.UnitVector();
 
             return normal;
+        }
+
+        public static bool IsParallel(CadVector v1, CadVector v2)
+        {
+            v1 = v1.UnitVector();
+            v2 = v2.UnitVector();
+
+            double a = InnerProduct(v1, v2);
+            return Near_P1(a) || Near_M1(a);
         }
 
         /**

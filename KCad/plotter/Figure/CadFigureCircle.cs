@@ -44,13 +44,13 @@ namespace Plotter
 
         public override void Draw(DrawContext dc, int pen)
         {
-            //drawCircle(dc, pen);
-            drawDisk(dc, pen);
+            drawCircle(dc, pen);
+            //drawDisk(dc, pen);
         }
 
         public override void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
         {
-            drawCircle(dc, pen);
+            //drawCircle(dc, pen);
         }
 
         public override void DrawSelected(DrawContext dc, int pen)

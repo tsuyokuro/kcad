@@ -534,7 +534,7 @@ namespace Plotter
                     continue;
                 }
 
-                if (scala < CadMath.R1Min)
+                if (scala < CadMath.RP1Min)
                 {
                     return false;
                 }
@@ -1510,6 +1510,29 @@ namespace Plotter
         public double InchToMilli(double inchi)
         {
             return inchi * MILLI_PER_INCH;
+        }
+
+        public static PointPair LeftTopRightBottom2D(CadVector p0, CadVector p1)
+        {
+            double lx = p0.x;
+            double rx = p1.x;
+
+            double ty = p0.y;
+            double by = p1.y;
+
+            if (p0.x > p1.x)
+            {
+                lx = p1.x;
+                rx = p0.x;
+            }
+
+            if (p0.y > p1.y)
+            {
+                ty = p1.y;
+                by = p0.y;
+            }
+
+            return new PointPair(CadVector.Create(lx, ty, 0), CadVector.Create(rx, by, 0));
         }
 
         public static void Dump(Vector4d v, string prefix)

@@ -14,15 +14,19 @@ namespace Plotter
 
             mUnitPerMilli = deviceSize.Width / pageSize.Width;
 
-            CopyCamera(currentDC);
-
-            if (currentDC is DrawContextGL)
+            if (currentDC.GetType() == typeof(DrawContextGL))
             {
-                DeviceScaleX = currentDC.DeviceScaleX;
-                DeviceScaleY = currentDC.DeviceScaleY;
+                CopyCamera(currentDC);
+                DeviceScaleX = currentDC.DeviceScaleX / 2;
+                DeviceScaleY = currentDC.DeviceScaleY / 2;
+            }
+            else
+            {
+                SetCamera(currentDC.Eye, currentDC.LookAt, currentDC.UpVector);
+                CalcProjectionMatrix();
             }
 
-            CadVector org = default(CadVector);
+            CadVector org = default;
 
             org.x = deviceSize.Width / 2.0;
             org.y = deviceSize.Height / 2.0;

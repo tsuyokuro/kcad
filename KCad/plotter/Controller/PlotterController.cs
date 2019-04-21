@@ -29,6 +29,7 @@ namespace Plotter.Controller
             private set
             {
                 mState = value;
+
                 if (mInteractCtrl.IsActive)
                 {
                     mInteractCtrl.Cancel();
@@ -37,6 +38,8 @@ namespace Plotter.Controller
 
             get => mState;
         }
+
+        public States mBackState;
 
         public CadObjectDB DB => mDB;
 

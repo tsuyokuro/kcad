@@ -39,7 +39,7 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawMarkCursor(int pen, CadVector p, double size)
+        public virtual void DrawMarkCursor(int pen, CadVector p, double pix_size)
         {
         }
 

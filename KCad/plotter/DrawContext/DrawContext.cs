@@ -23,7 +23,7 @@ namespace Plotter
         // 画素/Milli
         // 1ミリあたりの画素数
         protected double mUnitPerMilli = 1;
-        public double UnitPerMilli
+        public virtual double UnitPerMilli
         {
             set => mUnitPerMilli = value;
             get => mUnitPerMilli;
@@ -32,11 +32,11 @@ namespace Plotter
         // 視点
         public const double STD_EYE_DIST = 250.0;
         protected Vector3d mEye = Vector3d.UnitZ * STD_EYE_DIST;
-        Vector3d Eye => mEye;
+        public Vector3d Eye => mEye;
 
         // 注視点
         protected Vector3d mLookAt = Vector3d.Zero;
-        Vector3d LookAt => mLookAt;
+        public Vector3d LookAt => mLookAt;
 
         // 投影面までの距離
         protected double mProjectionNear = 0.1;
@@ -250,6 +250,12 @@ namespace Plotter
             CalcViewMatrix();
             CalcViewDir();
             CalcProjectionZW();
+        }
+
+        public virtual double DevSizeToWoldSize(double s)
+        {
+            CadVector size = DevVectorToWorldVector(CadVector.UnitX * s);
+            return size.Norm();
         }
 
         public virtual void dump()

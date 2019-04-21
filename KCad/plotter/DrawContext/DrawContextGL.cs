@@ -218,7 +218,7 @@ namespace Plotter
             return CadVector.Create(wv);
         }
 
-        private void SetupLight()
+        protected void SetupLight()
         {
             if (!LightingEnable)
             {

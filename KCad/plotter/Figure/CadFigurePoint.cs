@@ -79,7 +79,9 @@ namespace Plotter
                 return;
             }
 
-            dc.Drawing.DrawCross(pen, PointList[0], 4);
+            double size = dc.DevSizeToWoldSize(4);
+
+            dc.Drawing.DrawCross(pen, PointList[0], size);
         }
 
         private void drawSelected_Point(DrawContext dc, int pen)

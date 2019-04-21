@@ -277,9 +277,9 @@ namespace Plotter
                 );
         }
 
-        public override void DrawMarkCursor(int pen, CadVector p, double size)
+        public override void DrawMarkCursor(int pen, CadVector p, double pix_size)
         {
-            DrawCross(pen, p, size);
+            DrawCross(pen, p, pix_size);
         }
         #endregion
 

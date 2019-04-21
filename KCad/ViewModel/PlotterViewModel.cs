@@ -294,10 +294,10 @@ namespace Plotter
 
         private void SetView(IPlotterView view)
         {
-            if (view == mPlotterView)
-            {
-                return;
-            }
+            //if (view == mPlotterView)
+            //{
+            //    return;
+            //}
 
             if (mPlotterView != null)
             {
@@ -1056,6 +1056,102 @@ namespace Plotter
             switch (mViewMode)
             {
                 case ViewModes.FRONT:
+                    PlotterViewGL1.EnablePerse(false);
+                    view = PlotterViewGL1;
+                    view.DrawContext.SetCamera(
+                        Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitY);
+                    nextDC = view.DrawContext;
+                    break;
+
+                    //view = PlotterView1;
+                    //view.DrawContext.SetCamera(
+                    //    Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
+                    //    Vector3d.Zero, Vector3d.UnitY);
+                    //nextDC = view.DrawContext;
+                    //break;
+
+                case ViewModes.BACK:
+                    PlotterViewGL1.EnablePerse(false);
+                    view = PlotterViewGL1;
+                    view.DrawContext.SetCamera(
+                        -Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitY);
+
+                    nextDC = view.DrawContext;
+                    break;
+
+                case ViewModes.TOP:
+                    PlotterViewGL1.EnablePerse(false);
+                    view = PlotterViewGL1;
+                    view.DrawContext.SetCamera(
+                        Vector3d.UnitY * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, -Vector3d.UnitZ);
+
+                    nextDC = view.DrawContext;
+                    break;
+
+                case ViewModes.BOTTOM:
+                    PlotterViewGL1.EnablePerse(false);
+                    view = PlotterViewGL1;
+                    view.DrawContext.SetCamera(
+                        -Vector3d.UnitY * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitZ);
+
+                    nextDC = view.DrawContext;
+                    break;
+
+                case ViewModes.RIGHT:
+                    PlotterViewGL1.EnablePerse(false);
+                    view = PlotterViewGL1;
+                    view.DrawContext.SetCamera(
+                        Vector3d.UnitX * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitY);
+
+                    nextDC = view.DrawContext;
+                    break;
+
+                case ViewModes.LEFT:
+                    PlotterViewGL1.EnablePerse(false);
+                    view = PlotterViewGL1;
+                    view.DrawContext.SetCamera(
+                        -Vector3d.UnitX * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitY);
+
+                    nextDC = view.DrawContext;
+                    break;
+
+                case ViewModes.FREE:
+                    PlotterViewGL1.EnablePerse(true);
+                    view = PlotterViewGL1;
+                    nextDC = view.DrawContext;
+                    break;
+            }
+
+            currentDC.Deactive();
+            nextDC.Active();
+
+            SetView(view);
+            Redraw();
+            return true;
+        }
+
+        private bool ChangeViewMode_old(ViewModes newMode)
+        {
+            if (mViewMode == newMode)
+            {
+                return false;
+            }
+
+            mViewMode = newMode;
+
+            DrawContext currentDC = PlotterView1.DrawContext;
+            DrawContext nextDC = PlotterView1.DrawContext;
+            IPlotterView view = mPlotterView;
+
+            switch (mViewMode)
+            {
+                case ViewModes.FRONT:
                     view = PlotterView1;
                     view.DrawContext.SetCamera(
                         Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
@@ -1111,11 +1207,15 @@ namespace Plotter
                 case ViewModes.FREE:
                     view = PlotterViewGL1;
 
-                    PlotterViewGL1.Size = PlotterView1.Size;
-                    if (PlotterViewGL1.DrawContext is DrawContextGLOrtho)
-                    {
-                        PlotterViewGL1.DrawContext.UnitPerMilli = PlotterView1.DrawContext.UnitPerMilli;
-                    }
+                    //PlotterViewGL1.Size = PlotterView1.Size;
+                    //if (PlotterViewGL1.DrawContext is DrawContextGLOrtho)
+                    //{
+                    //    PlotterViewGL1.DrawContext.UnitPerMilli = PlotterView1.DrawContext.UnitPerMilli;
+
+                    //    view.DrawContext.SetCamera(
+                    //        -Vector3d.UnitX * DrawContext.STD_EYE_DIST,
+                    //        Vector3d.Zero, Vector3d.UnitY);
+                    //}
 
                     nextDC = view.DrawContext;
                     break;
