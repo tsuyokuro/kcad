@@ -17,8 +17,8 @@ namespace Plotter
             if (currentDC.GetType() == typeof(DrawContextGL))
             {
                 CopyCamera(currentDC);
-                DeviceScaleX = currentDC.DeviceScaleX / 2;
-                DeviceScaleY = currentDC.DeviceScaleY / 2;
+                DeviceScaleX = currentDC.ViewWidth / 4;
+                DeviceScaleY = -(currentDC.ViewHeight / 4);
             }
             else
             {

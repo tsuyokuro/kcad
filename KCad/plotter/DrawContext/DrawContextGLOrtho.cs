@@ -12,9 +12,6 @@ namespace Plotter
     {
         CadVector Center = default;
 
-        UMatrix4 ConvProjectionMatrix;
-        UMatrix4 ConvProjectionMatrixInv;
-
         public override double UnitPerMilli
         {
             set
@@ -45,24 +42,30 @@ namespace Plotter
 
         public override void StartDraw()
         {
-            //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 
-            //GL.Disable(EnableCap.DepthTest);
             GL.Enable(EnableCap.DepthTest);
 
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-
+            #region ModelView
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref mViewMatrix.Matrix);
+            #endregion
 
+            #region Projection            
             GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref mProjectionMatrix.Matrix);
+
+            Matrix4d proj = mProjectionMatrix.Matrix;
+
+            double dx = ViewOrg.x - (ViewWidth / 2.0);
+            double dy = ViewOrg.y - (ViewHeight / 2.0);
+
+            // x,yの平行移動成分を設定
+            // Set x and y translational components
+            proj.M41 = dx / (ViewWidth / 2.0);
+            proj.M42 = -dy / (ViewHeight / 2.0);
+
+            GL.LoadMatrix(ref proj);
+            #endregion
 
             SetupLight();
         }
@@ -92,7 +95,7 @@ namespace Plotter
             wv.W = 1.0f;
 
             Vector4d sv = wv * mViewMatrix;
-            Vector4d pv = sv * ConvProjectionMatrix;
+            Vector4d pv = sv * mProjectionMatrix;
 
             Vector4d dv;
 
@@ -121,7 +124,7 @@ namespace Plotter
             wv.X = pt.x * wv.W;
             wv.Y = pt.y * wv.W;
 
-            wv = wv * ConvProjectionMatrixInv;
+            wv = wv * mProjectionMatrixInv;
             wv = wv * mViewMatrixInv;
 
             wv /= WorldScale;
@@ -139,9 +142,6 @@ namespace Plotter
         {
             mViewWidth = w;
             mViewHeight = h;
-
-            //mViewOrg.x = w / 2.0;
-            //mViewOrg.y = h / 2.0;
 
             DeviceScaleX = w / 2.0;
             DeviceScaleY = -h / 2.0;
@@ -167,15 +167,6 @@ namespace Plotter
                                             mProjectionNear,
                                             mProjectionFar
                                             );
-
-            ConvProjectionMatrix = mProjectionMatrix;
-            ConvProjectionMatrixInv = mProjectionMatrix.Invert();
-
-            double dx = ViewOrg.x - (ViewWidth / 2.0);
-            double dy = ViewOrg.y - (ViewHeight / 2.0);
-
-            mProjectionMatrix.M41 = dx / (ViewWidth / 2.0);
-            mProjectionMatrix.M42 = -dy / (ViewHeight / 2.0);
 
             mProjectionMatrixInv = mProjectionMatrix.Invert();
         }

@@ -83,16 +83,16 @@ namespace Plotter
 
         public override void DrawLine(int pen, CadVector a, CadVector b)
         {
+            a *= DC.WorldScale;
+            b *= DC.WorldScale;
+
             GLPen glpen = DC.Pen(pen);
 
             GL.Begin(PrimitiveType.LineStrip);
             GL.Color4(glpen.Color);
 
-            a *= DC.WorldScale;
-            b *= DC.WorldScale;
-
-            GL.Vertex3(a.x, a.y, a.z);
-            GL.Vertex3(b.x, b.y, b.z);
+            GL.Vertex3(a.vector);
+            GL.Vertex3(b.vector);
 
             GL.End();
         }
@@ -521,13 +521,12 @@ namespace Plotter
 
         public override void DrawText(int font, int brush, CadVector a, CadVector xdir, CadVector ydir, DrawTextOption opt, string s)
         {
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.PushMatrix();
+            a *= DC.WorldScale;
 
             FontTex tex = mFontFaceW.CreateTexture(s);
 
-            CadVector xv = xdir.UnitVector() * tex.ImgW * 0.3;
-            CadVector yv = ydir.UnitVector() * tex.ImgH * 0.3;
+            CadVector xv = xdir.UnitVector() * tex.ImgW * 0.15;
+            CadVector yv = ydir.UnitVector() * tex.ImgH * 0.15;
 
             if (xv.IsZero() || yv.IsZero())
             {
@@ -543,8 +542,6 @@ namespace Plotter
             
             mFontRenderer.Render(tex, a.vector, xv.vector, yv.vector);
         }
-
-
 
         public override void DrawCrossCursorScrn(CadCursor pp, int pen)
         {
