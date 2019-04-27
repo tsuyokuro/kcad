@@ -261,7 +261,7 @@ def worldVToDevV(v):
 
 #[AC] test()
 def test():
-	SE.ToFigList([1,2])
+	SE.Test()
 
 
 class MyConsoleOut:

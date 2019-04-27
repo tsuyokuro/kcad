@@ -73,6 +73,7 @@ namespace Plotter
             DARK,
             PRINTER,
             DARK_GL,
+            PRINTER_GL,
         }
 
 
@@ -115,11 +116,15 @@ namespace Plotter
             {
                 SetupDarkSetGL();
             }
+            else if (t == ToolsType.PRINTER_GL)
+            {
+                SetupPrinterSetGL();
+            }
         }
 
         public static bool IsTypeForGL(ToolsType t)
         {
-            if (t == ToolsType.DARK_GL)
+            if (t == ToolsType.DARK_GL || t == ToolsType.PRINTER_GL)
             {
                 return true;
             }
@@ -208,6 +213,36 @@ namespace Plotter
             {
                 GLColorTbl[i] = DarkColors.BrushColorTbl[i];
             }
+        }
+
+        private void SetupPrinterSetGL()
+        {
+            AllocGLTbl();
+
+            PenColorTbl = DarkColors.PenColorTbl;
+            BrushColorTbl = DarkColors.BrushColorTbl;
+
+            float width = 1.0f;
+
+            for (int i = 0; i < PEN_TBL_SIZE; i++)
+            {
+                GLPenTbl[i] = new GLPen(DarkColors.PenColorTbl[i], width);
+            }
+
+            for (int i = 0; i < BRUSH_TBL_SIZE; i++)
+            {
+                GLColorTbl[i] = DarkColors.BrushColorTbl[i];
+            }
+
+            GLPenTbl[PEN_DEFAULT] = new GLPen(Color.FromArgb(255, 0, 0, 0), 1);
+            GLPenTbl[PEN_DEFAULT_FIGURE] = new GLPen(Color.FromArgb(255,0,0,0), 1);
+            GLPenTbl[PEN_PALE_FIGURE] = new GLPen(Color.FromArgb(255, 0, 0, 0), 1);
+            GLPenTbl[PEN_DIMENTION] = new GLPen(Color.FromArgb(255, 0, 0, 0), 1);
+            GLPenTbl[PEN_MESH_LINE] = new GLPen(Color.FromArgb(255, 0, 0, 0), 1);
+
+            GLColorTbl[BRUSH_DEFAULT] = Color.FromArgb(255, 0, 0, 0);
+            GLColorTbl[BRUSH_BACKGROUND] = Color.FromArgb(255, 255, 255, 255);
+            GLColorTbl[BRUSH_TEXT] = Color.FromArgb(255, 0, 0, 0);
         }
 
         public void Dispose()

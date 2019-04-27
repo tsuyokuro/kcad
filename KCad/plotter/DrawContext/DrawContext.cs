@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using System;
 using CadDataTypes;
+using System.Drawing;
 
 namespace Plotter
 {
@@ -256,6 +257,11 @@ namespace Plotter
         {
             CadVector size = DevVectorToWorldVector(CadVector.UnitX * s);
             return size.Norm();
+        }
+
+        public virtual DrawContext CreatePrinterContext(CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            return null;
         }
 
         public virtual void dump()

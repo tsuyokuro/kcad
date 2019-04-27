@@ -170,5 +170,24 @@ namespace Plotter
 
             mProjectionMatrixInv = mProjectionMatrix.Invert();
         }
+
+        public override DrawContext CreatePrinterContext(CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            DrawContextGLOrtho dc = new DrawContextGLOrtho();
+
+            dc.CopyMetrics(this);
+
+            dc.SetViewSize(deviceSize.Width, deviceSize.Height);
+
+            CadVector org = default;
+            org.x = deviceSize.Width / 2.0;
+            org.y = deviceSize.Height / 2.0;
+
+            dc.SetViewOrg(org);
+
+            dc.UnitPerMilli = (deviceSize.Width / pageSize.Width) * 0.96;
+
+            return dc;
+        }
     }
 }

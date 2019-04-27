@@ -5,6 +5,8 @@ using System;
 using System.Windows.Forms;
 using CadDataTypes;
 using Plotter.Controller;
+using System.Drawing;
+using System.Windows.Resources;
 
 namespace Plotter
 {
@@ -17,6 +19,11 @@ namespace Plotter
         CadVector PrevMousePos = default(CadVector);
 
         MouseButtons DownButton = MouseButtons.None;
+
+        ContextMenuEx mCurrentContextMenu = null;
+        ContextMenuEx mContextMenu = null;
+
+        private Cursor PointCursor;
 
         public DrawContext DrawContext
         {
@@ -55,6 +62,8 @@ namespace Plotter
 
         private PlotterViewGL(GraphicsMode mode) : base(mode)
         {
+            SetupContextMenu();
+
             Load += OnLoad;
             SizeChanged += OnResize;
             Paint += OnPaint;
@@ -62,6 +71,18 @@ namespace Plotter
             MouseDown += OnMouseDown;
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
+
+            SetupCursor();
+        }
+
+        protected void SetupCursor()
+        {
+            StreamResourceInfo si = System.Windows.Application.GetResourceStream(
+                new Uri("/KCad;component/Resources/dot.cur", UriKind.Relative));
+
+            PointCursor = new Cursor(si.Stream);
+
+            base.Cursor = PointCursor;
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)
@@ -74,6 +95,15 @@ namespace Plotter
 
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
+            if (mCurrentContextMenu != null)
+            {
+                if (mCurrentContextMenu.Visible)
+                {
+                    mCurrentContextMenu.Close();
+                    return;
+                }
+            }
+
             if (mDrawContext is DrawContextGLOrtho)
             {
                 mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
@@ -245,7 +275,17 @@ namespace Plotter
 
         public void SetController(PlotterController controller)
         {
+            if (mController != null)
+            {
+                mController.Observer.RequestContextMenu -= ShowContextMenu;
+            }
+
             mController = controller;
+
+            if (controller != null)
+            {
+                mController.Observer.RequestContextMenu += ShowContextMenu;
+            }
         }
 
         public void OnPushDraw(DrawContext dc)
@@ -264,6 +304,59 @@ namespace Plotter
         public void ChangeMouseCursor(PlotterObserver.MouseCursorType cursorType)
         {
             // NOP
+        }
+
+        private void SetupContextMenu()
+        {
+            mContextMenu = new ContextMenuEx();
+
+            mContextMenu.StateChanged = (s) =>
+            {
+                if (s == ContextMenuEx.State.OPENED)
+                {
+                    base.Cursor = Cursors.Arrow;
+                }
+                else if (s == ContextMenuEx.State.CLOSED)
+                {
+                    base.Cursor = PointCursor;
+                }
+            };
+        }
+
+        private void ContextMenueClick(object sender, System.EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+
+            MenuInfo.Item infoItem = item.Tag as MenuInfo.Item;
+
+            if (infoItem != null)
+            {
+                mController.ContextMenuEvent(infoItem);
+            }
+        }
+
+        public void ShowContextMenu(PlotterController sender, MenuInfo menuInfo, int x, int y)
+        {
+            ThreadUtil.RunOnMainThread(() => {
+                ShowContextMenuProc(sender, menuInfo, x, y);
+            }, true);
+        }
+
+        private void ShowContextMenuProc(PlotterController sender, MenuInfo menuInfo, int x, int y)
+        {
+            mContextMenu.Items.Clear();
+
+            foreach (MenuInfo.Item item in menuInfo.Items)
+            {
+                ToolStripMenuItem m = new ToolStripMenuItem(item.DefaultText);
+                m.Tag = item;
+                m.Click += ContextMenueClick;
+
+                mContextMenu.Items.Add(m);
+            }
+
+            mCurrentContextMenu = mContextMenu;
+            mCurrentContextMenu.Show(this, new Point(x, y));
         }
     }
 }

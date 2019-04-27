@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using CadDataTypes;
 using System.Drawing.Printing;
 using Plotter.Controller.TaskRunner;
+using System.Drawing;
+using GLUtil;
 
 namespace Plotter.Controller
 {
@@ -410,13 +412,63 @@ namespace Plotter.Controller
                 RubberBandScrnPoint1);
         }
 
-        public void Print(DrawContext dc)
+        public void DrawAllFigure(DrawContext dc)
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
                 dc.Drawing.Draw(layer.FigureList);
             }
         }
+
+        public void PrintPage(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            DOut.pl($"Dev Width:{deviceSize.Width} Height:{deviceSize.Height}");
+
+            if (!(CurrentDC.GetType() == typeof(DrawContextGL)))
+            {
+                DrawContextPrinter dc = new DrawContextPrinter(CurrentDC, printerGraphics, pageSize, deviceSize);
+                DrawAllFigure(dc);
+            }
+            else
+            {
+                Bitmap bmp = GetPrintableBmp(pageSize, deviceSize);
+                printerGraphics.DrawImage(bmp, 0, 0);
+            }
+        }
+
+        public Bitmap GetPrintableBmp(CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            if (!(CurrentDC is DrawContextGL))
+            {
+                return null;
+            }
+
+            DrawContext dc = CurrentDC.CreatePrinterContext(pageSize, deviceSize);
+
+            dc.SetupTools(DrawTools.ToolsType.PRINTER_GL);
+
+            FrameBufferW fb = new FrameBufferW();
+            fb.Create((int)deviceSize.Width, (int)deviceSize.Height);
+
+            fb.Begin();
+
+            dc.StartDraw();
+
+            dc.Drawing.Clear();
+
+            DrawAllFigure(dc);
+
+            dc.EndDraw();
+
+            Bitmap bmp = fb.GetBitmap();
+
+            fb.End();
+            fb.Dispose();
+
+            return bmp;
+        }
+
+
         #endregion
 
         #region Private editing figure methods

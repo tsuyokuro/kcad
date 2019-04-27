@@ -12,6 +12,9 @@ using KCad;
 using System.Threading;
 using static Plotter.CadFigure;
 using LibiglWrapper;
+using GLUtil;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 namespace Plotter.Controller
 {
@@ -1468,7 +1471,42 @@ namespace Plotter.Controller
 
         public void Test()
         {
+            Env.RunOnMainThread(() =>
+            {
+                testDraw();
+            });
         }
+
+        private void testDraw()
+        {
+            CadSize2D deviceSize = new CadSize2D(827, 1169);
+            CadSize2D pageSize = new CadSize2D(210, 297);
+
+            DrawContext dc = Controller.CurrentDC.CreatePrinterContext(pageSize, deviceSize);
+
+            dc.SetupTools(DrawTools.ToolsType.PRINTER_GL);
+
+            FrameBufferW fb = new FrameBufferW();
+            fb.Create((int)deviceSize.Width, (int)deviceSize.Height);
+
+            fb.Begin();
+
+            dc.StartDraw();
+
+            dc.Drawing.Clear();
+
+            Controller.DrawAllFigure(dc);
+
+            dc.EndDraw();
+
+            Bitmap bmp = fb.GetBitmap();
+
+            fb.End();
+            fb.Dispose();
+
+            bmp.Save(@"F:\work\test2.bmp");
+        }
+
 
         private void PrintSuccess()
         {

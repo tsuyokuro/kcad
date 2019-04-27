@@ -39,19 +39,7 @@ namespace Plotter
         {
             mDrawContext = new DrawContextGDI(this);
 
-            mContextMenu = new ContextMenuEx();
-
-            mContextMenu.StateChanged = (s) =>
-            {
-                if (s == ContextMenuEx.State.OPENED)
-                {
-                    base.Cursor = Cursors.Arrow;
-                }
-                else if (s == ContextMenuEx.State.CLOSED)
-                {
-                    base.Cursor = PointCursor;
-                }
-            };
+            SetupContextMenu();
 
             DoubleBuffered = false;
 
@@ -70,6 +58,11 @@ namespace Plotter
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
 
+            SetupCursor();
+        }
+
+        protected void SetupCursor()
+        {
             StreamResourceInfo si = System.Windows.Application.GetResourceStream(
                 new Uri("/KCad;component/Resources/dot.cur", UriKind.Relative));
 
@@ -209,6 +202,23 @@ namespace Plotter
             mController.Mouse.MouseUp(mDrawContext, e.Button, e.X, e.Y);
             Redraw();
 #endif
+        }
+
+        private void SetupContextMenu()
+        {
+            mContextMenu = new ContextMenuEx();
+
+            mContextMenu.StateChanged = (s) =>
+            {
+                if (s == ContextMenuEx.State.OPENED)
+                {
+                    base.Cursor = Cursors.Arrow;
+                }
+                else if (s == ContextMenuEx.State.CLOSED)
+                {
+                    base.Cursor = PointCursor;
+                }
+            };
         }
 
         public void ShowContextMenu(PlotterController sender, MenuInfo menuInfo, int x, int y)

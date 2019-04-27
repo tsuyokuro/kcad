@@ -922,14 +922,8 @@ namespace Plotter
             CadSize2D deviceSize = new CadSize2D(e.PageBounds.Size.Width, e.PageBounds.Size.Height);
             CadSize2D pageSize = new CadSize2D(Controller.PageSize.Width, Controller.PageSize.Height);
 
-            DrawContextPrinter dc = new DrawContextPrinter(mController.CurrentDC, g, pageSize, deviceSize);
-
-            //Font f = new Font("Arial", 10);
-            //e.Graphics.DrawString("TEST", f, Brushes.Black, 10, 10, StringFormat.GenericDefault);
-
-            mController.Print(dc);
+            Controller.PrintPage(g, pageSize, deviceSize);
         }
-
         #endregion
 
         public void PageSetting()

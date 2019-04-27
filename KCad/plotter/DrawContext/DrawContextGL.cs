@@ -5,6 +5,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using CadDataTypes;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace Plotter
 {
@@ -371,6 +372,25 @@ namespace Plotter
                                             );
 
             mProjectionMatrixInv = mProjectionMatrix.Invert();
+        }
+
+        public override DrawContext CreatePrinterContext(CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            DrawContextGL dc = new DrawContextGL();
+
+            dc.CopyMetrics(this);
+
+            dc.SetViewSize(deviceSize.Width, deviceSize.Height);
+
+            CadVector org = default;
+            org.x = deviceSize.Width / 2.0;
+            org.y = deviceSize.Height / 2.0;
+
+            dc.SetViewOrg(org);
+
+            dc.UnitPerMilli = deviceSize.Width / pageSize.Width;
+
+            return dc;
         }
     }
 }

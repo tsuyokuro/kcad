@@ -266,7 +266,7 @@ namespace GLFont
             Size = 8.25f;
         }
 
-        public void SetFont(string filename, int face_index=0)
+        public void SetFont(string filename, int face_index = 0)
         {
             FontFace = new Face(mLib, filename, face_index);
             SetSize(this.Size);
@@ -393,23 +393,39 @@ void main()
 ";
 
         public int Texture = -1;
-        public static int FontShaderProgram = -1;
+        public int FontShaderProgram = -1;
+
+        private bool mInitialized = false;
+
+        public bool Initialized
+        {
+            get => mInitialized;
+        }
 
         public void Init()
         {
+            Dispose();
+
             Texture = GL.GenTexture();
 
-            if (FontShaderProgram == -1)
+            SetupFontShader();
+
+            mInitialized = true;
+        }
+
+        public void Dispose()
+        {
+            if (mInitialized)
             {
-                SetupFontShader();
+                GL.DeleteTexture(Texture);
+                GL.DeleteProgram(FontShaderProgram);
             }
+
+            mInitialized = false;
         }
 
         private void SetupFontShader()
         {
-            //string vertexSrc = ReadResourceText("/Shader/font_vertex.shader");
-            //string fragmentSrc = ReadResourceText("/Shader/font_fragment.shader");
-
             string vertexSrc = VertexShaderSrc;
             string fragmentSrc = FragmentShaderSrc;
 
@@ -447,7 +463,7 @@ void main()
             GL.LinkProgram(shaderProgram);
 
             GL.GetProgram(shaderProgram, GetProgramParameterName.LinkStatus, out status);
-            
+
             //シェーダプログラムのリンクのチェック
             if (status == 0)
             {
@@ -490,9 +506,6 @@ void main()
             int texLoc = GL.GetUniformLocation(FontShaderProgram, "tex");
 
             GL.Uniform1(texLoc, 0);
-
-            float w = tex.W;
-            float h = tex.H;
 
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
