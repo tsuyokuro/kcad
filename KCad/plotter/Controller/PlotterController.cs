@@ -424,7 +424,7 @@ namespace Plotter.Controller
         {
             DOut.pl($"Dev Width:{deviceSize.Width} Height:{deviceSize.Height}");
 
-            if (!(CurrentDC.GetType() == typeof(DrawContextGL)))
+            if (!(CurrentDC.GetType() == typeof(DrawContextGLPers)))
             {
                 DrawContextPrinter dc = new DrawContextPrinter(CurrentDC, printerGraphics, pageSize, deviceSize);
                 DrawAllFigure(dc);

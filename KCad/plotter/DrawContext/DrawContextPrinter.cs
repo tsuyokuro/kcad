@@ -14,7 +14,7 @@ namespace Plotter
 
             mUnitPerMilli = deviceSize.Width / pageSize.Width;
 
-            if (currentDC.GetType() == typeof(DrawContextGL))
+            if (currentDC.GetType() == typeof(DrawContextGLPers))
             {
                 CopyCamera(currentDC);
                 DeviceScaleX = currentDC.ViewWidth / 4;

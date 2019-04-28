@@ -43,7 +43,7 @@ namespace Plotter
 
         private DrawContextGLOrtho mDrawContextOrtho;
 
-        private DrawContextGL mDrawContextPers;
+        private DrawContextGLPers mDrawContextPers;
 
         private bool mEnablePerse = false;
 
@@ -78,7 +78,7 @@ namespace Plotter
         protected void SetupCursor()
         {
             StreamResourceInfo si = System.Windows.Application.GetResourceStream(
-                new Uri("/KCad;component/Resources/dot.cur", UriKind.Relative));
+                new Uri("/KCad;component/Resources/mini_cross.cur", UriKind.Relative));
 
             PointCursor = new Cursor(si.Stream);
 
@@ -129,15 +129,17 @@ namespace Plotter
             }
             else
             {
+                DrawContextGLPers dc = mDrawContext as DrawContextGLPers;
+
                 if (CadKeyboard.IsCtrlKeyDown())
                 {
                     if (e.Delta > 0)
                     {
-                        mDrawContext.MoveForwardEyePoint(3);
+                        dc.MoveForwardEyePoint(3);
                     }
                     else if (e.Delta < 0)
                     {
-                        mDrawContext.MoveForwardEyePoint(-3);
+                        dc.MoveForwardEyePoint(-3);
                     }
 
                     Redraw();
@@ -151,7 +153,7 @@ namespace Plotter
             GL.Enable(EnableCap.DepthTest);
 
             mDrawContextOrtho = new DrawContextGLOrtho(this);
-            mDrawContextPers = new DrawContextGL(this);
+            mDrawContextPers = new DrawContextGLPers(this);
 
             mDrawContext = mDrawContextOrtho;
 
@@ -166,41 +168,41 @@ namespace Plotter
             if (mDrawContext is DrawContextGLOrtho)
             {
                 mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
-
                 Redraw();
-
-                return;
             }
-
-
-            if (DownButton == MouseButtons.Middle)
+            else
             {
-                CadVector t = CadVector.Create(e.X, e.Y, 0);
+                DrawContextGLPers dc = mDrawContext as DrawContextGLPers;
 
-                Vector2 prev = default(Vector2);
+                if (DownButton == MouseButtons.Middle)
+                {
+                    CadVector t = CadVector.Create(e.X, e.Y, 0);
 
-                prev.X = (float)PrevMousePos.x;
-                prev.Y = (float)PrevMousePos.y;
+                    Vector2 prev = default(Vector2);
 
-                Vector2 current = default(Vector2);
+                    prev.X = (float)PrevMousePos.x;
+                    prev.Y = (float)PrevMousePos.y;
 
-                current.X = (float)t.x;
-                current.Y = (float)t.y;
+                    Vector2 current = default(Vector2);
 
-                mDrawContext.RotateEyePoint(prev, current);
+                    current.X = (float)t.x;
+                    current.Y = (float)t.y;
 
-                Redraw();
+                    dc.RotateEyePoint(prev, current);
 
-                PrevMousePos = t;
-            }
-            // TODO とりあえずDragできない様にしときます
-            else if (DownButton == MouseButtons.None)
-            {
-                //DrawContext dc = StartDraw();
+                    Redraw();
 
-                mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
+                    PrevMousePos = t;
+                }
+                // TODO とりあえずDragできない様にしときます
+                else if (DownButton == MouseButtons.None)
+                {
+                    //DrawContext dc = StartDraw();
 
-                Redraw();
+                    mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
+
+                    Redraw();
+                }
             }
         }
 
