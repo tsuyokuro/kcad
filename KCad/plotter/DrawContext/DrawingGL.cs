@@ -167,11 +167,15 @@ namespace Plotter
 
         public override void DrawHarfEdgeModel(int pen, int edgePen, double edgeThreshold, HeModel model)
         {
-            DrawHarfEdgeModel(pen, model);
+            if (SettingsHolder.Settings.FillMesh)
+            {
+                DrawHarfEdgeModel(pen, model);
+            }
 
-#if DRAW_HALF_EDGE_OUTLINE
-            DrawEdge(pen, edgePen, edgeThreshold, model);
-#endif
+            if (SettingsHolder.Settings.DrawMeshEdge)
+            {
+                DrawEdge(pen, edgePen, edgeThreshold, model);
+            }
         }
 
         private void DrawEdge(int pen, int edgePen, double edgeThreshold, HeModel model)

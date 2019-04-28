@@ -124,7 +124,7 @@ namespace Plotter
                 return;
             }
 
-            bool outline = SettingsHolder.Settings.DrawFaceOutline;
+            bool outline = SettingsHolder.Settings.DrawMeshEdge;
 
             VectorList vl = CircleExpander.GetExpandList(PointList[0], PointList[1], PointList[2], 48);
 

@@ -85,30 +85,46 @@ namespace Plotter
             get => SettingsHolder.Settings.FilterTreeView;
         }
 
-        public bool DrawFaceOutline
+        public bool DrawMeshEdge
         {
             set
             {
-                SettingsHolder.Settings.DrawFaceOutline = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawFaceOutline)));
+                if (SettingsHolder.Settings.DrawMeshEdge != value && value == false)
+                {
+                    if (FillMesh == false)
+                    {
+                        FillMesh = true;
+                    }
+                }
+
+                SettingsHolder.Settings.DrawMeshEdge = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawMeshEdge)));
 
                 Redraw();
             }
 
-            get => SettingsHolder.Settings.DrawFaceOutline;
+            get => SettingsHolder.Settings.DrawMeshEdge;
         }
 
-        public bool FillFace
+        public bool FillMesh
         {
             set
             {
-                SettingsHolder.Settings.FillFace = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillFace)));
+                if (SettingsHolder.Settings.FillMesh != value && value == false)
+                {
+                    if (DrawMeshEdge == false)
+                    {
+                        DrawMeshEdge = true;
+                    }
+                }
+
+                SettingsHolder.Settings.FillMesh = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillMesh)));
 
                 Redraw();
             }
 
-            get => SettingsHolder.Settings.FillFace;
+            get => SettingsHolder.Settings.FillMesh;
         }
 
         public double InitialMoveLimit
@@ -206,8 +222,8 @@ namespace Plotter
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawFaceOutline)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillFace)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawMeshEdge)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillMesh)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToZero)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLastDownPoint)));
@@ -243,9 +259,9 @@ namespace Plotter
 
         public double KeyMoveUnit = 1.0;
 
-        public bool DrawFaceOutline = true;
+        public bool DrawMeshEdge = true;
 
-        public bool FillFace = true;
+        public bool FillMesh = true;
 
         public bool FilterTreeView = false;
 
@@ -318,8 +334,8 @@ namespace Plotter
 
 
             jo = new JObject();
-            jo.Add("DrawFaceOutline", DrawFaceOutline);
-            jo.Add("FillFace", FillFace);
+            jo.Add("DrawFaceOutline", DrawMeshEdge);
+            jo.Add("FillFace", FillMesh);
             root.Add("DrawSettings", jo);
 
             StreamWriter writer = new StreamWriter(fileName);
@@ -379,8 +395,8 @@ namespace Plotter
             }
 
             jo = (JObject)root["DrawSettings"];
-            DrawFaceOutline = jo.GetBool("DrawFaceOutline", DrawFaceOutline);
-            FillFace = jo.GetBool("FillFace", FillFace);
+            DrawMeshEdge = jo.GetBool("DrawFaceOutline", DrawMeshEdge);
+            FillMesh = jo.GetBool("FillFace", FillMesh);
 
             return true;
         }

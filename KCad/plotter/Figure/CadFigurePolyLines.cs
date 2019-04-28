@@ -109,12 +109,7 @@ namespace Plotter
         public override void Draw(DrawContext dc, int pen)
         {
             bool drawed = false;
-/*
-            if (IsLoop && SettingsHolder.Settings.FillFace)
-            {
-                drawed = DrawFaces(dc, pen);
-            }
-*/
+
             if (!drawed)
             {
                 DrawLines(dc, pen);
@@ -138,34 +133,6 @@ namespace Plotter
         {
             mPointList.Reverse();
             Normal = -Normal;
-        }
-
-        protected bool DrawFaces(DrawContext dc, int pen)
-        {
-            VectorList vl;
-            int srcCnt = mPointList.Count;
-
-            if (srcCnt < 2)
-            {
-                return false;
-            }
-
-            vl = GetPointsPart(0, srcCnt, 32);
-
-            if (!CadUtil.IsConvex(vl))
-            {
-                return false;
-            }
-
-            bool outline = SettingsHolder.Settings.DrawFaceOutline;
-
-
-            dc.Drawing.DrawFace(pen, vl, Normal, outline);
-
-            // Debug 法線表示
-            //dc.Drawing.DrawArrow(pen, vl[0], vl[0] + Normal * 10, ArrowTypes.PLUS, ArrowPos.END, 4, 2);
-
-            return true;
         }
 
         protected void DrawLines(DrawContext dc, int pen)
