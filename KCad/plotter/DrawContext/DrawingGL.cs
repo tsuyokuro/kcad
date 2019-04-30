@@ -36,7 +36,8 @@ namespace Plotter
             DC = dc;
 
             mFontFaceW = new FontFaceW();
-            mFontFaceW.SetFont(@"C:\Windows\Fonts\msgothic.ttc", 0);
+            //mFontFaceW.SetFont(@"C:\Windows\Fonts\msgothic.ttc", 0);
+            mFontFaceW.SetResourceFont("/Fonts/mplus-1m-regular.ttf");
             mFontFaceW.SetSize(20);
 
             mFontRenderer = new FontRenderer();

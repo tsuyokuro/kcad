@@ -437,6 +437,8 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <Resource Include="Fonts\mplus-1m-thin.ttf" />
+    <Resource Include="Fonts\mplus-1m-light.ttf" />
+    <Resource Include="Fonts\mplus-1m-regular.ttf" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

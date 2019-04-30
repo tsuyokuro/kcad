@@ -24,6 +24,8 @@ namespace GLFont
         public int FontW = 0;
         public int FontH = 0;
 
+        public int Top = 0;
+
         public bool IsSpace
         {
             get => Data == null;
@@ -274,6 +276,30 @@ namespace GLFont
             Cache.Clear();
         }
 
+        public void SetFont(byte[] data, int face_index = 0)
+        {
+            FontFace = new Face(mLib, data, face_index);
+            SetSize(this.Size);
+
+            Cache.Clear();
+        }
+
+        // url e.g. "/Fonts/mplus-1m-thin.ttf"
+        public void SetResourceFont(string url, int face_index = 0)
+        {
+            Uri fileUri = new Uri(url, UriKind.Relative);
+            StreamResourceInfo info = Application.GetResourceStream(fileUri);
+            Stream stream = info.Stream;
+
+            long len = stream.Length;
+
+            byte[] data = new byte[len];
+
+            int read = stream.Read(data, 0, (int)len);
+
+            SetFont(data, face_index);
+        }
+
         public void SetSize(float size)
         {
             Size = size;
@@ -304,16 +330,23 @@ namespace GLFont
 
             if (ftbmp.Width > 0 && ftbmp.Rows > 0)
             {
-                float top = (float)FontFace.Size.Metrics.Ascender;
-                int y = (int)(top - (float)FontFace.Glyph.Metrics.HorizontalBearingY);
-
                 ft = FontTex.Create(ftbmp);
 
                 ft.PosX = (int)((float)FontFace.Glyph.Metrics.HorizontalBearingX);
-                if (ft.PosX < 0) { ft.PosX = 0; };
+                if (ft.PosX < 0)
+                {
+                    ft.PosX = 0;
+                };
+
+                float top = (float)FontFace.Size.Metrics.Ascender;
+                float bottom = (float)(FontFace.Glyph.Metrics.Height - FontFace.Glyph.Metrics.HorizontalBearingY);
+
+                int y = (int)(top - (float)FontFace.Glyph.Metrics.HorizontalBearingY);
+
                 ft.PosY = y;
+
                 ft.FontW = Math.Max(fontW, ft.ImgW);
-                ft.FontH = fontH;
+                ft.FontH = (int)(top + bottom);
             }
             else
             {
@@ -350,7 +383,7 @@ namespace GLFont
                 ta.Add(ft);
             }
 
-            FontTex mft = new FontTex(fw, fh + 1);
+            FontTex mft = new FontTex(fw, fh);
 
             int x = 0;
             int y = 0;
@@ -362,6 +395,7 @@ namespace GLFont
             }
 
             //mft.dump_b();
+            //Console.WriteLine("");
 
             return mft;
         }

@@ -103,11 +103,13 @@ namespace Plotter
 
             CadVector normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
 
-            CircleExpander.ForEachSegs(PointList[0], PointList[1], PointList[2], 32, action);
-            void action(CadVector p0, CadVector p1)
+            CircleExpander.ForEachSegs(PointList[0], PointList[1], PointList[2], 32, (p0, p1) =>
             {
                 dc.Drawing.DrawLine(pen, p0, p1);
-            }
+            });
+
+            double size = dc.DevSizeToWoldSize(4);
+            dc.Drawing.DrawCross(pen, PointList[0], size);
         }
 
         private void drawDisk(DrawContext dc, int pen)
