@@ -15,6 +15,8 @@ using KCad;
 using Plotter.Serializer;
 using MessagePack;
 using Newtonsoft.Json.Linq;
+using System.Drawing;
+using OpenTK.Graphics;
 
 namespace Plotter.Controller
 {
@@ -547,28 +549,16 @@ namespace Plotter.Controller
 
         private void Test()
         {
-            #region 別スレッド例外処理のテスト
-            //CadFigure fig = null;
+            DrawTool dt = DrawTool.New(new Color4(0x11, 0x22, 0x33, 0x44));
 
-            //await Task.Run(() =>
-            //{
-            //    fig.AddPoint(CadVector.Create(0, 0, 0));
-            //});
-            #endregion
+            Color4 c4 = (Color4)dt;
 
-            MpCadData data = MpCadData.Create(Controller.DB);
+            dt = DrawTool.New(Color.FromArgb(0x44, 0x11, 0x22, 0x33));
 
-            data.ViewInfo.WorldScale = Controller.CurrentDC.WorldScale;
+            Color c = (Color)dt;
 
-            data.ViewInfo.PaperSettings.Set(Controller.PageSize);
 
-            byte[] bin_data = MessagePackSerializer.Serialize(data);
-
-            string s = MessagePackSerializer.ToJson(bin_data);
-
-            JObject jo = JObject.Parse(s);
-
-            s = jo.ToString();
+            DOut.pl("end");
         }
 
         private void testTriangulate()

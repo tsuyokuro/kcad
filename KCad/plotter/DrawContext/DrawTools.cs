@@ -339,11 +339,6 @@ namespace Plotter
             return PenTbl[id];
         }
 
-        public Color PenColor(int id)
-        {
-            return PenColorTbl[id];
-        }
-
         public Brush brush(int id)
         {
             return BrushTbl[id];
@@ -368,6 +363,92 @@ namespace Plotter
         {
             return GLColorTbl[id];
         }
+    }
+    
+    public enum ToolType : byte
+    {
+        INDEX,
+        COLOR,
+    }
 
+    [StructLayout(LayoutKind.Explicit)]
+    public struct DrawTool
+    {
+        [FieldOffset(0)]
+        public ToolType Type;
+
+        [FieldOffset(sizeof(ToolType))]
+        public int Val;
+
+        [FieldOffset(sizeof(ToolType)+3)]
+        public byte A;
+
+        [FieldOffset(sizeof(ToolType)+2)]
+        public byte R;
+
+        [FieldOffset(sizeof(ToolType)+1)]
+        public byte G;
+
+        [FieldOffset(sizeof(ToolType)+0)]
+        public byte B;
+
+        public static DrawTool New(int idx)
+        {
+            DrawTool dt = default;
+            dt.Type = ToolType.INDEX;
+            dt.Val = idx;
+            return dt;
+        }
+
+        public static DrawTool New(Color color)
+        {
+            DrawTool dt = default;
+            dt.Type = ToolType.COLOR;
+            dt.Val = color.ToArgb();
+            return dt;
+        }
+
+        public static DrawTool New(Color4 color)
+        {
+            DrawTool dt = default;
+            dt.Type = ToolType.COLOR;
+            dt.Val = color.ToArgb();
+            return dt;
+        }
+
+        public static explicit operator Color4(DrawTool dt)
+        {
+            return new Color4(
+                    dt.R,
+                    dt.G,
+                    dt.B,
+                    dt.A
+                );
+        }
+
+        public static explicit operator DrawTool(Color4 color)
+        {
+            return DrawTool.New(color);
+        }
+
+        public static explicit operator Color(DrawTool dt)
+        {
+            return Color.FromArgb(dt.Val);
+        }
+
+        public static explicit operator DrawTool(Color color)
+        {
+            return DrawTool.New(color);
+        }
+
+        public static explicit operator int(DrawTool dt)
+        {
+            return dt.Val;
+        }
+
+        public static explicit operator DrawTool(int idx)
+        {
+            return DrawTool.New(idx);
+        }
     }
 }
