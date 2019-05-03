@@ -1,5 +1,4 @@
-﻿//#define OPEN_TK_NEXT
-//#define DEBUG_DRAW_NORMAL
+﻿//#define DEBUG_DRAW_NORMAL
 #define DRAW_HALF_EDGE_OUTLINE
 
 using System.Collections.Generic;
@@ -9,7 +8,6 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using HalfEdgeNS;
 using CadDataTypes;
-using System.Drawing;
 using GLFont;
 
 namespace Plotter
@@ -17,16 +15,6 @@ namespace Plotter
     class DrawingGL : DrawingBase
     {
         private DrawContextGL DC;
-
-#if OPEN_TK_NEXT
-        private const PrimitiveType LINES = PrimitiveType.Lines;
-        private const PrimitiveType POLYGON = PrimitiveType.Polygon;
-        private const PrimitiveType LINE_STRIP = PrimitiveType.LineStrip;
-#else
-        private const BeginMode LINES = BeginMode.Lines;
-        private const BeginMode POLYGON = BeginMode.Polygon;
-        private const BeginMode LINE_STRIP = BeginMode.LineStrip;
-#endif
 
         private FontFaceW mFontFaceW;
         private FontRenderer mFontRenderer;
@@ -44,31 +32,31 @@ namespace Plotter
             mFontRenderer.Init();
         }
 
-        public override void Clear(int brush)
+        public override void Clear(DrawBrush brush)
         {
-            GL.ClearColor(DC.Color(brush));
+            GL.ClearColor(DC.Brush(brush.Idx).Color);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
-        public override void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
+        public override void Draw(List<CadFigure> list, DrawPen pen)
         {
             foreach (CadFigure fig in list)
             {
-                fig.ForEachFig(a =>
+                fig.ForEachFig((Action<CadFigure>)(a =>
                 {
                     if (a.Current)
                     {
-                        a.Draw(DC, DrawTools.PEN_FIGURE_HIGHLIGHT);
+                        a.Draw(DC, DrawPen.New((int)DrawTools.PEN_FIGURE_HIGHLIGHT));
                     }
                     else
                     {
                         a.Draw(DC, pen);
                     }
-                });
+                }));
             }
         }
 
-        public override void DrawSelected(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
+        public override void DrawSelected(List<CadFigure> list, DrawPen pen)
         {
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Light0);
@@ -82,12 +70,12 @@ namespace Plotter
             }
         }
 
-        public override void DrawLine(int pen, CadVector a, CadVector b)
+        public override void DrawLine(DrawPen pen, CadVector a, CadVector b)
         {
             a *= DC.WorldScale;
             b *= DC.WorldScale;
 
-            GLPen glpen = DC.Pen(pen);
+            GLPen glpen = DC.Pen(pen.Idx);
 
             GL.Begin(PrimitiveType.LineStrip);
             GL.Color4(glpen.Color);
@@ -98,7 +86,7 @@ namespace Plotter
             GL.End();
         }
 
-        public override void DrawFace(int pen, VectorList pointList, CadVector normal, bool drawOutline)
+        public override void DrawFace(DrawPen pen, VectorList pointList, CadVector normal, bool drawOutline)
         {
             //DebugOut.Std.println("GL DrawFace");
 
@@ -141,7 +129,7 @@ namespace Plotter
 
             if (drawOutline)
             {
-                glpen = DC.Pen(pen);
+                glpen = DC.Pen(pen.Idx);
 
                 GL.Color4(glpen.Color);
                 GL.LineWidth(1.0f);
@@ -166,7 +154,7 @@ namespace Plotter
             #endregion
         }
 
-        public override void DrawHarfEdgeModel(int pen, int edgePen, double edgeThreshold, HeModel model)
+        public override void DrawHarfEdgeModel(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
             if (SettingsHolder.Settings.FillMesh)
             {
@@ -179,14 +167,14 @@ namespace Plotter
             }
         }
 
-        private void DrawEdge(int pen, int edgePen, double edgeThreshold, HeModel model)
+        private void DrawEdge(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Light0);
             GL.LineWidth(1.0f);
 
-            GLPen glpen = DC.Pen(pen);
-            GLPen glEdgepen = DC.Pen(edgePen);
+            GLPen glpen = DC.Pen(pen.Idx);
+            GLPen glEdgepen = DC.Pen(edgePen.Idx);
 
             //Vector3d t = DC.ViewDir * (-0.1f / DC.WorldScale);
 
@@ -255,7 +243,7 @@ namespace Plotter
             }
         }
 
-        public override void DrawHarfEdgeModel(int pen, HeModel model)
+        public override void DrawHarfEdgeModel(DrawPen pen, HeModel model)
         {
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
@@ -355,7 +343,7 @@ namespace Plotter
 
             if (!CadMath.IsParallel(p1 - p0, (CadVector)DC.ViewDir))
             {
-                DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+                DrawArrow(DrawPen.New(DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
 
             // Y軸
@@ -372,7 +360,7 @@ namespace Plotter
 
             if (!CadMath.IsParallel(p1 - p0, (CadVector)DC.ViewDir))
             {
-                DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+                DrawArrow(DrawPen.New(DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
 
             // Z軸
@@ -389,7 +377,7 @@ namespace Plotter
 
             if (!CadMath.IsParallel(p1 - p0, (CadVector)DC.ViewDir))
             {
-                DrawArrow(DrawTools.PEN_AXIS, p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+                DrawArrow(DrawPen.New(DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
         }
 
@@ -427,7 +415,7 @@ namespace Plotter
             PopMatrixes();
         }
 
-        public override void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT)
+        public override void DrawSelectedPoint(CadVector pt, DrawPen pen)
         {
             CadVector p0 = DC.WorldPointToDevPoint(pt) - 2;
             CadVector p1 = p0 + 4;
@@ -435,7 +423,7 @@ namespace Plotter
             DrawRect2D(p0.vector, p1.vector, pen);
         }
 
-        private void DrawRect2D(Vector3d p0, Vector3d p1, int pen)
+        private void DrawRect2D(Vector3d p0, Vector3d p1, DrawPen pen)
         {
             Vector3d v0 = Vector3d.Zero;
             Vector3d v1 = Vector3d.Zero;
@@ -454,7 +442,7 @@ namespace Plotter
             v3.X = v2.X;
             v3.Y = v0.Y;
 
-            GLPen glpen = DC.Pen(pen);
+            GLPen glpen = DC.Pen(pen.Idx);
 
             Start2D();
 
@@ -472,7 +460,7 @@ namespace Plotter
             End2D();
         }
 
-        public override void DrawCross(int pen, CadVector p, double size)
+        public override void DrawCross(DrawPen pen, CadVector p, double size)
         {
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Light0);
@@ -524,7 +512,7 @@ namespace Plotter
             DC.ProjectionMatrix.dump("Set");
         }
 
-        public override void DrawText(int font, int brush, CadVector a, CadVector xdir, CadVector ydir, DrawTextOption opt, string s)
+        public override void DrawText(int font, DrawBrush brush, CadVector a, CadVector xdir, CadVector ydir, DrawTextOption opt, string s)
         {
             a *= DC.WorldScale;
 
@@ -543,12 +531,12 @@ namespace Plotter
                 a -= (xv / 2);
             }
 
-            GL.Color4(DC.Color(brush));
+            GL.Color4(DC.Brush(brush.Idx).Color);
             
             mFontRenderer.Render(tex, a.vector, xv.vector, yv.vector);
         }
 
-        public override void DrawCrossCursorScrn(CadCursor pp, int pen)
+        public override void DrawCrossCursorScrn(CadCursor pp, DrawPen pen)
         {
             double size = Math.Max(DC.ViewWidth, DC.ViewHeight);
 
@@ -569,7 +557,7 @@ namespace Plotter
             DrawLine(pen, p0, p1);
         }
 
-        public override void DrawMarkCursor(int pen, CadVector p, double pix_size)
+        public override void DrawMarkCursor(DrawPen pen, CadVector p, double pix_size)
         {
             GL.Disable(EnableCap.DepthTest);
 
@@ -579,7 +567,7 @@ namespace Plotter
             GL.Enable(EnableCap.DepthTest);
         }
 
-        public override void DrawRect(int pen, CadVector p0, CadVector p1)
+        public override void DrawRect(DrawPen pen, CadVector p0, CadVector p1)
         {
             GL.Disable(EnableCap.DepthTest);
 
@@ -605,15 +593,15 @@ namespace Plotter
             GL.Enable(EnableCap.DepthTest);
         }
 
-        public override void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHLIGHT)
+        public override void DrawHighlightPoint(CadVector pt, DrawPen pen)
         {
             CadVector size = DC.DevVectorToWorldVector(CadVector.UnitX * 4);
             DrawCross(pen, pt, size.Norm());
         }
 
-        public override void DrawDot(int pen, CadVector p)
+        public override void DrawDot(DrawPen pen, CadVector p)
         {
-            GLPen glpen = DC.Pen(pen);
+            GLPen glpen = DC.Pen(pen.Idx);
             GL.Color4(glpen.Color);
 
             GL.Begin(PrimitiveType.Points);
@@ -652,7 +640,7 @@ namespace Plotter
             double minz = Math.Min(ltw.z, rbw.z);
             double maxz = Math.Max(ltw.z, rbw.z);
 
-            int pen = DrawTools.PEN_GRID;
+            DrawPen pen = DrawPen.New(DrawTools.PEN_GRID);
 
             CadVector p = default;
 
@@ -731,7 +719,7 @@ namespace Plotter
         {
         }
 
-        public override void DrawRectScrn(int pen, CadVector pp0, CadVector pp1)
+        public override void DrawRectScrn(DrawPen pen, CadVector pp0, CadVector pp1)
         {
             CadVector p0 = DC.DevPointToWorldPoint(pp0);
             CadVector p1 = DC.DevPointToWorldPoint(pp1);
@@ -770,7 +758,7 @@ namespace Plotter
 
             p1 += DC.ViewOrg;
 
-            DrawRectScrn(DrawTools.PEN_PAGE_FRAME, p0, p1);
+            DrawRectScrn(DrawPen.New(DrawTools.PEN_PAGE_FRAME), p0, p1);
         }
     }
 }

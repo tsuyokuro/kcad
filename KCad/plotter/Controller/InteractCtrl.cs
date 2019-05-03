@@ -77,12 +77,12 @@ namespace Plotter.Controller
             {
                 p1 = PointList[i];
 
-                dc.Drawing.DrawLine(DrawTools.PEN_DEFAULT_FIGURE, p0, p1);
+                dc.Drawing.DrawLine(DrawPen.New(DrawTools.PEN_DEFAULT_FIGURE), p0, p1);
 
                 p0 = p1;
             }
 
-            dc.Drawing.DrawLine(DrawTools.PEN_TEMP_FIGURE, p0, tp);
+            dc.Drawing.DrawLine(DrawPen.New(DrawTools.PEN_TEMP_FIGURE), p0, tp);
         }
     }
 }

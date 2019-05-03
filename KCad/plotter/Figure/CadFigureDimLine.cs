@@ -57,32 +57,32 @@ namespace Plotter
             }
         }
 
-        public override void Draw(DrawContext dc, int pen)
+        public override void Draw(DrawContext dc, DrawPen pen)
         {
-            if (pen == DrawTools.PEN_DEFAULT_FIGURE)
+            if (pen.Idx == DrawTools.PEN_DEFAULT_FIGURE)
             {
-                pen = DrawTools.PEN_DIMENTION;
+                pen = DrawPen.New(DrawTools.PEN_DIMENTION);
             }
 
             DrawDim(dc, pen);
         }
 
-        public override void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
+        public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
         {
         }
 
-        public override void DrawSelected(DrawContext dc, int pen)
+        public override void DrawSelected(DrawContext dc, DrawPen pen)
         {
             foreach (CadVector p in PointList)
             {
                 if (p.Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(p);
+                    dc.Drawing.DrawSelectedPoint(p, DrawPen.New(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }
 
-        public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+        public override void DrawTemp(DrawContext dc, CadVector tp, DrawPen pen)
         {
             int cnt = PointList.Count;
 
@@ -242,7 +242,7 @@ namespace Plotter
                             CadVector a,
                             CadVector b,
                             CadVector p,
-                            int pen)
+                            DrawPen pen)
         {
             CadSegment seg = CadUtil.PerpendicularSeg(a, b, p);
 
@@ -258,7 +258,7 @@ namespace Plotter
             dc.Drawing.DrawArrow(pen, cp, seg.P1, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
         }
 
-        private void DrawDim(DrawContext dc, int pen)
+        private void DrawDim(DrawContext dc, DrawPen pen)
         {
             dc.Drawing.DrawLine(pen, PointList[0], PointList[3]);
             dc.Drawing.DrawLine(pen, PointList[1], PointList[2]);
@@ -288,7 +288,7 @@ namespace Plotter
             // |  |                            |
             // up 0                            1 
             // 
-            dc.Drawing.DrawText(FontID, BrushID, p, lineV, up,
+            dc.Drawing.DrawText(FontID, DrawBrush.New(BrushID), p, lineV, up,
                 new DrawTextOption(DrawTextOption.H_CENTER),
                 lenStr);
         }

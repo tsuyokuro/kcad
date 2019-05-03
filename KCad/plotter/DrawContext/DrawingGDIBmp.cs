@@ -167,13 +167,13 @@ namespace Plotter
             BmpDC.UnlockBits();
         }
 
-        public override void DrawDot(int pen, CadVector p)
+        public override void DrawDot(DrawPen pen, CadVector p)
         {
             CadVector p0 = DC.WorldPointToDevPoint(p);
 
             if (p0.x >= 0 && p0.y >= 0 && p0.x < DC.ViewWidth && p0.y < DC.ViewHeight)
             {
-                BmpDC.Image.SetPixel((int)p0.x, (int)p0.y, DC.PenColor(pen));
+                BmpDC.Image.SetPixel((int)p0.x, (int)p0.y, DC.PenColor(pen.Idx));
             }
         }
     }

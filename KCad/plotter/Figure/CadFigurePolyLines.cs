@@ -24,7 +24,7 @@ namespace Plotter
         {
         }
 
-        public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+        public override void DrawTemp(DrawContext dc, CadVector tp, DrawPen pen)
         {
         }
 
@@ -106,7 +106,7 @@ namespace Plotter
             mPointList.Add(p);
         }
 
-        public override void Draw(DrawContext dc, int pen)
+        public override void Draw(DrawContext dc, DrawPen pen)
         {
             bool drawed = false;
 
@@ -116,12 +116,12 @@ namespace Plotter
             }
         }
 
-        public override void DrawSelected(DrawContext dc, int pen)
+        public override void DrawSelected(DrawContext dc, DrawPen pen)
         {
             DrawSelectedLines(dc, pen);
         }
 
-        public override void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
+        public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
         {
             CadVector a = PointList[idxA];
             CadVector b = PointList[idxB];
@@ -135,7 +135,7 @@ namespace Plotter
             Normal = -Normal;
         }
 
-        protected void DrawLines(DrawContext dc, int pen)
+        protected void DrawLines(DrawContext dc, DrawPen pen)
         {
             VectorList pl = mPointList;
             int start = 0;
@@ -160,7 +160,7 @@ namespace Plotter
                 dc.Drawing.DrawCross(pen, a, 2);
                 if (a.Selected)
                 {
-                    dc.Drawing.DrawHighlightPoint(a);
+                    dc.Drawing.DrawHighlightPoint(a, DrawPen.New(DrawTools.PEN_POINT_HIGHLIGHT));
                 }
 
                 return;
@@ -189,7 +189,7 @@ namespace Plotter
             return PolyLineExpander.GetExpandList(mPointList, start, cnt, curveSplitNum);
         }
 
-        private void DrawSelectedLines(DrawContext dc, int pen)
+        private void DrawSelectedLines(DrawContext dc, DrawPen pen)
         {
             int i;
             int num = PointList.Count;
@@ -200,7 +200,7 @@ namespace Plotter
 
                 if (!p.Selected) continue;
 
-                dc.Drawing.DrawSelectedPoint(p);
+                dc.Drawing.DrawSelectedPoint(p, DrawPen.New(DrawTools.PEN_SELECT_POINT));
 
 
                 if (p.IsHandle)
@@ -212,8 +212,8 @@ namespace Plotter
                         CadVector np = GetPointAt(idx);
                         if (!np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
-                            dc.Drawing.DrawSelectedPoint(np);
+                            dc.Drawing.DrawLine(DrawPen.New(DrawTools.PEN_MATCH_SEG), p, np);
+                            dc.Drawing.DrawSelectedPoint(np, DrawPen.New(DrawTools.PEN_SELECT_POINT));
                         }
                     }
 
@@ -224,8 +224,8 @@ namespace Plotter
                         CadVector np = GetPointAt(idx);
                         if (!np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
-                            dc.Drawing.DrawSelectedPoint(np);
+                            dc.Drawing.DrawLine(DrawPen.New(DrawTools.PEN_MATCH_SEG), p, np);
+                            dc.Drawing.DrawSelectedPoint(np, DrawPen.New(DrawTools.PEN_SELECT_POINT));
                         }
                     }
                 }
@@ -238,8 +238,8 @@ namespace Plotter
                         CadVector np = GetPointAt(idx);
                         if (np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
-                            dc.Drawing.DrawSelectedPoint(np);
+                            dc.Drawing.DrawLine(DrawPen.New(DrawTools.PEN_MATCH_SEG), p, np);
+                            dc.Drawing.DrawSelectedPoint(np, DrawPen.New(DrawTools.PEN_SELECT_POINT));
                         }
                     }
 
@@ -250,8 +250,8 @@ namespace Plotter
                         CadVector np = GetPointAt(idx);
                         if (np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
-                            dc.Drawing.DrawSelectedPoint(np);
+                            dc.Drawing.DrawLine(DrawPen.New(DrawTools.PEN_MATCH_SEG), p, np);
+                            dc.Drawing.DrawSelectedPoint(np, DrawPen.New(DrawTools.PEN_SELECT_POINT));
                         }
                     }
                 }

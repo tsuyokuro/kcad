@@ -5,9 +5,9 @@ namespace Plotter
     public class HighlightPointListItem
     {
         public CadVector Point;
-        public int Pen;
+        public DrawPen Pen;
 
-        public HighlightPointListItem(CadVector p, int pen = DrawTools.PEN_POINT_HIGHLIGHT)
+        public HighlightPointListItem(CadVector p, DrawPen pen)
         {
             Point = p;
             Pen = pen;

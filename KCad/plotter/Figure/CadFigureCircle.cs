@@ -42,23 +42,23 @@ namespace Plotter
             mPointList.Clear();
         }
 
-        public override void Draw(DrawContext dc, int pen)
+        public override void Draw(DrawContext dc, DrawPen pen)
         {
             drawCircle(dc, pen);
             //drawDisk(dc, pen);
         }
 
-        public override void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
+        public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
         {
             //drawCircle(dc, pen);
         }
 
-        public override void DrawSelected(DrawContext dc, int pen)
+        public override void DrawSelected(DrawContext dc, DrawPen pen)
         {
             drawSelected_Circle(dc, pen);
         }
 
-        public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+        public override void DrawTemp(DrawContext dc, CadVector tp, DrawPen pen)
         {
             if (PointList.Count <= 0)
             {
@@ -87,7 +87,7 @@ namespace Plotter
             dc.Drawing.DrawLine(pen, cp, d);
         }
 
-        private void drawCircle(DrawContext dc, int pen)
+        private void drawCircle(DrawContext dc, DrawPen pen)
         {
             if (PointList.Count == 0)
             {
@@ -97,7 +97,7 @@ namespace Plotter
             if (PointList.Count == 1)
             {
                 dc.Drawing.DrawCross(pen, PointList[0], 2);
-                if (PointList[0].Selected) dc.Drawing.DrawSelectedPoint(PointList[0]);
+                if (PointList[0].Selected) dc.Drawing.DrawSelectedPoint(PointList[0], DrawPen.New(DrawTools.PEN_SELECT_POINT));
                 return;
             }
 
@@ -112,7 +112,7 @@ namespace Plotter
             dc.Drawing.DrawCross(pen, PointList[0], size);
         }
 
-        private void drawDisk(DrawContext dc, int pen)
+        private void drawDisk(DrawContext dc, DrawPen pen)
         {
             if (PointList.Count == 0)
             {
@@ -122,7 +122,12 @@ namespace Plotter
             if (PointList.Count < 3)
             {
                 dc.Drawing.DrawCross(pen, PointList[0], 2);
-                if (PointList[0].Selected) dc.Drawing.DrawSelectedPoint(PointList[0]);
+
+                if (PointList[0].Selected)
+                {
+                    dc.Drawing.DrawSelectedPoint(
+                        PointList[0], DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                }
                 return;
             }
 
@@ -138,13 +143,14 @@ namespace Plotter
             dc.Drawing.DrawLine(pen, mPointList[2], mPointList[4]);
         }
 
-        private void drawSelected_Circle(DrawContext dc, int pen)
+        private void drawSelected_Circle(DrawContext dc, DrawPen pen)
         {
             for (int i=0; i<PointList.Count; i++)
             {
                 if (PointList[i].Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(PointList[i]);
+                    dc.Drawing.DrawSelectedPoint(
+                        PointList[i], DrawPen.New(DrawTools.PEN_SELECT_POINT));
                 }
 
             }

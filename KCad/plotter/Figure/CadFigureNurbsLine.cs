@@ -24,7 +24,7 @@ namespace Plotter
         {
         }
 
-        public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+        public override void DrawTemp(DrawContext dc, CadVector tp, DrawPen pen)
         {
         }
 
@@ -80,7 +80,7 @@ namespace Plotter
             NurbsPointList = new VectorList(Nurbs.OutCnt);
         }
 
-        public override void Draw(DrawContext dc, int pen)
+        public override void Draw(DrawContext dc, DrawPen pen)
         {
             if (PointList.Count < 2)
             {
@@ -95,7 +95,8 @@ namespace Plotter
             for (int i=1; i<PointList.Count; i++)
             {
                 n = PointList[i];
-                dc.Drawing.DrawLine(DrawTools.PEN_NURBS_CTRL_LINE, c, n);
+                dc.Drawing.DrawLine(
+                    DrawPen.New(DrawTools.PEN_NURBS_CTRL_LINE), c, n);
 
                 c = n;
             }

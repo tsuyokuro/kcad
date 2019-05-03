@@ -668,19 +668,19 @@ namespace Plotter
             }
         }
 
-        public virtual void Draw(DrawContext dc, int pen)
+        public virtual void Draw(DrawContext dc, DrawPen pen)
         {
         }
 
-        public virtual void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
+        public virtual void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
         {
         }
 
-        public virtual void DrawSelected(DrawContext dc, int pen)
+        public virtual void DrawSelected(DrawContext dc, DrawPen pen)
         {
         }
 
-        public virtual void DrawTemp(DrawContext dc, CadVector tp, int pen)
+        public virtual void DrawTemp(DrawContext dc, CadVector tp, DrawPen pen)
         {
         }
 

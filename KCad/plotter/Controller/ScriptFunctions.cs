@@ -822,15 +822,15 @@ namespace Plotter.Controller
 
             tdc.SetViewOrg(tdc.ViewOrg - d);
 
-            Env.RunOnMainThread(() =>
+            Env.RunOnMainThread((Action)(() =>
             {
-                tdc.Drawing.Clear(DrawTools.BRUSH_TRANSPARENT);
+                tdc.Drawing.Clear(DrawBrush.New(DrawTools.BRUSH_TRANSPARENT));
 
                 tdc.GdiGraphics.SmoothingMode = SmoothingMode.AntiAlias;
 
                 foreach (CadFigure fig in figList)
                 {
-                    fig.Draw(tdc, DrawTools.PEN_DEFAULT_FIGURE);
+                    fig.Draw(tdc, DrawPen.New(DrawTools.PEN_DEFAULT_FIGURE));
                 }
 
                 if (fname.Length > 0)
@@ -843,7 +843,7 @@ namespace Plotter.Controller
                 }
 
                 tdc.Dispose();
-            });
+            }));
         }
 
         public void FaceToDirection(CadVector dir)
@@ -1493,7 +1493,7 @@ namespace Plotter.Controller
 
             dc.StartDraw();
 
-            dc.Drawing.Clear();
+            dc.Drawing.Clear(DrawBrush.New(DrawTools.BRUSH_BACKGROUND));
 
             Controller.DrawAllFigure(dc);
 

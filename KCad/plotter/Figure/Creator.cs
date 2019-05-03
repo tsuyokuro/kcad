@@ -31,7 +31,7 @@ namespace Plotter
                 Figure.AddPointInCreating(dc, p);
             }
 
-            public virtual void DrawTemp(DrawContext dc, CadVector tp, int pen)
+            public virtual void DrawTemp(DrawContext dc, CadVector tp, DrawPen pen)
             {
                 Figure.DrawTemp(dc, tp, pen);
             }
@@ -100,7 +100,7 @@ namespace Plotter
                 Figure.mPointList.Add(p);
             }
 
-            public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+            public override void DrawTemp(DrawContext dc, CadVector tp, DrawPen pen)
             {
                 if (Figure.PointCount == 0)
                 {
@@ -182,7 +182,7 @@ namespace Plotter
                 }
             }
 
-            public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+            public override void DrawTemp(DrawContext dc, CadVector tp, DrawPen pen)
             {
                 if (Figure.PointList.Count <= 0)
                 {

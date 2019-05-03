@@ -728,7 +728,8 @@ namespace Plotter.Controller
 
             if (mx.IsValid)
             {
-                HighlightPointList.Add(new HighlightPointListItem(mx.Point));
+                HighlightPointList.Add(
+                    new HighlightPointListItem(mx.Point, DrawPen.New(DrawTools.PEN_POINT_HIGHLIGHT)));
 
                 tp = dc.WorldPointToDevPoint(mx.Point);
 
@@ -741,7 +742,7 @@ namespace Plotter.Controller
 
             if (my.IsValid)
             {
-                HighlightPointList.Add(new HighlightPointListItem(my.Point));
+                HighlightPointList.Add(new HighlightPointListItem(my.Point, DrawPen.New(DrawTools.PEN_POINT_HIGHLIGHT)));
 
                 tp = dc.WorldPointToDevPoint(my.Point);
 
@@ -754,7 +755,7 @@ namespace Plotter.Controller
 
             if (mxy.IsValid)
             {
-                HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawTools.PEN_POINT_HIGHLIGHT2));
+                HighlightPointList.Add(new HighlightPointListItem(mxy.Point, DrawPen.New(DrawTools.PEN_POINT_HIGHLIGHT2)));
                 tp = dc.WorldPointToDevPoint(mx.Point);
 
                 si.Cursor.Pos = dc.WorldPointToDevPoint(si.SnapPoint);
@@ -779,7 +780,7 @@ namespace Plotter.Controller
                 if (markSeg.Distance < si.Distance)
                 {
                     CadFigure fig = mDB.GetFigure(markSeg.FigureID);
-                    fig.DrawSeg(dc, DrawTools.PEN_MATCH_SEG, markSeg.PtIndexA, markSeg.PtIndexB);
+                    fig.DrawSeg(dc, DrawPen.New(DrawTools.PEN_MATCH_SEG), markSeg.PtIndexA, markSeg.PtIndexB);
 
                     CadVector center = markSeg.CenterPoint;
 
@@ -787,7 +788,7 @@ namespace Plotter.Controller
 
                     if ((t - si.Cursor.Pos).Norm() < SettingsHolder.Settings.LineSnapRange)
                     {
-                        HighlightPointList.Add(new HighlightPointListItem(center));
+                        HighlightPointList.Add(new HighlightPointListItem(center, DrawPen.New(DrawTools.PEN_POINT_HIGHLIGHT)));
 
                         si.SnapPoint = center;
 
@@ -801,7 +802,7 @@ namespace Plotter.Controller
                         si.Cursor.Pos = markSeg.CrossPointScrn;
                         si.Cursor.Pos.z = 0;
 
-                        HighlightPointList.Add(new HighlightPointListItem(SnapPoint, DrawTools.PEN_LINE_SNAP));
+                        HighlightPointList.Add(new HighlightPointListItem(SnapPoint, DrawPen.New(DrawTools.PEN_LINE_SNAP)));
                     }
                 }
                 else
@@ -837,7 +838,7 @@ namespace Plotter.Controller
 
             if (snapx && snapy)
             {
-                HighlightPointList.Add(new HighlightPointListItem(si.SnapPoint));
+                HighlightPointList.Add(new HighlightPointListItem(si.SnapPoint, DrawPen.New(DrawTools.PEN_POINT_HIGHLIGHT)));
             }
 
             return si;
@@ -878,8 +879,8 @@ namespace Plotter.Controller
                     }
                 }
 
-                HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1));
-                HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint));
+                HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1, DrawPen.New(DrawTools.PEN_POINT_HIGHLIGHT)));
+                HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint, DrawPen.New(DrawTools.PEN_POINT_HIGHLIGHT)));
             }
 
             return si;
@@ -1050,7 +1051,7 @@ namespace Plotter.Controller
                     if (FigureCreator != null)
                     {
                         CadVector p = dc.DevPointToWorldPoint(CrossCursor.Pos);
-                        FigureCreator.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
+                        FigureCreator.DrawTemp(dc, p, DrawPen.New(DrawTools.PEN_TEMP_FIGURE));
                     }
                     break;
 
@@ -1058,7 +1059,7 @@ namespace Plotter.Controller
                     if (MeasureFigureCreator != null)
                     {
                         CadVector p = dc.DevPointToWorldPoint(CrossCursor.Pos);
-                        MeasureFigureCreator.DrawTemp(dc, p, DrawTools.PEN_TEMP_FIGURE);
+                        MeasureFigureCreator.DrawTemp(dc, p, DrawPen.New(DrawTools.PEN_TEMP_FIGURE));
                     }
                     break;
             }

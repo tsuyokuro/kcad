@@ -12,12 +12,22 @@ namespace Plotter
     public class GLPen
     {
         public Color4 Color;
-        public float LineWidth;
+        public float Thick;
 
-        public GLPen(Color4 color, float w)
+        public GLPen(Color4 color, float t)
         {
             Color = color;
-            LineWidth = w;
+            Thick = t;
+        }
+    }
+
+    public class GLBrush
+    {
+        public Color4 Color;
+
+        public GLBrush(Color4 color)
+        {
+            Color = color;
         }
     }
 
@@ -87,7 +97,7 @@ namespace Plotter
         Font[] FontTbl = null;
 
         GLPen[] GLPenTbl = null;
-        Color4[] GLColorTbl = null;
+        GLBrush[] GLBrushTbl = null;
 
         private void AllocGDITbl()
         {
@@ -99,7 +109,7 @@ namespace Plotter
         private void AllocGLTbl()
         {
             GLPenTbl = new GLPen[PEN_TBL_SIZE];
-            GLColorTbl = new Color4[BRUSH_TBL_SIZE];
+            GLBrushTbl = new GLBrush[BRUSH_TBL_SIZE];
         }
 
         public void Setup(ToolsType t)
@@ -211,7 +221,7 @@ namespace Plotter
 
             for (int i = 0; i < BRUSH_TBL_SIZE; i++)
             {
-                GLColorTbl[i] = DarkColors.BrushColorTbl[i];
+                GLBrushTbl[i] = new GLBrush(DarkColors.BrushColorTbl[i]);
             }
         }
 
@@ -231,7 +241,7 @@ namespace Plotter
 
             for (int i = 0; i < BRUSH_TBL_SIZE; i++)
             {
-                GLColorTbl[i] = DarkColors.BrushColorTbl[i];
+                GLBrushTbl[i] = new GLBrush(DarkColors.BrushColorTbl[i]);
             }
 
             GLPenTbl[PEN_DEFAULT] = new GLPen(Color.FromArgb(255, 0, 0, 0), 1);
@@ -240,9 +250,9 @@ namespace Plotter
             GLPenTbl[PEN_DIMENTION] = new GLPen(Color.FromArgb(255, 0, 0, 0), 1);
             GLPenTbl[PEN_MESH_LINE] = new GLPen(Color.FromArgb(255, 0, 0, 0), 1);
 
-            GLColorTbl[BRUSH_DEFAULT] = Color.FromArgb(255, 0, 0, 0);
-            GLColorTbl[BRUSH_BACKGROUND] = Color.FromArgb(255, 255, 255, 255);
-            GLColorTbl[BRUSH_TEXT] = Color.FromArgb(255, 0, 0, 0);
+            GLBrushTbl[BRUSH_DEFAULT] = new GLBrush(Color.FromArgb(255, 0, 0, 0));
+            GLBrushTbl[BRUSH_BACKGROUND] = new GLBrush(Color.FromArgb(255, 255, 255, 255));
+            GLBrushTbl[BRUSH_TEXT] = new GLBrush(Color.FromArgb(255, 0, 0, 0));
         }
 
         public void Dispose()
@@ -359,9 +369,9 @@ namespace Plotter
             return GLPenTbl[id];
         }
 
-        public Color4 glcolor(int id)
+        public GLBrush glbrush(int id)
         {
-            return GLColorTbl[id];
+            return GLBrushTbl[id];
         }
     }
     
@@ -369,86 +379,170 @@ namespace Plotter
     {
         INDEX,
         COLOR,
+        OBJECT,
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    public struct DrawTool
+    public struct DrawColor
     {
         [FieldOffset(0)]
-        public ToolType Type;
+        public int Argb;
 
-        [FieldOffset(sizeof(ToolType))]
-        public int Val;
-
-        [FieldOffset(sizeof(ToolType)+3)]
+        [FieldOffset(3)]
         public byte A;
 
-        [FieldOffset(sizeof(ToolType)+2)]
+        [FieldOffset(2)]
         public byte R;
 
-        [FieldOffset(sizeof(ToolType)+1)]
+        [FieldOffset(1)]
         public byte G;
 
-        [FieldOffset(sizeof(ToolType)+0)]
+        [FieldOffset(0)]
         public byte B;
+    }
 
-        public static DrawTool New(int idx)
+    public struct DrawPen
+    {
+        public ToolType Type;
+
+        public int Idx;
+
+        public int Argb;
+
+        public float Thick;
+
+        public Object Obj;
+
+        public static DrawPen New(int idx)
         {
-            DrawTool dt = default;
+            DrawPen dt = default;
             dt.Type = ToolType.INDEX;
-            dt.Val = idx;
+            dt.Idx = idx;
+            dt.Thick = 1.0f;
             return dt;
         }
 
-        public static DrawTool New(Color color)
+        public static DrawPen New(GLPen pen)
         {
-            DrawTool dt = default;
+            DrawPen dt = default;
+            dt.Type = ToolType.OBJECT;
+            dt.Obj = pen;
+            return dt;
+        }
+
+        public static DrawPen New(Pen pen)
+        {
+            DrawPen dt = default;
+            dt.Type = ToolType.OBJECT;
+            dt.Obj = pen;
+            return dt;
+        }
+
+        public static DrawPen New(Color color)
+        {
+            DrawPen dt = default;
             dt.Type = ToolType.COLOR;
-            dt.Val = color.ToArgb();
+            dt.Argb = color.ToArgb();
+            dt.Thick = 1.0f;
             return dt;
         }
 
-        public static DrawTool New(Color4 color)
+        public static DrawPen New(Color4 color)
         {
-            DrawTool dt = default;
+            DrawPen dt = default;
             dt.Type = ToolType.COLOR;
-            dt.Val = color.ToArgb();
+            dt.Argb = color.ToArgb();
+            dt.Thick = 1.0f;
             return dt;
         }
 
-        public static explicit operator Color4(DrawTool dt)
+        public static explicit operator Color4(DrawPen dt)
         {
+            DrawColor c = default;
+            c.Argb = dt.Argb;
+
             return new Color4(
-                    dt.R,
-                    dt.G,
-                    dt.B,
-                    dt.A
+                    c.R,
+                    c.G,
+                    c.B,
+                    c.A
                 );
         }
 
-        public static explicit operator DrawTool(Color4 color)
+        public static explicit operator Color(DrawPen dt)
         {
-            return DrawTool.New(color);
+            return Color.FromArgb(dt.Argb);
+        }
+    }
+
+    public struct DrawBrush
+    {
+        public ToolType Type;
+
+        public Object BrushObj;
+
+        public int Idx;
+
+        public int Argb;
+
+        public Object Obj;
+
+        public static DrawBrush New(int idx)
+        {
+            DrawBrush dt = default;
+            dt.Type = ToolType.INDEX;
+            dt.Idx = idx;
+            return dt;
         }
 
-        public static explicit operator Color(DrawTool dt)
+        public static DrawPen New(GLBrush brush)
         {
-            return Color.FromArgb(dt.Val);
+            DrawPen dt = default;
+            dt.Type = ToolType.OBJECT;
+            dt.Obj = brush;
+            return dt;
         }
 
-        public static explicit operator DrawTool(Color color)
+        public static DrawPen New(Brush brush)
         {
-            return DrawTool.New(color);
+            DrawPen dt = default;
+            dt.Type = ToolType.OBJECT;
+            dt.Obj = brush;
+            return dt;
         }
 
-        public static explicit operator int(DrawTool dt)
+        public static DrawBrush New(Color color)
         {
-            return dt.Val;
+            DrawBrush dt = default;
+            dt.Type = ToolType.COLOR;
+            dt.Argb = color.ToArgb();
+            return dt;
         }
 
-        public static explicit operator DrawTool(int idx)
+        public static DrawBrush New(Color4 color)
         {
-            return DrawTool.New(idx);
+            DrawBrush dt = default;
+            dt.Type = ToolType.COLOR;
+            dt.Argb = color.ToArgb();
+            return dt;
+        }
+
+        public static explicit operator Color4(DrawBrush dt)
+        {
+            DrawColor c = default;
+            c.Argb = dt.Argb;
+
+            return new Color4(
+                    c.R,
+                    c.G,
+                    c.B,
+                    c.A
+                );
+        }
+
+        public static explicit operator Color(DrawBrush dt)
+        {
+            return Color.FromArgb(dt.Argb);
         }
     }
 }

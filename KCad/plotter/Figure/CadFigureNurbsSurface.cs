@@ -31,7 +31,7 @@ namespace Plotter
         {
         }
 
-        public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+        public override void DrawTemp(DrawContext dc, CadVector tp, DrawPen pen)
         {
         }
 
@@ -104,7 +104,7 @@ namespace Plotter
             NurbsPointList = new VectorList(Nurbs.UOutCnt * Nurbs.VOutCnt);
         }
 
-        public override void Draw(DrawContext dc, int pen)
+        public override void Draw(DrawContext dc, DrawPen pen)
         {
             if (PointList.Count < 2)
             {
@@ -113,10 +113,11 @@ namespace Plotter
 
             DrawSurfaces(dc, pen);
 
-            DrawControlPoints(dc, DrawTools.PEN_NURBS_CTRL_LINE);
+            DrawControlPoints(dc,
+                DrawPen.New(DrawTools.PEN_NURBS_CTRL_LINE));
         }
 
-        public override void DrawSelected(DrawContext dc, int pen)
+        public override void DrawSelected(DrawContext dc, DrawPen pen)
         {
             for (int i=0; i<mPointList.Count; i++)
             {
@@ -124,12 +125,12 @@ namespace Plotter
 
                 if (p0.Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(p0);
+                    dc.Drawing.DrawSelectedPoint(p0, DrawPen.New(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }
 
-        private void DrawControlPoints(DrawContext dc, int pen)
+        private void DrawControlPoints(DrawContext dc, DrawPen pen)
         {
             CadVector p0;
             CadVector p1;
@@ -172,7 +173,7 @@ namespace Plotter
             }
         }
 
-        private void DrawSurfaces(DrawContext dc, int pen)
+        private void DrawSurfaces(DrawContext dc, DrawPen pen)
         {
             if (NeedsEval)
             {

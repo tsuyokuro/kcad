@@ -132,12 +132,13 @@ namespace Plotter
             }
         }
 
-        public override void Draw(DrawContext dc, int pen)
+        public override void Draw(DrawContext dc, DrawPen pen)
         {
-            dc.Drawing.DrawHarfEdgeModel(DrawTools.PEN_MESH_LINE, pen, EDGE_THRESHOLD, mHeModel);
+            dc.Drawing.DrawHarfEdgeModel(
+                DrawPen.New(DrawTools.PEN_MESH_LINE), pen, EDGE_THRESHOLD, mHeModel);
         }
 
-        public override void DrawSelected(DrawContext dc, int pen)
+        public override void DrawSelected(DrawContext dc, DrawPen pen)
         {
             int i;
             int num = PointList.Count;
@@ -148,7 +149,7 @@ namespace Plotter
 
                 if (!p.Selected) continue;
 
-                dc.Drawing.DrawSelectedPoint(p);
+                dc.Drawing.DrawSelectedPoint(p, DrawPen.New(DrawTools.PEN_SELECT_POINT));
             }
         }
 

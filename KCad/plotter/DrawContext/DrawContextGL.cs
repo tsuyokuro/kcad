@@ -124,9 +124,9 @@ namespace Plotter
             return Tools.glpen(id);
         }
 
-        public Color4 Color(int id)
+        public GLBrush Brush(int id)
         {
-            return Tools.glcolor(id);
+            return Tools.glbrush(id);
         }
 
         public override void SetupTools(DrawTools.ToolsType type)
