@@ -198,6 +198,7 @@
     <Compile Include="Controls\PopupEx.cs" />
     <Compile Include="GLUtil\FontFaceW.cs" />
     <Compile Include="GLUtil\FrameBufferW.cs" />
+    <Compile Include="plotter\DrawContext\PrintColors.cs" />
     <Compile Include="plotter\DrawContext\DarkColors.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGLOrtho.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGLPers.cs" />

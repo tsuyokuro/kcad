@@ -549,16 +549,6 @@ namespace Plotter.Controller
 
         private void Test()
         {
-            DrawPen dt = DrawPen.New(new Color4(0x11, 0x22, 0x33, 0x44));
-
-            Color4 c4 = (Color4)dt;
-
-            dt = DrawPen.New(Color.FromArgb(0x44, 0x11, 0x22, 0x33));
-
-            Color c = (Color)dt;
-
-
-            DOut.pl("end");
         }
 
         private void testTriangulate()
