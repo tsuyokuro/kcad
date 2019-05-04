@@ -114,7 +114,7 @@ namespace Plotter
             DrawSurfaces(dc, pen);
 
             DrawControlPoints(dc,
-                DrawPen.New(DrawTools.PEN_NURBS_CTRL_LINE));
+                dc.GetPen(DrawTools.PEN_NURBS_CTRL_LINE));
         }
 
         public override void DrawSelected(DrawContext dc, DrawPen pen)
@@ -125,7 +125,7 @@ namespace Plotter
 
                 if (p0.Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(p0, DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                    dc.Drawing.DrawSelectedPoint(p0, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }

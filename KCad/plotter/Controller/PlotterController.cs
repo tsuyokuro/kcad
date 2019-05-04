@@ -288,7 +288,7 @@ namespace Plotter.Controller
                 dc = CurrentDC;
             }
 
-            dc.Drawing.Clear(DrawBrush.New(DrawTools.BRUSH_BACKGROUND));
+            dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
         }
 
         public void DrawAll(DrawContext dc = null)
@@ -324,22 +324,22 @@ namespace Plotter.Controller
             {
                 if (layer.Visible)
                 {
-                    DrawPen pen = DrawPen.New(DrawTools.PEN_DEFAULT_FIGURE);
+                    DrawPen pen = dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE);
 
                     if (layer.ID != CurrentLayer.ID)
                     {
-                        pen = DrawPen.New(DrawTools.PEN_PALE_FIGURE);
+                        pen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
                     }
 
                     dc.Drawing.Draw(layer.FigureList, pen);
                 }
             }
 
-            dc.Drawing.Draw(TempFigureList, DrawPen.New(DrawTools.PEN_TEST_FIGURE));
+            dc.Drawing.Draw(TempFigureList, dc.GetPen(DrawTools.PEN_TEST_FIGURE));
 
             if (MeasureFigureCreator != null)
             {
-                MeasureFigureCreator.Figure.Draw(dc, DrawPen.New(DrawTools.PEN_MEASURE_FIGURE));
+                MeasureFigureCreator.Figure.Draw(dc, dc.GetPen(DrawTools.PEN_MEASURE_FIGURE));
             }
         }
 
@@ -360,21 +360,21 @@ namespace Plotter.Controller
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                dc.Drawing.DrawSelected(layer.FigureList, DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                dc.Drawing.DrawSelected(layer.FigureList, dc.GetPen(DrawTools.PEN_SELECT_POINT));
             }
         }
 
         public void DrawLastPoint(DrawContext dc)
         {
             dc.Drawing.DrawMarkCursor(
-                DrawPen.New(DrawTools.PEN_LAST_POINT_MARKER),
+                dc.GetPen(DrawTools.PEN_LAST_POINT_MARKER),
                 LastDownPoint,
                 ControllerConst.MARK_CURSOR_SIZE);
 
             if (ObjDownPoint.Valid)
             {
                 dc.Drawing.DrawMarkCursor(
-                    DrawPen.New(DrawTools.PEN_LAST_POINT_MARKER2),
+                    dc.GetPen(DrawTools.PEN_LAST_POINT_MARKER2),
                     ObjDownPoint,
                     ControllerConst.MARK_CURSOR_SIZE);
             }
@@ -387,18 +387,18 @@ namespace Plotter.Controller
                 return;
             }
 
-            dc.Drawing.DrawLine(DrawPen.New(DrawTools.PEN_DRAG_LINE),
+            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_DRAG_LINE),
                 LastDownPoint, dc.DevPointToWorldPoint(CrossCursor.Pos));
         }
 
         public void DrawCrossCursor(DrawContext dc)
         {
-            dc.Drawing.DrawCrossCursorScrn(CrossCursor, DrawPen.New(DrawTools.PEN_CURSOR2));
+            dc.Drawing.DrawCrossCursorScrn(CrossCursor, dc.GetPen(DrawTools.PEN_CURSOR2));
 
             if (CursorLocked)
             {
                 dc.Drawing.DrawCrossScrn(
-                    DrawPen.New(DrawTools.PEN_POINT_HIGHLIGHT),
+                    dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT),
                     CrossCursor.Pos,
                     ControllerConst.CURSOR_LOCK_MARK_SIZE);
             }
@@ -407,7 +407,7 @@ namespace Plotter.Controller
         public void DrawSelRect(DrawContext dc)
         {
             dc.Drawing.DrawRectScrn(
-                DrawPen.New(DrawTools.PEN_TEMP_FIGURE),
+                dc.GetPen(DrawTools.PEN_TEMP_FIGURE),
                 RubberBandScrnPoint0,
                 RubberBandScrnPoint1);
         }
@@ -416,7 +416,7 @@ namespace Plotter.Controller
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                dc.Drawing.Draw(layer.FigureList, DrawPen.New(DrawTools.PEN_DEFAULT_FIGURE));
+                dc.Drawing.Draw(layer.FigureList, dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE));
             }
         }
 
@@ -454,7 +454,7 @@ namespace Plotter.Controller
 
             dc.StartDraw();
 
-            dc.Drawing.Clear(DrawBrush.New(DrawTools.BRUSH_BACKGROUND));
+            dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
 
             DrawAllFigure(dc);
 

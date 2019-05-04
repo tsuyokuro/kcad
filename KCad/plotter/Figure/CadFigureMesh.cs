@@ -135,7 +135,7 @@ namespace Plotter
         public override void Draw(DrawContext dc, DrawPen pen)
         {
             dc.Drawing.DrawHarfEdgeModel(
-                DrawPen.New(DrawTools.PEN_MESH_LINE), pen, EDGE_THRESHOLD, mHeModel);
+                dc.GetPen(DrawTools.PEN_MESH_LINE), pen, EDGE_THRESHOLD, mHeModel);
         }
 
         public override void DrawSelected(DrawContext dc, DrawPen pen)
@@ -149,7 +149,7 @@ namespace Plotter
 
                 if (!p.Selected) continue;
 
-                dc.Drawing.DrawSelectedPoint(p, DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                dc.Drawing.DrawSelectedPoint(p, dc.GetPen(DrawTools.PEN_SELECT_POINT));
             }
         }
 

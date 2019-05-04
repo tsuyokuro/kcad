@@ -61,7 +61,7 @@ namespace Plotter
         {
             if (pen.Idx == DrawTools.PEN_DEFAULT_FIGURE)
             {
-                pen = DrawPen.New(DrawTools.PEN_DIMENTION);
+                pen = dc.GetPen(DrawTools.PEN_DIMENTION);
             }
 
             DrawDim(dc, pen);
@@ -77,7 +77,7 @@ namespace Plotter
             {
                 if (p.Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(p, DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                    dc.Drawing.DrawSelectedPoint(p, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }
@@ -288,7 +288,7 @@ namespace Plotter
             // |  |                            |
             // up 0                            1 
             // 
-            dc.Drawing.DrawText(FontID, DrawBrush.New(BrushID), p, lineV, up,
+            dc.Drawing.DrawText(FontID, dc.GetBrush(BrushID), p, lineV, up,
                 new DrawTextOption(DrawTextOption.H_CENTER),
                 lenStr);
         }

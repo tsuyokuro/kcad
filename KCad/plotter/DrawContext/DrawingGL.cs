@@ -9,6 +9,7 @@ using System;
 using HalfEdgeNS;
 using CadDataTypes;
 using GLFont;
+using OpenTK.Graphics;
 
 namespace Plotter
 {
@@ -34,7 +35,7 @@ namespace Plotter
 
         public override void Clear(DrawBrush brush)
         {
-            GL.ClearColor(DC.Brush(brush.Idx).Color);
+            GL.ClearColor(brush.Color4());
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
@@ -46,7 +47,7 @@ namespace Plotter
                 {
                     if (a.Current)
                     {
-                        a.Draw(DC, DrawPen.New((int)DrawTools.PEN_FIGURE_HIGHLIGHT));
+                        a.Draw(DC, DrawPen.New(DC, DrawTools.PEN_FIGURE_HIGHLIGHT));
                     }
                     else
                     {
@@ -75,10 +76,10 @@ namespace Plotter
             a *= DC.WorldScale;
             b *= DC.WorldScale;
 
-            GLPen glpen = DC.Pen(pen.Idx);
+            Color4 color = pen.Color4();
 
             GL.Begin(PrimitiveType.LineStrip);
-            GL.Color4(glpen.Color);
+            GL.Color4(color);
 
             GL.Vertex3(a.vector);
             GL.Vertex3(b.vector);
@@ -91,7 +92,6 @@ namespace Plotter
             //DebugOut.Std.println("GL DrawFace");
 
             CadVector p;
-            GLPen glpen;
 
             if (normal.IsZero())
             {
@@ -129,9 +129,9 @@ namespace Plotter
 
             if (drawOutline)
             {
-                glpen = DC.Pen(pen.Idx);
+                Color4 color = pen.Color4();
 
-                GL.Color4(glpen.Color);
+                GL.Color4(color);
                 GL.LineWidth(1.0f);
 
                 CadVector shift = GetShiftForOutLine();
@@ -173,8 +173,8 @@ namespace Plotter
             GL.Disable(EnableCap.Light0);
             GL.LineWidth(1.0f);
 
-            GLPen glpen = DC.Pen(pen.Idx);
-            GLPen glEdgepen = DC.Pen(edgePen.Idx);
+            Color4 color = pen.Color4();
+            Color4 edgeColor = edgePen.Color4();
 
             //Vector3d t = DC.ViewDir * (-0.1f / DC.WorldScale);
 
@@ -221,11 +221,11 @@ namespace Plotter
 
                     if (draw)
                     {
-                        GL.Color4(glEdgepen.Color);
+                        GL.Color4(edgeColor);
                     }
                     else
                     {
-                        GL.Color4(glpen.Color);
+                        GL.Color4(color);
                     }
 
                     GL.Begin(PrimitiveType.Lines);
@@ -343,7 +343,7 @@ namespace Plotter
 
             if (!CadMath.IsParallel(p1 - p0, (CadVector)DC.ViewDir))
             {
-                DrawArrow(DrawPen.New(DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+                DrawArrow(DrawPen.New(DC, DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
 
             // Y軸
@@ -360,7 +360,7 @@ namespace Plotter
 
             if (!CadMath.IsParallel(p1 - p0, (CadVector)DC.ViewDir))
             {
-                DrawArrow(DrawPen.New(DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+                DrawArrow(DrawPen.New(DC, DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
 
             // Z軸
@@ -377,7 +377,7 @@ namespace Plotter
 
             if (!CadMath.IsParallel(p1 - p0, (CadVector)DC.ViewDir))
             {
-                DrawArrow(DrawPen.New(DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+                DrawArrow(DrawPen.New(DC, DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
         }
 
@@ -640,7 +640,7 @@ namespace Plotter
             double minz = Math.Min(ltw.z, rbw.z);
             double maxz = Math.Max(ltw.z, rbw.z);
 
-            DrawPen pen = DrawPen.New(DrawTools.PEN_GRID);
+            DrawPen pen = DrawPen.New(DC, DrawTools.PEN_GRID);
 
             CadVector p = default;
 
@@ -758,7 +758,7 @@ namespace Plotter
 
             p1 += DC.ViewOrg;
 
-            DrawRectScrn(DrawPen.New(DrawTools.PEN_PAGE_FRAME), p0, p1);
+            DrawRectScrn(DrawPen.New(DC, DrawTools.PEN_PAGE_FRAME), p0, p1);
         }
     }
 }

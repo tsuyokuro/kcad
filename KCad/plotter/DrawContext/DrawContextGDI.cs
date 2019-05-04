@@ -208,5 +208,15 @@ namespace Plotter
             if (Buffer != null)
                 Buffer.Render();
         }
+
+        public override DrawPen GetPen(int idx)
+        {
+            return DrawPen.New(this, idx);
+        }
+
+        public override DrawBrush GetBrush(int idx)
+        {
+            return DrawBrush.New(this, idx);
+        }
     }
 }

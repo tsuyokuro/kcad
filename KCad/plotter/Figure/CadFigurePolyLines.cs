@@ -160,7 +160,7 @@ namespace Plotter
                 dc.Drawing.DrawCross(pen, a, 2);
                 if (a.Selected)
                 {
-                    dc.Drawing.DrawHighlightPoint(a, DrawPen.New(DrawTools.PEN_POINT_HIGHLIGHT));
+                    dc.Drawing.DrawHighlightPoint(a, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT));
                 }
 
                 return;
@@ -200,7 +200,7 @@ namespace Plotter
 
                 if (!p.Selected) continue;
 
-                dc.Drawing.DrawSelectedPoint(p, DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                dc.Drawing.DrawSelectedPoint(p, dc.GetPen(DrawTools.PEN_SELECT_POINT));
 
 
                 if (p.IsHandle)
@@ -212,8 +212,8 @@ namespace Plotter
                         CadVector np = GetPointAt(idx);
                         if (!np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(DrawPen.New(DrawTools.PEN_MATCH_SEG), p, np);
-                            dc.Drawing.DrawSelectedPoint(np, DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
+                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
 
@@ -224,8 +224,8 @@ namespace Plotter
                         CadVector np = GetPointAt(idx);
                         if (!np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(DrawPen.New(DrawTools.PEN_MATCH_SEG), p, np);
-                            dc.Drawing.DrawSelectedPoint(np, DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
+                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
                 }
@@ -238,8 +238,8 @@ namespace Plotter
                         CadVector np = GetPointAt(idx);
                         if (np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(DrawPen.New(DrawTools.PEN_MATCH_SEG), p, np);
-                            dc.Drawing.DrawSelectedPoint(np, DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
+                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
 
@@ -250,8 +250,8 @@ namespace Plotter
                         CadVector np = GetPointAt(idx);
                         if (np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(DrawPen.New(DrawTools.PEN_MATCH_SEG), p, np);
-                            dc.Drawing.DrawSelectedPoint(np, DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
+                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
                 }

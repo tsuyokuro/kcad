@@ -824,13 +824,13 @@ namespace Plotter.Controller
 
             Env.RunOnMainThread((Action)(() =>
             {
-                tdc.Drawing.Clear(DrawBrush.New(DrawTools.BRUSH_TRANSPARENT));
+                tdc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_TRANSPARENT));
 
                 tdc.GdiGraphics.SmoothingMode = SmoothingMode.AntiAlias;
 
                 foreach (CadFigure fig in figList)
                 {
-                    fig.Draw(tdc, DrawPen.New(DrawTools.PEN_DEFAULT_FIGURE));
+                    fig.Draw(tdc, dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE));
                 }
 
                 if (fname.Length > 0)
@@ -1493,7 +1493,7 @@ namespace Plotter.Controller
 
             dc.StartDraw();
 
-            dc.Drawing.Clear(DrawBrush.New(DrawTools.BRUSH_BACKGROUND));
+            dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
 
             Controller.DrawAllFigure(dc);
 

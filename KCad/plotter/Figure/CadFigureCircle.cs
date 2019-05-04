@@ -97,7 +97,7 @@ namespace Plotter
             if (PointList.Count == 1)
             {
                 dc.Drawing.DrawCross(pen, PointList[0], 2);
-                if (PointList[0].Selected) dc.Drawing.DrawSelectedPoint(PointList[0], DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                if (PointList[0].Selected) dc.Drawing.DrawSelectedPoint(PointList[0], dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 return;
             }
 
@@ -126,7 +126,7 @@ namespace Plotter
                 if (PointList[0].Selected)
                 {
                     dc.Drawing.DrawSelectedPoint(
-                        PointList[0], DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                        PointList[0], dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
                 return;
             }
@@ -150,7 +150,7 @@ namespace Plotter
                 if (PointList[i].Selected)
                 {
                     dc.Drawing.DrawSelectedPoint(
-                        PointList[i], DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                        PointList[i], dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
 
             }

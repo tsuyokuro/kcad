@@ -96,7 +96,7 @@ namespace Plotter
             {
                 n = PointList[i];
                 dc.Drawing.DrawLine(
-                    DrawPen.New(DrawTools.PEN_NURBS_CTRL_LINE), c, n);
+                    dc.GetPen(DrawTools.PEN_NURBS_CTRL_LINE), c, n);
 
                 c = n;
             }

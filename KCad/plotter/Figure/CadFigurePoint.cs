@@ -90,7 +90,7 @@ namespace Plotter
             {
                 if (PointList[0].Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(PointList[0], DrawPen.New(DrawTools.PEN_SELECT_POINT));
+                    dc.Drawing.DrawSelectedPoint(PointList[0], dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }

@@ -12,12 +12,12 @@ namespace Plotter
     public class GLPen
     {
         public Color4 Color;
-        public float Thick;
+        public float Width;
 
         public GLPen(Color4 color, float t)
         {
             Color = color;
-            Thick = t;
+            Width = t;
         }
     }
 
@@ -88,12 +88,10 @@ namespace Plotter
 
 
         public Color[] PenColorTbl;
-        Pen[] PenTbl = null;
-
         public Color[] BrushColorTbl;
-        Brush[] BrushTbl = null;
 
-
+        Pen[] PenTbl = null;
+        SolidBrush[] BrushTbl = null;
         Font[] FontTbl = null;
 
         GLPen[] GLPenTbl = null;
@@ -102,7 +100,7 @@ namespace Plotter
         private void AllocGDITbl()
         {
             PenTbl = new Pen[PEN_TBL_SIZE];
-            BrushTbl = new Brush[BRUSH_TBL_SIZE];
+            BrushTbl = new SolidBrush[BRUSH_TBL_SIZE];
             FontTbl = new Font[FONT_TBL_SIZE];
         }
 
@@ -231,7 +229,9 @@ namespace Plotter
             AllocGLTbl();
 
             PenColorTbl = PrintColors.PenColorTbl;
-            BrushColorTbl = PrintColors.BrushColorTbl;
+
+            BrushColorTbl = new Color[PrintColors.BrushColorTbl.Length];
+            Array.Copy(PrintColors.BrushColorTbl, BrushColorTbl, PrintColors.BrushColorTbl.Length);
 
             float width = 1.0f;
 
@@ -245,6 +245,7 @@ namespace Plotter
                 GLBrushTbl[i] = new GLBrush(BrushColorTbl[i]);
             }
 
+            BrushColorTbl[BRUSH_BACKGROUND] = Color.FromArgb(255, 255, 255, 255);
             GLBrushTbl[BRUSH_BACKGROUND] = new GLBrush(Color.FromArgb(255, 255, 255, 255));
         }
 
@@ -342,9 +343,14 @@ namespace Plotter
             return PenTbl[id];
         }
 
-        public Brush brush(int id)
+        public SolidBrush brush(int id)
         {
             return BrushTbl[id];
+        }
+
+        public Color PenColor(int id)
+        {
+            return PenColorTbl[id];
         }
 
         public Color BrushColor(int id)
@@ -413,56 +419,90 @@ namespace Plotter
 
     public struct DrawPen
     {
-        public ToolType Type;
-
         public int Idx;
 
         public int Argb;
 
-        public float Thick;
+        public float Width;
 
-        public Object Obj;
+        private Pen GdiPen;
 
-        public static DrawPen New(int idx)
+        public Pen GetGdiPen()
+        {
+            if (GdiPen == null)
+            {
+                GdiPen = new Pen(Color.FromArgb(Argb));
+            }
+
+            return GdiPen;
+        }
+
+        public void Dispose()
+        {
+            if (GdiPen != null && Idx == 0)
+            {
+                GdiPen.Dispose();
+                GdiPen = null;
+            }
+        }
+
+        public Color4 Color4()
+        {
+            return Color4Util.FromArgb(Argb);
+        }
+
+        public Color GdiColor()
+        {
+            return Color.FromArgb(Argb);
+        }
+
+        public static DrawPen New(DrawContextGDI dc, int idx)
         {
             DrawPen dt = default;
-            dt.Type = ToolType.INDEX;
             dt.Idx = idx;
-            dt.Thick = 1.0f;
+
+            dt.GdiPen = dc.Tools.pen(idx);
+            dt.Argb = dt.GdiPen.Color.ToArgb();
+            dt.Width = dt.GdiPen.Width;
+
             return dt;
         }
 
-        public static DrawPen New(GLPen pen)
+        public static DrawPen New(DrawContextGL dc, int idx)
         {
             DrawPen dt = default;
-            dt.Type = ToolType.OBJECT;
-            dt.Obj = pen;
+            dt.Idx = idx;
+
+            GLPen pen = dc.Tools.glpen(idx);
+
+            dt.Argb = pen.Color.ToArgb();
+            dt.Width = pen.Width;
+
             return dt;
         }
 
         public static DrawPen New(Pen pen)
         {
             DrawPen dt = default;
-            dt.Type = ToolType.OBJECT;
-            dt.Obj = pen;
+            dt.GdiPen = pen;
+            dt.Argb = pen.Color.ToArgb();
+            dt.Width = pen.Width;
             return dt;
         }
 
-        public static DrawPen New(Color color)
+        public static DrawPen New(Color color, float width)
         {
             DrawPen dt = default;
-            dt.Type = ToolType.COLOR;
             dt.Argb = color.ToArgb();
-            dt.Thick = 1.0f;
+            dt.Width = width;
             return dt;
         }
 
-        public static DrawPen New(Color4 color)
+        public static DrawPen New(Color4 color, float width)
         {
             DrawPen dt = default;
-            dt.Type = ToolType.COLOR;
             dt.Argb = color.ToArgb();
-            dt.Thick = 1.0f;
+            dt.Width = width;
             return dt;
         }
     }
@@ -477,29 +517,63 @@ namespace Plotter
 
         public int Argb;
 
-        public Object Obj;
+        private SolidBrush GdiBrush;
 
-        public static DrawBrush New(int idx)
+        public SolidBrush GetGdiBrush()
+        {
+            if (GdiBrush == null)
+            {
+                GdiBrush = new SolidBrush(Color.FromArgb(Argb));
+            }
+
+            return GdiBrush;
+        }
+
+        public void Dispose()
+        {
+            if (GdiBrush != null && Idx == 0)
+            {
+                GdiBrush.Dispose();
+                GdiBrush = null;
+            }
+        }
+
+        public Color4 Color4()
+        {
+            return Color4Util.FromArgb(Argb);
+        }
+
+        public Color GdiColor()
+        {
+            return Color.FromArgb(Argb);
+        }
+
+        public static DrawBrush New(DrawContextGL dc, int idx)
         {
             DrawBrush dt = default;
-            dt.Type = ToolType.INDEX;
             dt.Idx = idx;
+
+            Color color = dc.Tools.BrushColor(idx);
+            dt.Argb = color.ToArgb();
+
             return dt;
         }
 
-        public static DrawPen New(GLBrush brush)
+        public static DrawBrush New(DrawContextGDI dc, int idx)
         {
-            DrawPen dt = default;
-            dt.Type = ToolType.OBJECT;
-            dt.Obj = brush;
+            DrawBrush dt = default;
+            dt.Idx = idx;
+
+            dt.GdiBrush = dc.Tools.brush(idx);
+            dt.Argb = dt.GdiBrush.Color.ToArgb();
+
             return dt;
         }
 
-        public static DrawPen New(Brush brush)
+        public static DrawBrush New(SolidBrush brush)
         {
-            DrawPen dt = default;
-            dt.Type = ToolType.OBJECT;
-            dt.Obj = brush;
+            DrawBrush dt = default;
+            dt.GdiBrush = brush;
             return dt;
         }
 
