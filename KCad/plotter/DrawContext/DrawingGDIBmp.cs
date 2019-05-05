@@ -173,7 +173,7 @@ namespace Plotter
 
             if (p0.x >= 0 && p0.y >= 0 && p0.x < DC.ViewWidth && p0.y < DC.ViewHeight)
             {
-                BmpDC.Image.SetPixel((int)p0.x, (int)p0.y, DC.PenColor(pen.Idx));
+                BmpDC.Image.SetPixel((int)p0.x, (int)p0.y, pen.GdiPen.Color);
             }
         }
     }

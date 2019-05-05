@@ -180,7 +180,8 @@ namespace Plotter
 
         public Pen Pen(int id)
         {
-            return Tools.pen(id);
+            DrawPen pen = DrawPen.New(this, id);
+            return pen.GdiPen;
         }
 
         public Color PenColor(int id)
@@ -195,7 +196,8 @@ namespace Plotter
 
         public Brush Brush(int id)
         {
-            return Tools.brush(id);
+            DrawBrush brush = DrawBrush.New(this, id);
+            return brush.GdiBrush;
         }
 
         public Color BrushColor(int id)

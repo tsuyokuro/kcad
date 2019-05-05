@@ -358,12 +358,12 @@ namespace Plotter
 
         public override void DrawLine(DrawPen pen, CadVector a, CadVector b)
         {
-            if (DC.Pen(pen.Idx) == null) return;
+            if (pen.GdiPen == null) return;
 
             CadVector pa = DC.WorldPointToDevPoint(a);
             CadVector pb = DC.WorldPointToDevPoint(b);
 
-            DC.GdiGraphics.DrawLine(DC.Pen(pen.Idx), (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
+            DC.GdiGraphics.DrawLine(pen.GdiPen, (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
         }
 
         public override void DrawDot(DrawPen pen, CadVector p)
@@ -373,7 +373,7 @@ namespace Plotter
             p0.x = (int)p0.x;
             p1.x = p0.x + 0.1;
 
-            DC.GdiGraphics.DrawLine(DC.Pen(pen.Idx), (float)p0.x, (float)p0.y, (float)p1.x, (float)p1.y);
+            DC.GdiGraphics.DrawLine(pen.GdiPen, (float)p0.x, (float)p0.y, (float)p1.x, (float)p1.y);
 
             //if (p0.x >= 0 && p0.y >= 0 && p0.x < DC.ViewWidth && p0.y < DC.ViewHeight)
             //{
@@ -419,7 +419,7 @@ namespace Plotter
 
         public override void DrawTextScrn(int font, DrawBrush brush, CadVector a, CadVector dir, DrawTextOption opt, string s)
         {
-            if (DC.Brush(brush.Idx) == null) return;
+            if (brush.GdiBrush == null) return;
             if (DC.Font(font) == null) return;
 
             if (opt.Option != 0)
@@ -455,7 +455,7 @@ namespace Plotter
             DC.GdiGraphics.RotateTransform((float)angle);
 
             Font f = DC.Font(font);
-            Brush b = DC.Brush(brush.Idx);
+            Brush b = brush.GdiBrush;
 
             DC.GdiGraphics.DrawString(s, f, b, 0, 0);
 
@@ -498,21 +498,21 @@ namespace Plotter
 
         protected void DrawLineScrn(DrawPen pen, CadVector a, CadVector b)
         {
-            if (DC.Pen(pen.Idx) == null) return;
+            if (pen.GdiPen == null) return;
 
-            DC.GdiGraphics.DrawLine(DC.Pen(pen.Idx), (int)a.x, (int)a.y, (int)b.x, (int)b.y);
+            DC.GdiGraphics.DrawLine(pen.GdiPen, (int)a.x, (int)a.y, (int)b.x, (int)b.y);
         }
 
         protected void DrawLineScrn(DrawPen pen, double x1, double y1, double x2, double y2)
         {
-            if (DC.Pen(pen.Idx) == null) return;
+            if (pen.GdiPen == null) return;
 
-            DC.GdiGraphics.DrawLine(DC.Pen(pen.Idx), (int)x1, (int)y1, (int)x2, (int)y2);
+            DC.GdiGraphics.DrawLine(pen.GdiPen, (int)x1, (int)y1, (int)x2, (int)y2);
         }
 
         protected void DrawRectangleScrn(DrawPen pen, double x0, double y0, double x1, double y1)
         {
-            if (DC.Pen(pen.Idx) == null) return;
+            if (pen.GdiPen == null) return;
 
             int lx = (int)x0;
             int rx = (int)x1;
@@ -535,28 +535,26 @@ namespace Plotter
             int dx = rx - lx;
             int dy = by - ty;
 
-            DC.GdiGraphics.DrawRectangle(DC.Pen(pen.Idx), lx, ty, dx, dy);
+            DC.GdiGraphics.DrawRectangle(pen.GdiPen, lx, ty, dx, dy);
         }
 
         protected void DrawCircleScrn(DrawPen pen, CadVector cp, CadVector p1)
         {
-            if (DC.Pen(pen.Idx) == null) return;
-
             double r = CadUtil.SegNorm(cp, p1);
             DrawCircleScrn(pen, cp, r);
         }
 
         protected void DrawCircleScrn(DrawPen pen, CadVector cp, double r)
         {
-            if (DC.Pen(pen.Idx) == null) return;
+            if (pen.GdiPen == null) return;
 
             DC.GdiGraphics.DrawEllipse(
-                DC.Pen(pen.Idx), (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
+                pen.GdiPen, (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
         }
 
         protected void FillRectangleScrn(DrawBrush brush, double x0, double y0, double x1, double y1)
         {
-            if (DC.Brush(brush.Idx) == null) return;
+            if (brush.GdiBrush == null) return;
 
             int lx = (int)x0;
             int rx = (int)x1;
@@ -579,7 +577,7 @@ namespace Plotter
             int dx = rx - lx;
             int dy = by - ty;
 
-            DC.GdiGraphics.FillRectangle(DC.Brush(brush.Idx), lx, ty, dx, dy);
+            DC.GdiGraphics.FillRectangle(brush.GdiBrush, lx, ty, dx, dy);
         }
 
         protected void DrawAxis2()

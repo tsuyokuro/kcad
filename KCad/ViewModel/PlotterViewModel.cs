@@ -1,4 +1,4 @@
-﻿#define USE_GDI_VIEW
+﻿//#define USE_GDI_VIEW
 using OpenTK;
 using System;
 using System.Collections.Generic;

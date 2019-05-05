@@ -59,7 +59,7 @@ namespace Plotter
 
         public override void Draw(DrawContext dc, DrawPen pen)
         {
-            if (pen.Idx == DrawTools.PEN_DEFAULT_FIGURE)
+            if (pen.ID == DrawTools.PEN_DEFAULT_FIGURE)
             {
                 pen = dc.GetPen(DrawTools.PEN_DIMENTION);
             }

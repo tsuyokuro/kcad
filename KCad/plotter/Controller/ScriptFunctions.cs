@@ -773,6 +773,8 @@ namespace Plotter.Controller
 
         public void CreateBitmap(int w, int h, uint argb, int lineW, string fname)
         {
+            // TODO tdcのスケーリングがおかしいので直す必要がある
+
             DrawContext dc = Controller.CurrentDC;
 
             CadObjectDB db = Controller.DB;
@@ -802,9 +804,9 @@ namespace Plotter.Controller
 
             tdc.SetupTools(DrawTools.ToolsType.DARK);
 
-            Pen pen = tdc.Pen(DrawTools.PEN_DEFAULT_FIGURE);
-            pen.Color = Color.FromArgb((int)argb);
-            pen.Width = lineW;
+            Pen pen = new Pen(Color.FromArgb((int)argb), lineW);
+
+            DrawPen drawPen = DrawPen.New(pen);
 
             double sw = r.p1.x - r.p0.x;
             double sh = r.p1.y - r.p0.y;
@@ -830,7 +832,7 @@ namespace Plotter.Controller
 
                 foreach (CadFigure fig in figList)
                 {
-                    fig.Draw(tdc, dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE));
+                    fig.Draw(tdc, drawPen);
                 }
 
                 if (fname.Length > 0)
@@ -843,6 +845,7 @@ namespace Plotter.Controller
                 }
 
                 tdc.Dispose();
+                drawPen.DisposeGdiPen();
             }));
         }
 
