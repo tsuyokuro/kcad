@@ -127,28 +127,38 @@ namespace Plotter
 
         public virtual void CopyMetrics(DrawContext dc)
         {
-            //PageSize = dc.PageSize.clone();
             mUnitPerMilli = dc.mUnitPerMilli;
-            mEye = dc.mEye;
-            mLookAt = dc.mLookAt;
-            mUpVector = dc.mUpVector;
             mProjectionNear = dc.mProjectionNear;
             mProjectionFar = dc.mProjectionFar;
             mFovY = dc.mFovY;
-            mViewDir = dc.mViewDir;
-
-            mViewMatrix = dc.mViewMatrix;
-            mViewMatrixInv = dc.mViewMatrixInv;
-
-            mProjectionMatrix = dc.mProjectionMatrix;
-            mProjectionMatrixInv = dc.mProjectionMatrixInv;
 
             WorldScale = dc.WorldScale;
-            DeviceScaleX = dc.DeviceScaleX;
-            DeviceScaleY = dc.DeviceScaleY;
-
-            mViewOrg = dc.mViewOrg;
         }
+
+        //public virtual void CopyMetrics(DrawContext dc)
+        //{
+        //    //PageSize = dc.PageSize.clone();
+        //    mUnitPerMilli = dc.mUnitPerMilli;
+        //    mEye = dc.mEye;
+        //    mLookAt = dc.mLookAt;
+        //    mUpVector = dc.mUpVector;
+        //    mProjectionNear = dc.mProjectionNear;
+        //    mProjectionFar = dc.mProjectionFar;
+        //    mFovY = dc.mFovY;
+        //    mViewDir = dc.mViewDir;
+
+        //    mViewMatrix = dc.mViewMatrix;
+        //    mViewMatrixInv = dc.mViewMatrixInv;
+
+        //    mProjectionMatrix = dc.mProjectionMatrix;
+        //    mProjectionMatrixInv = dc.mProjectionMatrixInv;
+
+        //    WorldScale = dc.WorldScale;
+        //    DeviceScaleX = dc.DeviceScaleX;
+        //    DeviceScaleY = dc.DeviceScaleY;
+
+        //    mViewOrg = dc.mViewOrg;
+        //}
 
         public virtual void SetupTools(DrawTools.ToolsType type)
         {
@@ -232,8 +242,18 @@ namespace Plotter
         public virtual void CopyCamera(DrawContext dc)
         {
             SetCamera(dc.mEye, dc.mLookAt, dc.mUpVector);
+        }
+
+        public virtual void CopyProjectionMatrix(DrawContext dc)
+        {
             mProjectionMatrix = dc.mProjectionMatrix;
             mProjectionMatrixInv = dc.mProjectionMatrixInv;
+        }
+
+        public virtual void CopyVewMatrix(DrawContext dc)
+        {
+            mViewMatrix = dc.mViewMatrix;
+            mViewMatrixInv = dc.mViewMatrixInv;
         }
 
         public virtual void SetCamera(Vector3d eye, Vector3d lookAt, Vector3d upVector)

@@ -177,6 +177,7 @@ namespace Plotter
 
             dc.CopyMetrics(this);
 
+            dc.CopyCamera(this);
             dc.SetViewSize(deviceSize.Width, deviceSize.Height);
 
             CadVector org = default;

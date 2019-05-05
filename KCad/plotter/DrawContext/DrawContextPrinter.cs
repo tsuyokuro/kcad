@@ -17,12 +17,14 @@ namespace Plotter
             if (currentDC.GetType() == typeof(DrawContextGLPers))
             {
                 CopyCamera(currentDC);
+                CopyProjectionMatrix(currentDC);
+
                 DeviceScaleX = currentDC.ViewWidth / 4;
                 DeviceScaleY = -(currentDC.ViewHeight / 4);
             }
             else
             {
-                SetCamera(currentDC.Eye, currentDC.LookAt, currentDC.UpVector);
+                CopyCamera(currentDC);
                 CalcProjectionMatrix();
             }
 
