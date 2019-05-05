@@ -60,7 +60,7 @@ namespace Plotter
         public virtual Vector3d ViewDir => mViewDir;
 
         // ワールド座標系から視点座標系への変換(ビュー変換)行列
-        public UMatrix4 mViewMatrix = new UMatrix4();
+        protected UMatrix4 mViewMatrix = new UMatrix4();
         public UMatrix4 ViewMatrix => mViewMatrix;
         public ref Matrix4d ViewMatrixRef => ref mViewMatrix.Matrix;
 
@@ -123,12 +123,6 @@ namespace Plotter
         public virtual void SetViewOrg(CadVector org)
         {
             mViewOrg = org;
-        }
-
-        public virtual void CopyFrom(DrawContext dc)
-        {
-            CopyMetrics(dc);
-            SetViewSize(dc.mViewWidth, dc.mViewHeight);
         }
 
         public virtual void CopyMetrics(DrawContext dc)

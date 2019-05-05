@@ -796,7 +796,10 @@ namespace Plotter.Controller
 
             DrawContextGDIBmp tdc = new DrawContextGDIBmp();
 
-            tdc.CopyMetrics(dc);
+            tdc.WorldScale = dc.WorldScale;
+
+            tdc.SetCamera(dc.Eye, dc.LookAt, dc.UpVector);
+            tdc.CalcProjectionMatrix();
 
             tdc.SetViewSize(w, h);
 
