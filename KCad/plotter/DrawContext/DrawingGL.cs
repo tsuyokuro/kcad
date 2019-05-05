@@ -76,10 +76,8 @@ namespace Plotter
             a *= DC.WorldScale;
             b *= DC.WorldScale;
 
-            Color4 color = pen.Color4();
-
             GL.Begin(PrimitiveType.LineStrip);
-            GL.Color4(color);
+            GL.Color4(pen.Color4());
 
             GL.Vertex3(a.vector);
             GL.Vertex3(b.vector);
@@ -442,13 +440,11 @@ namespace Plotter
             v3.X = v2.X;
             v3.Y = v0.Y;
 
-            GLPen glpen = DC.Pen(pen.Idx);
-
             Start2D();
 
             GL.Begin(PrimitiveType.LineStrip);
 
-            GL.Color4(glpen.Color);
+            GL.Color4(pen.Color4());
             GL.Vertex3(v0);
             GL.Vertex3(v1);
             GL.Vertex3(v2);
@@ -531,7 +527,7 @@ namespace Plotter
                 a -= (xv / 2);
             }
 
-            GL.Color4(DC.Brush(brush.Idx).Color);
+            GL.Color4(brush.Color4());
             
             mFontRenderer.Render(tex, a.vector, xv.vector, yv.vector);
         }
@@ -601,8 +597,7 @@ namespace Plotter
 
         public override void DrawDot(DrawPen pen, CadVector p)
         {
-            GLPen glpen = DC.Pen(pen.Idx);
-            GL.Color4(glpen.Color);
+            GL.Color4(pen.Color4());
 
             GL.Begin(PrimitiveType.Points);
 

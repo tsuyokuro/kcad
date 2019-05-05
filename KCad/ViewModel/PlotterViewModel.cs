@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿#define USE_GDI_VIEW
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -96,9 +97,15 @@ namespace Plotter
         {
             set
             {
+#if (USE_GDI_VIEW)
+                bool changed = ChangeViewModeGdi(value);
+#else
                 bool changed = ChangeViewMode(value);
-
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewMode)));
+#endif
+                if (changed)
+                {
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewMode)));
+                }
             }
 
             get => mViewMode;
@@ -113,7 +120,7 @@ namespace Plotter
             get => mSettingsVeiwModel;
         }
 
-        #region Tree view
+#region Tree view
         private void UpdateTreeView(bool remakeTree)
         {
             ThreadUtil.RunOnMainThread(() =>
@@ -187,7 +194,7 @@ namespace Plotter
             return idx;
         }
 
-        #endregion
+#endregion
 
 
         ListBox mLayerListView;
@@ -348,7 +355,7 @@ namespace Plotter
             }
         }
 
-        #region Maps
+#region Maps
         private void InitCommandMap()
         {
             CommandMap = new Dictionary<string, Action>{
@@ -455,11 +462,11 @@ namespace Plotter
             return true;
         }
 
-        #endregion
+#endregion
 
 
         // Actions
-        #region Actions
+#region Actions
         public void Undo()
         {
             mController.Undo();
@@ -707,10 +714,10 @@ namespace Plotter
             mMoveKeyHandler.MoveKeyUp();
         }
 
-        #endregion
+#endregion
 
         // Handle events from PlotterController
-        #region Event From PlotterController
+#region Event From PlotterController
 
         //public void DataChanged(PlotterController sender, bool redraw)
         //{
@@ -802,11 +809,11 @@ namespace Plotter
             }, true);
         }
 
-        #endregion
+#endregion
 
 
         // Layer list handling
-        #region LayerList
+#region LayerList
         public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             LayerHolder lh = (LayerHolder)sender;
@@ -828,11 +835,11 @@ namespace Plotter
                 }
             }
         }
-        #endregion
+#endregion
 
 
         // Keyboard handling
-        #region Keyboard handling
+#region Keyboard handling
         private string ModifyerKeysStr()
         {
             ModifierKeys modifierKeys = Keyboard.Modifiers;
@@ -878,9 +885,9 @@ namespace Plotter
             string ks = KeyString(e);
             return ExecShortcutKey(ks, false);
         }
-        #endregion
+#endregion
 
-        #region helper
+#region helper
         public void Redraw()
         {
             ThreadUtil.RunOnMainThread(() =>
@@ -888,9 +895,9 @@ namespace Plotter
                 mController.Redraw();
             }, true);
         }
-        #endregion
+#endregion
 
-        #region "print"
+#region "print"
         public void StartPrint()
         {
             PrintDocument pd =
@@ -924,7 +931,7 @@ namespace Plotter
 
             Controller.PrintPage(g, pageSize, deviceSize);
         }
-        #endregion
+#endregion
 
         public void PageSetting()
         {
@@ -1043,8 +1050,8 @@ namespace Plotter
 
             mViewMode = newMode;
 
-            DrawContext currentDC = PlotterView1.DrawContext;
-            DrawContext nextDC = PlotterView1.DrawContext;
+            DrawContext currentDC = mPlotterView == null? null : mPlotterView.DrawContext;
+            DrawContext nextDC = mPlotterView == null ? null : mPlotterView.DrawContext;
             IPlotterView view = mPlotterView;
 
             switch (mViewMode)
@@ -1057,13 +1064,6 @@ namespace Plotter
                         Vector3d.Zero, Vector3d.UnitY);
                     nextDC = view.DrawContext;
                     break;
-
-                    //view = PlotterView1;
-                    //view.DrawContext.SetCamera(
-                    //    Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
-                    //    Vector3d.Zero, Vector3d.UnitY);
-                    //nextDC = view.DrawContext;
-                    //break;
 
                 case ViewModes.BACK:
                     PlotterViewGL1.EnablePerse(false);
@@ -1122,15 +1122,15 @@ namespace Plotter
                     break;
             }
 
-            currentDC.Deactive();
-            nextDC.Active();
+            if (currentDC != null) currentDC.Deactive();
+            if (nextDC != null) nextDC.Active();
 
             SetView(view);
             Redraw();
             return true;
         }
 
-        private bool ChangeViewMode_old(ViewModes newMode)
+        private bool ChangeViewModeGdi(ViewModes newMode)
         {
             if (mViewMode == newMode)
             {
@@ -1139,8 +1139,8 @@ namespace Plotter
 
             mViewMode = newMode;
 
-            DrawContext currentDC = PlotterView1.DrawContext;
-            DrawContext nextDC = PlotterView1.DrawContext;
+            DrawContext currentDC = mPlotterView == null ? null : mPlotterView.DrawContext;
+            DrawContext nextDC = mPlotterView == null ? null : mPlotterView.DrawContext;
             IPlotterView view = mPlotterView;
 
             switch (mViewMode)
@@ -1199,29 +1199,20 @@ namespace Plotter
                     break;
 
                 case ViewModes.FREE:
+                    PlotterViewGL1.EnablePerse(true);
                     view = PlotterViewGL1;
-
-                    //PlotterViewGL1.Size = PlotterView1.Size;
-                    //if (PlotterViewGL1.DrawContext is DrawContextGLOrtho)
-                    //{
-                    //    PlotterViewGL1.DrawContext.UnitPerMilli = PlotterView1.DrawContext.UnitPerMilli;
-
-                    //    view.DrawContext.SetCamera(
-                    //        -Vector3d.UnitX * DrawContext.STD_EYE_DIST,
-                    //        Vector3d.Zero, Vector3d.UnitY);
-                    //}
-
                     nextDC = view.DrawContext;
                     break;
             }
 
-            currentDC.Deactive();
-            nextDC.Active();
+            if (currentDC != null) currentDC.Deactive();
+            if (nextDC != null) nextDC.Active();
 
             SetView(view);
             Redraw();
             return true;
         }
+
 
         public void SetupTextCommandView(AutoCompleteTextBox textBox)
         {

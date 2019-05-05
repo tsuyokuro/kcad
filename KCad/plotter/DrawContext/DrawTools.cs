@@ -425,13 +425,15 @@ namespace Plotter
 
         public float Width;
 
+        private bool GdiObjOwner;
         private Pen GdiPen;
 
         public Pen GetGdiPen()
         {
             if (GdiPen == null)
             {
-                GdiPen = new Pen(Color.FromArgb(Argb));
+                GdiPen = new Pen(Color.FromArgb(Argb), Width);
+                GdiObjOwner = true;
             }
 
             return GdiPen;
@@ -439,10 +441,11 @@ namespace Plotter
 
         public void Dispose()
         {
-            if (GdiPen != null && Idx == 0)
+            if (GdiPen != null && GdiObjOwner)
             {
                 GdiPen.Dispose();
                 GdiPen = null;
+                GdiObjOwner = false;
             }
         }
 
@@ -517,6 +520,7 @@ namespace Plotter
 
         public int Argb;
 
+        private bool GdiObjOwner;
         private SolidBrush GdiBrush;
 
         public SolidBrush GetGdiBrush()
@@ -524,6 +528,7 @@ namespace Plotter
             if (GdiBrush == null)
             {
                 GdiBrush = new SolidBrush(Color.FromArgb(Argb));
+                GdiObjOwner = true;
             }
 
             return GdiBrush;
@@ -531,10 +536,11 @@ namespace Plotter
 
         public void Dispose()
         {
-            if (GdiBrush != null && Idx == 0)
+            if (GdiBrush != null && GdiObjOwner)
             {
                 GdiBrush.Dispose();
                 GdiBrush = null;
+                GdiObjOwner = false;
             }
         }
 

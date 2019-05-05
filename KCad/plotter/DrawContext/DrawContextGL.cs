@@ -119,16 +119,6 @@ namespace Plotter
             }
         }
 
-        public GLPen Pen(int id)
-        {
-            return Tools.glpen(id);
-        }
-
-        public GLBrush Brush(int id)
-        {
-            return Tools.glbrush(id);
-        }
-
         public override void SetupTools(DrawTools.ToolsType type)
         {
             if (DrawTools.IsTypeForGL(type))
