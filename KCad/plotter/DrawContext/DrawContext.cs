@@ -223,18 +223,7 @@ namespace Plotter
             mViewDir = ret;
         }
 
-        public virtual void CalcProjectionMatrix()
-        {
-            // Projection volume -1.0 -> 1.0 なので 2.0
-            mProjectionMatrix = Matrix4d.CreateOrthographic(
-                                            //2.0, 2.0,
-                                            ViewWidth / mUnitPerMilli, ViewHeight / mUnitPerMilli,
-                                            mProjectionNear,
-                                            mProjectionFar
-                                            );
-
-            mProjectionMatrixInv = mProjectionMatrix.Invert();
-        }
+        public abstract void CalcProjectionMatrix();
 
         public virtual void CalcProjectionZW()
         {

@@ -140,6 +140,17 @@ namespace Plotter
             Tools.Dispose();
         }
 
+        public override void CalcProjectionMatrix()
+        {
+            mProjectionMatrix = Matrix4d.CreateOrthographic(
+                                            ViewWidth / mUnitPerMilli, ViewHeight / mUnitPerMilli,
+                                            mProjectionNear,
+                                            mProjectionFar
+                                            );
+
+            mProjectionMatrixInv = mProjectionMatrix.Invert();
+        }
+
         public Pen Pen(int id)
         {
             DrawPen pen = DrawPen.New(this, id);

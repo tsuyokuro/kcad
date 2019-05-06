@@ -3,8 +3,6 @@
  * 
  */
 
-//#define USE_LONG_TERM_LOCK_BITS // ある程度長い期間LockBitsし続ける
-
 using HalfEdgeNS;
 using System;
 using System.Collections.Generic;
@@ -36,10 +34,6 @@ namespace Plotter
 
         public override void Draw(List<CadFigure> list, DrawPen pen)
         {
-            #if USE_LONG_TERM_LOCK_BITS
-                DC.LockBits();
-            #endif
-
             foreach (CadFigure fig in list)
             {
                 fig.ForEachFig((Action<CadFigure>)(a =>
@@ -54,18 +48,10 @@ namespace Plotter
                     }
                 }));
             }
-
-            #if USE_LONG_TERM_LOCK_BITS
-                DC.UnlockBits();
-            #endif
         }
 
         public override void DrawSelected(List<CadFigure> list, DrawPen pen)
         {
-#if USE_LONG_TERM_LOCK_BITS
-                DC.LockBits();
-#endif
-
             foreach (CadFigure fig in list)
             {
                 fig.ForEachFig(a =>
@@ -73,10 +59,6 @@ namespace Plotter
                     a.DrawSelected(DC, pen);
                 });
             }
-
-#if USE_LONG_TERM_LOCK_BITS
-                DC.UnlockBits();
-#endif
         }
 
         #region "Draw base"

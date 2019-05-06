@@ -68,11 +68,6 @@ namespace Plotter
                                         0, mProjectionFar);
         }
 
-        public override void SetViewOrg(CadVector org)
-        {
-            mViewOrg = org;
-        }
-
         public override void CalcProjectionMatrix()
         {
             double aspect = mViewWidth / mViewHeight;

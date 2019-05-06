@@ -70,12 +70,6 @@ namespace Plotter
             SetupLight();
         }
 
-        public override void SetViewOrg(CadVector org)
-        {
-            mViewOrg = org;
-            CalcProjectionMatrix();
-        }
-
         public override void SetViewSize(double w, double h)
         {
             mViewWidth = w;
