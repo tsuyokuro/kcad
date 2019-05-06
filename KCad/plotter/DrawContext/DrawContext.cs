@@ -131,8 +131,6 @@ namespace Plotter
             mProjectionNear = dc.mProjectionNear;
             mProjectionFar = dc.mProjectionFar;
             mFovY = dc.mFovY;
-
-            //WorldScale = dc.WorldScale;
         }
 
         public virtual void SetupTools(DrawTools.ToolsType type)
@@ -159,22 +157,63 @@ namespace Plotter
             mPushDraw?.Invoke(this);
         }
 
-        public abstract CadVector WorldPointToDevPoint(CadVector pt);
-
-        public abstract CadVector DevPointToWorldPoint(CadVector pt);
-
-        public abstract CadVector WorldVectorToDevVector(CadVector pt);
-
-        public abstract CadVector DevVectorToWorldVector(CadVector pt);
-
-        public virtual double UnitToMilli(double d)
+        public virtual CadVector WorldPointToDevPoint(CadVector pt)
         {
-            return d / mUnitPerMilli;
+            CadVector p = WorldVectorToDevVector(pt);
+            p = p + mViewOrg;
+            return p;
         }
 
-        public virtual double MilliToUnit(double d)
+        public virtual CadVector DevPointToWorldPoint(CadVector pt)
         {
-            return d * mUnitPerMilli;
+            pt = pt - mViewOrg;
+            return DevVectorToWorldVector(pt);
+        }
+
+        public virtual CadVector WorldVectorToDevVector(CadVector pt)
+        {
+            pt *= WorldScale;
+
+            Vector4d wv = (Vector4d)pt;
+
+            wv.W = 1.0f;
+
+            Vector4d sv = wv * mViewMatrix;
+            Vector4d pv = sv * mProjectionMatrix;
+
+            Vector4d dv;
+
+            dv.X = pv.X / pv.W;
+            dv.Y = pv.Y / pv.W;
+            dv.Z = pv.Z / pv.W;
+            dv.W = pv.W;
+
+            dv.X = dv.X * DeviceScaleX;
+            dv.Y = dv.Y * DeviceScaleY;
+            dv.Z = 0;
+
+            return CadVector.Create(dv);
+        }
+
+        public virtual CadVector DevVectorToWorldVector(CadVector pt)
+        {
+            pt.x = pt.x / DeviceScaleX;
+            pt.y = pt.y / DeviceScaleY;
+
+            Vector4d wv;
+
+            wv.W = mProjectionW;
+            wv.Z = mProjectionZ;
+
+            wv.X = pt.x * wv.W;
+            wv.Y = pt.y * wv.W;
+
+            wv = wv * mProjectionMatrixInv;
+            wv = wv * mViewMatrixInv;
+
+            wv /= WorldScale;
+
+            return CadVector.Create(wv);
         }
 
         public virtual void CalcViewDir()
