@@ -38,29 +38,7 @@ namespace Plotter
             CalcProjectionZW();
         }
 
-        public override void SetViewSize(double w, double h)
-        {
-            mViewWidth = w;
-            mViewHeight = h;
-
-            if (w == 0 || h == 0)
-            {
-                return;
-            }
-
-            DeviceScaleX = w / 2.0;
-            DeviceScaleY = -h / 2.0;
-
-            CalcProjectionMatrix();
-            CalcProjectionZW();
-
-            DisposeGraphics();
-
-            mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
-            mGdiGraphics = Graphics.FromImage(mImage);
-        }
-
-        private void DisposeGraphics()
+        protected override void DisposeGraphics()
         {
             if (mGdiGraphics != null)
             {
@@ -73,6 +51,12 @@ namespace Plotter
                 mImage.Dispose();
                 mImage = null;
             }
+        }
+
+        protected override void CreateGraphics()
+        {
+            mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
+            mGdiGraphics = Graphics.FromImage(mImage);
         }
 
         public BitmapData GetLockedBits()

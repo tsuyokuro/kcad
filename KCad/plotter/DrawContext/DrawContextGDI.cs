@@ -97,7 +97,7 @@ namespace Plotter
             mViewWidth = w;
             mViewHeight = h;
 
-            if (w == 0 || h==0)
+            if (w == 0 || h == 0)
             {
                 return;
             }
@@ -109,7 +109,20 @@ namespace Plotter
             CalcProjectionZW();
 
             DisposeGraphics();
+            CreateGraphics();
+        }
 
+        protected virtual void DisposeGraphics()
+        {
+            if (Buffer != null)
+            {
+                Buffer.Dispose();
+                Buffer = null;
+            }
+        }
+
+        protected virtual void CreateGraphics()
+        {
             BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current;
 
             Buffer = currentContext.Allocate(ViewCtrl.CreateGraphics(),
@@ -119,15 +132,6 @@ namespace Plotter
 
             mGdiGraphics.SmoothingMode = mSmoothingMode;
             mGdiGraphics.PixelOffsetMode = mPixelOffsetMode;
-        }
-
-        private void DisposeGraphics()
-        {
-            if (Buffer != null)
-            {
-                Buffer.Dispose();
-                Buffer = null;
-            }
         }
 
         public override void Dispose()

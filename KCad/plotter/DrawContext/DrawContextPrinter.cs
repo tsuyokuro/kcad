@@ -39,21 +39,14 @@ namespace Plotter
             mDrawing = new DrawingGDI(this);
         }
 
-        public override void SetViewSize(double w, double h)
+        protected override void DisposeGraphics()
         {
-            mViewWidth = w;
-            mViewHeight = h;
+            // NOP
+        }
 
-            if (w == 0 || h == 0)
-            {
-                return;
-            }
-
-            DeviceScaleX = w / 2.0;
-            DeviceScaleY = -h / 2.0;
-
-            CalcProjectionMatrix();
-            CalcProjectionZW();
+        protected override void CreateGraphics()
+        {
+            // NOP
         }
     }
 }
