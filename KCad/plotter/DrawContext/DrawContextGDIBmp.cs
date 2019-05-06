@@ -48,13 +48,16 @@ namespace Plotter
                 return;
             }
 
+            DeviceScaleX = w / 2.0;
+            DeviceScaleY = -h / 2.0;
+
+            CalcProjectionMatrix();
+            CalcProjectionZW();
+
             DisposeGraphics();
 
             mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
             mGdiGraphics = Graphics.FromImage(mImage);
-
-            CalcProjectionMatrix();
-            CalcProjectionZW();
         }
 
         private void DisposeGraphics()

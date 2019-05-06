@@ -74,16 +74,13 @@ namespace Plotter
         {
             CadVector p = WorldVectorToDevVector(pt);
             p = p + mViewOrg;
-
             return p;
         }
 
         public override CadVector DevPointToWorldPoint(CadVector pt)
         {
             pt = pt - mViewOrg;
-            CadVector p = DevVectorToWorldVector(pt);
-
-            return p;
+            return DevVectorToWorldVector(pt);
         }
 
         public override CadVector WorldVectorToDevVector(CadVector pt)
@@ -104,8 +101,8 @@ namespace Plotter
             dv.Z = pv.Z / pv.W;
             dv.W = pv.W;
 
-            dv.X = dv.X * (DeviceScaleX);
-            dv.Y = dv.Y * (DeviceScaleY);
+            dv.X = dv.X * DeviceScaleX;
+            dv.Y = dv.Y * DeviceScaleY;
             dv.Z = 0;
 
             return CadVector.Create(dv);
@@ -113,8 +110,8 @@ namespace Plotter
 
         public override CadVector DevVectorToWorldVector(CadVector pt)
         {
-            pt.x = pt.x / (DeviceScaleX);
-            pt.y = pt.y / (DeviceScaleY);
+            pt.x = pt.x / DeviceScaleX;
+            pt.y = pt.y / DeviceScaleY;
 
             Vector4d wv;
 
@@ -175,7 +172,8 @@ namespace Plotter
         {
             DrawContextGLOrtho dc = new DrawContextGLOrtho();
 
-            dc.CopyMetrics(this);
+            dc.CopyProjectionMetrics(this);
+            dc.WorldScale = WorldScale;
 
             dc.CopyCamera(this);
             dc.SetViewSize(deviceSize.Width, deviceSize.Height);

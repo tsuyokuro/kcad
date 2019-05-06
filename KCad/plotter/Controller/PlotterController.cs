@@ -1,4 +1,6 @@
 ﻿//#define COPY_AS_JSON
+//#define PRINT_WITH_GL_ONLY
+//#define PRINT_WITH_GDI_ONLY
 
 using System.Collections.Generic;
 using CadDataTypes;
@@ -423,7 +425,18 @@ namespace Plotter.Controller
         public void PrintPage(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
         {
             DOut.pl($"Dev Width:{deviceSize.Width} Height:{deviceSize.Height}");
+#if PRINT_WITH_GL_ONLY
+            PrintPageGL(printerGraphics, pageSize, deviceSize);
+#elif PRINT_WITH_GDI_ONLY
+            PrintPageGDI(printerGraphics, pageSize, deviceSize);
+#else
+            PrintPageSwitch(printerGraphics, pageSize, deviceSize);
+#endif
+        }
 
+
+        public void PrintPageSwitch(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        {
             if (!(CurrentDC.GetType() == typeof(DrawContextGLPers)))
             {
                 DrawContextPrinter dc = new DrawContextPrinter(CurrentDC, printerGraphics, pageSize, deviceSize);
@@ -432,6 +445,22 @@ namespace Plotter.Controller
             else
             {
                 Bitmap bmp = GetPrintableBmp(pageSize, deviceSize);
+                printerGraphics.DrawImage(bmp, 0, 0);
+            }
+        }
+
+        public void PrintPageGDI(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            DrawContextPrinter dc = new DrawContextPrinter(CurrentDC, printerGraphics, pageSize, deviceSize);
+            DrawAllFigure(dc);
+        }
+
+        public void PrintPageGL(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            Bitmap bmp = GetPrintableBmp(pageSize, deviceSize);
+
+            if (bmp != null)
+            {
                 printerGraphics.DrawImage(bmp, 0, 0);
             }
         }
@@ -469,9 +498,9 @@ namespace Plotter.Controller
         }
 
 
-        #endregion
+#endregion
 
-        #region Private editing figure methods
+#region Private editing figure methods
 
         private void NextState()
         {
@@ -635,7 +664,7 @@ namespace Plotter.Controller
         }
 
 
-        #endregion
+#endregion
 
         public bool HasSelect()
         {

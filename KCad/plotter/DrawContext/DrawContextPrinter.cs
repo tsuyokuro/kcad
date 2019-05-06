@@ -10,12 +10,10 @@ namespace Plotter
             GdiGraphics = g;
             SetupTools(DrawTools.ToolsType.PRINTER);
 
-            WorldScale = currentDC.WorldScale;
-
-            mUnitPerMilli = deviceSize.Width / pageSize.Width;
-
             if (currentDC.GetType() == typeof(DrawContextGLPers))
             {
+                WorldScale = currentDC.WorldScale;
+                mUnitPerMilli = deviceSize.Width / pageSize.Width;
                 CopyCamera(currentDC);
                 CopyProjectionMatrix(currentDC);
 
@@ -24,8 +22,11 @@ namespace Plotter
             }
             else
             {
+                WorldScale = currentDC.WorldScale;
+                mUnitPerMilli = deviceSize.Width / pageSize.Width;
+                CopyProjectionMetrics(currentDC);
                 CopyCamera(currentDC);
-                CalcProjectionMatrix();
+                SetViewSize(deviceSize.Width, deviceSize.Height);
             }
 
             CadVector org = default;
@@ -36,6 +37,23 @@ namespace Plotter
             SetViewOrg(org);
 
             mDrawing = new DrawingGDI(this);
+        }
+
+        public override void SetViewSize(double w, double h)
+        {
+            mViewWidth = w;
+            mViewHeight = h;
+
+            if (w == 0 || h == 0)
+            {
+                return;
+            }
+
+            DeviceScaleX = w / 2.0;
+            DeviceScaleY = -h / 2.0;
+
+            CalcProjectionMatrix();
+            CalcProjectionZW();
         }
     }
 }

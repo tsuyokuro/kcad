@@ -234,8 +234,8 @@ namespace Plotter
             pt.z = 0;
 
             CadVector p0 = default(CadVector);
-            p0.x = pt.x * DC.UnitPerMilli * DC.DeviceScaleX;
-            p0.y = pt.y * DC.UnitPerMilli * DC.DeviceScaleY;
+            p0.x = pt.x * DC.UnitPerMilli;
+            p0.y = pt.y * DC.UnitPerMilli;
 
             p0 += DC.ViewOrg;
 
@@ -245,8 +245,8 @@ namespace Plotter
             pt.z = 0;
 
             CadVector p1 = default(CadVector);
-            p1.x = pt.x * DC.UnitPerMilli * DC.DeviceScaleX;
-            p1.y = pt.y * DC.UnitPerMilli * DC.DeviceScaleY;
+            p1.x = pt.x * DC.UnitPerMilli;
+            p1.y = pt.y * DC.UnitPerMilli;
 
             p1 += DC.ViewOrg;
 

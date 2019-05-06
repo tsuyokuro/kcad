@@ -149,7 +149,8 @@ namespace Plotter
         {
             DrawContextGL dc = new DrawContextGLPers();
 
-            dc.CopyMetrics(this);
+            dc.CopyProjectionMetrics(this);
+            dc.WorldScale = WorldScale;
 
             dc.CopyCamera(this);
             dc.SetViewSize(deviceSize.Width, deviceSize.Height);

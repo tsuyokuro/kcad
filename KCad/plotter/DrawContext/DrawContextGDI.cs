@@ -19,6 +19,17 @@ namespace Plotter
             get => mGdiGraphics;
         }
 
+        public override double UnitPerMilli
+        {
+            set
+            {
+                mUnitPerMilli = value;
+                CalcProjectionMatrix();
+            }
+
+            get => mUnitPerMilli;
+        }
+
         private SmoothingMode mSmoothingMode = SmoothingMode.HighSpeed;
 
         public SmoothingMode SmoothingMode
@@ -91,6 +102,12 @@ namespace Plotter
                 return;
             }
 
+            DeviceScaleX = w / 2.0;
+            DeviceScaleY = -h / 2.0;
+
+            CalcProjectionMatrix();
+            CalcProjectionZW();
+
             DisposeGraphics();
 
             BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current;
@@ -144,8 +161,8 @@ namespace Plotter
             dv.Z = pv.Z / pv.W;
             dv.W = pv.W;
 
-            dv.X = dv.X * (mUnitPerMilli * DeviceScaleX);
-            dv.Y = dv.Y * (mUnitPerMilli * DeviceScaleY);
+            dv.X = dv.X * DeviceScaleX;
+            dv.Y = dv.Y * DeviceScaleY;
             dv.Z = 0;
 
             return CadVector.Create(dv);
@@ -153,8 +170,8 @@ namespace Plotter
 
         public override CadVector DevVectorToWorldVector(CadVector pt)
         {
-            pt.x = pt.x / (mUnitPerMilli * DeviceScaleX);
-            pt.y = pt.y / (mUnitPerMilli * DeviceScaleY);
+            pt.x = pt.x / DeviceScaleX;
+            pt.y = pt.y / DeviceScaleY;
 
             Vector4d wv;
 

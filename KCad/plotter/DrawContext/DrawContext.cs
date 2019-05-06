@@ -125,40 +125,15 @@ namespace Plotter
             mViewOrg = org;
         }
 
-        public virtual void CopyMetrics(DrawContext dc)
+        public virtual void CopyProjectionMetrics(DrawContext dc)
         {
             mUnitPerMilli = dc.mUnitPerMilli;
             mProjectionNear = dc.mProjectionNear;
             mProjectionFar = dc.mProjectionFar;
             mFovY = dc.mFovY;
 
-            WorldScale = dc.WorldScale;
+            //WorldScale = dc.WorldScale;
         }
-
-        //public virtual void CopyMetrics(DrawContext dc)
-        //{
-        //    //PageSize = dc.PageSize.clone();
-        //    mUnitPerMilli = dc.mUnitPerMilli;
-        //    mEye = dc.mEye;
-        //    mLookAt = dc.mLookAt;
-        //    mUpVector = dc.mUpVector;
-        //    mProjectionNear = dc.mProjectionNear;
-        //    mProjectionFar = dc.mProjectionFar;
-        //    mFovY = dc.mFovY;
-        //    mViewDir = dc.mViewDir;
-
-        //    mViewMatrix = dc.mViewMatrix;
-        //    mViewMatrixInv = dc.mViewMatrixInv;
-
-        //    mProjectionMatrix = dc.mProjectionMatrix;
-        //    mProjectionMatrixInv = dc.mProjectionMatrixInv;
-
-        //    WorldScale = dc.WorldScale;
-        //    DeviceScaleX = dc.DeviceScaleX;
-        //    DeviceScaleY = dc.DeviceScaleY;
-
-        //    mViewOrg = dc.mViewOrg;
-        //}
 
         public virtual void SetupTools(DrawTools.ToolsType type)
         {
@@ -213,7 +188,8 @@ namespace Plotter
         {
             // Projection volume -1.0 -> 1.0 なので 2.0
             mProjectionMatrix = Matrix4d.CreateOrthographic(
-                                            2.0, 2.0,
+                                            //2.0, 2.0,
+                                            ViewWidth / mUnitPerMilli, ViewHeight / mUnitPerMilli,
                                             mProjectionNear,
                                             mProjectionFar
                                             );
