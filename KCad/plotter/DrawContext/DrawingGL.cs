@@ -542,6 +542,8 @@ namespace Plotter
             p0 = DC.DevPointToWorldPoint(p0);
             p1 = DC.DevPointToWorldPoint(p1);
 
+            GL.Disable(EnableCap.DepthTest);
+
             DrawLine(pen, p0, p1);
 
             p0 = pp.Pos - (pp.DirY * size);
@@ -551,6 +553,8 @@ namespace Plotter
             p1 = DC.DevPointToWorldPoint(p1);
 
             DrawLine(pen, p0, p1);
+
+            GL.Enable(EnableCap.DepthTest);
         }
 
         public override void DrawMarkCursor(DrawPen pen, CadVector p, double pix_size)
