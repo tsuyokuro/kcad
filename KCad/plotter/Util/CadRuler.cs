@@ -71,7 +71,13 @@ namespace Plotter
             CadVector p = CadVector.InvalidValue;
             double mind = Double.MaxValue;
 
-            Span<CadVector> vtbl = stackalloc CadVector[] { cx, cy };
+            CadVectorArray4 vtbl = default;
+
+            vtbl[0] = cx;
+            vtbl[1] = cy;
+            vtbl.Length = 2;
+
+            //Span<CadVector> vtbl = stackalloc CadVector[] { cx, cy };
 
             for (int i = 0; i < vtbl.Length; i++)
             {

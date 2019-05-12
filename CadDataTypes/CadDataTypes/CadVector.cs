@@ -13,6 +13,8 @@ namespace CadDataTypes
 
         public byte Flag;
 
+        public ICadVertexAttr Attr;
+
         public double x
         {
             set
@@ -125,6 +127,7 @@ namespace CadDataTypes
             vector.Z = z;
 
             this.Flag = 0;
+            Attr = null;
         }
 
         public static CadVector Create(double v)
@@ -189,10 +192,11 @@ namespace CadDataTypes
             return p;
         }
 
-        public CadVector(double x, double y, double z, byte flag)
+        public CadVector(double x, double y, double z, byte flag, ICadVertexAttr attr)
         {
             vector = new Vector3d(x, y, z);
             Flag = flag;
+            Attr = attr;
         }
 
         public bool IsZero()

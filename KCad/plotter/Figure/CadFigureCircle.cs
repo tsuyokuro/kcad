@@ -200,12 +200,13 @@ namespace Plotter
                 return;
             }
 
-            Span<CadVector> vt = stackalloc CadVector[4];
+            CadVectorArray4 vt = default;
 
             vt[0] = StoreList[1] - cp;
             vt[1] = StoreList[2] - cp;
             vt[2] = StoreList[3] - cp;
             vt[3] = StoreList[4] - cp;
+            vt.Length = 4;
 
             if (vt[0].Norm() < 0.01)
             {
@@ -265,13 +266,18 @@ namespace Plotter
             vt[ci] = -vt[ai];
             vt[di] = -vt[bi];
 
-            vt[0].Selected = false;
-            vt[1].Selected = false;
-            vt[2].Selected = false;
-            vt[3].Selected = false;
+            CadVector tmp;
 
-            vt[ai].Selected = true;
+            for (int i=0; i<vt.Length; i++)
+            {
+                tmp = vt[i];
+                tmp.Selected = false;
+                vt[i] = tmp;
+            }
 
+            tmp = vt[ai];
+            tmp.Selected = true;
+            vt[ai] = tmp;
 
             mPointList[1] = vt[0] + cp;
             mPointList[2] = vt[1] + cp;
