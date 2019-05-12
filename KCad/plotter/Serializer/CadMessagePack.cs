@@ -181,8 +181,8 @@ namespace Plotter.Serializer
                 {
                     MpFigure fig = idMap[id];
 
-                    fig.ForEachFig((f) => {
-                        activeSet.Add(f.ID);
+                    fig.ForEachFigID(idMap,(a) => {
+                        activeSet.Add(a);
                     });
                 }
             }
@@ -367,6 +367,24 @@ namespace Plotter.Serializer
             {
                 MpFigure c = ChildList[i];
                 c.ForEachFig(d);
+            }
+        }
+
+        public virtual void ForEachFigID(Dictionary<uint, MpFigure> allMap, Action<uint> d)
+        {
+            d(ID);
+
+            if (ChildIdList == null)
+            {
+                return;
+            }
+
+            int i;
+            for (i = 0; i < ChildIdList.Count; i++)
+            {
+                uint id = ChildIdList[i];
+                MpFigure childFig = allMap[id];
+                childFig.ForEachFigID(allMap, d);
             }
         }
 
