@@ -12,7 +12,7 @@ using System.Linq;
 namespace Plotter.Serializer
 {
     [MessagePackObject]
-    public struct MpVector
+    public struct MpVertex
     {
         [Key(0)]
         public byte Flag;
@@ -26,9 +26,9 @@ namespace Plotter.Serializer
         [Key(3)]
         public double z;
 
-        public static MpVector Create(CadVector v)
+        public static MpVertex Create(CadVertex v)
         {
-            MpVector ret = new MpVector();
+            MpVertex ret = new MpVertex();
             ret.Flag = v.Flag;
             ret.x = v.x;
             ret.y = v.y;
@@ -36,9 +36,9 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        public CadVector Restore()
+        public CadVertex Restore()
         {
-            CadVector v = CadVector.Create(x, y, z);
+            CadVertex v = CadVertex.Create(x, y, z);
             v.Flag = Flag;
 
             return v;
@@ -322,7 +322,7 @@ namespace Plotter.Serializer
         public bool IsLoop;
 
         [Key("Normal")]
-        public MpVector Normal;
+        public MpVertex Normal;
 
         [Key("ChildList")]
         public List<MpFigure> ChildList;
@@ -394,7 +394,7 @@ namespace Plotter.Serializer
             Type = (byte)fig.Type;
             Locked = fig.Locked;
             IsLoop = fig.IsLoop;
-            Normal = MpVector.Create(fig.Normal);
+            Normal = MpVertex.Create(fig.Normal);
 
             GeoData = fig.GeometricDataToMp();
         }
@@ -458,7 +458,7 @@ namespace Plotter.Serializer
     public class MpSimpleGeometricData : MpGeometricData
     {
         [Key("PointList")]
-        public List<MpVector> PointList;
+        public List<MpVertex> PointList;
     }
 
 
@@ -489,10 +489,10 @@ namespace Plotter.Serializer
     public class MpHeModel
     {
         [Key("VertexStore")]
-        public List<MpVector> VertexStore;
+        public List<MpVertex> VertexStore;
 
         [Key("NormalStore")]
-        public List<MpVector> NormalStore;
+        public List<MpVertex> NormalStore;
 
         [Key("FaceStore")]
         public List<MpHeFace> FaceStore;
@@ -676,7 +676,7 @@ namespace Plotter.Serializer
         public double[] Weights;
 
         [Key("CtrlPoints")]
-        public List<MpVector> CtrlPoints;
+        public List<MpVertex> CtrlPoints;
 
         [Key("CtrlOrder")]
         public int[] CtrlOrder;
@@ -734,7 +734,7 @@ namespace Plotter.Serializer
         public double[] Weights;
 
         [Key("CtrlPoints")]
-        public List<MpVector> CtrlPoints;
+        public List<MpVertex> CtrlPoints;
 
         [Key("CtrlOrder")]
         public int[] CtrlOrder;
@@ -854,12 +854,12 @@ namespace Plotter.Serializer
 
     public class MpUtil
     {
-        public static List<MpVector> VectortListToMp(VectorList v)
+        public static List<MpVertex> VectortListToMp(VertexList v)
         {
-            List<MpVector> ret = new List<MpVector>();
+            List<MpVertex> ret = new List<MpVertex>();
             for (int i=0; i<v.Count; i++)
             {
-                ret.Add(MpVector.Create(v[i]));
+                ret.Add(MpVertex.Create(v[i]));
             }
 
             return ret;
@@ -876,9 +876,9 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        public static VectorList VectortListFromMp(List<MpVector> list)
+        public static VertexList VectortListFromMp(List<MpVertex> list)
         {
-            VectorList ret = new VectorList(list.Count);
+            VertexList ret = new VertexList(list.Count);
             for (int i = 0; i < list.Count; i++)
             {
                 ret.Add(list[i].Restore());

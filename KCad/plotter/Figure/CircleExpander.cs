@@ -10,11 +10,11 @@ namespace Plotter
     // 円を点リストに展開
     public static class CircleExpander
     {
-        public static VectorList GetExpandList(
-            CadVector cp, CadVector pa, CadVector pb,
+        public static VertexList GetExpandList(
+            CadVertex cp, CadVertex pa, CadVertex pb,
             int splitCnt)
         {
-            VectorList ret = new VectorList(splitCnt + 1);
+            VertexList ret = new VertexList(splitCnt + 1);
 
             ForEachPoints(cp , pa, pb, splitCnt, (v)=> { ret.Add(v); });
 
@@ -22,12 +22,12 @@ namespace Plotter
         }
 
         public static void ForEachSegs(
-            CadVector cp, CadVector pa, CadVector pb,
+            CadVertex cp, CadVertex pa, CadVertex pb,
             int splitCnt,
-            Action<CadVector, CadVector> action)
+            Action<CadVertex, CadVertex> action)
         {
-            CadVector va = pa - cp;
-            CadVector vb = pb - cp;
+            CadVertex va = pa - cp;
+            CadVertex vb = pb - cp;
 
             if (va.Norm() < 0.01)
             {
@@ -39,14 +39,14 @@ namespace Plotter
 
             int div = splitCnt;
 
-            CadVector normal = CadMath.Normal(va, vb);
+            CadVertex normal = CadMath.Normal(va, vb);
 
             CadQuaternion q = CadQuaternion.RotateQuaternion(normal, dt);
             CadQuaternion r = q.Conjugate();
 
-            CadVector p = va;
-            CadVector tp1 = pa;
-            CadVector tp2 = pa;
+            CadVertex p = va;
+            CadVertex tp1 = pa;
+            CadVertex tp2 = pa;
 
 
             int i = 0;
@@ -69,12 +69,12 @@ namespace Plotter
 
 
         public static void ForEachPoints(
-            CadVector cp, CadVector pa, CadVector pb,
+            CadVertex cp, CadVertex pa, CadVertex pb,
             int splitCnt,
-            Action<CadVector> action)
+            Action<CadVertex> action)
         {
-            CadVector va = pa - cp;
-            CadVector vb = pb - cp;
+            CadVertex va = pa - cp;
+            CadVertex vb = pb - cp;
 
             if (va.Norm() < 0.01)
             {
@@ -85,13 +85,13 @@ namespace Plotter
 
             int div = splitCnt;
 
-            CadVector normal = CadMath.Normal(va, vb);
+            CadVertex normal = CadMath.Normal(va, vb);
 
             CadQuaternion q = CadQuaternion.RotateQuaternion(normal, dt);
             CadQuaternion r = q.Conjugate();
 
-            CadVector p = va;
-            CadVector tp = pa;
+            CadVertex p = va;
+            CadVertex tp = pa;
 
 
             int i = 0;

@@ -280,7 +280,7 @@ namespace Plotter.Controller
             foreach (uint id in ids)
             {
                 CadFigure fig = mDB.GetFigure(id);
-                CadVector old = fig.Normal;
+                CadVertex old = fig.Normal;
 
                 fig.Normal *= -1;
 

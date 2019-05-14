@@ -24,37 +24,37 @@ namespace Plotter
         {
         }
 
-        public override void DrawTemp(DrawContext dc, CadVector tp, DrawPen pen)
+        public override void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
         {
         }
 
-        public override void AddPointInCreating(DrawContext dc, CadVector p)
+        public override void AddPointInCreating(DrawContext dc, CadVertex p)
         {
         }
 
 
         #region Point Move
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVector delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
         {
             //base.MoveSelectedPoints(dc, delta);
 
             if (Locked) return;
 
-            CadVector d;
+            CadVertex d;
 
 
             if (!IsSelectedAll() && mPointList.Count > 2 && RestrictionByNormal)
             {
-                CadVector vdir = (CadVector)dc.ViewDir;
+                CadVertex vdir = (CadVertex)dc.ViewDir;
 
-                CadVector a = delta;
-                CadVector b = delta + vdir;
+                CadVertex a = delta;
+                CadVertex b = delta + vdir;
 
                 d = CadUtil.CrossPlane(a, b, StoreList[0], Normal);
 
                 if (!d.Valid)
                 {
-                    CadVector nvNormal = CadMath.Normal(Normal, vdir);
+                    CadVertex nvNormal = CadMath.Normal(Normal, vdir);
 
                     double ip = CadMath.InnerProduct(nvNormal, delta);
 
@@ -74,7 +74,7 @@ namespace Plotter
             });
         }
 
-        public override void MoveAllPoints(CadVector delta)
+        public override void MoveAllPoints(CadVertex delta)
         {
             if (Locked) return;
 
@@ -101,7 +101,7 @@ namespace Plotter
             }
         }
 
-        public override void AddPoint(CadVector p)
+        public override void AddPoint(CadVertex p)
         {
             mPointList.Add(p);
         }
@@ -123,8 +123,8 @@ namespace Plotter
 
         public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
         {
-            CadVector a = PointList[idxA];
-            CadVector b = PointList[idxB];
+            CadVertex a = PointList[idxA];
+            CadVertex b = PointList[idxB];
 
             dc.Drawing.DrawLine(pen, a, b);
         }
@@ -137,7 +137,7 @@ namespace Plotter
 
         protected void DrawLines(DrawContext dc, DrawPen pen)
         {
-            VectorList pl = mPointList;
+            VertexList pl = mPointList;
             int start = 0;
             int cnt = mPointList.Count;
 
@@ -151,7 +151,7 @@ namespace Plotter
                 Normal = CadUtil.RepresentativeNormal(PointList);
             }
 
-            CadVector a;
+            CadVertex a;
 
             a = pl[start];
 
@@ -167,7 +167,7 @@ namespace Plotter
             }
 
             PolyLineExpander.ForEachPoints(mPointList, start + 1, cnt - 1, 8, action);
-            void action(CadVector v)
+            void action(CadVertex v)
             {
                 dc.Drawing.DrawLine(pen, a, v);
                 a = v;
@@ -179,12 +179,12 @@ namespace Plotter
             }
         }
 
-        public override VectorList GetPoints(int curveSplitNum)
+        public override VertexList GetPoints(int curveSplitNum)
         {
             return GetPointsPart(0, mPointList.Count, curveSplitNum);
         }
 
-        private VectorList GetPointsPart(int start, int cnt, int curveSplitNum)
+        private VertexList GetPointsPart(int start, int cnt, int curveSplitNum)
         {
             return PolyLineExpander.GetExpandList(mPointList, start, cnt, curveSplitNum);
         }
@@ -196,7 +196,7 @@ namespace Plotter
 
             for (i = 0; i < num; i++)
             {
-                CadVector p = PointList[i];
+                CadVertex p = PointList[i];
 
                 if (!p.Selected) continue;
 
@@ -209,7 +209,7 @@ namespace Plotter
 
                     if (idx < PointCount)
                     {
-                        CadVector np = GetPointAt(idx);
+                        CadVertex np = GetPointAt(idx);
                         if (!np.IsHandle)
                         {
                             dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
@@ -221,7 +221,7 @@ namespace Plotter
 
                     if (idx >= 0)
                     {
-                        CadVector np = GetPointAt(idx);
+                        CadVertex np = GetPointAt(idx);
                         if (!np.IsHandle)
                         {
                             dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
@@ -235,7 +235,7 @@ namespace Plotter
 
                     if (idx < PointCount)
                     {
-                        CadVector np = GetPointAt(idx);
+                        CadVertex np = GetPointAt(idx);
                         if (np.IsHandle)
                         {
                             dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
@@ -247,7 +247,7 @@ namespace Plotter
 
                     if (idx >= 0)
                     {
-                        CadVector np = GetPointAt(idx);
+                        CadVertex np = GetPointAt(idx);
                         if (np.IsHandle)
                         {
                             dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
@@ -258,7 +258,7 @@ namespace Plotter
             }
         }
 
-        public override void SetPointAt(int index, CadVector pt)
+        public override void SetPointAt(int index, CadVertex pt)
         {
             mPointList[index] = pt;
         }
@@ -298,9 +298,9 @@ namespace Plotter
                 return;
             }
 
-            CadVector prevNormal = Normal;
+            CadVertex prevNormal = Normal;
 
-            CadVector normal = CadUtil.RepresentativeNormal(PointList);
+            CadVertex normal = CadUtil.RepresentativeNormal(PointList);
 
             if (CadMath.InnerProduct(prevNormal, normal) < 0)
             {
@@ -335,7 +335,7 @@ namespace Plotter
         {
             Centroid ret = default(Centroid);
 
-            CadVector d = PointList[1] - PointList[0];
+            CadVertex d = PointList[1] - PointList[0];
 
             d /= 2.0;
 

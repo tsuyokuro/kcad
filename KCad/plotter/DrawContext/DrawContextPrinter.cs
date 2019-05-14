@@ -29,7 +29,7 @@ namespace Plotter
                 SetViewSize(deviceSize.Width, deviceSize.Height);
             }
 
-            CadVector org = default;
+            CadVertex org = default;
 
             org.x = deviceSize.Width / 2.0;
             org.y = deviceSize.Height / 2.0;

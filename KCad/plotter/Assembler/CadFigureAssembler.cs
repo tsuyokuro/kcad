@@ -124,7 +124,7 @@ namespace Plotter
 
     class CadSegmentCutter
     {
-        public static EditResult CutSegment(CadObjectDB db, MarkSegment seg, CadVector p)
+        public static EditResult CutSegment(CadObjectDB db, MarkSegment seg, CadVertex p)
         {
             EditResult result = new EditResult();
 

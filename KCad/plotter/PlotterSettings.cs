@@ -160,7 +160,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToLastDownPoint;
         }
 
-        public CadVector GridSize
+        public CadVertex GridSize
         {
             set
             {
@@ -251,7 +251,7 @@ namespace Plotter
 
         public bool SnapToGrid = false;
 
-        public CadVector GridSize;
+        public CadVertex GridSize;
 
         public double PointSnapRange = 6;
 
@@ -274,7 +274,7 @@ namespace Plotter
 
         public PlotterSettings()
         {
-            GridSize = CadVector.Create(10, 10, 10);
+            GridSize = CadVertex.Create(10, 10, 10);
         }
 
         private String FileName()

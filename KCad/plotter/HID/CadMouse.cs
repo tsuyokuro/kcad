@@ -23,9 +23,9 @@ namespace Plotter
         public WheelHandler Wheel;
         public MoveHandler PointerMoved;
 
-        public CadVector LDownPoint = default(CadVector);
-        public CadVector RDownPoint = default(CadVector);
-        public CadVector MDownPoint = default(CadVector);
+        public CadVertex LDownPoint = default(CadVertex);
+        public CadVertex RDownPoint = default(CadVertex);
+        public CadVertex MDownPoint = default(CadVertex);
 
         public void MouseMove(DrawContext dc, double x, double y)
         {

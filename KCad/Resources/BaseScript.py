@@ -10,8 +10,8 @@ from System import UInt32 as uint
 import clr
 clr.AddReference('CadDataTypes')
 
-import CadDataTypes.CadVector as CadVector
-import CadDataTypes.VectorList as VectorList
+import CadDataTypes.CadVertex as CadVertex
+import CadDataTypes.VertexList as VertexList
 
 #[AC] puts(s)
 def puts(s):
@@ -329,7 +329,7 @@ esc_b_white = "\x1b[97m"
 
 
 #test !!
-vv = CadVector.Create(1,1,1);
-vl = VectorList();
+vv = CadVertex.Create(1,1,1);
+vl = VertexList();
 vl.Add(vv);
 

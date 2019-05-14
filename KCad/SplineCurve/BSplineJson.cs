@@ -59,7 +59,7 @@ namespace SplineCurve
             NurbsLine n = new NurbsLine();
 
             JArray jarray = (JArray)jo["CtrlPoints"];
-            VectorList vl = CadJson.FromJson.VectorListFromJson(jarray);
+            VertexList vl = CadJson.FromJson.VectorListFromJson(jarray);
             n.CtrlPoints = vl;
 
             n.CtrlCnt = (int)jo["CtrlCnt"];
@@ -98,7 +98,7 @@ namespace SplineCurve
             NurbsSurface n = new NurbsSurface();
 
             JArray jarray = (JArray)jo["CtrlPoints"];
-            VectorList vl = CadJson.FromJson.VectorListFromJson(jarray);
+            VertexList vl = CadJson.FromJson.VectorListFromJson(jarray);
             n.CtrlPoints = vl;
 
             n.UCtrlCnt = (int)jo["UCtrlCnt"];

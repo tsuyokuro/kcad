@@ -85,8 +85,8 @@ namespace Plotter
 
         // Screen 座標系の原点 
         // 座標系の原点がView座標上で何処にあるかを示す
-        protected CadVector mViewOrg;
-        public virtual CadVector ViewOrg
+        protected CadVertex mViewOrg;
+        public virtual CadVertex ViewOrg
         {
             get => mViewOrg;
         }
@@ -120,7 +120,7 @@ namespace Plotter
 
         }
 
-        public virtual void SetViewOrg(CadVector org)
+        public virtual void SetViewOrg(CadVertex org)
         {
             mViewOrg = org;
         }
@@ -157,20 +157,20 @@ namespace Plotter
             mPushDraw?.Invoke(this);
         }
 
-        public virtual CadVector WorldPointToDevPoint(CadVector pt)
+        public virtual CadVertex WorldPointToDevPoint(CadVertex pt)
         {
-            CadVector p = WorldVectorToDevVector(pt);
+            CadVertex p = WorldVectorToDevVector(pt);
             p = p + mViewOrg;
             return p;
         }
 
-        public virtual CadVector DevPointToWorldPoint(CadVector pt)
+        public virtual CadVertex DevPointToWorldPoint(CadVertex pt)
         {
             pt = pt - mViewOrg;
             return DevVectorToWorldVector(pt);
         }
 
-        public virtual CadVector WorldVectorToDevVector(CadVector pt)
+        public virtual CadVertex WorldVectorToDevVector(CadVertex pt)
         {
             pt *= WorldScale;
 
@@ -192,10 +192,10 @@ namespace Plotter
             dv.Y = dv.Y * DeviceScaleY;
             dv.Z = 0;
 
-            return CadVector.Create(dv);
+            return CadVertex.Create(dv);
         }
 
-        public virtual CadVector DevVectorToWorldVector(CadVector pt)
+        public virtual CadVertex DevVectorToWorldVector(CadVertex pt)
         {
             pt.x = pt.x / DeviceScaleX;
             pt.y = pt.y / DeviceScaleY;
@@ -213,7 +213,7 @@ namespace Plotter
 
             wv /= WorldScale;
 
-            return CadVector.Create(wv);
+            return CadVertex.Create(wv);
         }
 
         public virtual void CalcViewDir()
@@ -273,7 +273,7 @@ namespace Plotter
 
         public virtual double DevSizeToWoldSize(double s)
         {
-            CadVector size = DevVectorToWorldVector(CadVector.UnitX * s);
+            CadVertex size = DevVectorToWorldVector(CadVertex.UnitX * s);
             return size.Norm();
         }
 
@@ -288,7 +288,7 @@ namespace Plotter
 
             DOut.pl("View Width=" + mViewWidth.ToString() + " Height=" + mViewHeight.ToString());
 
-            CadVector t = CadVector.Create(mViewDir);
+            CadVertex t = CadVertex.Create(mViewDir);
             t.dump("ViewDir");
 
             DOut.pl("ViewMatrix");

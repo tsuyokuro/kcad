@@ -9,7 +9,7 @@ namespace CadDataTypes
             get; set;
         }
 
-        CadVector Normal
+        CadVertex Normal
         {
             get; set;
         }

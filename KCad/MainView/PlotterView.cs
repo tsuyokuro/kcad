@@ -91,7 +91,7 @@ namespace Plotter
 
                 if (firstSizeChange)
                 {
-                    CadVector org = default(CadVector);
+                    CadVertex org = default(CadVertex);
                     org.x = Width / 2;
                     org.y = Height / 2;
 
@@ -99,7 +99,7 @@ namespace Plotter
 
                     //DOut.pl($"{GetType().Name} onSizeChanged firstChange {Width}, {Height}");
 
-                    mController.SetCursorWoldPos(CadVector.Zero);
+                    mController.SetCursorWoldPos(CadVertex.Zero);
 
                     firstSizeChange = false;
                 }

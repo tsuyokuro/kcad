@@ -58,15 +58,15 @@ namespace HalfEdgeNS
 
         public IdProvider FaceIdProvider = new IdProvider();
 
-        public VectorList VertexStore;
+        public VertexList VertexStore;
         public FlexArray<HeFace> FaceStore;
-        public VectorList NormalStore;
+        public VertexList NormalStore;
 
         public HeModel()
         {
-            VertexStore = new VectorList(8);
+            VertexStore = new VertexList(8);
             FaceStore = new FlexArray<HeFace>(6);
-            NormalStore = new VectorList(8);
+            NormalStore = new VertexList(8);
         }
 
         public void Clear()
@@ -77,7 +77,7 @@ namespace HalfEdgeNS
         }
 
         // 単純に頂点を追加
-        public int AddVertex(CadVector v)
+        public int AddVertex(CadVertex v)
         {
             return VertexStore.Add(v);
         }
@@ -123,7 +123,7 @@ namespace HalfEdgeNS
 
         public void RecreateNormals()
         {
-            VectorList newNormalStore = new VectorList(VertexStore.Count);
+            VertexList newNormalStore = new VertexList(VertexStore.Count);
 
             int i;
             for (i = 0; i < FaceStore.Count; i++)
@@ -133,7 +133,7 @@ namespace HalfEdgeNS
                 HalfEdge head = FaceStore[i].Head;
                 HalfEdge c = head;
 
-                CadVector n = CadMath.Normal(
+                CadVertex n = CadMath.Normal(
                     VertexStore[c.Vertex],
                     VertexStore[c.Next.Vertex],
                     VertexStore[c.Next.Next.Vertex]
@@ -344,7 +344,7 @@ namespace HalfEdgeNS
                 return ret;
             }
 
-            int s = FindMaxDistantHalfEdge(CadVector.Zero, heList);
+            int s = FindMaxDistantHalfEdge(CadVertex.Zero, heList);
 
             if (s == -1)
             {
@@ -393,9 +393,9 @@ namespace HalfEdgeNS
         }
 
         // 指定された座標から最も遠いHalfEdgeを求める
-        public int FindMaxDistantHalfEdge(CadVector p0, List<HalfEdge> heList)
+        public int FindMaxDistantHalfEdge(CadVertex p0, List<HalfEdge> heList)
         {
-            CadVector t;
+            CadVertex t;
 
             double maxd = 0;
 
@@ -410,7 +410,7 @@ namespace HalfEdgeNS
                     continue;
                 }
 
-                CadVector fp = VertexStore[vi];
+                CadVertex fp = VertexStore[vi];
 
                 t = fp - p0;
                 double d = t.Norm();
@@ -497,7 +497,7 @@ namespace HalfEdgeNS
             return idxList;
         }
 
-        public void ForReachEdgePoint(Func<CadVector, bool> func)
+        public void ForReachEdgePoint(Func<CadVertex, bool> func)
         {
             HeFace f = FaceStore[0];
 
@@ -528,7 +528,7 @@ namespace HalfEdgeNS
             }
         }
 
-        public void ForReachEdgePoint(Action<CadVector> action)
+        public void ForReachEdgePoint(Action<CadVertex> action)
         {
             HeFace f = FaceStore[0];
 

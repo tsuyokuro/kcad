@@ -280,7 +280,7 @@ namespace Plotter.Serializer
                 return jo;
             }
 
-            public static JArray VectorListToJson(VectorList vl)
+            public static JArray VectorListToJson(VertexList vl)
             {
                 JArray ja = new JArray();
 
@@ -292,7 +292,7 @@ namespace Plotter.Serializer
                 return ja;
             }
 
-            public static JObject VectorToJson(CadVector v)
+            public static JObject VectorToJson(CadVertex v)
             {
                 var jo = new JObject();
 
@@ -532,9 +532,9 @@ namespace Plotter.Serializer
                 return fig;
             }
 
-            public static VectorList VectorListFromJson(JArray jarray)
+            public static VertexList VectorListFromJson(JArray jarray)
             {
-                VectorList vl = new VectorList();
+                VertexList vl = new VertexList();
 
                 foreach (JObject jv in jarray)
                 {
@@ -544,9 +544,9 @@ namespace Plotter.Serializer
                 return vl;
             }
 
-            public static CadVector VectorFromJson(JObject jo)
+            public static CadVertex VectorFromJson(JObject jo)
             {
-                CadVector v = default(CadVector);
+                CadVertex v = default(CadVertex);
 
                 if (jo == null)
                 {

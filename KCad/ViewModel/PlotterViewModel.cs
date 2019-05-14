@@ -779,7 +779,7 @@ namespace Plotter
             return -1;
         }
 
-        private void CursorPosChanged(PlotterController sender, CadVector pt, Plotter.Controller.CursorType type)
+        private void CursorPosChanged(PlotterController sender, CadVertex pt, Plotter.Controller.CursorType type)
         {
             if (type == Plotter.Controller.CursorType.TRACKING)
             {

@@ -16,7 +16,7 @@ namespace Plotter
 
         private PlotterController mController = null;
 
-        CadVector PrevMousePos = default(CadVector);
+        CadVertex PrevMousePos = default(CadVertex);
 
         MouseButtons DownButton = MouseButtons.None;
 
@@ -176,7 +176,7 @@ namespace Plotter
 
                 if (DownButton == MouseButtons.Middle)
                 {
-                    CadVector t = CadVector.Create(e.X, e.Y, 0);
+                    CadVertex t = CadVertex.Create(e.X, e.Y, 0);
 
                     Vector2 prev = default(Vector2);
 
@@ -231,13 +231,13 @@ namespace Plotter
 
             if (sizeChangeCnt == 2)
             {
-                CadVector org = default(CadVector);
+                CadVertex org = default(CadVertex);
                 org.x = Width / 2;
                 org.y = Height / 2;
 
                 mDrawContext.SetViewOrg(org);
 
-                mController.SetCursorWoldPos(CadVector.Zero);
+                mController.SetCursorWoldPos(CadVertex.Zero);
             }
 
             sizeChangeCnt++;

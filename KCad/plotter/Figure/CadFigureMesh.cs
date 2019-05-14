@@ -26,7 +26,7 @@ namespace Plotter
             EDGE_THRESHOLD = Math.Cos(CadMath.Deg2Rad(30));
         }
 
-        public override VectorList PointList => mPointList;
+        public override VertexList PointList => mPointList;
 
         public override int PointCount => PointList.Count;
 
@@ -145,7 +145,7 @@ namespace Plotter
 
             for (i = 0; i < num; i++)
             {
-                CadVector p = PointList[i];
+                CadVertex p = PointList[i];
 
                 if (!p.Selected) continue;
 
@@ -155,7 +155,7 @@ namespace Plotter
 
         public override void SelectPointAt(int index, bool sel)
         {
-            CadVector p = mPointList[index];
+            CadVertex p = mPointList[index];
             p.Selected = sel;
             mPointList[index] = p;
         }

@@ -87,7 +87,7 @@ namespace Plotter
             mDrawing = new DrawingGDI(this);
         }
 
-        public override void SetViewOrg(CadVector org)
+        public override void SetViewOrg(CadVertex org)
         {
             mViewOrg = org;
         }

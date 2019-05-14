@@ -64,8 +64,8 @@ namespace Plotter
         #region "Draw base"
         public override void DrawAxis()
         {
-            CadVector p0 = default(CadVector);
-            CadVector p1 = default(CadVector);
+            CadVertex p0 = default(CadVertex);
+            CadVertex p1 = default(CadVertex);
 
             // X軸
             p0.x = -100;
@@ -114,11 +114,11 @@ namespace Plotter
 
         public override void DrawGrid(Gridding grid)
         {
-            CadVector lt = CadVector.Zero;
-            CadVector rb = CadVector.Create(DC.ViewWidth, DC.ViewHeight, 0);
+            CadVertex lt = CadVertex.Zero;
+            CadVertex rb = CadVertex.Create(DC.ViewWidth, DC.ViewHeight, 0);
 
-            CadVector ltw = DC.DevPointToWorldPoint(lt);
-            CadVector rbw = DC.DevPointToWorldPoint(rb);
+            CadVertex ltw = DC.DevPointToWorldPoint(lt);
+            CadVertex rbw = DC.DevPointToWorldPoint(rb);
 
             double minx = Math.Min(ltw.x, rbw.x);
             double maxx = Math.Max(ltw.x, rbw.x);
@@ -132,7 +132,7 @@ namespace Plotter
 
             DrawPen pen = DrawPen.New(DC, DrawTools.PEN_GRID);
 
-            CadVector p = default(CadVector);
+            CadVertex p = default(CadVertex);
 
 
             double n = grid.Decimate(DC, grid, 8);
@@ -206,16 +206,16 @@ namespace Plotter
             }
         }
 
-        public override void DrawPageFrame(double w, double h, CadVector center)
+        public override void DrawPageFrame(double w, double h, CadVertex center)
         {
-            CadVector pt = default(CadVector);
+            CadVertex pt = default(CadVertex);
 
             // p0
             pt.x = -w / 2 + center.x;
             pt.y = h / 2 + center.y;
             pt.z = 0;
 
-            CadVector p0 = default(CadVector);
+            CadVertex p0 = default(CadVertex);
             p0.x = pt.x * DC.UnitPerMilli;
             p0.y = pt.y * DC.UnitPerMilli;
 
@@ -226,7 +226,7 @@ namespace Plotter
             pt.y = -h / 2 + center.y;
             pt.z = 0;
 
-            CadVector p1 = default(CadVector);
+            CadVertex p1 = default(CadVertex);
             p1.x = pt.x * DC.UnitPerMilli;
             p1.y = pt.y * DC.UnitPerMilli;
 
@@ -237,18 +237,18 @@ namespace Plotter
         #endregion
 
         #region "Draw marker"
-        public override void DrawHighlightPoint(CadVector pt, DrawPen pen)
+        public override void DrawHighlightPoint(CadVertex pt, DrawPen pen)
         {
-            CadVector pp = DC.WorldPointToDevPoint(pt);
+            CadVertex pp = DC.WorldPointToDevPoint(pt);
 
             //DrawCircleScrn(pen, pp, 3);
 
             DrawCrossScrn(pen, pp, 4);
         }
 
-        public override void DrawSelectedPoint(CadVector pt, DrawPen pen)
+        public override void DrawSelectedPoint(CadVertex pt, DrawPen pen)
         {
-            CadVector pp = DC.WorldPointToDevPoint(pt);
+            CadVertex pp = DC.WorldPointToDevPoint(pt);
 
             int size = 2;
 
@@ -259,7 +259,7 @@ namespace Plotter
                 );
         }
 
-        public override void DrawMarkCursor(DrawPen pen, CadVector p, double pix_size)
+        public override void DrawMarkCursor(DrawPen pen, CadVertex p, double pix_size)
         {
             DrawCross(pen, p, pix_size);
         }
@@ -316,42 +316,42 @@ namespace Plotter
             }
         }
 
-        public override void DrawRect(DrawPen pen, CadVector p0, CadVector p1)
+        public override void DrawRect(DrawPen pen, CadVertex p0, CadVertex p1)
         {
-            CadVector pp0 = DC.WorldPointToDevPoint(p0);
-            CadVector pp1 = DC.WorldPointToDevPoint(p1);
+            CadVertex pp0 = DC.WorldPointToDevPoint(p0);
+            CadVertex pp1 = DC.WorldPointToDevPoint(p1);
 
             DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
         }
 
-        public override void DrawCross(DrawPen pen, CadVector p, double size)
+        public override void DrawCross(DrawPen pen, CadVertex p, double size)
         {
-            CadVector a = DC.WorldPointToDevPoint(p);
+            CadVertex a = DC.WorldPointToDevPoint(p);
 
             DrawLineScrn(pen, a.x - size, a.y + 0, a.x + size, a.y + 0);
             DrawLineScrn(pen, a.x + 0, a.y + size, a.x + 0, a.y - size);
         }
 
-        public override void DrawCrossScrn(DrawPen pen, CadVector p, double size)
+        public override void DrawCrossScrn(DrawPen pen, CadVertex p, double size)
         {
             DrawLineScrn(pen, p.x - size, p.y + 0, p.x + size, p.y + 0);
             DrawLineScrn(pen, p.x + 0, p.y + size, p.x + 0, p.y - size);
         }
 
-        public override void DrawLine(DrawPen pen, CadVector a, CadVector b)
+        public override void DrawLine(DrawPen pen, CadVertex a, CadVertex b)
         {
             if (pen.GdiPen == null) return;
 
-            CadVector pa = DC.WorldPointToDevPoint(a);
-            CadVector pb = DC.WorldPointToDevPoint(b);
+            CadVertex pa = DC.WorldPointToDevPoint(a);
+            CadVertex pb = DC.WorldPointToDevPoint(b);
 
             DC.GdiGraphics.DrawLine(pen.GdiPen, (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
         }
 
-        public override void DrawDot(DrawPen pen, CadVector p)
+        public override void DrawDot(DrawPen pen, CadVertex p)
         {
-            CadVector p0 = DC.WorldPointToDevPoint(p);
-            CadVector p1 = p0;
+            CadVertex p0 = DC.WorldPointToDevPoint(p);
+            CadVertex p1 = p0;
             p0.x = (int)p0.x;
             p1.x = p0.x + 0.1;
 
@@ -363,7 +363,7 @@ namespace Plotter
             //}
         }
 
-        public override void DrawFace(DrawPen pen, VectorList pointList, CadVector Normal, bool drawOutline)
+        public override void DrawFace(DrawPen pen, VertexList pointList, CadVertex Normal, bool drawOutline)
         {
             int cnt = pointList.Count;
             if (cnt == 0)
@@ -371,8 +371,8 @@ namespace Plotter
                 return;
             }
 
-            CadVector p0 = pointList[0];
-            CadVector p1;
+            CadVertex p0 = pointList[0];
+            CadVertex p1;
 
             int i;
             for (i = 1; i < cnt; i++)
@@ -391,28 +391,28 @@ namespace Plotter
             base.DrawHarfEdgeModel(pen, model);
         }
 
-        public override void DrawText(int font, DrawBrush brush, CadVector a, CadVector xdir, CadVector ydir, DrawTextOption opt, string s)
+        public override void DrawText(int font, DrawBrush brush, CadVertex a, CadVertex xdir, CadVertex ydir, DrawTextOption opt, string s)
         {
-            CadVector pa = DC.WorldPointToDevPoint(a);
-            CadVector d = DC.WorldVectorToDevVector(xdir);
+            CadVertex pa = DC.WorldPointToDevPoint(a);
+            CadVertex d = DC.WorldVectorToDevVector(xdir);
 
             DrawTextScrn(font, brush, pa, d, opt, s);
         }
 
-        public override void DrawTextScrn(int font, DrawBrush brush, CadVector a, CadVector dir, DrawTextOption opt, string s)
+        public override void DrawTextScrn(int font, DrawBrush brush, CadVertex a, CadVertex dir, DrawTextOption opt, string s)
         {
             if (brush.GdiBrush == null) return;
             if (DC.Font(font) == null) return;
 
             if (opt.Option != 0)
             {
-                CadVector sz = MeasureText(font, s);
+                CadVertex sz = MeasureText(font, s);
 
                 if ((opt.Option | DrawTextOption.H_CENTER) != 0)
                 {
                     double slen = sz.x / 2;
 
-                    CadVector ud = CadVector.UnitX;
+                    CadVertex ud = CadVertex.UnitX;
 
                     if (!dir.IsZero())
                     {
@@ -444,16 +444,16 @@ namespace Plotter
             DC.GdiGraphics.ResetTransform();
         }
 
-        public override CadVector MeasureText(int font, string s)
+        public override CadVertex MeasureText(int font, string s)
         {
             if (DC.Font(font) == null)
             {
-                return CadVector.Zero;
+                return CadVertex.Zero;
             }
 
             SizeF size = DC.GdiGraphics.MeasureString(s, DC.Font(font));
 
-            CadVector v = CadVector.Create(size.Width, size.Height, 0);
+            CadVertex v = CadVertex.Create(size.Width, size.Height, 0);
 
             return v;
         }
@@ -462,8 +462,8 @@ namespace Plotter
         {
             double size = Math.Max(DC.ViewWidth, DC.ViewHeight);
 
-            CadVector p0 = pp.Pos - (pp.DirX * size);
-            CadVector p1 = pp.Pos + (pp.DirX * size);
+            CadVertex p0 = pp.Pos - (pp.DirX * size);
+            CadVertex p1 = pp.Pos + (pp.DirX * size);
 
             DrawLineScrn(pen, p0.x, p0.y, p1.x, p1.y);
 
@@ -473,12 +473,12 @@ namespace Plotter
             DrawLineScrn(pen, p0.x, p0.y, p1.x, p1.y);
         }
 
-        public override void DrawRectScrn(DrawPen pen, CadVector pp0, CadVector pp1)
+        public override void DrawRectScrn(DrawPen pen, CadVertex pp0, CadVertex pp1)
         {
             DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
         }
 
-        protected void DrawLineScrn(DrawPen pen, CadVector a, CadVector b)
+        protected void DrawLineScrn(DrawPen pen, CadVertex a, CadVertex b)
         {
             if (pen.GdiPen == null) return;
 
@@ -520,13 +520,13 @@ namespace Plotter
             DC.GdiGraphics.DrawRectangle(pen.GdiPen, lx, ty, dx, dy);
         }
 
-        protected void DrawCircleScrn(DrawPen pen, CadVector cp, CadVector p1)
+        protected void DrawCircleScrn(DrawPen pen, CadVertex cp, CadVertex p1)
         {
             double r = CadUtil.SegNorm(cp, p1);
             DrawCircleScrn(pen, cp, r);
         }
 
-        protected void DrawCircleScrn(DrawPen pen, CadVector cp, double r)
+        protected void DrawCircleScrn(DrawPen pen, CadVertex cp, double r)
         {
             if (pen.GdiPen == null) return;
 
@@ -567,28 +567,28 @@ namespace Plotter
             double size = 20;
 
 
-            CadVector uv = CadVector.Create(size, 0, 0);
+            CadVertex uv = CadVertex.Create(size, 0, 0);
 
-            CadVector cv = DC.DevVectorToWorldVector(uv);
+            CadVertex cv = DC.DevVectorToWorldVector(uv);
 
             double len = cv.Norm();
 
 
-            CadVector up = CadVector.Create(size+5, size+5, 0);
+            CadVertex up = CadVertex.Create(size+5, size+5, 0);
 
-            CadVector cp = DC.DevPointToWorldPoint(up);
+            CadVertex cp = DC.DevPointToWorldPoint(up);
 
 
-            CadVector p0 = default;
-            CadVector p1 = default;
+            CadVertex p0 = default;
+            CadVertex p1 = default;
 
-            CadVector tp = default;
+            CadVertex tp = default;
 
             MinMax2D minMax2D = MinMax2D.Create();
 
-            CadVector xp = default;
-            CadVector yp = default;
-            CadVector zp = default;
+            CadVertex xp = default;
+            CadVertex yp = default;
+            CadVertex zp = default;
 
             // X軸
             p0.x = -len + cp.x;
@@ -653,9 +653,9 @@ namespace Plotter
             yp.y -= 7;
             zp.y -= 7;
 
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), xp, CadVector.UnitX, default(DrawTextOption), "x");
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), yp, CadVector.UnitX, default(DrawTextOption), "y");
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), zp, CadVector.UnitX, default(DrawTextOption), "z");
+            DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), xp, CadVertex.UnitX, default(DrawTextOption), "x");
+            DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), yp, CadVertex.UnitX, default(DrawTextOption), "y");
+            DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), zp, CadVertex.UnitX, default(DrawTextOption), "z");
         }
     }
 }

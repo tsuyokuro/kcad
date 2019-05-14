@@ -10,7 +10,7 @@ namespace Plotter
 {
     class DrawContextGLOrtho : DrawContextGL
     {
-        CadVector Center = default;
+        CadVertex Center = default;
 
         public override double UnitPerMilli
         {
@@ -113,7 +113,7 @@ namespace Plotter
             dc.CopyCamera(this);
             dc.SetViewSize(deviceSize.Width, deviceSize.Height);
 
-            CadVector org = default;
+            CadVertex org = default;
             org.x = deviceSize.Width / 2.0;
             org.y = deviceSize.Height / 2.0;
 

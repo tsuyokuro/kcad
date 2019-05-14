@@ -34,22 +34,22 @@ namespace Plotter
 
         // 内積
         #region inner product
-        public static double InnrProduct2D(CadVector v1, CadVector v2)
+        public static double InnrProduct2D(CadVertex v1, CadVertex v2)
         {
             return (v1.x * v2.x) + (v1.y * v2.y);
         }
 
-        public static double InnrProduct2D(CadVector v0, CadVector v1, CadVector v2)
+        public static double InnrProduct2D(CadVertex v0, CadVertex v1, CadVertex v2)
         {
             return InnrProduct2D(v1 - v0, v2 - v0);
         }
 
-        public static double InnerProduct(CadVector v1, CadVector v2)
+        public static double InnerProduct(CadVertex v1, CadVertex v2)
         {
             return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
         }
 
-        public static double InnerProduct(CadVector v0, CadVector v1, CadVector v2)
+        public static double InnerProduct(CadVertex v0, CadVertex v1, CadVertex v2)
         {
             return InnerProduct(v1 - v0, v2 - v0);
         }
@@ -58,19 +58,19 @@ namespace Plotter
 
         // 外積
         #region Cross product
-        public static double CrossProduct2D(CadVector v1, CadVector v2)
+        public static double CrossProduct2D(CadVertex v1, CadVertex v2)
         {
             return (v1.x * v2.y) - (v1.y * v2.x);
         }
 
-        public static double CrossProduct2D(CadVector v0, CadVector v1, CadVector v2)
+        public static double CrossProduct2D(CadVertex v0, CadVertex v1, CadVertex v2)
         {
             return CrossProduct2D(v1 - v0, v2 - v0);
         }
 
-        public static CadVector CrossProduct(CadVector v1, CadVector v2)
+        public static CadVertex CrossProduct(CadVertex v1, CadVertex v2)
         {
-            CadVector res = default(CadVector);
+            CadVertex res = default(CadVertex);
 
             res.x = v1.y * v2.z - v1.z * v2.y;
             res.y = v1.z * v2.x - v1.x * v2.z;
@@ -79,7 +79,7 @@ namespace Plotter
             return res;
         }
 
-        public static CadVector CrossProduct(CadVector v0, CadVector v1, CadVector v2)
+        public static CadVertex CrossProduct(CadVertex v0, CadVertex v1, CadVertex v2)
         {
             return CrossProduct(v1 - v0, v2 - v0);
         }
@@ -94,12 +94,12 @@ namespace Plotter
          * v0/_________v1
          *
          */
-        public static CadVector Normal(CadVector v0, CadVector v1, CadVector v2)
+        public static CadVertex Normal(CadVertex v0, CadVertex v1, CadVertex v2)
         {
-            CadVector va = v1 - v0;
-            CadVector vb = v2 - v0;
+            CadVertex va = v1 - v0;
+            CadVertex vb = v2 - v0;
 
-            CadVector normal = CadMath.CrossProduct(va, vb);
+            CadVertex normal = CadMath.CrossProduct(va, vb);
 
             if (normal.IsZero())
             {
@@ -121,9 +121,9 @@ namespace Plotter
          * 0 /_________va
          * 
          */
-        public static CadVector Normal(CadVector va, CadVector vb)
+        public static CadVertex Normal(CadVertex va, CadVertex vb)
         {
-            CadVector normal = CadMath.CrossProduct(va, vb);
+            CadVertex normal = CadMath.CrossProduct(va, vb);
 
             if (normal.IsZero())
             {
@@ -135,7 +135,7 @@ namespace Plotter
             return normal;
         }
 
-        public static bool IsParallel(CadVector v1, CadVector v2)
+        public static bool IsParallel(CadVertex v1, CadVertex v2)
         {
             v1 = v1.UnitVector();
             v2 = v2.UnitVector();
@@ -174,7 +174,7 @@ namespace Plotter
         /// <param name="v2">Vector2</param>
         /// <returns>なす角</returns>
         /// 
-        public static double AngleOfVector(CadVector v1, CadVector v2)
+        public static double AngleOfVector(CadVertex v1, CadVertex v2)
         {
             double v1n = v1.Norm();
             double v2n = v2.Norm();

@@ -43,11 +43,11 @@ namespace Plotter.Controller
 
 
             // Pase figures in fig list
-            CadVector pp = controller.LastDownPoint;
+            CadVertex pp = controller.LastDownPoint;
 
             MinMax3D mm3d = CadUtil.GetFigureMinMaxIncludeChild(figList);
 
-            CadVector d = pp - mm3d.GetMinAsVector();
+            CadVertex d = pp - mm3d.GetMinAsVector();
 
             CadOpeList opeRoot = new CadOpeList();
 
@@ -63,7 +63,7 @@ namespace Plotter.Controller
             controller.HistoryMan.foward(opeRoot);
         }
 
-        private static void PasteFigure(PlotterController controller, CadFigure fig, CadVector delta)
+        private static void PasteFigure(PlotterController controller, CadFigure fig, CadVertex delta)
         {
             fig.MoveAllPoints(delta);
             controller.DB.AddFigure(fig);

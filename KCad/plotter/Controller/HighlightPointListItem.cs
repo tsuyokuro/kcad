@@ -4,10 +4,10 @@ namespace Plotter
 {
     public class HighlightPointListItem
     {
-        public CadVector Point;
+        public CadVertex Point;
         public DrawPen Pen;
 
-        public HighlightPointListItem(CadVector p, DrawPen pen)
+        public HighlightPointListItem(CadVertex p, DrawPen pen)
         {
             Point = p;
             Pen = pen;

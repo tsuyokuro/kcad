@@ -48,7 +48,7 @@ namespace CarveWapper
 	{
 		CadMesh^ ret = gcnew CadMesh();
 
-		ret->VertexStore = gcnew VectorList();
+		ret->VertexStore = gcnew VertexList();
 		ret->FaceStore = gcnew FlexArray<CadFace^>();
 
 		int vnum = pmesh->vertices.size();
@@ -58,7 +58,7 @@ namespace CarveWapper
 		for (; i < vnum; i++)
 		{
 			carve::poly::Vertex<3> vertex = pmesh->vertices[i];
-			ret->VertexStore->Add(CadVector::Create(vertex.v.x, vertex.v.y, vertex.v.z));
+			ret->VertexStore->Add(CadVertex::Create(vertex.v.x, vertex.v.y, vertex.v.z));
 		}
 
 
@@ -94,7 +94,7 @@ namespace CarveWapper
 
 		for (i = 0; i < vnum; i++)
 		{
-			CadVector v = cadMesh->VertexStore[i];
+			CadVertex v = cadMesh->VertexStore[i];
 			data.addVertex(carve::geom::VECTOR(v.x, v.y, v.z));
 		}
 

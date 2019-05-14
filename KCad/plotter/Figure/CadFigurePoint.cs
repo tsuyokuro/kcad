@@ -12,12 +12,12 @@ namespace Plotter
             Type = Types.POINT;
         }
 
-        public override void AddPointInCreating(DrawContext dc, CadVector p)
+        public override void AddPointInCreating(DrawContext dc, CadVertex p)
         {
             mPointList.Add(p);
         }
 
-        public override void AddPoint(CadVector p)
+        public override void AddPoint(CadVertex p)
         {
             if (mPointList.Count > 0)
             {
@@ -27,7 +27,7 @@ namespace Plotter
             mPointList.Add(p);
         }
 
-        public override void SetPointAt(int index, CadVector pt)
+        public override void SetPointAt(int index, CadVertex pt)
         {
             if (index > 0)
             {
@@ -62,7 +62,7 @@ namespace Plotter
             drawSelected_Point(dc, pen);
         }
 
-        public override void DrawTemp(DrawContext dc, CadVector tp, DrawPen pen)
+        public override void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
         {
             // NOP
         }
@@ -104,9 +104,9 @@ namespace Plotter
         {
         }
 
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVector delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
         {
-            CadVector p = StoreList[0];
+            CadVertex p = StoreList[0];
 
             if (p.Selected)
             {

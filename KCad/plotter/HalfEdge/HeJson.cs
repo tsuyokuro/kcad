@@ -99,7 +99,7 @@ namespace HalfEdgeNS
 
             JArray ja = (JArray)jmodel["vertex_store"];
 
-            VectorList vlist = CadJson.FromJson.VectorListFromJson(ja);
+            VertexList vlist = CadJson.FromJson.VectorListFromJson(ja);
             model.VertexStore = vlist;
 
             bool normalExist = false;
@@ -108,7 +108,7 @@ namespace HalfEdgeNS
             if (ja != null)
             {
                 normalExist = true;
-                VectorList nlist = CadJson.FromJson.VectorListFromJson(ja);
+                VertexList nlist = CadJson.FromJson.VectorListFromJson(ja);
                 model.NormalStore = nlist;
             }
 

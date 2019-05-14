@@ -4,7 +4,7 @@ namespace CadDataTypes
 {
     public class CadMesh
     {
-        public VectorList VertexStore;
+        public VertexList VertexStore;
         public FlexArray<CadFace> FaceStore;
 
         public CadMesh()
@@ -13,7 +13,7 @@ namespace CadDataTypes
 
         public CadMesh(int vertexCount, int faceCount)
         {
-            VertexStore = new VectorList(vertexCount);
+            VertexStore = new VertexList(vertexCount);
             FaceStore = new FlexArray<CadFace>(faceCount);
         }
     }

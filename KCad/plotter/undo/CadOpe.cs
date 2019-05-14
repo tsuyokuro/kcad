@@ -197,13 +197,13 @@ namespace Plotter
 
     public class CadOpeAddPoint : CadOpePointBase
     {
-        private CadVector Point;
+        private CadVertex Point;
 
         public CadOpeAddPoint(
             uint layerID,
             uint figureID,
             int pointIndex,
-            ref CadVector pt)
+            ref CadVertex pt)
             : base(layerID, figureID, pointIndex)
         {
             Point = pt;
@@ -227,7 +227,7 @@ namespace Plotter
     {
         private int InsertNum;
 
-        private VectorList mPointList = null;
+        private VertexList mPointList = null;
 
         public CadOpeInsertPoints(
             uint layerID,
@@ -254,7 +254,7 @@ namespace Plotter
 
             if (mPointList == null)
             {
-                mPointList = new VectorList();
+                mPointList = new VertexList();
             }
 
             mPointList.Clear();
@@ -477,10 +477,10 @@ namespace Plotter
     public class CadOpeChangeNormal : CadOpe
     {
         private uint FigureID;
-        private CadVector NewNormal;
-        private CadVector OldNormal;
+        private CadVertex NewNormal;
+        private CadVertex OldNormal;
 
-        public CadOpeChangeNormal(uint figID, CadVector oldNormal, CadVector newNormal)
+        public CadOpeChangeNormal(uint figID, CadVertex oldNormal, CadVertex newNormal)
         {
             FigureID = figID;
             OldNormal = oldNormal;

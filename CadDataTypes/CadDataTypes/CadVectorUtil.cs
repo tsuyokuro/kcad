@@ -3,14 +3,14 @@
     // 短い配列をstackに確保するためのstruct
     public struct CadVectorArray4
     {
-        public CadVector v0;
-        public CadVector v1;
-        public CadVector v2;
-        public CadVector v3;
+        public CadVertex v0;
+        public CadVertex v1;
+        public CadVertex v2;
+        public CadVertex v3;
 
         public int Length;
 
-        public CadVector this[int i]
+        public CadVertex this[int i]
         {
             get
             {
@@ -22,7 +22,7 @@
                     case 3: return v3;
                 }
 
-                return CadVector.Zero;
+                return CadVertex.Zero;
             }
 
             set

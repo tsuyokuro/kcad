@@ -91,7 +91,7 @@ namespace Plotter
             dc.CopyCamera(this);
             dc.SetViewSize(deviceSize.Width, deviceSize.Height);
 
-            CadVector org = default;
+            CadVertex org = default;
             org.x = deviceSize.Width / 2.0;
             org.y = deviceSize.Height / 2.0;
 
@@ -129,10 +129,10 @@ namespace Plotter
 
             Vector3d ev = mLookAt - mEye;
 
-            CadVector a = CadVector.Create(ev);
-            CadVector b = CadVector.Create(mUpVector);
+            CadVertex a = CadVertex.Create(ev);
+            CadVertex b = CadVertex.Create(mUpVector);
 
-            CadVector axis = CadMath.Normal(a, b);
+            CadVertex axis = CadMath.Normal(a, b);
 
             if (!axis.IsZero())
             {

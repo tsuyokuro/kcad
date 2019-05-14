@@ -314,7 +314,7 @@ namespace Plotter.Controller
         public void DrawBase(DrawContext dc)
         {
             dc.Drawing.DrawAxis();
-            dc.Drawing.DrawPageFrame(PageSize.Width, PageSize.Height, CadVector.Zero);
+            dc.Drawing.DrawPageFrame(PageSize.Width, PageSize.Height, CadVertex.Zero);
             DrawGrid(dc);
         }
 
@@ -640,14 +640,14 @@ namespace Plotter.Controller
             return opeList;
         }
 
-        public void MoveSelectedPoints(CadVector delta)
+        public void MoveSelectedPoints(CadVertex delta)
         {
             StartEdit();
             MoveSelectedPoints(null, delta);
             EndEdit();
         }
 
-        private void MoveSelectedPoints(DrawContext dc, CadVector delta)
+        private void MoveSelectedPoints(DrawContext dc, CadVertex delta)
         {
             List<uint> figIDList = DB.GetSelectedFigIDList();
 
@@ -973,7 +973,7 @@ namespace Plotter.Controller
             UpdateTreeView(true);
         }
 
-        public void MovePointsFromStored(List<CadFigure> figList, CadVector d)
+        public void MovePointsFromStored(List<CadFigure> figList, CadVertex d)
         {
             if (figList == null)
             {
