@@ -11,7 +11,7 @@ namespace GLUtil
         int Height;
 
         int FrameBufferDesc;
-        int DepthRenderBufferDesc;
+        //int DepthRenderBufferDesc;
         int ColorTexDesc;
         int DepthTexDesc;
 
