@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Plotter.Serializer
 {
@@ -89,11 +90,18 @@ namespace Plotter.Serializer
             MpCadData_Latest data = CreateMpCadData_Latest(cd);
             string s = MessagePackSerializer.ToJson<MpCadData_Latest>(data);
 
+            s = s.Trim();
+
+            s = s.Substring(1, s.Length - 2);
+
+            string ss = @"{" + "\n" +
+                        @"""header"":""" + "type=" + JsonSign + "," + "version=" + JsonVersion + @"""," + "\n" +
+                        s + "\n" +
+                        @"}";
+
             StreamWriter writer = new StreamWriter(fname);
 
-            writer.WriteLine(JsonSign);
-            writer.WriteLine(JsonVersion);
-            writer.Write(s);
+            writer.Write(ss);
 
             writer.Close();
         }
@@ -102,12 +110,25 @@ namespace Plotter.Serializer
         {
             StreamReader reader = new StreamReader(fname);
 
-            string signe = reader.ReadLine();
-            string version = reader.ReadLine();
+            reader.ReadLine(); // skip "{\n"
+            string header = reader.ReadLine();
+            Regex headerPtn = new Regex(@"version=([0-9a-fA-F]+)");
+
+            Match m = headerPtn.Match(header);
+
+            string version = "";
+
+            if (m.Groups.Count >= 1)
+            {
+                version = m.Groups[1].Value;
+            }
 
             string js = reader.ReadToEnd();
-
             reader.Close();
+
+            js = js.Trim();
+            js = js.Substring(0, js.Length - 1);
+            js = "{" + js + "}";
 
             byte[] bin = MessagePackSerializer.FromJson(js);
 
@@ -125,38 +146,6 @@ namespace Plotter.Serializer
             }
 
             return null;
-        }
-
-        public static CadData? LoadJson_Latest(string fname)
-        {
-            StreamReader reader = new StreamReader(fname);
-
-            string js = reader.ReadToEnd();
-
-            reader.Close();
-
-            byte[] bin = MessagePackSerializer.FromJson(js);
-
-            MpCadData_Latest mpcd = MessagePackSerializer.Deserialize<MpCadData_Latest>(bin);
-
-            CadData cd = new CadData(
-                mpcd.GetDB(),
-                mpcd.ViewInfo.WorldScale,
-                mpcd.ViewInfo.PaperSettings.GetPaperPageSize()
-                );
-
-            return cd;
-        }
-
-        private static MpCadData_v1000 CreateMpCadData(CadData cd)
-        {
-            MpCadData_v1000 data = MpCadData_v1000.Create(cd.DB);
-
-            data.ViewInfo.WorldScale = cd.WorldScale;
-
-            data.ViewInfo.PaperSettings.Set(cd.PageSize);
-
-            return data;
         }
 
         private static MpCadData_Latest CreateMpCadData_Latest(CadData cd)
