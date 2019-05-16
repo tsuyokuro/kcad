@@ -172,11 +172,11 @@ namespace Plotter
 
         public static CadFigure Clone(CadFigure src)
         {
-            MpFigure mpf = MpFigure.Create(src, false);
+            MpFigure_Latest mpf = MpFigure_Latest.Create(src, false);
 
             byte[] data = MessagePackSerializer.Serialize(mpf);
 
-            MpFigure mpfCopy = MessagePackSerializer.Deserialize<MpFigure>(data);
+            MpFigure_Latest mpfCopy = MessagePackSerializer.Deserialize<MpFigure_Latest>(data);
 
             CadFigure fig = mpfCopy.Restore();
 
@@ -187,11 +187,11 @@ namespace Plotter
 
         public static void CopyTo(CadFigure src, CadFigure dst)
         {
-            MpFigure mpf = MpFigure.Create(src, false);
+            MpFigure_Latest mpf = MpFigure_Latest.Create(src, false);
 
             byte[] data = MessagePackSerializer.Serialize(mpf);
 
-            MpFigure mpfCopy = MessagePackSerializer.Deserialize<MpFigure>(data);
+            MpFigure_Latest mpfCopy = MessagePackSerializer.Deserialize<MpFigure_Latest>(data);
 
             uint id = dst.ID;
 

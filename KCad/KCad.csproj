@@ -204,6 +204,8 @@
     <Compile Include="plotter\DrawContext\DrawContextGLPers.cs" />
     <Compile Include="plotter\HalfEdge\HeModelBuilder.cs" />
     <Compile Include="plotter\HalfEdge\HeModelConverter.cs" />
+    <Compile Include="plotter\Serializer\CadMessagePack_v1001.cs" />
+    <Compile Include="plotter\Serializer\MpUtil.cs" />
     <Compile Include="WIndowsAPI\WindowsAPI.cs" />
     <Compile Include="Dialogs\AngleInputDialog.xaml.cs">
       <DependentUpon>AngleInputDialog.xaml</DependentUpon>

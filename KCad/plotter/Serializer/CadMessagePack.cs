@@ -1,6 +1,5 @@
 ﻿using HalfEdgeNS;
 using MessagePack;
-using MyCollections;
 using System;
 using System.Collections.Generic;
 using CadDataTypes;
@@ -46,10 +45,10 @@ namespace Plotter.Serializer
     }
 
     [MessagePackObject]
-    public class MpCadData
+    public class MpCadData_v1000
     {
         [Key("DB")]
-        public MpCadObjectDB MpDB;
+        public MpCadObjectDB_v1000 MpDB;
 
         [Key("ViewInfo")]
         public MpViewInfo ViewInfo;
@@ -57,11 +56,11 @@ namespace Plotter.Serializer
         [IgnoreMember]
         CadObjectDB DB = null;
 
-        public static MpCadData Create(CadObjectDB db)
+        public static MpCadData_v1000 Create(CadObjectDB db)
         {
-            MpCadData ret = new MpCadData();
+            MpCadData_v1000 ret = new MpCadData_v1000();
 
-            ret.MpDB = MpCadObjectDB.Create(db);
+            ret.MpDB = MpCadObjectDB_v1000.Create(db);
 
             ret.ViewInfo = new MpViewInfo();
 
@@ -131,7 +130,7 @@ namespace Plotter.Serializer
 
 
     [MessagePackObject]
-    public class MpCadObjectDB
+    public class MpCadObjectDB_v1000
     {
         [Key("LayerIdCnt")]
         public uint LayerIdCount;
@@ -140,7 +139,7 @@ namespace Plotter.Serializer
         public uint FigureIdCount;
 
         [Key("FigList")]
-        public List<MpFigure> FigureList;
+        public List<MpFigure_v1000> FigureList;
 
         [Key("LayerList")]
         public List<MpLayer> LayerList;
@@ -148,14 +147,14 @@ namespace Plotter.Serializer
         [Key("CurrentLayerID")]
         public uint CurrentLayerID;
 
-        public static MpCadObjectDB Create(CadObjectDB db)
+        public static MpCadObjectDB_v1000 Create(CadObjectDB db)
         {
-            MpCadObjectDB ret = new MpCadObjectDB();
+            MpCadObjectDB_v1000 ret = new MpCadObjectDB_v1000();
 
             ret.LayerIdCount = db.LayerIdProvider.Counter;
             ret.FigureIdCount = db.FigIdProvider.Counter;
 
-            ret.FigureList = MpUtil.FigureMapToMp(db.FigureMap);
+            ret.FigureList = MpUtil.FigureMapToMp_v1000(db.FigureMap);
 
             ret.LayerList = MpUtil.LayerListToMp(db.LayerList);
 
@@ -166,9 +165,9 @@ namespace Plotter.Serializer
 
         public void GarbageCollect()
         {
-            var idMap = new Dictionary<uint, MpFigure>();
+            var idMap = new Dictionary<uint, MpFigure_v1000>();
 
-            foreach (MpFigure fig in FigureList)
+            foreach (MpFigure_v1000 fig in FigureList)
             {
                 idMap.Add(fig.ID, fig);
             }
@@ -179,7 +178,7 @@ namespace Plotter.Serializer
             {
                 foreach (uint id in layer.FigureIdList)
                 {
-                    MpFigure fig = idMap[id];
+                    MpFigure_v1000 fig = idMap[id];
 
                     fig.ForEachFigID(idMap,(a) => {
                         activeSet.Add(a);
@@ -191,7 +190,7 @@ namespace Plotter.Serializer
 
             for (;i>=0;i--)
             {
-                MpFigure fig = FigureList[i];
+                MpFigure_v1000 fig = FigureList[i];
 
                 if (!activeSet.Contains(fig.ID))
                 {
@@ -208,7 +207,7 @@ namespace Plotter.Serializer
             ret.FigIdProvider.Counter = FigureIdCount;
 
             // Figure map
-            List<CadFigure> figList = MpUtil.FigureListFromMp(FigureList);
+            List<CadFigure> figList = MpUtil.FigureListFromMp_v1000(FigureList);
 
             var dic = new Dictionary<uint, CadFigure>();
 
@@ -226,7 +225,7 @@ namespace Plotter.Serializer
             // Child list
             for (int i = 0; i < figList.Count; i++)
             {
-                MpFigure mpfig = FigureList[i];
+                MpFigure_v1000 mpfig = FigureList[i];
                 SetFigChild(mpfig, dic);
             }
 
@@ -248,7 +247,7 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        private void SetFigChild(MpFigure mpfig, Dictionary<uint, CadFigure> dic)
+        private void SetFigChild(MpFigure_v1000 mpfig, Dictionary<uint, CadFigure> dic)
         {
             for (int i=0; i<mpfig.ChildIdList.Count; i++)
             {
@@ -260,6 +259,7 @@ namespace Plotter.Serializer
         }
 
     }
+
 
     [MessagePackObject]
     public class MpLayer
@@ -307,7 +307,7 @@ namespace Plotter.Serializer
     }
 
     [MessagePackObject]
-    public class MpFigure
+    public class MpFigure_v1000
     {
         [Key("ID")]
         public uint ID;
@@ -325,7 +325,7 @@ namespace Plotter.Serializer
         public MpVertex Normal;
 
         [Key("ChildList")]
-        public List<MpFigure> ChildList;
+        public List<MpFigure_v1000> ChildList;
 
         [Key("ChildIdList")]
         public List<uint> ChildIdList;
@@ -336,9 +336,9 @@ namespace Plotter.Serializer
         [IgnoreMember]
         public CadFigure TempFigure = null;
 
-        public static MpFigure Create(CadFigure fig, bool withChild = false)
+        public static MpFigure_v1000 Create(CadFigure fig, bool withChild = false)
         {
-            MpFigure ret = new MpFigure();
+            MpFigure_v1000 ret = new MpFigure_v1000();
 
             ret.StoreCommon(fig);
 
@@ -353,7 +353,7 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        public virtual void ForEachFig(Action<MpFigure> d)
+        public virtual void ForEachFig(Action<MpFigure_v1000> d)
         {
             d(this);
 
@@ -365,12 +365,12 @@ namespace Plotter.Serializer
             int i;
             for (i = 0; i < ChildList.Count; i++)
             {
-                MpFigure c = ChildList[i];
+                MpFigure_v1000 c = ChildList[i];
                 c.ForEachFig(d);
             }
         }
 
-        public virtual void ForEachFigID(Dictionary<uint, MpFigure> allMap, Action<uint> d)
+        public virtual void ForEachFigID(Dictionary<uint, MpFigure_v1000> allMap, Action<uint> d)
         {
             d(ID);
 
@@ -383,7 +383,7 @@ namespace Plotter.Serializer
             for (i = 0; i < ChildIdList.Count; i++)
             {
                 uint id = ChildIdList[i];
-                MpFigure childFig = allMap[id];
+                MpFigure_v1000 childFig = allMap[id];
                 childFig.ForEachFigID(allMap, d);
             }
         }
@@ -406,7 +406,7 @@ namespace Plotter.Serializer
 
         public void StoreChildList(CadFigure fig)
         {
-            ChildList = MpUtil.FigureListToMp(fig.ChildList);
+            ChildList = MpUtil.FigureListToMp_v1000(fig.ChildList);
         }
 
         public void RestoreTo(CadFigure fig)
@@ -418,7 +418,7 @@ namespace Plotter.Serializer
 
             if (ChildList != null)
             {
-                fig.ChildList = MpUtil.FigureListFromMp(ChildList);
+                fig.ChildList = MpUtil.FigureListFromMp_v1000(ChildList);
 
                 for (int i = 0; i < fig.ChildList.Count; i++)
                 {
@@ -850,144 +850,5 @@ namespace Plotter.Serializer
 
             return bs;
         }
-    }
-
-    public class MpUtil
-    {
-        public static List<MpVertex> VectortListToMp(VertexList v)
-        {
-            List<MpVertex> ret = new List<MpVertex>();
-            for (int i=0; i<v.Count; i++)
-            {
-                ret.Add(MpVertex.Create(v[i]));
-            }
-
-            return ret;
-        }
-
-        public static List<uint> FigureListToIdList(List<CadFigure> figList )
-        {
-            List<uint> ret = new List<uint>();
-            for (int i = 0; i < figList.Count; i++)
-            {
-                ret.Add(figList[i].ID);
-            }
-
-            return ret;
-        }
-
-        public static VertexList VectortListFromMp(List<MpVertex> list)
-        {
-            VertexList ret = new VertexList(list.Count);
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(list[i].Restore());
-            }
-
-            return ret;
-        }
-
-        public static List<MpFigure> FigureListToMp(List<CadFigure> figList, bool withChild=false)
-        {
-            List<MpFigure> ret = new List<MpFigure>();
-            for (int i = 0; i < figList.Count; i++)
-            {
-                ret.Add(MpFigure.Create(figList[i], withChild));
-            }
-
-            return ret;
-        }
-
-        public static List<CadFigure> FigureListFromMp(List<MpFigure> list)
-        {
-            List<CadFigure> ret = new List<CadFigure>();
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(list[i].Restore());
-            }
-
-            return ret;
-        }
-
-        public static List<MpFigure> FigureMapToMp(
-            Dictionary<uint, CadFigure> figMap, bool withChild = false)
-        {
-            List<MpFigure> ret = new List<MpFigure>();
-            foreach (CadFigure fig in figMap.Values)
-            {
-                ret.Add(MpFigure.Create(fig, withChild));
-            }
-
-            return ret;
-        }
-
-        public static List<MpHeFace> HeFaceListToMp(FlexArray<HeFace> list)
-        {
-            List<MpHeFace> ret = new List<MpHeFace>();
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(MpHeFace.Create(list[i]));
-            }
-
-            return ret;
-        }
-
-
-        public static List<MpLayer> LayerListToMp(List<CadLayer> src)
-        {
-            List<MpLayer> ret = new List<MpLayer>();
-            for (int i = 0; i < src.Count; i++)
-            {
-                ret.Add(MpLayer.Create(src[i]));
-            }
-
-            return ret;
-        }
-
-        public static List<CadLayer> LayerListFromMp(
-            List<MpLayer> src, Dictionary<uint, CadFigure> dic)
-        {
-            List<CadLayer> ret = new List<CadLayer>();
-            for (int i = 0; i < src.Count; i++)
-            {
-                ret.Add(src[i].Restore(dic));
-            }
-
-            return ret;
-        }
-
-        public static FlexArray<HeFace> HeFaceListFromMp(
-            List<MpHeFace> list,
-            Dictionary<uint, HalfEdge> dic
-            )
-        {
-            FlexArray<HeFace> ret = new FlexArray<HeFace>();
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(list[i].Restore(dic));
-            }
-
-            return ret;
-        }
-
-        public static List<MpHalfEdge> HalfEdgeListToMp(List<HalfEdge> list)
-        {
-            List<MpHalfEdge> ret = new List<MpHalfEdge>();
-            for (int i=0; i<list.Count; i++)
-            {
-                ret.Add(MpHalfEdge.Create(list[i]));
-            }
-
-            return ret;
-        }
-
-        public static T[] ArrayClone<T>(T[] src)
-        {
-            T[] dst = new T[src.Length];
-
-            Array.Copy(src, dst, src.Length);
-
-            return dst;
-        } 
     }
 }

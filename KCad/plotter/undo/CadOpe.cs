@@ -40,7 +40,7 @@ namespace Plotter
 
         public void StoreBefore(CadFigure fig)
         {
-            MpFigure mpfig = MpFigure.Create(fig);
+            MpFigure_Latest mpfig = MpFigure_Latest.Create(fig);
             Before = LZ4MessagePackSerializer.Serialize(mpfig);
 
             FigureID = fig.ID;
@@ -48,13 +48,13 @@ namespace Plotter
 
         public void StoreAfter(CadFigure fig)
         {
-            MpFigure mpfig = MpFigure.Create(fig);
+            MpFigure_Latest mpfig = MpFigure_Latest.Create(fig);
             After = LZ4MessagePackSerializer.Serialize(mpfig);
         }
 
         public override void Undo(CadObjectDB db)
         {
-            MpFigure mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure>(Before);
+            MpFigure_Latest mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure_Latest>(Before);
 
             CadFigure fig = db.GetFigure(mpfig.ID);
 
@@ -65,7 +65,7 @@ namespace Plotter
 
         public override void Redo(CadObjectDB db)
         {
-            MpFigure mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure>(After);
+            MpFigure_Latest mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure_Latest>(After);
 
             CadFigure fig = db.GetFigure(mpfig.ID);
 
