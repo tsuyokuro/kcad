@@ -43,9 +43,9 @@ namespace Plotter
 
         public int PointIndex;
 
-        public CadVector Point;     // Match座標 (World座標系)
+        public CadVertex Point;     // Match座標 (World座標系)
 
-        public CadVector PointScrn; // Match座標 (Screen座標系)
+        public CadVertex PointScrn; // Match座標 (Screen座標系)
 
         public double DistanceX;    // X距離 (Screen座標系)
         public double DistanceY;    // Y距離 (Screen座標系)
@@ -137,7 +137,7 @@ namespace Plotter
             }
         }
 
-        public CadVector pA
+        public CadVertex pA
         {
             get
             {
@@ -153,7 +153,7 @@ namespace Plotter
             }
         }
 
-        public CadVector pB
+        public CadVertex pB
         {
             get
             {
@@ -177,11 +177,11 @@ namespace Plotter
             }
         }
 
-        public CadVector CrossPoint;
+        public CadVertex CrossPoint;
 
-        public CadVector CrossPointScrn;
+        public CadVertex CrossPointScrn;
 
-        public CadVector CenterPoint
+        public CadVertex CenterPoint
         {
             get
             {

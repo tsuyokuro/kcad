@@ -36,7 +36,7 @@ namespace Plotter
             int idx = 0;
 
             for (int i=0; i < Fig.PointList.Count; i++) {
-                CadVector p = Fig.PointList[i];
+                CadVertex p = Fig.PointList[i];
                 CadPointTreeItem pi = new CadPointTreeItem(fig, idx);
                 Add(pi);
                 idx++;

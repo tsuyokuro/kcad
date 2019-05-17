@@ -13,7 +13,7 @@ namespace SplineCurve
         public int VCtrlDataCnt = 5;
 
         // 制御点リスト
-        public VectorList CtrlPoints = null;
+        public VertexList CtrlPoints = null;
 
         // Weight情報
         public double[] Weights;
@@ -118,9 +118,9 @@ namespace SplineCurve
             }
         }
 
-        private CadVector CalcPoint(double u, double v)
+        private CadVertex CalcPoint(double u, double v)
         {
-            CadVector pt = CadVector.Zero;
+            CadVertex pt = CadVertex.Zero;
 
             double weight = 0f;
 
@@ -159,7 +159,7 @@ namespace SplineCurve
             Weights[v * UCtrlDataCnt + u] = val;
         }
 
-        public void Eval(VectorList vl)
+        public void Eval(VertexList vl)
         {
             double u;
             double v;

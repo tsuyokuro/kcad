@@ -165,7 +165,7 @@ namespace Plotter
         //              |m21, m22, m23, m24|
         // (x, y, z, w) |m31, m32, m33, m34|
         //              |m41, m42, m43, m44|
-        public static CadVector operator *(CadVector p, UMatrix4 m)
+        public static CadVertex operator *(CadVertex p, UMatrix4 m)
         {
             return product(p, m);
         }
@@ -175,13 +175,13 @@ namespace Plotter
             return product(v, m);
         }
 
-        public static CadVector product(CadVector p, UMatrix4 m)
+        public static CadVertex product(CadVertex p, UMatrix4 m)
         {
-            CadVector rp = default(CadVector);
+            CadVertex rp = default(CadVertex);
 
             Vector4d v = Vector4d.Transform((Vector4d)p, m.Matrix);
 
-            rp = (CadVector)v;
+            rp = (CadVertex)v;
 
             return rp;
         }

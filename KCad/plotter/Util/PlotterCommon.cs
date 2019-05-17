@@ -76,7 +76,7 @@ namespace Plotter
 
     static class CadVectorExtensions
     {
-        public static void dump(this CadVector v, string prefix = nameof(CadVector))
+        public static void dump(this CadVertex v, string prefix = nameof(CadVertex))
         {
             DOut.pl(prefix + "{");
             DOut.Indent++;

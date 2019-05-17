@@ -19,10 +19,10 @@ namespace Plotter
             }
         }
 
-        public CadVector P0;
-        public CadVector P1;
+        public CadVertex P0;
+        public CadVertex P1;
 
-        public CadSegment(CadVector a, CadVector b)
+        public CadSegment(CadVertex a, CadVertex b)
         {
             P0 = a;
             P1 = b;
@@ -37,6 +37,18 @@ namespace Plotter
             P1.dump("P1");
             DOut.Indent--;
             DOut.pl("}");
+        }
+    }
+
+    public struct PointPair
+    {
+        public CadVertex P0;
+        public CadVertex P1;
+
+        public PointPair(CadVertex p0, CadVertex p1)
+        {
+            P0 = p0;
+            P1 = p1;
         }
     }
 
@@ -62,7 +74,7 @@ namespace Plotter
             }
         }
 
-        public CadVector Point0
+        public CadVertex Point0
         {
             get
             {
@@ -71,7 +83,7 @@ namespace Plotter
 
         }
 
-        public CadVector Point1
+        public CadVertex Point1
         {
             get
             {
@@ -79,7 +91,7 @@ namespace Plotter
             }
         }
 
-        public CadVector StoredPoint0
+        public CadVertex StoredPoint0
         {
             get
             {
@@ -88,7 +100,7 @@ namespace Plotter
 
         }
 
-        public CadVector StoredPoint1
+        public CadVertex StoredPoint1
         {
             get
             {
@@ -154,13 +166,13 @@ namespace Plotter
     // 直方体の対角線を保持
     public struct CadRect
     {
-        public CadVector p0;
-        public CadVector p1;
+        public CadVertex p0;
+        public CadVertex p1;
 
         public void Normalize()
         {
-            CadVector minv = p0;
-            CadVector maxv = p0;
+            CadVertex minv = p0;
+            CadVertex maxv = p0;
 
             if (p0.x < p1.x)
             {
@@ -225,19 +237,19 @@ namespace Plotter
             return mm;
         }
 
-        public void CheckMin(CadVector p)
+        public void CheckMin(CadVertex p)
         {
             MinX = Math.Min(MinX, p.x);
             MinY = Math.Min(MinY, p.y);
         }
 
-        public void CheckMax(CadVector p)
+        public void CheckMax(CadVertex p)
         {
             MaxX = Math.Max(MaxX, p.x);
             MaxY = Math.Max(MaxY, p.y);
         }
 
-        public void Check(CadVector p)
+        public void Check(CadVertex p)
         {
             CheckMin(p);
             CheckMax(p);
@@ -261,17 +273,17 @@ namespace Plotter
             CheckMax(mm);
         }
 
-        public CadVector GetMinAsVector()
+        public CadVertex GetMinAsVector()
         {
-            return CadVector.Create(MinX, MinY, 0);
+            return CadVertex.Create(MinX, MinY, 0);
         }
 
-        public CadVector GetMaxAsVector()
+        public CadVertex GetMaxAsVector()
         {
-            return CadVector.Create(MaxX, MaxY, 0);
+            return CadVertex.Create(MaxX, MaxY, 0);
         }
 
-        public CadVector Inner(CadVector v)
+        public CadVertex Inner(CadVertex v)
         {
             if (v.x > MaxX) v.x = MaxX;
             if (v.y > MaxY) v.y = MaxY;
@@ -312,21 +324,21 @@ namespace Plotter
             return mm;
         }
 
-        public void CheckMin(CadVector p)
+        public void CheckMin(CadVertex p)
         {
             MinX = Math.Min(MinX, p.x);
             MinY = Math.Min(MinY, p.y);
             MinZ = Math.Min(MinZ, p.z);
         }
 
-        public void CheckMax(CadVector p)
+        public void CheckMax(CadVertex p)
         {
             MaxX = Math.Max(MaxX, p.x);
             MaxY = Math.Max(MaxY, p.y);
             MaxZ = Math.Max(MaxZ, p.z);
         }
 
-        public void Check(CadVector p)
+        public void Check(CadVertex p)
         {
             CheckMin(p);
             CheckMax(p);
@@ -352,14 +364,14 @@ namespace Plotter
             CheckMax(mm);
         }
 
-        public CadVector GetMinAsVector()
+        public CadVertex GetMinAsVector()
         {
-            return CadVector.Create(MinX, MinY, MinZ);
+            return CadVertex.Create(MinX, MinY, MinZ);
         }
 
-        public CadVector GetMaxAsVector()
+        public CadVertex GetMaxAsVector()
         {
-            return CadVector.Create(MaxX, MaxY, MaxZ);
+            return CadVertex.Create(MaxX, MaxY, MaxZ);
         }
     }
 }

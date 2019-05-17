@@ -12,7 +12,7 @@ namespace Plotter
 
         private List<CadFigure> EditFigList;
 
-        private CadVector Delta = default;
+        private CadVertex Delta = default;
 
         public MoveKeyHandler(PlotterController controller)
         {
@@ -27,7 +27,7 @@ namespace Plotter
             }
 
             IsStarted = false;
-            Delta = CadVector.Zero;
+            Delta = CadVertex.Zero;
             EditFigList = null;
         }
 
@@ -36,12 +36,12 @@ namespace Plotter
             if (!IsStarted)
             {
                 EditFigList = Controller.StartEdit();
-                Delta = CadVector.Zero;
+                Delta = CadVertex.Zero;
                 IsStarted = true;
             }
 
-            CadVector wx = Controller.CurrentDC.DevVectorToWorldVector(CadVector.UnitX);
-            CadVector wy = Controller.CurrentDC.DevVectorToWorldVector(CadVector.UnitY);
+            CadVertex wx = Controller.CurrentDC.DevVectorToWorldVector(CadVertex.UnitX);
+            CadVertex wy = Controller.CurrentDC.DevVectorToWorldVector(CadVertex.UnitY);
 
             wx = wx.UnitVector() / Controller.CurrentDC.WorldScale;
             wy = wy.UnitVector() / Controller.CurrentDC.WorldScale;
@@ -78,7 +78,7 @@ namespace Plotter
                 }
                 else
                 {
-                    CadVector p = Controller.GetCursorPos();
+                    CadVertex p = Controller.GetCursorPos();
                     Controller.SetCursorWoldPos(p + Delta);
                     Controller.Redraw();
                 }

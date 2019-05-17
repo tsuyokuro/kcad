@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Plotter.Serializer
 {
@@ -22,7 +23,9 @@ namespace Plotter.Serializer
     public class MpCadFile
     {
         private static byte[] Sign;
-        private static byte[] Version = { 1, 0, 0, 0 };
+        private static byte[] Version = { 1, 0, 0, 1 };
+        private static string JsonSign = "KCAD_JSON";
+        private static string JsonVersion = "1001";
 
         static MpCadFile()
         {
@@ -53,14 +56,23 @@ namespace Plotter.Serializer
 
             fs.Close();
 
-            MpCadData mpdata = MessagePackSerializer.Deserialize<MpCadData>(data);
+            if (version[0] == 1 && version[1] == 0 && version[2] == 0 && version[3] == 0)
+            {
+                MpCadData_v1000 mpdata = MessagePackSerializer.Deserialize<MpCadData_v1000>(data);
+                return CreateCadData(mpdata);
+            }
+            else if (version[0] == 1 && version[1] == 0 && version[2] == 0 && version[3] == 1)
+            {
+                MpCadData_v1001 mpdata = MessagePackSerializer.Deserialize<MpCadData_v1001>(data);
+                return CreateCadData(mpdata);
+            }
 
-            return CreateCadData(mpdata);
+            return null;
         }
 
         public static void Save(string fname, CadData cd)
         {
-            MpCadData mpcd = CreateMpCadData(cd);
+            MpCadData_v1001 mpcd = CreateMpCadData_v1001(cd);
 
             mpcd.MpDB.GarbageCollect();
 
@@ -77,11 +89,21 @@ namespace Plotter.Serializer
 
         public static void SaveAsJson(string fname, CadData cd)
         {
-            MpCadData data = CreateMpCadData(cd);
-            string s = MessagePackSerializer.ToJson<MpCadData>(data);
+            MpCadData_v1001 data = CreateMpCadData_v1001(cd);
+            string s = MessagePackSerializer.ToJson<MpCadData_v1001>(data);
+
+            s = s.Trim();
+
+            s = s.Substring(1, s.Length - 2);
+
+            string ss = @"{" + "\n" +
+                        @"""header"":""" + "type=" + JsonSign + "," + "version=" + JsonVersion + @"""," + "\n" +
+                        s + "\n" +
+                        @"}";
 
             StreamWriter writer = new StreamWriter(fname);
-            writer.Write(s);
+
+            writer.Write(ss);
 
             writer.Close();
         }
@@ -90,27 +112,47 @@ namespace Plotter.Serializer
         {
             StreamReader reader = new StreamReader(fname);
 
-            string js = reader.ReadToEnd();
+            reader.ReadLine(); // skip "{\n"
+            string header = reader.ReadLine();
+            Regex headerPtn = new Regex(@"version=([0-9a-fA-F]+)");
 
+            Match m = headerPtn.Match(header);
+
+            string version = "";
+
+            if (m.Groups.Count >= 1)
+            {
+                version = m.Groups[1].Value;
+            }
+
+            string js = reader.ReadToEnd();
             reader.Close();
+
+            js = js.Trim();
+            js = js.Substring(0, js.Length - 1);
+            js = "{" + js + "}";
 
             byte[] bin = MessagePackSerializer.FromJson(js);
 
-            MpCadData mpcd = MessagePackSerializer.Deserialize<MpCadData>(bin);
+            if (version == "1001")
+            {
+                MpCadData_v1001 mpcd = MessagePackSerializer.Deserialize<MpCadData_v1001>(bin);
 
-            CadData cd = new CadData(
-                mpcd.GetDB(),
-                mpcd.ViewInfo.WorldScale,
-                mpcd.ViewInfo.PaperSettings.GetPaperPageSize()
-                );
+                CadData cd = new CadData(
+                    mpcd.GetDB(),
+                    mpcd.ViewInfo.WorldScale,
+                    mpcd.ViewInfo.PaperSettings.GetPaperPageSize()
+                    );
 
-            return cd;
+                return cd;
+            }
+
+            return null;
         }
 
-
-        private static MpCadData CreateMpCadData(CadData cd)
+        private static MpCadData_v1001 CreateMpCadData_v1001(CadData cd)
         {
-            MpCadData data = MpCadData.Create(cd.DB);
+            MpCadData_v1001 data = MpCadData_v1001.Create(cd.DB);
 
             data.ViewInfo.WorldScale = cd.WorldScale;
 
@@ -119,7 +161,48 @@ namespace Plotter.Serializer
             return data;
         }
 
-        private static CadData CreateCadData(MpCadData mpcd)
+        private static CadData CreateCadData(MpCadData_v1000 mpcd)
+        {
+            CadData cd = new CadData();
+
+            MpViewInfo viewInfo = mpcd.ViewInfo;
+
+            double worldScale = 0;
+
+            PaperPageSize pps = null;
+
+            if (viewInfo != null)
+            {
+                worldScale = viewInfo.WorldScale;
+
+                if (viewInfo.PaperSettings != null)
+                {
+                    pps = viewInfo.PaperSettings.GetPaperPageSize();
+                }
+            }
+
+
+            if (worldScale == 0)
+            {
+                worldScale = 1.0;
+            }
+
+            cd.WorldScale = worldScale;
+
+
+            if (pps == null)
+            {
+                pps = new PaperPageSize();
+            }
+
+            cd.PageSize = pps;
+
+            cd.DB = mpcd.GetDB();
+
+            return cd;
+        }
+
+        private static CadData CreateCadData(MpCadData_v1001 mpcd)
         {
             CadData cd = new CadData();
 

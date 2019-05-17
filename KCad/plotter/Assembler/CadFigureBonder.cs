@@ -20,8 +20,8 @@ namespace Plotter
 
             CadLayer layer = db.GetLayer(fig.LayerID);
 
-            CadVector ps = fig.PointList[0];
-            CadVector pe = fig.PointList[fig.PointCount-1];
+            CadVertex ps = fig.PointList[0];
+            CadVertex pe = fig.PointList[fig.PointCount-1];
 
             int pi = -1;
             int bpi = -1;
@@ -40,8 +40,8 @@ namespace Plotter
                     continue;
                 }
 
-                CadVector tps = tfig.PointList[0];
-                CadVector tpe = tfig.PointList[tfig.PointCount - 1];
+                CadVertex tps = tfig.PointList[0];
+                CadVertex tpe = tfig.PointList[tfig.PointCount - 1];
 
                 if (tps.Equals(ps))
                 {
@@ -83,8 +83,8 @@ namespace Plotter
 
             CadFigure newFig = db.NewFigure(CadFigure.Types.POLY_LINES);
 
-            VectorList plist = new VectorList(fig.PointList);
-            VectorList blist = new VectorList(bfig.PointList);
+            VertexList plist = new VertexList(fig.PointList);
+            VertexList blist = new VertexList(bfig.PointList);
 
             if (pi == 0)
             {

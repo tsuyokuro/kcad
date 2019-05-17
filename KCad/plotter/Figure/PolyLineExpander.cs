@@ -10,19 +10,19 @@ namespace Plotter
     // PolyLineの直線部分に含めてスプライン曲線部分を点リストに展開する
     public static class PolyLineExpander
     {
-        public static VectorList GetExpandList(
-            VectorList src,
+        public static VertexList GetExpandList(
+            VertexList src,
             int curveSplitNum)
         {
             return GetExpandList(src, 0, src.Count, curveSplitNum);
         }
 
-        public static VectorList GetExpandList(
-            VectorList src,
+        public static VertexList GetExpandList(
+            VertexList src,
             int start, int cnt,
             int curveSplitNum)
         {
-            VectorList ret = new VectorList(curveSplitNum * ((cnt + 1) / 2));
+            VertexList ret = new VertexList(curveSplitNum * ((cnt + 1) / 2));
 
             ForEachPoints(src, start, cnt, curveSplitNum, (v)=> { ret.Add(v); });
 
@@ -30,20 +30,20 @@ namespace Plotter
         }
 
         public static void ForEachPoints(
-            VectorList src,
+            VertexList src,
             int curveSplitNum,
-            Action<CadVector> action)
+            Action<CadVertex> action)
         {
             ForEachPoints(src, 0, src.Count, curveSplitNum, action);
         }
 
         public static void ForEachPoints(
-            VectorList src,
+            VertexList src,
             int start, int cnt,
             int curveSplitNum,
-            Action<CadVector> action)
+            Action<CadVertex> action)
         {
-            VectorList pl = src;
+            VertexList pl = src;
 
             if (cnt <= 0)
             {

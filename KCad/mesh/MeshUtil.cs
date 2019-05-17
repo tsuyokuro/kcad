@@ -36,7 +36,7 @@ namespace MeshUtilNS
 
         public static List<CadFace> Split(CadFace face, CadMesh mesh)
         {
-            CadVector p0 = default(CadVector);
+            CadVertex p0 = default(CadVertex);
 
             // Deep copy
             CadFace src = new CadFace(face);
@@ -58,12 +58,12 @@ namespace MeshUtilNS
 
             triangle = GetTriangleWithCenterPoint(src, i1);
 
-            CadVector tp0 = mesh.VertexStore[ triangle.VList[0] ];
-            CadVector tp1 = mesh.VertexStore[ triangle.VList[1] ];
-            CadVector tp2 = mesh.VertexStore[ triangle.VList[2] ];
+            CadVertex tp0 = mesh.VertexStore[ triangle.VList[0] ];
+            CadVertex tp1 = mesh.VertexStore[ triangle.VList[1] ];
+            CadVertex tp2 = mesh.VertexStore[ triangle.VList[2] ];
 
-            CadVector dir = CadMath.Normal(tp1, tp0, tp2);
-            CadVector currentDir = CadVector.Zero;
+            CadVertex dir = CadMath.Normal(tp1, tp0, tp2);
+            CadVertex currentDir = CadVertex.Zero;
 
             while (src.VList.Count > 3)
             {
@@ -130,7 +130,7 @@ namespace MeshUtilNS
 
             for (int i=0; i< face.VList.Count; i++)
             {
-                CadVector fv = mesh.VertexStore[ face.VList[i] ];
+                CadVertex fv = mesh.VertexStore[ face.VList[i] ];
 
                 if (
                     fv.Equals(mesh.VertexStore[ tps[0] ]) ||
@@ -151,18 +151,18 @@ namespace MeshUtilNS
             return false;
         }
 
-        public static int FindMaxDistantPointIndex(CadVector p0, CadFace f, CadMesh mesh)
+        public static int FindMaxDistantPointIndex(CadVertex p0, CadFace f, CadMesh mesh)
         {
             int ret = -1;
             int i;
 
-            CadVector t;
+            CadVertex t;
 
             double maxd = 0;
 
             for (i = 0; i < f.VList.Count; i++)
             {
-                CadVector fp = mesh.VertexStore[ f.VList[i] ];
+                CadVertex fp = mesh.VertexStore[ f.VList[i] ];
 
                 t = fp - p0;
                 double d = t.Norm();
@@ -197,20 +197,20 @@ namespace MeshUtilNS
             return triangle;
         }
 
-        public static bool IsPointInTriangle(CadVector p, CadFace triangle, CadMesh mesh)
+        public static bool IsPointInTriangle(CadVertex p, CadFace triangle, CadMesh mesh)
         {
             if (triangle.VList.Count < 3)
             {
                 return false;
             }
 
-            CadVector p0 = mesh.VertexStore[ triangle.VList[0] ];
-            CadVector p1 = mesh.VertexStore[ triangle.VList[1] ];
-            CadVector p2 = mesh.VertexStore[ triangle.VList[2] ];
+            CadVertex p0 = mesh.VertexStore[ triangle.VList[0] ];
+            CadVertex p1 = mesh.VertexStore[ triangle.VList[1] ];
+            CadVertex p2 = mesh.VertexStore[ triangle.VList[2] ];
 
-            CadVector c1 = CadMath.CrossProduct(p, p0, p1);
-            CadVector c2 = CadMath.CrossProduct(p, p1, p2);
-            CadVector c3 = CadMath.CrossProduct(p, p2, p0);
+            CadVertex c1 = CadMath.CrossProduct(p, p0, p1);
+            CadVertex c2 = CadMath.CrossProduct(p, p1, p2);
+            CadVertex c3 = CadMath.CrossProduct(p, p2, p0);
 
             double ip12 = CadMath.InnerProduct(c1, c2);
             double ip13 = CadMath.InnerProduct(c1, c3);
@@ -225,7 +225,7 @@ namespace MeshUtilNS
             return false;
         }
 
-        public static CadMesh CreateFrom(VectorList vl)
+        public static CadMesh CreateFrom(VertexList vl)
         {
             if (vl.Count < 2)
             {

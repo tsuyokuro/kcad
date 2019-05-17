@@ -15,6 +15,8 @@ using KCad;
 using Plotter.Serializer;
 using MessagePack;
 using Newtonsoft.Json.Linq;
+using System.Drawing;
+using OpenTK.Graphics;
 
 namespace Plotter.Controller
 {
@@ -22,13 +24,13 @@ namespace Plotter.Controller
     {
         private void test001()
         {
-            VectorList vl = new VectorList();
+            VertexList vl = new VertexList();
 
-            vl.Add(CadVector.Create(0, 20, 0));
-            vl.Add(CadVector.Create(15, 15, 0));
-            vl.Add(CadVector.Create(18, 0, 0));
-            vl.Add(CadVector.Create(15, -15, 0));
-            vl.Add(CadVector.Create(10, -20, 0));
+            vl.Add(CadVertex.Create(0, 20, 0));
+            vl.Add(CadVertex.Create(15, 15, 0));
+            vl.Add(CadVertex.Create(18, 0, 0));
+            vl.Add(CadVertex.Create(15, -15, 0));
+            vl.Add(CadVertex.Create(10, -20, 0));
 
             CadMesh cm = MeshMaker.CreateRotatingBody(16, vl);
 
@@ -70,7 +72,7 @@ namespace Plotter.Controller
             }
 
 
-            CadMesh cm = MeshMaker.CreateExtruded(tfig.GetPoints(16), CadVector.UnitZ * -20);
+            CadMesh cm = MeshMaker.CreateExtruded(tfig.GetPoints(16), CadVertex.UnitZ * -20);
 
             HeModel hem = HeModelConverter.ToHeModel(cm);
 
@@ -98,8 +100,8 @@ namespace Plotter.Controller
                 return;
             }
 
-            CadVector v1 = fig.PointList[0] - fig.PointList[1];
-            CadVector v2 = fig.PointList[2] - fig.PointList[1];
+            CadVertex v1 = fig.PointList[0] - fig.PointList[1];
+            CadVertex v2 = fig.PointList[2] - fig.PointList[1];
 
             double t = CadMath.AngleOfVector(v1, v2);
 
@@ -134,7 +136,7 @@ namespace Plotter.Controller
                         continue;
                     }
 
-                    CadVector p = fig.PointList[j];
+                    CadVertex p = fig.PointList[j];
 
                     p.z = 0;
 
@@ -156,8 +158,8 @@ namespace Plotter.Controller
         public static MinMax2D FigureMinMaxScrn(DrawContext dc, CadFigure fig)
         {
             MinMax2D mm = MinMax2D.Create();
-            CadVector p0;
-            CadVector p1;
+            CadVertex p0;
+            CadVertex p1;
 
             fig.ForEachSegment(seg =>
             {
@@ -239,8 +241,8 @@ namespace Plotter.Controller
 
                     for (; k < pcnt; k++)
                     {
-                        CadVector p = fig.PointList[k];
-                        CadVector sp = dc.WorldPointToDevPoint(p);
+                        CadVertex p = fig.PointList[k];
+                        CadVertex sp = dc.WorldPointToDevPoint(p);
                     }
                 }
             }
@@ -500,7 +502,7 @@ namespace Plotter.Controller
             int ucnt = 8;
             int vcnt = 5;
 
-            VectorList vl =SplineUtil.CreateFlatControlPoints(ucnt, vcnt, CadVector.UnitX * 20.0, CadVector.UnitZ * 20.0);
+            VertexList vl =SplineUtil.CreateFlatControlPoints(ucnt, vcnt, CadVertex.UnitX * 20.0, CadVertex.UnitZ * 20.0);
 
             nfig.Setup(2, ucnt, vcnt, vl, null, 16, 16);
 
@@ -520,8 +522,8 @@ namespace Plotter.Controller
             int ucnt = 4;
             int vcnt = 4;
 
-            VectorList vl = SplineUtil.CreateBoxControlPoints(
-                ucnt, vcnt, CadVector.UnitX * 20.0, CadVector.UnitZ * 20.0, CadVector.UnitY * -20.0 );
+            VertexList vl = SplineUtil.CreateBoxControlPoints(
+                ucnt, vcnt, CadVertex.UnitX * 20.0, CadVertex.UnitZ * 20.0, CadVertex.UnitY * -20.0 );
 
             nfig.Setup(2, ucnt*2, vcnt, vl, null, 16, 16, false, false, true, true);
 
@@ -547,28 +549,6 @@ namespace Plotter.Controller
 
         private void Test()
         {
-            #region 別スレッド例外処理のテスト
-            //CadFigure fig = null;
-
-            //await Task.Run(() =>
-            //{
-            //    fig.AddPoint(CadVector.Create(0, 0, 0));
-            //});
-            #endregion
-
-            MpCadData data = MpCadData.Create(Controller.DB);
-
-            data.ViewInfo.WorldScale = Controller.CurrentDC.WorldScale;
-
-            data.ViewInfo.PaperSettings.Set(Controller.PageSize);
-
-            byte[] bin_data = MessagePackSerializer.Serialize(data);
-
-            string s = MessagePackSerializer.ToJson(bin_data);
-
-            JObject jo = JObject.Parse(s);
-
-            s = jo.ToString();
         }
 
         private void testTriangulate()
@@ -584,7 +564,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            VectorList vl = tfig.GetPoints(12);
+            VertexList vl = tfig.GetPoints(12);
 
             CadMesh m = IglW.Triangulate(vl, "a1000q");
 

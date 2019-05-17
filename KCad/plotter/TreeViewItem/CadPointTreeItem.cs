@@ -26,7 +26,7 @@ namespace Plotter
 
             set
             {
-                CadVector v = Fig.GetPointAt(Index);
+                CadVertex v = Fig.GetPointAt(Index);
                 v.Selected = value;
                 Fig.SetPointAt(Index, v);
             }
@@ -36,7 +36,7 @@ namespace Plotter
         {
             get
             {
-                CadVector v;
+                CadVertex v;
 
                 if (Index >= 0 && Index < Fig.PointCount)
                 {

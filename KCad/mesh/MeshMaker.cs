@@ -13,7 +13,7 @@ namespace MeshMakerNS
             QUADRANGLE,
         }
 
-        public static CadMesh CreateBox(CadVector pos, CadVector sv, FaceType faceType = FaceType.TRIANGLE)
+        public static CadMesh CreateBox(CadVertex pos, CadVertex sv, FaceType faceType = FaceType.TRIANGLE)
         {
             CadMesh cm = CreateUnitCube(faceType);
 
@@ -31,15 +31,15 @@ namespace MeshMakerNS
         {
             CadMesh cm = new CadMesh(8, 12);
 
-            cm.VertexStore.Add(CadVector.Create(+0.5, +0.5, +0.5));
-            cm.VertexStore.Add(CadVector.Create(-0.5, +0.5, +0.5));
-            cm.VertexStore.Add(CadVector.Create(-0.5, -0.5, +0.5));
-            cm.VertexStore.Add(CadVector.Create(+0.5, -0.5, +0.5));
+            cm.VertexStore.Add(CadVertex.Create(+0.5, +0.5, +0.5));
+            cm.VertexStore.Add(CadVertex.Create(-0.5, +0.5, +0.5));
+            cm.VertexStore.Add(CadVertex.Create(-0.5, -0.5, +0.5));
+            cm.VertexStore.Add(CadVertex.Create(+0.5, -0.5, +0.5));
 
-            cm.VertexStore.Add(CadVector.Create(+0.5, +0.5, -0.5));
-            cm.VertexStore.Add(CadVector.Create(-0.5, +0.5, -0.5));
-            cm.VertexStore.Add(CadVector.Create(-0.5, -0.5, -0.5));
-            cm.VertexStore.Add(CadVector.Create(+0.5, -0.5, -0.5));
+            cm.VertexStore.Add(CadVertex.Create(+0.5, +0.5, -0.5));
+            cm.VertexStore.Add(CadVertex.Create(-0.5, +0.5, -0.5));
+            cm.VertexStore.Add(CadVertex.Create(-0.5, -0.5, -0.5));
+            cm.VertexStore.Add(CadVertex.Create(+0.5, -0.5, -0.5));
 
             if (faceType == FaceType.QUADRANGLE)
             {
@@ -79,7 +79,7 @@ namespace MeshMakerNS
             return cm;
         }
 
-        public static CadMesh CreateCylinder(CadVector pos, int slices, double r, double len)
+        public static CadMesh CreateCylinder(CadVertex pos, int slices, double r, double len)
         {
             CadMesh mesh = CreateCylinder(slices, r, len);
 
@@ -96,16 +96,16 @@ namespace MeshMakerNS
         {
             CadMesh mesh = new CadMesh(slices * 2 + 2, slices * 3);
 
-            mesh.VertexStore.Add(CadVector.Create(0, 0, len / 2));
-            mesh.VertexStore.Add(CadVector.Create(0, 0, -len / 2));
+            mesh.VertexStore.Add(CadVertex.Create(0, 0, len / 2));
+            mesh.VertexStore.Add(CadVertex.Create(0, 0, -len / 2));
 
             for (int i = 0; i < slices; i++)
             {
                 double a1 = i * Math.PI * 2.0 / slices;
                 double y = Math.Cos(a1) * r;
                 double x = Math.Sin(a1) * r;
-                mesh.VertexStore.Add(CadVector.Create(x, y, len / 2));
-                mesh.VertexStore.Add(CadVector.Create(x, y, -len / 2));
+                mesh.VertexStore.Add(CadVertex.Create(x, y, len / 2));
+                mesh.VertexStore.Add(CadVertex.Create(x, y, -len / 2));
             }
 
             for (int i = 0; i < slices; i++)
@@ -133,7 +133,7 @@ namespace MeshMakerNS
 
         public static CadMesh CreateSphere(double r, int slices1, int slices2)
         {
-            VectorList vl = new VectorList(slices2);
+            VertexList vl = new VertexList(slices2);
 
             double d = Math.PI / slices2;
 
@@ -145,10 +145,10 @@ namespace MeshMakerNS
                 double x = Math.Sin(a) * r;
                 double y = Math.Cos(a) * r;
 
-                vl.Add(CadVector.Create(x, y, 0));
+                vl.Add(CadVertex.Create(x, y, 0));
             }
 
-            vl.Add(CadVector.Create(0, -r, 0));
+            vl.Add(CadVertex.Create(0, -r, 0));
 
 
             return CreateRotatingBody(slices1, vl);
@@ -156,7 +156,7 @@ namespace MeshMakerNS
 
 
         // 回転体の作成
-        public static CadMesh CreateRotatingBody(int slices, VectorList vl, FaceType facetype = FaceType.TRIANGLE)
+        public static CadMesh CreateRotatingBody(int slices, VertexList vl, FaceType facetype = FaceType.TRIANGLE)
         {
             if (vl.Count < 2)
             {
@@ -202,8 +202,8 @@ namespace MeshMakerNS
 
                 for (int vi=s; vi<e; vi++)
                 {
-                    CadVector v = vl[vi];
-                    CadVector vv = default(CadVector);
+                    CadVertex v = vl[vi];
+                    CadVertex vv = default(CadVertex);
 
                     vv.x = v.x * Math.Cos(a);
                     vv.y = v.y;
@@ -287,7 +287,7 @@ namespace MeshMakerNS
             return mesh;
         }
 
-        public static CadMesh CreateExtruded(VectorList src, CadVector dv, int div = 0)
+        public static CadMesh CreateExtruded(VertexList src, CadVertex dv, int div = 0)
         {
             if (src.Count < 3)
             {
@@ -296,14 +296,14 @@ namespace MeshMakerNS
 
             div += 1;
 
-            VectorList vl;
+            VertexList vl;
 
-            CadVector n = CadUtil.RepresentativeNormal(src);
+            CadVertex n = CadUtil.RepresentativeNormal(src);
 
 
             if (CadMath.InnerProduct(n, dv) <= 0)
             {
-                vl = new VectorList(src);
+                vl = new VertexList(src);
                 vl.Reverse();
             }
             else
@@ -317,9 +317,9 @@ namespace MeshMakerNS
 
             CadFace f;
 
-            CadVector dt = dv / div;
+            CadVertex dt = dv / div;
 
-            CadVector sv = CadVector.Zero;
+            CadVertex sv = CadVertex.Zero;
 
             // 頂点リスト作成
             for (int i = 0; i < div + 1; i++)

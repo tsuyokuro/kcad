@@ -53,7 +53,7 @@ namespace Plotter
 
             int code;
 
-            VectorList pointList = new VectorList();
+            VertexList pointList = new VertexList();
 
             while (!reader.EndOfStream)
             {
@@ -98,7 +98,7 @@ namespace Plotter
 
                     if (valCnt >= 3)
                     {
-                        pointList.Add(CadVector.Create(val[0], val[1], val[2]));
+                        pointList.Add(CadVertex.Create(val[0], val[1], val[2]));
                         valCnt = 0;
 
                         TotalPointCount++;
@@ -111,7 +111,7 @@ namespace Plotter
             return mesh;
         }
 
-        private void AddFace(CadMesh mesh, VectorList plist)
+        private void AddFace(CadMesh mesh, VertexList plist)
         {
             if (plist.Count == 0)
             {

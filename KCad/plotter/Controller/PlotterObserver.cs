@@ -27,7 +27,7 @@ namespace Plotter.Controller
 
         //public Action<PlotterController, bool> DataChanged = (controller, redraw) => { };
 
-        public Action<PlotterController, CadVector, CursorType> CursorPosChanged = (controller, pos, cursorType) => { };
+        public Action<PlotterController, CadVertex, CursorType> CursorPosChanged = (controller, pos, cursorType) => { };
 
         public Action<bool> UpdateTreeView = (remakeTree) => { };
 

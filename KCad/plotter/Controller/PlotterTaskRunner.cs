@@ -36,8 +36,8 @@ namespace Plotter.Controller.TaskRunner
                     return;
                 }
 
-                CadVector normal = CadMath.Normal(
-                    res.p1 - res.p0, (CadVector)(Controller.CurrentDC.ViewDir));
+                CadVertex normal = CadMath.Normal(
+                    res.p1 - res.p0, (CadVertex)(Controller.CurrentDC.ViewDir));
 
                 FlipWithPlane(rootFigList, res.p0, normal);
                 Controller.EndEdit();
@@ -45,7 +45,7 @@ namespace Plotter.Controller.TaskRunner
             });
         }
 
-        public void FlipWithPlane(List<CadFigure> rootFigList, CadVector p0, CadVector normal)
+        public void FlipWithPlane(List<CadFigure> rootFigList, CadVertex p0, CadVertex normal)
         {
             foreach (CadFigure fig in rootFigList)
             {
@@ -56,17 +56,17 @@ namespace Plotter.Controller.TaskRunner
             }
         }
 
-        public void FlipWithPlane(CadFigure fig, CadVector p0, CadVector normal)
+        public void FlipWithPlane(CadFigure fig, CadVertex p0, CadVertex normal)
         {
-            VectorList vl = fig.PointList;
+            VertexList vl = fig.PointList;
 
             for (int i = 0; i < vl.Count; i++)
             {
-                CadVector v = vl[i];
+                CadVertex v = vl[i];
 
-                CadVector cp = CadUtil.CrossPlane(v, p0, normal);
+                CadVertex cp = CadUtil.CrossPlane(v, p0, normal);
 
-                CadVector d = v - cp;
+                CadVertex d = v - cp;
 
                 v = cp - d;
 
@@ -91,14 +91,14 @@ namespace Plotter.Controller.TaskRunner
                     return;
                 }
 
-                CadVector normal = CadMath.Normal(
-                    res.p1 - res.p0, (CadVector)(Controller.CurrentDC.ViewDir));
+                CadVertex normal = CadMath.Normal(
+                    res.p1 - res.p0, (CadVertex)(Controller.CurrentDC.ViewDir));
 
                 FlipAndCopyWithPlane(rootFigList, res.p0, normal);
             });
         }
 
-        public void FlipAndCopyWithPlane(List<CadFigure> rootFigList, CadVector p0, CadVector normal)
+        public void FlipAndCopyWithPlane(List<CadFigure> rootFigList, CadVertex p0, CadVertex normal)
         {
             List<CadFigure> cpy = PlotterClipboard.CopyFigures(rootFigList);
 
@@ -142,7 +142,7 @@ namespace Plotter.Controller.TaskRunner
                     return;
                 }
 
-                CadVector p0 = res.p0;
+                CadVertex p0 = res.p0;
 
                 double angle = 0;
 
@@ -172,7 +172,7 @@ namespace Plotter.Controller.TaskRunner
                 RotateWithAxis(
                     rootFigList,
                     p0,
-                    (CadVector)Controller.CurrentDC.ViewDir,
+                    (CadVertex)Controller.CurrentDC.ViewDir,
                     CadMath.Deg2Rad(angle));
 
                 Controller.EndEdit();
@@ -180,7 +180,7 @@ namespace Plotter.Controller.TaskRunner
             });
         }
 
-        public void RotateWithAxis(List<CadFigure> rootFigList, CadVector org, CadVector axisDir, double angle)
+        public void RotateWithAxis(List<CadFigure> rootFigList, CadVertex org, CadVertex axisDir, double angle)
         {
             foreach (CadFigure fig in rootFigList)
             {
@@ -191,7 +191,7 @@ namespace Plotter.Controller.TaskRunner
             }
         }
 
-        public (CadVector p0, InteractCtrl.States state) InputPoint()
+        public (CadVertex p0, InteractCtrl.States state) InputPoint()
         {
             InteractCtrl ctrl = Controller.mInteractCtrl;
 
@@ -210,11 +210,11 @@ namespace Plotter.Controller.TaskRunner
                 ClosePopupMessage();
                 ItConsole.println("Cancel!");
                 return (
-                    CadVector.InvalidValue,
+                    CadVertex.InvalidValue,
                     InteractCtrl.States.CANCEL);
             }
 
-            CadVector p0 = ctrl.PointList[0];
+            CadVertex p0 = ctrl.PointList[0];
             ItConsole.println(p0.CoordString());
             ctrl.End();
             ClosePopupMessage();
@@ -223,7 +223,7 @@ namespace Plotter.Controller.TaskRunner
         }
 
 
-        public (CadVector p0, CadVector p1, InteractCtrl.States state) InputLine()
+        public (CadVertex p0, CadVertex p1, InteractCtrl.States state) InputLine()
         {
             InteractCtrl ctrl = Controller.mInteractCtrl;
 
@@ -242,12 +242,12 @@ namespace Plotter.Controller.TaskRunner
                 ClosePopupMessage();
                 ItConsole.println("Cancel!");
                 return (
-                    CadVector.InvalidValue,
-                    CadVector.InvalidValue,
+                    CadVertex.InvalidValue,
+                    CadVertex.InvalidValue,
                     InteractCtrl.States.CANCEL);
             }
 
-            CadVector p0 = ctrl.PointList[0];
+            CadVertex p0 = ctrl.PointList[0];
             ItConsole.println(p0.CoordString());
 
             ItConsole.println(AnsiEsc.BYellow + "<< Input point 2 >>");
@@ -260,12 +260,12 @@ namespace Plotter.Controller.TaskRunner
                 ClosePopupMessage();
                 ItConsole.println("Cancel!");
                 return (
-                    CadVector.InvalidValue,
-                    CadVector.InvalidValue,
+                    CadVertex.InvalidValue,
+                    CadVertex.InvalidValue,
                     InteractCtrl.States.CANCEL);
             }
 
-            CadVector p1 = ctrl.PointList[1];
+            CadVertex p1 = ctrl.PointList[1];
             ItConsole.println(p1.CoordString());
 
             ctrl.End();

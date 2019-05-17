@@ -87,8 +87,8 @@ namespace Plotter
             CadFigure fig = fseg.Figure;
             int idxA = fseg.Index0;
             int idxB = fseg.Index1;
-            CadVector a = fseg.Point0;
-            CadVector b = fseg.Point1;
+            CadVertex a = fseg.Point0;
+            CadVertex b = fseg.Point1;
 
             if (fig.StoreList != null)
             {
@@ -96,37 +96,41 @@ namespace Plotter
                 b = fseg.StoredPoint1;
             }
 
-            CadVector cwp = dc.DevPointToWorldPoint(Target.Pos);
+            CadVertex cwp = dc.DevPointToWorldPoint(Target.Pos);
 
-            CadVector xfaceNormal = dc.DevVectorToWorldVector(Target.DirX);
-            CadVector yfaceNormal = dc.DevVectorToWorldVector(Target.DirY);
+            CadVertex xfaceNormal = dc.DevVectorToWorldVector(Target.DirX);
+            CadVertex yfaceNormal = dc.DevVectorToWorldVector(Target.DirY);
 
-            CadVector cx = CadUtil.CrossSegPlane(a, b, cwp, xfaceNormal);
-            CadVector cy = CadUtil.CrossSegPlane(a, b, cwp, yfaceNormal);
+            CadVertex cx = CadUtil.CrossSegPlane(a, b, cwp, xfaceNormal);
+            CadVertex cy = CadUtil.CrossSegPlane(a, b, cwp, yfaceNormal);
 
-            CadVector pa = dc.WorldPointToDevPoint(a);
-            CadVector pb = dc.WorldPointToDevPoint(b);
+            CadVertex pa = dc.WorldPointToDevPoint(a);
+            CadVertex pb = dc.WorldPointToDevPoint(b);
 
             if (!cx.Valid && !cy.Valid)
             {
                 return;
             }
 
-            CadVector p = CadVector.InvalidValue;
+            CadVertex p = CadVertex.InvalidValue;
             double mind = Double.MaxValue;
 
-            Span<CadVector> vtbl = stackalloc CadVector[] { cx, cy };
+            CadVectorArray4 vtbl = default;
+
+            vtbl[0] = cx;
+            vtbl[1] = cy;
+            vtbl.Length = 2;
 
             for (int i = 0; i < vtbl.Length; i++)
             {
-                CadVector v = vtbl[i];
+                CadVertex v = vtbl[i];
 
                 if (!v.Valid)
                 {
                     continue;
                 }
 
-                CadVector devv = dc.WorldPointToDevPoint(v);
+                CadVertex devv = dc.WorldPointToDevPoint(v);
 
                 double td = (devv - Target.Pos).Norm();
 
@@ -167,7 +171,7 @@ namespace Plotter
                 return;
             }
 
-            VectorList vl = fig.PointList;
+            VertexList vl = fig.PointList;
 
             if (fig.StoreList != null)
             {
@@ -175,14 +179,14 @@ namespace Plotter
             }
 
 
-            CadVector c = vl[0];
-            CadVector a = vl[1];
-            CadVector b = vl[2];
+            CadVertex c = vl[0];
+            CadVertex a = vl[1];
+            CadVertex b = vl[2];
 
 
-            CadVector pc = dc.WorldPointToDevPoint(c);
-            CadVector pa = dc.WorldPointToDevPoint(a);
-            CadVector pb = dc.WorldPointToDevPoint(b);
+            CadVertex pc = dc.WorldPointToDevPoint(c);
+            CadVertex pa = dc.WorldPointToDevPoint(a);
+            CadVertex pb = dc.WorldPointToDevPoint(b);
 
             double r = CadUtil.SegNorm2D(pa, pc);
             double tr = CadUtil.SegNorm2D(Target.Pos, pc);
@@ -207,11 +211,11 @@ namespace Plotter
 
             if (dist < MinDist)
             {
-                CadVector tp = dc.DevPointToWorldPoint(Target.Pos);
+                CadVertex tp = dc.DevPointToWorldPoint(Target.Pos);
                 r = CadUtil.SegNorm(a, c);
                 tr = CadUtil.SegNorm(tp, c);
 
-                CadVector td = tp - c;
+                CadVertex td = tp - c;
 
                 td *= (r / tr);
                 td += c;

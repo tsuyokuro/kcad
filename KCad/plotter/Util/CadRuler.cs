@@ -7,7 +7,7 @@ namespace Plotter
     public struct RulerInfo
     {
         public bool IsValid;
-        public CadVector CrossPoint;
+        public CadVertex CrossPoint;
         public double Distance;
 
         public CadRuler Ruler;
@@ -21,7 +21,7 @@ namespace Plotter
         public int Idx0;
         public int Idx1;
 
-        public CadVector P0
+        public CadVertex P0
         {
             get
             {
@@ -36,7 +36,7 @@ namespace Plotter
             }
         }
 
-        public CadVector P1
+        public CadVertex P1
         {
             get
             {
@@ -55,34 +55,40 @@ namespace Plotter
         {
             RulerInfo ret = default(RulerInfo);
 
-            CadVector cwp = dc.DevPointToWorldPoint(cursor.Pos);
+            CadVertex cwp = dc.DevPointToWorldPoint(cursor.Pos);
 
-            CadVector xfaceNormal = dc.DevVectorToWorldVector(cursor.DirX);
-            CadVector yfaceNormal = dc.DevVectorToWorldVector(cursor.DirY);
+            CadVertex xfaceNormal = dc.DevVectorToWorldVector(cursor.DirX);
+            CadVertex yfaceNormal = dc.DevVectorToWorldVector(cursor.DirY);
 
-            CadVector cx = CadUtil.CrossPlane(P0, P1, cwp, xfaceNormal);
-            CadVector cy = CadUtil.CrossPlane(P0, P1, cwp, yfaceNormal);
+            CadVertex cx = CadUtil.CrossPlane(P0, P1, cwp, xfaceNormal);
+            CadVertex cy = CadUtil.CrossPlane(P0, P1, cwp, yfaceNormal);
 
             if (!cx.Valid && !cy.Valid)
             {
                 return ret;
             }
 
-            CadVector p = CadVector.InvalidValue;
+            CadVertex p = CadVertex.InvalidValue;
             double mind = Double.MaxValue;
 
-            Span<CadVector> vtbl = stackalloc CadVector[] { cx, cy };
+            CadVectorArray4 vtbl = default;
+
+            vtbl[0] = cx;
+            vtbl[1] = cy;
+            vtbl.Length = 2;
+
+            //Span<CadVector> vtbl = stackalloc CadVector[] { cx, cy };
 
             for (int i = 0; i < vtbl.Length; i++)
             {
-                CadVector v = vtbl[i];
+                CadVertex v = vtbl[i];
 
                 if (!v.Valid)
                 {
                     continue;
                 }
 
-                CadVector devv = dc.WorldPointToDevPoint(v);
+                CadVertex devv = dc.WorldPointToDevPoint(v);
 
                 double td = (devv - cursor.Pos).Norm();
 

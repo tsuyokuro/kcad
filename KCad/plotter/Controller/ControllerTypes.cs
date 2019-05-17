@@ -46,8 +46,8 @@ namespace Plotter.Controller
     {
         public DrawContext DC;
 
-        public CadVector CursorScrPt;
-        public CadVector CursorWorldPt;
+        public CadVertex CursorScrPt;
+        public CadVertex CursorWorldPt;
         public CadCursor Cursor;
 
         public bool PointSelected;

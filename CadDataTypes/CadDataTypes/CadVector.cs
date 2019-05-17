@@ -3,7 +3,7 @@ using System;
 
 namespace CadDataTypes
 {
-    public struct CadVector : IEquatable<CadVector>
+    public struct CadVertex : IEquatable<CadVertex>
     {
         public static byte INVALID = 0x80;
         public static byte SELECTED = 0x01;
@@ -12,6 +12,8 @@ namespace CadDataTypes
         private static byte TYPE_MASK = (byte)(INVALID | HANDLE);
 
         public byte Flag;
+
+        public ICadVertexAttr Attr;
 
         public double x
         {
@@ -107,39 +109,40 @@ namespace CadDataTypes
             }
         }
 
-        public static CadVector Zero = default(CadVector);
+        public static CadVertex Zero = default(CadVertex);
 
-        public static CadVector UnitX = CadVector.Create(1, 0, 0);
-        public static CadVector UnitY = CadVector.Create(0, 1, 0);
-        public static CadVector UnitZ = CadVector.Create(0, 0, 1);
+        public static CadVertex UnitX = CadVertex.Create(1, 0, 0);
+        public static CadVertex UnitY = CadVertex.Create(0, 1, 0);
+        public static CadVertex UnitZ = CadVertex.Create(0, 0, 1);
 
-        public static CadVector InvalidValue = CadVector.CreateInvalid();
+        public static CadVertex InvalidValue = CadVertex.CreateInvalid();
 
-        public static CadVector MaxValue = CadVector.Create(double.MaxValue);
-        public static CadVector MinValue = CadVector.Create(double.MinValue);
+        public static CadVertex MaxValue = CadVertex.Create(double.MaxValue);
+        public static CadVertex MinValue = CadVertex.Create(double.MinValue);
 
-        public CadVector(double x, double y, double z)
+        public CadVertex(double x, double y, double z)
         {
             vector.X = x;
             vector.Y = y;
             vector.Z = z;
 
             this.Flag = 0;
+            Attr = null;
         }
 
-        public static CadVector Create(double v)
+        public static CadVertex Create(double v)
         {
             return Create(v, v, v);
         }
 
-        public static CadVector Create(double x, double y)
+        public static CadVertex Create(double x, double y)
         {
             return Create(x, y, 0);
         }
 
-        public static CadVector Create(double x, double y, double z)
+        public static CadVertex Create(double x, double y, double z)
         {
-            CadVector v = default(CadVector);
+            CadVertex v = default(CadVertex);
             v.Set(x, y, z);
 
             v.Flag = 0;
@@ -147,9 +150,9 @@ namespace CadDataTypes
             return v;
         }
 
-        public static CadVector Create()
+        public static CadVertex Create()
         {
-            CadVector v = default(CadVector);
+            CadVertex v = default(CadVertex);
             v.Set(0, 0, 0);
 
             v.Flag = 0;
@@ -157,9 +160,9 @@ namespace CadDataTypes
             return v;
         }
 
-        public static CadVector Create(Vector3d v)
+        public static CadVertex Create(Vector3d v)
         {
-            CadVector p = default(CadVector);
+            CadVertex p = default(CadVertex);
             p.Set(v.X, v.Y, v.Z);
 
             p.Flag = 0;
@@ -167,9 +170,9 @@ namespace CadDataTypes
             return p;
         }
 
-        public static CadVector Create(Vector4d v)
+        public static CadVertex Create(Vector4d v)
         {
-            CadVector p = default(CadVector);
+            CadVertex p = default(CadVertex);
             p.Set(v.X, v.Y, v.Z);
 
             p.Flag = 0;
@@ -177,22 +180,23 @@ namespace CadDataTypes
             return p;
         }
 
-        public static CadVector Create(CadVector v)
+        public static CadVertex Create(CadVertex v)
         {
             return v;
         }
 
-        public static CadVector CreateInvalid()
+        public static CadVertex CreateInvalid()
         {
-            CadVector p = default(CadVector);
+            CadVertex p = default(CadVertex);
             p.Valid = false;
             return p;
         }
 
-        public CadVector(double x, double y, double z, byte flag)
+        public CadVertex(double x, double y, double z, byte flag, ICadVertexAttr attr)
         {
             vector = new Vector3d(x, y, z);
             Flag = flag;
+            Attr = attr;
         }
 
         public bool IsZero()
@@ -207,19 +211,19 @@ namespace CadDataTypes
             this.z = z;
         }
 
-        public CadVector SetVector(Vector3d v)
+        public CadVertex SetVector(Vector3d v)
         {
             vector = v;
             return this;
         }
 
-        public CadVector SetVector(CadVector p)
+        public CadVertex SetVector(CadVertex p)
         {
             vector = p.vector;
             return this;
         }
 
-        public void Set(ref CadVector p)
+        public void Set(ref CadVertex p)
         {
             Flag = p.Flag;
             x = p.x;
@@ -228,12 +232,12 @@ namespace CadDataTypes
         }
 
         #region 同値判定
-        public bool DataEquals(CadVector p)
+        public bool DataEquals(CadVertex p)
         {
             return Equals(p) && ((Flag & TYPE_MASK) == (p.Flag & TYPE_MASK));
         }
 
-        public bool EqualsThreshold(CadVector p, double m = 0.000001)
+        public bool EqualsThreshold(CadVertex p, double m = 0.000001)
         {
             return (
                 x > p.x - m && x < p.x + m &&
@@ -243,7 +247,7 @@ namespace CadDataTypes
         }
 
 
-        public bool Equals(CadVector v)
+        public bool Equals(CadVertex v)
         {
             return x == v.x & y == v.y & z == v.z;
         }
@@ -260,18 +264,18 @@ namespace CadDataTypes
 
         public override bool Equals(object obj)
         {
-            CadVector t = (CadVector)obj;
+            CadVertex t = (CadVertex)obj;
 
             return Equals(t);
         }
 
 
-        public static bool operator ==(CadVector p1, CadVector p2)
+        public static bool operator ==(CadVertex p1, CadVertex p2)
         {
             return p1.x == p2.x & p1.y == p2.y & p1.z == p2.z;
         }
 
-        public static bool operator !=(CadVector p1, CadVector p2)
+        public static bool operator !=(CadVertex p1, CadVertex p2)
         {
             return p1.x != p2.x | p1.y != p2.y | p1.z != p2.z;
         }
@@ -279,7 +283,7 @@ namespace CadDataTypes
 
 
         #region 二項演算子
-        public static CadVector operator +(CadVector p1, CadVector p2)
+        public static CadVertex operator +(CadVertex p1, CadVertex p2)
         {
             p1.x += p2.x;
             p1.y += p2.y;
@@ -288,7 +292,7 @@ namespace CadDataTypes
             return p1;
         }
 
-        public static CadVector operator -(CadVector p1, CadVector p2)
+        public static CadVertex operator -(CadVertex p1, CadVertex p2)
         {
             p1.x -= p2.x;
             p1.y -= p2.y;
@@ -297,7 +301,7 @@ namespace CadDataTypes
             return p1;
         }
 
-        public static CadVector operator *(CadVector p1, double f)
+        public static CadVertex operator *(CadVertex p1, double f)
         {
             p1.x *= f;
             p1.y *= f;
@@ -306,7 +310,7 @@ namespace CadDataTypes
             return p1;
         }
 
-        public static CadVector operator *(double f, CadVector p1)
+        public static CadVertex operator *(double f, CadVertex p1)
         {
             p1.x *= f;
             p1.y *= f;
@@ -315,7 +319,7 @@ namespace CadDataTypes
             return p1;
         }
 
-        public static CadVector operator *(CadVector p1, CadVector p2)
+        public static CadVertex operator *(CadVertex p1, CadVertex p2)
         {
             p1.x *= p2.x;
             p1.y *= p2.y;
@@ -324,7 +328,7 @@ namespace CadDataTypes
             return p1;
         }
 
-        public static CadVector operator /(CadVector p1, double f)
+        public static CadVertex operator /(CadVertex p1, double f)
         {
             p1.x /= f;
             p1.y /= f;
@@ -333,7 +337,7 @@ namespace CadDataTypes
             return p1;
         }
 
-        public static CadVector operator -(CadVector p1, double d)
+        public static CadVertex operator -(CadVertex p1, double d)
         {
             p1.x -= d;
             p1.y -= d;
@@ -344,7 +348,7 @@ namespace CadDataTypes
         #endregion
 
         #region 単項演算子
-        public static CadVector operator -(CadVector p1)
+        public static CadVertex operator -(CadVertex p1)
         {
             p1.x *= -1;
             p1.y *= -1;
@@ -353,7 +357,7 @@ namespace CadDataTypes
             return p1;
         }
 
-        public static CadVector operator +(CadVector p1, double d)
+        public static CadVertex operator +(CadVertex p1, double d)
         {
             p1.x += d;
             p1.y += d;
@@ -364,12 +368,12 @@ namespace CadDataTypes
         #endregion
 
         #region Cast operator
-        public static explicit operator Vector3d(CadVector p)
+        public static explicit operator Vector3d(CadVertex p)
         {
             return new Vector3d(p.vector);
         }
 
-        public static explicit operator CadVector(Vector3d v)
+        public static explicit operator CadVertex(Vector3d v)
         {
             return Create(
                 v.X,
@@ -378,7 +382,7 @@ namespace CadDataTypes
                 );
         }
 
-        public static explicit operator CadVector(Vector4d v)
+        public static explicit operator CadVertex(Vector4d v)
         {
             return Create(
                 v.X,
@@ -387,7 +391,7 @@ namespace CadDataTypes
                 );
         }
 
-        public static explicit operator Vector4d(CadVector p)
+        public static explicit operator Vector4d(CadVertex p)
         {
             return new Vector4d(
                 p.vector.X,
@@ -404,9 +408,9 @@ namespace CadDataTypes
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
-        public static CadVector Min(CadVector v1, CadVector v2)
+        public static CadVertex Min(CadVertex v1, CadVertex v2)
         {
-            CadVector v = default(CadVector);
+            CadVertex v = default(CadVertex);
 
             v.x = Math.Min(v1.x, v2.x);
             v.y = Math.Min(v1.y, v2.y);
@@ -421,9 +425,9 @@ namespace CadDataTypes
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
-        public static CadVector Max(CadVector v1, CadVector v2)
+        public static CadVertex Max(CadVertex v1, CadVertex v2)
         {
-            CadVector v = default(CadVector);
+            CadVertex v = default(CadVertex);
 
             v.x = Math.Max(v1.x, v2.x);
             v.y = Math.Max(v1.y, v2.y);
@@ -446,9 +450,9 @@ namespace CadDataTypes
         }
 
         // 単位ベクトルを求める
-        public CadVector UnitVector()
+        public CadVertex UnitVector()
         {
-            CadVector ret = default(CadVector);
+            CadVertex ret = default(CadVertex);
 
             double norm = this.Norm();
 

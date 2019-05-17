@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿//#define USE_GDI_VIEW
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -96,9 +97,15 @@ namespace Plotter
         {
             set
             {
+#if (USE_GDI_VIEW)
+                bool changed = ChangeViewModeGdi(value);
+#else
                 bool changed = ChangeViewMode(value);
-
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewMode)));
+#endif
+                if (changed)
+                {
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewMode)));
+                }
             }
 
             get => mViewMode;
@@ -113,7 +120,7 @@ namespace Plotter
             get => mSettingsVeiwModel;
         }
 
-        #region Tree view
+#region Tree view
         private void UpdateTreeView(bool remakeTree)
         {
             ThreadUtil.RunOnMainThread(() =>
@@ -187,7 +194,7 @@ namespace Plotter
             return idx;
         }
 
-        #endregion
+#endregion
 
 
         ListBox mLayerListView;
@@ -294,10 +301,10 @@ namespace Plotter
 
         private void SetView(IPlotterView view)
         {
-            if (view == mPlotterView)
-            {
-                return;
-            }
+            //if (view == mPlotterView)
+            //{
+            //    return;
+            //}
 
             if (mPlotterView != null)
             {
@@ -348,7 +355,7 @@ namespace Plotter
             }
         }
 
-        #region Maps
+#region Maps
         private void InitCommandMap()
         {
             CommandMap = new Dictionary<string, Action>{
@@ -455,11 +462,11 @@ namespace Plotter
             return true;
         }
 
-        #endregion
+#endregion
 
 
         // Actions
-        #region Actions
+#region Actions
         public void Undo()
         {
             mController.Undo();
@@ -707,10 +714,10 @@ namespace Plotter
             mMoveKeyHandler.MoveKeyUp();
         }
 
-        #endregion
+#endregion
 
         // Handle events from PlotterController
-        #region Event From PlotterController
+#region Event From PlotterController
 
         //public void DataChanged(PlotterController sender, bool redraw)
         //{
@@ -772,7 +779,7 @@ namespace Plotter
             return -1;
         }
 
-        private void CursorPosChanged(PlotterController sender, CadVector pt, Plotter.Controller.CursorType type)
+        private void CursorPosChanged(PlotterController sender, CadVertex pt, Plotter.Controller.CursorType type)
         {
             if (type == Plotter.Controller.CursorType.TRACKING)
             {
@@ -802,11 +809,11 @@ namespace Plotter
             }, true);
         }
 
-        #endregion
+#endregion
 
 
         // Layer list handling
-        #region LayerList
+#region LayerList
         public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             LayerHolder lh = (LayerHolder)sender;
@@ -828,11 +835,11 @@ namespace Plotter
                 }
             }
         }
-        #endregion
+#endregion
 
 
         // Keyboard handling
-        #region Keyboard handling
+#region Keyboard handling
         private string ModifyerKeysStr()
         {
             ModifierKeys modifierKeys = Keyboard.Modifiers;
@@ -878,9 +885,9 @@ namespace Plotter
             string ks = KeyString(e);
             return ExecShortcutKey(ks, false);
         }
-        #endregion
+#endregion
 
-        #region helper
+#region helper
         public void Redraw()
         {
             ThreadUtil.RunOnMainThread(() =>
@@ -888,9 +895,9 @@ namespace Plotter
                 mController.Redraw();
             }, true);
         }
-        #endregion
+#endregion
 
-        #region "print"
+#region "print"
         public void StartPrint()
         {
             PrintDocument pd =
@@ -922,15 +929,9 @@ namespace Plotter
             CadSize2D deviceSize = new CadSize2D(e.PageBounds.Size.Width, e.PageBounds.Size.Height);
             CadSize2D pageSize = new CadSize2D(Controller.PageSize.Width, Controller.PageSize.Height);
 
-            DrawContextPrinter dc = new DrawContextPrinter(mController.CurrentDC, g, pageSize, deviceSize);
-
-            //Font f = new Font("Arial", 10);
-            //e.Graphics.DrawString("TEST", f, Brushes.Black, 10, 10, StringFormat.GenericDefault);
-
-            mController.Print(dc);
+            Controller.PrintPage(g, pageSize, deviceSize);
         }
-
-        #endregion
+#endregion
 
         public void PageSetting()
         {
@@ -1049,66 +1050,169 @@ namespace Plotter
 
             mViewMode = newMode;
 
+            DrawContext currentDC = mPlotterView == null? null : mPlotterView.DrawContext;
+            DrawContext nextDC = mPlotterView == null ? null : mPlotterView.DrawContext;
+            IPlotterView view = mPlotterView;
+
             switch (mViewMode)
             {
                 case ViewModes.FRONT:
-                    SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(
+                    PlotterViewGL1.EnablePerse(false);
+                    view = PlotterViewGL1;
+                    view.DrawContext.SetCamera(
                         Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
-                    Redraw();
+                    nextDC = view.DrawContext;
                     break;
 
                 case ViewModes.BACK:
-                    SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(
+                    PlotterViewGL1.EnablePerse(false);
+                    view = PlotterViewGL1;
+                    view.DrawContext.SetCamera(
                         -Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
-                    Redraw();
+
+                    nextDC = view.DrawContext;
                     break;
 
                 case ViewModes.TOP:
-                    SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(
+                    PlotterViewGL1.EnablePerse(false);
+                    view = PlotterViewGL1;
+                    view.DrawContext.SetCamera(
                         Vector3d.UnitY * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, -Vector3d.UnitZ);
-                    Redraw();
+
+                    nextDC = view.DrawContext;
                     break;
 
                 case ViewModes.BOTTOM:
-                    SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(
+                    PlotterViewGL1.EnablePerse(false);
+                    view = PlotterViewGL1;
+                    view.DrawContext.SetCamera(
                         -Vector3d.UnitY * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitZ);
-                    Redraw();
+
+                    nextDC = view.DrawContext;
                     break;
 
                 case ViewModes.RIGHT:
-                    SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(
+                    PlotterViewGL1.EnablePerse(false);
+                    view = PlotterViewGL1;
+                    view.DrawContext.SetCamera(
                         Vector3d.UnitX * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
-                    Redraw();
+
+                    nextDC = view.DrawContext;
                     break;
 
                 case ViewModes.LEFT:
-                    SetView(PlotterView1);
-                    mPlotterView.DrawContext.SetCamera(
+                    PlotterViewGL1.EnablePerse(false);
+                    view = PlotterViewGL1;
+                    view.DrawContext.SetCamera(
                         -Vector3d.UnitX * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
-                    Redraw();
+
+                    nextDC = view.DrawContext;
                     break;
 
                 case ViewModes.FREE:
-                    PlotterViewGL1.Size = PlotterView1.Size;
-                    PlotterViewGL1.DrawContext.UnitPerMilli = PlotterView1.DrawContext.UnitPerMilli;
-                    SetView(PlotterViewGL1);
-                    Redraw();
+                    PlotterViewGL1.EnablePerse(true);
+                    view = PlotterViewGL1;
+                    nextDC = view.DrawContext;
                     break;
             }
 
+            if (currentDC != null) currentDC.Deactive();
+            if (nextDC != null) nextDC.Active();
+
+            SetView(view);
+            Redraw();
             return true;
         }
+
+        private bool ChangeViewModeGdi(ViewModes newMode)
+        {
+            if (mViewMode == newMode)
+            {
+                return false;
+            }
+
+            mViewMode = newMode;
+
+            DrawContext currentDC = mPlotterView == null ? null : mPlotterView.DrawContext;
+            DrawContext nextDC = mPlotterView == null ? null : mPlotterView.DrawContext;
+            IPlotterView view = mPlotterView;
+
+            switch (mViewMode)
+            {
+                case ViewModes.FRONT:
+                    view = PlotterView1;
+                    view.DrawContext.SetCamera(
+                        Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitY);
+                    nextDC = view.DrawContext;
+                    break;
+
+                case ViewModes.BACK:
+                    view = PlotterView1;
+                    view.DrawContext.SetCamera(
+                        -Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitY);
+
+                    nextDC = view.DrawContext;
+                    break;
+
+                case ViewModes.TOP:
+                    view = PlotterView1;
+                    view.DrawContext.SetCamera(
+                        Vector3d.UnitY * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, -Vector3d.UnitZ);
+
+                    nextDC = view.DrawContext;
+                    break;
+
+                case ViewModes.BOTTOM:
+                    view = PlotterView1;
+                    view.DrawContext.SetCamera(
+                        -Vector3d.UnitY * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitZ);
+
+                    nextDC = view.DrawContext;
+                    break;
+
+                case ViewModes.RIGHT:
+                    view = PlotterView1;
+                    view.DrawContext.SetCamera(
+                        Vector3d.UnitX * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitY);
+
+                    nextDC = view.DrawContext;
+                    break;
+
+                case ViewModes.LEFT:
+                    view = PlotterView1;
+                    view.DrawContext.SetCamera(
+                        -Vector3d.UnitX * DrawContext.STD_EYE_DIST,
+                        Vector3d.Zero, Vector3d.UnitY);
+
+                    nextDC = view.DrawContext;
+                    break;
+
+                case ViewModes.FREE:
+                    PlotterViewGL1.EnablePerse(true);
+                    view = PlotterViewGL1;
+                    nextDC = view.DrawContext;
+                    break;
+            }
+
+            if (currentDC != null) currentDC.Deactive();
+            if (nextDC != null) nextDC.Active();
+
+            SetView(view);
+            Redraw();
+            return true;
+        }
+
 
         public void SetupTextCommandView(AutoCompleteTextBox textBox)
         {

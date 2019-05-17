@@ -6,9 +6,9 @@ namespace Plotter
 {
     public class Gridding
     {
-        private CadVector mGridSize;
+        private CadVertex mGridSize;
 
-        public CadVector GridSize
+        public CadVertex GridSize
         {
             set
             {
@@ -23,15 +23,15 @@ namespace Plotter
 
         public double Range = 8;
 
-        public CadVector XMatchU = default(CadVector);
-        public CadVector YMatchU = default(CadVector);
+        public CadVertex XMatchU = default(CadVertex);
+        public CadVertex YMatchU = default(CadVertex);
 
-        public CadVector XMatchW = default(CadVector);
-        public CadVector YMatchW = default(CadVector);
+        public CadVertex XMatchW = default(CadVertex);
+        public CadVertex YMatchW = default(CadVertex);
 
         public Gridding()
         {
-            GridSize = CadVector.Create(10, 10, 10);
+            GridSize = CadVertex.Create(10, 10, 10);
         }
 
         public void Clear()
@@ -49,9 +49,9 @@ namespace Plotter
             Range = g.Range;
         }
 
-        private CadVector CalcGridSizeU(DrawContext dc, CadVector gridSizeW)
+        private CadVertex CalcGridSizeU(DrawContext dc, CadVertex gridSizeW)
         {
-            CadVector gridSize = dc.WorldPointToDevPoint(gridSizeW) - dc.WorldPointToDevPoint(CadVector.Zero);
+            CadVertex gridSize = dc.WorldPointToDevPoint(gridSizeW) - dc.WorldPointToDevPoint(CadVertex.Zero);
 
             gridSize.x = Math.Abs(gridSize.x);
             gridSize.y = Math.Abs(gridSize.y);
@@ -60,15 +60,15 @@ namespace Plotter
             return gridSize;
         }
 
-        public void Check(DrawContext dc, CadVector up)
+        public void Check(DrawContext dc, CadVertex up)
         {
-            CadVector scr = CalcGridSizeU(dc, GridSize);
+            CadVertex scr = CalcGridSizeU(dc, GridSize);
 
-            CadVector t = default(CadVector);
+            CadVertex t = default(CadVertex);
 
-            CadVector sp = up;
+            CadVertex sp = up;
 
-            CadVector u0 = dc.ViewOrg;
+            CadVertex u0 = dc.ViewOrg;
 
             double range;
 
@@ -121,16 +121,16 @@ namespace Plotter
             double szy = grid.GridSize.y;
             double szz = grid.GridSize.z;
 
-            CadVector usz;
+            CadVertex usz;
             double t = 1;
             double d;
 
-            CadVector uzero = dc.WorldPointToDevPoint(CadVector.Zero);
+            CadVertex uzero = dc.WorldPointToDevPoint(CadVertex.Zero);
 
             double uszx;
             double uszy;
 
-            usz = dc.WorldPointToDevPoint(CadVector.Create(szx, 0, 0)) - uzero;
+            usz = dc.WorldPointToDevPoint(CadVertex.Create(szx, 0, 0)) - uzero;
 
             uszx = Math.Abs(usz.x);
             uszy = Math.Abs(usz.y);
@@ -157,7 +157,7 @@ namespace Plotter
                 n = t;
             }
 
-            usz = dc.WorldPointToDevPoint(CadVector.Create(0, szy, 0)) - uzero;
+            usz = dc.WorldPointToDevPoint(CadVertex.Create(0, szy, 0)) - uzero;
 
             uszx = Math.Abs(usz.x);
             uszy = Math.Abs(usz.y);
@@ -184,7 +184,7 @@ namespace Plotter
                 n = t;
             }
 
-            usz = dc.WorldPointToDevPoint(CadVector.Create(0, 0, szy)) - uzero;
+            usz = dc.WorldPointToDevPoint(CadVertex.Create(0, 0, szy)) - uzero;
 
             uszx = Math.Abs(usz.x);
             uszy = Math.Abs(usz.y);

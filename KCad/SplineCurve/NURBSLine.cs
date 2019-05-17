@@ -5,7 +5,7 @@ namespace SplineCurve
     public class NurbsLine
     {
         // êßå‰ì_ÉäÉXÉg
-        public VectorList CtrlPoints = null;
+        public VertexList CtrlPoints = null;
 
         // Control point ÇÃêî
         public int CtrlCnt = 0;
@@ -73,9 +73,9 @@ namespace SplineCurve
             }
         }
 
-        private CadVector CalcPoint(double t)
+        private CadVertex CalcPoint(double t)
         {
-            CadVector linePoint = CadVector.Zero;
+            CadVertex linePoint = CadVertex.Zero;
 			double weight = 0f;
 
             double bs;
@@ -98,7 +98,7 @@ namespace SplineCurve
             return linePoint / weight;
 		}
 
-        public void Eval(VectorList vl)
+        public void Eval(VertexList vl)
         {
             for (int p = 0; p <= BSplineP.DivCnt; ++p)
             {

@@ -1,9 +1,13 @@
 ﻿//#define COPY_AS_JSON
+//#define PRINT_WITH_GL_ONLY
+//#define PRINT_WITH_GDI_ONLY
 
 using System.Collections.Generic;
 using CadDataTypes;
 using System.Drawing.Printing;
 using Plotter.Controller.TaskRunner;
+using System.Drawing;
+using GLUtil;
 
 namespace Plotter.Controller
 {
@@ -29,6 +33,7 @@ namespace Plotter.Controller
             private set
             {
                 mState = value;
+
                 if (mInteractCtrl.IsActive)
                 {
                     mInteractCtrl.Cancel();
@@ -37,6 +42,8 @@ namespace Plotter.Controller
 
             get => mState;
         }
+
+        public States mBackState;
 
         public CadObjectDB DB => mDB;
 
@@ -283,7 +290,7 @@ namespace Plotter.Controller
                 dc = CurrentDC;
             }
 
-            dc.Drawing.Clear();
+            dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
         }
 
         public void DrawAll(DrawContext dc = null)
@@ -307,7 +314,7 @@ namespace Plotter.Controller
         public void DrawBase(DrawContext dc)
         {
             dc.Drawing.DrawAxis();
-            dc.Drawing.DrawPageFrame(PageSize.Width, PageSize.Height, CadVector.Zero);
+            dc.Drawing.DrawPageFrame(PageSize.Width, PageSize.Height, CadVertex.Zero);
             DrawGrid(dc);
         }
 
@@ -319,22 +326,22 @@ namespace Plotter.Controller
             {
                 if (layer.Visible)
                 {
-                    int pen = DrawTools.PEN_DEFAULT_FIGURE;
+                    DrawPen pen = dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE);
 
                     if (layer.ID != CurrentLayer.ID)
                     {
-                        pen = DrawTools.PEN_PALE_FIGURE;
+                        pen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
                     }
 
                     dc.Drawing.Draw(layer.FigureList, pen);
                 }
             }
 
-            dc.Drawing.Draw(TempFigureList, DrawTools.PEN_TEST_FIGURE);
+            dc.Drawing.Draw(TempFigureList, dc.GetPen(DrawTools.PEN_TEST_FIGURE));
 
             if (MeasureFigureCreator != null)
             {
-                MeasureFigureCreator.Figure.Draw(dc, DrawTools.PEN_MEASURE_FIGURE);
+                MeasureFigureCreator.Figure.Draw(dc, dc.GetPen(DrawTools.PEN_MEASURE_FIGURE));
             }
         }
 
@@ -355,21 +362,21 @@ namespace Plotter.Controller
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                dc.Drawing.DrawSelected(layer.FigureList);
+                dc.Drawing.DrawSelected(layer.FigureList, dc.GetPen(DrawTools.PEN_SELECT_POINT));
             }
         }
 
         public void DrawLastPoint(DrawContext dc)
         {
             dc.Drawing.DrawMarkCursor(
-                DrawTools.PEN_LAST_POINT_MARKER,
+                dc.GetPen(DrawTools.PEN_LAST_POINT_MARKER),
                 LastDownPoint,
                 ControllerConst.MARK_CURSOR_SIZE);
 
             if (ObjDownPoint.Valid)
             {
                 dc.Drawing.DrawMarkCursor(
-                    DrawTools.PEN_LAST_POINT_MARKER2,
+                    dc.GetPen(DrawTools.PEN_LAST_POINT_MARKER2),
                     ObjDownPoint,
                     ControllerConst.MARK_CURSOR_SIZE);
             }
@@ -382,18 +389,18 @@ namespace Plotter.Controller
                 return;
             }
 
-            dc.Drawing.DrawLine(DrawTools.PEN_DRAG_LINE,
+            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_DRAG_LINE),
                 LastDownPoint, dc.DevPointToWorldPoint(CrossCursor.Pos));
         }
 
         public void DrawCrossCursor(DrawContext dc)
         {
-            dc.Drawing.DrawCrossCursorScrn(CrossCursor);
+            dc.Drawing.DrawCrossCursorScrn(CrossCursor, dc.GetPen(DrawTools.PEN_CURSOR2));
 
             if (CursorLocked)
             {
                 dc.Drawing.DrawCrossScrn(
-                    DrawTools.PEN_POINT_HIGHLIGHT,
+                    dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT),
                     CrossCursor.Pos,
                     ControllerConst.CURSOR_LOCK_MARK_SIZE);
             }
@@ -402,21 +409,98 @@ namespace Plotter.Controller
         public void DrawSelRect(DrawContext dc)
         {
             dc.Drawing.DrawRectScrn(
-                DrawTools.PEN_TEMP_FIGURE,
+                dc.GetPen(DrawTools.PEN_TEMP_FIGURE),
                 RubberBandScrnPoint0,
                 RubberBandScrnPoint1);
         }
 
-        public void Print(DrawContext dc)
+        public void DrawAllFigure(DrawContext dc)
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                dc.Drawing.Draw(layer.FigureList);
+                dc.Drawing.Draw(layer.FigureList, dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE));
             }
         }
-        #endregion
 
-        #region Private editing figure methods
+        public void PrintPage(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            DOut.pl($"Dev Width:{deviceSize.Width} Height:{deviceSize.Height}");
+#if PRINT_WITH_GL_ONLY
+            PrintPageGL(printerGraphics, pageSize, deviceSize);
+#elif PRINT_WITH_GDI_ONLY
+            PrintPageGDI(printerGraphics, pageSize, deviceSize);
+#else
+            PrintPageSwitch(printerGraphics, pageSize, deviceSize);
+#endif
+        }
+
+
+        public void PrintPageSwitch(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            if (!(CurrentDC.GetType() == typeof(DrawContextGLPers)))
+            {
+                DrawContextPrinter dc = new DrawContextPrinter(CurrentDC, printerGraphics, pageSize, deviceSize);
+                DrawAllFigure(dc);
+            }
+            else
+            {
+                Bitmap bmp = GetPrintableBmp(pageSize, deviceSize);
+                printerGraphics.DrawImage(bmp, 0, 0);
+            }
+        }
+
+        public void PrintPageGDI(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            DrawContextPrinter dc = new DrawContextPrinter(CurrentDC, printerGraphics, pageSize, deviceSize);
+            DrawAllFigure(dc);
+        }
+
+        public void PrintPageGL(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            Bitmap bmp = GetPrintableBmp(pageSize, deviceSize);
+
+            if (bmp != null)
+            {
+                printerGraphics.DrawImage(bmp, 0, 0);
+            }
+        }
+
+        public Bitmap GetPrintableBmp(CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            if (!(CurrentDC is DrawContextGL))
+            {
+                return null;
+            }
+
+            DrawContext dc = CurrentDC.CreatePrinterContext(pageSize, deviceSize);
+
+            dc.SetupTools(DrawTools.ToolsType.PRINTER_GL);
+
+            FrameBufferW fb = new FrameBufferW();
+            fb.Create((int)deviceSize.Width, (int)deviceSize.Height);
+
+            fb.Begin();
+
+            dc.StartDraw();
+
+            dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
+
+            DrawAllFigure(dc);
+
+            dc.EndDraw();
+
+            Bitmap bmp = fb.GetBitmap();
+
+            fb.End();
+            fb.Dispose();
+
+            return bmp;
+        }
+
+
+#endregion
+
+#region Private editing figure methods
 
         private void NextState()
         {
@@ -556,14 +640,14 @@ namespace Plotter.Controller
             return opeList;
         }
 
-        public void MoveSelectedPoints(CadVector delta)
+        public void MoveSelectedPoints(CadVertex delta)
         {
             StartEdit();
             MoveSelectedPoints(null, delta);
             EndEdit();
         }
 
-        private void MoveSelectedPoints(DrawContext dc, CadVector delta)
+        private void MoveSelectedPoints(DrawContext dc, CadVertex delta)
         {
             List<uint> figIDList = DB.GetSelectedFigIDList();
 
@@ -580,7 +664,7 @@ namespace Plotter.Controller
         }
 
 
-        #endregion
+#endregion
 
         public bool HasSelect()
         {
@@ -889,7 +973,7 @@ namespace Plotter.Controller
             UpdateTreeView(true);
         }
 
-        public void MovePointsFromStored(List<CadFigure> figList, CadVector d)
+        public void MovePointsFromStored(List<CadFigure> figList, CadVertex d)
         {
             if (figList == null)
             {

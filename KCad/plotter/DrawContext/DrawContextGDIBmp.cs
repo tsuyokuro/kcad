@@ -34,30 +34,11 @@ namespace Plotter
 
             mDrawing = new DrawingGDIBmp(this);
 
-            CalcProjectionMatrix(ProjectionType.Orthographic);
+            CalcProjectionMatrix();
             CalcProjectionZW();
         }
 
-        public override void SetViewSize(double w, double h)
-        {
-            mViewWidth = w;
-            mViewHeight = h;
-
-            if (w == 0 || h == 0)
-            {
-                return;
-            }
-
-            DisposeGraphics();
-
-            mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
-            mGdiGraphics = Graphics.FromImage(mImage);
-
-            CalcProjectionMatrix(ProjectionType.Orthographic);
-            CalcProjectionZW();
-        }
-
-        private void DisposeGraphics()
+        protected override void DisposeGraphics()
         {
             if (mGdiGraphics != null)
             {
@@ -70,6 +51,12 @@ namespace Plotter
                 mImage.Dispose();
                 mImage = null;
             }
+        }
+
+        protected override void CreateGraphics()
+        {
+            mImage = new Bitmap((int)mViewWidth, (int)mViewHeight);
+            mGdiGraphics = Graphics.FromImage(mImage);
         }
 
         public BitmapData GetLockedBits()

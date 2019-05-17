@@ -96,7 +96,7 @@ namespace Plotter
             return dest;
         }
 
-        public static void BresenhamLine(BitmapData bitmapData, CadVector p0, CadVector p1, uint color)
+        public static void BresenhamLine(BitmapData bitmapData, CadVertex p0, CadVertex p1, uint color)
         {
             int x0 = (int)p0.x;
             int y0 = (int)p0.y;

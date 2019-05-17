@@ -47,7 +47,7 @@ namespace HalfEdgeNS
 
         // 三角形の追加
         // 左右回り方を統一して追加するようにする
-        public void AddTriangle(CadVector v0, CadVector v1, CadVector v2)
+        public void AddTriangle(CadVertex v0, CadVertex v1, CadVertex v2)
         {
             AddTriangle(
                 AddVertexWithoutSame(v0),
@@ -72,7 +72,7 @@ namespace HalfEdgeNS
             he2.Prev = he1;
 
             // 法線の設定
-            CadVector normal = CadMath.Normal(
+            CadVertex normal = CadMath.Normal(
                 mHeModel.VertexStore[v0],
                 mHeModel.VertexStore[v1],
                 mHeModel.VertexStore[v2]);
@@ -111,12 +111,12 @@ namespace HalfEdgeNS
 
         // 同じ座標がなければ追加してIndexを返す
         // 同じ座標があれば、そのIndexを返す
-        public int AddVertexWithoutSame(CadVector v)
+        public int AddVertexWithoutSame(CadVertex v)
         {
             int cnt = mHeModel.VertexStore.Count;
             for (int i = 0; i < cnt; i++)
             {
-                ref CadVector rv = ref mHeModel.VertexStore.Ref(i);
+                ref CadVertex rv = ref mHeModel.VertexStore.Ref(i);
                 if (v.Equals(rv))
                 {
                     return i;

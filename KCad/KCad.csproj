@@ -122,8 +122,8 @@
     <Reference Include="IronPython.Modules, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\IronPython.2.7.7\lib\Net45\IronPython.Modules.dll</HintPath>
     </Reference>
-    <Reference Include="MessagePack, Version=1.7.3.4, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
-      <HintPath>..\packages\MessagePack.1.7.3.4\lib\net45\MessagePack.dll</HintPath>
+    <Reference Include="MessagePack, Version=1.7.3.7, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
+      <HintPath>..\packages\MessagePack.1.7.3.7\lib\net47\MessagePack.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Dynamic, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Dynamic.dll</HintPath>
@@ -137,8 +137,8 @@
     <Reference Include="Microsoft.Scripting.Metadata, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Scripting.Metadata.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.3.0.1\lib\net20\OpenTK.dll</HintPath>
@@ -196,9 +196,17 @@
     <Compile Include="Controls\CadConsole\AnsiEsc.cs" />
     <Compile Include="Controls\CadConsole\TextLine.cs" />
     <Compile Include="Controls\PopupEx.cs" />
-    <Compile Include="GLFont\FontFaceW.cs" />
+    <Compile Include="GLUtil\FontFaceW.cs" />
+    <Compile Include="GLUtil\FrameBufferW.cs" />
+    <Compile Include="plotter\DrawContext\PrintColors.cs" />
+    <Compile Include="plotter\DrawContext\DarkColors.cs" />
+    <Compile Include="plotter\DrawContext\DrawContextGLOrtho.cs" />
+    <Compile Include="plotter\DrawContext\DrawContextGLPers.cs" />
     <Compile Include="plotter\HalfEdge\HeModelBuilder.cs" />
     <Compile Include="plotter\HalfEdge\HeModelConverter.cs" />
+    <Compile Include="plotter\Serializer\CadMessagePack_v1000.cs" />
+    <Compile Include="plotter\Serializer\CadMessagePack_v1001.cs" />
+    <Compile Include="plotter\Serializer\MpUtil.cs" />
     <Compile Include="WIndowsAPI\WindowsAPI.cs" />
     <Compile Include="Dialogs\AngleInputDialog.xaml.cs">
       <DependentUpon>AngleInputDialog.xaml</DependentUpon>
@@ -241,7 +249,6 @@
     <Compile Include="plotter\TreeViewItem\CadPointTreeItem.cs" />
     <Compile Include="plotter\Util\DebugOut.cs" />
     <Compile Include="plotter\Math\MatrixMN.cs" />
-    <Compile Include="SplineCurve\BSplineJson.cs" />
     <Compile Include="SplineCurve\BSplineParam.cs" />
     <Compile Include="SplineCurve\NurbsLine.cs" />
     <Compile Include="Controls\AutoCompleteTextBox.cs" />
@@ -258,7 +265,6 @@
     <Compile Include="plotter\Figure\CadFigureNurbsSurface.cs" />
     <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
     <Compile Include="plotter\Figure\FigUtil.cs" />
-    <Compile Include="plotter\HalfEdge\HeJson.cs" />
     <Compile Include="plotter\Serializer\CadMessagePack.cs" />
     <Compile Include="plotter\Serializer\JsonExtends.cs" />
     <Compile Include="plotter\Util\BitmapUtil.cs" />
@@ -269,7 +275,6 @@
     <Compile Include="plotter\DrawContext\DrawContextPrinter.cs" />
     <Compile Include="plotter\DrawContext\IDrawing.cs" />
     <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
-    <Compile Include="plotter\Serializer\CadJson.cs" />
     <Compile Include="plotter\PlotterSettings.cs" />
     <Compile Include="plotter\primitive\CadPrimitive.cs" />
     <Compile Include="plotter\searcher\MarkItem.cs" />
@@ -433,6 +438,8 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <Resource Include="Fonts\mplus-1m-thin.ttf" />
+    <Resource Include="Fonts\mplus-1m-light.ttf" />
+    <Resource Include="Fonts\mplus-1m-regular.ttf" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

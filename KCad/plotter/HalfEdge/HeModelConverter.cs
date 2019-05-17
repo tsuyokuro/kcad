@@ -69,7 +69,7 @@ namespace HalfEdgeNS
         {
             CadMesh cm = new CadMesh();
 
-            cm.VertexStore = new VectorList(hem.VertexStore);
+            cm.VertexStore = new VertexList(hem.VertexStore);
             cm.FaceStore = new FlexArray<CadFace>();
 
             for (int i=0; i < hem.FaceStore.Count;i++)

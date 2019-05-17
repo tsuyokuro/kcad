@@ -24,37 +24,37 @@ namespace Plotter
         {
         }
 
-        public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+        public override void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
         {
         }
 
-        public override void AddPointInCreating(DrawContext dc, CadVector p)
+        public override void AddPointInCreating(DrawContext dc, CadVertex p)
         {
         }
 
 
         #region Point Move
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVector delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
         {
             //base.MoveSelectedPoints(dc, delta);
 
             if (Locked) return;
 
-            CadVector d;
+            CadVertex d;
 
 
             if (!IsSelectedAll() && mPointList.Count > 2 && RestrictionByNormal)
             {
-                CadVector vdir = (CadVector)dc.ViewDir;
+                CadVertex vdir = (CadVertex)dc.ViewDir;
 
-                CadVector a = delta;
-                CadVector b = delta + vdir;
+                CadVertex a = delta;
+                CadVertex b = delta + vdir;
 
                 d = CadUtil.CrossPlane(a, b, StoreList[0], Normal);
 
                 if (!d.Valid)
                 {
-                    CadVector nvNormal = CadMath.Normal(Normal, vdir);
+                    CadVertex nvNormal = CadMath.Normal(Normal, vdir);
 
                     double ip = CadMath.InnerProduct(nvNormal, delta);
 
@@ -74,7 +74,7 @@ namespace Plotter
             });
         }
 
-        public override void MoveAllPoints(CadVector delta)
+        public override void MoveAllPoints(CadVertex delta)
         {
             if (Locked) return;
 
@@ -101,35 +101,30 @@ namespace Plotter
             }
         }
 
-        public override void AddPoint(CadVector p)
+        public override void AddPoint(CadVertex p)
         {
             mPointList.Add(p);
         }
 
-        public override void Draw(DrawContext dc, int pen)
+        public override void Draw(DrawContext dc, DrawPen pen)
         {
             bool drawed = false;
-/*
-            if (IsLoop && SettingsHolder.Settings.FillFace)
-            {
-                drawed = DrawFaces(dc, pen);
-            }
-*/
+
             if (!drawed)
             {
                 DrawLines(dc, pen);
             }
         }
 
-        public override void DrawSelected(DrawContext dc, int pen)
+        public override void DrawSelected(DrawContext dc, DrawPen pen)
         {
             DrawSelectedLines(dc, pen);
         }
 
-        public override void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
+        public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
         {
-            CadVector a = PointList[idxA];
-            CadVector b = PointList[idxB];
+            CadVertex a = PointList[idxA];
+            CadVertex b = PointList[idxB];
 
             dc.Drawing.DrawLine(pen, a, b);
         }
@@ -140,37 +135,9 @@ namespace Plotter
             Normal = -Normal;
         }
 
-        protected bool DrawFaces(DrawContext dc, int pen)
+        protected void DrawLines(DrawContext dc, DrawPen pen)
         {
-            VectorList vl;
-            int srcCnt = mPointList.Count;
-
-            if (srcCnt < 2)
-            {
-                return false;
-            }
-
-            vl = GetPointsPart(0, srcCnt, 32);
-
-            if (!CadUtil.IsConvex(vl))
-            {
-                return false;
-            }
-
-            bool outline = SettingsHolder.Settings.DrawFaceOutline;
-
-
-            dc.Drawing.DrawFace(pen, vl, Normal, outline);
-
-            // Debug 法線表示
-            //dc.Drawing.DrawArrow(pen, vl[0], vl[0] + Normal * 10, ArrowTypes.PLUS, ArrowPos.END, 4, 2);
-
-            return true;
-        }
-
-        protected void DrawLines(DrawContext dc, int pen)
-        {
-            VectorList pl = mPointList;
+            VertexList pl = mPointList;
             int start = 0;
             int cnt = mPointList.Count;
 
@@ -184,7 +151,7 @@ namespace Plotter
                 Normal = CadUtil.RepresentativeNormal(PointList);
             }
 
-            CadVector a;
+            CadVertex a;
 
             a = pl[start];
 
@@ -193,14 +160,14 @@ namespace Plotter
                 dc.Drawing.DrawCross(pen, a, 2);
                 if (a.Selected)
                 {
-                    dc.Drawing.DrawHighlightPoint(a);
+                    dc.Drawing.DrawHighlightPoint(a, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT));
                 }
 
                 return;
             }
 
             PolyLineExpander.ForEachPoints(mPointList, start + 1, cnt - 1, 8, action);
-            void action(CadVector v)
+            void action(CadVertex v)
             {
                 dc.Drawing.DrawLine(pen, a, v);
                 a = v;
@@ -212,28 +179,28 @@ namespace Plotter
             }
         }
 
-        public override VectorList GetPoints(int curveSplitNum)
+        public override VertexList GetPoints(int curveSplitNum)
         {
             return GetPointsPart(0, mPointList.Count, curveSplitNum);
         }
 
-        private VectorList GetPointsPart(int start, int cnt, int curveSplitNum)
+        private VertexList GetPointsPart(int start, int cnt, int curveSplitNum)
         {
             return PolyLineExpander.GetExpandList(mPointList, start, cnt, curveSplitNum);
         }
 
-        private void DrawSelectedLines(DrawContext dc, int pen)
+        private void DrawSelectedLines(DrawContext dc, DrawPen pen)
         {
             int i;
             int num = PointList.Count;
 
             for (i = 0; i < num; i++)
             {
-                CadVector p = PointList[i];
+                CadVertex p = PointList[i];
 
                 if (!p.Selected) continue;
 
-                dc.Drawing.DrawSelectedPoint(p);
+                dc.Drawing.DrawSelectedPoint(p, dc.GetPen(DrawTools.PEN_SELECT_POINT));
 
 
                 if (p.IsHandle)
@@ -242,11 +209,11 @@ namespace Plotter
 
                     if (idx < PointCount)
                     {
-                        CadVector np = GetPointAt(idx);
+                        CadVertex np = GetPointAt(idx);
                         if (!np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
-                            dc.Drawing.DrawSelectedPoint(np);
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
+                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
 
@@ -254,11 +221,11 @@ namespace Plotter
 
                     if (idx >= 0)
                     {
-                        CadVector np = GetPointAt(idx);
+                        CadVertex np = GetPointAt(idx);
                         if (!np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
-                            dc.Drawing.DrawSelectedPoint(np);
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
+                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
                 }
@@ -268,11 +235,11 @@ namespace Plotter
 
                     if (idx < PointCount)
                     {
-                        CadVector np = GetPointAt(idx);
+                        CadVertex np = GetPointAt(idx);
                         if (np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
-                            dc.Drawing.DrawSelectedPoint(np);
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
+                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
 
@@ -280,18 +247,18 @@ namespace Plotter
 
                     if (idx >= 0)
                     {
-                        CadVector np = GetPointAt(idx);
+                        CadVertex np = GetPointAt(idx);
                         if (np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(DrawTools.PEN_MATCH_SEG, p, np);
-                            dc.Drawing.DrawSelectedPoint(np);
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
+                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
                 }
             }
         }
 
-        public override void SetPointAt(int index, CadVector pt)
+        public override void SetPointAt(int index, CadVertex pt)
         {
             mPointList[index] = pt;
         }
@@ -331,9 +298,9 @@ namespace Plotter
                 return;
             }
 
-            CadVector prevNormal = Normal;
+            CadVertex prevNormal = Normal;
 
-            CadVector normal = CadUtil.RepresentativeNormal(PointList);
+            CadVertex normal = CadUtil.RepresentativeNormal(PointList);
 
             if (CadMath.InnerProduct(prevNormal, normal) < 0)
             {
@@ -368,7 +335,7 @@ namespace Plotter
         {
             Centroid ret = default(Centroid);
 
-            CadVector d = PointList[1] - PointList[0];
+            CadVertex d = PointList[1] - PointList[0];
 
             d /= 2.0;
 

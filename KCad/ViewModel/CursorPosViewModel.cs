@@ -34,9 +34,9 @@ namespace Plotter
             get => mStrCursorPos2;
         }
 
-        private CadVector mCursorPos;
+        private CadVertex mCursorPos;
 
-        public CadVector CursorPos
+        public CadVertex CursorPos
         {
             set
             {
@@ -56,9 +56,9 @@ namespace Plotter
             get => mCursorPos;
         }
 
-        private CadVector mCursorPos2;
+        private CadVertex mCursorPos2;
 
-        public CadVector CursorPos2
+        public CadVertex CursorPos2
         {
             set
             {
