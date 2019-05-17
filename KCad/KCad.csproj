@@ -204,6 +204,7 @@
     <Compile Include="plotter\DrawContext\DrawContextGLPers.cs" />
     <Compile Include="plotter\HalfEdge\HeModelBuilder.cs" />
     <Compile Include="plotter\HalfEdge\HeModelConverter.cs" />
+    <Compile Include="plotter\Serializer\CadMessagePack_v1000.cs" />
     <Compile Include="plotter\Serializer\CadMessagePack_v1001.cs" />
     <Compile Include="plotter\Serializer\MpUtil.cs" />
     <Compile Include="WIndowsAPI\WindowsAPI.cs" />
@@ -248,7 +249,6 @@
     <Compile Include="plotter\TreeViewItem\CadPointTreeItem.cs" />
     <Compile Include="plotter\Util\DebugOut.cs" />
     <Compile Include="plotter\Math\MatrixMN.cs" />
-    <Compile Include="SplineCurve\BSplineJson.cs" />
     <Compile Include="SplineCurve\BSplineParam.cs" />
     <Compile Include="SplineCurve\NurbsLine.cs" />
     <Compile Include="Controls\AutoCompleteTextBox.cs" />
@@ -265,7 +265,6 @@
     <Compile Include="plotter\Figure\CadFigureNurbsSurface.cs" />
     <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
     <Compile Include="plotter\Figure\FigUtil.cs" />
-    <Compile Include="plotter\HalfEdge\HeJson.cs" />
     <Compile Include="plotter\Serializer\CadMessagePack.cs" />
     <Compile Include="plotter\Serializer\JsonExtends.cs" />
     <Compile Include="plotter\Util\BitmapUtil.cs" />
@@ -276,7 +275,6 @@
     <Compile Include="plotter\DrawContext\DrawContextPrinter.cs" />
     <Compile Include="plotter\DrawContext\IDrawing.cs" />
     <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
-    <Compile Include="plotter\Serializer\CadJson.cs" />
     <Compile Include="plotter\PlotterSettings.cs" />
     <Compile Include="plotter\primitive\CadPrimitive.cs" />
     <Compile Include="plotter\searcher\MarkItem.cs" />

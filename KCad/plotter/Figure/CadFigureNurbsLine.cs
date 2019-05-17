@@ -160,23 +160,5 @@ namespace Plotter
 
             NurbsPointList = new VertexList(Nurbs.OutCnt);
         }
-
-
-        public override JObject GeometricDataToJson()
-        {
-            JObject jvdata = new JObject();
-            jvdata.Add("Nurbs", BSplineJson.NURBSLineToJson(Nurbs));
-
-            return jvdata;
-        }
-
-        public override void GeometricDataFromJson(JObject jvdata)
-        {
-            Nurbs = BSplineJson.NURBSLineFromJson((JObject)jvdata["Nurbs"]);
-
-            mPointList = Nurbs.CtrlPoints;
-
-            NurbsPointList = new VertexList(Nurbs.OutCnt);
-        }
     }
 }

@@ -22,7 +22,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            List<MpFigure_Latest> mpfigList = MpUtil.FigureListToMp_Latest(figList, true);
+            List<MpFigure_v1001> mpfigList = MpUtil.FigureListToMp_1001(figList, true);
 
             byte[] bin = MessagePackSerializer.Serialize(mpfigList);
 
@@ -37,9 +37,9 @@ namespace Plotter.Controller
             }
             byte[] bin = (byte[])Clipboard.GetData(CadClipBoard.TypeNameBin);
 
-            List<MpFigure_Latest> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure_Latest>>(bin);
+            List<MpFigure_v1001> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure_v1001>>(bin);
 
-            List<CadFigure> figList = MpUtil.FigureListFromMp_Latest(mpfigList);
+            List<CadFigure> figList = MpUtil.FigureListFromMp_1001(mpfigList);
 
 
             // Pase figures in fig list
@@ -92,7 +92,7 @@ namespace Plotter.Controller
 
         public static byte[] FigureListToBin(List<CadFigure> figList)
         {
-            List<MpFigure_Latest> mpfigList = MpUtil.FigureListToMp_Latest(figList, true);
+            List<MpFigure_v1001> mpfigList = MpUtil.FigureListToMp_1001(figList, true);
             byte[] bin = MessagePackSerializer.Serialize(mpfigList);
 
             return bin;
@@ -100,8 +100,8 @@ namespace Plotter.Controller
 
         public static List<CadFigure> FigureListFromBin(byte[] bin)
         {
-            List<MpFigure_Latest> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure_Latest>>(bin);
-            List<CadFigure> figList = MpUtil.FigureListFromMp_Latest(mpfigList);
+            List<MpFigure_v1001> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure_v1001>>(bin);
+            List<CadFigure> figList = MpUtil.FigureListFromMp_1001(mpfigList);
 
             return figList;
         }

@@ -860,25 +860,6 @@ namespace Plotter
             }
         }
 
-        public virtual JObject GeometricDataToJson()
-        {
-            JArray pointArray = CadJson.ToJson.VectorListToJson(PointList);
-
-            JObject jvdata = new JObject();
-            jvdata.Add(CadJson.VECTOR.POINT_LIST, pointArray);
-
-            return jvdata;
-        }
-
-        public virtual void GeometricDataFromJson(JObject jvdata)
-        {
-            JArray jarray = (JArray)jvdata[CadJson.VECTOR.POINT_LIST];
-
-            VertexList vl = CadJson.FromJson.VectorListFromJson(jarray);
-            mPointList = vl;
-        }
-
-
         public virtual MpGeometricData GeometricDataToMp()
         {
             MpSimpleGeometricData geo = new MpSimpleGeometricData();

@@ -61,16 +61,18 @@ namespace Plotter.Serializer
                 MpCadData_v1000 mpdata = MessagePackSerializer.Deserialize<MpCadData_v1000>(data);
                 return CreateCadData(mpdata);
             }
-            else
+            else if (version[0] == 1 && version[1] == 0 && version[2] == 0 && version[3] == 1)
             {
-                MpCadData_Latest mpdata = MessagePackSerializer.Deserialize<MpCadData_Latest>(data);
+                MpCadData_v1001 mpdata = MessagePackSerializer.Deserialize<MpCadData_v1001>(data);
                 return CreateCadData(mpdata);
             }
+
+            return null;
         }
 
         public static void Save(string fname, CadData cd)
         {
-            MpCadData_Latest mpcd = CreateMpCadData_Latest(cd);
+            MpCadData_v1001 mpcd = CreateMpCadData_v1001(cd);
 
             mpcd.MpDB.GarbageCollect();
 
@@ -87,8 +89,8 @@ namespace Plotter.Serializer
 
         public static void SaveAsJson(string fname, CadData cd)
         {
-            MpCadData_Latest data = CreateMpCadData_Latest(cd);
-            string s = MessagePackSerializer.ToJson<MpCadData_Latest>(data);
+            MpCadData_v1001 data = CreateMpCadData_v1001(cd);
+            string s = MessagePackSerializer.ToJson<MpCadData_v1001>(data);
 
             s = s.Trim();
 
@@ -134,7 +136,7 @@ namespace Plotter.Serializer
 
             if (version == "1001")
             {
-                MpCadData_Latest mpcd = MessagePackSerializer.Deserialize<MpCadData_Latest>(bin);
+                MpCadData_v1001 mpcd = MessagePackSerializer.Deserialize<MpCadData_v1001>(bin);
 
                 CadData cd = new CadData(
                     mpcd.GetDB(),
@@ -148,9 +150,9 @@ namespace Plotter.Serializer
             return null;
         }
 
-        private static MpCadData_Latest CreateMpCadData_Latest(CadData cd)
+        private static MpCadData_v1001 CreateMpCadData_v1001(CadData cd)
         {
-            MpCadData_Latest data = MpCadData_Latest.Create(cd.DB);
+            MpCadData_v1001 data = MpCadData_v1001.Create(cd.DB);
 
             data.ViewInfo.WorldScale = cd.WorldScale;
 
@@ -200,7 +202,7 @@ namespace Plotter.Serializer
             return cd;
         }
 
-        private static CadData CreateCadData(MpCadData_Latest mpcd)
+        private static CadData CreateCadData(MpCadData_v1001 mpcd)
         {
             CadData cd = new CadData();
 

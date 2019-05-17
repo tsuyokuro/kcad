@@ -53,12 +53,12 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        public static List<MpFigure_Latest> FigureListToMp_Latest(List<CadFigure> figList, bool withChild = false)
+        public static List<MpFigure_v1001> FigureListToMp_1001(List<CadFigure> figList, bool withChild = false)
         {
-            List<MpFigure_Latest> ret = new List<MpFigure_Latest>();
+            List<MpFigure_v1001> ret = new List<MpFigure_v1001>();
             for (int i = 0; i < figList.Count; i++)
             {
-                ret.Add(MpFigure_Latest.Create(figList[i], withChild));
+                ret.Add(MpFigure_v1001.Create(figList[i], withChild));
             }
 
             return ret;
@@ -75,7 +75,7 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        public static List<CadFigure> FigureListFromMp_Latest(List<MpFigure_Latest> list)
+        public static List<CadFigure> FigureListFromMp_1001(List<MpFigure_v1001> list)
         {
             List<CadFigure> ret = new List<CadFigure>();
             for (int i = 0; i < list.Count; i++)
@@ -98,13 +98,13 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        public static List<MpFigure_Latest> FigureMapToMp_Latest(
+        public static List<MpFigure_v1001> FigureMapToMp_1001(
             Dictionary<uint, CadFigure> figMap, bool withChild = false)
         {
-            List<MpFigure_Latest> ret = new List<MpFigure_Latest>();
+            List<MpFigure_v1001> ret = new List<MpFigure_v1001>();
             foreach (CadFigure fig in figMap.Values)
             {
-                ret.Add(MpFigure_Latest.Create(fig, withChild));
+                ret.Add(MpFigure_v1001.Create(fig, withChild));
             }
 
             return ret;

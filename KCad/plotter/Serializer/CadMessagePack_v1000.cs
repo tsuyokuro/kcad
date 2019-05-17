@@ -10,11 +10,13 @@ using OpenTK;
 
 namespace Plotter.Serializer
 {
+    // TODO 旧Versionの読み込み用なのでCreate系は不要
+
     [MessagePackObject]
-    public class MpCadData_v1001
+    public class MpCadData_v1000
     {
         [Key("DB")]
-        public MpCadObjectDB_v1001 MpDB;
+        public MpCadObjectDB_v1000 MpDB;
 
         [Key("ViewInfo")]
         public MpViewInfo ViewInfo;
@@ -22,11 +24,11 @@ namespace Plotter.Serializer
         [IgnoreMember]
         CadObjectDB DB = null;
 
-        public static MpCadData_v1001 Create(CadObjectDB db)
+        public static MpCadData_v1000 Create(CadObjectDB db)
         {
-            MpCadData_v1001 ret = new MpCadData_v1001();
+            MpCadData_v1000 ret = new MpCadData_v1000();
 
-            ret.MpDB = MpCadObjectDB_v1001.Create(db);
+            ret.MpDB = MpCadObjectDB_v1000.Create(db);
 
             ret.ViewInfo = new MpViewInfo();
 
@@ -45,7 +47,7 @@ namespace Plotter.Serializer
     }
 
     [MessagePackObject]
-    public class MpCadObjectDB_v1001
+    public class MpCadObjectDB_v1000
     {
         [Key("LayerIdCnt")]
         public uint LayerIdCount;
@@ -54,7 +56,7 @@ namespace Plotter.Serializer
         public uint FigureIdCount;
 
         [Key("FigList")]
-        public List<MpFigure_v1001> FigureList;
+        public List<MpFigure_v1000> FigureList;
 
         [Key("LayerList")]
         public List<MpLayer> LayerList;
@@ -62,14 +64,14 @@ namespace Plotter.Serializer
         [Key("CurrentLayerID")]
         public uint CurrentLayerID;
 
-        public static MpCadObjectDB_v1001 Create(CadObjectDB db)
+        public static MpCadObjectDB_v1000 Create(CadObjectDB db)
         {
-            MpCadObjectDB_v1001 ret = new MpCadObjectDB_v1001();
+            MpCadObjectDB_v1000 ret = new MpCadObjectDB_v1000();
 
             ret.LayerIdCount = db.LayerIdProvider.Counter;
             ret.FigureIdCount = db.FigIdProvider.Counter;
 
-            ret.FigureList = MpUtil.FigureMapToMp_1001(db.FigureMap);
+            ret.FigureList = MpUtil.FigureMapToMp_v1000(db.FigureMap);
 
             ret.LayerList = MpUtil.LayerListToMp(db.LayerList);
 
@@ -80,9 +82,9 @@ namespace Plotter.Serializer
 
         public void GarbageCollect()
         {
-            var idMap = new Dictionary<uint, MpFigure_v1001>();
+            var idMap = new Dictionary<uint, MpFigure_v1000>();
 
-            foreach (MpFigure_v1001 fig in FigureList)
+            foreach (MpFigure_v1000 fig in FigureList)
             {
                 idMap.Add(fig.ID, fig);
             }
@@ -93,10 +95,9 @@ namespace Plotter.Serializer
             {
                 foreach (uint id in layer.FigureIdList)
                 {
-                    MpFigure_v1001 fig = idMap[id];
+                    MpFigure_v1000 fig = idMap[id];
 
-                    fig.ForEachFigID(idMap, (a) =>
-                    {
+                    fig.ForEachFigID(idMap, (a) => {
                         activeSet.Add(a);
                     });
                 }
@@ -106,7 +107,7 @@ namespace Plotter.Serializer
 
             for (; i >= 0; i--)
             {
-                MpFigure_v1001 fig = FigureList[i];
+                MpFigure_v1000 fig = FigureList[i];
 
                 if (!activeSet.Contains(fig.ID))
                 {
@@ -123,7 +124,7 @@ namespace Plotter.Serializer
             ret.FigIdProvider.Counter = FigureIdCount;
 
             // Figure map
-            List<CadFigure> figList = MpUtil.FigureListFromMp_1001(FigureList);
+            List<CadFigure> figList = MpUtil.FigureListFromMp_v1000(FigureList);
 
             var dic = new Dictionary<uint, CadFigure>();
 
@@ -141,7 +142,7 @@ namespace Plotter.Serializer
             // Child list
             for (int i = 0; i < figList.Count; i++)
             {
-                MpFigure_v1001 mpfig = FigureList[i];
+                MpFigure_v1000 mpfig = FigureList[i];
                 SetFigChild(mpfig, dic);
             }
 
@@ -163,7 +164,7 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        private void SetFigChild(MpFigure_v1001 mpfig, Dictionary<uint, CadFigure> dic)
+        private void SetFigChild(MpFigure_v1000 mpfig, Dictionary<uint, CadFigure> dic)
         {
             for (int i = 0; i < mpfig.ChildIdList.Count; i++)
             {
@@ -173,10 +174,11 @@ namespace Plotter.Serializer
                 dic[id].Parent = mpfig.TempFigure;
             }
         }
+
     }
 
     [MessagePackObject]
-    public class MpFigure_v1001
+    public class MpFigure_v1000
     {
         [Key("ID")]
         public uint ID;
@@ -191,10 +193,10 @@ namespace Plotter.Serializer
         public bool IsLoop;
 
         [Key("Normal")]
-        public MpVector3d Normal;
+        public MpVertex Normal;
 
         [Key("ChildList")]
-        public List<MpFigure_v1001> ChildList;
+        public List<MpFigure_v1000> ChildList;
 
         [Key("ChildIdList")]
         public List<uint> ChildIdList;
@@ -205,9 +207,9 @@ namespace Plotter.Serializer
         [IgnoreMember]
         public CadFigure TempFigure = null;
 
-        public static MpFigure_v1001 Create(CadFigure fig, bool withChild = false)
+        public static MpFigure_v1000 Create(CadFigure fig, bool withChild = false)
         {
-            MpFigure_v1001 ret = new MpFigure_v1001();
+            MpFigure_v1000 ret = new MpFigure_v1000();
 
             ret.StoreCommon(fig);
 
@@ -222,7 +224,7 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        public virtual void ForEachFig(Action<MpFigure_v1001> d)
+        public virtual void ForEachFig(Action<MpFigure_v1000> d)
         {
             d(this);
 
@@ -234,12 +236,12 @@ namespace Plotter.Serializer
             int i;
             for (i = 0; i < ChildList.Count; i++)
             {
-                MpFigure_v1001 c = ChildList[i];
+                MpFigure_v1000 c = ChildList[i];
                 c.ForEachFig(d);
             }
         }
 
-        public virtual void ForEachFigID(Dictionary<uint, MpFigure_v1001> allMap, Action<uint> d)
+        public virtual void ForEachFigID(Dictionary<uint, MpFigure_v1000> allMap, Action<uint> d)
         {
             d(ID);
 
@@ -252,7 +254,7 @@ namespace Plotter.Serializer
             for (i = 0; i < ChildIdList.Count; i++)
             {
                 uint id = ChildIdList[i];
-                MpFigure_v1001 childFig = allMap[id];
+                MpFigure_v1000 childFig = allMap[id];
                 childFig.ForEachFigID(allMap, d);
             }
         }
@@ -263,7 +265,7 @@ namespace Plotter.Serializer
             Type = (byte)fig.Type;
             Locked = fig.Locked;
             IsLoop = fig.IsLoop;
-            Normal = MpVector3d.Create(fig.Normal.vector);
+            Normal = MpVertex.Create(fig.Normal);
 
             GeoData = fig.GeometricDataToMp();
         }
@@ -275,7 +277,7 @@ namespace Plotter.Serializer
 
         public void StoreChildList(CadFigure fig)
         {
-            ChildList = MpUtil.FigureListToMp_1001(fig.ChildList);
+            ChildList = MpUtil.FigureListToMp_v1000(fig.ChildList);
         }
 
         public void RestoreTo(CadFigure fig)
@@ -283,11 +285,11 @@ namespace Plotter.Serializer
             fig.ID = ID;
             fig.Locked = Locked;
             fig.IsLoop = IsLoop;
-            fig.Normal = (CadVertex)Normal.Restore();
+            fig.Normal = Normal.Restore();
 
             if (ChildList != null)
             {
-                fig.ChildList = MpUtil.FigureListFromMp_1001(ChildList);
+                fig.ChildList = MpUtil.FigureListFromMp_v1000(ChildList);
 
                 for (int i = 0; i < fig.ChildList.Count; i++)
                 {

@@ -194,34 +194,6 @@ namespace Plotter
             mHeModel.InvertAllFace();
         }
 
-        public override JObject GeometricDataToJson()
-        {
-            JObject jvdata = new JObject();
-
-            JObject jmodel = HeJson.HeModelToJson(mHeModel);
-
-            jvdata.Add("model", jmodel);
-
-            return jvdata;
-        }
-
-        public override void GeometricDataFromJson(JObject jvdata)
-        {
-            JObject jmodel = (JObject)jvdata["model"];
-
-            HeModel model = HeJson.HeModelFromJson(jmodel);
-
-            if (model == null)
-            {
-                return;
-            }
-
-            mHeModel = model;
-
-            mPointList = mHeModel.VertexStore;
-        }
-
-
         public override MpGeometricData GeometricDataToMp()
         {
             MpMeshGeometricData mpGeo = new MpMeshGeometricData();
