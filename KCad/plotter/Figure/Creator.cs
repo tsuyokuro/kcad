@@ -26,12 +26,12 @@ namespace Plotter
             } = null;
 
 
-            public virtual void AddPointInCreating(DrawContext dc, CadVector p)
+            public virtual void AddPointInCreating(DrawContext dc, CadVertex p)
             {
                 Figure.AddPointInCreating(dc, p);
             }
 
-            public virtual void DrawTemp(DrawContext dc, CadVector tp, int pen)
+            public virtual void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
             {
                 Figure.DrawTemp(dc, tp, pen);
             }
@@ -95,19 +95,19 @@ namespace Plotter
                 Figure = fig;
             }
 
-            public override void AddPointInCreating(DrawContext dc, CadVector p)
+            public override void AddPointInCreating(DrawContext dc, CadVertex p)
             {
                 Figure.mPointList.Add(p);
             }
 
-            public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+            public override void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
             {
                 if (Figure.PointCount == 0)
                 {
                     return;
                 }
 
-                CadVector lastPt = Figure.PointList[Figure.PointCount - 1];
+                CadVertex lastPt = Figure.PointList[Figure.PointCount - 1];
 
                 dc.Drawing.DrawLine(pen, lastPt, tp);
             }
@@ -119,7 +119,7 @@ namespace Plotter
                     //Vector3d normal = CadUtil.RepresentativeNormal(fig.PointList);
                     //double t = Vector3d.Dot(normal, dc.ViewDir);
 
-                    Figure.Normal = CadVector.Create(dc.ViewDir);
+                    Figure.Normal = CadVertex.Create(dc.ViewDir);
                     Figure.Normal *= -1;
                 }
             }
@@ -155,7 +155,7 @@ namespace Plotter
                 Figure = fig;
             }
 
-            public override void AddPointInCreating(DrawContext dc, CadVector p)
+            public override void AddPointInCreating(DrawContext dc, CadVertex p)
             {
                 if (Figure.mPointList.Count == 0)
                 {
@@ -165,13 +165,13 @@ namespace Plotter
                 {
                     // 左回りになるように設定
 
-                    CadVector pp0 = dc.WorldPointToDevPoint(Figure.PointList[0]);
-                    CadVector pp2 = dc.WorldPointToDevPoint(p);
+                    CadVertex pp0 = dc.WorldPointToDevPoint(Figure.PointList[0]);
+                    CadVertex pp2 = dc.WorldPointToDevPoint(p);
 
-                    CadVector pp1 = pp0;
+                    CadVertex pp1 = pp0;
                     pp1.y = pp2.y;
 
-                    CadVector pp3 = pp0;
+                    CadVertex pp3 = pp0;
                     pp3.x = pp2.x;
 
                     Figure.mPointList.Add(dc.DevPointToWorldPoint(pp1));
@@ -182,7 +182,7 @@ namespace Plotter
                 }
             }
 
-            public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+            public override void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
             {
                 if (Figure.PointList.Count <= 0)
                 {
@@ -194,7 +194,7 @@ namespace Plotter
 
             public override void EndCreate(DrawContext dc)
             {
-                Figure.Normal = CadVector.Create(dc.ViewDir);
+                Figure.Normal = CadVertex.Create(dc.ViewDir);
                 Figure.Normal *= -1;
                 Figure.Type = Types.POLY_LINES;
             }

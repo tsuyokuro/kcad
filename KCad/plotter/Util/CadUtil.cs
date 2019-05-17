@@ -10,7 +10,7 @@ namespace Plotter
     public struct CrossInfo
     {
         public bool IsCross;
-        public CadVector CrossPoint;
+        public CadVertex CrossPoint;
         public double Distance;
     }
 
@@ -18,10 +18,10 @@ namespace Plotter
     {
         public bool IsInvalid;
         public double Area;
-        public CadVector Point;
+        public CadVertex Point;
 
         // 三角形から作成
-        public static Centroid Create(CadVector p0, CadVector p1, CadVector p2)
+        public static Centroid Create(CadVertex p0, CadVertex p1, CadVertex p2)
         {
             Centroid ret = default(Centroid);
             ret.set(p0, p1, p2);
@@ -29,7 +29,7 @@ namespace Plotter
         }
 
         // 三角形で設定
-        public void set(CadVector p0, CadVector p1, CadVector p2)
+        public void set(CadVertex p0, CadVertex p1, CadVertex p2)
         {
             Area = CadUtil.TriangleArea(p0, p1, p2);
             Point = CadUtil.TriangleCentroid(p0, p1, p2);
@@ -47,17 +47,17 @@ namespace Plotter
          * list[0]/_________list[1]
          * 
          */
-        public static CadVector Normal(CadFigure fig)
+        public static CadVertex Normal(CadFigure fig)
         {
             if (fig.PointCount < 3)
             {
-                return CadVector.Zero;
+                return CadVertex.Zero;
             }
 
             return CadMath.Normal(fig.GetPointAt(0), fig.GetPointAt(1), fig.GetPointAt(2));
         }
 
-        public static void RotateFigure(CadFigure fig, CadVector org, CadVector axis, double t)
+        public static void RotateFigure(CadFigure fig, CadVertex org, CadVertex axis, double t)
         {
             CadQuaternion q = CadQuaternion.RotateQuaternion(axis, t);
             CadQuaternion r = q.Conjugate(); ;
@@ -68,7 +68,7 @@ namespace Plotter
 
             for (int i = 0; i < n; i++)
             {
-                CadVector p = fig.PointList[i];
+                CadVertex p = fig.PointList[i];
 
                 p -= org;
 
@@ -85,13 +85,13 @@ namespace Plotter
             }
         }
 
-        public static void ScaleFigure(CadFigure fig, CadVector org, double scale)
+        public static void ScaleFigure(CadFigure fig, CadVertex org, double scale)
         {
             int n = fig.PointList.Count;
 
             for (int i = 0; i < n; i++)
             {
-                CadVector p = fig.PointList[i];
+                CadVertex p = fig.PointList[i];
                 p -= org;
                 p *= scale;
                 p += org;
@@ -101,12 +101,12 @@ namespace Plotter
         }
 
         // 三角形の面積 3D対応
-        public static double TriangleArea(CadVector p0, CadVector p1, CadVector p2)
+        public static double TriangleArea(CadVertex p0, CadVertex p1, CadVertex p2)
         {
-            CadVector v1 = p0 - p1;
-            CadVector v2 = p2 - p1;
+            CadVertex v1 = p0 - p1;
+            CadVertex v2 = p2 - p1;
 
-            CadVector cp = CadMath.CrossProduct(v1, v2);
+            CadVertex cp = CadMath.CrossProduct(v1, v2);
 
             double area = cp.Norm() / 2.0;
 
@@ -125,9 +125,9 @@ namespace Plotter
 
 
         // 三角形の重心を求める
-        public static CadVector TriangleCentroid(CadVector p0, CadVector p1, CadVector p2)
+        public static CadVertex TriangleCentroid(CadVertex p0, CadVertex p1, CadVertex p2)
         {
-            CadVector gp = default(CadVector);
+            CadVertex gp = default(CadVertex);
 
             gp.x = (p0.x + p1.x + p2.x) / 3.0;
             gp.y = (p0.y + p1.y + p2.y) / 3.0;
@@ -137,7 +137,7 @@ namespace Plotter
         }
 
         // 三角形の重心を求める
-        public static CadVector TriangleCentroid(CadFigure fig)
+        public static CadVertex TriangleCentroid(CadFigure fig)
         {
             return TriangleCentroid(
                 fig.GetPointAt(0),
@@ -174,7 +174,7 @@ namespace Plotter
         // 二つの重心情報から重心を求める
         public static Centroid MergeCentroid(Centroid c0, Centroid c1)
         {
-            CadVector gpt = default(CadVector);
+            CadVertex gpt = default(CadVertex);
 
             double ratio = c1.Area / (c0.Area + c1.Area);
 
@@ -204,10 +204,10 @@ namespace Plotter
                 return 0;
             }
 
-            CadVector p0;
-            CadVector p1;
+            CadVertex p0;
+            CadVertex p1;
 
-            CadVector pd;
+            CadVertex pd;
 
             double d = 0;
 
@@ -233,14 +233,14 @@ namespace Plotter
                 idx2 = t;
             }
 
-            CadVector a = fig.GetPointAt(idx1);
-            CadVector b = fig.GetPointAt(idx2);
+            CadVertex a = fig.GetPointAt(idx1);
+            CadVertex b = fig.GetPointAt(idx2);
 
-            CadVector hp1 = b - a;
+            CadVertex hp1 = b - a;
             hp1 = hp1 / 3;
             hp1 = hp1 + a;
 
-            CadVector hp2 = a - b;
+            CadVertex hp2 = a - b;
             hp2 = hp2 / 3;
             hp2 = hp2 + b;
 
@@ -254,7 +254,7 @@ namespace Plotter
         }
 
         public static void BezierPoints(
-            CadVector p0, CadVector p1, CadVector p2, int s, VectorList ret)
+            CadVertex p0, CadVertex p1, CadVertex p2, int s, VertexList ret)
         {
             double t = 0;
             double d = 1.0 / (double)s;
@@ -263,14 +263,14 @@ namespace Plotter
 
             int n = 3;
 
-            CadVector t0 = p0;
-            CadVector t1 = p0;
+            CadVertex t0 = p0;
+            CadVertex t1 = p0;
 
             ret.Add(t0);
 
             while (t <= 1.0)
             {
-                t1 = default(CadVector);
+                t1 = default(CadVertex);
                 t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
                 t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
                 t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
@@ -284,7 +284,7 @@ namespace Plotter
         }
 
         public static bool ForEachBezierPoints(
-            CadVector p0, CadVector p1, CadVector p2, int s, Action<CadVector> action)
+            CadVertex p0, CadVertex p1, CadVertex p2, int s, Action<CadVertex> action)
         {
             double t = 0;
             double d = 1.0 / (double)s;
@@ -293,14 +293,14 @@ namespace Plotter
 
             int n = 3;
 
-            CadVector t0 = p0;
-            CadVector t1 = p0;
+            CadVertex t0 = p0;
+            CadVertex t1 = p0;
 
             action(t0);
 
             while (t <= 1.0)
             {
-                t1 = default(CadVector);
+                t1 = default(CadVertex);
                 t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
                 t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
                 t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
@@ -316,7 +316,7 @@ namespace Plotter
         }
 
         public static void BezierPoints(
-            CadVector p0, CadVector p1, CadVector p2, CadVector p3, int s, VectorList ret)
+            CadVertex p0, CadVertex p1, CadVertex p2, CadVertex p3, int s, VertexList ret)
         {
             double t = 0;
             double d = 1.0 / (double)s;
@@ -325,14 +325,14 @@ namespace Plotter
 
             int n = 4;
 
-            CadVector t0 = p0;
-            CadVector t1 = p0;
+            CadVertex t0 = p0;
+            CadVertex t1 = p0;
 
             ret.Add(t0);
 
             while (t <= 1.0)
             {
-                t1 = default(CadVector);
+                t1 = default(CadVertex);
                 t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
                 t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
                 t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
@@ -347,7 +347,7 @@ namespace Plotter
         }
 
         public static void ForEachBezierPoints(
-            CadVector p0, CadVector p1, CadVector p2, CadVector p3, int s, Action<CadVector> action)
+            CadVertex p0, CadVertex p1, CadVertex p2, CadVertex p3, int s, Action<CadVertex> action)
         {
             double t = 0;
             double d = 1.0 / (double)s;
@@ -356,14 +356,14 @@ namespace Plotter
 
             int n = 4;
 
-            CadVector t0 = p0;
-            CadVector t1 = p0;
+            CadVertex t0 = p0;
+            CadVertex t1 = p0;
 
             action(t0);
 
             while (t <= 1.0)
             {
-                t1 = default(CadVector);
+                t1 = default(CadVertex);
                 t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
                 t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
                 t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
@@ -378,16 +378,16 @@ namespace Plotter
         }
 
         // 点が三角形内にあるか 2D版
-        public static bool IsPointInTriangle2D(CadVector p, CadFigure fig)
+        public static bool IsPointInTriangle2D(CadVertex p, CadFigure fig)
         {
             if (fig.PointCount < 3)
             {
                 return false;
             }
 
-            CadVector p0 = fig.GetPointAt(0);
-            CadVector p1 = fig.GetPointAt(1);
-            CadVector p2 = fig.GetPointAt(2);
+            CadVertex p0 = fig.GetPointAt(0);
+            CadVertex p1 = fig.GetPointAt(1);
+            CadVertex p2 = fig.GetPointAt(2);
 
 
             double c1 = CadMath.CrossProduct2D(p, p0, p1);
@@ -405,20 +405,20 @@ namespace Plotter
         }
 
         // 点が三角形内にあるか
-        public static bool IsPointInTriangle(CadVector p, CadFigure fig)
+        public static bool IsPointInTriangle(CadVertex p, CadFigure fig)
         {
             if (fig.PointCount < 3)
             {
                 return false;
             }
 
-            CadVector p0 = fig.GetPointAt(0);
-            CadVector p1 = fig.GetPointAt(1);
-            CadVector p2 = fig.GetPointAt(2);
+            CadVertex p0 = fig.GetPointAt(0);
+            CadVertex p1 = fig.GetPointAt(1);
+            CadVertex p2 = fig.GetPointAt(2);
 
-            CadVector c1 = CadMath.CrossProduct(p, p0, p1);
-            CadVector c2 = CadMath.CrossProduct(p, p1, p2);
-            CadVector c3 = CadMath.CrossProduct(p, p2, p0);
+            CadVertex c1 = CadMath.CrossProduct(p, p0, p1);
+            CadVertex c2 = CadMath.CrossProduct(p, p1, p2);
+            CadVertex c3 = CadMath.CrossProduct(p, p2, p0);
 
             double ip12 = CadMath.InnerProduct(c1, c2);
             double ip13 = CadMath.InnerProduct(c1, c3);
@@ -434,18 +434,18 @@ namespace Plotter
         }
 
         // 指定された座標から最も遠いPointのIndexを求める
-        public static int FindMaxDistantPointIndex(CadVector p0, VectorList points)
+        public static int FindMaxDistantPointIndex(CadVertex p0, VertexList points)
         {
             int ret = -1;
             int i;
 
-            CadVector t;
+            CadVertex t;
 
             double maxd = 0;
 
             for (i = 0; i < points.Count; i++)
             {
-                CadVector fp = points[i];
+                CadVertex fp = points[i];
 
                 t = fp - p0;
                 double d = t.Norm();
@@ -461,11 +461,11 @@ namespace Plotter
         }
 
         // 法線の代表値を求める
-        public static CadVector RepresentativeNormal(VectorList points)
+        public static CadVertex RepresentativeNormal(VertexList points)
         {
             if (points.Count < 3)
             {
-                return CadVector.Zero;
+                return CadVertex.Zero;
             }
 
             int idx = FindMaxDistantPointIndex(points[0], points);
@@ -483,13 +483,13 @@ namespace Plotter
                 idxB = idxB - points.Count;
             }
 
-            CadVector normal = CadMath.Normal(points[idx], points[idxA], points[idxB]);
+            CadVertex normal = CadMath.Normal(points[idx], points[idxA], points[idxB]);
 
             return normal;
         }
 
         // 図形は凸である
-        public static bool IsConvex(VectorList points)
+        public static bool IsConvex(VertexList points)
         {
             int cnt = points.Count;
 
@@ -499,8 +499,8 @@ namespace Plotter
             }
 
             int i = 0;
-            CadVector n = default(CadVector);
-            CadVector cn = default(CadVector);
+            CadVertex n = default(CadVertex);
+            CadVertex cn = default(CadVertex);
             double scala = 0;
 
             for (;i < cnt - 2;)
@@ -534,7 +534,7 @@ namespace Plotter
                     continue;
                 }
 
-                if (scala < CadMath.R1Min)
+                if (scala < CadMath.RP1Min)
                 {
                     return false;
                 }
@@ -562,12 +562,12 @@ namespace Plotter
         // 線分apと点pの距離
         // 垂線がab内に無い場合は、点a,bで近い方への距離を返す
         // 2D
-        public static double DistancePointToSeg2D(CadVector a, CadVector b, CadVector p)
+        public static double DistancePointToSeg2D(CadVertex a, CadVertex b, CadVertex p)
         {
             double t;
 
-            CadVector ab = b - a;
-            CadVector ap = p - a;
+            CadVertex ab = b - a;
+            CadVertex ap = p - a;
 
             t = CadMath.InnrProduct2D(ab, ap);
 
@@ -576,8 +576,8 @@ namespace Plotter
                 return ap.Norm2D();
             }
 
-            CadVector ba = a - b;
-            CadVector bp = p - b;
+            CadVertex ba = a - b;
+            CadVertex bp = p - b;
 
             t = CadMath.InnrProduct2D(ba, bp);
 
@@ -598,12 +598,12 @@ namespace Plotter
         // 線分apと点pの距離
         // 垂線がab内に無い場合は、点a,bで近い方への距離を返す
         // 3D対応
-        public static double DistancePointToSeg(CadVector a, CadVector b, CadVector p)
+        public static double DistancePointToSeg(CadVertex a, CadVertex b, CadVertex p)
         {
             double t;
 
-            CadVector ab = b - a;
-            CadVector ap = p - a;
+            CadVertex ab = b - a;
+            CadVertex ap = p - a;
 
             t = CadMath.InnerProduct(ab, ap);
 
@@ -612,8 +612,8 @@ namespace Plotter
                 return ap.Norm();
             }
 
-            CadVector ba = a - b;
-            CadVector bp = p - b;
+            CadVertex ba = a - b;
+            CadVertex bp = p - b;
 
             t = CadMath.InnerProduct(ba, bp);
 
@@ -622,7 +622,7 @@ namespace Plotter
                 return bp.Norm();
             }
 
-            CadVector cp = CadMath.CrossProduct(ab, ap);
+            CadVertex cp = CadMath.CrossProduct(ab, ap);
 
             // 外積結果の長さが a->p a->b を辺とする平行四辺形の面積になる
             double s = cp.Norm();
@@ -632,22 +632,22 @@ namespace Plotter
         }
 
         // 点pから線分abに向かう垂線との交点を求める
-        public static CrossInfo PerpendicularCrossSeg(CadVector a, CadVector b, CadVector p)
+        public static CrossInfo PerpendicularCrossSeg(CadVertex a, CadVertex b, CadVertex p)
         {
             CrossInfo ret = default(CrossInfo);
 
-            CadVector ab = b - a;
-            CadVector ap = p - a;
+            CadVertex ab = b - a;
+            CadVertex ap = p - a;
 
-            CadVector ba = a - b;
-            CadVector bp = p - b;
+            CadVertex ba = a - b;
+            CadVertex bp = p - b;
 
             // A-B 単位ベクトル
             //CadPoint unit_ab = CadMath.unitVector(ab);
-            CadVector unit_ab = ab.UnitVector();
+            CadVertex unit_ab = ab.UnitVector();
 
             // B-A 単位ベクトル　(A-B単位ベクトルを反転) B側の中外判定に使用
-            CadVector unit_ba = unit_ab * -1.0;
+            CadVertex unit_ba = unit_ab * -1.0;
 
             // Aから交点までの距離 
             // A->交点->B or A->B->交点なら +
@@ -672,14 +672,14 @@ namespace Plotter
         }
 
         // 点pから線分abに向かう垂線との交点を求める2D
-        public static CrossInfo PerpendicularCrossSeg2D(CadVector a, CadVector b, CadVector p)
+        public static CrossInfo PerpendicularCrossSeg2D(CadVertex a, CadVertex b, CadVertex p)
         {
             CrossInfo ret = default(CrossInfo);
 
             double t1;
 
-            CadVector ab = b - a;
-            CadVector ap = p - a;
+            CadVertex ab = b - a;
+            CadVertex ap = p - a;
 
             t1 = CadMath.InnrProduct2D(ab, ap);
 
@@ -690,8 +690,8 @@ namespace Plotter
 
             double t2;
 
-            CadVector ba = a - b;
-            CadVector bp = p - b;
+            CadVertex ba = a - b;
+            CadVertex bp = p - b;
 
             t2 = CadMath.InnrProduct2D(ba, bp);
 
@@ -712,7 +712,7 @@ namespace Plotter
 
 
         // 点pから直線abに向かう垂線との交点を求める
-        public static CrossInfo PerpendicularCrossLine(CadVector a, CadVector b, CadVector p)
+        public static CrossInfo PerpendicularCrossLine(CadVertex a, CadVertex b, CadVertex p)
         {
             CrossInfo ret = default(CrossInfo);
 
@@ -722,11 +722,11 @@ namespace Plotter
             }
 
 
-            CadVector ab = b - a;
-            CadVector ap = p - a;
+            CadVertex ab = b - a;
+            CadVertex ap = p - a;
 
             // A-B 単位ベクトル
-            CadVector unit_ab = ab.UnitVector();
+            CadVertex unit_ab = ab.UnitVector();
 
             // Aから交点までの距離 
             double dist_ax = CadMath.InnerProduct(unit_ab, ap);
@@ -749,7 +749,7 @@ namespace Plotter
         //   |                       |
         //   a                       b
         //
-        public static CadSegment PerpendicularSeg(CadVector a, CadVector b, CadVector p)
+        public static CadSegment PerpendicularSeg(CadVertex a, CadVertex b, CadVertex p)
         {
             CadSegment seg = default(CadSegment);
 
@@ -760,7 +760,7 @@ namespace Plotter
 
             if (ci.IsCross)
             {
-                CadVector nv = p - ci.CrossPoint;
+                CadVertex nv = p - ci.CrossPoint;
 
                 seg.P0 += nv;
                 seg.P1 += nv;
@@ -771,14 +771,14 @@ namespace Plotter
 
 
         // 点pから直線abに向かう垂線との交点を求める2D
-        public static CrossInfo PerpendicularCrossLine2D(CadVector a, CadVector b, CadVector p)
+        public static CrossInfo PerpendicularCrossLine2D(CadVertex a, CadVertex b, CadVertex p)
         {
             CrossInfo ret = default(CrossInfo);
 
             double t1;
 
-            CadVector ab = b - a;
-            CadVector ap = p - a;
+            CadVertex ab = b - a;
+            CadVertex ap = p - a;
 
             t1 = CadMath.InnrProduct2D(ab, ap);
 
@@ -798,9 +798,9 @@ namespace Plotter
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static CadVector CenterPoint(CadVector a, CadVector b)
+        public static CadVertex CenterPoint(CadVertex a, CadVertex b)
         {
-            CadVector c = b - a;
+            CadVertex c = b - a;
             c /= 2;
             c += a;
 
@@ -814,9 +814,9 @@ namespace Plotter
         /// <param name="b"></param>
         /// <param name="len"></param>
         /// <returns></returns>
-        public static CadVector LinePoint(CadVector a, CadVector b, double len)
+        public static CadVertex LinePoint(CadVertex a, CadVertex b, double len)
         {
-            CadVector v = b - a;
+            CadVertex v = b - a;
 
             v = v.UnitVector();
 
@@ -832,13 +832,13 @@ namespace Plotter
         //    return Math.Sqrt(v.x * v.x + v.y * v.y);
         //}
 
-        public static double SegNorm(CadVector a, CadVector b)
+        public static double SegNorm(CadVertex a, CadVertex b)
         {
-            CadVector v = b - a;
+            CadVertex v = b - a;
             return v.Norm();
         }
 
-        public static double SegNorm2D(CadVector a, CadVector b)
+        public static double SegNorm2D(CadVertex a, CadVertex b)
         {
             double dx = b.x - a.x;
             double dy = b.y - a.y;
@@ -846,16 +846,16 @@ namespace Plotter
             return Math.Sqrt((dx * dx) + (dy * dy));
         }
 
-        public static void MovePoints(VectorList list, CadVector delta)
+        public static void MovePoints(VertexList list, CadVertex delta)
         {
             for (int i = 0; i < list.Count; i++)
             {
-                CadVector op = list[i];
+                CadVertex op = list[i];
                 list[i] = op + delta;
             }
         }
 
-        public static CadRect GetContainsRect(VectorList list)
+        public static CadRect GetContainsRect(VertexList list)
         {
             CadRect rect = default(CadRect);
 
@@ -867,7 +867,7 @@ namespace Plotter
             double maxy = CadConst.MinValue;
             double maxz = CadConst.MinValue;
 
-            foreach (CadVector p in list)
+            foreach (CadVertex p in list)
             {
                 minx = Math.Min(minx, p.x);
                 miny = Math.Min(miny, p.y);
@@ -878,8 +878,8 @@ namespace Plotter
                 maxz = Math.Max(maxz, p.z);
             }
 
-            rect.p0 = default(CadVector);
-            rect.p1 = default(CadVector);
+            rect.p0 = default(CadVertex);
+            rect.p1 = default(CadVertex);
 
             rect.p0.x = minx;
             rect.p0.y = miny;
@@ -953,8 +953,8 @@ namespace Plotter
                 maxy = Math.Max(maxy, fr.p1.y);
             }
 
-            rect.p0 = default(CadVector);
-            rect.p1 = default(CadVector);
+            rect.p0 = default(CadVertex);
+            rect.p1 = default(CadVertex);
 
             rect.p0.x = minx;
             rect.p0.y = miny;
@@ -967,7 +967,7 @@ namespace Plotter
             return rect;
         }
 
-        public static CadRect GetContainsRectScrn(DrawContext dc, VectorList list)
+        public static CadRect GetContainsRectScrn(DrawContext dc, VertexList list)
         {
             CadRect rect = default(CadRect);
 
@@ -979,7 +979,7 @@ namespace Plotter
 
             list.ForEach(p =>
             {
-                CadVector v = dc.WorldPointToDevPoint(p);
+                CadVertex v = dc.WorldPointToDevPoint(p);
 
                 minx = Math.Min(minx, v.x);
                 miny = Math.Min(miny, v.y);
@@ -988,8 +988,8 @@ namespace Plotter
                 maxy = Math.Max(maxy, v.y);
             });
 
-            rect.p0 = default(CadVector);
-            rect.p1 = default(CadVector);
+            rect.p0 = default(CadVertex);
+            rect.p1 = default(CadVertex);
 
             rect.p0.x = minx;
             rect.p0.y = miny;
@@ -1011,16 +1011,16 @@ namespace Plotter
         /// <returns>
         /// 点aに最も近い平面上の点
         /// </returns>
-        public static CadVector CrossPlane(CadVector a, CadVector p, CadVector normal)
+        public static CadVertex CrossPlane(CadVertex a, CadVertex p, CadVertex normal)
         {
-            CadVector pa = a - p;
+            CadVertex pa = a - p;
     
             // 法線とpaの内積をとる
             // 法線の順方向に点Aがあれば d>0 逆方向だと d<0
             double d = CadMath.InnerProduct(normal, pa);
 
             //内積値から平面上の最近点を求める
-            CadVector cp = default(CadVector);
+            CadVertex cp = default(CadVertex);
             cp.x = a.x - (normal.x * d);
             cp.y = a.y - (normal.y * d);
             cp.z = a.z - (normal.z * d);
@@ -1037,11 +1037,11 @@ namespace Plotter
         /// <param name="normal">平面の法線</param>
         /// <returns>交点</returns>
         /// 
-        public static CadVector CrossPlane(CadVector a, CadVector b, CadVector p, CadVector normal)
+        public static CadVertex CrossPlane(CadVertex a, CadVertex b, CadVertex p, CadVertex normal)
         {
-            CadVector cp = default(CadVector);
+            CadVertex cp = default(CadVertex);
 
-            CadVector e = b - a;
+            CadVertex e = b - a;
 
             double de = CadMath.InnerProduct(normal, e);
 
@@ -1073,9 +1073,9 @@ namespace Plotter
         /// <param name="normal">平面の法線</param>
         /// <returns>交点</returns>
         /// 
-        public static CadVector CrossSegPlane(CadVector a, CadVector b, CadVector p, CadVector normal)
+        public static CadVertex CrossSegPlane(CadVertex a, CadVertex b, CadVertex p, CadVertex normal)
         {
-            CadVector cp = CrossPlane(a, b, p, normal);
+            CadVertex cp = CrossPlane(a, b, p, normal);
 
             if (!cp.Valid)
             {
@@ -1106,21 +1106,21 @@ namespace Plotter
         /// <param name="b2">直線B上の点2</param>
         /// <returns></returns>
         /// 
-        public static CadVector CrossLine2D(CadVector a1, CadVector a2, CadVector b1, CadVector b2)
+        public static CadVertex CrossLine2D(CadVertex a1, CadVertex a2, CadVertex b1, CadVertex b2)
         {
-            CadVector a = (a2 - a1);
-            CadVector b = (b2 - b1);
+            CadVertex a = (a2 - a1);
+            CadVertex b = (b2 - b1);
 
             if (a.IsZero() || b.IsZero())
             {
-                return CadVector.InvalidValue;
+                return CadVertex.InvalidValue;
             }
 
             double cpBA = CadMath.CrossProduct2D(b, a);
 
             if (cpBA == 0)
             {
-                return CadVector.InvalidValue;
+                return CadVertex.InvalidValue;
             }
 
             return a1 + a * CadMath.CrossProduct2D(b, b1 - a1) / cpBA;
@@ -1135,17 +1135,17 @@ namespace Plotter
         /// <param name="lp2">直線上の点</param>
         /// <returns></returns>
         /// 
-        public static CadVector CrossSegLine2D(CadVector segp1, CadVector segp2, CadVector lp1, CadVector lp2)
+        public static CadVertex CrossSegLine2D(CadVertex segp1, CadVertex segp2, CadVertex lp1, CadVertex lp2)
         {
-            CadVector p = CrossLine2D(segp1, segp2, lp1, lp2);
+            CadVertex p = CrossLine2D(segp1, segp2, lp1, lp2);
 
             if (!p.Valid)
             {
                 return p;
             }
 
-            CadVector segv = segp2 - segp1;
-            CadVector pv = p - segp1;
+            CadVertex segv = segp2 - segp1;
+            CadVertex pv = p - segp1;
 
             double ip = CadMath.InnerProduct(segv, pv);
 
@@ -1182,7 +1182,7 @@ namespace Plotter
         /// また、同一線上にある場合は、false (交点が無限に存在する)
         /// </returns>
         /// 
-        public static bool CheckCrossSegSeg2D(CadVector p1, CadVector p2, CadVector p3, CadVector p4)
+        public static bool CheckCrossSegSeg2D(CadVertex p1, CadVertex p2, CadVertex p3, CadVertex p4)
         {
             if (p1.x >= p2.x)
             {
@@ -1240,7 +1240,7 @@ namespace Plotter
         /// false: 点は矩形外
         /// </returns>
         /// 
-        public static bool IsInRect2D(CadVector minp, CadVector maxp, CadVector p)
+        public static bool IsInRect2D(CadVertex minp, CadVertex maxp, CadVertex p)
         {
             if (p.x < minp.x) return false;
             if (p.x > maxp.x) return false;
@@ -1258,11 +1258,11 @@ namespace Plotter
         /// <param name="p1">線分の端点</param>
         /// <param name="lineY">水平線のY座標</param>
         /// <returns>交点 交点が存在しない場合は、Invalid==true</returns>
-        public static CadVector CrossSegHLine2D(CadVector p0, CadVector p1, double lineY )
+        public static CadVertex CrossSegHLine2D(CadVertex p0, CadVertex p1, double lineY )
         {
-            CadVector cp = default(CadVector);
-            CadVector sp;
-            CadVector ep;
+            CadVertex cp = default(CadVertex);
+            CadVertex sp;
+            CadVertex ep;
 
             if (p0.y < p1.y)
             {
@@ -1305,11 +1305,11 @@ namespace Plotter
         /// <param name="p1">線分の端点</param>
         /// <param name="lineX">垂直線のX座標</param>
         /// <returns>交点 交点が存在しない場合は、Invalid==true</returns>
-        public static CadVector CrossSegVLine2D(CadVector p0, CadVector p1, double lineX)
+        public static CadVertex CrossSegVLine2D(CadVertex p0, CadVertex p1, double lineX)
         {
-            CadVector cp = default(CadVector);
-            CadVector sp;
-            CadVector ep;
+            CadVertex cp = default(CadVertex);
+            CadVertex sp;
+            CadVertex ep;
 
             if (p0.x < p1.x)
             {
@@ -1359,7 +1359,7 @@ namespace Plotter
         public static CadSegment Clipping2D(
             double ox, double oy,
             double w, double h,
-            CadVector p0, CadVector p1)
+            CadVertex p0, CadVertex p1)
         {
             CadSegment seg = new CadSegment(p0, p1);
 
@@ -1484,7 +1484,7 @@ namespace Plotter
         /// </summary>
         /// <param name="v">ベクトル</param>
         /// <returns>水平線に対する角度(ラジアン)</returns>
-        public static double Angle2D(CadVector v)
+        public static double Angle2D(CadVertex v)
         {
             return Math.Atan2(v.y, v.x);
         }
@@ -1510,6 +1510,29 @@ namespace Plotter
         public double InchToMilli(double inchi)
         {
             return inchi * MILLI_PER_INCH;
+        }
+
+        public static PointPair LeftTopRightBottom2D(CadVertex p0, CadVertex p1)
+        {
+            double lx = p0.x;
+            double rx = p1.x;
+
+            double ty = p0.y;
+            double by = p1.y;
+
+            if (p0.x > p1.x)
+            {
+                lx = p1.x;
+                rx = p0.x;
+            }
+
+            if (p0.y > p1.y)
+            {
+                ty = p1.y;
+                by = p0.y;
+            }
+
+            return new PointPair(CadVertex.Create(lx, ty, 0), CadVertex.Create(rx, by, 0));
         }
 
         public static void Dump(Vector4d v, string prefix)

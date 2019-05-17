@@ -40,7 +40,7 @@ namespace Plotter
 
         public void StoreBefore(CadFigure fig)
         {
-            MpFigure mpfig = MpFigure.Create(fig);
+            MpFigure_v1001 mpfig = MpFigure_v1001.Create(fig);
             Before = LZ4MessagePackSerializer.Serialize(mpfig);
 
             FigureID = fig.ID;
@@ -48,13 +48,13 @@ namespace Plotter
 
         public void StoreAfter(CadFigure fig)
         {
-            MpFigure mpfig = MpFigure.Create(fig);
+            MpFigure_v1001 mpfig = MpFigure_v1001.Create(fig);
             After = LZ4MessagePackSerializer.Serialize(mpfig);
         }
 
         public override void Undo(CadObjectDB db)
         {
-            MpFigure mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure>(Before);
+            MpFigure_v1001 mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure_v1001>(Before);
 
             CadFigure fig = db.GetFigure(mpfig.ID);
 
@@ -65,7 +65,7 @@ namespace Plotter
 
         public override void Redo(CadObjectDB db)
         {
-            MpFigure mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure>(After);
+            MpFigure_v1001 mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure_v1001>(After);
 
             CadFigure fig = db.GetFigure(mpfig.ID);
 
@@ -197,13 +197,13 @@ namespace Plotter
 
     public class CadOpeAddPoint : CadOpePointBase
     {
-        private CadVector Point;
+        private CadVertex Point;
 
         public CadOpeAddPoint(
             uint layerID,
             uint figureID,
             int pointIndex,
-            ref CadVector pt)
+            ref CadVertex pt)
             : base(layerID, figureID, pointIndex)
         {
             Point = pt;
@@ -227,7 +227,7 @@ namespace Plotter
     {
         private int InsertNum;
 
-        private VectorList mPointList = null;
+        private VertexList mPointList = null;
 
         public CadOpeInsertPoints(
             uint layerID,
@@ -254,7 +254,7 @@ namespace Plotter
 
             if (mPointList == null)
             {
-                mPointList = new VectorList();
+                mPointList = new VertexList();
             }
 
             mPointList.Clear();
@@ -477,10 +477,10 @@ namespace Plotter
     public class CadOpeChangeNormal : CadOpe
     {
         private uint FigureID;
-        private CadVector NewNormal;
-        private CadVector OldNormal;
+        private CadVertex NewNormal;
+        private CadVertex OldNormal;
 
-        public CadOpeChangeNormal(uint figID, CadVector oldNormal, CadVector newNormal)
+        public CadOpeChangeNormal(uint figID, CadVertex oldNormal, CadVertex newNormal)
         {
             FigureID = figID;
             OldNormal = oldNormal;

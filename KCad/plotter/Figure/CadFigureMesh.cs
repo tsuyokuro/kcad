@@ -26,7 +26,7 @@ namespace Plotter
             EDGE_THRESHOLD = Math.Cos(CadMath.Deg2Rad(30));
         }
 
-        public override VectorList PointList => mPointList;
+        public override VertexList PointList => mPointList;
 
         public override int PointCount => PointList.Count;
 
@@ -132,29 +132,30 @@ namespace Plotter
             }
         }
 
-        public override void Draw(DrawContext dc, int pen)
+        public override void Draw(DrawContext dc, DrawPen pen)
         {
-            dc.Drawing.DrawHarfEdgeModel(DrawTools.PEN_MESH_LINE, pen, EDGE_THRESHOLD, mHeModel);
+            dc.Drawing.DrawHarfEdgeModel(
+                dc.GetPen(DrawTools.PEN_MESH_LINE), pen, EDGE_THRESHOLD, mHeModel);
         }
 
-        public override void DrawSelected(DrawContext dc, int pen)
+        public override void DrawSelected(DrawContext dc, DrawPen pen)
         {
             int i;
             int num = PointList.Count;
 
             for (i = 0; i < num; i++)
             {
-                CadVector p = PointList[i];
+                CadVertex p = PointList[i];
 
                 if (!p.Selected) continue;
 
-                dc.Drawing.DrawSelectedPoint(p);
+                dc.Drawing.DrawSelectedPoint(p, dc.GetPen(DrawTools.PEN_SELECT_POINT));
             }
         }
 
         public override void SelectPointAt(int index, bool sel)
         {
-            CadVector p = mPointList[index];
+            CadVertex p = mPointList[index];
             p.Selected = sel;
             mPointList[index] = p;
         }
@@ -192,34 +193,6 @@ namespace Plotter
         {
             mHeModel.InvertAllFace();
         }
-
-        public override JObject GeometricDataToJson()
-        {
-            JObject jvdata = new JObject();
-
-            JObject jmodel = HeJson.HeModelToJson(mHeModel);
-
-            jvdata.Add("model", jmodel);
-
-            return jvdata;
-        }
-
-        public override void GeometricDataFromJson(JObject jvdata)
-        {
-            JObject jmodel = (JObject)jvdata["model"];
-
-            HeModel model = HeJson.HeModelFromJson(jmodel);
-
-            if (model == null)
-            {
-                return;
-            }
-
-            mHeModel = model;
-
-            mPointList = mHeModel.VertexStore;
-        }
-
 
         public override MpGeometricData GeometricDataToMp()
         {

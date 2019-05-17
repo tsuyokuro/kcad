@@ -18,52 +18,52 @@ namespace Plotter
 
     public interface IDrawing
     {
-        void Clear(int brush = DrawTools.BRUSH_BACKGROUND);
+        void Clear(DrawBrush brush);
 
-        void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE);
+        void Draw(List<CadFigure> list, DrawPen pen);
 
-        void DrawSelected(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE);
+        void DrawSelected(List<CadFigure> list, DrawPen pen);
 
         void DrawAxis();
 
-        void DrawPageFrame(double w, double h, CadVector center);
+        void DrawPageFrame(double w, double h, CadVertex center);
 
         void DrawGrid(Gridding grid);
 
-        void DrawHighlightPoint(CadVector pt, int pen = DrawTools.PEN_POINT_HIGHLIGHT);
+        void DrawHighlightPoint(CadVertex pt, DrawPen pen);
 
-        void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT);
+        void DrawSelectedPoint(CadVertex pt, DrawPen pen);
 
-        void DrawMarkCursor(int pen, CadVector p, double size);
+        void DrawMarkCursor(DrawPen pen, CadVertex p, double pix_size);
 
-        void DrawRect(int pen, CadVector p0, CadVector p1);
+        void DrawRect(DrawPen pen, CadVertex p0, CadVertex p1);
 
-        void DrawCross(int pen, CadVector p, double size);
+        void DrawCross(DrawPen pen, CadVertex p, double size);
 
-        void DrawLine(int pen, CadVector a, CadVector b);
+        void DrawLine(DrawPen pen, CadVertex a, CadVertex b);
 
-        void DrawDot(int pen, CadVector p);
+        void DrawDot(DrawPen pen, CadVertex p);
 
-        void DrawFace(int pen, VectorList pointList);
+        void DrawFace(DrawPen pen, VertexList pointList);
 
-        void DrawFace(int pen, VectorList pointList, CadVector normal, bool drawOutline);
+        void DrawFace(DrawPen pen, VertexList pointList, CadVertex normal, bool drawOutline);
 
-        void DrawHarfEdgeModel(int pen, HeModel model);
+        void DrawHarfEdgeModel(DrawPen pen, HeModel model);
 
-        void DrawHarfEdgeModel(int pen, int edgePen, double edgeThreshold, HeModel model);
+        void DrawHarfEdgeModel(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model);
 
-        void DrawText(int font, int brush, CadVector a, CadVector xdir, CadVector ydir, DrawTextOption opt, string s);
+        void DrawText(int font, DrawBrush brush, CadVertex a, CadVertex xdir, CadVertex ydir, DrawTextOption opt, string s);
 
-        void DrawTextScrn(int font, int brush, CadVector a, CadVector direction, DrawTextOption opt, string s);
+        void DrawTextScrn(int font, DrawBrush brush, CadVertex a, CadVertex direction, DrawTextOption opt, string s);
 
-        CadVector MeasureText(int font, string s);
+        CadVertex MeasureText(int font, string s);
 
-        void DrawArrow(int pen, CadVector pt0, CadVector pt1, ArrowTypes type, ArrowPos pos, double len, double width);
+        void DrawArrow(DrawPen pen, CadVertex pt0, CadVertex pt1, ArrowTypes type, ArrowPos pos, double len, double width);
 
-        void DrawCrossCursorScrn(CadCursor pp, int pen = DrawTools.PEN_CURSOR2);
+        void DrawCrossCursorScrn(CadCursor pp, DrawPen pen);
 
-        void DrawRectScrn(int pen, CadVector p0, CadVector p1);
+        void DrawRectScrn(DrawPen pen, CadVertex p0, CadVertex p1);
 
-        void DrawCrossScrn(int pen, CadVector p, double size);
+        void DrawCrossScrn(DrawPen pen, CadVertex p, double size);
     }
 }

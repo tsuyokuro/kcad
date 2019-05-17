@@ -12,12 +12,12 @@ namespace Plotter
             Type = Types.POINT;
         }
 
-        public override void AddPointInCreating(DrawContext dc, CadVector p)
+        public override void AddPointInCreating(DrawContext dc, CadVertex p)
         {
             mPointList.Add(p);
         }
 
-        public override void AddPoint(CadVector p)
+        public override void AddPoint(CadVertex p)
         {
             if (mPointList.Count > 0)
             {
@@ -27,7 +27,7 @@ namespace Plotter
             mPointList.Add(p);
         }
 
-        public override void SetPointAt(int index, CadVector pt)
+        public override void SetPointAt(int index, CadVertex pt)
         {
             if (index > 0)
             {
@@ -47,22 +47,22 @@ namespace Plotter
             }
         }
 
-        public override void Draw(DrawContext dc, int pen)
+        public override void Draw(DrawContext dc, DrawPen pen)
         {
             drawPoint(dc, pen);
         }
 
-        public override void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
+        public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
         {
             // NOP
         }
 
-        public override void DrawSelected(DrawContext dc, int pen)
+        public override void DrawSelected(DrawContext dc, DrawPen pen)
         {
             drawSelected_Point(dc, pen);
         }
 
-        public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+        public override void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
         {
             // NOP
         }
@@ -72,23 +72,25 @@ namespace Plotter
             // NOP
         }
 
-        private void drawPoint(DrawContext dc, int pen)
+        private void drawPoint(DrawContext dc, DrawPen pen)
         {
             if (PointList.Count == 0)
             {
                 return;
             }
 
-            dc.Drawing.DrawCross(pen, PointList[0], 4);
+            double size = dc.DevSizeToWoldSize(4);
+
+            dc.Drawing.DrawCross(pen, PointList[0], size);
         }
 
-        private void drawSelected_Point(DrawContext dc, int pen)
+        private void drawSelected_Point(DrawContext dc, DrawPen pen)
         {
             if (PointList.Count > 0)
             {
                 if (PointList[0].Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(PointList[0]);
+                    dc.Drawing.DrawSelectedPoint(PointList[0], dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }
@@ -102,9 +104,9 @@ namespace Plotter
         {
         }
 
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVector delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
         {
-            CadVector p = StoreList[0];
+            CadVertex p = StoreList[0];
 
             if (p.Selected)
             {

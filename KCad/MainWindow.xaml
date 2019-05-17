@@ -388,11 +388,11 @@
                         <MenuItem
                             Header="Draw face outline"
                             IsCheckable="True"
-                            IsChecked="{Binding DrawFaceOutline}" />
+                            IsChecked="{Binding DrawMeshEdge}" />
                         <MenuItem
                             Header="Fill face"
                             IsCheckable="True"
-                            IsChecked="{Binding FillFace}" />
+                            IsChecked="{Binding FillMesh}" />
                     </MenuItem>
                     <MenuItem Header="Script">
                         <MenuItem

@@ -9,11 +9,11 @@ namespace Plotter
         public abstract class Result
         {
             public double Dist = double.MaxValue;
-            public CadVector WoldPoint;
+            public CadVertex WoldPoint;
 
             public abstract string ToInfoString();
 
-            public Result(CadVector wp, double dist)
+            public Result(CadVertex wp, double dist)
             {
                 WoldPoint = wp;
                 Dist = dist;
@@ -36,7 +36,7 @@ namespace Plotter
 
         List<SegmentItem> SegList = new List<SegmentItem>();
 
-        public CadVector TargetPoint = CadVector.InvalidValue;
+        public CadVertex TargetPoint = CadVertex.InvalidValue;
 
         public double Range = 128;
 
@@ -46,7 +46,7 @@ namespace Plotter
             DC = Controller.CurrentDC;
         }
 
-        public List<Result> Search(CadVector p, double range)
+        public List<Result> Search(CadVertex p, double range)
         {
             TargetPoint = p;
             Range = range;
@@ -73,9 +73,9 @@ namespace Plotter
 
         void CheckZeroPoint()
         {
-            CadVector p = DC.WorldPointToDevPoint(CadVector.Zero);
+            CadVertex p = DC.WorldPointToDevPoint(CadVertex.Zero);
 
-            CadVector d = p - TargetPoint;
+            CadVertex d = p - TargetPoint;
 
             double dist = d.Norm2D();
 
@@ -93,11 +93,11 @@ namespace Plotter
             int n = fig.PointCount;
             for (int i = 0; i < n; i++)
             {
-                CadVector cp = fig.PointList[i];
+                CadVertex cp = fig.PointList[i];
 
-                CadVector p = DC.WorldPointToDevPoint(cp);
+                CadVertex p = DC.WorldPointToDevPoint(cp);
 
-                CadVector d = p - TargetPoint;
+                CadVertex d = p - TargetPoint;
 
                 double dist = d.Norm2D();
 
@@ -124,8 +124,8 @@ namespace Plotter
             {
                 CadSegment seg = fig.GetSegmentAt(i);
 
-                CadVector pw = (seg.P1 - seg.P0) / 2 + seg.P0;
-                CadVector ps = DC.WorldPointToDevPoint(pw);
+                CadVertex pw = (seg.P1 - seg.P0) / 2 + seg.P0;
+                CadVertex ps = DC.WorldPointToDevPoint(pw);
 
                 double dist = (ps - TargetPoint).Norm2D();
 
@@ -135,8 +135,8 @@ namespace Plotter
                     ResultList.Add(res);
                 }
 
-                CadVector p0 = DC.WorldPointToDevPoint(seg.P0);
-                CadVector p1 = DC.WorldPointToDevPoint(seg.P1);
+                CadVertex p0 = DC.WorldPointToDevPoint(seg.P0);
+                CadVertex p1 = DC.WorldPointToDevPoint(seg.P1);
 
                 double d = CadUtil.DistancePointToSeg(p0, p1, TargetPoint);
 
@@ -173,14 +173,14 @@ namespace Plotter
                         continue;
                     }
 
-                    CadVector cv = CrossLineScr(seg0, seg1);
+                    CadVertex cv = CrossLineScr(seg0, seg1);
 
                     if (cv.Invalid)
                     {
                         continue;
                     }
 
-                    CadVector dv = cv - TargetPoint;
+                    CadVertex dv = cv - TargetPoint;
 
                     double dist = dv.Norm2D();
 
@@ -200,7 +200,7 @@ namespace Plotter
             }
         }
 
-        private bool IsSegVertex(CadVector v, SegmentItem seg)
+        private bool IsSegVertex(CadVertex v, SegmentItem seg)
         {
             return (seg.ScrSegment.P0.Equals(v)) || (seg.ScrSegment.P1.Equals(v));
         }
@@ -215,7 +215,7 @@ namespace Plotter
 
         }
 
-        private CadVector CrossLineScr(SegmentItem seg0, SegmentItem seg1)
+        private CadVertex CrossLineScr(SegmentItem seg0, SegmentItem seg1)
         {
             return CadUtil.CrossLine2D(
                 seg0.ScrSegment.P0,
@@ -229,7 +229,7 @@ namespace Plotter
         public class ResultZero : Result
         {
             public ResultZero(double dist)
-                : base(CadVector.Zero, dist)
+                : base(CadVertex.Zero, dist)
             {
             }
 
@@ -244,7 +244,7 @@ namespace Plotter
             public CadFigure Fig = null;
             public int PointIndex = -1;
 
-            public ResultPoint(CadVector wp, double dist, CadFigure fig, int index)
+            public ResultPoint(CadVertex wp, double dist, CadFigure fig, int index)
                 : base(wp, dist)
             {
                 Fig = fig;
@@ -262,7 +262,7 @@ namespace Plotter
             public CadFigure Fig = null;
             public int SegIndex;
 
-            public ResultSegCenter(CadVector wp, double dist, CadFigure fig, int segIndex)
+            public ResultSegCenter(CadVertex wp, double dist, CadFigure fig, int segIndex)
                 : base(wp, dist)
             {
                 Fig = fig;
@@ -280,7 +280,7 @@ namespace Plotter
             public SegmentItem Seg0 = default;
             public SegmentItem Seg1 = default;
 
-            public ResultCross(CadVector wp, double dist, SegmentItem seg0, SegmentItem seg1)
+            public ResultCross(CadVertex wp, double dist, SegmentItem seg0, SegmentItem seg1)
                 : base(wp, dist)
             {
                 WoldPoint = wp;

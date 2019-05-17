@@ -12,6 +12,9 @@ using KCad;
 using System.Threading;
 using static Plotter.CadFigure;
 using LibiglWrapper;
+using GLUtil;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 namespace Plotter.Controller
 {
@@ -155,7 +158,7 @@ namespace Plotter.Controller
             Controller.CrossCursor.DirY.y = Math.Sin(t);
         }
 
-        public void PrintVector(CadVector v)
+        public void PrintVector(CadVertex v)
         {
             var sb = new StringBuilder();
 
@@ -168,25 +171,45 @@ namespace Plotter.Controller
             ItConsole.println(sb.ToString());
         }
 
-        public void DumpVector(CadVector v)
+        public CadVertex WorldVToDevV(CadVertex w)
+        {
+            return Controller.CurrentDC.WorldVectorToDevVector(w);
+        }
+
+        public CadVertex DevVToWorldV(CadVertex d)
+        {
+            return Controller.CurrentDC.DevVectorToWorldVector(d);
+        }
+
+        public CadVertex WorldPToDevP(CadVertex w)
+        {
+            return Controller.CurrentDC.WorldVectorToDevVector(w);
+        }
+
+        public CadVertex DevPToWorldP(CadVertex d)
+        {
+            return Controller.CurrentDC.DevVectorToWorldVector(d);
+        }
+
+        public void DumpVector(CadVertex v)
         {
             string s = v.CoordString();
             ItConsole.println(s);
         }
 
-        public CadVector GetLastDownPoint()
+        public CadVertex GetLastDownPoint()
         {
             return Controller.LastDownPoint;
         }
 
-        public CadVector CreateVector(double x, double y, double z)
+        public CadVertex CreateVector(double x, double y, double z)
         {
-            return CadVector.Create(x, y, z);
+            return CadVertex.Create(x, y, z);
         }
 
-        public CadVector GetProjectionDir()
+        public CadVertex GetProjectionDir()
         {
-            CadVector viewv = CadVector.Create(Controller.CurrentDC.ViewDir);
+            CadVertex viewv = CadVertex.Create(Controller.CurrentDC.ViewDir);
             return -viewv;
         }
 
@@ -224,7 +247,7 @@ namespace Plotter.Controller
             fig.Select();
         }
 
-        public void Scale(uint id, CadVector org, double scale)
+        public void Scale(uint id, CadVertex org, double scale)
         {
             CadFigure fig = Controller.DB.GetFigure(id);
 
@@ -411,9 +434,9 @@ namespace Plotter.Controller
 
         public void MoveLastDownPoint(double x, double y, double z)
         {
-            CadVector p = Controller.GetLastDownPoint();
+            CadVertex p = Controller.GetLastDownPoint();
 
-            CadVector delta = CadVector.Create(x, y, z);
+            CadVertex delta = CadVertex.Create(x, y, z);
 
             p += delta;
 
@@ -424,14 +447,14 @@ namespace Plotter.Controller
 
         public void SetLastDownPoint(double x, double y, double z)
         {
-            CadVector p = CadVector.Create(x, y, z);
+            CadVertex p = CadVertex.Create(x, y, z);
 
             Controller.SetLastDownPoint(p);
 
             Session.PostRedraw();
         }
 
-        public void AddLine(CadVector v0, CadVector v1)
+        public void AddLine(CadVertex v0, CadVertex v1)
         {
             CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
             fig.AddPoint(v0);
@@ -446,14 +469,14 @@ namespace Plotter.Controller
 
         public void AddPoint(double x, double y, double z)
         {
-            CadVector p = default(CadVector);
+            CadVertex p = default(CadVertex);
 
             p.Set(x, y, z);
 
             AddPoint(p);
         }
 
-        public void AddPoint(CadVector p)
+        public void AddPoint(CadVertex p)
         {
             CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POINT);
             fig.AddPoint(p);
@@ -470,16 +493,16 @@ namespace Plotter.Controller
             return RectAt(Controller.LastDownPoint, w, h);
         }
 
-        public int RectAt(CadVector p, double w, double h)
+        public int RectAt(CadVertex p, double w, double h)
         {
-            CadVector viewDir = (CadVector)Controller.CurrentDC.ViewDir;
-            CadVector upDir = (CadVector)Controller.CurrentDC.UpVector;
+            CadVertex viewDir = (CadVertex)Controller.CurrentDC.ViewDir;
+            CadVertex upDir = (CadVertex)Controller.CurrentDC.UpVector;
 
-            CadVector wd = CadMath.Normal(viewDir, upDir) * w;
-            CadVector hd = upDir.UnitVector() * h;
+            CadVertex wd = CadMath.Normal(viewDir, upDir) * w;
+            CadVertex hd = upDir.UnitVector() * h;
 
-            CadVector p0 = p;
-            CadVector p1 = p;
+            CadVertex p0 = p;
+            CadVertex p1 = p;
 
             CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.RECT);
 
@@ -511,7 +534,7 @@ namespace Plotter.Controller
         {
             CadMesh cm =
                 MeshMaker.CreateBox(
-                    Controller.LastDownPoint, CadVector.Create(x, y, z), MeshMaker.FaceType.TRIANGLE);
+                    Controller.LastDownPoint, CadVertex.Create(x, y, z), MeshMaker.FaceType.TRIANGLE);
 
             HeModel hem = HeModelConverter.ToHeModel(cm);
 
@@ -567,7 +590,7 @@ namespace Plotter.Controller
 
         public void Move(uint figID, double x, double y, double z)
         {
-            CadVector delta = CadVector.Create(x, y, z);
+            CadVertex delta = CadVertex.Create(x, y, z);
 
             CadFigure fig = Controller.DB.GetFigure(figID);
 
@@ -598,14 +621,14 @@ namespace Plotter.Controller
 
             Controller.StartEdit(figList);
 
-            CadVector d = CadVector.Create(x, y, z);
+            CadVertex d = CadVertex.Create(x, y, z);
 
             foreach (CadFigure fig in figList)
             {
                 int i;
                 for (i=0; i<fig.PointCount; i++)
                 {
-                    CadVector v = fig.PointList[i];
+                    CadVertex v = fig.PointList[i];
                     if (v.Selected)
                     {
                         v += d;
@@ -633,10 +656,10 @@ namespace Plotter.Controller
 
             CadFigure fig = Controller.DB.GetFigure(seg.FigureID);
 
-            CadVector pa = fig.GetPointAt(seg.PtIndexA);
-            CadVector pb = fig.GetPointAt(seg.PtIndexB);
+            CadVertex pa = fig.GetPointAt(seg.PtIndexA);
+            CadVertex pb = fig.GetPointAt(seg.PtIndexB);
 
-            CadVector v;
+            CadVertex v;
 
             v = pa - Controller.LastDownPoint;
             double da = v.Norm();
@@ -647,7 +670,7 @@ namespace Plotter.Controller
 
             if (da < db)
             {
-                CadVector np = CadUtil.LinePoint(pb, pa, len);
+                CadVertex np = CadUtil.LinePoint(pb, pa, len);
                 Controller.StartEdit();
 
                 fig.SetPointAt(seg.PtIndexA, np);
@@ -656,7 +679,7 @@ namespace Plotter.Controller
             }
             else
             {
-                CadVector np = CadUtil.LinePoint(pa, pb, len);
+                CadVertex np = CadUtil.LinePoint(pa, pb, len);
                 Controller.StartEdit();
 
                 fig.SetPointAt(seg.PtIndexB, np);
@@ -694,15 +717,15 @@ namespace Plotter.Controller
             return area;
         }
 
-        public CadVector Centroid()
+        public CadVertex Centroid()
         {
             Centroid c = PlotterUtil.Centroid(Controller);
             return c.Point;
         }
 
-        public CadVector NewPoint()
+        public CadVertex NewPoint()
         {
-            return default(CadVector);
+            return default(CadVertex);
         }
 
         public CadFigure NewPolyLines()
@@ -711,7 +734,7 @@ namespace Plotter.Controller
             return fig;
         }
 
-        public void Rotate(uint figID, CadVector org, CadVector axisDir, double angle)
+        public void Rotate(uint figID, CadVertex org, CadVertex axisDir, double angle)
         {
             CadFigure fig = Controller.DB.GetFigure(figID);
 
@@ -740,7 +763,7 @@ namespace Plotter.Controller
             Session.PostRedraw();
         }
 
-        public void RotateWithAxis(CadFigure fig, CadVector org, CadVector axisDir, double angle)
+        public void RotateWithAxis(CadFigure fig, CadVertex org, CadVertex axisDir, double angle)
         {
             fig.ForEachFig(f =>
             {
@@ -750,6 +773,8 @@ namespace Plotter.Controller
 
         public void CreateBitmap(int w, int h, uint argb, int lineW, string fname)
         {
+            // TODO tdcのスケーリングがおかしいので直す必要がある
+
             DrawContext dc = Controller.CurrentDC;
 
             CadObjectDB db = Controller.DB;
@@ -771,17 +796,20 @@ namespace Plotter.Controller
 
             DrawContextGDIBmp tdc = new DrawContextGDIBmp();
 
-            tdc.CopyMetrics(dc);
+            tdc.WorldScale = dc.WorldScale;
+
+            tdc.SetCamera(dc.Eye, dc.LookAt, dc.UpVector);
+            tdc.CalcProjectionMatrix();
 
             tdc.SetViewSize(w, h);
 
-            tdc.ViewOrg = CadVector.Create(w / 2, h / 2, 0);
+            tdc.SetViewOrg(CadVertex.Create(w / 2, h / 2, 0));
 
             tdc.SetupTools(DrawTools.ToolsType.DARK);
 
-            Pen pen = tdc.Pen(DrawTools.PEN_DEFAULT_FIGURE);
-            pen.Color = Color.FromArgb((int)argb);
-            pen.Width = lineW;
+            Pen pen = new Pen(Color.FromArgb((int)argb), lineW);
+
+            DrawPen drawPen = DrawPen.New(pen);
 
             double sw = r.p1.x - r.p0.x;
             double sh = r.p1.y - r.p0.y;
@@ -793,21 +821,21 @@ namespace Plotter.Controller
 
             CadRect tr = CadUtil.GetContainsRectScrn(tdc, figList);
 
-            CadVector trcp = (tr.p1 - tr.p0) / 2 + tr.p0;
+            CadVertex trcp = (tr.p1 - tr.p0) / 2 + tr.p0;
 
-            CadVector d = trcp - tdc.ViewOrg;
+            CadVertex d = trcp - tdc.ViewOrg;
 
-            tdc.ViewOrg -= d;
+            tdc.SetViewOrg(tdc.ViewOrg - d);
 
-            Env.RunOnMainThread(() =>
+            Env.RunOnMainThread((Action)(() =>
             {
-                tdc.Drawing.Clear(DrawTools.BRUSH_TRANSPARENT);
+                tdc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_TRANSPARENT));
 
                 tdc.GdiGraphics.SmoothingMode = SmoothingMode.AntiAlias;
 
                 foreach (CadFigure fig in figList)
                 {
-                    fig.Draw(tdc, DrawTools.PEN_DEFAULT_FIGURE);
+                    fig.Draw(tdc, drawPen);
                 }
 
                 if (fname.Length > 0)
@@ -820,10 +848,11 @@ namespace Plotter.Controller
                 }
 
                 tdc.Dispose();
-            });
+                drawPen.DisposeGdiPen();
+            }));
         }
 
-        public void FaceToDirection(CadVector dir)
+        public void FaceToDirection(CadVertex dir)
         {
             DrawContext dc = Controller.CurrentDC;
 
@@ -839,14 +868,14 @@ namespace Plotter.Controller
             FaceToDirection(fig, Controller.LastDownPoint, dir);
         }
 
-        private void FaceToDirection(CadFigure fig, CadVector org, CadVector dir)
+        private void FaceToDirection(CadFigure fig, CadVertex org, CadVertex dir)
         {
             if (fig.Type != CadFigure.Types.POLY_LINES)
             {
                 return;
             }
 
-            CadVector faceNormal = CadUtil.RepresentativeNormal(fig.PointList);
+            CadVertex faceNormal = CadUtil.RepresentativeNormal(fig.PointList);
 
             if (faceNormal.EqualsThreshold(dir) || (-faceNormal).EqualsThreshold(dir))
             {
@@ -861,7 +890,7 @@ namespace Plotter.Controller
             //   /
             //  /
             // 面の法線 faceNormal
-            CadVector rv = CadMath.Normal(faceNormal, dir);
+            CadVertex rv = CadMath.Normal(faceNormal, dir);
 
             double t = CadMath.AngleOfVector(faceNormal, dir);
 
@@ -899,12 +928,12 @@ namespace Plotter.Controller
 
             CadFigure cfig = FigUtil.Clone(tfig);
 
-            CadVector org = cfig.PointList[0];
-            CadVector dir = CadVector.UnitZ;
+            CadVertex org = cfig.PointList[0];
+            CadVertex dir = CadVertex.UnitZ;
 
-            CadVector faceNormal = CadUtil.RepresentativeNormal(cfig.PointList);
+            CadVertex faceNormal = CadUtil.RepresentativeNormal(cfig.PointList);
 
-            CadVector rotateV = default;
+            CadVertex rotateV = default;
 
             double t = 0;
 
@@ -917,7 +946,7 @@ namespace Plotter.Controller
 
             //Controller.CurrentLayer.AddFigure(cfig);
 
-            VectorList vl = cfig.GetPoints(12);
+            VertexList vl = cfig.GetPoints(12);
 
             CadMesh m = IglW.Triangulate(vl, option);
 
@@ -929,7 +958,7 @@ namespace Plotter.Controller
 
             for (int i = 0; i<fig.PointCount; i++)
             {
-                CadVector v = fig.PointList[i];
+                CadVertex v = fig.PointList[i];
                 v.z = org.z;
                 fig.PointList[i] = v;
             }
@@ -958,7 +987,7 @@ namespace Plotter.Controller
         }
 
         // 押し出し
-        public void Extrude(uint id, CadVector v, double d, int divide)
+        public void Extrude(uint id, CadVertex v, double d, int divide)
         {
             CadFigure tfig = Controller.DB.GetFigure(id);
 
@@ -1243,7 +1272,7 @@ namespace Plotter.Controller
 
             for (int i = 0; i < cm.VertexStore.Count; i++)
             {
-                CadVector v = cm.VertexStore[i];
+                CadVertex v = cm.VertexStore[i];
                 ItConsole.printf("{0}:{1},{2},{3}\n", i, v.x, v.y, v.z);
             }
 
@@ -1262,7 +1291,7 @@ namespace Plotter.Controller
             }
         }
 
-        public CadVector RotateVector(CadVector v, CadVector axis, double angle)
+        public CadVertex RotateVector(CadVertex v, CadVertex axis, double angle)
         {
             axis = axis.UnitVector();
 
@@ -1278,7 +1307,7 @@ namespace Plotter.Controller
             qp = r * qp;
             qp = qp * q;
 
-            CadVector rv = qp.ToPoint();
+            CadVertex rv = qp.ToPoint();
 
             return rv;
         }
@@ -1300,7 +1329,7 @@ namespace Plotter.Controller
             return Controller.CurrentFigure;
         }
 
-        public CadVector InputPoint()
+        public CadVertex InputPoint()
         {
             Env.OpenPopupMessage("Input point", PlotterObserver.MessageType.INPUT);
 
@@ -1317,10 +1346,10 @@ namespace Plotter.Controller
             {
                 Env.ClosePopupMessage();
                 ItConsole.println("Cancel!");
-                return CadVector.InvalidValue;
+                return CadVertex.InvalidValue;
             }
 
-            CadVector p = ctrl.PointList[0];
+            CadVertex p = ctrl.PointList[0];
 
             ItConsole.println(p.CoordString());
 
@@ -1329,12 +1358,12 @@ namespace Plotter.Controller
             return p;
         }
 
-        public CadVector ViewDir()
+        public CadVertex ViewDir()
         {
-            return (CadVector)(Controller.CurrentDC.ViewDir);
+            return (CadVertex)(Controller.CurrentDC.ViewDir);
         }
 
-        public CadVector InputUnitVector()
+        public CadVertex InputUnitVector()
         {
             InteractCtrl ctrl = Controller.mInteractCtrl;
 
@@ -1350,10 +1379,10 @@ namespace Plotter.Controller
             {
                 ctrl.End();
                 ItConsole.println("Cancel!");
-                return CadVector.InvalidValue;
+                return CadVertex.InvalidValue;
             }
 
-            CadVector p0 = ctrl.PointList[0];
+            CadVertex p0 = ctrl.PointList[0];
             ItConsole.println(p0.CoordString());
 
             ItConsole.println(AnsiEsc.Yellow + "Input point 2 >>");
@@ -1364,15 +1393,15 @@ namespace Plotter.Controller
             {
                 ctrl.End();
                 ItConsole.println("Cancel!");
-                return CadVector.InvalidValue;
+                return CadVertex.InvalidValue;
             }
 
-            CadVector p1 = Controller.mInteractCtrl.PointList[1];
+            CadVertex p1 = Controller.mInteractCtrl.PointList[1];
 
             ctrl.End();
 
 
-            CadVector v = p1 - p0;
+            CadVertex v = p1 - p0;
 
             v = v.UnitVector();
 
@@ -1425,7 +1454,7 @@ namespace Plotter.Controller
         //    task.Wait();
         //}
 
-        public void SeturePoint(uint figID, int idx, CadVector p)
+        public void SeturePoint(uint figID, int idx, CadVertex p)
         {
             CadFigure fig = Controller.DB.GetFigure(figID);
             fig.SetPointAt(idx, p);
@@ -1448,7 +1477,42 @@ namespace Plotter.Controller
 
         public void Test()
         {
+            Env.RunOnMainThread(() =>
+            {
+                testDraw();
+            });
         }
+
+        private void testDraw()
+        {
+            CadSize2D deviceSize = new CadSize2D(827, 1169);
+            CadSize2D pageSize = new CadSize2D(210, 297);
+
+            DrawContext dc = Controller.CurrentDC.CreatePrinterContext(pageSize, deviceSize);
+
+            dc.SetupTools(DrawTools.ToolsType.PRINTER_GL);
+
+            FrameBufferW fb = new FrameBufferW();
+            fb.Create((int)deviceSize.Width, (int)deviceSize.Height);
+
+            fb.Begin();
+
+            dc.StartDraw();
+
+            dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
+
+            Controller.DrawAllFigure(dc);
+
+            dc.EndDraw();
+
+            Bitmap bmp = fb.GetBitmap();
+
+            fb.End();
+            fb.Dispose();
+
+            bmp.Save(@"F:\work\test2.bmp");
+        }
+
 
         private void PrintSuccess()
         {

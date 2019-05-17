@@ -7,15 +7,15 @@ namespace Plotter
 {
     public class DrawingBase : IDrawing
     {
-        public virtual void Clear(int brush = DrawTools.BRUSH_BACKGROUND)
+        public virtual void Clear(DrawBrush brush)
         {
         }
 
-        public virtual void Draw(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
+        public virtual void Draw(List<CadFigure> list, DrawPen pen)
         {
         }
 
-        public virtual void DrawSelected(List<CadFigure> list, int pen = DrawTools.PEN_DEFAULT_FIGURE)
+        public virtual void DrawSelected(List<CadFigure> list, DrawPen pen)
         {
         }
 
@@ -23,7 +23,7 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawPageFrame(double w, double h, CadVector center)
+        public virtual void DrawPageFrame(double w, double h, CadVertex center)
         {
         }
 
@@ -31,44 +31,44 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawHighlightPoint(CadVector pt, int pen=DrawTools.PEN_POINT_HIGHLIGHT)
+        public virtual void DrawHighlightPoint(CadVertex pt, DrawPen pen)
         {
         }
 
-        public virtual void DrawSelectedPoint(CadVector pt, int pen = DrawTools.PEN_SELECT_POINT)
+        public virtual void DrawSelectedPoint(CadVertex pt, DrawPen pen)
         {
         }
 
-        public virtual void DrawMarkCursor(int pen, CadVector p, double size)
+        public virtual void DrawMarkCursor(DrawPen pen, CadVertex p, double pix_size)
         {
         }
 
-        public virtual void DrawRect(int pen, CadVector p0, CadVector p1)
+        public virtual void DrawRect(DrawPen pen, CadVertex p0, CadVertex p1)
         {
         }
 
-        public virtual void DrawCross(int pen, CadVector p, double size)
+        public virtual void DrawCross(DrawPen pen, CadVertex p, double size)
         {
         }
 
-        public virtual void DrawLine(int pen, CadVector a, CadVector b)
+        public virtual void DrawLine(DrawPen pen, CadVertex a, CadVertex b)
         {
         }
 
-        public virtual void DrawDot(int pen, CadVector p)
+        public virtual void DrawDot(DrawPen pen, CadVertex p)
         {
         }
 
-        public virtual void DrawFace(int pen, VectorList pointList)
+        public virtual void DrawFace(DrawPen pen, VertexList pointList)
         {
-            DrawFace(pen, pointList, default(CadVector), true);
+            DrawFace(pen, pointList, default(CadVertex), true);
         }
 
-        public virtual void DrawFace(int pen, VectorList pointList, CadVector normal, bool drawOutline)
+        public virtual void DrawFace(DrawPen pen, VertexList pointList, CadVertex normal, bool drawOutline)
         {
         }
 
-        public virtual void DrawHarfEdgeModel(int pen, HeModel model)
+        public virtual void DrawHarfEdgeModel(DrawPen pen, HeModel model)
         {
             for (int i = 0; i < model.FaceStore.Count; i++)
             {
@@ -96,30 +96,30 @@ namespace Plotter
             }
         }
 
-        public virtual void DrawHarfEdgeModel(int pen, int edgePen, double edgeThreshold, HeModel model)
+        public virtual void DrawHarfEdgeModel(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
             DrawHarfEdgeModel(pen, model);
         }
 
-        public virtual void DrawText(int font, int brush, CadVector a, CadVector xdir, CadVector ydir, DrawTextOption opt, string s)
+        public virtual void DrawText(int font, DrawBrush brush, CadVertex a, CadVertex xdir, CadVertex ydir, DrawTextOption opt, string s)
         {
         }
 
-        public virtual void DrawTextScrn(int font, int brush, CadVector a, CadVector dir, DrawTextOption opt, string s)
+        public virtual void DrawTextScrn(int font, DrawBrush brush, CadVertex a, CadVertex dir, DrawTextOption opt, string s)
         {
         }
 
-        public virtual CadVector MeasureText(int font, string s)
+        public virtual CadVertex MeasureText(int font, string s)
         {
-            return CadVector.Zero;
+            return CadVertex.Zero;
         }
 
 
-        public virtual void DrawArrow(int pen, CadVector pt0, CadVector pt1, ArrowTypes type, ArrowPos pos, double len, double width)
+        public virtual void DrawArrow(DrawPen pen, CadVertex pt0, CadVertex pt1, ArrowTypes type, ArrowPos pos, double len, double width)
         {
             DrawLine(pen, pt0, pt1);
 
-            CadVector d = pt1 - pt0;
+            CadVertex d = pt1 - pt0;
 
             double dl = d.Norm();
 
@@ -129,15 +129,15 @@ namespace Plotter
             }
 
 
-            CadVector tmp = CadVector.Create(dl, 0, 0);
+            CadVertex tmp = CadVertex.Create(dl, 0, 0);
 
             double angle = Vector3d.CalculateAngle(tmp.vector, d.vector);
 
-            CadVector normal = CadMath.CrossProduct(tmp, d);  // 回転軸
+            CadVertex normal = CadMath.CrossProduct(tmp, d);  // 回転軸
 
             if (normal.Norm() < 0.0001)
             {
-                normal = CadVector.Create(0, 0, 1);
+                normal = CadVertex.Create(0, 0, 1);
             }
             else
             {
@@ -179,15 +179,15 @@ namespace Plotter
             }
         }
 
-        public virtual void DrawCrossCursorScrn(CadCursor pp, int pen)
+        public virtual void DrawCrossCursorScrn(CadCursor pp, DrawPen pen)
         {
         }
 
-        public virtual void DrawRectScrn(int pen, CadVector p0, CadVector p1)
+        public virtual void DrawRectScrn(DrawPen pen, CadVertex p0, CadVertex p1)
         {
         }
 
-        public virtual void DrawCrossScrn(int pen, CadVector p, double size)
+        public virtual void DrawCrossScrn(DrawPen pen, CadVertex p, double size)
         {
         }
     }

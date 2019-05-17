@@ -10,26 +10,43 @@ namespace Plotter
             GdiGraphics = g;
             SetupTools(DrawTools.ToolsType.PRINTER);
 
-            WorldScale = currentDC.WorldScale;
-
-            mUnitPerMilli = deviceSize.Width / pageSize.Width;
-
-            CopyCamera(currentDC);
-
-            if (currentDC is DrawContextGL)
+            if (currentDC.GetType() == typeof(DrawContextGLPers))
             {
-                DeviceScaleX = currentDC.DeviceScaleX;
-                DeviceScaleY = currentDC.DeviceScaleY;
+                WorldScale = currentDC.WorldScale;
+                mUnitPerMilli = deviceSize.Width / pageSize.Width;
+                CopyCamera(currentDC);
+                CopyProjectionMatrix(currentDC);
+
+                DeviceScaleX = currentDC.ViewWidth / 4;
+                DeviceScaleY = -(currentDC.ViewHeight / 4);
+            }
+            else
+            {
+                WorldScale = currentDC.WorldScale;
+                mUnitPerMilli = deviceSize.Width / pageSize.Width;
+                CopyProjectionMetrics(currentDC);
+                CopyCamera(currentDC);
+                SetViewSize(deviceSize.Width, deviceSize.Height);
             }
 
-            CadVector org = default(CadVector);
+            CadVertex org = default;
 
             org.x = deviceSize.Width / 2.0;
             org.y = deviceSize.Height / 2.0;
             
-            ViewOrg = org;
+            SetViewOrg(org);
 
             mDrawing = new DrawingGDI(this);
+        }
+
+        protected override void DisposeGraphics()
+        {
+            // NOP
+        }
+
+        protected override void CreateGraphics()
+        {
+            // NOP
         }
     }
 }

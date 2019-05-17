@@ -14,7 +14,7 @@ namespace Plotter
     {
         public NurbsSurface Nurbs;
 
-        private VectorList NurbsPointList;
+        private VertexList NurbsPointList;
 
         private bool NeedsEval = true;
 
@@ -31,23 +31,23 @@ namespace Plotter
         {
         }
 
-        public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+        public override void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
         {
         }
 
-        public override void AddPointInCreating(DrawContext dc, CadVector p)
+        public override void AddPointInCreating(DrawContext dc, CadVertex p)
         {
         }
 
 
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVector delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
         {
             base.MoveSelectedPointsFromStored(dc, delta);
 
             NeedsEval = true;
         }
 
-        public override void MoveAllPoints(CadVector delta)
+        public override void MoveAllPoints(CadVertex delta)
         {
             if (Locked) return;
 
@@ -72,7 +72,7 @@ namespace Plotter
             }
         }
 
-        public override void AddPoint(CadVector p)
+        public override void AddPoint(CadVertex p)
         {
             mPointList.Add(p);
         }
@@ -80,7 +80,7 @@ namespace Plotter
         public void Setup(
             int deg,
             int ucnt, int vcnt,
-            VectorList vl,
+            VertexList vl,
             int[] ctrlOrder,
             int uDivCnt, int vDivCnt,
             bool uedge=true, bool vedge=true,
@@ -101,10 +101,10 @@ namespace Plotter
                 Nurbs.CtrlOrder = ctrlOrder;
             }
 
-            NurbsPointList = new VectorList(Nurbs.UOutCnt * Nurbs.VOutCnt);
+            NurbsPointList = new VertexList(Nurbs.UOutCnt * Nurbs.VOutCnt);
         }
 
-        public override void Draw(DrawContext dc, int pen)
+        public override void Draw(DrawContext dc, DrawPen pen)
         {
             if (PointList.Count < 2)
             {
@@ -113,26 +113,27 @@ namespace Plotter
 
             DrawSurfaces(dc, pen);
 
-            DrawControlPoints(dc, DrawTools.PEN_NURBS_CTRL_LINE);
+            DrawControlPoints(dc,
+                dc.GetPen(DrawTools.PEN_NURBS_CTRL_LINE));
         }
 
-        public override void DrawSelected(DrawContext dc, int pen)
+        public override void DrawSelected(DrawContext dc, DrawPen pen)
         {
             for (int i=0; i<mPointList.Count; i++)
             {
-                ref CadVector p0 = ref mPointList.Ref(i);
+                ref CadVertex p0 = ref mPointList.Ref(i);
 
                 if (p0.Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(p0);
+                    dc.Drawing.DrawSelectedPoint(p0, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }
 
-        private void DrawControlPoints(DrawContext dc, int pen)
+        private void DrawControlPoints(DrawContext dc, DrawPen pen)
         {
-            CadVector p0;
-            CadVector p1;
+            CadVertex p0;
+            CadVertex p1;
 
             int ucnt = Nurbs.UCtrlDataCnt;
             int vcnt = Nurbs.VCtrlDataCnt;
@@ -172,7 +173,7 @@ namespace Plotter
             }
         }
 
-        private void DrawSurfaces(DrawContext dc, int pen)
+        private void DrawSurfaces(DrawContext dc, DrawPen pen)
         {
             if (NeedsEval)
             {
@@ -185,8 +186,8 @@ namespace Plotter
             int vcnt = Nurbs.VOutCnt;
 
 
-            CadVector p0;
-            CadVector p1;
+            CadVertex p0;
+            CadVertex p1;
 
             p0 = NurbsPointList[0];
 
@@ -228,7 +229,7 @@ namespace Plotter
         {
         }
 
-        public override void SetPointAt(int index, CadVector pt)
+        public override void SetPointAt(int index, CadVertex pt)
         {
             mPointList[index] = pt;
         }
@@ -259,27 +260,9 @@ namespace Plotter
 
             mPointList = Nurbs.CtrlPoints;
 
-            NurbsPointList = new VectorList(Nurbs.UOutCnt * Nurbs.VOutCnt);
+            NurbsPointList = new VertexList(Nurbs.UOutCnt * Nurbs.VOutCnt);
 
             NeedsEval = true;
-        }
-
-
-        public override JObject GeometricDataToJson()
-        {
-            JObject jvdata = new JObject();
-            jvdata.Add("Nurbs", BSplineJson.NURBSSurfaceToJson(Nurbs));
-
-            return jvdata;
-        }
-
-        public override void GeometricDataFromJson(JObject jvdata)
-        {
-            Nurbs = BSplineJson.NURBSSurfaceFromJson((JObject)jvdata["Nurbs"]);
-
-            mPointList = Nurbs.CtrlPoints;
-
-            NurbsPointList = new VectorList(Nurbs.UOutCnt * Nurbs.VOutCnt);
         }
     }
 }

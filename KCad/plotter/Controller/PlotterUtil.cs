@@ -6,10 +6,10 @@ namespace Plotter.Controller
 {
     public class PlotterUtil
     {
-        public static CadVector GetSelectionCenter(PlotterController c)
+        public static CadVertex GetSelectionCenter(PlotterController c)
         {
-            CadVector min = CadVector.Create(CadConst.MaxValue);
-            CadVector max = CadVector.Create(CadConst.MinValue);
+            CadVertex min = CadVertex.Create(CadConst.MaxValue);
+            CadVertex max = CadVertex.Create(CadConst.MinValue);
 
             int selPointCnt = 0;
 
@@ -17,7 +17,7 @@ namespace Plotter.Controller
             {
                 foreach (CadFigure fig in layer.FigureList)
                 {
-                    foreach (CadVector p in fig.PointList)
+                    foreach (CadVertex p in fig.PointList)
                     {
                         if (p.Selected)
                         {
@@ -35,7 +35,7 @@ namespace Plotter.Controller
                 }
             }
 
-            CadVector cp = (max - min) / 2f + min;
+            CadVertex cp = (max - min) / 2f + min;
 
             return cp;
         }
@@ -114,14 +114,14 @@ namespace Plotter.Controller
         // Calculate the intersection point in the screen coordinate system
         // スクリーン座標系での交点を求める
         //
-        public static CadVector CrossOnScreen(DrawContext dc, CadVector wp00, CadVector wp01, CadVector wp10, CadVector wp11)
+        public static CadVertex CrossOnScreen(DrawContext dc, CadVertex wp00, CadVertex wp01, CadVertex wp10, CadVertex wp11)
         {
-            CadVector sp00 = dc.WorldPointToDevPoint(wp00);
-            CadVector sp01 = dc.WorldPointToDevPoint(wp01);
-            CadVector sp10 = dc.WorldPointToDevPoint(wp10);
-            CadVector sp11 = dc.WorldPointToDevPoint(wp11);
+            CadVertex sp00 = dc.WorldPointToDevPoint(wp00);
+            CadVertex sp01 = dc.WorldPointToDevPoint(wp01);
+            CadVertex sp10 = dc.WorldPointToDevPoint(wp10);
+            CadVertex sp11 = dc.WorldPointToDevPoint(wp11);
 
-            CadVector cp = CadUtil.CrossLine2D(sp00, sp01, sp10, sp11);
+            CadVertex cp = CadUtil.CrossLine2D(sp00, sp01, sp10, sp11);
 
             return cp;
         }

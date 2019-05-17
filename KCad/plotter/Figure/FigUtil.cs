@@ -11,7 +11,7 @@ namespace Plotter
 {
     public class FigUtil
     {
-        public static void MoveSelectedPointsFromStored(CadFigure fig, DrawContext dc, CadVector delta)
+        public static void MoveSelectedPointsFromStored(CadFigure fig, DrawContext dc, CadVertex delta)
         {
             if (fig.StoreList == null)
             {
@@ -20,7 +20,7 @@ namespace Plotter
 
             for (int i = 0; i < fig.StoreList.Count; i++)
             {
-                CadVector op = fig.StoreList[i];
+                CadVertex op = fig.StoreList[i];
 
                 if (!op.Selected)
                 {
@@ -34,7 +34,7 @@ namespace Plotter
             }
         }
 
-        public static void MoveAllPoints(CadFigure fig, CadVector delta)
+        public static void MoveAllPoints(CadFigure fig, CadVertex delta)
         {
             CadUtil.MovePoints(fig.PointList, delta);
         }
@@ -49,24 +49,24 @@ namespace Plotter
             return CadUtil.GetContainsRectScrn(dc, fig.PointList);
         }
 
-        public static VectorList GetPoints(CadFigure fig, int curveSplitNum)
+        public static VertexList GetPoints(CadFigure fig, int curveSplitNum)
         {
             return fig.PointList;
         }
 
-        public static CadVector GetPointAt(CadFigure fig, int idx)
+        public static CadVertex GetPointAt(CadFigure fig, int idx)
         {
             return fig.PointList[idx];
         }
 
-        public static void SetPointAt(CadFigure fig, int index, CadVector pt)
+        public static void SetPointAt(CadFigure fig, int index, CadVertex pt)
         {
             fig.PointList[index] = pt;
         }
 
         public static void SelectPointAt(CadFigure fig, int index, bool sel)
         {
-            CadVector p = fig.PointList[index];
+            CadVertex p = fig.PointList[index];
             p.Selected = sel;
             fig.PointList[index] = p;
         }
@@ -134,7 +134,7 @@ namespace Plotter
             s += margin + "Point:[\n";
             for (int i=0; i<fig.PointList.Count; i++)
             {
-                CadVector v = fig.PointList[i];
+                CadVertex v = fig.PointList[i];
                 s += margin + "  " + string.Format("{0},{1},{2}\n", v.x, v.y, v.z);
             }
             s += margin + "]\n";
@@ -172,11 +172,11 @@ namespace Plotter
 
         public static CadFigure Clone(CadFigure src)
         {
-            MpFigure mpf = MpFigure.Create(src, false);
+            MpFigure_v1001 mpf = MpFigure_v1001.Create(src, false);
 
             byte[] data = MessagePackSerializer.Serialize(mpf);
 
-            MpFigure mpfCopy = MessagePackSerializer.Deserialize<MpFigure>(data);
+            MpFigure_v1001 mpfCopy = MessagePackSerializer.Deserialize<MpFigure_v1001>(data);
 
             CadFigure fig = mpfCopy.Restore();
 
@@ -187,11 +187,11 @@ namespace Plotter
 
         public static void CopyTo(CadFigure src, CadFigure dst)
         {
-            MpFigure mpf = MpFigure.Create(src, false);
+            MpFigure_v1001 mpf = MpFigure_v1001.Create(src, false);
 
             byte[] data = MessagePackSerializer.Serialize(mpf);
 
-            MpFigure mpfCopy = MessagePackSerializer.Deserialize<MpFigure>(data);
+            MpFigure_v1001 mpfCopy = MessagePackSerializer.Deserialize<MpFigure_v1001>(data);
 
             uint id = dst.ID;
 

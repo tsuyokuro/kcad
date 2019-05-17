@@ -22,7 +22,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            List<MpFigure> mpfigList = MpUtil.FigureListToMp(figList, true);
+            List<MpFigure_v1001> mpfigList = MpUtil.FigureListToMp_1001(figList, true);
 
             byte[] bin = MessagePackSerializer.Serialize(mpfigList);
 
@@ -37,17 +37,17 @@ namespace Plotter.Controller
             }
             byte[] bin = (byte[])Clipboard.GetData(CadClipBoard.TypeNameBin);
 
-            List<MpFigure> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure>>(bin);
+            List<MpFigure_v1001> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure_v1001>>(bin);
 
-            List<CadFigure> figList = MpUtil.FigureListFromMp(mpfigList);
+            List<CadFigure> figList = MpUtil.FigureListFromMp_1001(mpfigList);
 
 
             // Pase figures in fig list
-            CadVector pp = controller.LastDownPoint;
+            CadVertex pp = controller.LastDownPoint;
 
             MinMax3D mm3d = CadUtil.GetFigureMinMaxIncludeChild(figList);
 
-            CadVector d = pp - mm3d.GetMinAsVector();
+            CadVertex d = pp - mm3d.GetMinAsVector();
 
             CadOpeList opeRoot = new CadOpeList();
 
@@ -63,7 +63,7 @@ namespace Plotter.Controller
             controller.HistoryMan.foward(opeRoot);
         }
 
-        private static void PasteFigure(PlotterController controller, CadFigure fig, CadVector delta)
+        private static void PasteFigure(PlotterController controller, CadFigure fig, CadVertex delta)
         {
             fig.MoveAllPoints(delta);
             controller.DB.AddFigure(fig);
@@ -92,7 +92,7 @@ namespace Plotter.Controller
 
         public static byte[] FigureListToBin(List<CadFigure> figList)
         {
-            List<MpFigure> mpfigList = MpUtil.FigureListToMp(figList, true);
+            List<MpFigure_v1001> mpfigList = MpUtil.FigureListToMp_1001(figList, true);
             byte[] bin = MessagePackSerializer.Serialize(mpfigList);
 
             return bin;
@@ -100,8 +100,8 @@ namespace Plotter.Controller
 
         public static List<CadFigure> FigureListFromBin(byte[] bin)
         {
-            List<MpFigure> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure>>(bin);
-            List<CadFigure> figList = MpUtil.FigureListFromMp(mpfigList);
+            List<MpFigure_v1001> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure_v1001>>(bin);
+            List<CadFigure> figList = MpUtil.FigureListFromMp_1001(mpfigList);
 
             return figList;
         }

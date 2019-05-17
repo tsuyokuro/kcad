@@ -1,18 +1,46 @@
 ﻿using HalfEdgeNS;
 using MessagePack;
-using MyCollections;
 using System;
 using System.Collections.Generic;
 using CadDataTypes;
 using SplineCurve;
 using System.Drawing.Printing;
 using System.Linq;
-
+using OpenTK;
 
 namespace Plotter.Serializer
 {
     [MessagePackObject]
-    public struct MpVector
+    public struct MpVector3d
+    {
+        [Key(0)]
+        public double X;
+
+        [Key(1)]
+        public double Y;
+
+        [Key(2)]
+        public double Z;
+
+        public static MpVector3d Create(Vector3d v)
+        {
+            MpVector3d ret = new MpVector3d();
+
+            ret.X = v.X;
+            ret.Y = v.Y;
+            ret.Z = v.Z;
+
+            return ret;
+        }
+
+        public Vector3d Restore()
+        {
+            return new Vector3d(X, Y, Z);
+        }
+    }
+
+    [MessagePackObject]
+    public struct MpVertex
     {
         [Key(0)]
         public byte Flag;
@@ -26,9 +54,9 @@ namespace Plotter.Serializer
         [Key(3)]
         public double z;
 
-        public static MpVector Create(CadVector v)
+        public static MpVertex Create(CadVertex v)
         {
-            MpVector ret = new MpVector();
+            MpVertex ret = new MpVertex();
             ret.Flag = v.Flag;
             ret.x = v.x;
             ret.y = v.y;
@@ -36,46 +64,12 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        public CadVector Restore()
+        public CadVertex Restore()
         {
-            CadVector v = CadVector.Create(x, y, z);
+            CadVertex v = CadVertex.Create(x, y, z);
             v.Flag = Flag;
 
             return v;
-        }
-    }
-
-    [MessagePackObject]
-    public class MpCadData
-    {
-        [Key("DB")]
-        public MpCadObjectDB MpDB;
-
-        [Key("ViewInfo")]
-        public MpViewInfo ViewInfo;
-
-        [IgnoreMember]
-        CadObjectDB DB = null;
-
-        public static MpCadData Create(CadObjectDB db)
-        {
-            MpCadData ret = new MpCadData();
-
-            ret.MpDB = MpCadObjectDB.Create(db);
-
-            ret.ViewInfo = new MpViewInfo();
-
-            return ret;
-        }
-
-        public CadObjectDB GetDB()
-        {
-            if (DB == null)
-            {
-                DB = MpDB.Restore();
-            }
-
-            return DB;
         }
     }
 
@@ -129,138 +123,6 @@ namespace Plotter.Serializer
         }
     }
 
-
-    [MessagePackObject]
-    public class MpCadObjectDB
-    {
-        [Key("LayerIdCnt")]
-        public uint LayerIdCount;
-
-        [Key("FigIdCnt")]
-        public uint FigureIdCount;
-
-        [Key("FigList")]
-        public List<MpFigure> FigureList;
-
-        [Key("LayerList")]
-        public List<MpLayer> LayerList;
-
-        [Key("CurrentLayerID")]
-        public uint CurrentLayerID;
-
-        public static MpCadObjectDB Create(CadObjectDB db)
-        {
-            MpCadObjectDB ret = new MpCadObjectDB();
-
-            ret.LayerIdCount = db.LayerIdProvider.Counter;
-            ret.FigureIdCount = db.FigIdProvider.Counter;
-
-            ret.FigureList = MpUtil.FigureMapToMp(db.FigureMap);
-
-            ret.LayerList = MpUtil.LayerListToMp(db.LayerList);
-
-            ret.CurrentLayerID = db.CurrentLayerID;
-
-            return ret;
-        }
-
-        public void GarbageCollect()
-        {
-            var idMap = new Dictionary<uint, MpFigure>();
-
-            foreach (MpFigure fig in FigureList)
-            {
-                idMap.Add(fig.ID, fig);
-            }
-
-            var activeSet = new HashSet<uint>();
-
-            foreach (MpLayer layer in LayerList)
-            {
-                foreach (uint id in layer.FigureIdList)
-                {
-                    MpFigure fig = idMap[id];
-
-                    fig.ForEachFig((f) => {
-                        activeSet.Add(f.ID);
-                    });
-                }
-            }
-
-            int i = FigureList.Count - 1;
-
-            for (;i>=0;i--)
-            {
-                MpFigure fig = FigureList[i];
-
-                if (!activeSet.Contains(fig.ID))
-                {
-                    FigureList.RemoveAt(i);
-                }
-            }
-        }
-
-        public CadObjectDB Restore()
-        {
-            CadObjectDB ret = new CadObjectDB();
-
-            ret.LayerIdProvider.Counter = LayerIdCount;
-            ret.FigIdProvider.Counter = FigureIdCount;
-
-            // Figure map
-            List<CadFigure> figList = MpUtil.FigureListFromMp(FigureList);
-
-            var dic = new Dictionary<uint, CadFigure>();
-
-            for (int i=0; i<figList.Count; i++)
-            {
-                CadFigure fig = figList[i];
-
-                dic.Add(fig.ID, fig);
-                FigureList[i].TempFigure = fig;
-            }
-
-            ret.FigureMap = dic;
-
-
-            // Child list
-            for (int i = 0; i < figList.Count; i++)
-            {
-                MpFigure mpfig = FigureList[i];
-                SetFigChild(mpfig, dic);
-            }
-
-
-            // Layer map
-            ret.LayerList = MpUtil.LayerListFromMp(LayerList, dic);
-
-            ret.LayerMap = new Dictionary<uint, CadLayer>();
-
-            for (int i=0; i< ret.LayerList.Count; i++)
-            {
-                CadLayer layer = ret.LayerList[i];
-
-                ret.LayerMap.Add(layer.ID, layer);
-            }
-
-            ret.CurrentLayerID = CurrentLayerID;
-
-            return ret;
-        }
-
-        private void SetFigChild(MpFigure mpfig, Dictionary<uint, CadFigure> dic)
-        {
-            for (int i=0; i<mpfig.ChildIdList.Count; i++)
-            {
-                uint id = mpfig.ChildIdList[i];
-
-                mpfig.TempFigure.ChildList.Add(dic[id]);
-                dic[id].Parent = mpfig.TempFigure;
-            }
-        }
-
-    }
-
     [MessagePackObject]
     public class MpLayer
     {
@@ -306,126 +168,6 @@ namespace Plotter.Serializer
         }
     }
 
-    [MessagePackObject]
-    public class MpFigure
-    {
-        [Key("ID")]
-        public uint ID;
-
-        [Key("Type")]
-        public byte Type;
-
-        [Key("Locked")]
-        public bool Locked;
-
-        [Key("IsLoop")]
-        public bool IsLoop;
-
-        [Key("Normal")]
-        public MpVector Normal;
-
-        [Key("ChildList")]
-        public List<MpFigure> ChildList;
-
-        [Key("ChildIdList")]
-        public List<uint> ChildIdList;
-
-        [Key("GeoData")]
-        public MpGeometricData GeoData;
-
-        [IgnoreMember]
-        public CadFigure TempFigure = null;
-
-        public static MpFigure Create(CadFigure fig, bool withChild = false)
-        {
-            MpFigure ret = new MpFigure();
-
-            ret.StoreCommon(fig);
-
-            if (withChild)
-            {
-                ret.StoreChildList(fig);
-            }
-            else
-            {
-                ret.StoreChildIdList(fig);
-            }
-            return ret;
-        }
-
-        public virtual void ForEachFig(Action<MpFigure> d)
-        {
-            d(this);
-
-            if (ChildList == null)
-            {
-                return;
-            }
-
-            int i;
-            for (i = 0; i < ChildList.Count; i++)
-            {
-                MpFigure c = ChildList[i];
-                c.ForEachFig(d);
-            }
-        }
-
-        public void StoreCommon(CadFigure fig)
-        {
-            ID = fig.ID;
-            Type = (byte)fig.Type;
-            Locked = fig.Locked;
-            IsLoop = fig.IsLoop;
-            Normal = MpVector.Create(fig.Normal);
-
-            GeoData = fig.GeometricDataToMp();
-        }
-
-        public void StoreChildIdList(CadFigure fig)
-        {
-            ChildIdList = MpUtil.FigureListToIdList(fig.ChildList);
-        }
-
-        public void StoreChildList(CadFigure fig)
-        {
-            ChildList = MpUtil.FigureListToMp(fig.ChildList);
-        }
-
-        public void RestoreTo(CadFigure fig)
-        {
-            fig.ID = ID;
-            fig.Locked = Locked;
-            fig.IsLoop = IsLoop;
-            fig.Normal = Normal.Restore();
-
-            if (ChildList != null)
-            {
-                fig.ChildList = MpUtil.FigureListFromMp(ChildList);
-
-                for (int i = 0; i < fig.ChildList.Count; i++)
-                {
-                    CadFigure c = fig.ChildList[i];
-                    c.Parent = fig;
-                }
-            }
-            else
-            {
-                fig.ChildList.Clear();
-            }
-
-            fig.GeometricDataFromMp(GeoData);
-        }
-
-        public CadFigure Restore()
-        {
-            CadFigure fig = CadFigure.Create((CadFigure.Types)Type);
-
-            RestoreTo(fig);
-
-            return fig;
-        }
-    }
-
     [MessagePack.Union(0, typeof(MpSimpleGeometricData))]
     [MessagePack.Union(1, typeof(MpMeshGeometricData))]
     [MessagePack.Union(2, typeof(MpNurbsLineGeometricData))]
@@ -440,7 +182,7 @@ namespace Plotter.Serializer
     public class MpSimpleGeometricData : MpGeometricData
     {
         [Key("PointList")]
-        public List<MpVector> PointList;
+        public List<MpVertex> PointList;
     }
 
 
@@ -471,10 +213,10 @@ namespace Plotter.Serializer
     public class MpHeModel
     {
         [Key("VertexStore")]
-        public List<MpVector> VertexStore;
+        public List<MpVertex> VertexStore;
 
         [Key("NormalStore")]
-        public List<MpVector> NormalStore;
+        public List<MpVertex> NormalStore;
 
         [Key("FaceStore")]
         public List<MpHeFace> FaceStore;
@@ -658,7 +400,7 @@ namespace Plotter.Serializer
         public double[] Weights;
 
         [Key("CtrlPoints")]
-        public List<MpVector> CtrlPoints;
+        public List<MpVertex> CtrlPoints;
 
         [Key("CtrlOrder")]
         public int[] CtrlOrder;
@@ -716,7 +458,7 @@ namespace Plotter.Serializer
         public double[] Weights;
 
         [Key("CtrlPoints")]
-        public List<MpVector> CtrlPoints;
+        public List<MpVertex> CtrlPoints;
 
         [Key("CtrlOrder")]
         public int[] CtrlOrder;
@@ -832,144 +574,5 @@ namespace Plotter.Serializer
 
             return bs;
         }
-    }
-
-    public class MpUtil
-    {
-        public static List<MpVector> VectortListToMp(VectorList v)
-        {
-            List<MpVector> ret = new List<MpVector>();
-            for (int i=0; i<v.Count; i++)
-            {
-                ret.Add(MpVector.Create(v[i]));
-            }
-
-            return ret;
-        }
-
-        public static List<uint> FigureListToIdList(List<CadFigure> figList )
-        {
-            List<uint> ret = new List<uint>();
-            for (int i = 0; i < figList.Count; i++)
-            {
-                ret.Add(figList[i].ID);
-            }
-
-            return ret;
-        }
-
-        public static VectorList VectortListFromMp(List<MpVector> list)
-        {
-            VectorList ret = new VectorList(list.Count);
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(list[i].Restore());
-            }
-
-            return ret;
-        }
-
-        public static List<MpFigure> FigureListToMp(List<CadFigure> figList, bool withChild=false)
-        {
-            List<MpFigure> ret = new List<MpFigure>();
-            for (int i = 0; i < figList.Count; i++)
-            {
-                ret.Add(MpFigure.Create(figList[i], withChild));
-            }
-
-            return ret;
-        }
-
-        public static List<CadFigure> FigureListFromMp(List<MpFigure> list)
-        {
-            List<CadFigure> ret = new List<CadFigure>();
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(list[i].Restore());
-            }
-
-            return ret;
-        }
-
-        public static List<MpFigure> FigureMapToMp(
-            Dictionary<uint, CadFigure> figMap, bool withChild = false)
-        {
-            List<MpFigure> ret = new List<MpFigure>();
-            foreach (CadFigure fig in figMap.Values)
-            {
-                ret.Add(MpFigure.Create(fig, withChild));
-            }
-
-            return ret;
-        }
-
-        public static List<MpHeFace> HeFaceListToMp(FlexArray<HeFace> list)
-        {
-            List<MpHeFace> ret = new List<MpHeFace>();
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(MpHeFace.Create(list[i]));
-            }
-
-            return ret;
-        }
-
-
-        public static List<MpLayer> LayerListToMp(List<CadLayer> src)
-        {
-            List<MpLayer> ret = new List<MpLayer>();
-            for (int i = 0; i < src.Count; i++)
-            {
-                ret.Add(MpLayer.Create(src[i]));
-            }
-
-            return ret;
-        }
-
-        public static List<CadLayer> LayerListFromMp(
-            List<MpLayer> src, Dictionary<uint, CadFigure> dic)
-        {
-            List<CadLayer> ret = new List<CadLayer>();
-            for (int i = 0; i < src.Count; i++)
-            {
-                ret.Add(src[i].Restore(dic));
-            }
-
-            return ret;
-        }
-
-        public static FlexArray<HeFace> HeFaceListFromMp(
-            List<MpHeFace> list,
-            Dictionary<uint, HalfEdge> dic
-            )
-        {
-            FlexArray<HeFace> ret = new FlexArray<HeFace>();
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(list[i].Restore(dic));
-            }
-
-            return ret;
-        }
-
-        public static List<MpHalfEdge> HalfEdgeListToMp(List<HalfEdge> list)
-        {
-            List<MpHalfEdge> ret = new List<MpHalfEdge>();
-            for (int i=0; i<list.Count; i++)
-            {
-                ret.Add(MpHalfEdge.Create(list[i]));
-            }
-
-            return ret;
-        }
-
-        public static T[] ArrayClone<T>(T[] src)
-        {
-            T[] dst = new T[src.Length];
-
-            Array.Copy(src, dst, src.Length);
-
-            return dst;
-        } 
     }
 }

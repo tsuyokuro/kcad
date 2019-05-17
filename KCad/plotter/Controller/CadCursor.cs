@@ -4,29 +4,29 @@ namespace Plotter
 {
     public struct CadCursor
     {
-        public CadVector Pos;
-        public CadVector DirX;
-        public CadVector DirY;
+        public CadVertex Pos;
+        public CadVertex DirX;
+        public CadVertex DirY;
 
-        public CadVector StorePos;
+        public CadVertex StorePos;
 
         public static CadCursor Create()
         {
             CadCursor cc = default(CadCursor);
 
-            cc.DirX = CadVector.UnitX;
-            cc.DirY = CadVector.UnitY;
+            cc.DirX = CadVertex.UnitX;
+            cc.DirY = CadVertex.UnitY;
 
             return cc;
         }
 
-        public static CadCursor Create(CadVector pixp)
+        public static CadCursor Create(CadVertex pixp)
         {
             CadCursor cc = default(CadCursor);
 
             cc.Pos = pixp;
-            cc.DirX = CadVector.UnitX;
-            cc.DirY = CadVector.UnitY;
+            cc.DirX = CadVertex.UnitX;
+            cc.DirY = CadVertex.UnitY;
 
             return cc;
         }
@@ -36,28 +36,28 @@ namespace Plotter
             StorePos = Pos;
         }
 
-        public CadVector DistanceX(CadVector pixp)
+        public CadVertex DistanceX(CadVertex pixp)
         {
-            CadVector a1 = Pos;
-            CadVector a2 = Pos + DirY;
+            CadVertex a1 = Pos;
+            CadVertex a2 = Pos + DirY;
 
-            CadVector b1 = pixp;
-            CadVector b2 = pixp + DirX;
+            CadVertex b1 = pixp;
+            CadVertex b2 = pixp + DirX;
 
-            CadVector c = CadUtil.CrossLine2D(a1, a2, b1, b2);
+            CadVertex c = CadUtil.CrossLine2D(a1, a2, b1, b2);
 
             return pixp - c;
         }
 
-        public CadVector DistanceY(CadVector pixp)
+        public CadVertex DistanceY(CadVertex pixp)
         {
-            CadVector a1 = Pos;
-            CadVector a2 = Pos + DirX;
+            CadVertex a1 = Pos;
+            CadVertex a2 = Pos + DirX;
 
-            CadVector b1 = pixp;
-            CadVector b2 = pixp + DirY;
+            CadVertex b1 = pixp;
+            CadVertex b2 = pixp + DirY;
 
-            CadVector c = CadUtil.CrossLine2D(a1, a2, b1, b2);
+            CadVertex c = CadUtil.CrossLine2D(a1, a2, b1, b2);
 
             return pixp - c;
         }

@@ -26,11 +26,11 @@ namespace Plotter
 
         public override void DrawGrid(Gridding grid)
         {
-            CadVector lt = CadVector.Zero;
-            CadVector rb = CadVector.Create(DC.ViewWidth, DC.ViewHeight, 0);
+            CadVertex lt = CadVertex.Zero;
+            CadVertex rb = CadVertex.Create(DC.ViewWidth, DC.ViewHeight, 0);
 
-            CadVector ltw = DC.DevPointToWorldPoint(lt);
-            CadVector rbw = DC.DevPointToWorldPoint(rb);
+            CadVertex ltw = DC.DevPointToWorldPoint(lt);
+            CadVertex rbw = DC.DevPointToWorldPoint(rb);
 
             double minx = Math.Min(ltw.x, rbw.x);
             double maxx = Math.Max(ltw.x, rbw.x);
@@ -77,8 +77,8 @@ namespace Plotter
             double y;
             double z;
 
-            CadVector p = default(CadVector);
-            CadVector up = default(CadVector);
+            CadVertex p = default(CadVertex);
+            CadVertex up = default(CadVertex);
 
 
             Bitmap tgt = BmpDC.Image;
@@ -167,13 +167,13 @@ namespace Plotter
             BmpDC.UnlockBits();
         }
 
-        public override void DrawDot(int pen, CadVector p)
+        public override void DrawDot(DrawPen pen, CadVertex p)
         {
-            CadVector p0 = DC.WorldPointToDevPoint(p);
+            CadVertex p0 = DC.WorldPointToDevPoint(p);
 
             if (p0.x >= 0 && p0.y >= 0 && p0.x < DC.ViewWidth && p0.y < DC.ViewHeight)
             {
-                BmpDC.Image.SetPixel((int)p0.x, (int)p0.y, DC.PenColor(pen));
+                BmpDC.Image.SetPixel((int)p0.x, (int)p0.y, pen.GdiPen.Color);
             }
         }
     }

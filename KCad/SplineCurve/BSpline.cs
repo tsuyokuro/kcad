@@ -13,19 +13,19 @@ namespace SplineCurve
                     u
                  ucnt:4
         */
-        public static VectorList CreateFlatControlPoints(int ucnt, int vcnt, CadVector uunit, CadVector vunit)
+        public static VertexList CreateFlatControlPoints(int ucnt, int vcnt, CadVertex uunit, CadVertex vunit)
         {
-            VectorList vl = new VectorList(ucnt * vcnt);
+            VertexList vl = new VertexList(ucnt * vcnt);
 
-            CadVector ud = ((double)(ucnt-1) / 2.0) * uunit;
-            CadVector vd = ((double)(vcnt-1) / 2.0) * vunit;
+            CadVertex ud = ((double)(ucnt-1) / 2.0) * uunit;
+            CadVertex vd = ((double)(vcnt-1) / 2.0) * vunit;
 
-            CadVector p = CadVector.Zero;
+            CadVertex p = CadVertex.Zero;
 
             p -= ud;
             p -= vd;
 
-            CadVector lp = p;
+            CadVertex lp = p;
 
             for (int v = 0; v < vcnt; v++)
             {
@@ -43,22 +43,22 @@ namespace SplineCurve
             return vl;
         }
 
-        public static VectorList CreateBoxControlPoints(
+        public static VertexList CreateBoxControlPoints(
             int ucnt, int vcnt,
-            CadVector uunit, CadVector vunit, CadVector tunit
+            CadVertex uunit, CadVertex vunit, CadVertex tunit
             )
         {
-            VectorList vl = new VectorList(ucnt * vcnt);
+            VertexList vl = new VertexList(ucnt * vcnt);
 
-            CadVector ud = ((double)(ucnt - 1) / 2.0) * uunit;
-            CadVector vd = ((double)(vcnt - 1) / 2.0) * vunit;
+            CadVertex ud = ((double)(ucnt - 1) / 2.0) * uunit;
+            CadVertex vd = ((double)(vcnt - 1) / 2.0) * vunit;
 
-            CadVector p = CadVector.Zero;
+            CadVertex p = CadVertex.Zero;
 
             p -= ud;
             p -= vd;
 
-            CadVector lp = p;
+            CadVertex lp = p;
 
             for (int v = 0; v < vcnt; v++)
             {
@@ -145,7 +145,7 @@ namespace SplineCurve
         }
 
         // 2次での一様なBスプライン基底関数。
-        public static CadVector CalcurateUniformBSplinePointWithDegree2(VectorList vl, int i, double t)
+        public static CadVertex CalcurateUniformBSplinePointWithDegree2(VertexList vl, int i, double t)
         {
             return 0.5f * (t * t - 2f * t + 1f) * vl[i] +
                 0.5f * (-2f * t * t + 2f * t + 1f) * vl[i + 1] +
@@ -153,7 +153,7 @@ namespace SplineCurve
         }
 
         // 3次での一様なBスプライン基底関数。
-        public static CadVector CalcurateUniformBSplinePointWithDegree3(VectorList vl, int i, double t)
+        public static CadVertex CalcurateUniformBSplinePointWithDegree3(VertexList vl, int i, double t)
         {
             return 1f / 6f * (-vl[i] + 3f * vl[i + 1] - 3f * vl[i + 2] + vl[i + 3]) * t * t * t +
                 0.5f * (vl[i] - 2f * vl[i + 1] + vl[i + 2]) * t * t +

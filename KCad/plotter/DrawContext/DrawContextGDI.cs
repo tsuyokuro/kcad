@@ -19,6 +19,17 @@ namespace Plotter
             get => mGdiGraphics;
         }
 
+        public override double UnitPerMilli
+        {
+            set
+            {
+                mUnitPerMilli = value;
+                CalcProjectionMatrix();
+            }
+
+            get => mUnitPerMilli;
+        }
+
         private SmoothingMode mSmoothingMode = SmoothingMode.HighSpeed;
 
         public SmoothingMode SmoothingMode
@@ -70,10 +81,15 @@ namespace Plotter
             mViewOrg.x = 0;
             mViewOrg.y = 0;
 
-            CalcProjectionMatrix(ProjectionType.Orthographic);
+            CalcProjectionMatrix();
             CalcProjectionZW();
 
             mDrawing = new DrawingGDI(this);
+        }
+
+        public override void SetViewOrg(CadVertex org)
+        {
+            mViewOrg = org;
         }
 
         public override void SetViewSize(double w, double h)
@@ -81,13 +97,32 @@ namespace Plotter
             mViewWidth = w;
             mViewHeight = h;
 
-            if (w == 0 || h==0)
+            if (w == 0 || h == 0)
             {
                 return;
             }
 
-            DisposeGraphics();
+            DeviceScaleX = w / 2.0;
+            DeviceScaleY = -h / 2.0;
 
+            CalcProjectionMatrix();
+            CalcProjectionZW();
+
+            DisposeGraphics();
+            CreateGraphics();
+        }
+
+        protected virtual void DisposeGraphics()
+        {
+            if (Buffer != null)
+            {
+                Buffer.Dispose();
+                Buffer = null;
+            }
+        }
+
+        protected virtual void CreateGraphics()
+        {
             BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current;
 
             Buffer = currentContext.Allocate(ViewCtrl.CreateGraphics(),
@@ -99,83 +134,27 @@ namespace Plotter
             mGdiGraphics.PixelOffsetMode = mPixelOffsetMode;
         }
 
-        private void DisposeGraphics()
-        {
-            if (Buffer != null)
-            {
-                Buffer.Dispose();
-                Buffer = null;
-            }
-        }
-
-        public override CadVector WorldPointToDevPoint(CadVector pt)
-        {
-            CadVector p = WorldVectorToDevVector(pt);
-            p = p + mViewOrg;
-            return p;
-        }
-
-        public override CadVector DevPointToWorldPoint(CadVector pt)
-        {
-            pt = pt - mViewOrg;
-            return DevVectorToWorldVector(pt);
-        }
-
-        public override CadVector WorldVectorToDevVector(CadVector pt)
-        {
-            pt *= WorldScale;
-
-            Vector4d wv = (Vector4d)pt;
-
-            wv.W = 1.0f;
-
-            Vector4d sv = wv * mViewMatrix;
-            Vector4d pv = sv * mProjectionMatrix;
-
-            Vector4d dv;
-
-            dv.X = pv.X / pv.W;
-            dv.Y = pv.Y / pv.W;
-            dv.Z = pv.Z / pv.W;
-            dv.W = pv.W;
-
-            dv.X = dv.X * (mUnitPerMilli * DeviceScaleX);
-            dv.Y = dv.Y * (mUnitPerMilli * DeviceScaleY);
-            dv.Z = 0;
-
-            return CadVector.Create(dv);
-        }
-
-        public override CadVector DevVectorToWorldVector(CadVector pt)
-        {
-            pt.x = pt.x / (mUnitPerMilli * DeviceScaleX);
-            pt.y = pt.y / (mUnitPerMilli * DeviceScaleY);
-
-            Vector4d wv;
-
-            wv.W = mProjectionW;
-            wv.Z = mProjectionZ;
-
-            wv.X = pt.x * wv.W;
-            wv.Y = pt.y * wv.W;
-
-            wv = wv * mProjectionMatrixInv;
-            wv = wv * mViewMatrixInv;
-
-            wv /= WorldScale;
-
-            return CadVector.Create(wv);
-        }
-
         public override void Dispose()
         {
             DisposeGraphics();
             Tools.Dispose();
         }
 
+        public override void CalcProjectionMatrix()
+        {
+            mProjectionMatrix = Matrix4d.CreateOrthographic(
+                                            ViewWidth / mUnitPerMilli, ViewHeight / mUnitPerMilli,
+                                            mProjectionNear,
+                                            mProjectionFar
+                                            );
+
+            mProjectionMatrixInv = mProjectionMatrix.Invert();
+        }
+
         public Pen Pen(int id)
         {
-            return Tools.pen(id);
+            DrawPen pen = DrawPen.New(this, id);
+            return pen.GdiPen;
         }
 
         public Color PenColor(int id)
@@ -190,7 +169,8 @@ namespace Plotter
 
         public Brush Brush(int id)
         {
-            return Tools.brush(id);
+            DrawBrush brush = DrawBrush.New(this, id);
+            return brush.GdiBrush;
         }
 
         public Color BrushColor(int id)
@@ -202,6 +182,16 @@ namespace Plotter
         {
             if (Buffer != null)
                 Buffer.Render();
+        }
+
+        public override DrawPen GetPen(int idx)
+        {
+            return DrawPen.New(this, idx);
+        }
+
+        public override DrawBrush GetBrush(int idx)
+        {
+            return DrawBrush.New(this, idx);
         }
     }
 }

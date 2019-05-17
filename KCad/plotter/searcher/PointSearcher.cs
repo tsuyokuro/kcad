@@ -167,12 +167,12 @@ namespace Plotter
             }
         }
 
-        public void Check(DrawContext dc, CadVector pt)
+        public void Check(DrawContext dc, CadVertex pt)
         {
             CheckFigPoint(dc, pt, null, null, 0);
         }
 
-        public void Check(DrawContext dc, VectorList list)
+        public void Check(DrawContext dc, VertexList list)
         {
             for (int i=0;i< list.Count; i++)
             {
@@ -182,7 +182,7 @@ namespace Plotter
 
         public void CheckFigure(DrawContext dc, CadLayer layer, CadFigure fig)
         {
-            VectorList list = fig.PointList;
+            VertexList list = fig.PointList;
 
             if (fig.StoreList != null)
             {
@@ -204,9 +204,9 @@ namespace Plotter
             }
         }
 
-        private void CheckFigPoint(DrawContext dc, CadVector pt, CadLayer layer, CadFigure fig, int ptIdx)
+        private void CheckFigPoint(DrawContext dc, CadVertex pt, CadLayer layer, CadFigure fig, int ptIdx)
         {
-            CadVector ppt = dc.WorldPointToDevPoint(pt);
+            CadVertex ppt = dc.WorldPointToDevPoint(pt);
 
             double dx = Math.Abs(ppt.x - Target.Pos.x);
             double dy = Math.Abs(ppt.y - Target.Pos.y);

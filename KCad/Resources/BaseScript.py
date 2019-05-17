@@ -10,8 +10,8 @@ from System import UInt32 as uint
 import clr
 clr.AddReference('CadDataTypes')
 
-import CadDataTypes.CadVector as CadVector
-import CadDataTypes.VectorList as VectorList
+import CadDataTypes.CadVertex as CadVertex
+import CadDataTypes.VertexList as VertexList
 
 #[AC] puts(s)
 def puts(s):
@@ -241,11 +241,27 @@ def to_bmp(bw, bh, argb=0xffffffff, linew=1, fname=""):
 def face_to(dir):
     SE.FaceToDirection(dir)
 
+#[AC] devPToWorldP(p)
+def devPToWorldP(p):
+    return SE.DevPToWorldP(p)
+
+#[AC] worldPToDevP(p)
+def worldPToDevP(p):
+    return SE.WorldPToDevP(p)
+
+#[AC] devVToWorldV(v)
+def devPToWorldP(v):
+    return SE.DevVToWorldV(v)
+
+#[AC] worldVToDevV(v)
+def worldVToDevV(v):
+    return SE.WorldVToDevV(v)
+
 # <<<< Need to consider
 
 #[AC] test()
 def test():
-	SE.ToFigList([1,2])
+	SE.Test()
 
 
 class MyConsoleOut:
@@ -313,7 +329,7 @@ esc_b_white = "\x1b[97m"
 
 
 #test !!
-vv = CadVector.Create(1,1,1);
-vl = VectorList();
+vv = CadVertex.Create(1,1,1);
+vl = VertexList();
 vl.Add(vv);
 

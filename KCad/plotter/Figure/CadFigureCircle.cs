@@ -22,17 +22,17 @@ namespace Plotter
             Type = Types.CIRCLE;
         }
 
-        public override void AddPointInCreating(DrawContext dc, CadVector p)
+        public override void AddPointInCreating(DrawContext dc, CadVertex p)
         {
             mPointList.Add(p);
         }
 
-        public override void AddPoint(CadVector p)
+        public override void AddPoint(CadVertex p)
         {
             mPointList.Add(p);
         }
 
-        public override void SetPointAt(int index, CadVector pt)
+        public override void SetPointAt(int index, CadVertex pt)
         {
             mPointList[index] = pt;
         }
@@ -42,40 +42,40 @@ namespace Plotter
             mPointList.Clear();
         }
 
-        public override void Draw(DrawContext dc, int pen)
-        {
-            //drawCircle(dc, pen);
-            drawDisk(dc, pen);
-        }
-
-        public override void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
+        public override void Draw(DrawContext dc, DrawPen pen)
         {
             drawCircle(dc, pen);
+            //drawDisk(dc, pen);
         }
 
-        public override void DrawSelected(DrawContext dc, int pen)
+        public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
+        {
+            //drawCircle(dc, pen);
+        }
+
+        public override void DrawSelected(DrawContext dc, DrawPen pen)
         {
             drawSelected_Circle(dc, pen);
         }
 
-        public override void DrawTemp(DrawContext dc, CadVector tp, int pen)
+        public override void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
         {
             if (PointList.Count <= 0)
             {
                 return;
             }
 
-            CadVector cp = PointList[0];
+            CadVertex cp = PointList[0];
 
-            CadVector a = tp;
-            CadVector b = getRP(dc, cp, tp, true);
+            CadVertex a = tp;
+            CadVertex b = getRP(dc, cp, tp, true);
 
-            CadVector c = -(a - cp) + cp;
-            CadVector d = -(b - cp) + cp;
+            CadVertex c = -(a - cp) + cp;
+            CadVertex d = -(b - cp) + cp;
 
 
             CircleExpander.ForEachSegs(cp, a, b, 32,
-                (CadVector p0, CadVector p1) =>
+                (CadVertex p0, CadVertex p1) =>
                 {
                     dc.Drawing.DrawLine(pen, p0, p1);
                 });
@@ -87,7 +87,7 @@ namespace Plotter
             dc.Drawing.DrawLine(pen, cp, d);
         }
 
-        private void drawCircle(DrawContext dc, int pen)
+        private void drawCircle(DrawContext dc, DrawPen pen)
         {
             if (PointList.Count == 0)
             {
@@ -97,20 +97,22 @@ namespace Plotter
             if (PointList.Count == 1)
             {
                 dc.Drawing.DrawCross(pen, PointList[0], 2);
-                if (PointList[0].Selected) dc.Drawing.DrawSelectedPoint(PointList[0]);
+                if (PointList[0].Selected) dc.Drawing.DrawSelectedPoint(PointList[0], dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 return;
             }
 
-            CadVector normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
+            CadVertex normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
 
-            CircleExpander.ForEachSegs(PointList[0], PointList[1], PointList[2], 32, action);
-            void action(CadVector p0, CadVector p1)
+            CircleExpander.ForEachSegs(PointList[0], PointList[1], PointList[2], 32, (p0, p1) =>
             {
                 dc.Drawing.DrawLine(pen, p0, p1);
-            }
+            });
+
+            double size = dc.DevSizeToWoldSize(4);
+            dc.Drawing.DrawCross(pen, PointList[0], size);
         }
 
-        private void drawDisk(DrawContext dc, int pen)
+        private void drawDisk(DrawContext dc, DrawPen pen)
         {
             if (PointList.Count == 0)
             {
@@ -120,15 +122,20 @@ namespace Plotter
             if (PointList.Count < 3)
             {
                 dc.Drawing.DrawCross(pen, PointList[0], 2);
-                if (PointList[0].Selected) dc.Drawing.DrawSelectedPoint(PointList[0]);
+
+                if (PointList[0].Selected)
+                {
+                    dc.Drawing.DrawSelectedPoint(
+                        PointList[0], dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                }
                 return;
             }
 
-            bool outline = SettingsHolder.Settings.DrawFaceOutline;
+            bool outline = SettingsHolder.Settings.DrawMeshEdge;
 
-            VectorList vl = CircleExpander.GetExpandList(PointList[0], PointList[1], PointList[2], 48);
+            VertexList vl = CircleExpander.GetExpandList(PointList[0], PointList[1], PointList[2], 48);
 
-            CadVector normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
+            CadVertex normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
 
             dc.Drawing.DrawFace(pen, vl, normal, outline);
 
@@ -136,13 +143,14 @@ namespace Plotter
             dc.Drawing.DrawLine(pen, mPointList[2], mPointList[4]);
         }
 
-        private void drawSelected_Circle(DrawContext dc, int pen)
+        private void drawSelected_Circle(DrawContext dc, DrawPen pen)
         {
             for (int i=0; i<PointList.Count; i++)
             {
                 if (PointList[i].Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(PointList[i]);
+                    dc.Drawing.DrawSelectedPoint(
+                        PointList[i], dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
 
             }
@@ -160,16 +168,16 @@ namespace Plotter
                 return;
             }
 
-            CadVector cp = mPointList[0];
+            CadVertex cp = mPointList[0];
 
-            CadVector a = mPointList[1];
+            CadVertex a = mPointList[1];
 
-            CadVector b = getRP(dc, cp, a, true);
+            CadVertex b = getRP(dc, cp, a, true);
 
             AddPoint(b);
 
-            CadVector c = -(a - cp) + cp;
-            CadVector d = -(b - cp) + cp;
+            CadVertex c = -(a - cp) + cp;
+            CadVertex d = -(b - cp) + cp;
 
             AddPoint(c);
 
@@ -178,9 +186,9 @@ namespace Plotter
             return;
         }
 
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVector delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
         {
-            CadVector cp = StoreList[0];
+            CadVertex cp = StoreList[0];
 
             if (cp.Selected)
             {
@@ -192,12 +200,13 @@ namespace Plotter
                 return;
             }
 
-            Span<CadVector> vt = stackalloc CadVector[4];
+            CadVectorArray4 vt = default;
 
             vt[0] = StoreList[1] - cp;
             vt[1] = StoreList[2] - cp;
             vt[2] = StoreList[3] - cp;
             vt[3] = StoreList[4] - cp;
+            vt.Length = 4;
 
             if (vt[0].Norm() < 0.01)
             {
@@ -224,13 +233,13 @@ namespace Plotter
             int ci = (ai + 2) % 4;
             int di = (ai + 3) % 4;
 
-            CadVector normal = CadMath.CrossProduct(vt[ai], vt[bi]);
+            CadVertex normal = CadMath.CrossProduct(vt[ai], vt[bi]);
             normal = normal.UnitVector();
 
             vt[ai] += delta;
 
-            CadVector uva = vt[ai].UnitVector();
-            CadVector uvb = vt[bi].UnitVector();
+            CadVertex uva = vt[ai].UnitVector();
+            CadVertex uvb = vt[bi].UnitVector();
 
             if (!uva.EqualsThreshold(uvb))
             {
@@ -257,13 +266,18 @@ namespace Plotter
             vt[ci] = -vt[ai];
             vt[di] = -vt[bi];
 
-            vt[0].Selected = false;
-            vt[1].Selected = false;
-            vt[2].Selected = false;
-            vt[3].Selected = false;
+            CadVertex tmp;
 
-            vt[ai].Selected = true;
+            for (int i=0; i<vt.Length; i++)
+            {
+                tmp = vt[i];
+                tmp.Selected = false;
+                vt[i] = tmp;
+            }
 
+            tmp = vt[ai];
+            tmp.Selected = true;
+            vt[ai] = tmp;
 
             mPointList[1] = vt[0] + cp;
             mPointList[2] = vt[1] + cp;
@@ -275,10 +289,10 @@ namespace Plotter
         {
             Centroid ret = default(Centroid);
 
-            CadVector cp = StoreList[0];
-            CadVector rp = StoreList[1];
+            CadVertex cp = StoreList[0];
+            CadVertex rp = StoreList[1];
 
-            CadVector d = rp - cp;
+            CadVertex d = rp - cp;
 
             double r = d.Norm();
 
@@ -288,7 +302,7 @@ namespace Plotter
             return ret;
         }
 
-        private CadVector getRP(DrawContext dc, CadVector cp, CadVector p, bool isA)
+        private CadVertex getRP(DrawContext dc, CadVertex cp, CadVertex p, bool isA)
         {
             if (p.Equals(cp))
             {
@@ -296,7 +310,7 @@ namespace Plotter
             }
 
 
-            CadVector r = CadMath.CrossProduct(p - cp, (CadVector)(dc.ViewDir));
+            CadVertex r = CadMath.CrossProduct(p - cp, (CadVertex)(dc.ViewDir));
 
             r = r.UnitVector();
 
@@ -307,7 +321,7 @@ namespace Plotter
 
         public override CadSegment GetSegmentAt(int n)
         {
-            return new CadSegment(CadVector.InvalidValue, CadVector.InvalidValue);
+            return new CadSegment(CadVertex.InvalidValue, CadVertex.InvalidValue);
         }
 
         public override FigureSegment GetFigSegmentAt(int n)

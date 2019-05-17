@@ -75,13 +75,13 @@ namespace Plotter
 
         public bool IsLoop { get; set; }
 
-        public CadVector Normal;
+        public CadVertex Normal;
 
-        public virtual VectorList PointList => mPointList;
+        public virtual VertexList PointList => mPointList;
 
         public virtual int PointCount => PointList.Count;
 
-        public VectorList StoreList => mStoreList;
+        public VertexList StoreList => mStoreList;
 
         public bool Locked  { set; get; } = false;
 
@@ -97,9 +97,9 @@ namespace Plotter
 
         #endregion
 
-        protected VectorList mPointList = new VectorList();
+        protected VertexList mPointList = new VertexList();
 
-        protected VectorList mStoreList = null;
+        protected VertexList mStoreList = null;
 
 
         #region Group management
@@ -280,29 +280,29 @@ namespace Plotter
             mPointList.AddRange(fig.mPointList);
         }
 
-        public virtual void AddPoints(VectorList points, int sp, int num)
+        public virtual void AddPoints(VertexList points, int sp, int num)
         {
             for (int i = 0; i < num; i++)
             {
-                CadVector p = points[i + sp];
+                CadVertex p = points[i + sp];
                 AddPoint(p);
             }
         }
 
-        public virtual void AddPoints(VectorList points, int sp)
+        public virtual void AddPoints(VertexList points, int sp)
         {
             AddPoints(points, sp, points.Count - sp);
         }
 
-        public virtual void AddPoints(VectorList points)
+        public virtual void AddPoints(VertexList points)
         {
-            foreach (CadVector p in points)
+            foreach (CadVertex p in points)
             {
                 AddPoint(p);
             }
         }
 
-        public virtual void AddPointsReverse(VectorList points)
+        public virtual void AddPointsReverse(VertexList points)
         {
             int cnt = points.Count;
             int i = cnt - 1;
@@ -313,7 +313,7 @@ namespace Plotter
             }
         }
 
-        public virtual void AddPointsReverse(VectorList points, int sp)
+        public virtual void AddPointsReverse(VertexList points, int sp)
         {
             int cnt = points.Count;
             int i = cnt - 1 - sp;
@@ -324,7 +324,7 @@ namespace Plotter
             }
         }
 
-        public virtual void InsertPointAt(int index, CadVector pt)
+        public virtual void InsertPointAt(int index, CadVertex pt)
         {
             if (index > mPointList.Count - 1)
             {
@@ -345,7 +345,7 @@ namespace Plotter
             mPointList.RemoveRange(index, count);
         }
 
-        public virtual void InsertPointsRange(int index, VectorList collection)
+        public virtual void InsertPointsRange(int index, VertexList collection)
         {
             mPointList.InsertRange(index, collection);
         }
@@ -392,24 +392,24 @@ namespace Plotter
             return false;
         }
 
-        public virtual CadVector GetPointAt(int idx)
+        public virtual CadVertex GetPointAt(int idx)
         {
             return mPointList[idx];
         }
 
-        public virtual CadVector GetStorePointAt(int idx)
+        public virtual CadVertex GetStorePointAt(int idx)
         {
             return mStoreList[idx];
         }
 
-        public virtual void SetPointAt(int index, CadVector pt)
+        public virtual void SetPointAt(int index, CadVertex pt)
         {
             mPointList[index] = pt;
         }
 
         public virtual void SelectPointAt(int index, bool sel)
         {
-            CadVector p = mPointList[index];
+            CadVertex p = mPointList[index];
             p.Selected = sel;
             mPointList[index] = p;
         }
@@ -454,7 +454,7 @@ namespace Plotter
                 return;
             }
 
-            mStoreList = new VectorList();
+            mStoreList = new VertexList();
             mStoreList.AddRange(mPointList);
         }
 
@@ -481,10 +481,10 @@ namespace Plotter
             mStoreList = null;
         }
 
-        public virtual int FindPoint(CadVector t)
+        public virtual int FindPoint(CadVertex t)
         {
             int i = 0;
-            foreach (CadVector p in mPointList)
+            foreach (CadVertex p in mPointList)
             {
                 if (t.Equals(p))
                 {
@@ -572,7 +572,7 @@ namespace Plotter
             mChildList.AddRange(fig.mChildList);
         }
 
-        public virtual void SetPointList(VectorList list)
+        public virtual void SetPointList(VertexList list)
         {
             mPointList = list;
         }
@@ -596,7 +596,7 @@ namespace Plotter
 
             DOut.pl("PointList [");
             DOut.Indent++;
-            foreach (CadVector point in PointList)
+            foreach (CadVertex point in PointList)
             {
                 point.dump("");
             }
@@ -621,7 +621,7 @@ namespace Plotter
 
         #endregion
 
-        public virtual void MoveSelectedPointsFromStored(DrawContext dc, CadVector delta)
+        public virtual void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
         {
             if (Locked) return;
 
@@ -639,19 +639,19 @@ namespace Plotter
             });
         }
 
-        public virtual void MoveAllPoints(CadVector delta)
+        public virtual void MoveAllPoints(CadVertex delta)
         {
             if (Locked) return;
 
             FigUtil.MoveAllPoints(this, delta);
         }
 
-        public virtual void AddPoint(CadVector p)
+        public virtual void AddPoint(CadVertex p)
         {
             mPointList.Add(p);
         }
 
-        public virtual void AddPointInCreating(DrawContext dc, CadVector p)
+        public virtual void AddPointInCreating(DrawContext dc, CadVertex p)
         {
             mPointList.Add(p);
         }
@@ -668,19 +668,19 @@ namespace Plotter
             }
         }
 
-        public virtual void Draw(DrawContext dc, int pen)
+        public virtual void Draw(DrawContext dc, DrawPen pen)
         {
         }
 
-        public virtual void DrawSeg(DrawContext dc, int pen, int idxA, int idxB)
+        public virtual void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
         {
         }
 
-        public virtual void DrawSelected(DrawContext dc, int pen)
+        public virtual void DrawSelected(DrawContext dc, DrawPen pen)
         {
         }
 
-        public virtual void DrawTemp(DrawContext dc, CadVector tp, int pen)
+        public virtual void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
         {
         }
 
@@ -702,7 +702,7 @@ namespace Plotter
             return FigUtil.GetContainsRectScrn(this, dc);
         }
 
-        public virtual VectorList GetPoints(int curveSplitNum)
+        public virtual VertexList GetPoints(int curveSplitNum)
         {
             return FigUtil.GetPoints(this, curveSplitNum);
         }
@@ -784,7 +784,7 @@ namespace Plotter
             }
         }
 
-        public virtual void ForEachPoint(Action<CadVector> dg)
+        public virtual void ForEachPoint(Action<CadVertex> dg)
         {
             int cnt = PointCount;
             for (int i = 0; i < cnt; i++)
@@ -793,7 +793,7 @@ namespace Plotter
             }
         }
 
-        public virtual void ForEachPointB(Func<CadVector, bool> dg)
+        public virtual void ForEachPointB(Func<CadVertex, bool> dg)
         {
             int cnt = PointCount;
             for (int i = 0; i < cnt; i++)
@@ -805,7 +805,7 @@ namespace Plotter
             }
         }
 
-        public virtual void ForEachPoint(Action<CadVector, int> dg)
+        public virtual void ForEachPoint(Action<CadVertex, int> dg)
         {
             int cnt = PointCount;
             for (int i = 0; i < cnt; i++)
@@ -814,7 +814,7 @@ namespace Plotter
             }
         }
 
-        public virtual void ForEachPointB(Func<CadVector, int, bool> dg)
+        public virtual void ForEachPointB(Func<CadVertex, int, bool> dg)
         {
             int cnt = PointCount;
             for (int i = 0; i < cnt; i++)
@@ -859,25 +859,6 @@ namespace Plotter
                 }
             }
         }
-
-        public virtual JObject GeometricDataToJson()
-        {
-            JArray pointArray = CadJson.ToJson.VectorListToJson(PointList);
-
-            JObject jvdata = new JObject();
-            jvdata.Add(CadJson.VECTOR.POINT_LIST, pointArray);
-
-            return jvdata;
-        }
-
-        public virtual void GeometricDataFromJson(JObject jvdata)
-        {
-            JArray jarray = (JArray)jvdata[CadJson.VECTOR.POINT_LIST];
-
-            VectorList vl = CadJson.FromJson.VectorListFromJson(jarray);
-            mPointList = vl;
-        }
-
 
         public virtual MpGeometricData GeometricDataToMp()
         {

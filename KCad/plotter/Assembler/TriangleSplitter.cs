@@ -7,7 +7,7 @@ namespace Plotter
     {
         public static List<CadFigure> Split(CadFigure fig, int curveSplitNum = 32)
         {
-            CadVector p0 = default(CadVector);
+            CadVertex p0 = default(CadVertex);
 
             var triangles = new List<CadFigure>();
 
@@ -17,7 +17,7 @@ namespace Plotter
 
             CadFigure triangle;
 
-            VectorList pointList = fig.GetPoints(curveSplitNum);
+            VertexList pointList = fig.GetPoints(curveSplitNum);
 
             i1 = CadUtil.FindMaxDistantPointIndex(p0, pointList);
 
@@ -28,12 +28,12 @@ namespace Plotter
 
             triangle = GetTriangleWithCenterPoint(pointList, i1);
 
-            CadVector tp0 = triangle.PointList[0];
-            CadVector tp1 = triangle.PointList[1];
-            CadVector tp2 = triangle.PointList[2];
+            CadVertex tp0 = triangle.PointList[0];
+            CadVertex tp1 = triangle.PointList[1];
+            CadVertex tp2 = triangle.PointList[2];
 
-            CadVector dir = CadMath.Normal(tp1, tp0, tp2);
-            CadVector currentDir = CadVector.Zero;
+            CadVertex dir = CadMath.Normal(tp1, tp0, tp2);
+            CadVertex currentDir = CadVertex.Zero;
 
             while (pointList.Count > 3)
             {
@@ -94,7 +94,7 @@ namespace Plotter
             return triangles;
         }
 
-        private static CadFigure GetTriangleWithCenterPoint(VectorList pointList, int cpIndex)
+        private static CadFigure GetTriangleWithCenterPoint(VertexList pointList, int cpIndex)
         {
             int i1 = cpIndex;
             int endi = pointList.Count - 1;
@@ -107,9 +107,9 @@ namespace Plotter
 
             var triangle = CadFigure.Create(CadFigure.Types.POLY_LINES);
 
-            CadVector tp0 = pointList[i0];
-            CadVector tp1 = pointList[i1];
-            CadVector tp2 = pointList[i2];
+            CadVertex tp0 = pointList[i0];
+            CadVertex tp1 = pointList[i1];
+            CadVertex tp2 = pointList[i2];
 
             triangle.AddPoint(tp0);
             triangle.AddPoint(tp1);
@@ -120,11 +120,11 @@ namespace Plotter
             return triangle;
         }
 
-        private static bool ListContainsPointInTriangle(VectorList check, CadFigure triangle)
+        private static bool ListContainsPointInTriangle(VertexList check, CadFigure triangle)
         {
             var tps = triangle.PointList;
 
-            foreach (CadVector cp in check)
+            foreach (CadVertex cp in check)
             {
                 if (
                     cp.Equals(tps[0]) ||
