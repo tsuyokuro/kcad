@@ -1,4 +1,6 @@
-﻿namespace CadDataTypes
+﻿using CadDataTypes;
+
+namespace Plotter
 {
     // 短い配列をstackに確保するためのstruct
     public struct CadVectorArray4

@@ -236,7 +236,7 @@ namespace Plotter
          */
         public static CadQuaternion RotateQuaternion(Vector3d axis, double radian)
         {
-            axis = Vector3d.Normalize(axis);
+            axis.Normalize();
 
             CadQuaternion ans = default(CadQuaternion);
             double c, s;

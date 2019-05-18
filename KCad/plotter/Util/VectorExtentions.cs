@@ -42,6 +42,21 @@ namespace Plotter
             return (v.X + v.Y + v.Z) == 0;
         }
 
+        public static Vector3d UnitVector()
+        {
+            Vector3d ret = default;
+
+            double norm = ret.Length;
+
+            double f = 1.0 / norm;
+
+            ret.X *= f;
+            ret.Y *= f;
+            ret.Z *= f;
+
+            return ret;
+        }
+
         public static void dump(this Vector3d v, string prefix = nameof(Vector3d))
         {
             DOut.pl(prefix + "{");
