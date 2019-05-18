@@ -1126,6 +1126,26 @@ namespace Plotter
             return a1 + a * CadMath.CrossProduct2D(b, b1 - a1) / cpBA;
         }
 
+        public static Vector3d? CrossLine2D(Vector3d a1, Vector3d a2, Vector3d b1, Vector3d b2)
+        {
+            Vector3d a = (a2 - a1);
+            Vector3d b = (b2 - b1);
+
+            if (a.IsZero() || b.IsZero())
+            {
+                return null;
+            }
+
+            double cpBA = CadMath.CrossProduct2D(b, a);
+
+            if (cpBA == 0)
+            {
+                return null;
+            }
+
+            return a1 + a * CadMath.CrossProduct2D(b, b1 - a1) / cpBA;
+        }
+
         /// <summary>
         /// 線分と直線の交点
         /// </summary>

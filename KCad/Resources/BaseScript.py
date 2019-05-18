@@ -177,7 +177,7 @@ def add_cylinder(slices, r, len):
 def add_sphere(slices, r):
     SE.AddSphere(slices, r)
 
-#[AC] extrude(id=current_fig_id(), dir=unitVZ, d=20, div=0)
+#[AC] extrude(id=current_fig_id(), dir=unit_vz, d=20, div=0)
 def extrude(id, dir, d, div):
     SE.Extrude(id, dir, d, div)
 
