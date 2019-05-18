@@ -1,6 +1,6 @@
 ﻿using System;
 using CadDataTypes;
-
+using OpenTK;
 
 namespace Plotter
 {
@@ -68,7 +68,7 @@ namespace Plotter
 
             CadVertex sp = up;
 
-            CadVertex u0 = dc.ViewOrg;
+            Vector3d u0 = dc.ViewOrg;
 
             double range;
 

@@ -91,7 +91,7 @@ namespace Plotter
             dc.CopyCamera(this);
             dc.SetViewSize(deviceSize.Width, deviceSize.Height);
 
-            CadVertex org = default;
+            Vector3d org = default;
             org.X = deviceSize.Width / 2.0;
             org.Y = deviceSize.Height / 2.0;
 

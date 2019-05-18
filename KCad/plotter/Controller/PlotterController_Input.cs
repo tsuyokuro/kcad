@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using CadDataTypes;
 using KCad;
+using OpenTK;
 
 namespace Plotter.Controller
 {
@@ -39,7 +40,7 @@ namespace Plotter.Controller
         private CadRulerSet RulerSet = new CadRulerSet();
 
 
-        private CadVertex StoreViewOrg = default;
+        private Vector3d StoreViewOrg = default;
 
         private CadVertex SnapPoint;
 

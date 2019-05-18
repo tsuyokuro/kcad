@@ -301,6 +301,97 @@ namespace CadDataTypes
             return p1;
         }
 
+        public static CadVertex operator *(CadVertex p1, CadVertex p2)
+        {
+            p1.X *= p2.X;
+            p1.Y *= p2.Y;
+            p1.Z *= p2.Z;
+
+            return p1;
+        }
+
+        public static CadVertex operator /(CadVertex p1, CadVertex p2)
+        {
+            p1.X /= p2.X;
+            p1.Y /= p2.Y;
+            p1.Z /= p2.Z;
+
+            return p1;
+        }
+
+        public static CadVertex operator +(CadVertex p1, Vector3d p2)
+        {
+            p1.X += p2.X;
+            p1.Y += p2.Y;
+            p1.Z += p2.Z;
+
+            return p1;
+        }
+
+        public static CadVertex operator -(CadVertex p1, Vector3d p2)
+        {
+            p1.X -= p2.X;
+            p1.Y -= p2.Y;
+            p1.Z -= p2.Z;
+
+            return p1;
+        }
+
+        public static CadVertex operator *(CadVertex p1, Vector3d p2)
+        {
+            p1.X *= p2.X;
+            p1.Y *= p2.Y;
+            p1.Z *= p2.Z;
+
+            return p1;
+        }
+
+        public static CadVertex operator /(CadVertex p1, Vector3d p2)
+        {
+            p1.X /= p2.X;
+            p1.Y /= p2.Y;
+            p1.Z /= p2.Z;
+
+            return p1;
+        }
+
+        public static CadVertex operator +(Vector3d p1, CadVertex p2)
+        {
+            p1.X += p2.X;
+            p1.Y += p2.Y;
+            p1.Z += p2.Z;
+
+            return CadVertex.Create(p1);
+        }
+
+        public static CadVertex operator -(Vector3d p1, CadVertex p2)
+        {
+            p1.X -= p2.X;
+            p1.Y -= p2.Y;
+            p1.Z -= p2.Z;
+
+            return CadVertex.Create(p1);
+        }
+
+        public static CadVertex operator *(Vector3d p1, CadVertex p2)
+        {
+            p1.X *= p2.X;
+            p1.Y *= p2.Y;
+            p1.Z *= p2.Z;
+
+            return CadVertex.Create(p1);
+        }
+
+        public static CadVertex operator /(Vector3d p1, CadVertex p2)
+        {
+            p1.X /= p2.X;
+            p1.Y /= p2.Y;
+            p1.Z /= p2.Z;
+
+            return CadVertex.Create(p1);
+        }
+
+
         public static CadVertex operator *(CadVertex p1, double f)
         {
             p1.X *= f;
@@ -315,15 +406,6 @@ namespace CadDataTypes
             p1.X *= f;
             p1.Y *= f;
             p1.Z *= f;
-
-            return p1;
-        }
-
-        public static CadVertex operator *(CadVertex p1, CadVertex p2)
-        {
-            p1.X *= p2.X;
-            p1.Y *= p2.Y;
-            p1.Z *= p2.Z;
 
             return p1;
         }

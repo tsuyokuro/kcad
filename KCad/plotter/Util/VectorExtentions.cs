@@ -7,6 +7,24 @@ using System.Threading.Tasks;
 
 namespace Plotter
 {
+    public static class VectorUtil
+    {
+        public static void Set(out Vector3d v, double x, double y, double z)
+        {
+            v.X = x;
+            v.Y = y;
+            v.Z = z;
+        }
+
+        public static void Set(out Vector4d v, double x, double y, double z, double w)
+        {
+            v.X = x;
+            v.Y = y;
+            v.Z = z;
+            v.W = w;
+        }
+    }
+
     public static class VectorExtentions
     {
         public static Vector4d ToVector4d(this Vector3d v, double w)

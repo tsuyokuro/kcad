@@ -803,7 +803,7 @@ namespace Plotter.Controller
 
             tdc.SetViewSize(w, h);
 
-            tdc.SetViewOrg(CadVertex.Create(w / 2, h / 2, 0));
+            tdc.SetViewOrg(new Vector3d(w / 2, h / 2, 0));
 
             tdc.SetupTools(DrawTools.ToolsType.DARK);
 
@@ -821,9 +821,9 @@ namespace Plotter.Controller
 
             CadRect tr = CadUtil.GetContainsRectScrn(tdc, figList);
 
-            CadVertex trcp = (tr.p1 - tr.p0) / 2 + tr.p0;
+            Vector3d trcp = (Vector3d)((tr.p1 - tr.p0) / 2 + tr.p0);
 
-            CadVertex d = trcp - tdc.ViewOrg;
+            Vector3d d = trcp - tdc.ViewOrg;
 
             tdc.SetViewOrg(tdc.ViewOrg - d);
 

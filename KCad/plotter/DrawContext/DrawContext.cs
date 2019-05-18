@@ -85,8 +85,8 @@ namespace Plotter
 
         // Screen 座標系の原点 
         // 座標系の原点がView座標上で何処にあるかを示す
-        protected CadVertex mViewOrg;
-        public virtual CadVertex ViewOrg
+        protected Vector3d mViewOrg;
+        public virtual Vector3d ViewOrg
         {
             get => mViewOrg;
         }
@@ -120,7 +120,7 @@ namespace Plotter
 
         }
 
-        public virtual void SetViewOrg(CadVertex org)
+        public virtual void SetViewOrg(Vector3d org)
         {
             mViewOrg = org;
         }

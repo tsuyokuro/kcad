@@ -231,7 +231,7 @@ namespace Plotter
 
             if (sizeChangeCnt == 2)
             {
-                CadVertex org = default(CadVertex);
+                Vector3d org = default;
                 org.X = Width / 2;
                 org.Y = Height / 2;
 
