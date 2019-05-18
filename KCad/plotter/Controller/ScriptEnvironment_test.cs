@@ -599,6 +599,13 @@ namespace Plotter.Controller
                 {
                     Controller.CurrentDC.dump();
                 }
+                else if (ss[1] == "fig")
+                {
+                    if (Controller.CurrentFigure != null)
+                    {
+                        Controller.CurrentFigure.Dump();
+                    }
+                }
             }
 
             else if (cmd == "@clearTemp")

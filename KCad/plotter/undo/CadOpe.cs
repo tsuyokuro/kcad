@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -477,10 +478,10 @@ namespace Plotter
     public class CadOpeChangeNormal : CadOpe
     {
         private uint FigureID;
-        private CadVertex NewNormal;
-        private CadVertex OldNormal;
+        private Vector3d NewNormal;
+        private Vector3d OldNormal;
 
-        public CadOpeChangeNormal(uint figID, CadVertex oldNormal, CadVertex newNormal)
+        public CadOpeChangeNormal(uint figID, Vector3d oldNormal, Vector3d newNormal)
         {
             FigureID = figID;
             OldNormal = oldNormal;

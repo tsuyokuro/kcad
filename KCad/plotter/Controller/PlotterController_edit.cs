@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CadDataTypes;
 using KCad.Properties;
+using OpenTK;
 
 namespace Plotter.Controller
 {
@@ -280,7 +281,7 @@ namespace Plotter.Controller
             foreach (uint id in ids)
             {
                 CadFigure fig = mDB.GetFigure(id);
-                CadVertex old = fig.Normal;
+                Vector3d old = fig.Normal;
 
                 fig.Normal *= -1;
 

@@ -119,7 +119,7 @@ namespace Plotter
                     //Vector3d normal = CadUtil.RepresentativeNormal(fig.PointList);
                     //double t = Vector3d.Dot(normal, dc.ViewDir);
 
-                    Figure.Normal = CadVertex.Create(dc.ViewDir);
+                    Figure.Normal = dc.ViewDir;
                     Figure.Normal *= -1;
                 }
             }
@@ -194,7 +194,7 @@ namespace Plotter
 
             public override void EndCreate(DrawContext dc)
             {
-                Figure.Normal = CadVertex.Create(dc.ViewDir);
+                Figure.Normal = dc.ViewDir;
                 Figure.Normal *= -1;
                 Figure.Type = Types.POLY_LINES;
             }

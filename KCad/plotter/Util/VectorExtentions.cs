@@ -19,6 +19,11 @@ namespace Plotter
             return new Vector3d(v.X, v.Y, v.Z);
         }
 
+        public static bool IsZero(this Vector3d v)
+        {
+            return (v.X + v.Y + v.Z) == 0;
+        }
+
         public static void dump(this Vector3d v, string prefix = nameof(Vector3d))
         {
             DOut.pl(prefix + "{");
