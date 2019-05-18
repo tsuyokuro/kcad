@@ -159,24 +159,48 @@ namespace Plotter
 
         public virtual CadVertex WorldPointToDevPoint(CadVertex pt)
         {
-            CadVertex p = WorldVectorToDevVector(pt);
+            pt.vector = WorldVectorToDevVector(pt.vector);
+            pt.vector += mViewOrg;
+            return pt;
+        }
+
+        public virtual CadVertex DevPointToWorldPoint(CadVertex pt)
+        {
+            pt.vector -= mViewOrg;
+            pt.vector = DevVectorToWorldVector(pt.vector);
+            return pt;
+        }
+
+        public virtual CadVertex WorldVectorToDevVector(CadVertex pt)
+        {
+            pt.vector = WorldVectorToDevVector(pt.vector);
+            return pt;
+        }
+
+        public virtual CadVertex DevVectorToWorldVector(CadVertex pt)
+        {
+            pt.vector = DevVectorToWorldVector(pt.vector);
+            return pt;
+        }
+
+        public virtual Vector3d WorldPointToDevPoint(Vector3d pt)
+        {
+            Vector3d p = WorldVectorToDevVector(pt);
             p = p + mViewOrg;
             return p;
         }
 
-        public virtual CadVertex DevPointToWorldPoint(CadVertex pt)
+        public virtual Vector3d DevPointToWorldPoint(Vector3d pt)
         {
             pt = pt - mViewOrg;
             return DevVectorToWorldVector(pt);
         }
 
-        public virtual CadVertex WorldVectorToDevVector(CadVertex pt)
+        public virtual Vector3d WorldVectorToDevVector(Vector3d pt)
         {
             pt *= WorldScale;
 
-            Vector4d wv = (Vector4d)pt;
-
-            wv.W = 1.0f;
+            Vector4d wv = pt.ToVector4d(1.0);
 
             Vector4d sv = wv * mViewMatrix;
             Vector4d pv = sv * mProjectionMatrix;
@@ -192,10 +216,10 @@ namespace Plotter
             dv.Y = dv.Y * DeviceScaleY;
             dv.Z = 0;
 
-            return CadVertex.Create(dv);
+            return dv.ToVector3d();
         }
 
-        public virtual CadVertex DevVectorToWorldVector(CadVertex pt)
+        public virtual Vector3d DevVectorToWorldVector(Vector3d pt)
         {
             pt.X = pt.X / DeviceScaleX;
             pt.Y = pt.Y / DeviceScaleY;
@@ -213,7 +237,7 @@ namespace Plotter
 
             wv /= WorldScale;
 
-            return CadVertex.Create(wv);
+            return wv.ToVector3d();
         }
 
         public virtual void CalcViewDir()
