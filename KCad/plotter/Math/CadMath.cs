@@ -36,7 +36,7 @@ namespace Plotter
         #region inner product
         public static double InnrProduct2D(CadVertex v1, CadVertex v2)
         {
-            return (v1.x * v2.x) + (v1.y * v2.y);
+            return (v1.X * v2.X) + (v1.Y * v2.Y);
         }
 
         public static double InnrProduct2D(CadVertex v0, CadVertex v1, CadVertex v2)
@@ -46,7 +46,7 @@ namespace Plotter
 
         public static double InnerProduct(CadVertex v1, CadVertex v2)
         {
-            return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+            return (v1.X * v2.X) + (v1.Y * v2.Y) + (v1.Z * v2.Z);
         }
 
         public static double InnerProduct(CadVertex v0, CadVertex v1, CadVertex v2)
@@ -60,7 +60,7 @@ namespace Plotter
         #region Cross product
         public static double CrossProduct2D(CadVertex v1, CadVertex v2)
         {
-            return (v1.x * v2.y) - (v1.y * v2.x);
+            return (v1.X * v2.Y) - (v1.Y * v2.X);
         }
 
         public static double CrossProduct2D(CadVertex v0, CadVertex v1, CadVertex v2)
@@ -72,9 +72,9 @@ namespace Plotter
         {
             CadVertex res = default(CadVertex);
 
-            res.x = v1.y * v2.z - v1.z * v2.y;
-            res.y = v1.z * v2.x - v1.x * v2.z;
-            res.z = v1.x * v2.y - v1.y * v2.x;
+            res.X = v1.Y * v2.Z - v1.Z * v2.Y;
+            res.Y = v1.Z * v2.X - v1.X * v2.Z;
+            res.Z = v1.X * v2.Y - v1.Y * v2.X;
 
             return res;
         }

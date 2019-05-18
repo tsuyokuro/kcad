@@ -44,7 +44,7 @@ namespace Plotter
 
                     //return String.Format("{0, 7:F2},{1, 7:F2},{2, 7:F2}", v.x, v.y, v.z);
 
-                    return v.x.ToString("F2") + ", " + v.y.ToString("F2") + ", " + v.z.ToString("F2");
+                    return v.X.ToString("F2") + ", " + v.Y.ToString("F2") + ", " + v.Z.ToString("F2");
                 }
 
                 return "removed";

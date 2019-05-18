@@ -176,7 +176,7 @@ namespace MeshMakerNS
 
             int ps = 0;
 
-            if (vl[0].x == 0)
+            if (vl[0].X == 0)
             {
                 mesh.VertexStore.Add(vl[0]);
                 s += 1;
@@ -185,7 +185,7 @@ namespace MeshMakerNS
                 ps++;
             }
 
-            if (vl[vl.Count-1].x == 0)
+            if (vl[vl.Count-1].X == 0)
             {
                 mesh.VertexStore.Add(vl[vl.Count - 1]);
                 e -= 1;
@@ -205,9 +205,9 @@ namespace MeshMakerNS
                     CadVertex v = vl[vi];
                     CadVertex vv = default(CadVertex);
 
-                    vv.x = v.x * Math.Cos(a);
-                    vv.y = v.y;
-                    vv.z = v.x * Math.Sin(a);
+                    vv.X = v.X * Math.Cos(a);
+                    vv.Y = v.Y;
+                    vv.Z = v.X * Math.Sin(a);
 
                     mesh.VertexStore.Add(vv);
                 }

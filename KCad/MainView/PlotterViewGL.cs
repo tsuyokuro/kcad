@@ -180,13 +180,13 @@ namespace Plotter
 
                     Vector2 prev = default(Vector2);
 
-                    prev.X = (float)PrevMousePos.x;
-                    prev.Y = (float)PrevMousePos.y;
+                    prev.X = (float)PrevMousePos.X;
+                    prev.Y = (float)PrevMousePos.Y;
 
                     Vector2 current = default(Vector2);
 
-                    current.X = (float)t.x;
-                    current.Y = (float)t.y;
+                    current.X = (float)t.X;
+                    current.Y = (float)t.Y;
 
                     dc.RotateEyePoint(prev, current);
 
@@ -232,8 +232,8 @@ namespace Plotter
             if (sizeChangeCnt == 2)
             {
                 CadVertex org = default(CadVertex);
-                org.x = Width / 2;
-                org.y = Height / 2;
+                org.X = Width / 2;
+                org.Y = Height / 2;
 
                 mDrawContext.SetViewOrg(org);
 

@@ -78,8 +78,8 @@ namespace Plotter
             SetViewSize(1, 1);  // Create dummy Graphics
 
             mUnitPerMilli = 4; // 4 pix = 1mm
-            mViewOrg.x = 0;
-            mViewOrg.y = 0;
+            mViewOrg.X = 0;
+            mViewOrg.Y = 0;
 
             CalcProjectionMatrix();
             CalcProjectionZW();

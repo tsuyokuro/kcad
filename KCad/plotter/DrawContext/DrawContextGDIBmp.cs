@@ -26,8 +26,8 @@ namespace Plotter
             SetViewSize(8, 1);  // Create dummy Image and Graphics
 
             mUnitPerMilli = 4; // 4 pix = 1mm
-            mViewOrg.x = 0;
-            mViewOrg.y = 0;
+            mViewOrg.X = 0;
+            mViewOrg.Y = 0;
 
             mProjectionMatrix = UMatrix4.Unit;
             mProjectionMatrixInv = UMatrix4.Unit;

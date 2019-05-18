@@ -95,7 +95,7 @@ namespace CarveWapper
 		for (i = 0; i < vnum; i++)
 		{
 			CadVertex v = cadMesh->VertexStore[i];
-			data.addVertex(carve::geom::VECTOR(v.x, v.y, v.z));
+			data.addVertex(carve::geom::VECTOR(v.X, v.Y, v.Z));
 		}
 
 		int fnum = cadMesh->FaceStore->Count;

@@ -23,13 +23,13 @@ namespace Plotter.Controller
                         {
                             selPointCnt++;
 
-                            min.x = Math.Min(p.x, min.x);
-                            min.y = Math.Min(p.y, min.y);
-                            min.z = Math.Min(p.z, min.z);
+                            min.X = Math.Min(p.X, min.X);
+                            min.Y = Math.Min(p.Y, min.Y);
+                            min.Z = Math.Min(p.Z, min.Z);
 
-                            max.x = Math.Max(p.x, max.x);
-                            max.y = Math.Max(p.y, max.y);
-                            max.z = Math.Max(p.z, max.z);
+                            max.X = Math.Max(p.X, max.X);
+                            max.Y = Math.Max(p.Y, max.Y);
+                            max.Z = Math.Max(p.Z, max.Z);
                         }
                     }
                 }

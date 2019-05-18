@@ -51,8 +51,8 @@ namespace Plotter
             mViewWidth = w;
             mViewHeight = h;
 
-            mViewOrg.x = w / 2.0;
-            mViewOrg.y = h / 2.0;
+            mViewOrg.X = w / 2.0;
+            mViewOrg.Y = h / 2.0;
 
             DeviceScaleX = w / 2.0;
             DeviceScaleY = -h / 2.0;
@@ -92,8 +92,8 @@ namespace Plotter
             dc.SetViewSize(deviceSize.Width, deviceSize.Height);
 
             CadVertex org = default;
-            org.x = deviceSize.Width / 2.0;
-            org.y = deviceSize.Height / 2.0;
+            org.X = deviceSize.Width / 2.0;
+            org.Y = deviceSize.Height / 2.0;
 
             dc.SetViewOrg(org);
 

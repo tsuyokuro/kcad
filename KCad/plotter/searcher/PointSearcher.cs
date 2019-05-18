@@ -208,8 +208,8 @@ namespace Plotter
         {
             CadVertex ppt = dc.WorldPointToDevPoint(pt);
 
-            double dx = Math.Abs(ppt.x - Target.Pos.x);
-            double dy = Math.Abs(ppt.y - Target.Pos.y);
+            double dx = Math.Abs(ppt.X - Target.Pos.X);
+            double dy = Math.Abs(ppt.Y - Target.Pos.Y);
 
             CrossInfo cix = CadUtil.PerpendicularCrossLine(Target.Pos, Target.Pos + Target.DirX, ppt);
             CrossInfo ciy = CadUtil.PerpendicularCrossLine(Target.Pos, Target.Pos + Target.DirY, ppt);

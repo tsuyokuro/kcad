@@ -53,9 +53,9 @@ namespace Plotter
         {
             CadVertex gridSize = dc.WorldPointToDevPoint(gridSizeW) - dc.WorldPointToDevPoint(CadVertex.Zero);
 
-            gridSize.x = Math.Abs(gridSize.x);
-            gridSize.y = Math.Abs(gridSize.y);
-            gridSize.z = Math.Abs(gridSize.z);
+            gridSize.X = Math.Abs(gridSize.X);
+            gridSize.Y = Math.Abs(gridSize.Y);
+            gridSize.Z = Math.Abs(gridSize.Z);
 
             return gridSize;
         }
@@ -74,27 +74,27 @@ namespace Plotter
 
             up -= u0;
 
-            t.x = (Math.Round(up.x / scr.x)) * scr.x;
-            t.y = (Math.Round(up.y / scr.y)) * scr.y;
-            t.z = 0;
+            t.X = (Math.Round(up.X / scr.X)) * scr.X;
+            t.Y = (Math.Round(up.Y / scr.Y)) * scr.Y;
+            t.Z = 0;
 
-            range = Math.Min(scr.x / 3, Range);
+            range = Math.Min(scr.X / 3, Range);
 
-            if (Math.Abs(t.x - up.x) < range)
+            if (Math.Abs(t.X - up.X) < range)
             {
                 XMatchU = t + dc.ViewOrg;
-                XMatchU.y = sp.y;
-                XMatchU.z = 0;
+                XMatchU.Y = sp.Y;
+                XMatchU.Z = 0;
                 XMatchU.Valid = true;
             }
 
-            range = Math.Min(scr.y / 3, Range);
+            range = Math.Min(scr.Y / 3, Range);
 
-            if (Math.Abs(t.y - up.y) < range)
+            if (Math.Abs(t.Y - up.Y) < range)
             {
                 YMatchU = t + dc.ViewOrg;
-                YMatchU.x = sp.x;
-                YMatchU.z = 0;
+                YMatchU.X = sp.X;
+                YMatchU.Z = 0;
                 YMatchU.Valid = true;
             }
 
@@ -117,9 +117,9 @@ namespace Plotter
         {
             double n = 1;
 
-            double szx = grid.GridSize.x;
-            double szy = grid.GridSize.y;
-            double szz = grid.GridSize.z;
+            double szx = grid.GridSize.X;
+            double szy = grid.GridSize.Y;
+            double szz = grid.GridSize.Z;
 
             CadVertex usz;
             double t = 1;
@@ -132,8 +132,8 @@ namespace Plotter
 
             usz = dc.WorldPointToDevPoint(CadVertex.Create(szx, 0, 0)) - uzero;
 
-            uszx = Math.Abs(usz.x);
-            uszy = Math.Abs(usz.y);
+            uszx = Math.Abs(usz.X);
+            uszy = Math.Abs(usz.Y);
 
             if (uszx != 0 && uszx < min)
             {
@@ -159,8 +159,8 @@ namespace Plotter
 
             usz = dc.WorldPointToDevPoint(CadVertex.Create(0, szy, 0)) - uzero;
 
-            uszx = Math.Abs(usz.x);
-            uszy = Math.Abs(usz.y);
+            uszx = Math.Abs(usz.X);
+            uszy = Math.Abs(usz.Y);
 
             if (uszx != 0 && uszx < min)
             {
@@ -186,8 +186,8 @@ namespace Plotter
 
             usz = dc.WorldPointToDevPoint(CadVertex.Create(0, 0, szy)) - uzero;
 
-            uszx = Math.Abs(usz.x);
-            uszy = Math.Abs(usz.y);
+            uszx = Math.Abs(usz.X);
+            uszy = Math.Abs(usz.Y);
 
 
             if (uszx != 0 && uszx < min)

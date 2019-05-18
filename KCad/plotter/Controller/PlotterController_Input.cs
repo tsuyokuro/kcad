@@ -228,13 +228,13 @@ namespace Plotter.Controller
 
                     if (mGridding.XMatchU.Valid)
                     {
-                        p.x = mGridding.XMatchU.x;
+                        p.X = mGridding.XMatchU.X;
                         match = true;
                     }
 
                     if (mGridding.YMatchU.Valid)
                     {
-                        p.y = mGridding.YMatchU.y;
+                        p.Y = mGridding.YMatchU.Y;
                         match = true;
                     }
 
@@ -277,7 +277,7 @@ namespace Plotter.Controller
 
             MoveOrgScrnPoint = sc.DC.WorldPointToDevPoint(sc.MarkPt.Point);
 
-            MoveOrgScrnPoint.z = 0;
+            MoveOrgScrnPoint.Z = 0;
 
             CadFigure fig = mDB.GetFigure(sc.MarkPt.FigureID);
 
@@ -396,8 +396,8 @@ namespace Plotter.Controller
         {
             if (CursorLocked)
             {
-                x = CrossCursor.Pos.x;
-                y = CrossCursor.Pos.y;
+                x = CrossCursor.Pos.X;
+                y = CrossCursor.Pos.Y;
             }
 
             CadVertex pixp = CadVertex.Create(x, y, 0);
@@ -559,7 +559,7 @@ namespace Plotter.Controller
 
         private void MButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
         {
-            if (pointer.MDownPoint.x == x && pointer.MDownPoint.y == y)
+            if (pointer.MDownPoint.X == x && pointer.MDownPoint.Y == y)
             {
                 ViewCtrl.AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
                 //Redraw();
@@ -583,7 +583,7 @@ namespace Plotter.Controller
 
             CadVertex op = StoreViewOrg + d;
 
-            ViewCtrl.SetOrigin(dc, (int)op.x, (int)op.y);
+            ViewCtrl.SetOrigin(dc, (int)op.X, (int)op.Y);
 
             CrossCursor.Pos = CrossCursor.StorePos + d;
 
@@ -793,14 +793,14 @@ namespace Plotter.Controller
                         si.SnapPoint = center;
 
                         si.Cursor.Pos = t;
-                        si.Cursor.Pos.z = 0;
+                        si.Cursor.Pos.Z = 0;
                     }
                     else
                     {
                         si.SnapPoint = markSeg.CrossPoint;
 
                         si.Cursor.Pos = markSeg.CrossPointScrn;
-                        si.Cursor.Pos.z = 0;
+                        si.Cursor.Pos.Z = 0;
 
                         HighlightPointList.Add(new HighlightPointListItem(SnapPoint, dc.GetPen(DrawTools.PEN_LINE_SNAP)));
                     }
@@ -824,13 +824,13 @@ namespace Plotter.Controller
 
             if (!mPointSearcher.IsXMatch && mGridding.XMatchU.Valid)
             {
-                si.Cursor.Pos.x = mGridding.XMatchU.x;
+                si.Cursor.Pos.X = mGridding.XMatchU.X;
                 snapx = true;
             }
 
             if (!mPointSearcher.IsYMatch && mGridding.YMatchU.Valid)
             {
-                si.Cursor.Pos.y = mGridding.YMatchU.y;
+                si.Cursor.Pos.Y = mGridding.YMatchU.Y;
                 snapy = true;
             }
 
@@ -848,12 +848,12 @@ namespace Plotter.Controller
         {
             if (mPointSearcher.IsXMatch)
             {
-                si.Cursor.Pos.x = mPointSearcher.GetXMatch().PointScrn.x;
+                si.Cursor.Pos.X = mPointSearcher.GetXMatch().PointScrn.X;
             }
 
             if (mPointSearcher.IsYMatch)
             {
-                si.Cursor.Pos.y = mPointSearcher.GetYMatch().PointScrn.y;
+                si.Cursor.Pos.Y = mPointSearcher.GetYMatch().PointScrn.Y;
             }
 
             RulerInfo ri = RulerSet.Capture(dc, si.Cursor, SettingsHolder.Settings.LineSnapRange);
@@ -970,8 +970,8 @@ namespace Plotter.Controller
 
             if (CursorLocked)
             {
-                x = CrossCursor.Pos.x;
-                y = CrossCursor.Pos.y;
+                x = CrossCursor.Pos.X;
+                y = CrossCursor.Pos.Y;
             }
 
             //DOut.pl($"MouseMove {x}, {y}");
@@ -1143,7 +1143,7 @@ namespace Plotter.Controller
 
             LockCursorScrn(sv);
 
-            Mouse.MouseMove(dc, sv.x, sv.y);
+            Mouse.MouseMove(dc, sv.X, sv.Y);
         }
 
         public void LockCursorScrn(CadVertex p)

@@ -138,7 +138,7 @@ namespace Plotter.Controller
 
                     CadVertex p = fig.PointList[j];
 
-                    p.z = 0;
+                    p.Z = 0;
 
                     fig.PointList[j] = p;
                 }
@@ -166,45 +166,45 @@ namespace Plotter.Controller
                 p0 = dc.WorldPointToDevPoint(seg.P0);
                 p1 = dc.WorldPointToDevPoint(seg.P1);
 
-                if (p0.x < mm.MinX)
+                if (p0.X < mm.MinX)
                 {
-                    mm.MinX = p0.x;
+                    mm.MinX = p0.X;
                 }
 
-                if (p1.x < mm.MinX)
+                if (p1.X < mm.MinX)
                 {
-                    mm.MinX = p1.x;
+                    mm.MinX = p1.X;
                 }
 
-                if (p0.x > mm.MaxX)
+                if (p0.X > mm.MaxX)
                 {
-                    mm.MaxX = p0.x;
+                    mm.MaxX = p0.X;
                 }
 
-                if (p1.x > mm.MaxX)
+                if (p1.X > mm.MaxX)
                 {
-                    mm.MaxX = p1.x;
+                    mm.MaxX = p1.X;
                 }
 
 
-                if (p0.y < mm.MinY)
+                if (p0.Y < mm.MinY)
                 {
-                    mm.MinY = p0.y;
+                    mm.MinY = p0.Y;
                 }
 
-                if (p1.y < mm.MinY)
+                if (p1.Y < mm.MinY)
                 {
-                    mm.MinY = p1.y;
+                    mm.MinY = p1.Y;
                 }
 
-                if (p0.y > mm.MaxY)
+                if (p0.Y > mm.MaxY)
                 {
-                    mm.MaxY = p0.y;
+                    mm.MaxY = p0.Y;
                 }
 
-                if (p1.y > mm.MaxY)
+                if (p1.Y > mm.MaxY)
                 {
-                    mm.MaxY = p1.y;
+                    mm.MaxY = p1.Y;
                 }
 
                 return true;

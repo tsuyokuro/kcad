@@ -31,8 +31,8 @@ namespace Plotter
 
             CadVertex org = default;
 
-            org.x = deviceSize.Width / 2.0;
-            org.y = deviceSize.Height / 2.0;
+            org.X = deviceSize.Width / 2.0;
+            org.Y = deviceSize.Height / 2.0;
             
             SetViewOrg(org);
 

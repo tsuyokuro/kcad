@@ -56,8 +56,8 @@ namespace Plotter
 
             Matrix4d proj = mProjectionMatrix.Matrix;
 
-            double dx = ViewOrg.x - (ViewWidth / 2.0);
-            double dy = ViewOrg.y - (ViewHeight / 2.0);
+            double dx = ViewOrg.X - (ViewWidth / 2.0);
+            double dy = ViewOrg.Y - (ViewHeight / 2.0);
 
             // x,yの平行移動成分を設定
             // Set x and y translational components
@@ -83,8 +83,8 @@ namespace Plotter
             CalcProjectionMatrix();
             CalcProjectionZW();
 
-            Center.x = w / 2;
-            Center.y = h / 2;
+            Center.X = w / 2;
+            Center.Y = h / 2;
 
             Matrix2D = Matrix4d.CreateOrthographicOffCenter(
                                         0, mViewWidth,
@@ -114,8 +114,8 @@ namespace Plotter
             dc.SetViewSize(deviceSize.Width, deviceSize.Height);
 
             CadVertex org = default;
-            org.x = deviceSize.Width / 2.0;
-            org.y = deviceSize.Height / 2.0;
+            org.X = deviceSize.Width / 2.0;
+            org.Y = deviceSize.Height / 2.0;
 
             dc.SetViewOrg(org);
 

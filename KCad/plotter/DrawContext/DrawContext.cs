@@ -197,16 +197,16 @@ namespace Plotter
 
         public virtual CadVertex DevVectorToWorldVector(CadVertex pt)
         {
-            pt.x = pt.x / DeviceScaleX;
-            pt.y = pt.y / DeviceScaleY;
+            pt.X = pt.X / DeviceScaleX;
+            pt.Y = pt.Y / DeviceScaleY;
 
             Vector4d wv;
 
             wv.W = mProjectionW;
             wv.Z = mProjectionZ;
 
-            wv.X = pt.x * wv.W;
-            wv.Y = pt.y * wv.W;
+            wv.X = pt.X * wv.W;
+            wv.Y = pt.Y * wv.W;
 
             wv = wv * mProjectionMatrixInv;
             wv = wv * mViewMatrixInv;

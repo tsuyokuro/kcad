@@ -327,9 +327,9 @@ namespace Plotter
 
             jo = new JObject();
             jo.Add("enable", SnapToGrid);
-            jo.Add("size_x", GridSize.x);
-            jo.Add("size_y", GridSize.z);
-            jo.Add("size_z", GridSize.x);
+            jo.Add("size_x", GridSize.X);
+            jo.Add("size_y", GridSize.Z);
+            jo.Add("size_z", GridSize.X);
             root.Add("GridInfo", jo);
 
 

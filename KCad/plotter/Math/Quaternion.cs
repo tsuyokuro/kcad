@@ -223,9 +223,9 @@ namespace Plotter
             s = Math.Sin(0.5 * radian);
 
             ans.t = c;
-            ans.x = s * axis.x;
-            ans.y = s * axis.y;
-            ans.z = s * axis.z;
+            ans.x = s * axis.X;
+            ans.y = s * axis.Y;
+            ans.z = s * axis.Z;
 
             return ans;
         }
@@ -260,9 +260,9 @@ namespace Plotter
         {
             CadQuaternion q;
             q.t = 0.0;
-            q.x = point.x;
-            q.y = point.y;
-            q.z = point.z;
+            q.x = point.X;
+            q.y = point.Y;
+            q.z = point.Z;
 
             return q;
         }
@@ -276,9 +276,9 @@ namespace Plotter
         {
             CadVertex p = default(CadVertex);
 
-            p.x = x;
-            p.y = y;
-            p.z = z;
+            p.X = x;
+            p.Y = y;
+            p.Z = z;
 
             return p;
         }

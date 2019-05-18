@@ -169,10 +169,10 @@ namespace Plotter
                     CadVertex pp2 = dc.WorldPointToDevPoint(p);
 
                     CadVertex pp1 = pp0;
-                    pp1.y = pp2.y;
+                    pp1.Y = pp2.Y;
 
                     CadVertex pp3 = pp0;
-                    pp3.x = pp2.x;
+                    pp3.X = pp2.X;
 
                     Figure.mPointList.Add(dc.DevPointToWorldPoint(pp1));
                     Figure.mPointList.Add(dc.DevPointToWorldPoint(pp2));
