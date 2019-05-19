@@ -1087,32 +1087,59 @@ namespace Plotter.Controller
 
             CadOpe ope;
 
-            CadFigure fig = Controller.DB.GetFigure(id);
+            CadFigure orgFig = Controller.DB.GetFigure(id);
 
 
-            if (fig == null)
+            if (orgFig == null)
             {
                 return;    
             }
 
-            if (fig.Type != CadFigure.Types.POLY_LINES)
+            if (orgFig.Type != CadFigure.Types.POLY_LINES)
             {
                 return;
             }
 
             CadFigureMesh mesh = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
 
-            mesh.CreateModel(fig);
+            mesh.CreateModel(orgFig);
 
+            foreach (CadFigure fig in orgFig.ChildList)
+            {
+                mesh.AddChild(fig);
+            }
 
-            ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, mesh.ID);
-            opeRoot.Add(ope);
-            Controller.CurrentLayer.AddFigure(mesh);
+            CadFigure parent = orgFig.Parent;
 
+            if (parent != null)
+            {
+                int index = orgFig.Parent.ChildList.IndexOf(orgFig);
 
-            ope = new CadOpeRemoveFigure(Controller.CurrentLayer, fig.ID);
-            opeRoot.Add(ope);
-            Controller.CurrentLayer.RemoveFigureByID(fig.ID);
+                // Remove original poly lines object
+                ope = new CadOpeRemoveChild(parent, orgFig, index);
+                opeRoot.Add(ope);
+
+                orgFig.Parent.ChildList.Remove(orgFig);
+
+                // Insert mesh object
+                ope = new CadOpeAddChild(parent, mesh, index);
+                opeRoot.Add(ope);
+
+                orgFig.Parent.ChildList.Insert(index, mesh);
+                mesh.Parent = parent;
+            }
+            else
+            {
+                // Remove original poly lines object
+                ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, mesh.ID);
+                opeRoot.Add(ope);
+                Controller.CurrentLayer.AddFigure(mesh);
+
+                // Insert mesh object
+                ope = new CadOpeRemoveFigure(Controller.CurrentLayer, orgFig.ID);
+                opeRoot.Add(ope);
+                Controller.CurrentLayer.RemoveFigureByID(orgFig.ID);
+            }
 
             Session.AddOpe(opeRoot);
 

@@ -606,6 +606,13 @@ namespace Plotter.Controller
                         Controller.CurrentFigure.Dump();
                     }
                 }
+                else if (ss[1] == "layer")
+                {
+                    if (Controller.CurrentLayer != null)
+                    {
+                        Controller.CurrentLayer.dump();
+                    }
+                }
             }
 
             else if (cmd == "@clearTemp")

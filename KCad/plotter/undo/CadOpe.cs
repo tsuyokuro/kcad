@@ -447,31 +447,63 @@ namespace Plotter
         }
     }
 
-    public class CadOpeRemoveChild : CadOpe
+    public class CadOpeAddChild : CadOpe
     {
         private uint ParentID = 0;
-        private uint ChildID;
+        private uint ChildID = 0;
+        private int Index;
 
-        public CadOpeRemoveChild(CadFigure parent, CadFigure child)
+        public CadOpeAddChild(CadFigure parent, CadFigure child, int index)
         {
             ParentID = parent.ID;
             ChildID = child.ID;
+            Index = index;
         }
 
         public override void Undo(CadObjectDB db)
         {
             CadFigure parent = db.GetFigure(ParentID);
             CadFigure child = db.GetFigure(ChildID);
-            parent.AddChild(child);
+            parent.ChildList.Remove(child);
+            child.Parent = null;
         }
 
         public override void Redo(CadObjectDB db)
         {
             CadFigure parent = db.GetFigure(ParentID);
+            CadFigure child = db.GetFigure(ChildID);
+            parent.ChildList.Insert(Index, child);
+            child.Parent = parent;
+        }
+    }
 
-            parent.ChildList.RemoveAll(a => a.ID == ChildID);
-            CadFigure fig = db.GetFigure(ChildID);
-            fig.Parent = null;
+    public class CadOpeRemoveChild : CadOpe
+    {
+        private uint ParentID = 0;
+        private uint ChildID;
+        private int Index;
+
+        public CadOpeRemoveChild(CadFigure parent, CadFigure child, int index)
+        {
+            ParentID = parent.ID;
+            ChildID = child.ID;
+            Index = index;
+        }
+
+        public override void Undo(CadObjectDB db)
+        {
+            CadFigure parent = db.GetFigure(ParentID);
+            CadFigure child = db.GetFigure(ChildID);
+            parent.ChildList.Insert(Index, child);
+            child.Parent = parent;
+        }
+
+        public override void Redo(CadObjectDB db)
+        {
+            CadFigure parent = db.GetFigure(ParentID);
+            CadFigure child = db.GetFigure(ChildID);
+            parent.ChildList.Remove(child);
+            child.Parent = null;
         }
     }
 
