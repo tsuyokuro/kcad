@@ -68,7 +68,7 @@ namespace Plotter
          * v0/_________v1
          *
          */
-        public static Vector3d? Normal(Vector3d v0, Vector3d v1, Vector3d v2)
+        public static Vector3d Normal(Vector3d v0, Vector3d v1, Vector3d v2)
         {
             Vector3d va = v1 - v0;
             Vector3d vb = v2 - v0;

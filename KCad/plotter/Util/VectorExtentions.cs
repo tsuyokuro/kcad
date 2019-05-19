@@ -1,14 +1,12 @@
 ﻿using OpenTK;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Plotter
 {
     public static class VectorUtil
     {
+        public static readonly Vector3d InvalidVector3d = new Vector3d(Double.NaN, Double.NaN, Double.NaN);
+
         public static void Set(out Vector3d v, double x, double y, double z)
         {
             v.X = x;
@@ -40,6 +38,16 @@ namespace Plotter
         public static bool IsZero(this Vector3d v)
         {
             return (v.X + v.Y + v.Z) == 0;
+        }
+
+        public static bool IsInvalid(this Vector3d v)
+        {
+            return double.IsNaN(v.X);
+        }
+
+        public static bool IsValid(this Vector3d v)
+        {
+            return !double.IsNaN(v.X);
         }
 
         public static Vector3d UnitVector()
