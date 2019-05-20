@@ -156,10 +156,6 @@ def union(id1, id2):
 def intersection(id1, id2):
     SE.Intersection(id1, id2)
 
-#[AC] dump_mesh(id=current_fig_id())
-def dump_mesh(id):
-    SE.DumpMesh(id)
-
 #[AC] add_box(x=40,y=40,z=20)
 def add_box(x, y, z):
     SE.AddBox(x, y, z)
@@ -189,13 +185,17 @@ def current_fig_id():
 def currentFig():
     return SE.GetCurrentFigure()
 
-#[AC] rotatev(v=unitVX, axis=unitVZ, deg=45.0)
+#[AC] rotatev(v=unit_vx, axis=unit_vz, deg=45.0)
 def rotatev(v, axis, deg):
     return SE.RotateVector(v, axis, deg)
 
-#[AC] dumpv(v=unitVX)
+#[AC] dumpv(v=unit_vx)
 def dumpv(v):
     return SE.DumpVector(v)
+
+#[AC] dump_mesh(id=current_fig_id())
+def dump_mesh(id):
+    SE.DumpMesh(id)
 
 #[AC] input_point()
 def input_point():
@@ -237,7 +237,7 @@ def set_seg_len(len):
 def to_bmp(bw, bh, argb=0xffffffff, linew=1, fname=""):
     SE.CreateBitmap(bw, bh, argb, linew, fname)
 
-#[AC] faceTo(dir=unitVZ)
+#[AC] faceTo(dir=unit_vz)
 def face_to(dir):
     SE.FaceToDirection(dir)
 
