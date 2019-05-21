@@ -58,9 +58,9 @@ namespace Plotter.Serializer
         {
             MpVertex ret = new MpVertex();
             ret.Flag = v.Flag;
-            ret.x = v.x;
-            ret.y = v.y;
-            ret.z = v.z;
+            ret.x = v.X;
+            ret.y = v.Y;
+            ret.z = v.Z;
             return ret;
         }
 

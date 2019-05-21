@@ -48,7 +48,7 @@ namespace Plotter
                 mCursorPos = value;
 
                 String s = string.Format("({0:0.00}, {1:0.00}, {2:0.00})",
-                    mCursorPos.x, mCursorPos.y, mCursorPos.z);
+                    mCursorPos.X, mCursorPos.Y, mCursorPos.Z);
 
                 StrCursorPos = s;
             }
@@ -70,7 +70,7 @@ namespace Plotter
                 mCursorPos2 = value;
 
                 String s = string.Format("({0:0.00}, {1:0.00}, {2:0.00})",
-                    mCursorPos2.x, mCursorPos2.y, mCursorPos2.z);
+                    mCursorPos2.X, mCursorPos2.Y, mCursorPos2.Z);
 
                 StrCursorPos2 = s;
             }

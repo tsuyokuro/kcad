@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CadDataTypes;
 using KCad.Properties;
+using OpenTK;
 
 namespace Plotter.Controller
 {
@@ -280,7 +281,7 @@ namespace Plotter.Controller
             foreach (uint id in ids)
             {
                 CadFigure fig = mDB.GetFigure(id);
-                CadVertex old = fig.Normal;
+                Vector3d old = fig.Normal;
 
                 fig.Normal *= -1;
 
@@ -366,7 +367,7 @@ namespace Plotter.Controller
             CurrentLayer.AddFigure(pointFig);
 
             string s = string.Format("({0:0.000},{1:0.000},{2:0.000})",
-                               cent.Point.x, cent.Point.y, cent.Point.z);
+                               cent.Point.X, cent.Point.Y, cent.Point.Z);
 
             ItConsole.println("Centroid:" + s);
             ItConsole.println("Area:" + (cent.Area / 100).ToString() + "(㎠)");

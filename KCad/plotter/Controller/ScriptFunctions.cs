@@ -146,27 +146,27 @@ namespace Plotter.Controller
         {
             double t = -CadMath.Deg2Rad(d);
 
-            Controller.CrossCursor.DirX.x = Math.Cos(t);
-            Controller.CrossCursor.DirX.y = Math.Sin(t);
+            Controller.CrossCursor.DirX.X = Math.Cos(t);
+            Controller.CrossCursor.DirX.Y = Math.Sin(t);
         }
 
         public void CursorAngleY(double d)
         {
             double t = -CadMath.Deg2Rad(d) + Math.PI / 2;
 
-            Controller.CrossCursor.DirY.x = Math.Cos(t);
-            Controller.CrossCursor.DirY.y = Math.Sin(t);
+            Controller.CrossCursor.DirY.X = Math.Cos(t);
+            Controller.CrossCursor.DirY.Y = Math.Sin(t);
         }
 
         public void PrintVector(CadVertex v)
         {
             var sb = new StringBuilder();
 
-            sb.Append(CadUtil.ValToString(v.x));
+            sb.Append(CadUtil.ValToString(v.X));
             sb.Append(", ");
-            sb.Append(CadUtil.ValToString(v.y));
+            sb.Append(CadUtil.ValToString(v.Y));
             sb.Append(", ");
-            sb.Append(CadUtil.ValToString(v.z));
+            sb.Append(CadUtil.ValToString(v.Z));
 
             ItConsole.println(sb.ToString());
         }
@@ -803,7 +803,7 @@ namespace Plotter.Controller
 
             tdc.SetViewSize(w, h);
 
-            tdc.SetViewOrg(CadVertex.Create(w / 2, h / 2, 0));
+            tdc.SetViewOrg(new Vector3d(w / 2, h / 2, 0));
 
             tdc.SetupTools(DrawTools.ToolsType.DARK);
 
@@ -811,8 +811,8 @@ namespace Plotter.Controller
 
             DrawPen drawPen = DrawPen.New(pen);
 
-            double sw = r.p1.x - r.p0.x;
-            double sh = r.p1.y - r.p0.y;
+            double sw = r.p1.X - r.p0.X;
+            double sh = r.p1.Y - r.p0.Y;
 
             double a = Math.Min(w, h) / (Math.Max(sw, sh) + lineW);
 
@@ -821,9 +821,9 @@ namespace Plotter.Controller
 
             CadRect tr = CadUtil.GetContainsRectScrn(tdc, figList);
 
-            CadVertex trcp = (tr.p1 - tr.p0) / 2 + tr.p0;
+            Vector3d trcp = (Vector3d)((tr.p1 - tr.p0) / 2 + tr.p0);
 
-            CadVertex d = trcp - tdc.ViewOrg;
+            Vector3d d = trcp - tdc.ViewOrg;
 
             tdc.SetViewOrg(tdc.ViewOrg - d);
 
@@ -959,7 +959,7 @@ namespace Plotter.Controller
             for (int i = 0; i<fig.PointCount; i++)
             {
                 CadVertex v = fig.PointList[i];
-                v.z = org.z;
+                v.Z = org.Z;
                 fig.PointList[i] = v;
             }
 
@@ -1087,32 +1087,59 @@ namespace Plotter.Controller
 
             CadOpe ope;
 
-            CadFigure fig = Controller.DB.GetFigure(id);
+            CadFigure orgFig = Controller.DB.GetFigure(id);
 
 
-            if (fig == null)
+            if (orgFig == null)
             {
                 return;    
             }
 
-            if (fig.Type != CadFigure.Types.POLY_LINES)
+            if (orgFig.Type != CadFigure.Types.POLY_LINES)
             {
                 return;
             }
 
             CadFigureMesh mesh = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
 
-            mesh.CreateModel(fig);
+            mesh.CreateModel(orgFig);
 
+            foreach (CadFigure fig in orgFig.ChildList)
+            {
+                mesh.AddChild(fig);
+            }
 
-            ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, mesh.ID);
-            opeRoot.Add(ope);
-            Controller.CurrentLayer.AddFigure(mesh);
+            CadFigure parent = orgFig.Parent;
 
+            if (parent != null)
+            {
+                int index = orgFig.Parent.ChildList.IndexOf(orgFig);
 
-            ope = new CadOpeRemoveFigure(Controller.CurrentLayer, fig.ID);
-            opeRoot.Add(ope);
-            Controller.CurrentLayer.RemoveFigureByID(fig.ID);
+                // Remove original poly lines object
+                ope = new CadOpeRemoveChild(parent, orgFig, index);
+                opeRoot.Add(ope);
+
+                orgFig.Parent.ChildList.Remove(orgFig);
+
+                // Insert mesh object
+                ope = new CadOpeAddChild(parent, mesh, index);
+                opeRoot.Add(ope);
+
+                orgFig.Parent.ChildList.Insert(index, mesh);
+                mesh.Parent = parent;
+            }
+            else
+            {
+                // Remove original poly lines object
+                ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, mesh.ID);
+                opeRoot.Add(ope);
+                Controller.CurrentLayer.AddFigure(mesh);
+
+                // Insert mesh object
+                ope = new CadOpeRemoveFigure(Controller.CurrentLayer, orgFig.ID);
+                opeRoot.Add(ope);
+                Controller.CurrentLayer.RemoveFigureByID(orgFig.ID);
+            }
 
             Session.AddOpe(opeRoot);
 
@@ -1273,7 +1300,7 @@ namespace Plotter.Controller
             for (int i = 0; i < cm.VertexStore.Count; i++)
             {
                 CadVertex v = cm.VertexStore[i];
-                ItConsole.printf("{0}:{1},{2},{3}\n", i, v.x, v.y, v.z);
+                ItConsole.printf("{0}:{1},{2},{3}\n", i, v.X, v.Y, v.Z);
             }
 
             for (int i = 0; i < cm.FaceStore.Count; i++)

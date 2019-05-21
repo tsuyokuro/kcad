@@ -39,22 +39,22 @@ namespace Plotter
         {
             if (btn == MouseButtons.Left)
             {
-                LDownPoint.x = x;
-                LDownPoint.y = y;
+                LDownPoint.X = x;
+                LDownPoint.Y = y;
 
                 if (LButtonDown != null) LButtonDown(this, dc, x, y);
             }
             else if (btn == MouseButtons.Right)
             {
-                RDownPoint.x = x;
-                RDownPoint.y = y;
+                RDownPoint.X = x;
+                RDownPoint.Y = y;
 
                 if (LButtonDown != null) RButtonDown(this, dc, x, y);
             }
             else if (btn == MouseButtons.Middle)
             {
-                MDownPoint.x = x;
-                MDownPoint.y = y;
+                MDownPoint.X = x;
+                MDownPoint.Y = y;
 
                 if (MButtonDown != null) MButtonDown(this, dc, x, y);
             }

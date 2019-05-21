@@ -135,7 +135,7 @@ namespace Plotter
             for (int i=0; i<fig.PointList.Count; i++)
             {
                 CadVertex v = fig.PointList[i];
-                s += margin + "  " + string.Format("{0},{1},{2}\n", v.x, v.y, v.z);
+                s += margin + "  " + string.Format("{0},{1},{2}\n", v.X, v.Y, v.Z);
             }
             s += margin + "]\n";
 

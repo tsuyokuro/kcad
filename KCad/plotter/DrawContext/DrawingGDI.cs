@@ -68,13 +68,13 @@ namespace Plotter
             CadVertex p1 = default(CadVertex);
 
             // X軸
-            p0.x = -100;
-            p0.y = 0;
-            p0.z = 0;
+            p0.X = -100;
+            p0.Y = 0;
+            p0.Z = 0;
 
-            p1.x = 100;
-            p1.y = 0;
-            p1.z = 0;
+            p1.X = 100;
+            p1.Y = 0;
+            p1.Z = 0;
 
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
@@ -82,13 +82,13 @@ namespace Plotter
             DrawLine(DrawPen.New(DC, DrawTools.PEN_AXIS), p0, p1);
 
             // Y軸
-            p0.x = 0;
-            p0.y = -100;
-            p0.z = 0;
+            p0.X = 0;
+            p0.Y = -100;
+            p0.Z = 0;
 
-            p1.x = 0;
-            p1.y = 100;
-            p1.z = 0;
+            p1.X = 0;
+            p1.Y = 100;
+            p1.Z = 0;
 
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
@@ -96,13 +96,13 @@ namespace Plotter
             DrawLine(DrawPen.New(DC, DrawTools.PEN_AXIS), p0, p1);
 
             // Z軸
-            p0.x = 0;
-            p0.y = 0;
-            p0.z = -100;
+            p0.X = 0;
+            p0.Y = 0;
+            p0.Z = -100;
 
-            p1.x = 0;
-            p1.y = 0;
-            p1.z = 100;
+            p1.X = 0;
+            p1.Y = 0;
+            p1.Z = 100;
 
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
@@ -120,14 +120,14 @@ namespace Plotter
             CadVertex ltw = DC.DevPointToWorldPoint(lt);
             CadVertex rbw = DC.DevPointToWorldPoint(rb);
 
-            double minx = Math.Min(ltw.x, rbw.x);
-            double maxx = Math.Max(ltw.x, rbw.x);
+            double minx = Math.Min(ltw.X, rbw.X);
+            double maxx = Math.Max(ltw.X, rbw.X);
 
-            double miny = Math.Min(ltw.y, rbw.y);
-            double maxy = Math.Max(ltw.y, rbw.y);
+            double miny = Math.Min(ltw.Y, rbw.Y);
+            double maxy = Math.Max(ltw.Y, rbw.Y);
 
-            double minz = Math.Min(ltw.z, rbw.z);
-            double maxz = Math.Max(ltw.z, rbw.z);
+            double minz = Math.Min(ltw.Z, rbw.Z);
+            double maxz = Math.Max(ltw.Z, rbw.Z);
 
 
             DrawPen pen = DrawPen.New(DC, DrawTools.PEN_GRID);
@@ -139,9 +139,9 @@ namespace Plotter
 
             double x, y, z;
             double sx, sy, sz;
-            double szx = grid.GridSize.x * n;
-            double szy = grid.GridSize.y * n;
-            double szz = grid.GridSize.z * n;
+            double szx = grid.GridSize.X * n;
+            double szy = grid.GridSize.Y * n;
+            double szz = grid.GridSize.Z * n;
 
             sx = Math.Round(minx / szx) * szx;
             sy = Math.Round(miny / szy) * szy;
@@ -150,14 +150,14 @@ namespace Plotter
             x = sx;
             while (x < maxx)
             {
-                p.x = x;
-                p.z = 0;
+                p.X = x;
+                p.Z = 0;
 
                 y = sy;
 
                 while (y < maxy)
                 {
-                    p.y = y;
+                    p.Y = y;
                     DrawDot(pen, p);
                     y += szy;
                 }
@@ -170,14 +170,14 @@ namespace Plotter
 
             while (z < maxz)
             {
-                p.z = z;
-                p.x = 0;
+                p.Z = z;
+                p.X = 0;
 
                 y = sy;
 
                 while (y < maxy)
                 {
-                    p.y = y;
+                    p.Y = y;
                     DrawDot(pen, p);
                     y += szy;
                 }
@@ -190,14 +190,14 @@ namespace Plotter
 
             while (x < maxx)
             {
-                p.x = x;
-                p.y = 0;
+                p.X = x;
+                p.Y = 0;
 
                 z = sz;
 
                 while (z < maxz)
                 {
-                    p.z = z;
+                    p.Z = z;
                     DrawDot(pen, p);
                     z += szz;
                 }
@@ -211,24 +211,24 @@ namespace Plotter
             CadVertex pt = default(CadVertex);
 
             // p0
-            pt.x = -w / 2 + center.x;
-            pt.y = h / 2 + center.y;
-            pt.z = 0;
+            pt.X = -w / 2 + center.X;
+            pt.Y = h / 2 + center.Y;
+            pt.Z = 0;
 
             CadVertex p0 = default(CadVertex);
-            p0.x = pt.x * DC.UnitPerMilli;
-            p0.y = pt.y * DC.UnitPerMilli;
+            p0.X = pt.X * DC.UnitPerMilli;
+            p0.Y = pt.Y * DC.UnitPerMilli;
 
             p0 += DC.ViewOrg;
 
             // p1
-            pt.x = w / 2 + center.x;
-            pt.y = -h / 2 + center.y;
-            pt.z = 0;
+            pt.X = w / 2 + center.X;
+            pt.Y = -h / 2 + center.Y;
+            pt.Z = 0;
 
             CadVertex p1 = default(CadVertex);
-            p1.x = pt.x * DC.UnitPerMilli;
-            p1.y = pt.y * DC.UnitPerMilli;
+            p1.X = pt.X * DC.UnitPerMilli;
+            p1.Y = pt.Y * DC.UnitPerMilli;
 
             p1 += DC.ViewOrg;
 
@@ -254,8 +254,8 @@ namespace Plotter
 
             DrawRectangleScrn(
                 pen,
-                (int)pp.x - size, (int)pp.y - size,
-                (int)pp.x + size, (int)pp.y + size
+                (int)pp.X - size, (int)pp.Y - size,
+                (int)pp.X + size, (int)pp.Y + size
                 );
         }
 
@@ -321,21 +321,21 @@ namespace Plotter
             CadVertex pp0 = DC.WorldPointToDevPoint(p0);
             CadVertex pp1 = DC.WorldPointToDevPoint(p1);
 
-            DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
+            DrawRectangleScrn(pen, pp0.X, pp0.Y, pp1.X, pp1.Y);
         }
 
         public override void DrawCross(DrawPen pen, CadVertex p, double size)
         {
             CadVertex a = DC.WorldPointToDevPoint(p);
 
-            DrawLineScrn(pen, a.x - size, a.y + 0, a.x + size, a.y + 0);
-            DrawLineScrn(pen, a.x + 0, a.y + size, a.x + 0, a.y - size);
+            DrawLineScrn(pen, a.X - size, a.Y + 0, a.X + size, a.Y + 0);
+            DrawLineScrn(pen, a.X + 0, a.Y + size, a.X + 0, a.Y - size);
         }
 
         public override void DrawCrossScrn(DrawPen pen, CadVertex p, double size)
         {
-            DrawLineScrn(pen, p.x - size, p.y + 0, p.x + size, p.y + 0);
-            DrawLineScrn(pen, p.x + 0, p.y + size, p.x + 0, p.y - size);
+            DrawLineScrn(pen, p.X - size, p.Y + 0, p.X + size, p.Y + 0);
+            DrawLineScrn(pen, p.X + 0, p.Y + size, p.X + 0, p.Y - size);
         }
 
         public override void DrawLine(DrawPen pen, CadVertex a, CadVertex b)
@@ -345,17 +345,17 @@ namespace Plotter
             CadVertex pa = DC.WorldPointToDevPoint(a);
             CadVertex pb = DC.WorldPointToDevPoint(b);
 
-            DC.GdiGraphics.DrawLine(pen.GdiPen, (int)pa.x, (int)pa.y, (int)pb.x, (int)pb.y);
+            DC.GdiGraphics.DrawLine(pen.GdiPen, (int)pa.X, (int)pa.Y, (int)pb.X, (int)pb.Y);
         }
 
         public override void DrawDot(DrawPen pen, CadVertex p)
         {
             CadVertex p0 = DC.WorldPointToDevPoint(p);
             CadVertex p1 = p0;
-            p0.x = (int)p0.x;
-            p1.x = p0.x + 0.1;
+            p0.X = (int)p0.X;
+            p1.X = p0.X + 0.1;
 
-            DC.GdiGraphics.DrawLine(pen.GdiPen, (float)p0.x, (float)p0.y, (float)p1.x, (float)p1.y);
+            DC.GdiGraphics.DrawLine(pen.GdiPen, (float)p0.X, (float)p0.Y, (float)p1.X, (float)p1.Y);
 
             //if (p0.x >= 0 && p0.y >= 0 && p0.x < DC.ViewWidth && p0.y < DC.ViewHeight)
             //{
@@ -410,7 +410,7 @@ namespace Plotter
 
                 if ((opt.Option | DrawTextOption.H_CENTER) != 0)
                 {
-                    double slen = sz.x / 2;
+                    double slen = sz.X / 2;
 
                     CadVertex ud = CadVertex.UnitX;
 
@@ -425,14 +425,14 @@ namespace Plotter
 
             double angle = 0;
 
-            if (!(dir.x == 0 && dir.y == 0))
+            if (!(dir.X == 0 && dir.Y == 0))
             {
                 angle = CadUtil.Angle2D(dir);
             }
 
             angle = CadMath.Rad2Deg(angle);
 
-            DC.GdiGraphics.TranslateTransform((int)a.x, (int)a.y);
+            DC.GdiGraphics.TranslateTransform((int)a.X, (int)a.Y);
 
             DC.GdiGraphics.RotateTransform((float)angle);
 
@@ -465,24 +465,24 @@ namespace Plotter
             CadVertex p0 = pp.Pos - (pp.DirX * size);
             CadVertex p1 = pp.Pos + (pp.DirX * size);
 
-            DrawLineScrn(pen, p0.x, p0.y, p1.x, p1.y);
+            DrawLineScrn(pen, p0.X, p0.Y, p1.X, p1.Y);
 
             p0 = pp.Pos - (pp.DirY * size);
             p1 = pp.Pos + (pp.DirY * size);
 
-            DrawLineScrn(pen, p0.x, p0.y, p1.x, p1.y);
+            DrawLineScrn(pen, p0.X, p0.Y, p1.X, p1.Y);
         }
 
         public override void DrawRectScrn(DrawPen pen, CadVertex pp0, CadVertex pp1)
         {
-            DrawRectangleScrn(pen, pp0.x, pp0.y, pp1.x, pp1.y);
+            DrawRectangleScrn(pen, pp0.X, pp0.Y, pp1.X, pp1.Y);
         }
 
         protected void DrawLineScrn(DrawPen pen, CadVertex a, CadVertex b)
         {
             if (pen.GdiPen == null) return;
 
-            DC.GdiGraphics.DrawLine(pen.GdiPen, (int)a.x, (int)a.y, (int)b.x, (int)b.y);
+            DC.GdiGraphics.DrawLine(pen.GdiPen, (int)a.X, (int)a.Y, (int)b.X, (int)b.Y);
         }
 
         protected void DrawLineScrn(DrawPen pen, double x1, double y1, double x2, double y2)
@@ -531,7 +531,7 @@ namespace Plotter
             if (pen.GdiPen == null) return;
 
             DC.GdiGraphics.DrawEllipse(
-                pen.GdiPen, (int)(cp.x - r), (int)(cp.y - r), (int)(r * 2), (int)(r * 2));
+                pen.GdiPen, (int)(cp.X - r), (int)(cp.Y - r), (int)(r * 2), (int)(r * 2));
         }
 
         protected void FillRectangleScrn(DrawBrush brush, double x0, double y0, double x1, double y1)
@@ -591,13 +591,13 @@ namespace Plotter
             CadVertex zp = default;
 
             // X軸
-            p0.x = -len + cp.x;
-            p0.y = 0 + cp.y;
-            p0.z = 0 + cp.z;
+            p0.X = -len + cp.X;
+            p0.Y = 0 + cp.Y;
+            p0.Z = 0 + cp.Z;
 
-            p1.x = len + cp.x;
-            p1.y = 0 + cp.y;
-            p1.z = 0 + cp.z;
+            p1.X = len + cp.X;
+            p1.Y = 0 + cp.Y;
+            p1.Z = 0 + cp.Z;
 
             DrawLine(DrawPen.New(DC, DrawTools.PEN_AXIS2), p0, p1);
 
@@ -608,13 +608,13 @@ namespace Plotter
             xp = tp;
 
             // Y軸
-            p0.x = 0 + cp.x;
-            p0.y = -len + cp.y;
-            p0.z = 0 + cp.z;
+            p0.X = 0 + cp.X;
+            p0.Y = -len + cp.Y;
+            p0.Z = 0 + cp.Z;
 
-            p1.x = 0 + cp.x;
-            p1.y = len + cp.y;
-            p1.z = 0 + cp.z;
+            p1.X = 0 + cp.X;
+            p1.Y = len + cp.Y;
+            p1.Z = 0 + cp.Z;
 
             DrawLine(DrawPen.New(DC, DrawTools.PEN_AXIS2), p0, p1);
 
@@ -626,13 +626,13 @@ namespace Plotter
             yp = tp;
 
             // Z軸
-            p0.x = 0 + cp.x;
-            p0.y = 0 + cp.y;
-            p0.z = -len + cp.z;
+            p0.X = 0 + cp.X;
+            p0.Y = 0 + cp.Y;
+            p0.Z = -len + cp.Z;
 
-            p1.x = 0 + cp.x;
-            p1.y = 0 + cp.y;
-            p1.z = len + cp.z;
+            p1.X = 0 + cp.X;
+            p1.Y = 0 + cp.Y;
+            p1.Z = len + cp.Z;
 
             DrawLine(DrawPen.New(DC, DrawTools.PEN_AXIS2), p0, p1);
 
@@ -649,9 +649,9 @@ namespace Plotter
             yp = minMax2D.Inner(yp);
             zp = minMax2D.Inner(zp);
 
-            xp.y -= 7;
-            yp.y -= 7;
-            zp.y -= 7;
+            xp.Y -= 7;
+            yp.Y -= 7;
+            zp.Y -= 7;
 
             DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), xp, CadVertex.UnitX, default(DrawTextOption), "x");
             DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), yp, CadVertex.UnitX, default(DrawTextOption), "y");

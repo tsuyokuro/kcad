@@ -8,6 +8,7 @@ using CadDataTypes;
 
 namespace Plotter
 {
+    using OpenTK;
     using Plotter.Serializer;
     using static CadFigure;
 
@@ -75,7 +76,7 @@ namespace Plotter
 
         public bool IsLoop { get; set; }
 
-        public CadVertex Normal;
+        public Vector3d Normal;
 
         public virtual VertexList PointList => mPointList;
 
@@ -594,6 +595,8 @@ namespace Plotter
             DOut.pl("LayerID=" + LayerID.ToString());
             DOut.pl("Type=" + Type.ToString());
 
+            Normal.dump("Normal=");
+
             DOut.pl("PointList [");
             DOut.Indent++;
             foreach (CadVertex point in PointList)
@@ -714,7 +717,7 @@ namespace Plotter
 
         public virtual void RecalcNormal()
         {
-            Normal = CadUtil.RepresentativeNormal(PointList);
+            Normal = CadUtil.RepresentativeNormal(PointList).vector;
         }
 
         public virtual CadSegment GetSegmentAt(int n)

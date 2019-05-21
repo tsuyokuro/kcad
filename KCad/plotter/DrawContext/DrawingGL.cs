@@ -328,13 +328,13 @@ namespace Plotter
             double arrowW2 = 6.0 / DC.WorldScale;
 
             // X軸
-            p0.x = -len;
-            p0.y = 0;
-            p0.z = 0;
+            p0.X = -len;
+            p0.Y = 0;
+            p0.Z = 0;
 
-            p1.x = len;
-            p1.y = 0;
-            p1.z = 0;
+            p1.X = len;
+            p1.Y = 0;
+            p1.Z = 0;
 
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
@@ -345,13 +345,13 @@ namespace Plotter
             }
 
             // Y軸
-            p0.x = 0;
-            p0.y = -len;
-            p0.z = 0;
+            p0.X = 0;
+            p0.Y = -len;
+            p0.Z = 0;
 
-            p1.x = 0;
-            p1.y = len;
-            p1.z = 0;
+            p1.X = 0;
+            p1.Y = len;
+            p1.Z = 0;
 
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
@@ -362,13 +362,13 @@ namespace Plotter
             }
 
             // Z軸
-            p0.x = 0;
-            p0.y = 0;
-            p0.z = -len;
+            p0.X = 0;
+            p0.Y = 0;
+            p0.Z = -len;
 
-            p1.x = 0;
-            p1.y = 0;
-            p1.z = len;
+            p1.X = 0;
+            p1.Y = 0;
+            p1.Z = len;
 
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
@@ -464,19 +464,19 @@ namespace Plotter
             double hs = size;
 
             CadVertex px0 = p;
-            px0.x -= hs;
+            px0.X -= hs;
             CadVertex px1 = p;
-            px1.x += hs;
+            px1.X += hs;
 
             CadVertex py0 = p;
-            py0.y -= hs;
+            py0.Y -= hs;
             CadVertex py1 = p;
-            py1.y += hs;
+            py1.Y += hs;
 
             CadVertex pz0 = p;
-            pz0.z -= hs;
+            pz0.Z -= hs;
             CadVertex pz1 = p;
-            pz1.z += hs;
+            pz1.Z += hs;
 
             DrawLine(pen, px0, px1);
             DrawLine(pen, py0, py1);
@@ -575,10 +575,10 @@ namespace Plotter
             CadVertex pp2 = DC.WorldPointToDevPoint(p1);
 
             CadVertex pp1 = pp0;
-            pp1.y = pp2.y;
+            pp1.Y = pp2.Y;
 
             CadVertex pp3 = pp0;
-            pp3.x = pp2.x;
+            pp3.X = pp2.X;
 
             pp0 = DC.DevPointToWorldPoint(pp0);
             pp1 = DC.DevPointToWorldPoint(pp1);
@@ -630,14 +630,14 @@ namespace Plotter
             CadVertex ltw = DC.DevPointToWorldPoint(lt);
             CadVertex rbw = DC.DevPointToWorldPoint(rb);
 
-            double minx = Math.Min(ltw.x, rbw.x);
-            double maxx = Math.Max(ltw.x, rbw.x);
+            double minx = Math.Min(ltw.X, rbw.X);
+            double maxx = Math.Max(ltw.X, rbw.X);
 
-            double miny = Math.Min(ltw.y, rbw.y);
-            double maxy = Math.Max(ltw.y, rbw.y);
+            double miny = Math.Min(ltw.Y, rbw.Y);
+            double maxy = Math.Max(ltw.Y, rbw.Y);
 
-            double minz = Math.Min(ltw.z, rbw.z);
-            double maxz = Math.Max(ltw.z, rbw.z);
+            double minz = Math.Min(ltw.Z, rbw.Z);
+            double maxz = Math.Max(ltw.Z, rbw.Z);
 
             DrawPen pen = DrawPen.New(DC, DrawTools.PEN_GRID);
 
@@ -647,9 +647,9 @@ namespace Plotter
 
             double x, y, z;
             double sx, sy, sz;
-            double szx = grid.GridSize.x * n;
-            double szy = grid.GridSize.y * n;
-            double szz = grid.GridSize.z * n;
+            double szx = grid.GridSize.X * n;
+            double szy = grid.GridSize.Y * n;
+            double szz = grid.GridSize.Z * n;
 
             sx = Math.Round(minx / szx) * szx;
             sy = Math.Round(miny / szy) * szy;
@@ -658,14 +658,14 @@ namespace Plotter
             x = sx;
             while (x < maxx)
             {
-                p.x = x;
-                p.z = 0;
+                p.X = x;
+                p.Z = 0;
 
                 y = sy;
 
                 while (y < maxy)
                 {
-                    p.y = y;
+                    p.Y = y;
                     DrawDot(pen, p);
                     y += szy;
                 }
@@ -678,14 +678,14 @@ namespace Plotter
 
             while (z < maxz)
             {
-                p.z = z;
-                p.x = 0;
+                p.Z = z;
+                p.X = 0;
 
                 y = sy;
 
                 while (y < maxy)
                 {
-                    p.y = y;
+                    p.Y = y;
                     DrawDot(pen, p);
                     y += szy;
                 }
@@ -698,14 +698,14 @@ namespace Plotter
 
             while (x < maxx)
             {
-                p.x = x;
-                p.y = 0;
+                p.X = x;
+                p.Y = 0;
 
                 z = sz;
 
                 while (z < maxz)
                 {
-                    p.z = z;
+                    p.Z = z;
                     DrawDot(pen, p);
                     z += szz;
                 }
@@ -736,24 +736,24 @@ namespace Plotter
             CadVertex pt = default(CadVertex);
 
             // p0
-            pt.x = -w / 2 + center.x;
-            pt.y = h / 2 + center.y;
-            pt.z = 0;
+            pt.X = -w / 2 + center.X;
+            pt.Y = h / 2 + center.Y;
+            pt.Z = 0;
 
             CadVertex p0 = default(CadVertex);
-            p0.x = pt.x * DC.UnitPerMilli;
-            p0.y = pt.y * DC.UnitPerMilli;
+            p0.X = pt.X * DC.UnitPerMilli;
+            p0.Y = pt.Y * DC.UnitPerMilli;
 
             p0 += DC.ViewOrg;
 
             // p1
-            pt.x = w / 2 + center.x;
-            pt.y = -h / 2 + center.y;
-            pt.z = 0;
+            pt.X = w / 2 + center.X;
+            pt.Y = -h / 2 + center.Y;
+            pt.Z = 0;
 
             CadVertex p1 = default(CadVertex);
-            p1.x = pt.x * DC.UnitPerMilli;
-            p1.y = pt.y * DC.UnitPerMilli;
+            p1.X = pt.X * DC.UnitPerMilli;
+            p1.Y = pt.Y * DC.UnitPerMilli;
 
             p1 += DC.ViewOrg;
 

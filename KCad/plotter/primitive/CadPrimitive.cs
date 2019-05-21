@@ -174,31 +174,31 @@ namespace Plotter
             CadVertex minv = p0;
             CadVertex maxv = p0;
 
-            if (p0.x < p1.x)
+            if (p0.X < p1.X)
             {
-                maxv.x = p1.x;
+                maxv.X = p1.X;
             }
             else
             {
-                minv.x = p1.x;
+                minv.X = p1.X;
             }
 
-            if (p0.y < p1.y)
+            if (p0.Y < p1.Y)
             {
-                maxv.y = p1.y;
+                maxv.Y = p1.Y;
             }
             else
             {
-                minv.y = p1.y;
+                minv.Y = p1.Y;
             }
 
-            if (p0.z < p1.z)
+            if (p0.Z < p1.Z)
             {
-                maxv.z = p1.z;
+                maxv.Z = p1.Z;
             }
             else
             {
-                minv.z = p1.z;
+                minv.Z = p1.Z;
             }
 
             p0 = minv;
@@ -239,14 +239,14 @@ namespace Plotter
 
         public void CheckMin(CadVertex p)
         {
-            MinX = Math.Min(MinX, p.x);
-            MinY = Math.Min(MinY, p.y);
+            MinX = Math.Min(MinX, p.X);
+            MinY = Math.Min(MinY, p.Y);
         }
 
         public void CheckMax(CadVertex p)
         {
-            MaxX = Math.Max(MaxX, p.x);
-            MaxY = Math.Max(MaxY, p.y);
+            MaxX = Math.Max(MaxX, p.X);
+            MaxY = Math.Max(MaxY, p.Y);
         }
 
         public void Check(CadVertex p)
@@ -285,10 +285,10 @@ namespace Plotter
 
         public CadVertex Inner(CadVertex v)
         {
-            if (v.x > MaxX) v.x = MaxX;
-            if (v.y > MaxY) v.y = MaxY;
-            if (v.x < MinX) v.x = MinX;
-            if (v.y < MinY) v.y = MinY;
+            if (v.X > MaxX) v.X = MaxX;
+            if (v.Y > MaxY) v.Y = MaxY;
+            if (v.X < MinX) v.X = MinX;
+            if (v.Y < MinY) v.Y = MinY;
 
             return v;
         }
@@ -326,16 +326,16 @@ namespace Plotter
 
         public void CheckMin(CadVertex p)
         {
-            MinX = Math.Min(MinX, p.x);
-            MinY = Math.Min(MinY, p.y);
-            MinZ = Math.Min(MinZ, p.z);
+            MinX = Math.Min(MinX, p.X);
+            MinY = Math.Min(MinY, p.Y);
+            MinZ = Math.Min(MinZ, p.Z);
         }
 
         public void CheckMax(CadVertex p)
         {
-            MaxX = Math.Max(MaxX, p.x);
-            MaxY = Math.Max(MaxY, p.y);
-            MaxZ = Math.Max(MaxZ, p.z);
+            MaxX = Math.Max(MaxX, p.X);
+            MaxY = Math.Max(MaxY, p.Y);
+            MaxZ = Math.Max(MaxZ, p.Z);
         }
 
         public void Check(CadVertex p)

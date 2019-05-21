@@ -265,7 +265,7 @@ namespace Plotter.Serializer
             Type = (byte)fig.Type;
             Locked = fig.Locked;
             IsLoop = fig.IsLoop;
-            Normal = MpVertex.Create(fig.Normal);
+            Normal = MpVertex.Create((CadVertex)fig.Normal);
 
             GeoData = fig.GeometricDataToMp();
         }
@@ -285,7 +285,7 @@ namespace Plotter.Serializer
             fig.ID = ID;
             fig.Locked = Locked;
             fig.IsLoop = IsLoop;
-            fig.Normal = Normal.Restore();
+            fig.Normal = Normal.Restore().vector;
 
             if (ChildList != null)
             {

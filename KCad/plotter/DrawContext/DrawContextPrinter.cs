@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -29,10 +30,10 @@ namespace Plotter
                 SetViewSize(deviceSize.Width, deviceSize.Height);
             }
 
-            CadVertex org = default;
+            Vector3d org = default;
 
-            org.x = deviceSize.Width / 2.0;
-            org.y = deviceSize.Height / 2.0;
+            org.X = deviceSize.Width / 2.0;
+            org.Y = deviceSize.Height / 2.0;
             
             SetViewOrg(org);
 
