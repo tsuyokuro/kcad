@@ -1,4 +1,6 @@
-﻿using OpenTK;
+﻿#define MOUSE_THREAD
+
+using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System;
@@ -7,6 +9,7 @@ using CadDataTypes;
 using Plotter.Controller;
 using System.Drawing;
 using System.Windows.Resources;
+using KCad;
 
 namespace Plotter
 {
@@ -22,6 +25,8 @@ namespace Plotter
 
         ContextMenuEx mCurrentContextMenu = null;
         ContextMenuEx mContextMenu = null;
+
+        MyEventSequencer mEventSequencer;
 
         private Cursor PointCursor;
 
@@ -73,6 +78,27 @@ namespace Plotter
             MouseWheel += OnMouseWheel;
 
             SetupCursor();
+
+#if MOUSE_THREAD
+            mEventSequencer = new MyEventSequencer(this, 100);
+            mEventSequencer.Start();
+#endif
+        }
+
+        private void OnLoad(object sender, EventArgs e)
+        {
+            GL.ClearColor(Color4.Black);
+            GL.Enable(EnableCap.DepthTest);
+
+            mDrawContextOrtho = new DrawContextGLOrtho(this);
+            mDrawContextPers = new DrawContextGLPers(this);
+
+            mDrawContext = mDrawContextOrtho;
+
+            mDrawContextOrtho.PushDraw = OnPushDraw;
+            mDrawContextPers.PushDraw = OnPushDraw;
+
+            SwapBuffers();
         }
 
         protected void SetupCursor()
@@ -87,6 +113,24 @@ namespace Plotter
 
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
+#if MOUSE_THREAD
+            int what = MyEventSequencer.MOUSE_UP;
+
+            mEventSequencer.RemoveAll(what);
+
+            MyEvent evt = mEventSequencer.ObtainEvent();
+
+            evt.What = what;
+            evt.EventArgs = e;
+
+            mEventSequencer.Post(evt);
+#else
+            HandleMouseUp(e);
+#endif
+        }
+
+        private void HandleMouseUp(MouseEventArgs e)
+        {
             DownButton = MouseButtons.None;
             mController.Mouse.MouseUp(mDrawContext, e.Button, e.X, e.Y);
 
@@ -94,6 +138,23 @@ namespace Plotter
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+#if MOUSE_THREAD
+            int what = MyEventSequencer.MOUSE_DOWN;
+
+            mEventSequencer.RemoveAll(what);
+
+            MyEvent evt = mEventSequencer.ObtainEvent();
+
+            evt.What = what;
+            evt.EventArgs = e;
+
+            mEventSequencer.Post(evt);
+#else
+            HandleMouseDown(e);
+#endif
+        }
+        private void HandleMouseDown(MouseEventArgs e)
         {
             if (mCurrentContextMenu != null)
             {
@@ -122,6 +183,24 @@ namespace Plotter
 
         private void OnMouseWheel(object sender, MouseEventArgs e)
         {
+#if MOUSE_THREAD
+            int what = MyEventSequencer.MOUSE_WHEEL;
+
+            mEventSequencer.RemoveAll(what);
+
+            MyEvent evt = mEventSequencer.ObtainEvent();
+
+            evt.What = what;
+            evt.EventArgs = e;
+
+            mEventSequencer.Post(evt);
+#else
+            HandleMouseDown(e);
+#endif
+        }
+
+        private void HandleMouseWheel(MouseEventArgs e)
+        {
             if (mDrawContext is DrawContextGLOrtho)
             {
                 mController.Mouse.MouseWheel(mDrawContext, e.X, e.Y, e.Delta);
@@ -147,23 +226,25 @@ namespace Plotter
             }
         }
 
-        private void OnLoad(object sender, EventArgs e)
+        private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            GL.ClearColor(Color4.Black);
-            GL.Enable(EnableCap.DepthTest);
+#if MOUSE_THREAD
+            int what = MyEventSequencer.MOUSE_MOVE;
 
-            mDrawContextOrtho = new DrawContextGLOrtho(this);
-            mDrawContextPers = new DrawContextGLPers(this);
+            mEventSequencer.RemoveAll(what);
 
-            mDrawContext = mDrawContextOrtho;
+            MyEvent evt = mEventSequencer.ObtainEvent();
 
-            mDrawContextOrtho.PushDraw = OnPushDraw;
-            mDrawContextPers.PushDraw = OnPushDraw;
+            evt.What = what;
+            evt.EventArgs = e;
 
-            SwapBuffers();
+            mEventSequencer.Post(evt);
+#else
+            HandleMouseMove(e);
+#endif
         }
 
-        private void OnMouseMove(object sender, MouseEventArgs e)
+        private void HandleMouseMove(MouseEventArgs e)
         {
             if (mDrawContext is DrawContextGLOrtho)
             {
@@ -208,8 +289,9 @@ namespace Plotter
 
         public void Redraw()
         {
-            //MakeCurrent();
-            mController.Redraw(mController.CurrentDC);
+            ThreadUtil.RunOnMainThread(()=>{
+                mController.Redraw(mController.CurrentDC);
+            }, wait: false);
         }
 
         private void OnPaint(object sender, PaintEventArgs e)
@@ -359,6 +441,49 @@ namespace Plotter
 
             mCurrentContextMenu = mContextMenu;
             mCurrentContextMenu.Show(this, new Point(x, y));
+        }
+
+
+        class MyEvent : EventSequencer<MyEvent>.Event
+        {
+            public MouseEventArgs EventArgs;
+        }
+
+        class MyEventSequencer : EventSequencer<MyEvent>
+        {
+            public const int MOUSE_MOVE = 1;
+            public const int MOUSE_WHEEL = 2;
+            public const int MOUSE_DOWN = 3;
+            public const int MOUSE_UP = 4;
+
+            private PlotterViewGL mPlotterView;
+
+            public MyEventSequencer(PlotterViewGL view, int queueSize) : base(queueSize)
+            {
+                mPlotterView = view;
+            }
+
+            public override void HandleEvent(MyEvent msg)
+            {
+                //DOut.pl($"HandleEvent what:{msg.What}");
+
+                if (msg.What == MOUSE_MOVE)
+                {
+                    mPlotterView.HandleMouseMove(msg.EventArgs);
+                }
+                else if (msg.What == MOUSE_WHEEL)
+                {
+                    mPlotterView.HandleMouseWheel(msg.EventArgs);
+                }
+                else if (msg.What == MOUSE_DOWN)
+                {
+                    mPlotterView.HandleMouseDown(msg.EventArgs);
+                }
+                else if (msg.What == MOUSE_UP)
+                {
+                    mPlotterView.HandleMouseUp(msg.EventArgs);
+                }
+            }
         }
     }
 }
