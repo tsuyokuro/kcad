@@ -15,7 +15,7 @@ namespace CadDataTypes
 
         public ICadVertexAttr Attr;
 
-        public double x
+        public double X
         {
             set
             {
@@ -28,7 +28,7 @@ namespace CadDataTypes
             }
         }
 
-        public double y
+        public double Y
         {
             set
             {
@@ -41,7 +41,7 @@ namespace CadDataTypes
             }
         }
 
-        public double z
+        public double Z
         {
             set
             {
@@ -201,14 +201,14 @@ namespace CadDataTypes
 
         public bool IsZero()
         {
-            return x == 0 && y == 0 && z == 0;
+            return X == 0 && Y == 0 && Z == 0;
         }
 
         public void Set(double x, double y, double z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
         }
 
         public CadVertex SetVector(Vector3d v)
@@ -226,9 +226,9 @@ namespace CadDataTypes
         public void Set(ref CadVertex p)
         {
             Flag = p.Flag;
-            x = p.x;
-            y = p.y;
-            z = p.z;
+            X = p.X;
+            Y = p.Y;
+            Z = p.Z;
         }
 
         #region 同値判定
@@ -240,16 +240,16 @@ namespace CadDataTypes
         public bool EqualsThreshold(CadVertex p, double m = 0.000001)
         {
             return (
-                x > p.x - m && x < p.x + m &&
-                y > p.y - m && y < p.y + m &&
-                z > p.z - m && z < p.z + m
+                X > p.X - m && X < p.X + m &&
+                Y > p.Y - m && Y < p.Y + m &&
+                Z > p.Z - m && Z < p.Z + m
                 );
         }
 
 
         public bool Equals(CadVertex v)
         {
-            return x == v.x & y == v.y & z == v.z;
+            return X == v.X & Y == v.Y & Z == v.Z;
         }
 
         private const double HASH_COEFFICIENT = 10000.0;
@@ -257,9 +257,9 @@ namespace CadDataTypes
         public override int GetHashCode()
         {
             return
-                ((int)(x * HASH_COEFFICIENT)) ^
-                ((int)(y * HASH_COEFFICIENT) << 2) ^
-                ((int)(z * HASH_COEFFICIENT) >> 2);
+                ((int)(X * HASH_COEFFICIENT)) ^
+                ((int)(Y * HASH_COEFFICIENT) << 2) ^
+                ((int)(Z * HASH_COEFFICIENT) >> 2);
         }
 
         public override bool Equals(object obj)
@@ -272,12 +272,12 @@ namespace CadDataTypes
 
         public static bool operator ==(CadVertex p1, CadVertex p2)
         {
-            return p1.x == p2.x & p1.y == p2.y & p1.z == p2.z;
+            return p1.X == p2.X & p1.Y == p2.Y & p1.Z == p2.Z;
         }
 
         public static bool operator !=(CadVertex p1, CadVertex p2)
         {
-            return p1.x != p2.x | p1.y != p2.y | p1.z != p2.z;
+            return p1.X != p2.X | p1.Y != p2.Y | p1.Z != p2.Z;
         }
         #endregion
 
@@ -285,63 +285,145 @@ namespace CadDataTypes
         #region 二項演算子
         public static CadVertex operator +(CadVertex p1, CadVertex p2)
         {
-            p1.x += p2.x;
-            p1.y += p2.y;
-            p1.z += p2.z;
+            p1.X += p2.X;
+            p1.Y += p2.Y;
+            p1.Z += p2.Z;
 
             return p1;
         }
 
         public static CadVertex operator -(CadVertex p1, CadVertex p2)
         {
-            p1.x -= p2.x;
-            p1.y -= p2.y;
-            p1.z -= p2.z;
-
-            return p1;
-        }
-
-        public static CadVertex operator *(CadVertex p1, double f)
-        {
-            p1.x *= f;
-            p1.y *= f;
-            p1.z *= f;
-
-            return p1;
-        }
-
-        public static CadVertex operator *(double f, CadVertex p1)
-        {
-            p1.x *= f;
-            p1.y *= f;
-            p1.z *= f;
+            p1.X -= p2.X;
+            p1.Y -= p2.Y;
+            p1.Z -= p2.Z;
 
             return p1;
         }
 
         public static CadVertex operator *(CadVertex p1, CadVertex p2)
         {
-            p1.x *= p2.x;
-            p1.y *= p2.y;
-            p1.z *= p2.z;
+            p1.X *= p2.X;
+            p1.Y *= p2.Y;
+            p1.Z *= p2.Z;
+
+            return p1;
+        }
+
+        public static CadVertex operator /(CadVertex p1, CadVertex p2)
+        {
+            p1.X /= p2.X;
+            p1.Y /= p2.Y;
+            p1.Z /= p2.Z;
+
+            return p1;
+        }
+
+        public static CadVertex operator +(CadVertex p1, Vector3d p2)
+        {
+            p1.X += p2.X;
+            p1.Y += p2.Y;
+            p1.Z += p2.Z;
+
+            return p1;
+        }
+
+        public static CadVertex operator -(CadVertex p1, Vector3d p2)
+        {
+            p1.X -= p2.X;
+            p1.Y -= p2.Y;
+            p1.Z -= p2.Z;
+
+            return p1;
+        }
+
+        public static CadVertex operator *(CadVertex p1, Vector3d p2)
+        {
+            p1.X *= p2.X;
+            p1.Y *= p2.Y;
+            p1.Z *= p2.Z;
+
+            return p1;
+        }
+
+        public static CadVertex operator /(CadVertex p1, Vector3d p2)
+        {
+            p1.X /= p2.X;
+            p1.Y /= p2.Y;
+            p1.Z /= p2.Z;
+
+            return p1;
+        }
+
+        public static CadVertex operator +(Vector3d p1, CadVertex p2)
+        {
+            p1.X += p2.X;
+            p1.Y += p2.Y;
+            p1.Z += p2.Z;
+
+            return CadVertex.Create(p1);
+        }
+
+        public static CadVertex operator -(Vector3d p1, CadVertex p2)
+        {
+            p1.X -= p2.X;
+            p1.Y -= p2.Y;
+            p1.Z -= p2.Z;
+
+            return CadVertex.Create(p1);
+        }
+
+        public static CadVertex operator *(Vector3d p1, CadVertex p2)
+        {
+            p1.X *= p2.X;
+            p1.Y *= p2.Y;
+            p1.Z *= p2.Z;
+
+            return CadVertex.Create(p1);
+        }
+
+        public static CadVertex operator /(Vector3d p1, CadVertex p2)
+        {
+            p1.X /= p2.X;
+            p1.Y /= p2.Y;
+            p1.Z /= p2.Z;
+
+            return CadVertex.Create(p1);
+        }
+
+
+        public static CadVertex operator *(CadVertex p1, double f)
+        {
+            p1.X *= f;
+            p1.Y *= f;
+            p1.Z *= f;
+
+            return p1;
+        }
+
+        public static CadVertex operator *(double f, CadVertex p1)
+        {
+            p1.X *= f;
+            p1.Y *= f;
+            p1.Z *= f;
 
             return p1;
         }
 
         public static CadVertex operator /(CadVertex p1, double f)
         {
-            p1.x /= f;
-            p1.y /= f;
-            p1.z /= f;
+            p1.X /= f;
+            p1.Y /= f;
+            p1.Z /= f;
 
             return p1;
         }
 
         public static CadVertex operator -(CadVertex p1, double d)
         {
-            p1.x -= d;
-            p1.y -= d;
-            p1.z -= d;
+            p1.X -= d;
+            p1.Y -= d;
+            p1.Z -= d;
 
             return p1;
         }
@@ -350,18 +432,18 @@ namespace CadDataTypes
         #region 単項演算子
         public static CadVertex operator -(CadVertex p1)
         {
-            p1.x *= -1;
-            p1.y *= -1;
-            p1.z *= -1;
+            p1.X *= -1;
+            p1.Y *= -1;
+            p1.Z *= -1;
 
             return p1;
         }
 
         public static CadVertex operator +(CadVertex p1, double d)
         {
-            p1.x += d;
-            p1.y += d;
-            p1.z += d;
+            p1.X += d;
+            p1.Y += d;
+            p1.Z += d;
 
             return p1;
         }
@@ -412,9 +494,9 @@ namespace CadDataTypes
         {
             CadVertex v = default(CadVertex);
 
-            v.x = Math.Min(v1.x, v2.x);
-            v.y = Math.Min(v1.y, v2.y);
-            v.z = Math.Min(v1.z, v2.z);
+            v.X = Math.Min(v1.X, v2.X);
+            v.Y = Math.Min(v1.Y, v2.Y);
+            v.Z = Math.Min(v1.Z, v2.Z);
 
             return v;
         }
@@ -429,9 +511,9 @@ namespace CadDataTypes
         {
             CadVertex v = default(CadVertex);
 
-            v.x = Math.Max(v1.x, v2.x);
-            v.y = Math.Max(v1.y, v2.y);
-            v.z = Math.Max(v1.z, v2.z);
+            v.X = Math.Max(v1.X, v2.X);
+            v.Y = Math.Max(v1.Y, v2.Y);
+            v.Z = Math.Max(v1.Z, v2.Z);
 
             return v;
         }
@@ -441,12 +523,12 @@ namespace CadDataTypes
         // ベクトルのノルム(長さ)を求める
         public double Norm()
         {
-            return Math.Sqrt((x * x) + (y * y) + (z * z));
+            return Math.Sqrt((X * X) + (Y * Y) + (Z * Z));
         }
 
         public double Norm2D()
         {
-            return Math.Sqrt((x * x) + (y * y));
+            return Math.Sqrt((X * X) + (Y * Y));
         }
 
         // 単位ベクトルを求める
@@ -458,16 +540,16 @@ namespace CadDataTypes
 
             double f = 1.0 / norm;
 
-            ret.x = x * f;
-            ret.y = y * f;
-            ret.z = z * f;
+            ret.X = X * f;
+            ret.Y = Y * f;
+            ret.Z = Z * f;
 
             return ret;
         }
 
         public string CoordString()
         {
-            return x.ToString() + ", " + y.ToString() + ", " + z.ToString();
+            return X.ToString() + ", " + Y.ToString() + ", " + Z.ToString();
         }
 
         public override string ToString()

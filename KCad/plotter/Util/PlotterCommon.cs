@@ -80,9 +80,9 @@ namespace Plotter
         {
             DOut.pl(prefix + "{");
             DOut.Indent++;
-            DOut.pl("x:" + v.x.ToString());
-            DOut.pl("y:" + v.y.ToString());
-            DOut.pl("z:" + v.z.ToString());
+            DOut.pl("x:" + v.X.ToString());
+            DOut.pl("y:" + v.Y.ToString());
+            DOut.pl("z:" + v.Z.ToString());
             DOut.Indent--;
             DOut.pl("}");
         }

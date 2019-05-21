@@ -32,14 +32,14 @@ namespace Plotter
             CadVertex ltw = DC.DevPointToWorldPoint(lt);
             CadVertex rbw = DC.DevPointToWorldPoint(rb);
 
-            double minx = Math.Min(ltw.x, rbw.x);
-            double maxx = Math.Max(ltw.x, rbw.x);
+            double minx = Math.Min(ltw.X, rbw.X);
+            double maxx = Math.Max(ltw.X, rbw.X);
 
-            double miny = Math.Min(ltw.y, rbw.y);
-            double maxy = Math.Max(ltw.y, rbw.y);
+            double miny = Math.Min(ltw.Y, rbw.Y);
+            double maxy = Math.Max(ltw.Y, rbw.Y);
 
-            double minz = Math.Min(ltw.z, rbw.z);
-            double maxz = Math.Max(ltw.z, rbw.z);
+            double minz = Math.Min(ltw.Z, rbw.Z);
+            double maxz = Math.Max(ltw.Z, rbw.Z);
 
 
             Color c = DC.PenColor(DrawTools.PEN_GRID);
@@ -49,9 +49,9 @@ namespace Plotter
             double n = grid.Decimate(DC, grid, 8);
 
             double sx, sy, sz;
-            double szx = grid.GridSize.x * n;
-            double szy = grid.GridSize.y * n;
-            double szz = grid.GridSize.z * n;
+            double szx = grid.GridSize.X * n;
+            double szy = grid.GridSize.Y * n;
+            double szz = grid.GridSize.Z * n;
 
             sx = Math.Round(minx / szx) * szx;
             sy = Math.Round(miny / szy) * szy;
@@ -92,19 +92,19 @@ namespace Plotter
                 x = sx;
                 while (x < maxx)
                 {
-                    p.x = x;
-                    p.z = 0;
+                    p.X = x;
+                    p.Z = 0;
 
                     y = sy;
 
                     while (y < maxy)
                     {
-                        p.y = y;
+                        p.Y = y;
                         up = DC.WorldPointToDevPoint(p);
 
-                        if (up.x >= 0 && up.x < tgt.Width && up.y >= 0 && up.y < tgt.Height)
+                        if (up.X >= 0 && up.X < tgt.Width && up.Y >= 0 && up.Y < tgt.Height)
                         {
-                            *(srcPixels + ((int)up.y * tgt.Width) + (int)up.x) = argb;
+                            *(srcPixels + ((int)up.Y * tgt.Width) + (int)up.X) = argb;
                         }
 
                         y += szy;
@@ -116,20 +116,20 @@ namespace Plotter
                 z = sz;
                 while (z < maxz)
                 {
-                    p.z = z;
-                    p.x = 0;
+                    p.Z = z;
+                    p.X = 0;
 
                     y = sy;
 
                     while (y < maxy)
                     {
-                        p.y = y;
+                        p.Y = y;
 
                         up = DC.WorldPointToDevPoint(p);
 
-                        if (up.x >= 0 && up.x < tgt.Width && up.y >= 0 && up.y < tgt.Height)
+                        if (up.X >= 0 && up.X < tgt.Width && up.Y >= 0 && up.Y < tgt.Height)
                         {
-                            *(srcPixels + ((int)up.y * tgt.Width) + (int)up.x) = argb;
+                            *(srcPixels + ((int)up.Y * tgt.Width) + (int)up.X) = argb;
                         }
 
                         y += szy;
@@ -141,20 +141,20 @@ namespace Plotter
                 x = sx;
                 while (x < maxx)
                 {
-                    p.x = x;
-                    p.y = 0;
+                    p.X = x;
+                    p.Y = 0;
 
                     z = sz;
 
                     while (z < maxz)
                     {
-                        p.z = z;
+                        p.Z = z;
 
                         up = DC.WorldPointToDevPoint(p);
 
-                        if (up.x >= 0 && up.x < tgt.Width && up.y >= 0 && up.y < tgt.Height)
+                        if (up.X >= 0 && up.X < tgt.Width && up.Y >= 0 && up.Y < tgt.Height)
                         {
-                            *(srcPixels + ((int)up.y * tgt.Width) + (int)up.x) = argb;
+                            *(srcPixels + ((int)up.Y * tgt.Width) + (int)up.X) = argb;
                         }
 
                         z += szz;
@@ -171,9 +171,9 @@ namespace Plotter
         {
             CadVertex p0 = DC.WorldPointToDevPoint(p);
 
-            if (p0.x >= 0 && p0.y >= 0 && p0.x < DC.ViewWidth && p0.y < DC.ViewHeight)
+            if (p0.X >= 0 && p0.Y >= 0 && p0.X < DC.ViewWidth && p0.Y < DC.ViewHeight)
             {
-                BmpDC.Image.SetPixel((int)p0.x, (int)p0.y, pen.GdiPen.Color);
+                BmpDC.Image.SetPixel((int)p0.X, (int)p0.Y, pen.GdiPen.Color);
             }
         }
     }

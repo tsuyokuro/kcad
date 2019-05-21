@@ -129,9 +129,9 @@ namespace Plotter
         {
             CadVertex gp = default(CadVertex);
 
-            gp.x = (p0.x + p1.x + p2.x) / 3.0;
-            gp.y = (p0.y + p1.y + p2.y) / 3.0;
-            gp.z = (p0.z + p1.z + p2.z) / 3.0;
+            gp.X = (p0.X + p1.X + p2.X) / 3.0;
+            gp.Y = (p0.Y + p1.Y + p2.Y) / 3.0;
+            gp.Z = (p0.Z + p1.Z + p2.Z) / 3.0;
 
             return gp;
         }
@@ -178,9 +178,9 @@ namespace Plotter
 
             double ratio = c1.Area / (c0.Area + c1.Area);
 
-            gpt.x = (c1.Point.x - c0.Point.x) * ratio + c0.Point.x;
-            gpt.y = (c1.Point.y - c0.Point.y) * ratio + c0.Point.y;
-            gpt.z = (c1.Point.z - c0.Point.z) * ratio + c0.Point.z;
+            gpt.X = (c1.Point.X - c0.Point.X) * ratio + c0.Point.X;
+            gpt.Y = (c1.Point.Y - c0.Point.Y) * ratio + c0.Point.Y;
+            gpt.Z = (c1.Point.Z - c0.Point.Z) * ratio + c0.Point.Z;
 
             Centroid ret = default(Centroid);
 
@@ -664,9 +664,9 @@ namespace Plotter
                 ret.IsCross = true;
             }
 
-            ret.CrossPoint.x = a.x + (unit_ab.x * dist_ax);
-            ret.CrossPoint.y = a.y + (unit_ab.y * dist_ax);
-            ret.CrossPoint.z = a.z + (unit_ab.z * dist_ax);
+            ret.CrossPoint.X = a.X + (unit_ab.X * dist_ax);
+            ret.CrossPoint.Y = a.Y + (unit_ab.Y * dist_ax);
+            ret.CrossPoint.Z = a.Z + (unit_ab.Z * dist_ax);
 
             return ret;
         }
@@ -704,8 +704,8 @@ namespace Plotter
             double abl2 = abl * abl;
 
             ret.IsCross = true;
-            ret.CrossPoint.x = ab.x * t1 / abl2 + a.x;
-            ret.CrossPoint.y = ab.y * t1 / abl2 + a.y;
+            ret.CrossPoint.X = ab.X * t1 / abl2 + a.X;
+            ret.CrossPoint.Y = ab.Y * t1 / abl2 + a.Y;
 
             return ret;
         }
@@ -731,9 +731,9 @@ namespace Plotter
             // Aから交点までの距離 
             double dist_ax = CadMath.InnerProduct(unit_ab, ap);
 
-            ret.CrossPoint.x = a.x + (unit_ab.x * dist_ax);
-            ret.CrossPoint.y = a.y + (unit_ab.y * dist_ax);
-            ret.CrossPoint.z = a.z + (unit_ab.z * dist_ax);
+            ret.CrossPoint.X = a.X + (unit_ab.X * dist_ax);
+            ret.CrossPoint.Y = a.Y + (unit_ab.Y * dist_ax);
+            ret.CrossPoint.Z = a.Z + (unit_ab.Z * dist_ax);
 
             ret.IsCross = true;
 
@@ -786,8 +786,8 @@ namespace Plotter
             double norm2 = norm * norm;
 
             ret.IsCross = true;
-            ret.CrossPoint.x = ab.x * t1 / norm2 + a.x;
-            ret.CrossPoint.y = ab.y * t1 / norm2 + a.y;
+            ret.CrossPoint.X = ab.X * t1 / norm2 + a.X;
+            ret.CrossPoint.Y = ab.Y * t1 / norm2 + a.Y;
 
             return ret;
         }
@@ -840,8 +840,8 @@ namespace Plotter
 
         public static double SegNorm2D(CadVertex a, CadVertex b)
         {
-            double dx = b.x - a.x;
-            double dy = b.y - a.y;
+            double dx = b.X - a.X;
+            double dy = b.Y - a.Y;
 
             return Math.Sqrt((dx * dx) + (dy * dy));
         }
@@ -869,25 +869,25 @@ namespace Plotter
 
             foreach (CadVertex p in list)
             {
-                minx = Math.Min(minx, p.x);
-                miny = Math.Min(miny, p.y);
-                minz = Math.Min(minz, p.z);
+                minx = Math.Min(minx, p.X);
+                miny = Math.Min(miny, p.Y);
+                minz = Math.Min(minz, p.Z);
 
-                maxx = Math.Max(maxx, p.x);
-                maxy = Math.Max(maxy, p.y);
-                maxz = Math.Max(maxz, p.z);
+                maxx = Math.Max(maxx, p.X);
+                maxy = Math.Max(maxy, p.Y);
+                maxz = Math.Max(maxz, p.Z);
             }
 
             rect.p0 = default(CadVertex);
             rect.p1 = default(CadVertex);
 
-            rect.p0.x = minx;
-            rect.p0.y = miny;
-            rect.p0.z = minz;
+            rect.p0.X = minx;
+            rect.p0.Y = miny;
+            rect.p0.Z = minz;
 
-            rect.p1.x = maxx;
-            rect.p1.y = maxy;
-            rect.p1.z = maxz;
+            rect.p1.X = maxx;
+            rect.p1.Y = maxy;
+            rect.p1.Z = maxz;
 
             return rect;
         }
@@ -947,22 +947,22 @@ namespace Plotter
 
                 fr.Normalize();
 
-                minx = Math.Min(minx, fr.p0.x);
-                miny = Math.Min(miny, fr.p0.y);
-                maxx = Math.Max(maxx, fr.p1.x);
-                maxy = Math.Max(maxy, fr.p1.y);
+                minx = Math.Min(minx, fr.p0.X);
+                miny = Math.Min(miny, fr.p0.Y);
+                maxx = Math.Max(maxx, fr.p1.X);
+                maxy = Math.Max(maxy, fr.p1.Y);
             }
 
             rect.p0 = default(CadVertex);
             rect.p1 = default(CadVertex);
 
-            rect.p0.x = minx;
-            rect.p0.y = miny;
-            rect.p0.z = 0;
+            rect.p0.X = minx;
+            rect.p0.Y = miny;
+            rect.p0.Z = 0;
 
-            rect.p1.x = maxx;
-            rect.p1.y = maxy;
-            rect.p1.z = 0;
+            rect.p1.X = maxx;
+            rect.p1.Y = maxy;
+            rect.p1.Z = 0;
 
             return rect;
         }
@@ -981,23 +981,23 @@ namespace Plotter
             {
                 CadVertex v = dc.WorldPointToDevPoint(p);
 
-                minx = Math.Min(minx, v.x);
-                miny = Math.Min(miny, v.y);
+                minx = Math.Min(minx, v.X);
+                miny = Math.Min(miny, v.Y);
 
-                maxx = Math.Max(maxx, v.x);
-                maxy = Math.Max(maxy, v.y);
+                maxx = Math.Max(maxx, v.X);
+                maxy = Math.Max(maxy, v.Y);
             });
 
             rect.p0 = default(CadVertex);
             rect.p1 = default(CadVertex);
 
-            rect.p0.x = minx;
-            rect.p0.y = miny;
-            rect.p0.z = 0;
+            rect.p0.X = minx;
+            rect.p0.Y = miny;
+            rect.p0.Z = 0;
 
-            rect.p1.x = maxx;
-            rect.p1.y = maxy;
-            rect.p1.z = 0;
+            rect.p1.X = maxx;
+            rect.p1.Y = maxy;
+            rect.p1.Z = 0;
 
             return rect;
         }
@@ -1021,9 +1021,9 @@ namespace Plotter
 
             //内積値から平面上の最近点を求める
             CadVertex cp = default(CadVertex);
-            cp.x = a.x - (normal.x * d);
-            cp.y = a.y - (normal.y * d);
-            cp.z = a.z - (normal.z * d);
+            cp.X = a.X - (normal.X * d);
+            cp.Y = a.Y - (normal.Y * d);
+            cp.Z = a.Z - (normal.Z * d);
 
             return cp;
         }
@@ -1126,6 +1126,26 @@ namespace Plotter
             return a1 + a * CadMath.CrossProduct2D(b, b1 - a1) / cpBA;
         }
 
+        public static Vector3d CrossLine2D(Vector3d a1, Vector3d a2, Vector3d b1, Vector3d b2)
+        {
+            Vector3d a = (a2 - a1);
+            Vector3d b = (b2 - b1);
+
+            if (a.IsZero() || b.IsZero())
+            {
+                return VectorUtil.InvalidVector3d;
+            }
+
+            double cpBA = CadMath.CrossProduct2D(b, a);
+
+            if (cpBA == 0)
+            {
+                return VectorUtil.InvalidVector3d;
+            }
+
+            return a1 + a * CadMath.CrossProduct2D(b, b1 - a1) / cpBA;
+        }
+
         /// <summary>
         /// 線分と直線の交点
         /// </summary>
@@ -1184,44 +1204,44 @@ namespace Plotter
         /// 
         public static bool CheckCrossSegSeg2D(CadVertex p1, CadVertex p2, CadVertex p3, CadVertex p4)
         {
-            if (p1.x >= p2.x)
+            if (p1.X >= p2.X)
             {
-                if ((p1.x < p3.x && p1.x < p4.x) || (p2.x > p3.x && p2.x > p4.x))
+                if ((p1.X < p3.X && p1.X < p4.X) || (p2.X > p3.X && p2.X > p4.X))
                 {
                     return false;
                 }
             }
             else
             {
-                if((p2.x < p3.x && p2.x < p4.x) || (p1.x > p3.x && p1.x > p4.x))
+                if((p2.X < p3.X && p2.X < p4.X) || (p1.X > p3.X && p1.X > p4.X))
                 {
                     return false;
                 }
             }
 
-            if (p1.y >= p2.y)
+            if (p1.Y >= p2.Y)
             {
-                if ((p1.y < p3.y && p1.y < p4.y) || (p2.y > p3.y && p2.y > p4.y))
+                if ((p1.Y < p3.Y && p1.Y < p4.Y) || (p2.Y > p3.Y && p2.Y > p4.Y))
                 {
                     return false;
                 }
             }
             else
             {
-                if ((p2.y < p3.y && p2.y < p4.y) || (p1.y > p3.y && p1.y > p4.y))
+                if ((p2.Y < p3.Y && p2.Y < p4.Y) || (p1.Y > p3.Y && p1.Y > p4.Y))
                 {
                     return false;
                 }
             }
 
-            if (((p1.x - p2.x) * (p3.y - p1.y) + (p1.y - p2.y) * (p1.x - p3.x)) *
-                ((p1.x - p2.x) * (p4.y - p1.y) + (p1.y - p2.y) * (p1.x - p4.x)) > 0)
+            if (((p1.X - p2.X) * (p3.Y - p1.Y) + (p1.Y - p2.Y) * (p1.X - p3.X)) *
+                ((p1.X - p2.X) * (p4.Y - p1.Y) + (p1.Y - p2.Y) * (p1.X - p4.X)) > 0)
             {
                 return false;
             }
 
-            if (((p3.x - p4.x) * (p1.y - p3.y) + (p3.y - p4.y) * (p3.x - p1.x)) *
-                ((p3.x - p4.x) * (p2.y - p3.y) + (p3.y - p4.y) * (p3.x - p2.x)) > 0)
+            if (((p3.X - p4.X) * (p1.Y - p3.Y) + (p3.Y - p4.Y) * (p3.X - p1.X)) *
+                ((p3.X - p4.X) * (p2.Y - p3.Y) + (p3.Y - p4.Y) * (p3.X - p2.X)) > 0)
             {
                 return false;
             }
@@ -1242,11 +1262,11 @@ namespace Plotter
         /// 
         public static bool IsInRect2D(CadVertex minp, CadVertex maxp, CadVertex p)
         {
-            if (p.x < minp.x) return false;
-            if (p.x > maxp.x) return false;
+            if (p.X < minp.X) return false;
+            if (p.X > maxp.X) return false;
 
-            if (p.y < minp.y) return false;
-            if (p.y > maxp.y) return false;
+            if (p.Y < minp.Y) return false;
+            if (p.Y > maxp.Y) return false;
 
             return true;
         }
@@ -1264,7 +1284,7 @@ namespace Plotter
             CadVertex sp;
             CadVertex ep;
 
-            if (p0.y < p1.y)
+            if (p0.Y < p1.Y)
             {
                 sp = p0;
                 ep = p1;
@@ -1275,25 +1295,25 @@ namespace Plotter
                 ep = p0;
             }
 
-            if (lineY < sp.y)
+            if (lineY < sp.Y)
             {
                 cp.Invalid = true;
                 return cp;
             }
 
-            if (lineY > ep.y)
+            if (lineY > ep.Y)
             {
                 cp.Invalid = true;
                 return cp;
             }
 
-            double dx = ep.x - sp.x;
-            double dy = ep.y - sp.y;
+            double dx = ep.X - sp.X;
+            double dy = ep.Y - sp.Y;
 
             double a = dx / dy;
 
-            cp.x = a * (lineY - sp.y) + sp.x;
-            cp.y = lineY;
+            cp.X = a * (lineY - sp.Y) + sp.X;
+            cp.Y = lineY;
 
             return cp;
         }
@@ -1311,7 +1331,7 @@ namespace Plotter
             CadVertex sp;
             CadVertex ep;
 
-            if (p0.x < p1.x)
+            if (p0.X < p1.X)
             {
                 sp = p0;
                 ep = p1;
@@ -1322,25 +1342,25 @@ namespace Plotter
                 ep = p0;
             }
 
-            if (lineX < sp.x)
+            if (lineX < sp.X)
             {
                 cp.Invalid = true;
                 return cp;
             }
 
-            if (lineX > ep.x)
+            if (lineX > ep.X)
             {
                 cp.Invalid = true;
                 return cp;
             }
 
-            double dx = ep.x - sp.x;
-            double dy = ep.y - sp.y;
+            double dx = ep.X - sp.X;
+            double dy = ep.Y - sp.Y;
 
             double a = dy / dx;
 
-            cp.x = lineX;
-            cp.y = a * (lineX - sp.x) + sp.y;
+            cp.X = lineX;
+            cp.Y = a * (lineX - sp.X) + sp.Y;
 
             return cp;
         }
@@ -1367,9 +1387,9 @@ namespace Plotter
             double ey = oy + h - 1;
 
             // Clip X
-            if (p0.x < ox)
+            if (p0.X < ox)
             {
-                if (p1.x >= ox)
+                if (p1.X >= ox)
                 {
                     p0 = CrossSegVLine2D(p0, p1, ox);
                 }
@@ -1380,9 +1400,9 @@ namespace Plotter
                 }
             }
 
-            if (p0.x > ex)
+            if (p0.X > ex)
             {
-                if (p1.x <= ex)
+                if (p1.X <= ex)
                 {
                     p0 = CrossSegVLine2D(p0, p1, ex);
                 }
@@ -1393,9 +1413,9 @@ namespace Plotter
                 }
             }
 
-            if (p1.x < ox)
+            if (p1.X < ox)
             {
-                if (p0.x >= ox)
+                if (p0.X >= ox)
                 {
                     p1 = CrossSegVLine2D(p0, p1, ox);
                 }
@@ -1406,9 +1426,9 @@ namespace Plotter
                 }
             }
 
-            if (p1.x > ex)
+            if (p1.X > ex)
             {
-                if (p0.x <= ex)
+                if (p0.X <= ex)
                 {
                     p1 = CrossSegVLine2D(p0, p1, ex);
                 }
@@ -1421,9 +1441,9 @@ namespace Plotter
 
 
             // Clip Y
-            if (p0.y < oy)
+            if (p0.Y < oy)
             {
-                if (p1.y >= oy)
+                if (p1.Y >= oy)
                 {
                     p0 = CrossSegHLine2D(p0, p1, oy);
                 }
@@ -1434,9 +1454,9 @@ namespace Plotter
                 }
             }
 
-            if (p0.y > ey)
+            if (p0.Y > ey)
             {
-                if (p1.y <= ey)
+                if (p1.Y <= ey)
                 {
                     p0 = CrossSegHLine2D(p0, p1, ey);
                 }
@@ -1447,9 +1467,9 @@ namespace Plotter
                 }
             }
 
-            if (p1.y < oy)
+            if (p1.Y < oy)
             {
-                if (p0.y >= oy)
+                if (p0.Y >= oy)
                 {
                     p1 = CrossSegHLine2D(p0, p1, oy);
                 }
@@ -1460,9 +1480,9 @@ namespace Plotter
                 }
             }
 
-            if (p1.y > ey)
+            if (p1.Y > ey)
             {
-                if (p0.y <= ey)
+                if (p0.Y <= ey)
                 {
                     p1 = CrossSegHLine2D(p0, p1, ey);
                 }
@@ -1486,7 +1506,7 @@ namespace Plotter
         /// <returns>水平線に対する角度(ラジアン)</returns>
         public static double Angle2D(CadVertex v)
         {
-            return Math.Atan2(v.y, v.x);
+            return Math.Atan2(v.Y, v.X);
         }
 
         /// <summary>
@@ -1514,22 +1534,22 @@ namespace Plotter
 
         public static PointPair LeftTopRightBottom2D(CadVertex p0, CadVertex p1)
         {
-            double lx = p0.x;
-            double rx = p1.x;
+            double lx = p0.X;
+            double rx = p1.X;
 
-            double ty = p0.y;
-            double by = p1.y;
+            double ty = p0.Y;
+            double by = p1.Y;
 
-            if (p0.x > p1.x)
+            if (p0.X > p1.X)
             {
-                lx = p1.x;
-                rx = p0.x;
+                lx = p1.X;
+                rx = p0.X;
             }
 
-            if (p0.y > p1.y)
+            if (p0.Y > p1.Y)
             {
-                ty = p1.y;
-                by = p0.y;
+                ty = p1.Y;
+                by = p0.Y;
             }
 
             return new PointPair(CadVertex.Create(lx, ty, 0), CadVertex.Create(rx, by, 0));

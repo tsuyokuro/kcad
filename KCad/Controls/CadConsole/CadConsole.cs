@@ -539,7 +539,7 @@ namespace KCad
 
             Point tpt = pt;
 
-            tpt.Y = pt.Y + ((pt2.Y - pt.Y) - ft.Height) / 2;
+            tpt.Y = pt.Y + (mLineHeight - ft.Height) / 2;
 
             dc.DrawText(ft, tpt);
             pt.X += ft.Width;

@@ -119,7 +119,7 @@ namespace Plotter
                     //Vector3d normal = CadUtil.RepresentativeNormal(fig.PointList);
                     //double t = Vector3d.Dot(normal, dc.ViewDir);
 
-                    Figure.Normal = CadVertex.Create(dc.ViewDir);
+                    Figure.Normal = dc.ViewDir;
                     Figure.Normal *= -1;
                 }
             }
@@ -169,10 +169,10 @@ namespace Plotter
                     CadVertex pp2 = dc.WorldPointToDevPoint(p);
 
                     CadVertex pp1 = pp0;
-                    pp1.y = pp2.y;
+                    pp1.Y = pp2.Y;
 
                     CadVertex pp3 = pp0;
-                    pp3.x = pp2.x;
+                    pp3.X = pp2.X;
 
                     Figure.mPointList.Add(dc.DevPointToWorldPoint(pp1));
                     Figure.mPointList.Add(dc.DevPointToWorldPoint(pp2));
@@ -194,7 +194,7 @@ namespace Plotter
 
             public override void EndCreate(DrawContext dc)
             {
-                Figure.Normal = CadVertex.Create(dc.ViewDir);
+                Figure.Normal = dc.ViewDir;
                 Figure.Normal *= -1;
                 Figure.Type = Types.POLY_LINES;
             }

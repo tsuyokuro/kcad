@@ -1,4 +1,5 @@
 ﻿using CadDataTypes;
+using OpenTK;
 
 namespace Plotter.Controller
 {
@@ -6,15 +7,14 @@ namespace Plotter.Controller
     {
         public void SetOrigin(DrawContext dc, int pixX, int pixY)
         {
-            CadVertex op = default(CadVertex);
-            op.Set(pixX, pixY, 0);
+            Vector3d op = new Vector3d(pixX, pixY, 0);
 
             dc.SetViewOrg(op);
         }
 
         public void MoveOrigin(DrawContext dc, double pixDx, double pixDy)
         {
-            CadVertex d = CadVertex.Create(pixDx, pixDy, 0);
+            Vector3d d = new Vector3d(pixDx, pixDy, 0);
 
             dc.SetViewOrg(dc.ViewOrg + d);
         }
@@ -29,13 +29,11 @@ namespace Plotter.Controller
 
         public void DpiUpDown(DrawContext dc, double f)
         {
-            CadVertex op = dc.ViewOrg;
+            Vector3d op = dc.ViewOrg;
 
-            CadVertex center = default(CadVertex); 
-                
-            center.Set(dc.ViewWidth / 2, dc.ViewHeight / 2, 0);
+            Vector3d center = new Vector3d(dc.ViewWidth / 2, dc.ViewHeight / 2, 0);
 
-            CadVertex d = center - op;
+            Vector3d d = center - op;
 
             d *= f;
 

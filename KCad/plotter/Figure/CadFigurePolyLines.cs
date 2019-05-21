@@ -50,11 +50,11 @@ namespace Plotter
                 CadVertex a = delta;
                 CadVertex b = delta + vdir;
 
-                d = CadUtil.CrossPlane(a, b, StoreList[0], Normal);
+                d = CadUtil.CrossPlane(a, b, StoreList[0], (CadVertex)Normal);
 
                 if (!d.Valid)
                 {
-                    CadVertex nvNormal = CadMath.Normal(Normal, vdir);
+                    CadVertex nvNormal = CadMath.Normal((CadVertex)Normal, vdir);
 
                     double ip = CadMath.InnerProduct(nvNormal, delta);
 
@@ -148,7 +148,7 @@ namespace Plotter
 
             if (Normal.IsZero())
             {
-                Normal = CadUtil.RepresentativeNormal(PointList);
+                Normal = (Vector3d)CadUtil.RepresentativeNormal(PointList);
             }
 
             CadVertex a;
@@ -298,7 +298,7 @@ namespace Plotter
                 return;
             }
 
-            CadVertex prevNormal = Normal;
+            CadVertex prevNormal = (CadVertex)Normal;
 
             CadVertex normal = CadUtil.RepresentativeNormal(PointList);
 
@@ -307,7 +307,7 @@ namespace Plotter
                 normal *= -1;
             }
 
-            Normal = normal;
+            Normal = normal.vector;
         }
 
         private Centroid GetPointListCentroid()

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Windows.Resources;
 using CadDataTypes;
 using KCad;
+using OpenTK;
 using Plotter.Controller;
 
 namespace Plotter
@@ -91,9 +92,9 @@ namespace Plotter
 
                 if (firstSizeChange)
                 {
-                    CadVertex org = default(CadVertex);
-                    org.x = Width / 2;
-                    org.y = Height / 2;
+                    Vector3d org = default;
+                    org.X = Width / 2;
+                    org.Y = Height / 2;
 
                     mDrawContext.SetViewOrg(org);
 

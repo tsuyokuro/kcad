@@ -27,9 +27,9 @@ namespace KCad
 
         private void GridSettingsDialog_Loaded(object sender, RoutedEventArgs e)
         {
-            grid_x_size.Text = GridSize.x.ToString();
-            grid_y_size.Text = GridSize.y.ToString();
-            grid_z_size.Text = GridSize.z.ToString();
+            grid_x_size.Text = GridSize.X.ToString();
+            grid_y_size.Text = GridSize.Y.ToString();
+            grid_z_size.Text = GridSize.Z.ToString();
         }
 
         private void Cancel_button_Click(object sender, RoutedEventArgs e)
@@ -44,13 +44,13 @@ namespace KCad
             double v;
 
             ret &= Double.TryParse(grid_x_size.Text, out v);
-            GridSize.x = v;
+            GridSize.X = v;
 
             ret &= Double.TryParse(grid_y_size.Text, out v);
-            GridSize.y = v;
+            GridSize.Y = v;
 
             ret &= Double.TryParse(grid_z_size.Text, out v);
-            GridSize.z = v;
+            GridSize.Z = v;
 
             this.DialogResult = ret;
         }

@@ -98,11 +98,11 @@ namespace Plotter
 
         public static void BresenhamLine(BitmapData bitmapData, CadVertex p0, CadVertex p1, uint color)
         {
-            int x0 = (int)p0.x;
-            int y0 = (int)p0.y;
+            int x0 = (int)p0.X;
+            int y0 = (int)p0.Y;
 
-            int x1 = (int)p1.x;
-            int y1 = (int)p1.y;
+            int x1 = (int)p1.X;
+            int y1 = (int)p1.Y;
 
             int stepx;
             int stepy;

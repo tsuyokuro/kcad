@@ -3,7 +3,7 @@ using CadDataTypes;
 
 namespace Plotter
 {
-    public class CadMath
+    public partial class CadMath
     {
         public const double Epsilon = 0.0000005;
 
@@ -29,119 +29,6 @@ namespace Plotter
         public static bool Near_0(double v)
         {
             return (v > R0Min && v < R0Max);
-        }
-
-
-        // 内積
-        #region inner product
-        public static double InnrProduct2D(CadVertex v1, CadVertex v2)
-        {
-            return (v1.x * v2.x) + (v1.y * v2.y);
-        }
-
-        public static double InnrProduct2D(CadVertex v0, CadVertex v1, CadVertex v2)
-        {
-            return InnrProduct2D(v1 - v0, v2 - v0);
-        }
-
-        public static double InnerProduct(CadVertex v1, CadVertex v2)
-        {
-            return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
-        }
-
-        public static double InnerProduct(CadVertex v0, CadVertex v1, CadVertex v2)
-        {
-            return InnerProduct(v1 - v0, v2 - v0);
-        }
-        #endregion
-
-
-        // 外積
-        #region Cross product
-        public static double CrossProduct2D(CadVertex v1, CadVertex v2)
-        {
-            return (v1.x * v2.y) - (v1.y * v2.x);
-        }
-
-        public static double CrossProduct2D(CadVertex v0, CadVertex v1, CadVertex v2)
-        {
-            return CrossProduct2D(v1 - v0, v2 - v0);
-        }
-
-        public static CadVertex CrossProduct(CadVertex v1, CadVertex v2)
-        {
-            CadVertex res = default(CadVertex);
-
-            res.x = v1.y * v2.z - v1.z * v2.y;
-            res.y = v1.z * v2.x - v1.x * v2.z;
-            res.z = v1.x * v2.y - v1.y * v2.x;
-
-            return res;
-        }
-
-        public static CadVertex CrossProduct(CadVertex v0, CadVertex v1, CadVertex v2)
-        {
-            return CrossProduct(v1 - v0, v2 - v0);
-        }
-        #endregion
-
-        /**
-         * 法線を求める
-         * 
-         *      v2
-         *     / 
-         *    /
-         * v0/_________v1
-         *
-         */
-        public static CadVertex Normal(CadVertex v0, CadVertex v1, CadVertex v2)
-        {
-            CadVertex va = v1 - v0;
-            CadVertex vb = v2 - v0;
-
-            CadVertex normal = CadMath.CrossProduct(va, vb);
-
-            if (normal.IsZero())
-            {
-                normal.Invalid = true;
-                return normal;
-            }
-
-            normal = normal.UnitVector();
-
-            return normal;
-        }
-
-        /**
-         * 法線を求める
-         * 
-         *       vb
-         *      / 
-         *     /
-         * 0 /_________va
-         * 
-         */
-        public static CadVertex Normal(CadVertex va, CadVertex vb)
-        {
-            CadVertex normal = CadMath.CrossProduct(va, vb);
-
-            if (normal.IsZero())
-            {
-                return normal;
-            }
-
-            normal = normal.UnitVector();
-
-            return normal;
-        }
-
-        public static bool IsParallel(CadVertex v1, CadVertex v2)
-        {
-            v1 = v1.UnitVector();
-            v2 = v2.UnitVector();
-
-            double a = InnerProduct(v1, v2);
-            return Near_P1(a) || Near_M1(a);
         }
 
         /**
