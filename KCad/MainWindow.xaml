@@ -376,6 +376,10 @@
                             IsCheckable="True"
                             IsChecked="{Binding SnapToLastDownPoint}" />
                         <MenuItem
+                            Header="Snap to self"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToSelfPoint}" />
+                        <MenuItem
                             Click="Command_Clicked"
                             Header="Grid Settings..."
                             Tag="grid_settings" />

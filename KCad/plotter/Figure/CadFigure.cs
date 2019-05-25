@@ -455,6 +455,8 @@ namespace Plotter
                 return;
             }
 
+            //DOut.pl($"StartEdit ID:{ID}");
+
             mStoreList = new VertexList();
             mStoreList.AddRange(mPointList);
         }
@@ -466,6 +468,8 @@ namespace Plotter
                 mStoreList.Clear();
                 mStoreList = null;
             }
+
+            //DOut.pl($"EndEdit ID:{ID}");
         }
 
         public virtual void CancelEdit()

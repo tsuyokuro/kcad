@@ -160,6 +160,17 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToLastDownPoint;
         }
 
+        public bool SnapToSelfPoint
+        {
+            set
+            {
+                SettingsHolder.Settings.SnapToSelfPoint = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSelfPoint)));
+            }
+
+            get => SettingsHolder.Settings.SnapToSelfPoint;
+        }
+
         public CadVertex GridSize
         {
             set
@@ -227,6 +238,7 @@ namespace Plotter
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToZero)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLastDownPoint)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSelfPoint)));
 
             Controller.Grid.GridSize = SettingsHolder.Settings.GridSize;
         }
@@ -271,6 +283,8 @@ namespace Plotter
         public bool SnapToZero = true;
 
         public bool SnapToLastDownPoint = true;
+
+        public bool SnapToSelfPoint = true;
 
         public PlotterSettings()
         {
@@ -324,6 +338,9 @@ namespace Plotter
             jo.Add("enable", SnapToLastDownPoint);
             root.Add("LastDownSnap", jo);
 
+            jo = new JObject();
+            jo.Add("enable", SnapToSelfPoint);
+            root.Add("SelfPointSnap", jo);
 
             jo = new JObject();
             jo.Add("enable", SnapToGrid);
@@ -392,6 +409,12 @@ namespace Plotter
             if (jo != null)
             {
                 SnapToLastDownPoint = jo.GetBool("enable", SnapToLastDownPoint);
+            }
+
+            jo = (JObject)root["SelfPointSnap"];
+            if (jo != null)
+            {
+                SnapToSelfPoint = jo.GetBool("enable", SnapToSelfPoint);
             }
 
             jo = (JObject)root["DrawSettings"];

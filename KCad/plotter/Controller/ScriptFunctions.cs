@@ -1495,11 +1495,13 @@ namespace Plotter.Controller
 
         public void AddFigure(CadFigure fig)
         {
-            Controller.DB.AddFigure(fig);
-            Controller.CurrentLayer.AddFigure(fig);
-
-            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Session.AddOpe(ope);
+            lock (Controller.DB)
+            {
+                Controller.DB.AddFigure(fig);
+                Controller.CurrentLayer.AddFigure(fig);
+                CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
+                Session.AddOpe(ope);
+            }
         }
 
         public void Test()
