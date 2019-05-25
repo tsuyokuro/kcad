@@ -20,6 +20,8 @@ namespace Plotter
 
         public double Range;        // matchする範囲(スクリーン座標系)
 
+        public bool CheckStorePoint = false;
+
         public uint CurrentLayerID
         {
             set; get;
@@ -186,12 +188,24 @@ namespace Plotter
 
             if (fig.StoreList != null)
             {
-                list = fig.StoreList;
+                if (CheckStorePoint)
+                {
+                    list = fig.StoreList;
+                }
+                else
+                {
+                    list = null;
+                }
             }
 
-            for (int i=0; i < fig.PointCount; i++)
+            if (list != null)
             {
-                CheckFigPoint(dc, list[i], layer, fig, i);
+                int cnt = list.Count;
+
+                for (int i = 0; i < cnt; i++)
+                {
+                    CheckFigPoint(dc, list[i], layer, fig, i);
+                }
             }
 
             if (fig.ChildList != null)

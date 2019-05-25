@@ -322,26 +322,29 @@ namespace Plotter.Controller
         {
             if (dc == null) return;
 
-            foreach (CadLayer layer in mDB.LayerList)
+            lock (DB)
             {
-                if (layer.Visible)
+                foreach (CadLayer layer in mDB.LayerList)
                 {
-                    DrawPen pen = dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE);
-
-                    if (layer.ID != CurrentLayer.ID)
+                    if (layer.Visible)
                     {
-                        pen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
+                        DrawPen pen = dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE);
+
+                        if (layer.ID != CurrentLayer.ID)
+                        {
+                            pen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
+                        }
+
+                        dc.Drawing.Draw(layer.FigureList, pen);
                     }
-
-                    dc.Drawing.Draw(layer.FigureList, pen);
                 }
-            }
 
-            dc.Drawing.Draw(TempFigureList, dc.GetPen(DrawTools.PEN_TEST_FIGURE));
+                dc.Drawing.Draw(TempFigureList, dc.GetPen(DrawTools.PEN_TEST_FIGURE));
 
-            if (MeasureFigureCreator != null)
-            {
-                MeasureFigureCreator.Figure.Draw(dc, dc.GetPen(DrawTools.PEN_MEASURE_FIGURE));
+                if (MeasureFigureCreator != null)
+                {
+                    MeasureFigureCreator.Figure.Draw(dc, dc.GetPen(DrawTools.PEN_MEASURE_FIGURE));
+                }
             }
         }
 

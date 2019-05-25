@@ -143,6 +143,21 @@ namespace Plotter
             int i;
             int num = PointList.Count;
 
+            int selCount = 0;
+
+            for (i = 0; i < num; i++)
+            {
+                CadVertex p = PointList[i];
+
+                if (p.Selected) selCount++;
+            }
+
+            if (selCount >= num)
+            {
+                return;
+            }
+
+
             for (i = 0; i < num; i++)
             {
                 CadVertex p = PointList[i];

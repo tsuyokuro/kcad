@@ -253,6 +253,7 @@ namespace Plotter.Controller
         {
             mPointSearcher.Clean();
             mPointSearcher.SetRangePixel(sc.DC, SettingsHolder.Settings.PointSnapRange);
+            mPointSearcher.CheckStorePoint = SettingsHolder.Settings.SnapToSelfPoint;
 
             if (CurrentFigure != null)
             {
@@ -710,7 +711,7 @@ namespace Plotter.Controller
             }
 
             // 計測用オブジェクトの点のチェック
-                if (MeasureFigureCreator != null)
+            if (MeasureFigureCreator != null)
             {
                 mPointSearcher.Check(dc, MeasureFigureCreator.Figure.PointList);
             }
@@ -902,7 +903,18 @@ namespace Plotter.Controller
 
             mPointSearcher.Clean();
             mPointSearcher.SetRangePixel(dc, SettingsHolder.Settings.PointSnapRange);
+            mPointSearcher.CheckStorePoint = SettingsHolder.Settings.SnapToSelfPoint;
             mPointSearcher.SetTargetPoint(CrossCursor);
+
+            //if (!SettingsHolder.Settings.SnapToSelfPoint)
+            //{
+            //    DOut.pl("SnapToSelf");
+
+            //    if (CurrentFigure != null)
+            //    {
+            //        mPointSearcher.AddIgnore(CurrentFigure);
+            //    }
+            //}
 
             // (0, 0, 0)にスナップするようにする
             if (SettingsHolder.Settings.SnapToZero)

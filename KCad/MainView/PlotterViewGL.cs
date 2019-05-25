@@ -1,4 +1,4 @@
-﻿#define MOUSE_THREAD
+﻿//#define MOUSE_THREAD
 
 using OpenTK;
 using OpenTK.Graphics;
@@ -195,7 +195,7 @@ namespace Plotter
 
             mEventSequencer.Post(evt);
 #else
-            HandleMouseDown(e);
+            HandleMouseWheel(e);
 #endif
         }
 

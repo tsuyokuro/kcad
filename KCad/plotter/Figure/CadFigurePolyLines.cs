@@ -112,7 +112,12 @@ namespace Plotter
 
             if (!drawed)
             {
-                DrawLines(dc, pen);
+                if (mStoreList != null)
+                {
+                    DrawLines(dc, dc.GetPen(DrawTools.PEN_PAGE_FRAME), mStoreList);
+                }
+
+                DrawLines(dc, pen, mPointList);
             }
         }
 
@@ -135,11 +140,10 @@ namespace Plotter
             Normal = -Normal;
         }
 
-        protected void DrawLines(DrawContext dc, DrawPen pen)
+        protected void DrawLines(DrawContext dc, DrawPen pen, VertexList pl)
         {
-            VertexList pl = mPointList;
             int start = 0;
-            int cnt = mPointList.Count;
+            int cnt = pl.Count;
 
             if (cnt <= 0)
             {
@@ -148,7 +152,7 @@ namespace Plotter
 
             if (Normal.IsZero())
             {
-                Normal = (Vector3d)CadUtil.RepresentativeNormal(PointList);
+                Normal = (Vector3d)CadUtil.RepresentativeNormal(pl);
             }
 
             CadVertex a;
@@ -166,12 +170,12 @@ namespace Plotter
                 return;
             }
 
-            PolyLineExpander.ForEachPoints(mPointList, start + 1, cnt - 1, 8, action);
-            void action(CadVertex v)
-            {
-                dc.Drawing.DrawLine(pen, a, v);
-                a = v;
-            }
+            PolyLineExpander.ForEachPoints(pl, start + 1, cnt - 1, 8,
+                (v) =>
+                {
+                    dc.Drawing.DrawLine(pen, a, v);
+                    a = v;
+                });
 
             if (IsLoop)
             {
