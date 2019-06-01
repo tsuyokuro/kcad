@@ -62,27 +62,7 @@ namespace Plotter
             CadQuaternion q = CadQuaternion.RotateQuaternion(axis, t);
             CadQuaternion r = q.Conjugate(); ;
 
-            CadQuaternion qp;
-
-            int n = fig.PointList.Count;
-
-            for (int i = 0; i < n; i++)
-            {
-                CadVertex p = fig.PointList[i];
-
-                p -= org;
-
-                qp = CadQuaternion.FromPoint(p);
-
-                qp = r * qp;
-                qp = qp * q;
-
-                p = qp.ToPoint();
-
-                p += org;
-
-                fig.SetPointAt(i, p);
-            }
+            fig.Rotate(org, q, r);
         }
 
         public static void ScaleFigure(CadFigure fig, CadVertex org, double scale)
