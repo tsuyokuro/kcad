@@ -1,4 +1,5 @@
 ﻿using CadDataTypes;
+using OpenTK;
 using System;
 
 namespace Plotter
@@ -281,6 +282,17 @@ namespace Plotter
             CadVertex p = PointList[3] + (lineV / 2);
 
             CadVertex up = PointList[3] - PointList[0];
+
+            // 裏返しになる場合は、反転する
+            // If it turns over, reverse it
+            Vector3d normal = CadMath.Normal(lineV.vector, up.vector);
+
+            double scala = CadMath.InnerProduct(normal, dc.ViewDir);
+
+            if (scala > 0)
+            {
+                lineV = -lineV;
+            }
 
             //             --- lineV ---> 
             //    3<------------ p ----------->2

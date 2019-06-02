@@ -45,6 +45,7 @@ namespace Plotter
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 
             GL.Enable(EnableCap.DepthTest);
+            GL.DepthFunc(DepthFunction.Lequal);
 
             #region ModelView
             GL.MatrixMode(MatrixMode.Modelview);
