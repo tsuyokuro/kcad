@@ -23,10 +23,10 @@ namespace Plotter
             }
             else
             {
-                WorldScale = currentDC.WorldScale;
-                mUnitPerMilli = deviceSize.Width / pageSize.Width;
                 CopyProjectionMetrics(currentDC);
                 CopyCamera(currentDC);
+                WorldScale = currentDC.WorldScale;
+                UnitPerMilli = deviceSize.Width / pageSize.Width;
                 SetViewSize(deviceSize.Width, deviceSize.Height);
             }
 
