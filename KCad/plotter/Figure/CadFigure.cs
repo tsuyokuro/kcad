@@ -886,6 +886,31 @@ namespace Plotter
             mPointList = MpUtil.VectortListFromMp(g.PointList);
         }
 
-            
+        public virtual void Rotate(CadVertex org, CadQuaternion q, CadQuaternion r)
+        {
+            CadQuaternion qp;
+
+            int n = PointList.Count;
+
+            for (int i = 0; i < n; i++)
+            {
+                CadVertex p = PointList[i];
+
+                p -= org;
+
+                qp = CadQuaternion.FromPoint(p);
+
+                qp = r * qp;
+                qp = qp * q;
+
+                p = qp.ToPoint();
+
+                p += org;
+
+                PointList[i] = p;
+                //SetPointAt(i, p);
+            }
+        }
+
     } // End of class CadFigure
 }

@@ -421,6 +421,11 @@ namespace Plotter.Controller
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
+                if (!layer.Visible)
+                {
+                    continue;
+                }
+
                 dc.Drawing.Draw(layer.FigureList, dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE));
             }
         }
@@ -452,21 +457,21 @@ namespace Plotter.Controller
             }
         }
 
-        public void PrintPageGDI(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
-        {
-            DrawContextPrinter dc = new DrawContextPrinter(CurrentDC, printerGraphics, pageSize, deviceSize);
-            DrawAllFigure(dc);
-        }
+        //public void PrintPageGDI(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        //{
+        //    DrawContextPrinter dc = new DrawContextPrinter(CurrentDC, printerGraphics, pageSize, deviceSize);
+        //    DrawAllFigure(dc);
+        //}
 
-        public void PrintPageGL(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
-        {
-            Bitmap bmp = GetPrintableBmp(pageSize, deviceSize);
+        //public void PrintPageGL(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        //{
+        //    Bitmap bmp = GetPrintableBmp(pageSize, deviceSize);
 
-            if (bmp != null)
-            {
-                printerGraphics.DrawImage(bmp, 0, 0);
-            }
-        }
+        //    if (bmp != null)
+        //    {
+        //        printerGraphics.DrawImage(bmp, 0, 0);
+        //    }
+        //}
 
         public Bitmap GetPrintableBmp(CadSize2D pageSize, CadSize2D deviceSize)
         {

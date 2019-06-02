@@ -98,7 +98,7 @@ namespace Plotter
 
                     if (valCnt >= 3)
                     {
-                        pointList.Add(CadVertex.Create(val[0], val[1], val[2]));
+                        pointList.Add(CadVertex.Create(val[2], val[1], val[0]));
                         valCnt = 0;
 
                         TotalPointCount++;

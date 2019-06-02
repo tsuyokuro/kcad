@@ -289,13 +289,13 @@ namespace Plotter
                 {
                     HalfEdge next = c.Next;
 
-                    CadVector p = model.VertexStore.Ref(c.Vertex);
+                    CadVertex p = model.VertexStore.Ref(c.Vertex);
 
                     if (c.Normal != HeModel.INVALID_INDEX)
                     {
-                        CadVector nv = model.NormalStore[c.Normal];
-                        CadVector np0 = p;
-                        CadVector np1 = p + (nv * 15);
+                        CadVertex nv = model.NormalStore[c.Normal];
+                        CadVertex np0 = p;
+                        CadVertex np1 = p + (nv * 15);
 
                         GL.Disable(EnableCap.Lighting);
                         GL.Disable(EnableCap.Light0);
