@@ -326,17 +326,22 @@ namespace Plotter.Controller
             {
                 foreach (CadLayer layer in mDB.LayerList)
                 {
-                    if (layer.Visible)
-                    {
-                        DrawPen pen = dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE);
+                    if (!layer.Visible) { continue; }
 
-                        if (layer.ID != CurrentLayer.ID)
-                        {
-                            pen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
-                        }
+                    // Skip current layer.
+                    // It will be drawn at the end.
+                    if (layer == CurrentLayer) { continue; }
 
-                        dc.Drawing.Draw(layer.FigureList, pen);
-                    }
+                    DrawPen pen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
+
+                    dc.Drawing.Draw(layer.FigureList, pen);
+                }
+
+                // Draw current layer at last
+                if (CurrentLayer != null)
+                {
+                    DrawPen pen = dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE);
+                    dc.Drawing.Draw(CurrentLayer.FigureList, pen);
                 }
 
                 dc.Drawing.Draw(TempFigureList, dc.GetPen(DrawTools.PEN_TEST_FIGURE));
