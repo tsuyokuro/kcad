@@ -112,36 +112,36 @@ namespace Plotter
             dc.Drawing.DrawCross(pen, PointList[0], size);
         }
 
-        private void drawDisk(DrawContext dc, DrawPen pen)
-        {
-            if (PointList.Count == 0)
-            {
-                return;
-            }
+        //private void drawDisk(DrawContext dc, DrawPen pen)
+        //{
+        //    if (PointList.Count == 0)
+        //    {
+        //        return;
+        //    }
 
-            if (PointList.Count < 3)
-            {
-                dc.Drawing.DrawCross(pen, PointList[0], 2);
+        //    if (PointList.Count < 3)
+        //    {
+        //        dc.Drawing.DrawCross(pen, PointList[0], 2);
 
-                if (PointList[0].Selected)
-                {
-                    dc.Drawing.DrawSelectedPoint(
-                        PointList[0], dc.GetPen(DrawTools.PEN_SELECT_POINT));
-                }
-                return;
-            }
+        //        if (PointList[0].Selected)
+        //        {
+        //            dc.Drawing.DrawSelectedPoint(
+        //                PointList[0], dc.GetPen(DrawTools.PEN_SELECT_POINT));
+        //        }
+        //        return;
+        //    }
 
-            bool outline = SettingsHolder.Settings.DrawMeshEdge;
+        //    bool outline = SettingsHolder.Settings.DrawMeshEdge;
 
-            VertexList vl = CircleExpander.GetExpandList(PointList[0], PointList[1], PointList[2], 48);
+        //    VertexList vl = CircleExpander.GetExpandList(PointList[0], PointList[1], PointList[2], 48);
 
-            CadVertex normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
+        //    CadVertex normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
 
-            dc.Drawing.DrawFace(pen, vl, normal, outline);
+        //    dc.Drawing.DrawFace(pen, vl, normal, outline);
 
-            dc.Drawing.DrawLine(pen, mPointList[1], mPointList[3]);
-            dc.Drawing.DrawLine(pen, mPointList[2], mPointList[4]);
-        }
+        //    dc.Drawing.DrawLine(pen, mPointList[1], mPointList[3]);
+        //    dc.Drawing.DrawLine(pen, mPointList[2], mPointList[4]);
+        //}
 
         private void drawSelected_Circle(DrawContext dc, DrawPen pen)
         {

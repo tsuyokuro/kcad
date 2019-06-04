@@ -363,28 +363,28 @@ namespace Plotter
             //}
         }
 
-        public override void DrawFace(DrawPen pen, VertexList pointList, CadVertex Normal, bool drawOutline)
-        {
-            int cnt = pointList.Count;
-            if (cnt == 0)
-            {
-                return;
-            }
+        //public override void DrawFace(DrawPen pen, VertexList pointList, CadVertex Normal, bool drawOutline)
+        //{
+        //    int cnt = pointList.Count;
+        //    if (cnt == 0)
+        //    {
+        //        return;
+        //    }
 
-            CadVertex p0 = pointList[0];
-            CadVertex p1;
+        //    CadVertex p0 = pointList[0];
+        //    CadVertex p1;
 
-            int i;
-            for (i = 1; i < cnt; i++)
-            {
-                p1 = pointList[i];
-                DrawLine(pen, p0, p1);
-                p0 = p1;
-            }
+        //    int i;
+        //    for (i = 1; i < cnt; i++)
+        //    {
+        //        p1 = pointList[i];
+        //        DrawLine(pen, p0, p1);
+        //        p0 = p1;
+        //    }
 
-            p1 = pointList[0];
-            DrawLine(pen, p0, p1);
-        }
+        //    p1 = pointList[0];
+        //    DrawLine(pen, p0, p1);
+        //}
 
         public override void DrawHarfEdgeModel(DrawPen pen, HeModel model)
         {
