@@ -59,14 +59,14 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawFace(DrawPen pen, VertexList pointList)
-        {
-            DrawFace(pen, pointList, default(CadVertex), true);
-        }
+        //public virtual void DrawFace(DrawPen pen, VertexList pointList)
+        //{
+        //    DrawFace(pen, pointList, default(CadVertex), true);
+        //}
 
-        public virtual void DrawFace(DrawPen pen, VertexList pointList, CadVertex normal, bool drawOutline)
-        {
-        }
+        //public virtual void DrawFace(DrawPen pen, VertexList pointList, CadVertex normal, bool drawOutline)
+        //{
+        //}
 
         public virtual void DrawHarfEdgeModel(DrawPen pen, HeModel model)
         {

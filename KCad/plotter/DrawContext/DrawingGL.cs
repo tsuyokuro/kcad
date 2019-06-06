@@ -59,8 +59,7 @@ namespace Plotter
 
         public override void DrawSelected(List<CadFigure> list, DrawPen pen)
         {
-            GL.Disable(EnableCap.Lighting);
-            GL.Disable(EnableCap.Light0);
+            DisableLight();
 
             foreach (CadFigure fig in list)
             {
@@ -76,8 +75,9 @@ namespace Plotter
             a *= DC.WorldScale;
             b *= DC.WorldScale;
 
-            GL.Begin(PrimitiveType.LineStrip);
             GL.Color4(pen.Color4());
+
+            GL.Begin(PrimitiveType.LineStrip);
 
             GL.Vertex3(a.vector);
             GL.Vertex3(b.vector);
@@ -85,72 +85,72 @@ namespace Plotter
             GL.End();
         }
 
-        public override void DrawFace(DrawPen pen, VertexList pointList, CadVertex normal, bool drawOutline)
-        {
-            //DebugOut.Std.println("GL DrawFace");
+        //public override void DrawFace(DrawPen pen, VertexList pointList, CadVertex normal, bool drawOutline)
+        //{
+        //    //DebugOut.Std.println("GL DrawFace");
 
-            CadVertex p;
+        //    CadVertex p;
 
-            if (normal.IsZero())
-            {
-                normal = CadMath.Normal(pointList[0], pointList[1], pointList[2]);
-            }
+        //    if (normal.IsZero())
+        //    {
+        //        normal = CadMath.Normal(pointList[0], pointList[1], pointList[2]);
+        //    }
 
-            bool normalValid = !normal.IsZero();
-
-
-            GL.Enable(EnableCap.Lighting);
-            GL.Enable(EnableCap.Light0);
+        //    bool normalValid = !normal.IsZero();
 
 
-            GL.Begin(PrimitiveType.Polygon);
-            GL.Color4(0.8f, 0.8f, 0.8f, 1.0f);
+        //    GL.Enable(EnableCap.Lighting);
+        //    GL.Enable(EnableCap.Light0);
 
-            if (normalValid)
-            {
-                GL.Normal3(normal.vector);
-            }
 
-            foreach (CadVertex pt in pointList)
-            {
-                p = pt * DC.WorldScale;
+        //    GL.Begin(PrimitiveType.Polygon);
+        //    GL.Color4(0.8f, 0.8f, 0.8f, 1.0f);
 
-                GL.Vertex3(p.vector);
-            }
+        //    if (normalValid)
+        //    {
+        //        GL.Normal3(normal.vector);
+        //    }
 
-            GL.End();
+        //    foreach (CadVertex pt in pointList)
+        //    {
+        //        p = pt * DC.WorldScale;
 
-            GL.Disable(EnableCap.Lighting);
-            GL.Disable(EnableCap.Light0);
+        //        GL.Vertex3(p.vector);
+        //    }
 
-            #region 輪郭
+        //    GL.End();
 
-            if (drawOutline)
-            {
-                Color4 color = pen.Color4();
+        //    GL.Disable(EnableCap.Lighting);
+        //    GL.Disable(EnableCap.Light0);
 
-                GL.Color4(color);
-                GL.LineWidth(1.0f);
+        //    #region 輪郭
 
-                CadVertex shift = GetShiftForOutLine();
+        //    if (drawOutline)
+        //    {
+        //        Color4 color = pen.Color4();
 
-                GL.Begin(PrimitiveType.LineStrip);
+        //        GL.Color4(color);
+        //        GL.LineWidth(1.0f);
 
-                foreach (CadVertex pt in pointList)
-                {
-                    p = (pt + shift) * DC.WorldScale;
-                    GL.Vertex3(p.vector);
-                }
+        //        CadVertex shift = GetShiftForOutLine();
 
-                CadVertex pt0 = pointList[0];
-                p = (pt0 + shift) * DC.WorldScale;
+        //        GL.Begin(PrimitiveType.LineStrip);
 
-                GL.Vertex3(p.vector);
+        //        foreach (CadVertex pt in pointList)
+        //        {
+        //            p = (pt + shift) * DC.WorldScale;
+        //            GL.Vertex3(p.vector);
+        //        }
 
-                GL.End();
-            }
-            #endregion
-        }
+        //        CadVertex pt0 = pointList[0];
+        //        p = (pt0 + shift) * DC.WorldScale;
+
+        //        GL.Vertex3(p.vector);
+
+        //        GL.End();
+        //    }
+        //    #endregion
+        //}
 
         public override void DrawHarfEdgeModel(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
@@ -167,16 +167,14 @@ namespace Plotter
 
         private void DrawEdge(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
-            GL.Disable(EnableCap.Lighting);
-            GL.Disable(EnableCap.Light0);
+            DisableLight();
+
             GL.LineWidth(1.0f);
 
             Color4 color = pen.Color4();
             Color4 edgeColor = edgePen.Color4();
 
-            //Vector3d t = DC.ViewDir * (-0.1f / DC.WorldScale);
-
-            CadVertex shift = GetShiftForOutLine();
+            Vector3d shift = GetShiftForOutLine();
 
             CadVertex p0;
             CadVertex p1;
@@ -243,8 +241,7 @@ namespace Plotter
 
         public override void DrawHarfEdgeModel(DrawPen pen, HeModel model)
         {
-            GL.Enable(EnableCap.Lighting);
-            GL.Enable(EnableCap.Light0);
+            EnableLight();
             
             for (int i = 0; i < model.FaceStore.Count; i++)
             {
@@ -282,6 +279,7 @@ namespace Plotter
                 GL.End();
 
 #if DEBUG_DRAW_NORMAL
+                DisableLight();
 
                 c = head;
 
@@ -297,13 +295,7 @@ namespace Plotter
                         CadVertex np0 = p;
                         CadVertex np1 = p + (nv * 15);
 
-                        GL.Disable(EnableCap.Lighting);
-                        GL.Disable(EnableCap.Light0);
-
                         DrawArrow(pen, np0, np1, ArrowTypes.CROSS, ArrowPos.END, 3, 3);
-
-                        GL.Enable(EnableCap.Lighting);
-                        GL.Enable(EnableCap.Light0);
                     }
 
 
@@ -314,8 +306,12 @@ namespace Plotter
                         break;
                     }
                 }
+
+                EnableLight();
 #endif
             }
+
+            DisableLight();
         }
 
         public override void DrawAxis()
@@ -483,30 +479,30 @@ namespace Plotter
             DrawLine(pen, pz0, pz1);
         }
 
-        private CadVertex GetShiftForOutLine()
+        private Vector3d GetShiftForOutLine()
         {
-            CadVertex v = DC.DevVectorToWorldVector(CadVertex.UnitX);
-            Vector3d vv = -DC.ViewDir * v.Norm();
+            double shift = DC.DevSizeToWoldSize(0.9);
+            Vector3d vv = -DC.ViewDir * shift;
 
-            return (CadVertex)vv;
+            return vv;
         }
 
-        private void DumpGLMatrix()
-        {
-            GL.MatrixMode(MatrixMode.Modelview);
+        //private void DumpGLMatrix()
+        //{
+        //    GL.MatrixMode(MatrixMode.Modelview);
 
-            double[] model = new double[16];
-            double[] projection = new double[16];
+        //    double[] model = new double[16];
+        //    double[] projection = new double[16];
 
-            GL.GetDouble(GetPName.ProjectionMatrix, projection);
+        //    GL.GetDouble(GetPName.ProjectionMatrix, projection);
 
-            UMatrix4 m4 = new UMatrix4(projection);
+        //    UMatrix4 m4 = new UMatrix4(projection);
 
 
-            m4.dump("Get");
+        //    m4.dump("Get");
 
-            DC.ProjectionMatrix.dump("Set");
-        }
+        //    DC.ProjectionMatrix.dump("Set");
+        //}
 
         public override void DrawText(int font, DrawBrush brush, CadVertex a, CadVertex xdir, CadVertex ydir, DrawTextOption opt, string s)
         {
@@ -758,6 +754,18 @@ namespace Plotter
             p1 += DC.ViewOrg;
 
             DrawRectScrn(DrawPen.New(DC, DrawTools.PEN_PAGE_FRAME), p0, p1);
+        }
+
+        public void EnableLight()
+        {
+            GL.Enable(EnableCap.Lighting);
+            GL.Enable(EnableCap.Light0);
+        }
+
+        public void DisableLight()
+        {
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
         }
     }
 }

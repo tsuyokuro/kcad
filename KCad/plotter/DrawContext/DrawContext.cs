@@ -41,15 +41,15 @@ namespace Plotter
 
         // 投影面までの距離
         protected double mProjectionNear = 0.1;
-        public double ProjectionNear => mProjectionNear;
+        protected double ProjectionNear => mProjectionNear;
 
         // 視野空間の遠方側クリップ面までの距離
         protected double mProjectionFar = 2000.0;
-        public double ProjectionFar => mProjectionFar;
+        protected double ProjectionFar => mProjectionFar;
 
         // 画角 大きければ広角レンズ、小さければ望遠レンズ
         protected double mFovY = Math.PI / 4;
-        public double FovY => mFovY;
+        protected double FovY => mFovY;
 
         // 上を示す Vector
         protected Vector3d mUpVector = Vector3d.UnitY;
@@ -61,27 +61,27 @@ namespace Plotter
 
         // ワールド座標系から視点座標系への変換(ビュー変換)行列
         protected UMatrix4 mViewMatrix = new UMatrix4();
-        public UMatrix4 ViewMatrix => mViewMatrix;
-        public ref Matrix4d ViewMatrixRef => ref mViewMatrix.Matrix;
+        protected UMatrix4 ViewMatrix => mViewMatrix;
+        protected ref Matrix4d ViewMatrixRef => ref mViewMatrix.Matrix;
 
         // 視点座標系からワールド座標系への変換行列
         protected UMatrix4 mViewMatrixInv = new UMatrix4();
-        public UMatrix4 ViewMatrixInv => mViewMatrixInv;
+        protected UMatrix4 ViewMatrixInv => mViewMatrixInv;
 
         // 視点座標系から投影座標系への変換行列
-        public UMatrix4 mProjectionMatrix = new UMatrix4();
-        public UMatrix4 ProjectionMatrix => mProjectionMatrix;
-        public ref Matrix4d ProjectionMatrixRef => ref mProjectionMatrix.Matrix;
+        protected UMatrix4 mProjectionMatrix = new UMatrix4();
+        protected UMatrix4 ProjectionMatrix => mProjectionMatrix;
+        protected ref Matrix4d ProjectionMatrixRef => ref mProjectionMatrix.Matrix;
 
         // 投影座標系から視点座標系への変換行列
         protected UMatrix4 mProjectionMatrixInv = new UMatrix4();
-        public UMatrix4 ProjectionMatrixInv => mProjectionMatrixInv;
+        protected UMatrix4 ProjectionMatrixInv => mProjectionMatrixInv;
 
         protected double mProjectionW = 1.0;
-        public double ProjectionW => mProjectionW;
+        protected double ProjectionW => mProjectionW;
 
         protected double mProjectionZ = 0;
-        public double ProjectionZ => mProjectionZ;
+        protected double ProjectionZ => mProjectionZ;
 
         // Screen 座標系の原点 
         // 座標系の原点がView座標上で何処にあるかを示す

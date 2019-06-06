@@ -44,9 +44,9 @@ namespace Plotter
 
         void DrawDot(DrawPen pen, CadVertex p);
 
-        void DrawFace(DrawPen pen, VertexList pointList);
+        //void DrawFace(DrawPen pen, VertexList pointList);
 
-        void DrawFace(DrawPen pen, VertexList pointList, CadVertex normal, bool drawOutline);
+        //void DrawFace(DrawPen pen, VertexList pointList, CadVertex normal, bool drawOutline);
 
         void DrawHarfEdgeModel(DrawPen pen, HeModel model);
 
