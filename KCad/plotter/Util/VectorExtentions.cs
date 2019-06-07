@@ -21,6 +21,28 @@ namespace Plotter
             v.Z = z;
             v.W = w;
         }
+
+        public static Vector3d Min(Vector3d v1, Vector3d v2)
+        {
+            Vector3d v = default(Vector3d);
+
+            v.X = Math.Min(v1.X, v2.X);
+            v.Y = Math.Min(v1.Y, v2.Y);
+            v.Z = Math.Min(v1.Z, v2.Z);
+
+            return v;
+        }
+
+        public static Vector3d Max(Vector3d v1, Vector3d v2)
+        {
+            Vector3d v = default;
+
+            v.X = Math.Max(v1.X, v2.X);
+            v.Y = Math.Max(v1.Y, v2.Y);
+            v.Z = Math.Max(v1.Z, v2.Z);
+
+            return v;
+        }
     }
 
     public static class VectorExtentions
@@ -63,6 +85,15 @@ namespace Plotter
             ret.Z *= f;
 
             return ret;
+        }
+
+        public static bool EqualsThreshold(this Vector3d v, Vector3d p, double m = 0.000001)
+        {
+            return (
+                v.X > p.X - m && v.X < p.X + m &&
+                v.Y > p.Y - m && v.Y < p.Y + m &&
+                v.Z > p.Z - m && v.Z < p.Z + m
+                );
         }
 
         public static void dump(this Vector3d v, string prefix = nameof(Vector3d))
