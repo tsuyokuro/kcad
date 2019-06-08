@@ -90,7 +90,7 @@ namespace Plotter
             CadVertex a = fseg.Point0;
             CadVertex b = fseg.Point1;
 
-            if (fig.StoreList != null)
+            if (fig.StoreList != null && fig.StoreList.Count > 1)
             {
                 a = fseg.StoredPoint0;
                 b = fseg.StoredPoint1;

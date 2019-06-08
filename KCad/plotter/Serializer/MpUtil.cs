@@ -9,7 +9,7 @@ namespace Plotter.Serializer
 {
     public partial class MpUtil
     {
-        public static List<MpVertex> VectortListToMp(VertexList v)
+        public static List<MpVertex> VertexListToMp(VertexList v)
         {
             List<MpVertex> ret = new List<MpVertex>();
             for (int i=0; i<v.Count; i++)
@@ -31,9 +31,31 @@ namespace Plotter.Serializer
             return ret;
         }
 
-        public static VertexList VectortListFromMp(List<MpVertex> list)
+        public static VertexList VertexListFromMp(List<MpVertex> list)
         {
             VertexList ret = new VertexList(list.Count);
+            for (int i = 0; i < list.Count; i++)
+            {
+                ret.Add(list[i].Restore());
+            }
+
+            return ret;
+        }
+
+        public static List<MpVector3d> Vector3dListToMp(Vector3dList v)
+        {
+            List<MpVector3d> ret = new List<MpVector3d>();
+            for (int i = 0; i < v.Count; i++)
+            {
+                ret.Add(MpVector3d.Create(v[i]));
+            }
+
+            return ret;
+        }
+
+        public static Vector3dList Vector3dListFromMp(List<MpVector3d> list)
+        {
+            Vector3dList ret = new Vector3dList(list.Count);
             for (int i = 0; i < list.Count; i++)
             {
                 ret.Add(list[i].Restore());

@@ -1,4 +1,5 @@
 ﻿using CadDataTypes;
+using OpenTK;
 using Plotter;
 using System;
 using System.Collections.Generic;
@@ -72,14 +73,14 @@ namespace HalfEdgeNS
             he2.Prev = he1;
 
             // 法線の設定
-            CadVertex normal = CadMath.Normal(
-                mHeModel.VertexStore[v0],
-                mHeModel.VertexStore[v1],
-                mHeModel.VertexStore[v2]);
+            Vector3d normal = CadMath.Normal(
+                mHeModel.VertexStore[v0].vector,
+                mHeModel.VertexStore[v1].vector,
+                mHeModel.VertexStore[v2].vector);
 
             int normalIndex = HeModel.INVALID_INDEX;
 
-            if (!normal.Invalid)
+            if (!normal.IsInvalid())
             {
                 normalIndex = mHeModel.NormalStore.Add(normal);
             }

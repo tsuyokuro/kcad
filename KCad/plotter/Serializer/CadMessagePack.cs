@@ -216,7 +216,7 @@ namespace Plotter.Serializer
         public List<MpVertex> VertexStore;
 
         [Key("NormalStore")]
-        public List<MpVertex> NormalStore;
+        public List<MpVector3d> NormalStore;
 
         [Key("FaceStore")]
         public List<MpHeFace> FaceStore;
@@ -235,9 +235,9 @@ namespace Plotter.Serializer
         {
             MpHeModel ret = new MpHeModel();
 
-            ret.VertexStore = MpUtil.VectortListToMp(model.VertexStore);
+            ret.VertexStore = MpUtil.VertexListToMp(model.VertexStore);
 
-            ret.NormalStore = MpUtil.VectortListToMp(model.NormalStore);
+            ret.NormalStore = MpUtil.Vector3dListToMp(model.NormalStore);
 
             ret.FaceStore = MpUtil.HeFaceListToMp(model.FaceStore);
 
@@ -256,9 +256,9 @@ namespace Plotter.Serializer
         {
             HeModel ret = new HeModel();
 
-            ret.VertexStore = MpUtil.VectortListFromMp(VertexStore);
+            ret.VertexStore = MpUtil.VertexListFromMp(VertexStore);
 
-            ret.NormalStore = MpUtil.VectortListFromMp(NormalStore);
+            ret.NormalStore = MpUtil.Vector3dListFromMp(NormalStore);
 
             // Create dictionary
             Dictionary<uint, HalfEdge> dic = new Dictionary<uint, HalfEdge>();
@@ -415,7 +415,7 @@ namespace Plotter.Serializer
             ret.CtrlCnt = src.CtrlCnt;
             ret.CtrlDataCnt = src.CtrlDataCnt;
             ret.Weights = MpUtil.ArrayClone<double>(src.Weights);
-            ret.CtrlPoints = MpUtil.VectortListToMp(src.CtrlPoints);
+            ret.CtrlPoints = MpUtil.VertexListToMp(src.CtrlPoints);
             ret.CtrlOrder = MpUtil.ArrayClone<int>(src.CtrlOrder);
 
             ret.BSplineP = MpBSplineParam.Create(src.BSplineP);
@@ -430,7 +430,7 @@ namespace Plotter.Serializer
             nurbs.CtrlCnt = CtrlCnt;
             nurbs.CtrlDataCnt = CtrlDataCnt;
             nurbs.Weights = MpUtil.ArrayClone<double>(Weights);
-            nurbs.CtrlPoints = MpUtil.VectortListFromMp(CtrlPoints);
+            nurbs.CtrlPoints = MpUtil.VertexListFromMp(CtrlPoints);
             nurbs.CtrlOrder = MpUtil.ArrayClone<int>(CtrlOrder);
 
             nurbs.BSplineP = BSplineP.Restore();
@@ -479,7 +479,7 @@ namespace Plotter.Serializer
             ret.UCtrlDataCnt = src.UCtrlDataCnt;
             ret.VCtrlDataCnt = src.VCtrlDataCnt;
 
-            ret.CtrlPoints = MpUtil.VectortListToMp(src.CtrlPoints);
+            ret.CtrlPoints = MpUtil.VertexListToMp(src.CtrlPoints);
 
             ret.Weights = MpUtil.ArrayClone<double>(src.Weights);
             ret.CtrlOrder = MpUtil.ArrayClone<int>(src.CtrlOrder);
@@ -500,7 +500,7 @@ namespace Plotter.Serializer
             nurbs.UCtrlDataCnt = UCtrlDataCnt;
             nurbs.VCtrlDataCnt = VCtrlDataCnt;
 
-            nurbs.CtrlPoints = MpUtil.VectortListFromMp(CtrlPoints);
+            nurbs.CtrlPoints = MpUtil.VertexListFromMp(CtrlPoints);
 
             nurbs.Weights = MpUtil.ArrayClone<double>(Weights);
             nurbs.CtrlOrder = MpUtil.ArrayClone<int>(CtrlOrder);

@@ -256,8 +256,8 @@ namespace Plotter
 
                 if (f.Normal != HeModel.INVALID_INDEX)
                 {
-                    CadVertex nv = model.NormalStore[f.Normal];
-                    GL.Normal3(nv.vector);
+                    Vector3d nv = model.NormalStore[f.Normal];
+                    GL.Normal3(nv);
                 }
 
                 for (; ; )
