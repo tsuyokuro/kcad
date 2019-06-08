@@ -9,9 +9,13 @@ from System import UInt32 as uint
 
 import clr
 clr.AddReference('CadDataTypes')
+clr.AddReference('OpenTK')
 
 import CadDataTypes.CadVertex as CadVertex
 import CadDataTypes.VertexList as VertexList
+
+import OpenTK.Vector3d as Vector3d
+
 
 #[AC] puts(s)
 def puts(s):
@@ -236,10 +240,6 @@ def set_seg_len(len):
 #[AC] to_bmp(32, 32, 0xffffffff, 1, "")
 def to_bmp(bw, bh, argb=0xffffffff, linew=1, fname=""):
     SE.CreateBitmap(bw, bh, argb, linew, fname)
-
-#[AC] faceTo(dir=unit_vz)
-def face_to(dir):
-    SE.FaceToDirection(dir)
 
 #[AC] devPToWorldP(p)
 def devPToWorldP(p):

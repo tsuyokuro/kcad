@@ -72,19 +72,22 @@ namespace Plotter
             return !double.IsNaN(v.X);
         }
 
-        public static Vector3d UnitVector()
+        public static Vector3d UnitVector(this Vector3d v)
         {
-            Vector3d ret = default;
-
-            double norm = ret.Length;
+            double norm = v.Length;
 
             double f = 1.0 / norm;
 
-            ret.X *= f;
-            ret.Y *= f;
-            ret.Z *= f;
+            v.X *= f;
+            v.Y *= f;
+            v.Z *= f;
 
-            return ret;
+            return v;
+        }
+
+        public static double Norm(this Vector3d v)
+        {
+            return v.Length;
         }
 
         public static bool EqualsThreshold(this Vector3d v, Vector3d p, double m = 0.000001)

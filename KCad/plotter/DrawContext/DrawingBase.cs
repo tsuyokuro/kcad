@@ -119,9 +119,9 @@ namespace Plotter
         {
             DrawLine(pen, pt0, pt1);
 
-            CadVertex d = pt1 - pt0;
+            Vector3d d = pt1.vector - pt0.vector;
 
-            double dl = d.Norm();
+            double dl = d.Length;
 
             if (dl < 0.00001)
             {
@@ -129,15 +129,15 @@ namespace Plotter
             }
 
 
-            CadVertex tmp = CadVertex.Create(dl, 0, 0);
+            Vector3d tmp = new Vector3d(dl, 0, 0);
 
-            double angle = Vector3d.CalculateAngle(tmp.vector, d.vector);
+            double angle = Vector3d.CalculateAngle(tmp, d);
 
-            CadVertex normal = CadMath.CrossProduct(tmp, d);  // 回転軸
+            Vector3d normal = CadMath.CrossProduct(tmp, d);  // 回転軸
 
-            if (normal.Norm() < 0.0001)
+            if (normal.Length < 0.0001)
             {
-                normal = CadVertex.Create(0, 0, 1);
+                normal = new Vector3d(0, 0, 1);
             }
             else
             {

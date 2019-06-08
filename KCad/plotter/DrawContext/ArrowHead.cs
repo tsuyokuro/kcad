@@ -87,39 +87,39 @@ namespace Plotter
         {
             CadQuaternion qp;
 
-            qp = CadQuaternion.FromPoint(p0);
+            qp = CadQuaternion.FromPoint(p0.vector);
             qp = r * qp;
             qp = qp * q;
 
-            p0 = CadQuaternion.ToPoint(qp);
+            p0.vector = CadQuaternion.ToPoint(qp);
 
 
-            qp = CadQuaternion.FromPoint(p1);
+            qp = CadQuaternion.FromPoint(p1.vector);
             qp = r * qp;
             qp = qp * q;
 
-            p1 = CadQuaternion.ToPoint(qp);
+            p1.vector = CadQuaternion.ToPoint(qp);
 
 
-            qp = CadQuaternion.FromPoint(p2);
+            qp = CadQuaternion.FromPoint(p2.vector);
             qp = r * qp;
             qp = qp * q;
 
-            p2 = CadQuaternion.ToPoint(qp);
+            p2.vector = CadQuaternion.ToPoint(qp);
 
 
-            qp = CadQuaternion.FromPoint(p3);
+            qp = CadQuaternion.FromPoint(p3.vector);
             qp = r * qp;
             qp = qp * q;
 
-            p3 = CadQuaternion.ToPoint(qp);
+            p3.vector = CadQuaternion.ToPoint(qp);
 
 
-            qp = CadQuaternion.FromPoint(p4);
+            qp = CadQuaternion.FromPoint(p4.vector);
             qp = r * qp;
             qp = qp * q;
 
-            p4 = CadQuaternion.ToPoint(qp);
+            p4.vector = CadQuaternion.ToPoint(qp);
         }
     }
 }

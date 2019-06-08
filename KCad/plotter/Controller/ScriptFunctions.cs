@@ -767,7 +767,7 @@ namespace Plotter.Controller
         {
             fig.ForEachFig(f =>
             {
-                CadUtil.RotateFigure(f, org, axisDir, angle);
+                CadUtil.RotateFigure(f, org.vector, axisDir.vector, angle);
             });
         }
 
@@ -852,7 +852,7 @@ namespace Plotter.Controller
             }));
         }
 
-        public void FaceToDirection(CadVertex dir)
+        public void FaceToDirection(Vector3d dir)
         {
             DrawContext dc = Controller.CurrentDC;
 
@@ -865,17 +865,17 @@ namespace Plotter.Controller
                 return;
             }
 
-            FaceToDirection(fig, Controller.LastDownPoint, dir);
+            FaceToDirection(fig, Controller.LastDownPoint.vector, dir);
         }
 
-        private void FaceToDirection(CadFigure fig, CadVertex org, CadVertex dir)
+        private void FaceToDirection(CadFigure fig, Vector3d org, Vector3d dir)
         {
             if (fig.Type != CadFigure.Types.POLY_LINES)
             {
                 return;
             }
 
-            CadVertex faceNormal = CadUtil.RepresentativeNormal(fig.PointList);
+            Vector3d faceNormal = CadUtil.RepresentativeNormal(fig.PointList).vector;
 
             if (faceNormal.EqualsThreshold(dir) || (-faceNormal).EqualsThreshold(dir))
             {
@@ -890,7 +890,7 @@ namespace Plotter.Controller
             //   /
             //  /
             // 面の法線 faceNormal
-            CadVertex rv = CadMath.Normal(faceNormal, dir);
+            Vector3d rv = CadMath.Normal(faceNormal, dir);
 
             double t = CadMath.AngleOfVector(faceNormal, dir);
 
@@ -928,12 +928,12 @@ namespace Plotter.Controller
 
             CadFigure cfig = FigUtil.Clone(tfig);
 
-            CadVertex org = cfig.PointList[0];
-            CadVertex dir = CadVertex.UnitZ;
+            Vector3d org = cfig.PointList[0].vector;
+            Vector3d dir = Vector3d.UnitZ;
 
-            CadVertex faceNormal = CadUtil.RepresentativeNormal(cfig.PointList);
+            Vector3d faceNormal = CadUtil.RepresentativeNormal(cfig.PointList).vector;
 
-            CadVertex rotateV = default;
+            Vector3d rotateV = default;
 
             double t = 0;
 
@@ -1324,17 +1324,19 @@ namespace Plotter.Controller
 
             double t = CadMath.Deg2Rad(angle);
 
-            CadQuaternion q = CadQuaternion.RotateQuaternion(axis, t);
+            CadQuaternion q = CadQuaternion.RotateQuaternion(axis.vector, t);
             CadQuaternion r = q.Conjugate(); ;
 
             CadQuaternion qp;
 
-            qp = CadQuaternion.FromPoint(v);
+            qp = CadQuaternion.FromPoint(v.vector);
 
             qp = r * qp;
             qp = qp * q;
 
-            CadVertex rv = qp.ToPoint();
+            CadVertex rv = v;
+
+            rv.vector = qp.ToPoint();
 
             return rv;
         }

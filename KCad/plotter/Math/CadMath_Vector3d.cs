@@ -116,6 +116,18 @@ namespace Plotter
             double a = InnerProduct(v1, v2);
             return Near_P1(a) || Near_M1(a);
         }
+
+        public static double AngleOfVector(Vector3d v1, Vector3d v2)
+        {
+            double v1n = v1.Norm();
+            double v2n = v2.Norm();
+
+            double cost = InnerProduct(v1, v2) / (v1n * v2n);
+
+            double t = Math.Acos(cost);
+
+            return t;
+        }
     }
 }
 

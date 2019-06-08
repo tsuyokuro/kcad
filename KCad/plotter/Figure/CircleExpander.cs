@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -39,7 +40,7 @@ namespace Plotter
 
             int div = splitCnt;
 
-            CadVertex normal = CadMath.Normal(va, vb);
+            Vector3d normal = CadMath.Normal(va.vector, vb.vector);
 
             CadQuaternion q = CadQuaternion.RotateQuaternion(normal, dt);
             CadQuaternion r = q.Conjugate();
@@ -52,11 +53,11 @@ namespace Plotter
             int i = 0;
             for (; i < div - 1; i++)
             {
-                CadQuaternion qp = CadQuaternion.FromPoint(p);
+                CadQuaternion qp = CadQuaternion.FromPoint(p.vector);
                 qp = r * qp;
                 qp = qp * q;
 
-                p = qp.ToPoint();
+                p.vector = qp.ToPoint();
 
                 tp2 = p + cp;
 
@@ -85,7 +86,7 @@ namespace Plotter
 
             int div = splitCnt;
 
-            CadVertex normal = CadMath.Normal(va, vb);
+            Vector3d normal = CadMath.Normal(va.vector, vb.vector);
 
             CadQuaternion q = CadQuaternion.RotateQuaternion(normal, dt);
             CadQuaternion r = q.Conjugate();
@@ -97,11 +98,11 @@ namespace Plotter
             int i = 0;
             for (; i < div - 1; i++)
             {
-                CadQuaternion qp = CadQuaternion.FromPoint(p);
+                CadQuaternion qp = CadQuaternion.FromPoint(p.vector);
                 qp = r * qp;
                 qp = qp * q;
 
-                p = qp.ToPoint();
+                p.vector = qp.ToPoint();
 
                 tp = p + cp;
 
