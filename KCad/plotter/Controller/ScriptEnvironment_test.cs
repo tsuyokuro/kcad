@@ -17,6 +17,7 @@ using MessagePack;
 using Newtonsoft.Json.Linq;
 using System.Drawing;
 using OpenTK.Graphics;
+using OpenTK;
 
 namespace Plotter.Controller
 {
@@ -100,8 +101,8 @@ namespace Plotter.Controller
                 return;
             }
 
-            CadVertex v1 = fig.PointList[0] - fig.PointList[1];
-            CadVertex v2 = fig.PointList[2] - fig.PointList[1];
+            Vector3d v1 = fig.PointList[0].vector - fig.PointList[1].vector;
+            Vector3d v2 = fig.PointList[2].vector - fig.PointList[1].vector;
 
             double t = CadMath.AngleOfVector(v1, v2);
 

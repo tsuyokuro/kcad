@@ -117,6 +117,17 @@ namespace Plotter
             return Near_P1(a) || Near_M1(a);
         }
 
+        /// <summary>
+        /// 2つのVectorのなす角を求める 
+        ///
+        /// 内積の定義を使う
+        /// cosθ = ( AとBの内積 ) / (Aの長さ * Bの長さ)
+        ///
+        /// </summary>
+        /// <param name="v1">Vector1</param>
+        /// <param name="v2">Vector2</param>
+        /// <returns>なす角</returns>
+        /// 
         public static double AngleOfVector(Vector3d v1, Vector3d v2)
         {
             double v1n = v1.Norm();

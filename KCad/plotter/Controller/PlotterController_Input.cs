@@ -525,8 +525,8 @@ namespace Plotter.Controller
                 CadVertex p1 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 3);
                 CadVertex p2 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 1);
 
-                CadVertex v1 = p1 - p0;
-                CadVertex v2 = p2 - p0;
+                Vector3d v1 = p1.vector - p0.vector;
+                Vector3d v2 = p2.vector - p0.vector;
 
                 double t = CadMath.AngleOfVector(v1, v2);
                 a = CadMath.Rad2Deg(t);
