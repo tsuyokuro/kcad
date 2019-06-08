@@ -8,7 +8,7 @@ namespace Plotter
     public struct RulerInfo
     {
         public bool IsValid;
-        public CadVertex CrossPoint;
+        public Vector3d CrossPoint;
         public double Distance;
 
         public CadRuler Ruler;
@@ -22,32 +22,32 @@ namespace Plotter
         public int Idx0;
         public int Idx1;
 
-        public CadVertex P0
+        public Vector3d P0
         {
             get
             {
                 if (Fig.StoreList == null)
                 {
-                    return Fig.PointList[Idx0];
+                    return Fig.PointList[Idx0].vector;
                 }
                 else
                 {
-                    return Fig.StoreList[Idx0];
+                    return Fig.StoreList[Idx0].vector;
                 }
             }
         }
 
-        public CadVertex P1
+        public Vector3d P1
         {
             get
             {
                 if (Fig.StoreList == null)
                 {
-                    return Fig.PointList[Idx1];
+                    return Fig.PointList[Idx1].vector;
                 }
                 else
                 {
-                    return Fig.StoreList[Idx1];
+                    return Fig.StoreList[Idx1].vector;
                 }
             }
         }
@@ -61,8 +61,8 @@ namespace Plotter
             Vector3d xfaceNormal = dc.DevVectorToWorldVector(cursor.DirX);
             Vector3d yfaceNormal = dc.DevVectorToWorldVector(cursor.DirY);
 
-            Vector3d cx = CadUtil.CrossPlane(P0.vector, P1.vector, cwp, xfaceNormal);
-            Vector3d cy = CadUtil.CrossPlane(P0.vector, P1.vector, cwp, yfaceNormal);
+            Vector3d cx = CadUtil.CrossPlane(P0, P1, cwp, xfaceNormal);
+            Vector3d cy = CadUtil.CrossPlane(P0, P1, cwp, yfaceNormal);
 
             if (!cx.IsValid() && !cy.IsValid())
             {
@@ -77,8 +77,6 @@ namespace Plotter
             vtbl[0] = cx;
             vtbl[1] = cy;
             vtbl.Length = 2;
-
-            //Span<CadVector> vtbl = stackalloc CadVector[] { cx, cy };
 
             for (int i = 0; i < vtbl.Length; i++)
             {
@@ -111,7 +109,7 @@ namespace Plotter
             }
 
             ret.IsValid = true;
-            ret.CrossPoint = (CadVertex)p;
+            ret.CrossPoint = p;
             ret.Distance = mind;
 
             ret.Ruler = this;

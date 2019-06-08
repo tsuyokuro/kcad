@@ -861,7 +861,7 @@ namespace Plotter.Controller
 
             if (ri.IsValid)
             {
-                si.SnapPoint = ri.CrossPoint.vector;
+                si.SnapPoint = ri.CrossPoint;
                 si.Cursor.Pos = dc.WorldPointToDevPoint(si.SnapPoint);
 
                 if (mSegSearcher.IsMatch)
@@ -870,18 +870,18 @@ namespace Plotter.Controller
 
                     if (ms.FigureID != ri.Ruler.Fig.ID)
                     {
-                        CadVertex cp = PlotterUtil.CrossOnScreen(dc, ri.Ruler.P0, ri.Ruler.P1, ms.FigSeg.Point0, ms.FigSeg.Point1);
+                        Vector3d cp = PlotterUtil.CrossOnScreen(dc, ri.Ruler.P0, ri.Ruler.P1, ms.FigSeg.Point0.vector, ms.FigSeg.Point1.vector);
 
-                        if (cp.Valid)
+                        if (cp.IsValid())
                         {
-                            si.SnapPoint = dc.DevPointToWorldPoint(cp.vector);
-                            si.Cursor.Pos = cp.vector;
+                            si.SnapPoint = dc.DevPointToWorldPoint(cp);
+                            si.Cursor.Pos = cp;
                         }
                     }
                 }
 
-                HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1.vector, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
-                HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint.vector, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
+                HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
+                HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
             }
 
             return si;
