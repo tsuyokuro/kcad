@@ -461,13 +461,13 @@ namespace Plotter
         {
             double size = Math.Max(DC.ViewWidth, DC.ViewHeight);
 
-            Vector3d p0 = pp.Pos.vector - (pp.DirX.vector * size);
-            Vector3d p1 = pp.Pos.vector + (pp.DirX.vector * size);
+            Vector3d p0 = pp.Pos - (pp.DirX * size);
+            Vector3d p1 = pp.Pos + (pp.DirX * size);
 
             DrawLineScrn(pen, p0.X, p0.Y, p1.X, p1.Y);
 
-            p0 = pp.Pos.vector - (pp.DirY.vector * size);
-            p1 = pp.Pos.vector + (pp.DirY.vector * size);
+            p0 = pp.Pos - (pp.DirY * size);
+            p1 = pp.Pos + (pp.DirY * size);
 
             DrawLineScrn(pen, p0.X, p0.Y, p1.X, p1.Y);
         }

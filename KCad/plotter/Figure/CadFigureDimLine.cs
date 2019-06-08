@@ -115,7 +115,7 @@ namespace Plotter
             PointList.Add(seg.P0);
         }
 
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             if (PointList[0].Selected && PointList[1].Selected &&
                 PointList[2].Selected && PointList[3].Selected)
@@ -129,7 +129,7 @@ namespace Plotter
 
             if (PointList[2].Selected || PointList[3].Selected)
             {
-                CadVertex v0 = StoreList[3] - StoreList[0];
+                Vector3d v0 = StoreList[3].vector - StoreList[0].vector;
 
                 if (v0.IsZero())
                 {
@@ -138,11 +138,11 @@ namespace Plotter
                     return;
                 }
 
-                CadVertex v0u = v0.UnitVector();
+                Vector3d v0u = v0.UnitVector();
 
                 double d = CadMath.InnerProduct(v0u, delta);
 
-                CadVertex vd = v0u * d;
+                Vector3d vd = v0u * d;
 
                 CadVertex nv3 = StoreList[3] + vd;
                 CadVertex nv2 = StoreList[2] + vd;
@@ -214,7 +214,7 @@ namespace Plotter
         // 高さが０の場合、移動方向が定まらないので
         // 投影座標系でz=0とした座標から,List[0] - List[1]への垂線を計算して
         // そこへ移動する
-        private void MoveSelectedPointWithHeight(DrawContext dc, CadVertex delta)
+        private void MoveSelectedPointWithHeight(DrawContext dc, Vector3d delta)
         {
             CadSegment seg = CadUtil.PerpendicularSeg(PointList[0], PointList[1],
                 StoreList[2] + delta);

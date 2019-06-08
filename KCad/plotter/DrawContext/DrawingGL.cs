@@ -531,8 +531,8 @@ namespace Plotter
         {
             double size = Math.Max(DC.ViewWidth, DC.ViewHeight);
 
-            Vector3d p0 = pp.Pos.vector - (pp.DirX.vector * size);
-            Vector3d p1 = pp.Pos.vector + (pp.DirX.vector * size);
+            Vector3d p0 = pp.Pos - (pp.DirX * size);
+            Vector3d p1 = pp.Pos + (pp.DirX * size);
 
             p0 = DC.DevPointToWorldPoint(p0);
             p1 = DC.DevPointToWorldPoint(p1);
@@ -541,8 +541,8 @@ namespace Plotter
 
             DrawLine(pen, p0, p1);
 
-            p0 = pp.Pos.vector - (pp.DirY.vector * size);
-            p1 = pp.Pos.vector + (pp.DirY.vector * size);
+            p0 = pp.Pos - (pp.DirY * size);
+            p1 = pp.Pos + (pp.DirY * size);
 
             p0 = DC.DevPointToWorldPoint(p0);
             p1 = DC.DevPointToWorldPoint(p1);

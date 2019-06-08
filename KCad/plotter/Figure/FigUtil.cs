@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using CadDataTypes;
 using MessagePack;
+using OpenTK;
 using Plotter.Serializer;
 
 namespace Plotter
 {
     public class FigUtil
     {
-        public static void MoveSelectedPointsFromStored(CadFigure fig, DrawContext dc, CadVertex delta)
+        public static void MoveSelectedPointsFromStored(CadFigure fig, DrawContext dc, Vector3d delta)
         {
             if (fig.StoreList == null)
             {

@@ -628,7 +628,7 @@ namespace Plotter
 
         #endregion
 
-        public virtual void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public virtual void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             if (Locked) return;
 

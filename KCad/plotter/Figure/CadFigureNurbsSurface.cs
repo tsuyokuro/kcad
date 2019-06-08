@@ -40,7 +40,7 @@ namespace Plotter
         }
 
 
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             base.MoveSelectedPointsFromStored(dc, delta);
 

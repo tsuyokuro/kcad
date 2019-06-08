@@ -211,7 +211,7 @@
     <Compile Include="plotter\Serializer\CadMessagePack_v1000.cs" />
     <Compile Include="plotter\Serializer\CadMessagePack_v1001.cs" />
     <Compile Include="plotter\Serializer\MpUtil.cs" />
-    <Compile Include="plotter\Util\CadVertexUtil.cs" />
+    <Compile Include="plotter\Util\StackArray.cs" />
     <Compile Include="plotter\Util\VectorExtentions.cs" />
     <Compile Include="WIndowsAPI\WindowsAPI.cs" />
     <Compile Include="Dialogs\AngleInputDialog.xaml.cs">

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -96,26 +97,26 @@ namespace Plotter
                 b = fseg.StoredPoint1;
             }
 
-            CadVertex cwp = dc.DevPointToWorldPoint(Target.Pos);
+            Vector3d cwp = dc.DevPointToWorldPoint(Target.Pos);
 
-            CadVertex xfaceNormal = dc.DevVectorToWorldVector(Target.DirX);
-            CadVertex yfaceNormal = dc.DevVectorToWorldVector(Target.DirY);
+            Vector3d xfaceNormal = dc.DevVectorToWorldVector(Target.DirX);
+            Vector3d yfaceNormal = dc.DevVectorToWorldVector(Target.DirY);
 
-            CadVertex cx = CadUtil.CrossSegPlane(a, b, cwp, xfaceNormal);
-            CadVertex cy = CadUtil.CrossSegPlane(a, b, cwp, yfaceNormal);
+            Vector3d cx = CadUtil.CrossSegPlane(a.vector, b.vector, cwp, xfaceNormal);
+            Vector3d cy = CadUtil.CrossSegPlane(a.vector, b.vector, cwp, yfaceNormal);
 
             CadVertex pa = dc.WorldPointToDevPoint(a);
             CadVertex pb = dc.WorldPointToDevPoint(b);
 
-            if (!cx.Valid && !cy.Valid)
+            if (!cx.IsValid() && !cy.IsValid())
             {
                 return;
             }
 
-            CadVertex p = CadVertex.InvalidValue;
+            Vector3d p = VectorUtil.InvalidVector3d;
             double mind = Double.MaxValue;
 
-            CadVectorArray4 vtbl = default;
+            StackArray<Vector3d> vtbl = default;
 
             vtbl[0] = cx;
             vtbl[1] = cy;
@@ -123,14 +124,14 @@ namespace Plotter
 
             for (int i = 0; i < vtbl.Length; i++)
             {
-                CadVertex v = vtbl[i];
+                Vector3d v = vtbl[i];
 
-                if (!v.Valid)
+                if (!v.IsValid())
                 {
                     continue;
                 }
 
-                CadVertex devv = dc.WorldPointToDevPoint(v);
+                Vector3d devv = dc.WorldPointToDevPoint(v);
 
                 double td = (devv - Target.Pos).Norm();
 
@@ -141,7 +142,7 @@ namespace Plotter
                 }
             }
 
-            if (!p.Valid)
+            if (!p.IsValid())
             {
                 return;
             }
@@ -155,8 +156,8 @@ namespace Plotter
             {
                 MarkSeg.Layer = layer;
                 MarkSeg.FigSeg = fseg;
-                MarkSeg.CrossPoint = p;
-                MarkSeg.CrossPointScrn = dc.WorldPointToDevPoint(p);
+                MarkSeg.CrossPoint = (CadVertex)p;
+                MarkSeg.CrossPointScrn = (CadVertex)dc.WorldPointToDevPoint(p);
                 MarkSeg.Distance = mind;
 
                 MinDist = mind;
@@ -189,10 +190,10 @@ namespace Plotter
             CadVertex pb = dc.WorldPointToDevPoint(b);
 
             double r = CadUtil.SegNorm2D(pa, pc);
-            double tr = CadUtil.SegNorm2D(Target.Pos, pc);
+            double tr = CadUtil.SegNorm2D(Target.Pos, pc.vector);
 
-            double pad = CadUtil.SegNorm2D(Target.Pos, pa);
-            double pbd = CadUtil.SegNorm2D(Target.Pos, pb);
+            double pad = CadUtil.SegNorm2D(Target.Pos, pa.vector);
+            double pbd = CadUtil.SegNorm2D(Target.Pos, pb.vector);
 
             int idxB = 1;
 
@@ -211,9 +212,9 @@ namespace Plotter
 
             if (dist < MinDist)
             {
-                CadVertex tp = dc.DevPointToWorldPoint(Target.Pos);
+                Vector3d tp = dc.DevPointToWorldPoint(Target.Pos);
                 r = CadUtil.SegNorm(a, c);
-                tr = CadUtil.SegNorm(tp, c);
+                tr = CadUtil.SegNorm(tp, c.vector);
 
                 CadVertex td = tp - c;
 

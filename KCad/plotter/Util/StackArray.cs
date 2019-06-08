@@ -1,18 +1,16 @@
-﻿using CadDataTypes;
-
+﻿
 namespace Plotter
 {
-    // 短い配列をstackに確保するためのstruct
-    public struct CadVectorArray4
+    public struct StackArray<T>
     {
-        public CadVertex v0;
-        public CadVertex v1;
-        public CadVertex v2;
-        public CadVertex v3;
+        public T v0;
+        public T v1;
+        public T v2;
+        public T v3;
 
         public int Length;
 
-        public CadVertex this[int i]
+        public T this[int i]
         {
             get
             {
@@ -24,7 +22,7 @@ namespace Plotter
                     case 3: return v3;
                 }
 
-                return CadVertex.Zero;
+                return default(T);
             }
 
             set

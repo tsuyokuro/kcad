@@ -187,7 +187,7 @@ namespace Plotter
             return;
         }
 
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             CadVertex cp = StoreList[0];
 
@@ -201,7 +201,7 @@ namespace Plotter
                 return;
             }
 
-            CadVectorArray4 vt = default;
+            StackArray<CadVertex> vt = default;
 
             vt[0] = StoreList[1] - cp;
             vt[1] = StoreList[2] - cp;

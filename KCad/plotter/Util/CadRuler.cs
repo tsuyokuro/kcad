@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -55,23 +56,23 @@ namespace Plotter
         {
             RulerInfo ret = default(RulerInfo);
 
-            CadVertex cwp = dc.DevPointToWorldPoint(cursor.Pos);
+            Vector3d cwp = dc.DevPointToWorldPoint(cursor.Pos);
 
-            CadVertex xfaceNormal = dc.DevVectorToWorldVector(cursor.DirX);
-            CadVertex yfaceNormal = dc.DevVectorToWorldVector(cursor.DirY);
+            Vector3d xfaceNormal = dc.DevVectorToWorldVector(cursor.DirX);
+            Vector3d yfaceNormal = dc.DevVectorToWorldVector(cursor.DirY);
 
-            CadVertex cx = CadUtil.CrossPlane(P0, P1, cwp, xfaceNormal);
-            CadVertex cy = CadUtil.CrossPlane(P0, P1, cwp, yfaceNormal);
+            Vector3d cx = CadUtil.CrossPlane(P0.vector, P1.vector, cwp, xfaceNormal);
+            Vector3d cy = CadUtil.CrossPlane(P0.vector, P1.vector, cwp, yfaceNormal);
 
-            if (!cx.Valid && !cy.Valid)
+            if (!cx.IsValid() && !cy.IsValid())
             {
                 return ret;
             }
 
-            CadVertex p = CadVertex.InvalidValue;
+            Vector3d p = VectorUtil.InvalidVector3d;
             double mind = Double.MaxValue;
 
-            CadVectorArray4 vtbl = default;
+            StackArray<Vector3d> vtbl = default;
 
             vtbl[0] = cx;
             vtbl[1] = cy;
@@ -81,14 +82,14 @@ namespace Plotter
 
             for (int i = 0; i < vtbl.Length; i++)
             {
-                CadVertex v = vtbl[i];
+                Vector3d v = vtbl[i];
 
-                if (!v.Valid)
+                if (!v.IsValid())
                 {
                     continue;
                 }
 
-                CadVertex devv = dc.WorldPointToDevPoint(v);
+                Vector3d devv = dc.WorldPointToDevPoint(v);
 
                 double td = (devv - cursor.Pos).Norm();
 
@@ -99,7 +100,7 @@ namespace Plotter
                 }
             }
 
-            if (!p.Valid)
+            if (!p.IsValid())
             {
                 return ret;
             }
@@ -110,7 +111,7 @@ namespace Plotter
             }
 
             ret.IsValid = true;
-            ret.CrossPoint = p;
+            ret.CrossPoint = (CadVertex)p;
             ret.Distance = mind;
 
             ret.Ruler = this;

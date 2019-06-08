@@ -399,7 +399,7 @@ namespace Plotter.Controller
             }
 
             dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_DRAG_LINE),
-                LastDownPoint.vector, dc.DevPointToWorldPoint(CrossCursor.Pos.vector));
+                LastDownPoint.vector, dc.DevPointToWorldPoint(CrossCursor.Pos));
         }
 
         public void DrawCrossCursor(DrawContext dc)
@@ -410,7 +410,7 @@ namespace Plotter.Controller
             {
                 dc.Drawing.DrawCrossScrn(
                     dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT),
-                    CrossCursor.Pos.vector,
+                    CrossCursor.Pos,
                     ControllerConst.CURSOR_LOCK_MARK_SIZE);
             }
         }
@@ -654,14 +654,14 @@ namespace Plotter.Controller
             return opeList;
         }
 
-        public void MoveSelectedPoints(CadVertex delta)
+        public void MoveSelectedPoints(Vector3d delta)
         {
             StartEdit();
             MoveSelectedPoints(null, delta);
             EndEdit();
         }
 
-        private void MoveSelectedPoints(DrawContext dc, CadVertex delta)
+        private void MoveSelectedPoints(DrawContext dc, Vector3d delta)
         {
             List<uint> figIDList = DB.GetSelectedFigIDList();
 
@@ -987,7 +987,7 @@ namespace Plotter.Controller
             UpdateTreeView(true);
         }
 
-        public void MovePointsFromStored(List<CadFigure> figList, CadVertex d)
+        public void MovePointsFromStored(List<CadFigure> figList, Vector3d d)
         {
             if (figList == null)
             {

@@ -720,6 +720,35 @@ namespace Plotter
             return ret;
         }
 
+        // 点pから直線abに向かう垂線との交点を求める
+        public static CrossInfo PerpendicularCrossLine(Vector3d a, Vector3d b, Vector3d p)
+        {
+            CrossInfo ret = default(CrossInfo);
+
+            if (a.Equals(b))
+            {
+                return ret;
+            }
+
+
+            Vector3d ab = b - a;
+            Vector3d ap = p - a;
+
+            // A-B 単位ベクトル
+            Vector3d unit_ab = ab.UnitVector();
+
+            // Aから交点までの距離 
+            double dist_ax = CadMath.InnerProduct(unit_ab, ap);
+
+            ret.CrossPoint.X = a.X + (unit_ab.X * dist_ax);
+            ret.CrossPoint.Y = a.Y + (unit_ab.Y * dist_ax);
+            ret.CrossPoint.Z = a.Z + (unit_ab.Z * dist_ax);
+
+            ret.IsCross = true;
+
+            return ret;
+        }
+
 
         //
         // 点pを通り、a - b に平行で、a-bに垂直な線分を求める
@@ -807,10 +836,13 @@ namespace Plotter
             return v;
         }
 
-        //public static double VectorNorm2D(CadVector v)
-        //{
-        //    return Math.Sqrt(v.x * v.x + v.y * v.y);
-        //}
+        public static double SegNorm2D(Vector3d a, Vector3d b)
+        {
+            double dx = b.X - a.X;
+            double dy = b.Y - a.Y;
+
+            return Math.Sqrt((dx * dx) + (dy * dy));
+        }
 
         public static double SegNorm(CadVertex a, CadVertex b)
         {
@@ -1078,6 +1110,97 @@ namespace Plotter
             {
                 cp.Valid = false;
                 return cp;
+            }
+
+            return cp;
+        }
+
+
+        /// <summary>
+        /// 点aに最も近い平面上の点を求める
+        /// </summary>
+        /// <param name="a">点</param>
+        /// <param name="p">平面上の点</param>
+        /// <param name="normal">平面の法線</param>
+        /// <returns>
+        /// 点aに最も近い平面上の点
+        /// </returns>
+        public static Vector3d CrossPlane(Vector3d a, Vector3d p, Vector3d normal)
+        {
+            Vector3d pa = a - p;
+
+            // 法線とpaの内積をとる
+            // 法線の順方向に点Aがあれば d>0 逆方向だと d<0
+            double d = CadMath.InnerProduct(normal, pa);
+
+            //内積値から平面上の最近点を求める
+            Vector3d cp = default(Vector3d);
+            cp.X = a.X - (normal.X * d);
+            cp.Y = a.Y - (normal.Y * d);
+            cp.Z = a.Z - (normal.Z * d);
+
+            return cp;
+        }
+
+        /// <summary>
+        /// 直線 a b と p と normalが示す平面との交点を求める
+        /// </summary>
+        /// <param name="a">直線上の点</param>
+        /// <param name="b">直線上の点</param>
+        /// <param name="p">平面上の点</param>
+        /// <param name="normal">平面の法線</param>
+        /// <returns>交点</returns>
+        /// 
+        public static Vector3d CrossPlane(Vector3d a, Vector3d b, Vector3d p, Vector3d normal)
+        {
+            Vector3d cp = default(Vector3d);
+
+            Vector3d e = b - a;
+
+            double de = CadMath.InnerProduct(normal, e);
+
+            if (de > CadMath.R0Min && de < CadMath.R0Max)
+            {
+                //DebugOut.Std.println("CrossPlane is parallel");
+
+                // 平面と直線は平行
+                return VectorUtil.InvalidVector3d;
+            }
+
+            double d = CadMath.InnerProduct(normal, p);
+            double t = (d - CadMath.InnerProduct(normal, a)) / de;
+
+            cp = a + (e * t);
+
+            return cp;
+        }
+
+        /// <summary>
+        /// 直線 a b と p と normalが示す平面との交点を求める
+        /// </summary>
+        /// <param name="a">直線上の点</param>
+        /// <param name="b">直線上の点</param>
+        /// <param name="p">平面上の点</param>
+        /// <param name="normal">平面の法線</param>
+        /// <returns>交点</returns>
+        /// 
+        public static Vector3d CrossSegPlane(Vector3d a, Vector3d b, Vector3d p, Vector3d normal)
+        {
+            Vector3d cp = CrossPlane(a, b, p, normal);
+
+            if (!cp.IsValid())
+            {
+                return VectorUtil.InvalidVector3d;
+            }
+
+            if (CadMath.InnerProduct((b - a), (cp - a)) < 0)
+            {
+                return VectorUtil.InvalidVector3d;
+            }
+
+            if (CadMath.InnerProduct((a - b), (cp - b)) < 0)
+            {
+                return VectorUtil.InvalidVector3d;
             }
 
             return cp;

@@ -225,8 +225,8 @@ namespace Plotter
             double dx = Math.Abs(ppt.X - Target.Pos.X);
             double dy = Math.Abs(ppt.Y - Target.Pos.Y);
 
-            CrossInfo cix = CadUtil.PerpendicularCrossLine(Target.Pos, Target.Pos + Target.DirX, ppt);
-            CrossInfo ciy = CadUtil.PerpendicularCrossLine(Target.Pos, Target.Pos + Target.DirY, ppt);
+            CrossInfo cix = CadUtil.PerpendicularCrossLine(Target.Pos, Target.Pos + Target.DirX, ppt.vector);
+            CrossInfo ciy = CadUtil.PerpendicularCrossLine(Target.Pos, Target.Pos + Target.DirY, ppt.vector);
 
             double nx = (ppt - ciy.CrossPoint).Norm(); // Cursor Y軸からの距離
             double ny = (ppt - cix.CrossPoint).Norm(); // Cursor X軸からの距離

@@ -34,27 +34,27 @@ namespace Plotter
 
 
         #region Point Move
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             //base.MoveSelectedPoints(dc, delta);
 
             if (Locked) return;
 
-            CadVertex d;
+            Vector3d d;
 
 
             if (!IsSelectedAll() && mPointList.Count > 2 && RestrictionByNormal)
             {
-                CadVertex vdir = (CadVertex)dc.ViewDir;
+                Vector3d vdir = dc.ViewDir;
 
-                CadVertex a = delta;
-                CadVertex b = delta + vdir;
+                Vector3d a = delta;
+                Vector3d b = delta + vdir;
 
-                d = CadUtil.CrossPlane(a, b, StoreList[0], (CadVertex)Normal);
+                d = CadUtil.CrossPlane(a, b, StoreList[0].vector, Normal);
 
-                if (!d.Valid)
+                if (!d.IsValid())
                 {
-                    CadVertex nvNormal = CadMath.Normal((CadVertex)Normal, vdir);
+                    Vector3d nvNormal = CadMath.Normal(Normal, vdir);
 
                     double ip = CadMath.InnerProduct(nvNormal, delta);
 

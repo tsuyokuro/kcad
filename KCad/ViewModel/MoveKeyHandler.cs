@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CadDataTypes;
+using OpenTK;
 using Plotter.Controller;
 
 namespace Plotter
@@ -12,7 +13,7 @@ namespace Plotter
 
         private List<CadFigure> EditFigList;
 
-        private CadVertex Delta = default;
+        private Vector3d Delta = default;
 
         public MoveKeyHandler(PlotterController controller)
         {
@@ -27,7 +28,7 @@ namespace Plotter
             }
 
             IsStarted = false;
-            Delta = CadVertex.Zero;
+            Delta = Vector3d.Zero;
             EditFigList = null;
         }
 
@@ -36,12 +37,12 @@ namespace Plotter
             if (!IsStarted)
             {
                 EditFigList = Controller.StartEdit();
-                Delta = CadVertex.Zero;
+                Delta = Vector3d.Zero;
                 IsStarted = true;
             }
 
-            CadVertex wx = Controller.CurrentDC.DevVectorToWorldVector(CadVertex.UnitX);
-            CadVertex wy = Controller.CurrentDC.DevVectorToWorldVector(CadVertex.UnitY);
+            Vector3d wx = Controller.CurrentDC.DevVectorToWorldVector(Vector3d.UnitX);
+            Vector3d wy = Controller.CurrentDC.DevVectorToWorldVector(Vector3d.UnitY);
 
             wx = wx.UnitVector() / Controller.CurrentDC.WorldScale;
             wy = wy.UnitVector() / Controller.CurrentDC.WorldScale;

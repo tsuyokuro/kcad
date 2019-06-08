@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -104,7 +105,7 @@ namespace Plotter
         {
         }
 
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             CadVertex p = StoreList[0];
 

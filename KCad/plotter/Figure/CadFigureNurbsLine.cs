@@ -2,6 +2,7 @@
 using SplineCurve;
 using Plotter.Serializer;
 using Newtonsoft.Json.Linq;
+using OpenTK;
 
 namespace Plotter
 {
@@ -34,7 +35,7 @@ namespace Plotter
 
 
         #region Point Move
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             base.MoveSelectedPointsFromStored(dc, delta);
         }
