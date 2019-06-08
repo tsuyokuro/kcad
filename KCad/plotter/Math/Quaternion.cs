@@ -212,33 +212,11 @@ namespace Plotter
          * Vector (v.x, v.y, v.z)を回転軸としてradianだけ回転する四元数を作成
          * 
          */
-        public static CadQuaternion RotateQuaternion(CadVertex axis, double radian)
-        {
-            axis = axis.UnitVector();
-
-            CadQuaternion ans = default(CadQuaternion);
-            double c, s;
-
-            c = Math.Cos(0.5 * radian);
-            s = Math.Sin(0.5 * radian);
-
-            ans.t = c;
-            ans.x = s * axis.X;
-            ans.y = s * axis.Y;
-            ans.z = s * axis.Z;
-
-            return ans;
-        }
-
-        /**
-         * Vector (v.x, v.y, v.z)を回転軸としてradianだけ回転する四元数を作成
-         * 
-         */
         public static CadQuaternion RotateQuaternion(Vector3d axis, double radian)
         {
-            axis.Normalize();
+            axis = axis.Normalized();
 
-            CadQuaternion ans = default(CadQuaternion);
+            CadQuaternion ans = default;
             double c, s;
 
             c = Math.Cos(0.5 * radian);
@@ -256,7 +234,7 @@ namespace Plotter
          * CadPoint - 四元数 変換
          * 
          */
-        public static CadQuaternion FromPoint(CadVertex point)
+        public static CadQuaternion FromPoint(Vector3d point)
         {
             CadQuaternion q;
             q.t = 0.0;
@@ -267,14 +245,14 @@ namespace Plotter
             return q;
         }
 
-        public static CadVertex ToPoint(CadQuaternion q)
+        public static Vector3d ToPoint(CadQuaternion q)
         {
-            return CadVertex.Create(q.x, q.y, q.z);
+            return new Vector3d(q.x, q.y, q.z);
         }
 
-        public CadVertex ToPoint()
+        public Vector3d ToPoint()
         {
-            CadVertex p = default(CadVertex);
+            Vector3d p = default;
 
             p.X = x;
             p.Y = y;

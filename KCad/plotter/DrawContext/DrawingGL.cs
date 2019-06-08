@@ -256,8 +256,8 @@ namespace Plotter
 
                 if (f.Normal != HeModel.INVALID_INDEX)
                 {
-                    CadVertex nv = model.NormalStore[f.Normal];
-                    GL.Normal3(nv.vector);
+                    Vector3d nv = model.NormalStore[f.Normal];
+                    GL.Normal3(nv);
                 }
 
                 for (; ; )
@@ -319,9 +319,9 @@ namespace Plotter
             CadVertex p0 = default(CadVertex);
             CadVertex p1 = default(CadVertex);
 
-            double len = 120.0;
-            double arrowLen = 12.0 / DC.WorldScale;
-            double arrowW2 = 6.0 / DC.WorldScale;
+            double len = 100.0;
+            double arrowLen = 4.0 / DC.WorldScale;
+            double arrowW2 = 2.0 / DC.WorldScale;
 
             // X軸
             p0.X = -len;

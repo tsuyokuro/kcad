@@ -870,7 +870,7 @@ namespace Plotter
         public virtual MpGeometricData GeometricDataToMp()
         {
             MpSimpleGeometricData geo = new MpSimpleGeometricData();
-            geo.PointList = MpUtil.VectortListToMp(PointList);
+            geo.PointList = MpUtil.VertexListToMp(PointList);
             return geo;
         }
 
@@ -883,10 +883,10 @@ namespace Plotter
 
             MpSimpleGeometricData g = (MpSimpleGeometricData)geo;
 
-            mPointList = MpUtil.VectortListFromMp(g.PointList);
+            mPointList = MpUtil.VertexListFromMp(g.PointList);
         }
 
-        public virtual void Rotate(CadVertex org, CadQuaternion q, CadQuaternion r)
+        public virtual void Rotate(Vector3d org, CadQuaternion q, CadQuaternion r)
         {
             CadQuaternion qp;
 
@@ -896,19 +896,18 @@ namespace Plotter
             {
                 CadVertex p = PointList[i];
 
-                p -= org;
+                p.vector -= org;
 
-                qp = CadQuaternion.FromPoint(p);
+                qp = CadQuaternion.FromPoint(p.vector);
 
                 qp = r * qp;
                 qp = qp * q;
 
-                p = qp.ToPoint();
+                p.vector = qp.ToPoint();
 
                 p += org;
 
                 PointList[i] = p;
-                //SetPointAt(i, p);
             }
         }
 

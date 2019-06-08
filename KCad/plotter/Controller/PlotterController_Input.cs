@@ -165,7 +165,7 @@ namespace Plotter.Controller
             }
         }
 
-        public bool SelectNearest(DrawContext dc, CadVertex pixp)
+        public bool SelectNearest(DrawContext dc, Vector3d pixp)
         {
             SelectContext sc = default;
 
@@ -174,12 +174,12 @@ namespace Plotter.Controller
             RulerSet.Clear();
 
             sc.DC = dc;
-            sc.CursorWorldPt = dc.DevPointToWorldPoint(pixp);
+            sc.CursorWorldPt = (CadVertex)dc.DevPointToWorldPoint(pixp);
             sc.PointSelected = false;
             sc.SegmentSelected = false;
 
-            sc.CursorScrPt = pixp;
-            sc.Cursor = CadCursor.Create(pixp);
+            sc.CursorScrPt = (CadVertex)pixp;
+            sc.Cursor = CadCursor.Create((CadVertex)pixp);
 
             sc = PointSelectNearest(sc);
 
@@ -220,20 +220,20 @@ namespace Plotter.Controller
 
                 if (SettingsHolder.Settings.SnapToGrid)
                 {
-                    CadVertex p = pixp;
+                    Vector3d p = pixp;
 
                     bool match = false;
 
                     mGridding.Clear();
                     mGridding.Check(dc, pixp);
 
-                    if (mGridding.XMatchU.Valid)
+                    if (mGridding.XMatchU.IsValid())
                     {
                         p.X = mGridding.XMatchU.X;
                         match = true;
                     }
 
-                    if (mGridding.YMatchU.Valid)
+                    if (mGridding.YMatchU.IsValid())
                     {
                         p.Y = mGridding.YMatchU.Y;
                         match = true;
@@ -241,7 +241,7 @@ namespace Plotter.Controller
 
                     if (match)
                     {
-                        LastDownPoint = dc.DevPointToWorldPoint(p);
+                        LastDownPoint = (CadVertex)dc.DevPointToWorldPoint(p);
                     }
                 }
             }
@@ -425,7 +425,7 @@ namespace Plotter.Controller
             switch (State)
             {
                 case States.SELECT:
-                    if (SelectNearest(dc, CrossCursor.Pos))
+                    if (SelectNearest(dc, (Vector3d)CrossCursor.Pos))
                     {
                         if (!CursorLocked)
                         {
@@ -525,8 +525,8 @@ namespace Plotter.Controller
                 CadVertex p1 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 3);
                 CadVertex p2 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 1);
 
-                CadVertex v1 = p1 - p0;
-                CadVertex v2 = p2 - p0;
+                Vector3d v1 = p1.vector - p0.vector;
+                Vector3d v2 = p2.vector - p0.vector;
 
                 double t = CadMath.AngleOfVector(v1, v2);
                 a = CadMath.Rad2Deg(t);
@@ -819,18 +819,18 @@ namespace Plotter.Controller
         private SnapInfo SnapGrid(DrawContext dc, SnapInfo si)
         {
             mGridding.Clear();
-            mGridding.Check(dc, si.Cursor.Pos);
+            mGridding.Check(dc, (Vector3d)si.Cursor.Pos);
 
             bool snapx = false;
             bool snapy = false;
 
-            if (!mPointSearcher.IsXMatch && mGridding.XMatchU.Valid)
+            if (!mPointSearcher.IsXMatch && mGridding.XMatchU.IsValid())
             {
                 si.Cursor.Pos.X = mGridding.XMatchU.X;
                 snapx = true;
             }
 
-            if (!mPointSearcher.IsYMatch && mGridding.YMatchU.Valid)
+            if (!mPointSearcher.IsYMatch && mGridding.YMatchU.IsValid())
             {
                 si.Cursor.Pos.Y = mGridding.YMatchU.Y;
                 snapy = true;

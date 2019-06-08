@@ -1,6 +1,7 @@
 ﻿using CadDataTypes;
 using KCad;
 using KCad.Dialogs;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -171,8 +172,8 @@ namespace Plotter.Controller.TaskRunner
 
                 RotateWithAxis(
                     rootFigList,
-                    p0,
-                    (CadVertex)Controller.CurrentDC.ViewDir,
+                    p0.vector,
+                    Controller.CurrentDC.ViewDir,
                     CadMath.Deg2Rad(angle));
 
                 Controller.EndEdit();
@@ -180,7 +181,7 @@ namespace Plotter.Controller.TaskRunner
             });
         }
 
-        public void RotateWithAxis(List<CadFigure> rootFigList, CadVertex org, CadVertex axisDir, double angle)
+        public void RotateWithAxis(List<CadFigure> rootFigList, Vector3d org, Vector3d axisDir, double angle)
         {
             foreach (CadFigure fig in rootFigList)
             {

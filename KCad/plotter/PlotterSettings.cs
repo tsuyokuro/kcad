@@ -6,6 +6,7 @@ using System.Reflection;
 using CadDataTypes;
 using System.ComponentModel;
 using Plotter.Controller;
+using OpenTK;
 
 namespace Plotter
 {
@@ -171,7 +172,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToSelfPoint;
         }
 
-        public CadVertex GridSize
+        public Vector3d GridSize
         {
             set
             {
@@ -263,7 +264,7 @@ namespace Plotter
 
         public bool SnapToGrid = false;
 
-        public CadVertex GridSize;
+        public Vector3d GridSize;
 
         public double PointSnapRange = 6;
 
@@ -288,7 +289,7 @@ namespace Plotter
 
         public PlotterSettings()
         {
-            GridSize = CadVertex.Create(10, 10, 10);
+            GridSize = new Vector3d(10, 10, 10);
         }
 
         private String FileName()
@@ -345,8 +346,8 @@ namespace Plotter
             jo = new JObject();
             jo.Add("enable", SnapToGrid);
             jo.Add("size_x", GridSize.X);
-            jo.Add("size_y", GridSize.Z);
-            jo.Add("size_z", GridSize.X);
+            jo.Add("size_y", GridSize.Y);
+            jo.Add("size_z", GridSize.Z);
             root.Add("GridInfo", jo);
 
 
@@ -420,6 +421,15 @@ namespace Plotter
             jo = (JObject)root["DrawSettings"];
             DrawMeshEdge = jo.GetBool("DrawFaceOutline", DrawMeshEdge);
             FillMesh = jo.GetBool("FillFace", FillMesh);
+
+            jo = (JObject)root["GridInfo"];
+            if (jo != null)
+            {
+                SnapToGrid = jo.GetBool("enable", SnapToSelfPoint);
+                GridSize.X = jo.GetDouble("size_x", 10);
+                GridSize.Y = jo.GetDouble("size_y", 10);
+                GridSize.Z = jo.GetDouble("size_z", 10);
+            }
 
             return true;
         }

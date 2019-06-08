@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Input;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -23,9 +24,9 @@ namespace Plotter
         public WheelHandler Wheel;
         public MoveHandler PointerMoved;
 
-        public CadVertex LDownPoint = default(CadVertex);
-        public CadVertex RDownPoint = default(CadVertex);
-        public CadVertex MDownPoint = default(CadVertex);
+        public Vector3d LDownPoint = default;
+        public Vector3d RDownPoint = default;
+        public Vector3d MDownPoint = default;
 
         public void MouseMove(DrawContext dc, double x, double y)
         {

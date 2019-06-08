@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -233,7 +234,7 @@ namespace Plotter
             int ci = (ai + 2) % 4;
             int di = (ai + 3) % 4;
 
-            CadVertex normal = CadMath.CrossProduct(vt[ai], vt[bi]);
+            Vector3d normal = CadMath.CrossProduct(vt[ai].vector, vt[bi].vector);
             normal = normal.UnitVector();
 
             vt[ai] += delta;
@@ -243,7 +244,7 @@ namespace Plotter
 
             if (!uva.EqualsThreshold(uvb))
             {
-                normal = CadMath.CrossProduct(vt[ai], vt[bi]);
+                normal = CadMath.CrossProduct(vt[ai].vector, vt[bi].vector);
 
                 if (normal.IsZero())
                 {
@@ -257,11 +258,11 @@ namespace Plotter
             CadQuaternion q = CadQuaternion.RotateQuaternion(normal, Math.PI / 2.0);
             CadQuaternion r = q.Conjugate();
 
-            CadQuaternion qp = CadQuaternion.FromPoint(vt[ai]);
+            CadQuaternion qp = CadQuaternion.FromPoint(vt[ai].vector);
             qp = r * qp;
             qp = qp * q;
 
-            vt[bi] = qp.ToPoint();
+            vt[bi] = (CadVertex)qp.ToPoint();
 
             vt[ci] = -vt[ai];
             vt[di] = -vt[bi];

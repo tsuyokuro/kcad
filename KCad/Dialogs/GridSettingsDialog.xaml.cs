@@ -4,12 +4,13 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using OpenTK;
 
 namespace KCad
 {
     public partial class GridSettingsDialog : Window
     {
-        public CadVertex GridSize = default(CadVertex);
+        public Vector3d GridSize = default;
 
         public GridSettingsDialog()
         {

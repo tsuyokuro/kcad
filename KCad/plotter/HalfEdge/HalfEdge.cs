@@ -6,6 +6,7 @@ using Plotter;
 using Plotter.Serializer;
 using System;
 using System.Collections.Generic;
+using OpenTK;
 
 namespace HalfEdgeNS
 {
@@ -60,13 +61,13 @@ namespace HalfEdgeNS
 
         public VertexList VertexStore;
         public FlexArray<HeFace> FaceStore;
-        public VertexList NormalStore;
+        public Vector3dList NormalStore;
 
         public HeModel()
         {
             VertexStore = new VertexList(8);
             FaceStore = new FlexArray<HeFace>(6);
-            NormalStore = new VertexList(8);
+            NormalStore = new Vector3dList(8);
         }
 
         public void Clear()
@@ -123,7 +124,7 @@ namespace HalfEdgeNS
 
         public void RecreateNormals()
         {
-            VertexList newNormalStore = new VertexList(VertexStore.Count);
+            Vector3dList newNormalStore = new Vector3dList(VertexStore.Count);
 
             int i;
             for (i = 0; i < FaceStore.Count; i++)
@@ -133,10 +134,10 @@ namespace HalfEdgeNS
                 HalfEdge head = FaceStore[i].Head;
                 HalfEdge c = head;
 
-                CadVertex n = CadMath.Normal(
-                    VertexStore[c.Vertex],
-                    VertexStore[c.Next.Vertex],
-                    VertexStore[c.Next.Next.Vertex]
+                Vector3d n = CadMath.Normal(
+                    VertexStore[c.Vertex].vector,
+                    VertexStore[c.Next.Vertex].vector,
+                    VertexStore[c.Next.Next.Vertex].vector
                     );
 
                 int nidx = newNormalStore.Add(n);

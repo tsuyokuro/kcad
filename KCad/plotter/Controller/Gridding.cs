@@ -6,9 +6,9 @@ namespace Plotter
 {
     public class Gridding
     {
-        private CadVertex mGridSize;
+        private Vector3d mGridSize;
 
-        public CadVertex GridSize
+        public Vector3d GridSize
         {
             set
             {
@@ -23,24 +23,24 @@ namespace Plotter
 
         public double Range = 8;
 
-        public CadVertex XMatchU = default(CadVertex);
-        public CadVertex YMatchU = default(CadVertex);
+        public Vector3d XMatchU = default;
+        public Vector3d YMatchU = default;
 
-        public CadVertex XMatchW = default(CadVertex);
-        public CadVertex YMatchW = default(CadVertex);
+        public Vector3d XMatchW = default;
+        public Vector3d YMatchW = default;
 
         public Gridding()
         {
-            GridSize = CadVertex.Create(10, 10, 10);
+            GridSize = new Vector3d(10, 10, 10);
         }
 
         public void Clear()
         {
-            XMatchU.Valid = false;
-            YMatchU.Valid = false;
+            XMatchU = VectorUtil.InvalidVector3d;
+            YMatchU = VectorUtil.InvalidVector3d;
 
-            XMatchW.Valid = false;
-            YMatchW.Valid = false;
+            XMatchW = VectorUtil.InvalidVector3d;
+            YMatchW = VectorUtil.InvalidVector3d;
         }
 
         public void CopyFrom(Gridding g)
@@ -49,9 +49,9 @@ namespace Plotter
             Range = g.Range;
         }
 
-        private CadVertex CalcGridSizeU(DrawContext dc, CadVertex gridSizeW)
+        private Vector3d CalcGridSizeU(DrawContext dc, Vector3d gridSizeW)
         {
-            CadVertex gridSize = dc.WorldPointToDevPoint(gridSizeW) - dc.WorldPointToDevPoint(CadVertex.Zero);
+            Vector3d gridSize = dc.WorldPointToDevPoint(gridSizeW) - dc.WorldPointToDevPoint(Vector3d.Zero);
 
             gridSize.X = Math.Abs(gridSize.X);
             gridSize.Y = Math.Abs(gridSize.Y);
@@ -60,13 +60,13 @@ namespace Plotter
             return gridSize;
         }
 
-        public void Check(DrawContext dc, CadVertex up)
+        public void Check(DrawContext dc, Vector3d up)
         {
-            CadVertex scr = CalcGridSizeU(dc, GridSize);
+            Vector3d scr = CalcGridSizeU(dc, GridSize);
 
-            CadVertex t = default(CadVertex);
+            Vector3d t = default;
 
-            CadVertex sp = up;
+            Vector3d sp = up;
 
             Vector3d u0 = dc.ViewOrg;
 
@@ -85,7 +85,6 @@ namespace Plotter
                 XMatchU = t + dc.ViewOrg;
                 XMatchU.Y = sp.Y;
                 XMatchU.Z = 0;
-                XMatchU.Valid = true;
             }
 
             range = Math.Min(scr.Y / 3, Range);
@@ -95,15 +94,14 @@ namespace Plotter
                 YMatchU = t + dc.ViewOrg;
                 YMatchU.X = sp.X;
                 YMatchU.Z = 0;
-                YMatchU.Valid = true;
             }
 
-            if (XMatchU.Valid)
+            if (XMatchU.IsValid())
             {
                 XMatchW = dc.DevPointToWorldPoint(XMatchU);
             }
 
-            if (YMatchU.Valid)
+            if (YMatchU.IsValid())
             {
                 YMatchW = dc.DevPointToWorldPoint(YMatchU);
             }
@@ -121,16 +119,16 @@ namespace Plotter
             double szy = grid.GridSize.Y;
             double szz = grid.GridSize.Z;
 
-            CadVertex usz;
+            Vector3d usz;
             double t = 1;
             double d;
 
-            CadVertex uzero = dc.WorldPointToDevPoint(CadVertex.Zero);
+            Vector3d uzero = dc.WorldPointToDevPoint(Vector3d.Zero);
 
             double uszx;
             double uszy;
 
-            usz = dc.WorldPointToDevPoint(CadVertex.Create(szx, 0, 0)) - uzero;
+            usz = dc.WorldPointToDevPoint(new Vector3d(szx, 0, 0)) - uzero;
 
             uszx = Math.Abs(usz.X);
             uszy = Math.Abs(usz.Y);
@@ -157,7 +155,7 @@ namespace Plotter
                 n = t;
             }
 
-            usz = dc.WorldPointToDevPoint(CadVertex.Create(0, szy, 0)) - uzero;
+            usz = dc.WorldPointToDevPoint(new Vector3d(0, szy, 0)) - uzero;
 
             uszx = Math.Abs(usz.X);
             uszy = Math.Abs(usz.Y);
@@ -184,7 +182,7 @@ namespace Plotter
                 n = t;
             }
 
-            usz = dc.WorldPointToDevPoint(CadVertex.Create(0, 0, szy)) - uzero;
+            usz = dc.WorldPointToDevPoint(new Vector3d(0, 0, szy)) - uzero;
 
             uszx = Math.Abs(usz.X);
             uszy = Math.Abs(usz.Y);

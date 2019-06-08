@@ -49,30 +49,6 @@ namespace Plotter
             return Math.PI * deg / 180.0;
         }
 
-
-        /// <summary>
-        /// 2つのVectorのなす角を求める 
-        ///
-        /// 内積の定義を使う
-        /// cosθ = ( AとBの内積 ) / (Aの長さ * Bの長さ)
-        ///
-        /// </summary>
-        /// <param name="v1">Vector1</param>
-        /// <param name="v2">Vector2</param>
-        /// <returns>なす角</returns>
-        /// 
-        public static double AngleOfVector(CadVertex v1, CadVertex v2)
-        {
-            double v1n = v1.Norm();
-            double v2n = v2.Norm();
-
-            double cost = InnerProduct(v1, v2) / (v1n * v2n);
-
-            double t = Math.Acos(cost);
-
-            return t;
-        }
-
         #region For bezier
         static double[] FactorialTbl =
         {

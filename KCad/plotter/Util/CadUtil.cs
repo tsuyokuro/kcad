@@ -57,7 +57,7 @@ namespace Plotter
             return CadMath.Normal(fig.GetPointAt(0), fig.GetPointAt(1), fig.GetPointAt(2));
         }
 
-        public static void RotateFigure(CadFigure fig, CadVertex org, CadVertex axis, double t)
+        public static void RotateFigure(CadFigure fig, Vector3d org, Vector3d axis, double t)
         {
             CadQuaternion q = CadQuaternion.RotateQuaternion(axis, t);
             CadQuaternion r = q.Conjugate(); ;
