@@ -96,7 +96,7 @@ namespace Plotter
             {
                 n = PointList[i];
                 dc.Drawing.DrawLine(
-                    dc.GetPen(DrawTools.PEN_NURBS_CTRL_LINE), c, n);
+                    dc.GetPen(DrawTools.PEN_NURBS_CTRL_LINE), c.vector, n.vector);
 
                 c = n;
             }
@@ -115,7 +115,7 @@ namespace Plotter
             for (int i=1; i< NurbsPointList.Count; i++)
             {
                 n = NurbsPointList[i];
-                dc.Drawing.DrawLine(pen, c, n);
+                dc.Drawing.DrawLine(pen, c.vector, n.vector);
 
                 c = n;
             }

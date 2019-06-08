@@ -818,6 +818,12 @@ namespace Plotter
             return v.Norm();
         }
 
+        public static double SegNorm(Vector3d a, Vector3d b)
+        {
+            Vector3d v = b - a;
+            return v.Norm();
+        }
+
         public static double SegNorm2D(CadVertex a, CadVertex b)
         {
             double dx = b.X - a.X;
@@ -879,7 +885,7 @@ namespace Plotter
             int i = 0;
             for (;i<fig.PointCount; i++)
             {
-                mm.Check(fig.PointList[i]);
+                mm.Check(fig.PointList[i].vector);
             }
 
             return mm;
@@ -1485,6 +1491,11 @@ namespace Plotter
         /// <param name="v">ベクトル</param>
         /// <returns>水平線に対する角度(ラジアン)</returns>
         public static double Angle2D(CadVertex v)
+        {
+            return Math.Atan2(v.Y, v.X);
+        }
+
+        public static double Angle2D(Vector3d v)
         {
             return Math.Atan2(v.Y, v.X);
         }

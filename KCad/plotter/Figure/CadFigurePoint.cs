@@ -81,7 +81,7 @@ namespace Plotter
 
             double size = dc.DevSizeToWoldSize(4);
 
-            dc.Drawing.DrawCross(pen, PointList[0], size);
+            dc.Drawing.DrawCross(pen, PointList[0].vector, size);
         }
 
         private void drawSelected_Point(DrawContext dc, DrawPen pen)
@@ -90,7 +90,7 @@ namespace Plotter
             {
                 if (PointList[0].Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(PointList[0], dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                    dc.Drawing.DrawSelectedPoint(PointList[0].vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }

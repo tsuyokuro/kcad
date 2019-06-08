@@ -125,7 +125,7 @@ namespace Plotter
 
                 if (p0.Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(p0, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                    dc.Drawing.DrawSelectedPoint(p0.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }
@@ -143,7 +143,7 @@ namespace Plotter
             for (int u = 1; u < ucnt; u++)
             {
                 p1 = mPointList[u];
-                dc.Drawing.DrawLine(pen, p0, p1);
+                dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 p0 = p1;
             }
 
@@ -152,7 +152,7 @@ namespace Plotter
             for (int v = 1; v < vcnt; v++)
             {
                 p1 = mPointList[ucnt * v];
-                dc.Drawing.DrawLine(pen, p0, p1);
+                dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 p0 = p1;
             }
 
@@ -163,12 +163,12 @@ namespace Plotter
                     p0 = mPointList[ucnt * v + u - 1];
                     p1 = mPointList[ucnt * v + u];
 
-                    dc.Drawing.DrawLine(pen, p0, p1);
+                    dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
 
                     p0 = mPointList[ucnt * (v - 1) + u];
                     p1 = mPointList[ucnt * v + u];
 
-                    dc.Drawing.DrawLine(pen, p0, p1);
+                    dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 }
             }
         }
@@ -194,7 +194,7 @@ namespace Plotter
             for (int u = 1; u < ucnt; u++)
             {
                 p1 = NurbsPointList[u];
-                dc.Drawing.DrawLine(pen, p0, p1);
+                dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 p0 = p1;
             }
 
@@ -203,7 +203,7 @@ namespace Plotter
             for (int v = 1; v < vcnt; v++)
             {
                 p1 = NurbsPointList[ucnt * v];
-                dc.Drawing.DrawLine(pen, p0, p1);
+                dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 p0 = p1;
             }
 
@@ -214,12 +214,12 @@ namespace Plotter
                     p0 = NurbsPointList[ucnt * v + u - 1];
                     p1 = NurbsPointList[ucnt * v + u];
 
-                    dc.Drawing.DrawLine(pen, p0, p1);
+                    dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
 
                     p0 = NurbsPointList[ucnt * (v - 1) + u];
                     p1 = NurbsPointList[ucnt * v + u];
 
-                    dc.Drawing.DrawLine(pen, p0, p1);
+                    dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 }
             }
         }

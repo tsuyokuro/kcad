@@ -1,6 +1,6 @@
 ﻿using HalfEdgeNS;
 using System.Collections.Generic;
-using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -26,44 +26,44 @@ namespace Plotter
 
         void DrawAxis();
 
-        void DrawPageFrame(double w, double h, CadVertex center);
+        void DrawPageFrame(double w, double h, Vector3d center);
 
         void DrawGrid(Gridding grid);
 
-        void DrawHighlightPoint(CadVertex pt, DrawPen pen);
+        void DrawHighlightPoint(Vector3d pt, DrawPen pen);
 
-        void DrawSelectedPoint(CadVertex pt, DrawPen pen);
+        void DrawSelectedPoint(Vector3d pt, DrawPen pen);
 
-        void DrawMarkCursor(DrawPen pen, CadVertex p, double pix_size);
+        void DrawMarkCursor(DrawPen pen, Vector3d p, double pix_size);
 
-        void DrawRect(DrawPen pen, CadVertex p0, CadVertex p1);
+        void DrawRect(DrawPen pen, Vector3d p0, Vector3d p1);
 
-        void DrawCross(DrawPen pen, CadVertex p, double size);
+        void DrawCross(DrawPen pen, Vector3d p, double size);
 
-        void DrawLine(DrawPen pen, CadVertex a, CadVertex b);
+        void DrawLine(DrawPen pen, Vector3d a, Vector3d b);
 
-        void DrawDot(DrawPen pen, CadVertex p);
+        void DrawDot(DrawPen pen, Vector3d p);
 
         //void DrawFace(DrawPen pen, VertexList pointList);
 
-        //void DrawFace(DrawPen pen, VertexList pointList, CadVertex normal, bool drawOutline);
+        //void DrawFace(DrawPen pen, VertexList pointList, Vector3d normal, bool drawOutline);
 
         void DrawHarfEdgeModel(DrawPen pen, HeModel model);
 
         void DrawHarfEdgeModel(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model);
 
-        void DrawText(int font, DrawBrush brush, CadVertex a, CadVertex xdir, CadVertex ydir, DrawTextOption opt, string s);
+        void DrawText(int font, DrawBrush brush, Vector3d a, Vector3d xdir, Vector3d ydir, DrawTextOption opt, string s);
 
-        void DrawTextScrn(int font, DrawBrush brush, CadVertex a, CadVertex direction, DrawTextOption opt, string s);
+        void DrawTextScrn(int font, DrawBrush brush, Vector3d a, Vector3d direction, DrawTextOption opt, string s);
 
-        CadVertex MeasureText(int font, string s);
+        Vector3d MeasureText(int font, string s);
 
-        void DrawArrow(DrawPen pen, CadVertex pt0, CadVertex pt1, ArrowTypes type, ArrowPos pos, double len, double width);
+        void DrawArrow(DrawPen pen, Vector3d pt0, Vector3d pt1, ArrowTypes type, ArrowPos pos, double len, double width);
 
         void DrawCrossCursorScrn(CadCursor pp, DrawPen pen);
 
-        void DrawRectScrn(DrawPen pen, CadVertex p0, CadVertex p1);
+        void DrawRectScrn(DrawPen pen, Vector3d p0, Vector3d p1);
 
-        void DrawCrossScrn(DrawPen pen, CadVertex p, double size);
+        void DrawCrossScrn(DrawPen pen, Vector3d p, double size);
     }
 }

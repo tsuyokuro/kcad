@@ -78,14 +78,14 @@ namespace Plotter
             CircleExpander.ForEachSegs(cp, a, b, 32,
                 (CadVertex p0, CadVertex p1) =>
                 {
-                    dc.Drawing.DrawLine(pen, p0, p1);
+                    dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 });
 
 
-            dc.Drawing.DrawLine(pen, cp, a);
-            dc.Drawing.DrawLine(pen, cp, b);
-            dc.Drawing.DrawLine(pen, cp, c);
-            dc.Drawing.DrawLine(pen, cp, d);
+            dc.Drawing.DrawLine(pen, cp.vector, a.vector);
+            dc.Drawing.DrawLine(pen, cp.vector, b.vector);
+            dc.Drawing.DrawLine(pen, cp.vector, c.vector);
+            dc.Drawing.DrawLine(pen, cp.vector, d.vector);
         }
 
         private void drawCircle(DrawContext dc, DrawPen pen)
@@ -97,8 +97,8 @@ namespace Plotter
 
             if (PointList.Count == 1)
             {
-                dc.Drawing.DrawCross(pen, PointList[0], 2);
-                if (PointList[0].Selected) dc.Drawing.DrawSelectedPoint(PointList[0], dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                dc.Drawing.DrawCross(pen, PointList[0].vector, 2);
+                if (PointList[0].Selected) dc.Drawing.DrawSelectedPoint(PointList[0].vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 return;
             }
 
@@ -106,11 +106,11 @@ namespace Plotter
 
             CircleExpander.ForEachSegs(PointList[0], PointList[1], PointList[2], 32, (p0, p1) =>
             {
-                dc.Drawing.DrawLine(pen, p0, p1);
+                dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
             });
 
             double size = dc.DevSizeToWoldSize(4);
-            dc.Drawing.DrawCross(pen, PointList[0], size);
+            dc.Drawing.DrawCross(pen, PointList[0].vector, size);
         }
 
         //private void drawDisk(DrawContext dc, DrawPen pen)
@@ -151,7 +151,7 @@ namespace Plotter
                 if (PointList[i].Selected)
                 {
                     dc.Drawing.DrawSelectedPoint(
-                        PointList[i], dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                        PointList[i].vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
 
             }
@@ -311,7 +311,7 @@ namespace Plotter
             }
 
 
-            CadVertex r = CadMath.CrossProduct(p - cp, (CadVertex)(dc.ViewDir));
+            CadVertex r = CadMath.CrossProduct(p - cp, (CadVertex)dc.ViewDir);
 
             r = r.UnitVector();
 

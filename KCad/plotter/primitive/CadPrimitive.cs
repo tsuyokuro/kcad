@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -237,19 +238,19 @@ namespace Plotter
             return mm;
         }
 
-        public void CheckMin(CadVertex p)
+        public void CheckMin(Vector3d p)
         {
             MinX = Math.Min(MinX, p.X);
             MinY = Math.Min(MinY, p.Y);
         }
 
-        public void CheckMax(CadVertex p)
+        public void CheckMax(Vector3d p)
         {
             MaxX = Math.Max(MaxX, p.X);
             MaxY = Math.Max(MaxY, p.Y);
         }
 
-        public void Check(CadVertex p)
+        public void Check(Vector3d p)
         {
             CheckMin(p);
             CheckMax(p);
@@ -273,17 +274,17 @@ namespace Plotter
             CheckMax(mm);
         }
 
-        public CadVertex GetMinAsVector()
+        public Vector3d GetMinAsVector()
         {
-            return CadVertex.Create(MinX, MinY, 0);
+            return new Vector3d(MinX, MinY, 0);
         }
 
-        public CadVertex GetMaxAsVector()
+        public Vector3d GetMaxAsVector()
         {
-            return CadVertex.Create(MaxX, MaxY, 0);
+            return new Vector3d(MaxX, MaxY, 0);
         }
 
-        public CadVertex Inner(CadVertex v)
+        public Vector3d Inner(Vector3d v)
         {
             if (v.X > MaxX) v.X = MaxX;
             if (v.Y > MaxY) v.Y = MaxY;
@@ -324,21 +325,21 @@ namespace Plotter
             return mm;
         }
 
-        public void CheckMin(CadVertex p)
+        public void CheckMin(Vector3d p)
         {
             MinX = Math.Min(MinX, p.X);
             MinY = Math.Min(MinY, p.Y);
             MinZ = Math.Min(MinZ, p.Z);
         }
 
-        public void CheckMax(CadVertex p)
+        public void CheckMax(Vector3d p)
         {
             MaxX = Math.Max(MaxX, p.X);
             MaxY = Math.Max(MaxY, p.Y);
             MaxZ = Math.Max(MaxZ, p.Z);
         }
 
-        public void Check(CadVertex p)
+        public void Check(Vector3d p)
         {
             CheckMin(p);
             CheckMax(p);
@@ -364,14 +365,14 @@ namespace Plotter
             CheckMax(mm);
         }
 
-        public CadVertex GetMinAsVector()
+        public Vector3d GetMinAsVector()
         {
-            return CadVertex.Create(MinX, MinY, MinZ);
+            return new Vector3d(MinX, MinY, MinZ);
         }
 
-        public CadVertex GetMaxAsVector()
+        public Vector3d GetMaxAsVector()
         {
-            return CadVertex.Create(MaxX, MaxY, MaxZ);
+            return new Vector3d(MaxX, MaxY, MaxZ);
         }
     }
 }

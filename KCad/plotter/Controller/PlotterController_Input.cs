@@ -414,7 +414,7 @@ namespace Plotter.Controller
 
             if (mInteractCtrl.IsActive)
             {
-                mInteractCtrl.Draw(dc, SnapPoint);
+                mInteractCtrl.Draw(dc, SnapPoint.vector);
                 mInteractCtrl.SetPoint(SnapPoint);
 
                 LastDownPoint = SnapPoint;
@@ -1079,7 +1079,7 @@ namespace Plotter.Controller
 
             if (mInteractCtrl.IsActive)
             {
-                mInteractCtrl.Draw(dc, SnapPoint);
+                mInteractCtrl.Draw(dc, SnapPoint.vector);
             }
         }
 
@@ -1087,7 +1087,7 @@ namespace Plotter.Controller
         {
             HighlightPointList.ForEach(item =>
             {
-                dc.Drawing.DrawHighlightPoint(item.Point, item.Pen);
+                dc.Drawing.DrawHighlightPoint(item.Point.vector, item.Pen);
             });
         }
 

@@ -99,6 +99,15 @@ namespace Plotter
                 );
         }
 
+        public static Vector3d Add(this Vector3d p1, double d)
+        {
+            p1.X += d;
+            p1.Y += d;
+            p1.Z += d;
+
+            return p1;
+        }
+
         public static void dump(this Vector3d v, string prefix = nameof(Vector3d))
         {
             DOut.pl(prefix + "{");

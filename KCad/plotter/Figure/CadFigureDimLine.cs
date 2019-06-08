@@ -78,7 +78,7 @@ namespace Plotter
             {
                 if (p.Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(p, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                    dc.Drawing.DrawSelectedPoint(p.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }
@@ -247,30 +247,30 @@ namespace Plotter
         {
             CadSegment seg = CadUtil.PerpendicularSeg(a, b, p);
 
-            dc.Drawing.DrawLine(pen, a, seg.P0);
-            dc.Drawing.DrawLine(pen, b, seg.P1);
+            dc.Drawing.DrawLine(pen, a.vector, seg.P0.vector);
+            dc.Drawing.DrawLine(pen, b.vector, seg.P1.vector);
 
             CadVertex cp = CadUtil.CenterPoint(seg.P0, seg.P1);
 
             double arrowW = ARROW_W / dc.WorldScale;
             double arrowL = ARROW_LEN / dc.WorldScale;
 
-            dc.Drawing.DrawArrow(pen, cp, seg.P0, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
-            dc.Drawing.DrawArrow(pen, cp, seg.P1, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp.vector, seg.P0.vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp.vector, seg.P1.vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
         }
 
         private void DrawDim(DrawContext dc, DrawPen pen)
         {
-            dc.Drawing.DrawLine(pen, PointList[0], PointList[3]);
-            dc.Drawing.DrawLine(pen, PointList[1], PointList[2]);
+            dc.Drawing.DrawLine(pen, PointList[0].vector, PointList[3].vector);
+            dc.Drawing.DrawLine(pen, PointList[1].vector, PointList[2].vector);
 
             CadVertex cp = CadUtil.CenterPoint(PointList[3], PointList[2]);
 
             double arrowW = ARROW_W / dc.WorldScale;
             double arrowL = ARROW_LEN / dc.WorldScale;
 
-            dc.Drawing.DrawArrow(pen, cp, PointList[3], ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
-            dc.Drawing.DrawArrow(pen, cp, PointList[2], ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp.vector, PointList[3].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp.vector, PointList[2].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
 
 
             CadVertex lineV = PointList[2] - PointList[3];
@@ -300,7 +300,7 @@ namespace Plotter
             // |  |                            |
             // up 0                            1 
             // 
-            dc.Drawing.DrawText(FontID, dc.GetBrush(BrushID), p, lineV, up,
+            dc.Drawing.DrawText(FontID, dc.GetBrush(BrushID), p.vector, lineV.vector, up.vector,
                 new DrawTextOption(DrawTextOption.H_CENTER),
                 lenStr);
         }

@@ -1,4 +1,5 @@
 ﻿using CadDataTypes;
+using OpenTK;
 using System.Threading;
 
 namespace Plotter.Controller
@@ -63,19 +64,19 @@ namespace Plotter.Controller
             return mState;
         }
 
-        public void Draw(DrawContext dc, CadVertex tp)
+        public void Draw(DrawContext dc, Vector3d tp)
         {
             if (PointList.Count == 0)
             {
                 return;
             }
 
-            CadVertex p0 = PointList[0];
-            CadVertex p1;
+            Vector3d p0 = PointList[0].vector;
+            Vector3d p1;
 
             for (int i = 1; i < PointList.Count; i++)
             {
-                p1 = PointList[i];
+                p1 = PointList[i].vector;
 
                 dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE), p0, p1);
 

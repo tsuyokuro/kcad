@@ -131,7 +131,7 @@ namespace Plotter
             CadVertex a = PointList[idxA];
             CadVertex b = PointList[idxB];
 
-            dc.Drawing.DrawLine(pen, a, b);
+            dc.Drawing.DrawLine(pen, a.vector, b.vector);
         }
 
         public override void InvertDir()
@@ -161,10 +161,10 @@ namespace Plotter
 
             if (cnt == 1)
             {
-                dc.Drawing.DrawCross(pen, a, 2);
+                dc.Drawing.DrawCross(pen, a.vector, 2);
                 if (a.Selected)
                 {
-                    dc.Drawing.DrawHighlightPoint(a, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT));
+                    dc.Drawing.DrawHighlightPoint(a.vector, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT));
                 }
 
                 return;
@@ -173,13 +173,13 @@ namespace Plotter
             PolyLineExpander.ForEachPoints(pl, start + 1, cnt - 1, 8,
                 (v) =>
                 {
-                    dc.Drawing.DrawLine(pen, a, v);
+                    dc.Drawing.DrawLine(pen, a.vector, v.vector);
                     a = v;
                 });
 
             if (IsLoop)
             {
-                dc.Drawing.DrawLine(pen, a, pl[start]);
+                dc.Drawing.DrawLine(pen, a.vector, pl[start].vector);
             }
         }
 
@@ -204,7 +204,7 @@ namespace Plotter
 
                 if (!p.Selected) continue;
 
-                dc.Drawing.DrawSelectedPoint(p, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                dc.Drawing.DrawSelectedPoint(p.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
 
 
                 if (p.IsHandle)
@@ -216,8 +216,8 @@ namespace Plotter
                         CadVertex np = GetPointAt(idx);
                         if (!np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
-                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p.vector, np.vector);
+                            dc.Drawing.DrawSelectedPoint(np.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
 
@@ -228,8 +228,8 @@ namespace Plotter
                         CadVertex np = GetPointAt(idx);
                         if (!np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
-                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p.vector, np.vector);
+                            dc.Drawing.DrawSelectedPoint(np.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
                 }
@@ -242,8 +242,8 @@ namespace Plotter
                         CadVertex np = GetPointAt(idx);
                         if (np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
-                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p.vector, np.vector);
+                            dc.Drawing.DrawSelectedPoint(np.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
 
@@ -254,8 +254,8 @@ namespace Plotter
                         CadVertex np = GetPointAt(idx);
                         if (np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
-                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p.vector, np.vector);
+                            dc.Drawing.DrawSelectedPoint(np.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
                 }

@@ -164,7 +164,7 @@ namespace Plotter
 
                 if (!p.Selected) continue;
 
-                dc.Drawing.DrawSelectedPoint(p, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                dc.Drawing.DrawSelectedPoint(p.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
             }
         }
 

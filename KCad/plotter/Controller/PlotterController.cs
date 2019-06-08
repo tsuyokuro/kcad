@@ -8,6 +8,7 @@ using System.Drawing.Printing;
 using Plotter.Controller.TaskRunner;
 using System.Drawing;
 using GLUtil;
+using OpenTK;
 
 namespace Plotter.Controller
 {
@@ -314,7 +315,7 @@ namespace Plotter.Controller
         public void DrawBase(DrawContext dc)
         {
             dc.Drawing.DrawAxis();
-            dc.Drawing.DrawPageFrame(PageSize.Width, PageSize.Height, CadVertex.Zero);
+            dc.Drawing.DrawPageFrame(PageSize.Width, PageSize.Height, Vector3d.Zero);
             DrawGrid(dc);
         }
 
@@ -378,14 +379,14 @@ namespace Plotter.Controller
         {
             dc.Drawing.DrawMarkCursor(
                 dc.GetPen(DrawTools.PEN_LAST_POINT_MARKER),
-                LastDownPoint,
+                LastDownPoint.vector,
                 ControllerConst.MARK_CURSOR_SIZE);
 
             if (ObjDownPoint.Valid)
             {
                 dc.Drawing.DrawMarkCursor(
                     dc.GetPen(DrawTools.PEN_LAST_POINT_MARKER2),
-                    ObjDownPoint,
+                    ObjDownPoint.vector,
                     ControllerConst.MARK_CURSOR_SIZE);
             }
         }
@@ -398,7 +399,7 @@ namespace Plotter.Controller
             }
 
             dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_DRAG_LINE),
-                LastDownPoint, dc.DevPointToWorldPoint(CrossCursor.Pos));
+                LastDownPoint.vector, dc.DevPointToWorldPoint(CrossCursor.Pos.vector));
         }
 
         public void DrawCrossCursor(DrawContext dc)
@@ -409,7 +410,7 @@ namespace Plotter.Controller
             {
                 dc.Drawing.DrawCrossScrn(
                     dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT),
-                    CrossCursor.Pos,
+                    CrossCursor.Pos.vector,
                     ControllerConst.CURSOR_LOCK_MARK_SIZE);
             }
         }
@@ -418,8 +419,8 @@ namespace Plotter.Controller
         {
             dc.Drawing.DrawRectScrn(
                 dc.GetPen(DrawTools.PEN_TEMP_FIGURE),
-                RubberBandScrnPoint0,
-                RubberBandScrnPoint1);
+                RubberBandScrnPoint0.vector,
+                RubberBandScrnPoint1.vector);
         }
 
         public void DrawAllFigure(DrawContext dc)
