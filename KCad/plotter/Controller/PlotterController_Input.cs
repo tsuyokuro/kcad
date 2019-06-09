@@ -405,7 +405,7 @@ namespace Plotter.Controller
             if (mInteractCtrl.IsActive)
             {
                 mInteractCtrl.Draw(dc, SnapPoint);
-                mInteractCtrl.SetPoint((CadVertex)SnapPoint);
+                mInteractCtrl.SetPoint(SnapPoint);
 
                 LastDownPoint = SnapPoint;
 

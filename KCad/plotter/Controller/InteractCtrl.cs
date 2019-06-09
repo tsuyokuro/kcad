@@ -16,7 +16,7 @@ namespace Plotter.Controller
 
         private SemaphoreSlim Sem = new SemaphoreSlim(0, 1);
 
-        public VertexList PointList = new VertexList();
+        public Vector3dList PointList = new Vector3dList();
 
         public States mState = States.NONE;
         public States State
@@ -33,7 +33,7 @@ namespace Plotter.Controller
             Sem.Release();
         }
 
-        public void SetPoint(CadVertex v)
+        public void SetPoint(Vector3d v)
         {
             lock (PointList)
             {
@@ -71,12 +71,12 @@ namespace Plotter.Controller
                 return;
             }
 
-            Vector3d p0 = PointList[0].vector;
+            Vector3d p0 = PointList[0];
             Vector3d p1;
 
             for (int i = 1; i < PointList.Count; i++)
             {
-                p1 = PointList[i].vector;
+                p1 = PointList[i];
 
                 dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE), p0, p1);
 

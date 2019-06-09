@@ -126,7 +126,7 @@ def sel_fig(id):
 def scale(id, org, ratio):
     SE.Scale(id, org, ratio)
 
-#[AC] rotate(current_fig_id(), inputPoint(), viewDir(), 45)
+#[AC] rotate(current_fig_id(), input_point(), view_dir(), 45)
 def rotate(id, p0, v, t):
     SE.Rotate(id, p0, v, t)
 

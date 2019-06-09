@@ -108,6 +108,11 @@ namespace Plotter
             return p1;
         }
 
+        public static string CoordString(this Vector3d v)
+        {
+            return v.X.ToString() + ", " + v.Y.ToString() + ", " + v.Z.ToString();
+        }
+
         public static void dump(this Vector3d v, string prefix = nameof(Vector3d))
         {
             DOut.pl(prefix + "{");

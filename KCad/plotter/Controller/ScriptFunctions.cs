@@ -9,12 +9,10 @@ using CarveWapper;
 using MeshUtilNS;
 using MeshMakerNS;
 using KCad;
-using System.Threading;
 using static Plotter.CadFigure;
 using LibiglWrapper;
 using GLUtil;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 
 namespace Plotter.Controller
 {
@@ -739,7 +737,7 @@ namespace Plotter.Controller
             return fig;
         }
 
-        public void Rotate(uint figID, CadVertex org, CadVertex axisDir, double angle)
+        public void Rotate(uint figID, Vector3d org, Vector3d axisDir, double angle)
         {
             CadFigure fig = Controller.DB.GetFigure(figID);
 
@@ -768,11 +766,11 @@ namespace Plotter.Controller
             Session.PostRedraw();
         }
 
-        public void RotateWithAxis(CadFigure fig, CadVertex org, CadVertex axisDir, double angle)
+        public void RotateWithAxis(CadFigure fig, Vector3d org, Vector3d axisDir, double angle)
         {
             fig.ForEachFig(f =>
             {
-                CadUtil.RotateFigure(f, org.vector, axisDir.vector, angle);
+                CadUtil.RotateFigure(f, org, axisDir, angle);
             });
         }
 
@@ -1363,7 +1361,7 @@ namespace Plotter.Controller
             return Controller.CurrentFigure;
         }
 
-        public CadVertex InputPoint()
+        public Vector3d InputPoint()
         {
             Env.OpenPopupMessage("Input point", PlotterObserver.MessageType.INPUT);
 
@@ -1380,10 +1378,10 @@ namespace Plotter.Controller
             {
                 Env.ClosePopupMessage();
                 ItConsole.println("Cancel!");
-                return CadVertex.InvalidValue;
+                return VectorUtil.InvalidVector3d;
             }
 
-            CadVertex p = ctrl.PointList[0];
+            Vector3d p = ctrl.PointList[0];
 
             ItConsole.println(p.CoordString());
 
@@ -1392,12 +1390,12 @@ namespace Plotter.Controller
             return p;
         }
 
-        public CadVertex ViewDir()
+        public Vector3d ViewDir()
         {
-            return (CadVertex)(Controller.CurrentDC.ViewDir);
+            return Controller.CurrentDC.ViewDir;
         }
 
-        public CadVertex InputUnitVector()
+        public Vector3d InputUnitVector()
         {
             InteractCtrl ctrl = Controller.mInteractCtrl;
 
@@ -1413,10 +1411,10 @@ namespace Plotter.Controller
             {
                 ctrl.End();
                 ItConsole.println("Cancel!");
-                return CadVertex.InvalidValue;
+                return VectorUtil.InvalidVector3d;
             }
 
-            CadVertex p0 = ctrl.PointList[0];
+            Vector3d p0 = ctrl.PointList[0];
             ItConsole.println(p0.CoordString());
 
             ItConsole.println(AnsiEsc.Yellow + "Input point 2 >>");
@@ -1427,15 +1425,15 @@ namespace Plotter.Controller
             {
                 ctrl.End();
                 ItConsole.println("Cancel!");
-                return CadVertex.InvalidValue;
+                return VectorUtil.InvalidVector3d;
             }
 
-            CadVertex p1 = Controller.mInteractCtrl.PointList[1];
+            Vector3d p1 = Controller.mInteractCtrl.PointList[1];
 
             ctrl.End();
 
 
-            CadVertex v = p1 - p0;
+            Vector3d v = p1 - p0;
 
             v = v.UnitVector();
 

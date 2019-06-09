@@ -37,8 +37,8 @@ namespace Plotter.Controller.TaskRunner
                     return;
                 }
 
-                CadVertex normal = CadMath.Normal(
-                    res.p1 - res.p0, (CadVertex)(Controller.CurrentDC.ViewDir));
+                Vector3d normal = CadMath.Normal(
+                    res.p1 - res.p0, (Controller.CurrentDC.ViewDir));
 
                 FlipWithPlane(rootFigList, res.p0, normal);
                 Controller.EndEdit();
@@ -46,7 +46,7 @@ namespace Plotter.Controller.TaskRunner
             });
         }
 
-        public void FlipWithPlane(List<CadFigure> rootFigList, CadVertex p0, CadVertex normal)
+        public void FlipWithPlane(List<CadFigure> rootFigList, Vector3d p0, Vector3d normal)
         {
             foreach (CadFigure fig in rootFigList)
             {
@@ -57,7 +57,7 @@ namespace Plotter.Controller.TaskRunner
             }
         }
 
-        public void FlipWithPlane(CadFigure fig, CadVertex p0, CadVertex normal)
+        public void FlipWithPlane(CadFigure fig, Vector3d p0, Vector3d normal)
         {
             VertexList vl = fig.PointList;
 
@@ -65,7 +65,7 @@ namespace Plotter.Controller.TaskRunner
             {
                 CadVertex v = vl[i];
 
-                CadVertex cp = CadUtil.CrossPlane(v, p0, normal);
+                Vector3d cp = CadUtil.CrossPlane(v.vector, p0, normal);
 
                 CadVertex d = v - cp;
 
@@ -92,14 +92,14 @@ namespace Plotter.Controller.TaskRunner
                     return;
                 }
 
-                CadVertex normal = CadMath.Normal(
-                    res.p1 - res.p0, (CadVertex)(Controller.CurrentDC.ViewDir));
+                Vector3d normal = CadMath.Normal(
+                    res.p1 - res.p0, Controller.CurrentDC.ViewDir);
 
                 FlipAndCopyWithPlane(rootFigList, res.p0, normal);
             });
         }
 
-        public void FlipAndCopyWithPlane(List<CadFigure> rootFigList, CadVertex p0, CadVertex normal)
+        public void FlipAndCopyWithPlane(List<CadFigure> rootFigList, Vector3d p0, Vector3d normal)
         {
             List<CadFigure> cpy = PlotterClipboard.CopyFigures(rootFigList);
 
@@ -143,7 +143,7 @@ namespace Plotter.Controller.TaskRunner
                     return;
                 }
 
-                CadVertex p0 = res.p0;
+                Vector3d p0 = res.p0;
 
                 double angle = 0;
 
@@ -172,7 +172,7 @@ namespace Plotter.Controller.TaskRunner
 
                 RotateWithAxis(
                     rootFigList,
-                    p0.vector,
+                    p0,
                     Controller.CurrentDC.ViewDir,
                     CadMath.Deg2Rad(angle));
 
@@ -192,7 +192,7 @@ namespace Plotter.Controller.TaskRunner
             }
         }
 
-        public (CadVertex p0, InteractCtrl.States state) InputPoint()
+        public (Vector3d p0, InteractCtrl.States state) InputPoint()
         {
             InteractCtrl ctrl = Controller.mInteractCtrl;
 
@@ -211,11 +211,11 @@ namespace Plotter.Controller.TaskRunner
                 ClosePopupMessage();
                 ItConsole.println("Cancel!");
                 return (
-                    CadVertex.InvalidValue,
+                    VectorUtil.InvalidVector3d,
                     InteractCtrl.States.CANCEL);
             }
 
-            CadVertex p0 = ctrl.PointList[0];
+            Vector3d p0 = ctrl.PointList[0];
             ItConsole.println(p0.CoordString());
             ctrl.End();
             ClosePopupMessage();
@@ -224,7 +224,7 @@ namespace Plotter.Controller.TaskRunner
         }
 
 
-        public (CadVertex p0, CadVertex p1, InteractCtrl.States state) InputLine()
+        public (Vector3d p0, Vector3d p1, InteractCtrl.States state) InputLine()
         {
             InteractCtrl ctrl = Controller.mInteractCtrl;
 
@@ -243,12 +243,12 @@ namespace Plotter.Controller.TaskRunner
                 ClosePopupMessage();
                 ItConsole.println("Cancel!");
                 return (
-                    CadVertex.InvalidValue,
-                    CadVertex.InvalidValue,
+                    VectorUtil.InvalidVector3d,
+                    VectorUtil.InvalidVector3d,
                     InteractCtrl.States.CANCEL);
             }
 
-            CadVertex p0 = ctrl.PointList[0];
+            Vector3d p0 = ctrl.PointList[0];
             ItConsole.println(p0.CoordString());
 
             ItConsole.println(AnsiEsc.BYellow + "<< Input point 2 >>");
@@ -261,12 +261,12 @@ namespace Plotter.Controller.TaskRunner
                 ClosePopupMessage();
                 ItConsole.println("Cancel!");
                 return (
-                    CadVertex.InvalidValue,
-                    CadVertex.InvalidValue,
+                    VectorUtil.InvalidVector3d,
+                    VectorUtil.InvalidVector3d,
                     InteractCtrl.States.CANCEL);
             }
 
-            CadVertex p1 = ctrl.PointList[1];
+            Vector3d p1 = ctrl.PointList[1];
             ItConsole.println(p1.CoordString());
 
             ctrl.End();
