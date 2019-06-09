@@ -47,15 +47,15 @@ namespace Plotter
          * list[0]/_________list[1]
          * 
          */
-        public static CadVertex Normal(CadFigure fig)
-        {
-            if (fig.PointCount < 3)
-            {
-                return CadVertex.Zero;
-            }
+        //public static CadVertex Normal(CadFigure fig)
+        //{
+        //    if (fig.PointCount < 3)
+        //    {
+        //        return CadVertex.Zero;
+        //    }
 
-            return CadMath.Normal(fig.GetPointAt(0), fig.GetPointAt(1), fig.GetPointAt(2));
-        }
+        //    return CadMath.Normal(fig.GetPointAt(0), fig.GetPointAt(1), fig.GetPointAt(2));
+        //}
 
         public static void RotateFigure(CadFigure fig, Vector3d org, Vector3d axis, double t)
         {
@@ -65,7 +65,7 @@ namespace Plotter
             fig.Rotate(org, q, r);
         }
 
-        public static void ScaleFigure(CadFigure fig, CadVertex org, double scale)
+        public static void ScaleFigure(CadFigure fig, Vector3d org, double scale)
         {
             int n = fig.PointList.Count;
 
@@ -891,6 +891,27 @@ namespace Plotter
 
             return v;
         }
+
+        /// <summary>
+        /// a b を通る直線上で a からの距離がlenの座標を求める
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="len"></param>
+        /// <returns></returns>
+        public static Vector3d LinePoint(Vector3d a, Vector3d b, double len)
+        {
+            Vector3d v = b - a;
+
+            v = v.UnitVector();
+
+            v *= len;
+
+            v += a;
+
+            return v;
+        }
+
 
         public static double SegNorm2D(Vector3d a, Vector3d b)
         {

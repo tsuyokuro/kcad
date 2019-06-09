@@ -49,7 +49,7 @@ namespace Plotter.Controller
 
         private void test002()
         {
-            CadMesh cm = MeshMaker.CreateSphere(20, 16, 16);
+            CadMesh cm = MeshMaker.CreateSphere(new Vector3d(0,0,0), 20, 16, 16);
 
             HeModel hem = HeModelConverter.ToHeModel(cm);
 

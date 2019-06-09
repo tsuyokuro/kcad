@@ -122,7 +122,7 @@ def set_last_down(x, y, z):
 def sel_fig(id):
     SE.SelectFigure(id)
 
-#[AC] scale(id=current_fig_id(), org=lastDown(), ratio=1.5)
+#[AC] scale(id=current_fig_id(), org=last_down(), ratio=1.5)
 def scale(id, org, ratio):
     SE.Scale(id, org, ratio)
 
@@ -164,22 +164,22 @@ def union(id1, id2):
 def intersection(id1, id2):
     SE.Intersection(id1, id2)
 
-#[AC] add_box(x=40,y=40,z=20)
-def add_box(x, y, z):
-    SE.AddBox(x, y, z)
+#[AC] add_box(last_down(), size_x=40, size_y=40, size_z=20)
+def add_box(pos, size_x, size_y, size_z):
+    SE.AddBox(pos, size_x, size_y, size_z)
 
 #[AC] spf(x=w_1x4, y=40, z=t_1x4)
 def spf(x, y, z):
     SE.AddBox(x, y, z)
 
-#[AC] add_cylinder(slices=16, r=10, len=40)
-def add_cylinder(slices, r, len):
-    SE.AddCylinder(slices, r, len)
+#[AC] add_cylinder(pos=last_down(), slices=16, r=10, len=40)
+def add_cylinder(pos, slices, r, len):
+    SE.AddCylinder(pos, slices, r, len)
 
 
-#[AC] add_sphere(slices=16, r=20)
-def add_sphere(slices, r):
-    SE.AddSphere(slices, r)
+#[AC] add_sphere(pos=last_down(), slices=16, r=20)
+def add_sphere(pos, slices, r):
+    SE.AddSphere(pos, slices, r)
 
 #[AC] extrude(id=current_fig_id(), dir=unit_vz, d=20, div=0)
 def extrude(id, dir, d, div):
@@ -229,7 +229,7 @@ def triangulate(id, area, deg):
 def triangulate_opt(id, option):
     SE.Triangulate(id, option)
 
-#[AC] add_line(vertex(0, 0, 0), vertex(10, 20, 0))
+#[AC] add_line(vector(0, 0, 0), vector(10, 20, 0))
 def add_line(v0, v1):
     SE.AddLine(v0, v1)
 

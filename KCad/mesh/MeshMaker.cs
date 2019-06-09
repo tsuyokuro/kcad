@@ -14,13 +14,13 @@ namespace MeshMakerNS
             QUADRANGLE,
         }
 
-        public static CadMesh CreateBox(Vector3d pos, CadVertex sv, FaceType faceType = FaceType.TRIANGLE)
+        public static CadMesh CreateBox(Vector3d pos, Vector3d sizeV, FaceType faceType = FaceType.TRIANGLE)
         {
             CadMesh cm = CreateUnitCube(faceType);
 
             for (int i=0;i<cm.VertexStore.Count; i++)
             {
-                cm.VertexStore.Ref(i) *= sv;
+                cm.VertexStore.Ref(i) *= sizeV;
                 cm.VertexStore.Ref(i) += pos;
             }
 
@@ -132,7 +132,7 @@ namespace MeshMakerNS
             return mesh;
         }
 
-        public static CadMesh CreateSphere(double r, int slices1, int slices2)
+        public static CadMesh CreateSphere(Vector3d pos, double r, int slices1, int slices2)
         {
             VertexList vl = new VertexList(slices2);
 
@@ -152,7 +152,14 @@ namespace MeshMakerNS
             vl.Add(CadVertex.Create(0, -r, 0));
 
 
-            return CreateRotatingBody(slices1, vl);
+            CadMesh mesh = CreateRotatingBody(slices1, vl);
+
+            for (int i=0; i<mesh.VertexStore.Count; i++)
+            {
+                mesh.VertexStore.Ref(i).vector += pos;
+            }
+
+            return mesh;
         }
 
 
