@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -39,16 +40,16 @@ namespace Plotter
 
         public int PointIndex;
 
-        public CadVertex Point;     // Match座標 (World座標系)
+        public Vector3d Point;     // Match座標 (World座標系)
 
-        public CadVertex PointScrn; // Match座標 (Screen座標系)
+        public Vector3d PointScrn; // Match座標 (Screen座標系)
 
         public double DistanceX;    // X距離 (Screen座標系)
         public double DistanceY;    // Y距離 (Screen座標系)
 
         public void reset()
         {
-            this = default(MarkPoint);
+            this = default;
 
             IsValid = false;
 

@@ -10,9 +10,9 @@ namespace Plotter
 {
     public class PointSearcher
     {
-        private MarkPoint XMatch = default(MarkPoint);
-        private MarkPoint YMatch = default(MarkPoint);
-        private MarkPoint XYMatch = default(MarkPoint);
+        private MarkPoint XMatch = default;
+        private MarkPoint YMatch = default;
+        private MarkPoint XYMatch = default;
 
         private List<MarkPoint> XYMatchList = new List<MarkPoint>();
 
@@ -265,8 +265,8 @@ namespace Plotter
                     t.Layer = layer;
                     t.Figure = fig;
                     t.PointIndex = ptIdx;
-                    t.Point = pt;
-                    t.PointScrn = ppt;
+                    t.Point = pt.vector;
+                    t.PointScrn = ppt.vector;
                     t.DistanceX = dx;
                     t.DistanceY = dy;
 
@@ -289,8 +289,8 @@ namespace Plotter
                 mp.Layer = layer;
                 mp.Figure = fig;
                 mp.PointIndex = ptIdx;
-                mp.Point = pt;
-                mp.PointScrn = ppt;
+                mp.Point = pt.vector;
+                mp.PointScrn = ppt.vector;
                 mp.DistanceX = nx;
                 mp.DistanceY = ny;
 

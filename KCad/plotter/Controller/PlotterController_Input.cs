@@ -274,9 +274,9 @@ namespace Plotter.Controller
                 return sc;
             }
 
-            ObjDownPoint = sc.MarkPt.Point.vector;
+            ObjDownPoint = sc.MarkPt.Point;
 
-            MoveOrgScrnPoint = sc.DC.WorldPointToDevPoint(sc.MarkPt.Point.vector);
+            MoveOrgScrnPoint = sc.DC.WorldPointToDevPoint(sc.MarkPt.Point);
 
             MoveOrgScrnPoint.Z = 0;
 
@@ -724,16 +724,14 @@ namespace Plotter.Controller
             MarkPoint mx = mPointSearcher.GetXMatch();
             MarkPoint my = mPointSearcher.GetYMatch();
 
-            CadVertex tp = default;
-
             if (mx.IsValid)
             {
                 HighlightPointList.Add(
-                    new HighlightPointListItem(mx.Point.vector, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
+                    new HighlightPointListItem(mx.Point, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
 
-                tp = dc.WorldPointToDevPoint(mx.Point);
+                Vector3d tp = dc.WorldPointToDevPoint(mx.Point);
 
-                Vector3d distanceX = si.Cursor.DistanceX(tp.vector);
+                Vector3d distanceX = si.Cursor.DistanceX(tp);
 
                 si.Cursor.Pos += distanceX;
 
@@ -742,11 +740,11 @@ namespace Plotter.Controller
 
             if (my.IsValid)
             {
-                HighlightPointList.Add(new HighlightPointListItem(my.Point.vector, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
+                HighlightPointList.Add(new HighlightPointListItem(my.Point, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
 
-                tp = dc.WorldPointToDevPoint(my.Point);
+                Vector3d tp = dc.WorldPointToDevPoint(my.Point);
 
-                Vector3d distanceY = si.Cursor.DistanceY(tp.vector);
+                Vector3d distanceY = si.Cursor.DistanceY(tp);
 
                 si.Cursor.Pos += distanceY;
 
@@ -755,12 +753,11 @@ namespace Plotter.Controller
 
             if (mxy.IsValid)
             {
-                HighlightPointList.Add(new HighlightPointListItem(mxy.Point.vector, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT2)));
-                tp = dc.WorldPointToDevPoint(mx.Point);
+                HighlightPointList.Add(new HighlightPointListItem(mxy.Point, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT2)));
 
                 si.Cursor.Pos = dc.WorldPointToDevPoint(si.SnapPoint);
 
-                si.SnapPoint = mxy.Point.vector;
+                si.SnapPoint = mxy.Point;
             }
 
             return si;
