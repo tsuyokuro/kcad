@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using CadDataTypes;
-using OpenTK;
+﻿using OpenTK;
 
 namespace Plotter
 {

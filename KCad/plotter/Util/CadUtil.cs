@@ -651,6 +651,47 @@ namespace Plotter
             return ret;
         }
 
+        // 点pから線分abに向かう垂線との交点を求める
+        public static CrossInfo PerpendicularCrossSeg(Vector3d a, Vector3d b, Vector3d p)
+        {
+            CrossInfo ret = default(CrossInfo);
+
+            Vector3d ab = b - a;
+            Vector3d ap = p - a;
+
+            Vector3d ba = a - b;
+            Vector3d bp = p - b;
+
+            // A-B 単位ベクトル
+            //CadPoint unit_ab = CadMath.unitVector(ab);
+            Vector3d unit_ab = ab.UnitVector();
+
+            // B-A 単位ベクトル　(A-B単位ベクトルを反転) B側の中外判定に使用
+            Vector3d unit_ba = unit_ab * -1.0;
+
+            // Aから交点までの距離 
+            // A->交点->B or A->B->交点なら +
+            // 交点<-A->B なら -
+            double dist_ax = CadMath.InnerProduct(unit_ab, ap);
+
+            // Bから交点までの距離 B側の中外判定に使用
+            double dist_bx = CadMath.InnerProduct(unit_ba, bp);
+
+            //Console.WriteLine("getNormCross dist_ax={0} dist_bx={1}" , dist_ax.ToString(), dist_bx.ToString());
+
+            if (dist_ax > 0 && dist_bx > 0)
+            {
+                ret.IsCross = true;
+            }
+
+            ret.CrossPoint.X = a.X + (unit_ab.X * dist_ax);
+            ret.CrossPoint.Y = a.Y + (unit_ab.Y * dist_ax);
+            ret.CrossPoint.Z = a.Z + (unit_ab.Z * dist_ax);
+
+            return ret;
+        }
+
+
         // 点pから線分abに向かう垂線との交点を求める2D
         public static CrossInfo PerpendicularCrossSeg2D(CadVertex a, CadVertex b, CadVertex p)
         {
@@ -810,6 +851,21 @@ namespace Plotter
         public static CadVertex CenterPoint(CadVertex a, CadVertex b)
         {
             CadVertex c = b - a;
+            c /= 2;
+            c += a;
+
+            return c;
+        }
+
+        /// <summary>
+        /// a b の中点を求める
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static Vector3d CenterPoint(Vector3d a, Vector3d b)
+        {
+            Vector3d c = b - a;
             c /= 2;
             c += a;
 

@@ -156,8 +156,8 @@ namespace Plotter
             {
                 MarkSeg.Layer = layer;
                 MarkSeg.FigSeg = fseg;
-                MarkSeg.CrossPoint = (CadVertex)p;
-                MarkSeg.CrossPointScrn = (CadVertex)dc.WorldPointToDevPoint(p);
+                MarkSeg.CrossPoint = p;
+                MarkSeg.CrossPointScrn = dc.WorldPointToDevPoint(p);
                 MarkSeg.Distance = mind;
 
                 MinDist = mind;
@@ -180,20 +180,20 @@ namespace Plotter
             }
 
 
-            CadVertex c = vl[0];
-            CadVertex a = vl[1];
-            CadVertex b = vl[2];
+            Vector3d c = vl[0].vector;
+            Vector3d a = vl[1].vector;
+            Vector3d b = vl[2].vector;
 
 
-            CadVertex pc = dc.WorldPointToDevPoint(c);
-            CadVertex pa = dc.WorldPointToDevPoint(a);
-            CadVertex pb = dc.WorldPointToDevPoint(b);
+            Vector3d pc = dc.WorldPointToDevPoint(c);
+            Vector3d pa = dc.WorldPointToDevPoint(a);
+            Vector3d pb = dc.WorldPointToDevPoint(b);
 
             double r = CadUtil.SegNorm2D(pa, pc);
-            double tr = CadUtil.SegNorm2D(Target.Pos, pc.vector);
+            double tr = CadUtil.SegNorm2D(Target.Pos, pc);
 
-            double pad = CadUtil.SegNorm2D(Target.Pos, pa.vector);
-            double pbd = CadUtil.SegNorm2D(Target.Pos, pb.vector);
+            double pad = CadUtil.SegNorm2D(Target.Pos, pa);
+            double pbd = CadUtil.SegNorm2D(Target.Pos, pb);
 
             int idxB = 1;
 
@@ -214,9 +214,9 @@ namespace Plotter
             {
                 Vector3d tp = dc.DevPointToWorldPoint(Target.Pos);
                 r = CadUtil.SegNorm(a, c);
-                tr = CadUtil.SegNorm(tp, c.vector);
+                tr = CadUtil.SegNorm(tp, c);
 
-                CadVertex td = tp - c;
+                Vector3d td = tp - c;
 
                 td *= (r / tr);
                 td += c;

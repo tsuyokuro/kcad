@@ -344,17 +344,17 @@ namespace Plotter.Controller
                 return sc;
             }
 
-            CadVertex center = sc.MarkSeg.CenterPoint;
+            Vector3d center = sc.MarkSeg.CenterPoint;
 
-            CadVertex t = sc.DC.WorldPointToDevPoint(center);
+            Vector3d t = sc.DC.WorldPointToDevPoint(center);
 
             if ((t - sc.CursorScrPt).Norm() < SettingsHolder.Settings.LineSnapRange)
             {
-                ObjDownPoint = center.vector;
+                ObjDownPoint = center;
             }
             else
             {
-                ObjDownPoint = sc.MarkSeg.CrossPoint.vector;
+                ObjDownPoint = sc.MarkSeg.CrossPoint;
             }
 
             CadFigure fig = mDB.GetFigure(sc.MarkSeg.FigureID);
@@ -779,24 +779,24 @@ namespace Plotter.Controller
                     CadFigure fig = mDB.GetFigure(markSeg.FigureID);
                     fig.DrawSeg(dc, dc.GetPen(DrawTools.PEN_MATCH_SEG), markSeg.PtIndexA, markSeg.PtIndexB);
 
-                    CadVertex center = markSeg.CenterPoint;
+                    Vector3d center = markSeg.CenterPoint;
 
-                    CadVertex t = dc.WorldPointToDevPoint(center);
+                    Vector3d t = dc.WorldPointToDevPoint(center);
 
                     if ((t - si.Cursor.Pos).Norm() < SettingsHolder.Settings.LineSnapRange)
                     {
-                        HighlightPointList.Add(new HighlightPointListItem(center.vector, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
+                        HighlightPointList.Add(new HighlightPointListItem(center, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
 
-                        si.SnapPoint = center.vector;
+                        si.SnapPoint = center;
 
-                        si.Cursor.Pos = t.vector;
+                        si.Cursor.Pos = t;
                         si.Cursor.Pos.Z = 0;
                     }
                     else
                     {
-                        si.SnapPoint = markSeg.CrossPoint.vector;
+                        si.SnapPoint = markSeg.CrossPoint;
 
-                        si.Cursor.Pos = markSeg.CrossPointScrn.vector;
+                        si.Cursor.Pos = markSeg.CrossPointScrn;
                         si.Cursor.Pos.Z = 0;
 
                         HighlightPointList.Add(new HighlightPointListItem(SnapPoint, dc.GetPen(DrawTools.PEN_LINE_SNAP)));

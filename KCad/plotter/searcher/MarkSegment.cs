@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -75,15 +76,15 @@ namespace Plotter
             }
         }
 
-        public CadVertex CrossPoint;
+        public Vector3d CrossPoint;
 
-        public CadVertex CrossPointScrn;
+        public Vector3d CrossPointScrn;
 
-        public CadVertex CenterPoint
+        public Vector3d CenterPoint
         {
             get
             {
-                return CadUtil.CenterPoint(FigSeg.Point0, FigSeg.Point1);
+                return CadUtil.CenterPoint(FigSeg.Point0.vector, FigSeg.Point1.vector);
             }
         }
 
@@ -122,8 +123,8 @@ namespace Plotter
 
         public void Clean()
         {
-            CrossPoint.Valid = false;
-            CrossPointScrn.Valid = false;
+            CrossPoint = VectorUtil.InvalidVector3d;
+            CrossPointScrn = VectorUtil.InvalidVector3d;
         }
 
         public bool IsSelected()

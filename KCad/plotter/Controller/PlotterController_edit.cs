@@ -147,7 +147,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            if (!ms.CrossPoint.Valid)
+            if (!ms.CrossPoint.IsValid())
             {
                 return;
             }
