@@ -35,7 +35,7 @@ namespace Plotter
             }
         }
 
-        public static void MoveAllPoints(CadFigure fig, CadVertex delta)
+        public static void MoveAllPoints(CadFigure fig, Vector3d delta)
         {
             CadUtil.MovePoints(fig.PointList, delta);
         }

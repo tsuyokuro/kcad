@@ -646,7 +646,7 @@ namespace Plotter
             });
         }
 
-        public virtual void MoveAllPoints(CadVertex delta)
+        public virtual void MoveAllPoints(Vector3d delta)
         {
             if (Locked) return;
 

@@ -100,7 +100,7 @@ namespace Plotter
 
                     //DOut.pl($"{GetType().Name} onSizeChanged firstChange {Width}, {Height}");
 
-                    mController.SetCursorWoldPos(CadVertex.Zero);
+                    mController.SetCursorWoldPos(Vector3d.Zero);
 
                     firstSizeChange = false;
                 }

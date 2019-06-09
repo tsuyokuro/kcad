@@ -319,7 +319,7 @@ namespace Plotter
 
                 mDrawContext.SetViewOrg(org);
 
-                mController.SetCursorWoldPos(CadVertex.Zero);
+                mController.SetCursorWoldPos(Vector3d.Zero);
             }
 
             sizeChangeCnt++;

@@ -40,7 +40,7 @@ namespace Plotter
             base.MoveSelectedPointsFromStored(dc, delta);
         }
 
-        public override void MoveAllPoints(CadVertex delta)
+        public override void MoveAllPoints(Vector3d delta)
         {
             if (Locked) return;
 

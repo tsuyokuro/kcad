@@ -3,6 +3,7 @@ using Plotter.Serializer;
 using System.Collections.Generic;
 using System.Windows;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter.Controller
 {
@@ -43,11 +44,11 @@ namespace Plotter.Controller
 
 
             // Pase figures in fig list
-            CadVertex pp = controller.LastDownPoint;
+            Vector3d pp = controller.LastDownPoint;
 
             MinMax3D mm3d = CadUtil.GetFigureMinMaxIncludeChild(figList);
 
-            CadVertex d = pp - mm3d.GetMinAsVector();
+            Vector3d d = pp - mm3d.GetMinAsVector();
 
             CadOpeList opeRoot = new CadOpeList();
 
@@ -63,7 +64,7 @@ namespace Plotter.Controller
             controller.HistoryMan.foward(opeRoot);
         }
 
-        private static void PasteFigure(PlotterController controller, CadFigure fig, CadVertex delta)
+        private static void PasteFigure(PlotterController controller, CadFigure fig, Vector3d delta)
         {
             fig.MoveAllPoints(delta);
             controller.DB.AddFigure(fig);

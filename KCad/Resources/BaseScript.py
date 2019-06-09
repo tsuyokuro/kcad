@@ -25,7 +25,7 @@ def puts(s):
 def add_rect(w=10, h=10):
     SE.Rect(w, h)
 
-#[AC] add_rect_at(pv=lastDown(), w=10, h=10)
+#[AC] add_rect_at(pv=last_down(), w=10, h=10)
 def add_rect_at(pv, w=10, h=10):
     SE.RectAt(pv, w, h)
 
@@ -97,9 +97,13 @@ def move_selected_point(x=0, y=0, z=0):
 def ins_point():
     SE.InsPoint()
 
-#[AC] create_vector(x, y, z)
-def create_vector(x, y, z):
+#[AC] vector(x, y, z)
+def vector(x, y, z):
     return SE.CreateVector(x, y, z)
+
+#[AC] vertex(x, y, z)
+def vertex(x, y, z):
+    return SE.CreateVertex(x, y, z)
 
 #[AC] get_last_down()
 def get_last_down():
@@ -225,7 +229,7 @@ def triangulate(id, area, deg):
 def triangulate_opt(id, option):
     SE.Triangulate(id, option)
 
-#[AC] add_line(create_vector(0, 0, 0), create_vector(10, 20, 0))
+#[AC] add_line(vertex(0, 0, 0), vertex(10, 20, 0))
 def add_line(v0, v1):
     SE.AddLine(v0, v1)
 
@@ -273,14 +277,14 @@ cout = MyConsoleOut()
 sys.stdout = cout
 
 #[AC] point0
-point0 = SE.CreateVector(0,0,0)
+point0 = Vector3d(0,0,0)
 
 #[AC] unit_vx
 #[AC] unit_vy
 #[AC] unit_vz
-unit_vx = SE.CreateVector(1,0,0)
-unit_vy = SE.CreateVector(0,1,0)
-unit_vz = SE.CreateVector(0,0,1)
+unit_vx = Vector3d(1,0,0)
+unit_vy = Vector3d(0,1,0)
+unit_vz = Vector3d(0,0,1)
 
 w_1x4 = 89
 t_1x4 = 19
@@ -326,10 +330,4 @@ esc_b_blue = "\x1b[94m"
 esc_b_magenta = "\x1b[95m"
 esc_b_cyan = "\x1b[96m"
 esc_b_white = "\x1b[97m"
-
-
-#test !!
-vv = CadVertex.Create(1,1,1);
-vl = VertexList();
-vl.Add(vv);
 

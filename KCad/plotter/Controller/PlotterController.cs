@@ -125,7 +125,7 @@ namespace Plotter.Controller
 
             mPlotterTaskRunner = new PlotterTaskRunner(this);
 
-            ObjDownPoint.Valid = false;
+            ObjDownPoint = VectorUtil.InvalidVector3d;
 
             InitHid();
         }
@@ -379,14 +379,14 @@ namespace Plotter.Controller
         {
             dc.Drawing.DrawMarkCursor(
                 dc.GetPen(DrawTools.PEN_LAST_POINT_MARKER),
-                LastDownPoint.vector,
+                LastDownPoint,
                 ControllerConst.MARK_CURSOR_SIZE);
 
-            if (ObjDownPoint.Valid)
+            if (ObjDownPoint.IsValid())
             {
                 dc.Drawing.DrawMarkCursor(
                     dc.GetPen(DrawTools.PEN_LAST_POINT_MARKER2),
-                    ObjDownPoint.vector,
+                    ObjDownPoint,
                     ControllerConst.MARK_CURSOR_SIZE);
             }
         }
@@ -399,7 +399,7 @@ namespace Plotter.Controller
             }
 
             dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_DRAG_LINE),
-                LastDownPoint.vector, dc.DevPointToWorldPoint(CrossCursor.Pos));
+                LastDownPoint, dc.DevPointToWorldPoint(CrossCursor.Pos));
         }
 
         public void DrawCrossCursor(DrawContext dc)
@@ -419,8 +419,8 @@ namespace Plotter.Controller
         {
             dc.Drawing.DrawRectScrn(
                 dc.GetPen(DrawTools.PEN_TEMP_FIGURE),
-                RubberBandScrnPoint0.vector,
-                RubberBandScrnPoint1.vector);
+                RubberBandScrnPoint0,
+                RubberBandScrnPoint1);
         }
 
         public void DrawAllFigure(DrawContext dc)

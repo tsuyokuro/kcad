@@ -197,14 +197,19 @@ namespace Plotter.Controller
             ItConsole.println(s);
         }
 
-        public CadVertex GetLastDownPoint()
+        public Vector3d GetLastDownPoint()
         {
             return Controller.LastDownPoint;
         }
 
-        public CadVertex CreateVector(double x, double y, double z)
+        public CadVertex CreateVertex(double x, double y, double z)
         {
             return CadVertex.Create(x, y, z);
+        }
+
+        public Vector3d CreateVector(double x, double y, double z)
+        {
+            return new Vector3d(x, y, z);
         }
 
         public CadVertex GetProjectionDir()
@@ -434,9 +439,9 @@ namespace Plotter.Controller
 
         public void MoveLastDownPoint(double x, double y, double z)
         {
-            CadVertex p = Controller.GetLastDownPoint();
+            Vector3d p = Controller.GetLastDownPoint();
 
-            CadVertex delta = CadVertex.Create(x, y, z);
+            Vector3d delta = new Vector3d(x, y, z);
 
             p += delta;
 
@@ -447,7 +452,7 @@ namespace Plotter.Controller
 
         public void SetLastDownPoint(double x, double y, double z)
         {
-            CadVertex p = CadVertex.Create(x, y, z);
+            Vector3d p = new Vector3d(x, y, z);
 
             Controller.SetLastDownPoint(p);
 
@@ -493,16 +498,16 @@ namespace Plotter.Controller
             return RectAt(Controller.LastDownPoint, w, h);
         }
 
-        public int RectAt(CadVertex p, double w, double h)
+        public int RectAt(Vector3d p, double w, double h)
         {
-            CadVertex viewDir = (CadVertex)Controller.CurrentDC.ViewDir;
-            CadVertex upDir = (CadVertex)Controller.CurrentDC.UpVector;
+            Vector3d viewDir = Controller.CurrentDC.ViewDir;
+            Vector3d upDir = Controller.CurrentDC.UpVector;
 
-            CadVertex wd = CadMath.Normal(viewDir, upDir) * w;
-            CadVertex hd = upDir.UnitVector() * h;
+            Vector3d wd = CadMath.Normal(viewDir, upDir) * w;
+            Vector3d hd = upDir.UnitVector() * h;
 
-            CadVertex p0 = p;
-            CadVertex p1 = p;
+            CadVertex p0 = (CadVertex)p;
+            CadVertex p1 = (CadVertex)p;
 
             CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.RECT);
 
@@ -590,7 +595,7 @@ namespace Plotter.Controller
 
         public void Move(uint figID, double x, double y, double z)
         {
-            CadVertex delta = CadVertex.Create(x, y, z);
+            Vector3d delta = new Vector3d(x, y, z);
 
             CadFigure fig = Controller.DB.GetFigure(figID);
 
@@ -865,7 +870,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            FaceToDirection(fig, Controller.LastDownPoint.vector, dir);
+            FaceToDirection(fig, Controller.LastDownPoint, dir);
         }
 
         private void FaceToDirection(CadFigure fig, Vector3d org, Vector3d dir)

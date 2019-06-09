@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using CadDataTypes;
 using KCad;
 using OpenTK;
@@ -42,26 +41,26 @@ namespace Plotter.Controller
 
         private Vector3d StoreViewOrg = default;
 
-        private CadVertex SnapPoint;
+        private Vector3d SnapPoint;
 
-        private CadVertex MoveOrgScrnPoint;
+        private Vector3d MoveOrgScrnPoint;
 
         // 生のL button down point (デバイス座標系)
-        private CadVertex RawDownPoint = default;
+        private Vector3d RawDownPoint = default;
 
         // Snap等で補正された L button down point (World座標系)
-        public CadVertex LastDownPoint = default;
+        public Vector3d LastDownPoint = default;
 
         // 選択したObjectの点の座標 (World座標系)
-        private CadVertex ObjDownPoint = default;
-        private CadVertex SObjDownPoint = default;
+        private Vector3d ObjDownPoint = default;
+        private Vector3d SObjDownPoint = default;
 
         // 実際のMouse座標からCross cursorへのOffset
-        private CadVertex OffsetScreen = default;
+        private Vector3d OffsetScreen = default;
 
-        public CadVertex RubberBandScrnPoint0 = CadVertex.InvalidValue;
+        public Vector3d RubberBandScrnPoint0 = VectorUtil.InvalidVector3d;
 
-        public CadVertex RubberBandScrnPoint1 = default;
+        public Vector3d RubberBandScrnPoint1 = default;
 
         private CadFigure mCurrentFigure = null;
 
@@ -169,7 +168,7 @@ namespace Plotter.Controller
         {
             SelectContext sc = default;
 
-            ObjDownPoint = CadVertex.InvalidValue;
+            ObjDownPoint = VectorUtil.InvalidVector3d;
 
             RulerSet.Clear();
 
@@ -203,11 +202,11 @@ namespace Plotter.Controller
                 }
             }
 
-            if (ObjDownPoint.Valid)
+            if (ObjDownPoint.IsValid())
             {
                 LastDownPoint = ObjDownPoint;
 
-                CrossCursor.Pos = dc.WorldPointToDevPoint(ObjDownPoint.vector);
+                CrossCursor.Pos = dc.WorldPointToDevPoint(ObjDownPoint);
 
                 //DebugOut.println("SelectNearest ObjDownPoint.Valid");
 
@@ -241,7 +240,7 @@ namespace Plotter.Controller
 
                     if (match)
                     {
-                        LastDownPoint = (CadVertex)dc.DevPointToWorldPoint(p);
+                        LastDownPoint = dc.DevPointToWorldPoint(p);
                     }
                 }
             }
@@ -275,9 +274,9 @@ namespace Plotter.Controller
                 return sc;
             }
 
-            ObjDownPoint = sc.MarkPt.Point;
+            ObjDownPoint = sc.MarkPt.Point.vector;
 
-            MoveOrgScrnPoint = sc.DC.WorldPointToDevPoint(sc.MarkPt.Point);
+            MoveOrgScrnPoint = sc.DC.WorldPointToDevPoint(sc.MarkPt.Point.vector);
 
             MoveOrgScrnPoint.Z = 0;
 
@@ -351,11 +350,11 @@ namespace Plotter.Controller
 
             if ((t - sc.CursorScrPt).Norm() < SettingsHolder.Settings.LineSnapRange)
             {
-                ObjDownPoint = center;
+                ObjDownPoint = center.vector;
             }
             else
             {
-                ObjDownPoint = sc.MarkSeg.CrossPoint;
+                ObjDownPoint = sc.MarkSeg.CrossPoint.vector;
             }
 
             CadFigure fig = mDB.GetFigure(sc.MarkSeg.FigureID);
@@ -402,8 +401,8 @@ namespace Plotter.Controller
                 y = CrossCursor.Pos.Y;
             }
 
-            CadVertex pixp = CadVertex.Create(x, y, 0);
-            CadVertex cp = dc.DevPointToWorldPoint(pixp);
+            Vector3d pixp = new Vector3d(x, y, 0);
+            Vector3d cp = dc.DevPointToWorldPoint(pixp);
 
             RawDownPoint = pixp;
 
@@ -414,8 +413,8 @@ namespace Plotter.Controller
 
             if (mInteractCtrl.IsActive)
             {
-                mInteractCtrl.Draw(dc, SnapPoint.vector);
-                mInteractCtrl.SetPoint(SnapPoint);
+                mInteractCtrl.Draw(dc, SnapPoint);
+                mInteractCtrl.SetPoint((CadVertex)SnapPoint);
 
                 LastDownPoint = SnapPoint;
 
@@ -621,13 +620,13 @@ namespace Plotter.Controller
         }
 
         #region RubberBand
-        public void RubberBandSelect(CadVertex p0, CadVertex p1)
+        public void RubberBandSelect(Vector3d p0, Vector3d p1)
         {
             LastSelPoint = null;
             LastSelSegment = null;
 
-            CadVertex minp = CadVertex.Min(p0, p1);
-            CadVertex maxp = CadVertex.Max(p0, p1);
+            Vector3d minp = VectorUtil.Min(p0, p1);
+            Vector3d maxp = VectorUtil.Max(p0, p1);
 
             DB.WalkEditable(
                 (layer, fig) =>
@@ -636,11 +635,11 @@ namespace Plotter.Controller
                 });
         }
 
-        public void SelectIfContactRect(CadVertex minp, CadVertex maxp, CadLayer layer, CadFigure fig)
+        public void SelectIfContactRect(Vector3d minp, Vector3d maxp, CadLayer layer, CadFigure fig)
         {
             for (int i = 0; i < fig.PointCount; i++)
             {
-                CadVertex p = CurrentDC.WorldPointToDevPoint(fig.PointList[i]);
+                Vector3d p = CurrentDC.WorldPointToDevPoint(fig.PointList[i].vector);
 
                 if (CadUtil.IsInRect2D(minp, maxp, p))
                 {
@@ -803,7 +802,7 @@ namespace Plotter.Controller
                         si.Cursor.Pos = markSeg.CrossPointScrn.vector;
                         si.Cursor.Pos.Z = 0;
 
-                        HighlightPointList.Add(new HighlightPointListItem(SnapPoint.vector, dc.GetPen(DrawTools.PEN_LINE_SNAP)));
+                        HighlightPointList.Add(new HighlightPointListItem(SnapPoint, dc.GetPen(DrawTools.PEN_LINE_SNAP)));
                     }
                 }
                 else
@@ -894,7 +893,7 @@ namespace Plotter.Controller
             SnapInfo si =
                 new SnapInfo(
                     CrossCursor,
-                    SnapPoint.vector,
+                    SnapPoint,
                     mPointSearcher.Distance()
                     );
 
@@ -969,7 +968,7 @@ namespace Plotter.Controller
             }
 
             CrossCursor = si.Cursor;
-            SnapPoint = (CadVertex)si.SnapPoint;
+            SnapPoint = si.SnapPoint;
         }
 
         private void MouseMove(CadMouse pointer, DrawContext dc, double x, double y)
@@ -986,11 +985,8 @@ namespace Plotter.Controller
                 y = CrossCursor.Pos.Y;
             }
 
-            //DOut.pl($"MouseMove {x}, {y}");
-
-            CadVertex pixp = CadVertex.Create(x, y, 0) - OffsetScreen;
-            CadVertex cp = dc.DevPointToWorldPoint(pixp);
-
+            Vector3d pixp = new Vector3d(x, y, 0) - OffsetScreen;
+            Vector3d cp = dc.DevPointToWorldPoint(pixp);
 
             if (State == States.START_DRAGING_POINTS)
             {
@@ -1010,7 +1006,7 @@ namespace Plotter.Controller
 
             RubberBandScrnPoint1 = pixp;
 
-            CrossCursor.Pos = pixp.vector;
+            CrossCursor.Pos = pixp;
             SnapPoint = cp;
 
             if (!CursorLocked)
@@ -1020,14 +1016,14 @@ namespace Plotter.Controller
 
             if (State == States.DRAGING_POINTS)
             {
-                Vector3d p0 = dc.DevPointToWorldPoint(MoveOrgScrnPoint.vector);
+                Vector3d p0 = dc.DevPointToWorldPoint(MoveOrgScrnPoint);
                 Vector3d p1 = dc.DevPointToWorldPoint(CrossCursor.Pos);
 
                 Vector3d delta = p1 - p0;
 
                 MoveSelectedPoints(dc, delta);
 
-                ObjDownPoint.vector = SObjDownPoint.vector + delta;
+                ObjDownPoint = SObjDownPoint + delta;
             }
 
             Observer.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);
@@ -1078,7 +1074,7 @@ namespace Plotter.Controller
 
             if (mInteractCtrl.IsActive)
             {
-                mInteractCtrl.Draw(dc, SnapPoint.vector);
+                mInteractCtrl.Draw(dc, SnapPoint);
             }
         }
 
@@ -1151,19 +1147,19 @@ namespace Plotter.Controller
 
             ItConsole.println(res.ToInfoString());
 
-            CadVertex sv = CurrentDC.WorldPointToDevPoint(res.WoldPoint);
+            Vector3d sv = CurrentDC.WorldPointToDevPoint(res.WoldPoint.vector);
 
             LockCursorScrn(sv);
 
             Mouse.MouseMove(dc, sv.X, sv.Y);
         }
 
-        public void LockCursorScrn(CadVertex p)
+        public void LockCursorScrn(Vector3d p)
         {
             CursorLocked = true;
 
             SnapPoint = CurrentDC.DevPointToWorldPoint(p);
-            CrossCursor.Pos = p.vector;
+            CrossCursor.Pos = p;
         }
 
         public void CursorLock()
@@ -1176,26 +1172,26 @@ namespace Plotter.Controller
             CursorLocked = false;
         }
 
-        public CadVertex GetCursorPos()
+        public Vector3d GetCursorPos()
         {
             return SnapPoint;
         }
 
-        public void SetCursorWoldPos(CadVertex v)
+        public void SetCursorWoldPos(Vector3d v)
         {
             SnapPoint = v;
-            CrossCursor.Pos = CurrentDC.WorldPointToDevPoint(SnapPoint.vector);
+            CrossCursor.Pos = CurrentDC.WorldPointToDevPoint(SnapPoint);
 
             Observer.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);
         }
 
 
-        public CadVertex GetLastDownPoint()
+        public Vector3d GetLastDownPoint()
         {
             return LastDownPoint;
         }
 
-        public void SetLastDownPoint(CadVertex v)
+        public void SetLastDownPoint(Vector3d v)
         {
             LastDownPoint = v;
             Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);

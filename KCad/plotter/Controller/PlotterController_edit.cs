@@ -339,7 +339,7 @@ namespace Plotter.Controller
 
             DOut.pl($"ins={ins} pcnt={fig.PointCount}");
 
-            fig.InsertPointAt(ins, LastDownPoint);
+            fig.InsertPointAt(ins, (CadVertex)LastDownPoint);
 
             ClearSelection();
 

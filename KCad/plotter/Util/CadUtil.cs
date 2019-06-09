@@ -864,7 +864,7 @@ namespace Plotter
             return Math.Sqrt((dx * dx) + (dy * dy));
         }
 
-        public static void MovePoints(VertexList list, CadVertex delta)
+        public static void MovePoints(VertexList list, Vector3d delta)
         {
             for (int i = 0; i < list.Count; i++)
             {
@@ -1370,6 +1370,28 @@ namespace Plotter
         /// </returns>
         /// 
         public static bool IsInRect2D(CadVertex minp, CadVertex maxp, CadVertex p)
+        {
+            if (p.X < minp.X) return false;
+            if (p.X > maxp.X) return false;
+
+            if (p.Y < minp.Y) return false;
+            if (p.Y > maxp.Y) return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// 点が矩形内あるかチェック
+        /// </summary>
+        /// <param name="minp">矩形の最小頂点</param>
+        /// <param name="maxp">矩形の最大頂点</param>
+        /// <param name="p">検査対象点</param>
+        /// <returns>
+        /// true:  点は矩形内
+        /// false: 点は矩形外
+        /// </returns>
+        /// 
+        public static bool IsInRect2D(Vector3d minp, Vector3d maxp, Vector3d p)
         {
             if (p.X < minp.X) return false;
             if (p.X > maxp.X) return false;

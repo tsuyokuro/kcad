@@ -79,7 +79,7 @@ namespace Plotter
                 }
                 else
                 {
-                    CadVertex p = Controller.GetCursorPos();
+                    Vector3d p = Controller.GetCursorPos();
                     Controller.SetCursorWoldPos(p + Delta);
                     Controller.Redraw();
                 }

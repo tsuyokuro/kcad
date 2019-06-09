@@ -1,5 +1,6 @@
 ﻿using CadDataTypes;
 using MeshUtilNS;
+using OpenTK;
 using Plotter;
 using System;
 
@@ -13,7 +14,7 @@ namespace MeshMakerNS
             QUADRANGLE,
         }
 
-        public static CadMesh CreateBox(CadVertex pos, CadVertex sv, FaceType faceType = FaceType.TRIANGLE)
+        public static CadMesh CreateBox(Vector3d pos, CadVertex sv, FaceType faceType = FaceType.TRIANGLE)
         {
             CadMesh cm = CreateUnitCube(faceType);
 
@@ -79,7 +80,7 @@ namespace MeshMakerNS
             return cm;
         }
 
-        public static CadMesh CreateCylinder(CadVertex pos, int slices, double r, double len)
+        public static CadMesh CreateCylinder(Vector3d pos, int slices, double r, double len)
         {
             CadMesh mesh = CreateCylinder(slices, r, len);
 

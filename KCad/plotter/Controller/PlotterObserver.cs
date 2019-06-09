@@ -1,4 +1,5 @@
 ﻿using CadDataTypes;
+using OpenTK;
 using System;
 
 namespace Plotter.Controller
@@ -27,7 +28,7 @@ namespace Plotter.Controller
 
         //public Action<PlotterController, bool> DataChanged = (controller, redraw) => { };
 
-        public Action<PlotterController, CadVertex, CursorType> CursorPosChanged = (controller, pos, cursorType) => { };
+        public Action<PlotterController, Vector3d, CursorType> CursorPosChanged = (controller, pos, cursorType) => { };
 
         public Action<bool> UpdateTreeView = (remakeTree) => { };
 

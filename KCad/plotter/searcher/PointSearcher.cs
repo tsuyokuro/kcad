@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CadDataTypes;
-
+using OpenTK;
 
 namespace Plotter
 {
@@ -172,6 +172,11 @@ namespace Plotter
         public void Check(DrawContext dc, CadVertex pt)
         {
             CheckFigPoint(dc, pt, null, null, 0);
+        }
+
+        public void Check(DrawContext dc, Vector3d pt)
+        {
+            CheckFigPoint(dc, (CadVertex)pt, null, null, 0);
         }
 
         public void Check(DrawContext dc, VertexList list)
