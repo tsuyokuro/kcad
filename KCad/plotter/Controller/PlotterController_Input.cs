@@ -173,11 +173,11 @@ namespace Plotter.Controller
             RulerSet.Clear();
 
             sc.DC = dc;
-            sc.CursorWorldPt = (CadVertex)dc.DevPointToWorldPoint(pixp);
+            sc.CursorWorldPt = dc.DevPointToWorldPoint(pixp);
             sc.PointSelected = false;
             sc.SegmentSelected = false;
 
-            sc.CursorScrPt = (CadVertex)pixp;
+            sc.CursorScrPt = pixp;
             sc.Cursor = CadCursor.Create(pixp);
 
             sc = PointSelectNearest(sc);
@@ -193,13 +193,6 @@ namespace Plotter.Controller
                         ClearSelection();
                     }
                 }
-                else
-                {
-                    //DbgOut.pf(
-                    //    "SegSelected fig id:{0} idx0:{1} idx1:{2}\n",
-                    //    sc.MarkSeg.FigureID,
-                    //    sc.MarkSeg.FSegment.Index0, sc.MarkSeg.FSegment.Index1);
-                }
             }
 
             if (ObjDownPoint.IsValid())
@@ -207,8 +200,6 @@ namespace Plotter.Controller
                 LastDownPoint = ObjDownPoint;
 
                 CrossCursor.Pos = dc.WorldPointToDevPoint(ObjDownPoint);
-
-                //DebugOut.println("SelectNearest ObjDownPoint.Valid");
 
                 // LastDownPointを投影面上にしたい場合は、こちら
                 //LastDownPoint = mSnapPoint;
