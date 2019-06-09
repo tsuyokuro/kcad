@@ -18,10 +18,10 @@ namespace Plotter
     {
         public bool IsInvalid;
         public double Area;
-        public CadVertex Point;
+        public Vector3d Point;
 
         // 三角形から作成
-        public static Centroid Create(CadVertex p0, CadVertex p1, CadVertex p2)
+        public static Centroid Create(Vector3d p0, Vector3d p1, Vector3d p2)
         {
             Centroid ret = default(Centroid);
             ret.set(p0, p1, p2);
@@ -29,7 +29,7 @@ namespace Plotter
         }
 
         // 三角形で設定
-        public void set(CadVertex p0, CadVertex p1, CadVertex p2)
+        public void set(Vector3d p0, Vector3d p1, Vector3d p2)
         {
             Area = CadUtil.TriangleArea(p0, p1, p2);
             Point = CadUtil.TriangleCentroid(p0, p1, p2);
@@ -94,6 +94,20 @@ namespace Plotter
         }
 
         // 三角形の面積 3D対応
+        public static double TriangleArea(Vector3d p0, Vector3d p1, Vector3d p2)
+        {
+            Vector3d v1 = p0 - p1;
+            Vector3d v2 = p2 - p1;
+
+            Vector3d cp = CadMath.CrossProduct(v1, v2);
+
+            double area = cp.Norm() / 2.0;
+
+            return area;
+        }
+
+
+        // 三角形の面積 3D対応
         public static double TriangleArea(CadFigure fig)
         {
             return TriangleArea(
@@ -105,9 +119,9 @@ namespace Plotter
 
 
         // 三角形の重心を求める
-        public static CadVertex TriangleCentroid(CadVertex p0, CadVertex p1, CadVertex p2)
+        public static Vector3d TriangleCentroid(CadVertex p0, CadVertex p1, CadVertex p2)
         {
-            CadVertex gp = default(CadVertex);
+            Vector3d gp = default;
 
             gp.X = (p0.X + p1.X + p2.X) / 3.0;
             gp.Y = (p0.Y + p1.Y + p2.Y) / 3.0;
@@ -117,21 +131,33 @@ namespace Plotter
         }
 
         // 三角形の重心を求める
-        public static CadVertex TriangleCentroid(CadFigure fig)
+        public static Vector3d TriangleCentroid(Vector3d p0, Vector3d p1, Vector3d p2)
+        {
+            Vector3d gp = default(Vector3d);
+
+            gp.X = (p0.X + p1.X + p2.X) / 3.0;
+            gp.Y = (p0.Y + p1.Y + p2.Y) / 3.0;
+            gp.Z = (p0.Z + p1.Z + p2.Z) / 3.0;
+
+            return gp;
+        }
+
+        // 三角形の重心を求める
+        public static Vector3d TriangleCentroid(CadFigure fig)
         {
             return TriangleCentroid(
-                fig.GetPointAt(0),
-                fig.GetPointAt(1),
-                fig.GetPointAt(2)
+                fig.GetPointAt(0).vector,
+                fig.GetPointAt(1).vector,
+                fig.GetPointAt(2).vector
                 );
         }
 
         // 三角形群の重心を求める
         public static Centroid TriangleListCentroid(List<CadFigure> triangles)
         {
-            Centroid c0 = default(Centroid);
-            Centroid c1 = default(Centroid);
-            Centroid ct = default(Centroid);
+            Centroid c0 = default;
+            Centroid c1 = default;
+            Centroid ct = default;
 
             int i = 1;
 
@@ -154,7 +180,7 @@ namespace Plotter
         // 二つの重心情報から重心を求める
         public static Centroid MergeCentroid(Centroid c0, Centroid c1)
         {
-            CadVertex gpt = default(CadVertex);
+            Vector3d gpt = default;
 
             double ratio = c1.Area / (c0.Area + c1.Area);
 

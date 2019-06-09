@@ -193,9 +193,9 @@ namespace Plotter
                 int i2 = he.Next.Next.Vertex;
 
                 ct.set(
-                    mHeModel.VertexStore[i0],
-                    mHeModel.VertexStore[i1],
-                    mHeModel.VertexStore[i2]
+                    mHeModel.VertexStore[i0].vector,
+                    mHeModel.VertexStore[i1].vector,
+                    mHeModel.VertexStore[i2].vector
                     );
 
                 cent = CadUtil.MergeCentroid(cent, ct);

@@ -717,22 +717,22 @@ namespace Plotter.Controller
             return area;
         }
 
-        public CadVertex Centroid()
+        public Vector3d Centroid()
         {
             Centroid c = PlotterUtil.Centroid(Controller);
             return c.Point;
         }
 
-        public CadVertex NewPoint()
-        {
-            return default(CadVertex);
-        }
+        //public CadVertex NewPoint()
+        //{
+        //    return default(CadVertex);
+        //}
 
-        public CadFigure NewPolyLines()
-        {
-            CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
-            return fig;
-        }
+        //public CadFigure NewPolyLines()
+        //{
+        //    CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
+        //    return fig;
+        //}
 
         public void Rotate(uint figID, Vector3d org, Vector3d axisDir, double angle)
         {
@@ -1318,25 +1318,25 @@ namespace Plotter.Controller
             }
         }
 
-        public CadVertex RotateVector(CadVertex v, CadVertex axis, double angle)
+        public Vector3d RotateVector(Vector3d v, Vector3d axis, double angle)
         {
             axis = axis.UnitVector();
 
             double t = CadMath.Deg2Rad(angle);
 
-            CadQuaternion q = CadQuaternion.RotateQuaternion(axis.vector, t);
+            CadQuaternion q = CadQuaternion.RotateQuaternion(axis, t);
             CadQuaternion r = q.Conjugate(); ;
 
             CadQuaternion qp;
 
-            qp = CadQuaternion.FromPoint(v.vector);
+            qp = CadQuaternion.FromPoint(v);
 
             qp = r * qp;
             qp = qp * q;
 
-            CadVertex rv = v;
+            Vector3d rv = v;
 
-            rv.vector = qp.ToPoint();
+            rv = qp.ToPoint();
 
             return rv;
         }
@@ -1483,11 +1483,11 @@ namespace Plotter.Controller
         //    task.Wait();
         //}
 
-        public void SeturePoint(uint figID, int idx, CadVertex p)
-        {
-            CadFigure fig = Controller.DB.GetFigure(figID);
-            fig.SetPointAt(idx, p);
-        }
+        //public void SeturePoint(uint figID, int idx, CadVertex p)
+        //{
+        //    CadFigure fig = Controller.DB.GetFigure(figID);
+        //    fig.SetPointAt(idx, p);
+        //}
 
         public CadFigure CreatePolyLines()
         {

@@ -120,7 +120,7 @@ namespace Plotter
         {
             Centroid ret = default(Centroid);
 
-            ret.Point = mPointList[0];
+            ret.Point = mPointList[0].vector;
 
             return ret;
         }

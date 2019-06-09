@@ -329,7 +329,7 @@ namespace Plotter
         {
             Centroid ret = default(Centroid);
 
-            ret.Point = PointList[0];
+            ret.Point = PointList[0].vector;
             ret.Area = 0;
 
             return ret;
@@ -339,11 +339,11 @@ namespace Plotter
         {
             Centroid ret = default(Centroid);
 
-            CadVertex d = PointList[1] - PointList[0];
+            Vector3d d = PointList[1].vector - PointList[0].vector;
 
             d /= 2.0;
 
-            ret.Point = PointList[0] + d;
+            ret.Point = PointList[0].vector + d;
             ret.Area = 0;
 
             return ret;

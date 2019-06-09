@@ -290,10 +290,10 @@ namespace Plotter
         {
             Centroid ret = default(Centroid);
 
-            CadVertex cp = StoreList[0];
-            CadVertex rp = StoreList[1];
+            Vector3d cp = StoreList[0].vector;
+            Vector3d rp = StoreList[1].vector;
 
-            CadVertex d = rp - cp;
+            Vector3d d = rp - cp;
 
             double r = d.Norm();
 

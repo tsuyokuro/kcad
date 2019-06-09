@@ -358,7 +358,7 @@ namespace Plotter.Controller
             }
 
             CadFigure pointFig = mDB.NewFigure(CadFigure.Types.POINT);
-            pointFig.AddPoint(cent.Point);
+            pointFig.AddPoint((CadVertex)cent.Point);
 
             pointFig.EndCreate(CurrentDC);
 
