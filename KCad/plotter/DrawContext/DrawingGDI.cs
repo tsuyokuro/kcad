@@ -426,7 +426,7 @@ namespace Plotter
 
             if (!(dir.X == 0 && dir.Y == 0))
             {
-                angle = CadUtil.Angle2D(dir);
+                angle = CadMath.Angle2D(dir);
             }
 
             angle = CadMath.Rad2Deg(angle);
@@ -521,7 +521,7 @@ namespace Plotter
 
         protected void DrawCircleScrn(DrawPen pen, Vector3d cp, Vector3d p1)
         {
-            double r = CadUtil.SegNorm(cp, p1);
+            double r = CadMath.SegNorm(cp, p1);
             DrawCircleScrn(pen, cp, r);
         }
 

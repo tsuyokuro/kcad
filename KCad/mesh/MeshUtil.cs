@@ -1,5 +1,6 @@
 ﻿using CadDataTypes;
 using MyCollections;
+using OpenTK;
 using Plotter;
 using System.Collections.Generic;
 
@@ -58,12 +59,12 @@ namespace MeshUtilNS
 
             triangle = GetTriangleWithCenterPoint(src, i1);
 
-            CadVertex tp0 = mesh.VertexStore[ triangle.VList[0] ];
-            CadVertex tp1 = mesh.VertexStore[ triangle.VList[1] ];
-            CadVertex tp2 = mesh.VertexStore[ triangle.VList[2] ];
-
-            CadVertex dir = CadMath.Normal(tp1, tp0, tp2);
-            CadVertex currentDir = CadVertex.Zero;
+            Vector3d tp0 = mesh.VertexStore[ triangle.VList[0] ].vector;
+            Vector3d tp1 = mesh.VertexStore[ triangle.VList[1] ].vector;
+            Vector3d tp2 = mesh.VertexStore[ triangle.VList[2] ].vector;
+            
+            Vector3d dir = CadMath.Normal(tp1, tp0, tp2);
+            Vector3d currentDir = Vector3d.Zero;
 
             while (src.VList.Count > 3)
             {
@@ -78,9 +79,9 @@ namespace MeshUtilNS
 
                 triangle = GetTriangleWithCenterPoint(src, i1);
 
-                tp0 = mesh.VertexStore[ triangle.VList[0] ];
-                tp1 = mesh.VertexStore[ triangle.VList[1] ];
-                tp2 = mesh.VertexStore[ triangle.VList[2] ];
+                tp0 = mesh.VertexStore[ triangle.VList[0] ].vector;
+                tp1 = mesh.VertexStore[ triangle.VList[1] ].vector;
+                tp2 = mesh.VertexStore[ triangle.VList[2] ].vector;
 
                 currentDir = CadMath.Normal(tp1, tp0, tp2);
 

@@ -139,7 +139,7 @@ namespace Plotter
                 return result;
             }
 
-            CrossInfo ci = CadUtil.PerpendicularCrossSeg(seg.pA.vector, seg.pB.vector, p);
+            CrossInfo ci = CadMath.PerpendicularCrossSeg(seg.pA.vector, seg.pB.vector, p);
 
             if (!ci.IsCross)
             {
@@ -156,9 +156,9 @@ namespace Plotter
             CadFigure fb = db.NewFigure(CadFigure.Types.POLY_LINES);
 
             fa.AddPoints(org.PointList, 0, a + 1);
-            fa.AddPoint(ci.CrossPoint);
+            fa.AddPoint(new CadVertex(ci.CrossPoint));
 
-            fb.AddPoint(ci.CrossPoint);
+            fb.AddPoint(new CadVertex(ci.CrossPoint));
             fb.AddPoints(org.PointList, b);
 
             if (org.IsLoop)

@@ -102,8 +102,8 @@ namespace Plotter
             Vector3d xfaceNormal = dc.DevVectorToWorldVector(Target.DirX);
             Vector3d yfaceNormal = dc.DevVectorToWorldVector(Target.DirY);
 
-            Vector3d cx = CadUtil.CrossSegPlane(a.vector, b.vector, cwp, xfaceNormal);
-            Vector3d cy = CadUtil.CrossSegPlane(a.vector, b.vector, cwp, yfaceNormal);
+            Vector3d cx = CadMath.CrossSegPlane(a.vector, b.vector, cwp, xfaceNormal);
+            Vector3d cy = CadMath.CrossSegPlane(a.vector, b.vector, cwp, yfaceNormal);
 
             CadVertex pa = dc.WorldPointToDevPoint(a);
             CadVertex pb = dc.WorldPointToDevPoint(b);
@@ -189,11 +189,11 @@ namespace Plotter
             Vector3d pa = dc.WorldPointToDevPoint(a);
             Vector3d pb = dc.WorldPointToDevPoint(b);
 
-            double r = CadUtil.SegNorm2D(pa, pc);
-            double tr = CadUtil.SegNorm2D(Target.Pos, pc);
+            double r = CadMath.SegNorm2D(pa, pc);
+            double tr = CadMath.SegNorm2D(Target.Pos, pc);
 
-            double pad = CadUtil.SegNorm2D(Target.Pos, pa);
-            double pbd = CadUtil.SegNorm2D(Target.Pos, pb);
+            double pad = CadMath.SegNorm2D(Target.Pos, pa);
+            double pbd = CadMath.SegNorm2D(Target.Pos, pb);
 
             int idxB = 1;
 
@@ -213,8 +213,8 @@ namespace Plotter
             if (dist < MinDist)
             {
                 Vector3d tp = dc.DevPointToWorldPoint(Target.Pos);
-                r = CadUtil.SegNorm(a, c);
-                tr = CadUtil.SegNorm(tp, c);
+                r = CadMath.SegNorm(a, c);
+                tr = CadMath.SegNorm(tp, c);
 
                 Vector3d td = tp - c;
 

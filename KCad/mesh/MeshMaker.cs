@@ -309,7 +309,7 @@ namespace MeshMakerNS
             CadVertex n = CadUtil.RepresentativeNormal(src);
 
 
-            if (CadMath.InnerProduct(n, dv) <= 0)
+            if (CadMath.InnerProduct(n.vector, dv.vector) <= 0)
             {
                 vl = new VertexList(src);
                 vl.Reverse();

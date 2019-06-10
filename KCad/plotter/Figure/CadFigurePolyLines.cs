@@ -50,7 +50,7 @@ namespace Plotter
                 Vector3d a = delta;
                 Vector3d b = delta + vdir;
 
-                d = CadUtil.CrossPlane(a, b, StoreList[0].vector, Normal);
+                d = CadMath.CrossPlane(a, b, StoreList[0].vector, Normal);
 
                 if (!d.IsValid())
                 {

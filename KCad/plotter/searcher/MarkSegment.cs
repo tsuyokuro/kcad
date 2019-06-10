@@ -84,7 +84,7 @@ namespace Plotter
         {
             get
             {
-                return CadUtil.CenterPoint(FigSeg.Point0.vector, FigSeg.Point1.vector);
+                return CadMath.CenterPoint(FigSeg.Point0.vector, FigSeg.Point1.vector);
             }
         }
 

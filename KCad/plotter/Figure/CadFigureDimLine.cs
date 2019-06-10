@@ -161,27 +161,27 @@ namespace Plotter
 
             if (PointList[0].Selected || PointList[1].Selected)
             {
-                CadVertex v0 = StoreList[0];
-                CadVertex v1 = StoreList[1];
-                CadVertex v2 = StoreList[2];
-                CadVertex v3 = StoreList[3];
+                Vector3d v0 = StoreList[0].vector;
+                Vector3d v1 = StoreList[1].vector;
+                Vector3d v2 = StoreList[2].vector;
+                Vector3d v3 = StoreList[3].vector;
 
-                CadVertex lv = v3 - v0;
+                Vector3d lv = v3 - v0;
                 double h = lv.Norm();
 
-                CadVertex planeNormal = CadMath.Normal(v0, v1, v2);
+                Vector3d planeNormal = CadMath.Normal(v0, v1, v2);
 
-                CadVertex cp0 = v0;
-                CadVertex cp1 = v1;
+                Vector3d cp0 = v0;
+                Vector3d cp1 = v1;
 
                 if (PointList[0].Selected)
                 {
-                    cp0 = CadUtil.CrossPlane(v0 + delta, v0, planeNormal);
+                    cp0 = CadMath.CrossPlane(v0 + delta, v0, planeNormal);
                 }
 
                 if (PointList[1].Selected)
                 {
-                    cp1 = CadUtil.CrossPlane(v1 + delta, v1, planeNormal);
+                    cp1 = CadMath.CrossPlane(v1 + delta, v1, planeNormal);
                 }
 
                 if (cp0.EqualsThreshold(cp1, 0.001))
@@ -191,16 +191,16 @@ namespace Plotter
 
                 if (PointList[0].Selected)
                 {
-                    PointList[0] = PointList[0].SetVector(cp0.vector);
+                    PointList[0] = PointList[0].SetVector(cp0);
                 }
 
                 if (PointList[1].Selected)
                 {
-                    PointList[1] = PointList[1].SetVector(cp1.vector);
+                    PointList[1] = PointList[1].SetVector(cp1);
                 }
 
-                CadVertex normal = CadMath.Normal(cp0, cp0 + planeNormal, cp1);
-                CadVertex d = normal * h;
+                Vector3d normal = CadMath.Normal(cp0, cp0 + planeNormal, cp1);
+                Vector3d d = normal * h;
 
                 PointList[3] = PointList[3].SetVector(PointList[0] + d);
                 PointList[2] = PointList[2].SetVector(PointList[1] + d);
@@ -250,13 +250,13 @@ namespace Plotter
             dc.Drawing.DrawLine(pen, a.vector, seg.P0.vector);
             dc.Drawing.DrawLine(pen, b.vector, seg.P1.vector);
 
-            CadVertex cp = CadUtil.CenterPoint(seg.P0, seg.P1);
+            Vector3d cp = CadMath.CenterPoint(seg.P0.vector, seg.P1.vector);
 
             double arrowW = ARROW_W / dc.WorldScale;
             double arrowL = ARROW_LEN / dc.WorldScale;
 
-            dc.Drawing.DrawArrow(pen, cp.vector, seg.P0.vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
-            dc.Drawing.DrawArrow(pen, cp.vector, seg.P1.vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp, seg.P0.vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp, seg.P1.vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
         }
 
         private void DrawDim(DrawContext dc, DrawPen pen)
@@ -264,13 +264,13 @@ namespace Plotter
             dc.Drawing.DrawLine(pen, PointList[0].vector, PointList[3].vector);
             dc.Drawing.DrawLine(pen, PointList[1].vector, PointList[2].vector);
 
-            CadVertex cp = CadUtil.CenterPoint(PointList[3], PointList[2]);
+            Vector3d cp = CadMath.CenterPoint(PointList[3].vector, PointList[2].vector);
 
             double arrowW = ARROW_W / dc.WorldScale;
             double arrowL = ARROW_LEN / dc.WorldScale;
 
-            dc.Drawing.DrawArrow(pen, cp.vector, PointList[3].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
-            dc.Drawing.DrawArrow(pen, cp.vector, PointList[2].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp, PointList[3].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp, PointList[2].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
 
 
             CadVertex lineV = PointList[2] - PointList[3];

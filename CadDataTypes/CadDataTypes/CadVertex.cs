@@ -130,6 +130,14 @@ namespace CadDataTypes
             Attr = null;
         }
 
+        public CadVertex(Vector3d pos)
+        {
+            vector = pos;
+
+            this.Flag = 0;
+            Attr = null;
+        }
+
         public static CadVertex Create(double v)
         {
             return Create(v, v, v);

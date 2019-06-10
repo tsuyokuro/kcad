@@ -4,6 +4,13 @@ using OpenTK;
 
 namespace Plotter
 {
+    public struct CrossInfo
+    {
+        public bool IsCross;
+        public Vector3d CrossPoint;
+        public double Distance;
+    }
+
     public partial class CadMath
     {
         // 内積
@@ -138,6 +145,504 @@ namespace Plotter
             double t = Math.Acos(cost);
 
             return t;
+        }
+
+        // 三角形の面積
+        public static double TriangleArea(Vector3d p0, Vector3d p1, Vector3d p2)
+        {
+            Vector3d v1 = p0 - p1;
+            Vector3d v2 = p2 - p1;
+
+            Vector3d cp = CadMath.CrossProduct(v1, v2);
+
+            double area = cp.Norm() / 2.0;
+
+            return area;
+        }
+
+        // 三角形の重心を求める
+        public static Vector3d TriangleCentroid(Vector3d p0, Vector3d p1, Vector3d p2)
+        {
+            Vector3d gp = default(Vector3d);
+
+            gp.X = (p0.X + p1.X + p2.X) / 3.0;
+            gp.Y = (p0.Y + p1.Y + p2.Y) / 3.0;
+            gp.Z = (p0.Z + p1.Z + p2.Z) / 3.0;
+
+            return gp;
+        }
+
+        // 線分apと点pの距離
+        // 垂線がab内に無い場合は、点a,bで近い方への距離を返す
+        // 2D
+        public static double DistancePointToSeg2D(Vector3d a, Vector3d b, Vector3d p)
+        {
+            double t;
+
+            Vector3d ab = b - a;
+            Vector3d ap = p - a;
+
+            t = CadMath.InnrProduct2D(ab, ap);
+
+            if (t < 0)
+            {
+                return ap.Norm2D();
+            }
+
+            Vector3d ba = a - b;
+            Vector3d bp = p - b;
+
+            t = CadMath.InnrProduct2D(ba, bp);
+
+            if (t < 0)
+            {
+                return bp.Norm2D();
+            }
+
+            // 外積結果が a->p a->b を辺とする平行四辺形の面積になる
+            double d = Math.Abs(CadMath.CrossProduct2D(ab, ap));
+
+            double abl = ab.Norm2D();
+
+            // 高さ = 面積 / 底辺の長さ
+            return d / abl;
+        }
+
+        // 線分apと点pの距離
+        // 垂線がab内に無い場合は、点a,bで近い方への距離を返す
+        // 3D対応
+        public static double DistancePointToSeg(Vector3d a, Vector3d b, Vector3d p)
+        {
+            double t;
+
+            Vector3d ab = b - a;
+            Vector3d ap = p - a;
+
+            t = CadMath.InnerProduct(ab, ap);
+
+            if (t < 0)
+            {
+                return ap.Norm();
+            }
+
+            Vector3d ba = a - b;
+            Vector3d bp = p - b;
+
+            t = CadMath.InnerProduct(ba, bp);
+
+            if (t < 0)
+            {
+                return bp.Norm();
+            }
+
+            Vector3d cp = CadMath.CrossProduct(ab, ap);
+
+            // 外積結果の長さが a->p a->b を辺とする平行四辺形の面積になる
+            double s = cp.Norm();
+
+            // 高さ = 面積 / 底辺の長さ
+            return s / ab.Norm();
+        }
+
+        // 点が三角形内にあるか 2D版
+        public static bool IsPointInTriangle2D(
+            Vector3d p,
+            Vector3d p0,
+            Vector3d p1,
+            Vector3d p2
+            )
+        {
+            double c1 = CadMath.CrossProduct2D(p, p0, p1);
+            double c2 = CadMath.CrossProduct2D(p, p1, p2);
+            double c3 = CadMath.CrossProduct2D(p, p2, p0);
+
+            // 外積の結果の符号が全て同じなら点は三角形の中
+            // When all corossProduct result's sign are same, Point is in triangle
+            if ((c1 > 0 && c2 > 0 && c3 > 0) || (c1 < 0 && c2 < 0 && c3 < 0))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        // 点が三角形内にあるか
+        public static bool IsPointInTriangle(
+            Vector3d p,
+            Vector3d p0,
+            Vector3d p1,
+            Vector3d p2
+            )
+        {
+            Vector3d c1 = CadMath.CrossProduct(p, p0, p1);
+            Vector3d c2 = CadMath.CrossProduct(p, p1, p2);
+            Vector3d c3 = CadMath.CrossProduct(p, p2, p0);
+
+            double ip12 = CadMath.InnerProduct(c1, c2);
+            double ip13 = CadMath.InnerProduct(c1, c3);
+
+            // 外積の結果の符号が全て同じなら点は三角形の中
+            // When all corossProduct result's sign are same, Point is in triangle
+            if (ip12 > 0 && ip13 > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
+        // 点pから線分abに向かう垂線との交点を求める
+        public static CrossInfo PerpendicularCrossSeg(Vector3d a, Vector3d b, Vector3d p)
+        {
+            CrossInfo ret = default(CrossInfo);
+
+            Vector3d ab = b - a;
+            Vector3d ap = p - a;
+
+            Vector3d ba = a - b;
+            Vector3d bp = p - b;
+
+            // A-B 単位ベクトル
+            //CadPoint unit_ab = CadMath.unitVector(ab);
+            Vector3d unit_ab = ab.UnitVector();
+
+            // B-A 単位ベクトル　(A-B単位ベクトルを反転) B側の中外判定に使用
+            Vector3d unit_ba = unit_ab * -1.0;
+
+            // Aから交点までの距離 
+            // A->交点->B or A->B->交点なら +
+            // 交点<-A->B なら -
+            double dist_ax = CadMath.InnerProduct(unit_ab, ap);
+
+            // Bから交点までの距離 B側の中外判定に使用
+            double dist_bx = CadMath.InnerProduct(unit_ba, bp);
+
+            //Console.WriteLine("getNormCross dist_ax={0} dist_bx={1}" , dist_ax.ToString(), dist_bx.ToString());
+
+            if (dist_ax > 0 && dist_bx > 0)
+            {
+                ret.IsCross = true;
+            }
+
+            ret.CrossPoint.X = a.X + (unit_ab.X * dist_ax);
+            ret.CrossPoint.Y = a.Y + (unit_ab.Y * dist_ax);
+            ret.CrossPoint.Z = a.Z + (unit_ab.Z * dist_ax);
+
+            return ret;
+        }
+
+        // 点pから線分abに向かう垂線との交点を求める2D
+        public static CrossInfo PerpendicularCrossSeg2D(Vector3d a, Vector3d b, Vector3d p)
+        {
+            CrossInfo ret = default(CrossInfo);
+
+            double t1;
+
+            Vector3d ab = b - a;
+            Vector3d ap = p - a;
+
+            t1 = CadMath.InnrProduct2D(ab, ap);
+
+            if (t1 < 0)
+            {
+                return ret;
+            }
+
+            double t2;
+
+            Vector3d ba = a - b;
+            Vector3d bp = p - b;
+
+            t2 = CadMath.InnrProduct2D(ba, bp);
+
+            if (t2 < 0)
+            {
+                return ret;
+            }
+
+            double abl = ab.Norm2D();
+            double abl2 = abl * abl;
+
+            ret.IsCross = true;
+            ret.CrossPoint.X = ab.X * t1 / abl2 + a.X;
+            ret.CrossPoint.Y = ab.Y * t1 / abl2 + a.Y;
+
+            return ret;
+        }
+
+        // 点pから直線abに向かう垂線との交点を求める
+        public static CrossInfo PerpendicularCrossLine(Vector3d a, Vector3d b, Vector3d p)
+        {
+            CrossInfo ret = default(CrossInfo);
+
+            if (a.Equals(b))
+            {
+                return ret;
+            }
+
+            Vector3d ab = b - a;
+            Vector3d ap = p - a;
+
+            // A-B 単位ベクトル
+            Vector3d unit_ab = ab.UnitVector();
+
+            // Aから交点までの距離 
+            double dist_ax = CadMath.InnerProduct(unit_ab, ap);
+
+            ret.CrossPoint.X = a.X + (unit_ab.X * dist_ax);
+            ret.CrossPoint.Y = a.Y + (unit_ab.Y * dist_ax);
+            ret.CrossPoint.Z = a.Z + (unit_ab.Z * dist_ax);
+
+            ret.IsCross = true;
+
+            return ret;
+        }
+
+        // 点pから直線abに向かう垂線との交点を求める2D
+        public static CrossInfo PerpendicularCrossLine2D(Vector3d a, Vector3d b, Vector3d p)
+        {
+            CrossInfo ret = default(CrossInfo);
+
+            double t1;
+
+            Vector3d ab = b - a;
+            Vector3d ap = p - a;
+
+            t1 = InnrProduct2D(ab, ap);
+
+            double norm = ab.Norm2D();
+            double norm2 = norm * norm;
+
+            ret.IsCross = true;
+            ret.CrossPoint.X = ab.X * t1 / norm2 + a.X;
+            ret.CrossPoint.Y = ab.Y * t1 / norm2 + a.Y;
+
+            return ret;
+        }
+
+        /// <summary>
+        /// a b の中点を求める
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static Vector3d CenterPoint(Vector3d a, Vector3d b)
+        {
+            Vector3d c = b - a;
+            c /= 2;
+            c += a;
+
+            return c;
+        }
+
+        /// <summary>
+        /// a b を通る直線上で a からの距離がlenの座標を求める
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="len"></param>
+        /// <returns></returns>
+        public static Vector3d LinePoint(Vector3d a, Vector3d b, double len)
+        {
+            Vector3d v = b - a;
+
+            v = v.UnitVector();
+
+            v *= len;
+
+            v += a;
+
+            return v;
+        }
+
+        public static double SegNorm2D(Vector3d a, Vector3d b)
+        {
+            double dx = b.X - a.X;
+            double dy = b.Y - a.Y;
+
+            return Math.Sqrt((dx * dx) + (dy * dy));
+        }
+
+        public static double SegNorm(Vector3d a, Vector3d b)
+        {
+            Vector3d v = b - a;
+            return v.Norm();
+        }
+
+        /// <summary>
+        /// 点aに最も近い平面上の点を求める
+        /// </summary>
+        /// <param name="a">点</param>
+        /// <param name="p">平面上の点</param>
+        /// <param name="normal">平面の法線</param>
+        /// <returns>
+        /// 点aに最も近い平面上の点
+        /// </returns>
+        public static Vector3d CrossPlane(Vector3d a, Vector3d p, Vector3d normal)
+        {
+            Vector3d pa = a - p;
+
+            // 法線とpaの内積をとる
+            // 法線の順方向に点Aがあれば d>0 逆方向だと d<0
+            double d = CadMath.InnerProduct(normal, pa);
+
+            //内積値から平面上の最近点を求める
+            Vector3d cp = default(Vector3d);
+            cp.X = a.X - (normal.X * d);
+            cp.Y = a.Y - (normal.Y * d);
+            cp.Z = a.Z - (normal.Z * d);
+
+            return cp;
+        }
+
+        /// <summary>
+        /// 直線 a b と p と normalが示す平面との交点を求める
+        /// </summary>
+        /// <param name="a">直線上の点</param>
+        /// <param name="b">直線上の点</param>
+        /// <param name="p">平面上の点</param>
+        /// <param name="normal">平面の法線</param>
+        /// <returns>交点</returns>
+        /// 
+        public static Vector3d CrossPlane(Vector3d a, Vector3d b, Vector3d p, Vector3d normal)
+        {
+            Vector3d cp = default(Vector3d);
+
+            Vector3d e = b - a;
+
+            double de = CadMath.InnerProduct(normal, e);
+
+            if (de > CadMath.R0Min && de < CadMath.R0Max)
+            {
+                //DebugOut.Std.println("CrossPlane is parallel");
+
+                // 平面と直線は平行
+                return VectorUtil.InvalidVector3d;
+            }
+
+            double d = CadMath.InnerProduct(normal, p);
+            double t = (d - CadMath.InnerProduct(normal, a)) / de;
+
+            cp = a + (e * t);
+
+            return cp;
+        }
+
+        /// <summary>
+        /// 直線 a b と p と normalが示す平面との交点を求める
+        /// </summary>
+        /// <param name="a">直線上の点</param>
+        /// <param name="b">直線上の点</param>
+        /// <param name="p">平面上の点</param>
+        /// <param name="normal">平面の法線</param>
+        /// <returns>交点</returns>
+        /// 
+        public static Vector3d CrossSegPlane(Vector3d a, Vector3d b, Vector3d p, Vector3d normal)
+        {
+            Vector3d cp = CrossPlane(a, b, p, normal);
+
+            if (!cp.IsValid())
+            {
+                return VectorUtil.InvalidVector3d;
+            }
+
+            if (CadMath.InnerProduct((b - a), (cp - a)) < 0)
+            {
+                return VectorUtil.InvalidVector3d;
+            }
+
+            if (CadMath.InnerProduct((a - b), (cp - b)) < 0)
+            {
+                return VectorUtil.InvalidVector3d;
+            }
+
+            return cp;
+        }
+
+        /// <summary>
+        /// 線分同士の交点が存在するかチェックする
+        /// </summary>
+        /// <param name="p1">線分A</param>
+        /// <param name="p2">線分A</param>
+        /// <param name="p3">線分B</param>
+        /// <param name="p4">線分B</param>
+        /// <returns>
+        /// 交点が存在す場合は、true
+        /// 存在しない場合は、false
+        /// また、同一線上にある場合は、false (交点が無限に存在する)
+        /// </returns>
+        /// 
+        public static bool CheckCrossSegSeg2D(Vector3d p1, Vector3d p2, Vector3d p3, Vector3d p4)
+        {
+            if (p1.X >= p2.X)
+            {
+                if ((p1.X < p3.X && p1.X < p4.X) || (p2.X > p3.X && p2.X > p4.X))
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if ((p2.X < p3.X && p2.X < p4.X) || (p1.X > p3.X && p1.X > p4.X))
+                {
+                    return false;
+                }
+            }
+
+            if (p1.Y >= p2.Y)
+            {
+                if ((p1.Y < p3.Y && p1.Y < p4.Y) || (p2.Y > p3.Y && p2.Y > p4.Y))
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if ((p2.Y < p3.Y && p2.Y < p4.Y) || (p1.Y > p3.Y && p1.Y > p4.Y))
+                {
+                    return false;
+                }
+            }
+
+            if (((p1.X - p2.X) * (p3.Y - p1.Y) + (p1.Y - p2.Y) * (p1.X - p3.X)) *
+                ((p1.X - p2.X) * (p4.Y - p1.Y) + (p1.Y - p2.Y) * (p1.X - p4.X)) > 0)
+            {
+                return false;
+            }
+
+            if (((p3.X - p4.X) * (p1.Y - p3.Y) + (p3.Y - p4.Y) * (p3.X - p1.X)) *
+                ((p3.X - p4.X) * (p2.Y - p3.Y) + (p3.Y - p4.Y) * (p3.X - p2.X)) > 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static double Angle2D(Vector3d v)
+        {
+            return Math.Atan2(v.Y, v.X);
+        }
+
+        public static Vector3d CrossLine2D(Vector3d a1, Vector3d a2, Vector3d b1, Vector3d b2)
+        {
+            Vector3d a = (a2 - a1);
+            Vector3d b = (b2 - b1);
+
+            if (a.IsZero() || b.IsZero())
+            {
+                return VectorUtil.InvalidVector3d;
+            }
+
+            double cpBA = CadMath.CrossProduct2D(b, a);
+
+            if (cpBA == 0)
+            {
+                return VectorUtil.InvalidVector3d;
+            }
+
+            return a1 + a * CadMath.CrossProduct2D(b, b1 - a1) / cpBA;
         }
     }
 }

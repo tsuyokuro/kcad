@@ -45,7 +45,7 @@ namespace Plotter
             Vector3d b1 = pixp;
             Vector3d b2 = pixp + DirX;
 
-            Vector3d c = CadUtil.CrossLine2D(a1, a2, b1, b2);
+            Vector3d c = CadMath.CrossLine2D(a1, a2, b1, b2);
 
             return pixp - c;
         }
@@ -58,7 +58,7 @@ namespace Plotter
             Vector3d b1 = pixp;
             Vector3d b2 = pixp + DirY;
 
-            Vector3d c = CadUtil.CrossLine2D(a1, a2, b1, b2);
+            Vector3d c = CadMath.CrossLine2D(a1, a2, b1, b2);
 
             return pixp - c;
         }

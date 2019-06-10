@@ -61,8 +61,8 @@ namespace Plotter
             Vector3d xfaceNormal = dc.DevVectorToWorldVector(cursor.DirX);
             Vector3d yfaceNormal = dc.DevVectorToWorldVector(cursor.DirY);
 
-            Vector3d cx = CadUtil.CrossPlane(P0, P1, cwp, xfaceNormal);
-            Vector3d cy = CadUtil.CrossPlane(P0, P1, cwp, yfaceNormal);
+            Vector3d cx = CadMath.CrossPlane(P0, P1, cwp, xfaceNormal);
+            Vector3d cy = CadMath.CrossPlane(P0, P1, cwp, yfaceNormal);
 
             if (!cx.IsValid() && !cy.IsValid())
             {

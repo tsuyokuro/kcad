@@ -65,7 +65,7 @@ namespace Plotter.Controller.TaskRunner
             {
                 CadVertex v = vl[i];
 
-                Vector3d cp = CadUtil.CrossPlane(v.vector, p0, normal);
+                Vector3d cp = CadMath.CrossPlane(v.vector, p0, normal);
 
                 CadVertex d = v - cp;
 

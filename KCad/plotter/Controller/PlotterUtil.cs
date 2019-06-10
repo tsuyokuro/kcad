@@ -67,7 +67,7 @@ namespace Plotter.Controller
                     continue;
                 }
 
-                cent = CadUtil.MergeCentroid(cent, t);
+                cent = cent.Merge(t);
             }
 
             return cent;
@@ -100,7 +100,7 @@ namespace Plotter.Controller
                     continue;
                 }
 
-                cent = CadUtil.MergeCentroid(cent, t);
+                cent = cent.Merge(t);
             }
 
             if (cent.IsInvalid)
@@ -115,17 +115,17 @@ namespace Plotter.Controller
         // Calculate the intersection point in the screen coordinate system
         // スクリーン座標系での交点を求める
         //
-        public static CadVertex CrossOnScreen(DrawContext dc, CadVertex wp00, CadVertex wp01, CadVertex wp10, CadVertex wp11)
-        {
-            CadVertex sp00 = dc.WorldPointToDevPoint(wp00);
-            CadVertex sp01 = dc.WorldPointToDevPoint(wp01);
-            CadVertex sp10 = dc.WorldPointToDevPoint(wp10);
-            CadVertex sp11 = dc.WorldPointToDevPoint(wp11);
+        //public static CadVertex CrossOnScreen(DrawContext dc, CadVertex wp00, CadVertex wp01, CadVertex wp10, CadVertex wp11)
+        //{
+        //    CadVertex sp00 = dc.WorldPointToDevPoint(wp00);
+        //    CadVertex sp01 = dc.WorldPointToDevPoint(wp01);
+        //    CadVertex sp10 = dc.WorldPointToDevPoint(wp10);
+        //    CadVertex sp11 = dc.WorldPointToDevPoint(wp11);
 
-            CadVertex cp = CadUtil.CrossLine2D(sp00, sp01, sp10, sp11);
+        //    CadVertex cp = CadUtil.CrossLine2D(sp00, sp01, sp10, sp11);
 
-            return cp;
-        }
+        //    return cp;
+        //}
 
         //
         // Calculate the intersection point in the screen coordinate system
@@ -138,7 +138,7 @@ namespace Plotter.Controller
             Vector3d sp10 = dc.WorldPointToDevPoint(wp10);
             Vector3d sp11 = dc.WorldPointToDevPoint(wp11);
 
-            Vector3d cp = CadUtil.CrossLine2D(sp00, sp01, sp10, sp11);
+            Vector3d cp = CadMath.CrossLine2D(sp00, sp01, sp10, sp11);
 
             return cp;
         }

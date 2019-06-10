@@ -666,7 +666,7 @@ namespace Plotter.Controller
 
             if (da < db)
             {
-                Vector3d np = CadUtil.LinePoint(pb.vector, pa.vector, len);
+                Vector3d np = CadMath.LinePoint(pb.vector, pa.vector, len);
                 Controller.StartEdit();
 
                 pa.vector = np;
@@ -677,7 +677,7 @@ namespace Plotter.Controller
             }
             else
             {
-                Vector3d np = CadUtil.LinePoint(pa.vector, pb.vector, len);
+                Vector3d np = CadMath.LinePoint(pa.vector, pb.vector, len);
                 Controller.StartEdit();
 
                 pb.vector = np;

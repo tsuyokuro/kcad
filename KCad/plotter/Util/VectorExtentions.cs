@@ -90,6 +90,11 @@ namespace Plotter
             return v.Length;
         }
 
+        public static double Norm2D(this Vector3d v)
+        {
+            return Math.Sqrt((v.X * v.X) + (v.Y * v.Y));
+        }
+
         public static bool EqualsThreshold(this Vector3d v, Vector3d p, double m = 0.000001)
         {
             return (

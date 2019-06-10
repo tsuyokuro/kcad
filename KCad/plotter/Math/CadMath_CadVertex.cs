@@ -7,25 +7,25 @@ namespace Plotter
     {
         // 内積
         #region inner product
-        public static double InnrProduct2D(CadVertex v1, CadVertex v2)
-        {
-            return (v1.X * v2.X) + (v1.Y * v2.Y);
-        }
+        //public static double InnrProduct2D(CadVertex v1, CadVertex v2)
+        //{
+        //    return (v1.X * v2.X) + (v1.Y * v2.Y);
+        //}
 
-        public static double InnrProduct2D(CadVertex v0, CadVertex v1, CadVertex v2)
-        {
-            return InnrProduct2D(v1 - v0, v2 - v0);
-        }
+        //public static double InnrProduct2D(CadVertex v0, CadVertex v1, CadVertex v2)
+        //{
+        //    return InnrProduct2D(v1 - v0, v2 - v0);
+        //}
 
         public static double InnerProduct(CadVertex v1, CadVertex v2)
         {
             return (v1.X * v2.X) + (v1.Y * v2.Y) + (v1.Z * v2.Z);
         }
 
-        public static double InnerProduct(CadVertex v0, CadVertex v1, CadVertex v2)
-        {
-            return InnerProduct(v1 - v0, v2 - v0);
-        }
+        //public static double InnerProduct(CadVertex v0, CadVertex v1, CadVertex v2)
+        //{
+        //    return InnerProduct(v1 - v0, v2 - v0);
+        //}
         #endregion
 
 

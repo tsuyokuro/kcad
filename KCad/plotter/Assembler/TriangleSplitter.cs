@@ -135,7 +135,12 @@ namespace Plotter
                     continue;
                 }
 
-                bool ret = CadUtil.IsPointInTriangle(cp, triangle);
+                bool ret = CadMath.IsPointInTriangle(
+                                                cp.vector,
+                                                tps[0].vector,
+                                                tps[1].vector,
+                                                tps[2].vector
+                                                );
                 if (ret)
                 {
                     return true;
