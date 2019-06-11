@@ -503,7 +503,7 @@ namespace Plotter.Controller
             int ucnt = 8;
             int vcnt = 5;
 
-            VertexList vl =SplineUtil.CreateFlatControlPoints(ucnt, vcnt, CadVertex.UnitX * 20.0, CadVertex.UnitZ * 20.0);
+            VertexList vl =SplineUtil.CreateFlatControlPoints(ucnt, vcnt, Vector3d.UnitX * 20.0, Vector3d.UnitZ * 20.0);
 
             nfig.Setup(2, ucnt, vcnt, vl, null, 16, 16);
 
@@ -524,7 +524,7 @@ namespace Plotter.Controller
             int vcnt = 4;
 
             VertexList vl = SplineUtil.CreateBoxControlPoints(
-                ucnt, vcnt, CadVertex.UnitX * 20.0, CadVertex.UnitZ * 20.0, CadVertex.UnitY * -20.0 );
+                ucnt, vcnt, Vector3d.UnitX * 20.0, Vector3d.UnitZ * 20.0, Vector3d.UnitY * -20.0 );
 
             nfig.Setup(2, ucnt*2, vcnt, vl, null, 16, 16, false, false, true, true);
 
