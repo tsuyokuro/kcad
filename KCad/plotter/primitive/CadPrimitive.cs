@@ -41,17 +41,17 @@ namespace Plotter
         }
     }
 
-    public struct PointPair
-    {
-        public CadVertex P0;
-        public CadVertex P1;
+    //public struct PointPair
+    //{
+    //    public CadVertex P0;
+    //    public CadVertex P1;
 
-        public PointPair(CadVertex p0, CadVertex p1)
-        {
-            P0 = p0;
-            P1 = p1;
-        }
-    }
+    //    public PointPair(CadVertex p0, CadVertex p1)
+    //    {
+    //        P0 = p0;
+    //        P1 = p1;
+    //    }
+    //}
 
     public struct FigureSegment
     {

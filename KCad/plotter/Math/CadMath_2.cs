@@ -372,7 +372,7 @@ namespace Plotter
         }
 
         // 点pから直線abに向かう垂線との交点を求める
-        public static CrossInfo PerpendicularCrossLine(Vector3d a, Vector3d b, Vector3d p)
+        public static CrossInfo PerpCrossLine(Vector3d a, Vector3d b, Vector3d p)
         {
             CrossInfo ret = default(CrossInfo);
 

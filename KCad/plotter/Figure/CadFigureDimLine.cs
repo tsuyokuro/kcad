@@ -109,7 +109,7 @@ namespace Plotter
                 return;
             }
 
-            CadSegment seg = CadUtil.PerpendicularSeg(PointList[0], PointList[1], PointList[2]);
+            CadSegment seg = CadUtil.PerpSeg(PointList[0], PointList[1], PointList[2]);
 
             PointList[2] = PointList[2].SetVector(seg.P1.vector);
             PointList.Add(seg.P0);
@@ -216,7 +216,7 @@ namespace Plotter
         // そこへ移動する
         private void MoveSelectedPointWithHeight(DrawContext dc, Vector3d delta)
         {
-            CadSegment seg = CadUtil.PerpendicularSeg(PointList[0], PointList[1],
+            CadSegment seg = CadUtil.PerpSeg(PointList[0], PointList[1],
                 StoreList[2] + delta);
 
             PointList[2] = PointList[2].SetVector(seg.P1.vector);
@@ -232,7 +232,7 @@ namespace Plotter
                 return;
             }
 
-            CadSegment seg = CadUtil.PerpendicularSeg(PointList[0], PointList[1], PointList[2]);
+            CadSegment seg = CadUtil.PerpSeg(PointList[0], PointList[1], PointList[2]);
 
             PointList[2] = PointList[2].SetVector(seg.P1.vector);
             PointList[3] = PointList[3].SetVector(seg.P0.vector);
@@ -245,7 +245,7 @@ namespace Plotter
                             CadVertex p,
                             DrawPen pen)
         {
-            CadSegment seg = CadUtil.PerpendicularSeg(a, b, p);
+            CadSegment seg = CadUtil.PerpSeg(a, b, p);
 
             dc.Drawing.DrawLine(pen, a.vector, seg.P0.vector);
             dc.Drawing.DrawLine(pen, b.vector, seg.P1.vector);

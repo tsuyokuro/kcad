@@ -19,7 +19,7 @@ namespace Plotter
 
         private PlotterController mController = null;
 
-        CadVertex PrevMousePos = default(CadVertex);
+        Vector3d PrevMousePos = default;
 
         MouseButtons DownButton = MouseButtons.None;
 
@@ -171,7 +171,7 @@ namespace Plotter
             }
             else
             {
-                PrevMousePos.Set(e.X, e.Y, 0);
+                VectorUtil.Set(out PrevMousePos, e.X, e.Y, 0);
                 DownButton = e.Button;
 
                 if (DownButton != MouseButtons.Middle)
@@ -257,7 +257,7 @@ namespace Plotter
 
                 if (DownButton == MouseButtons.Middle)
                 {
-                    CadVertex t = CadVertex.Create(e.X, e.Y, 0);
+                    Vector3d t = new Vector3d(e.X, e.Y, 0);
 
                     Vector2 prev = default(Vector2);
 

@@ -475,14 +475,14 @@ namespace Plotter
         //   |                       |
         //   a                       b
         //
-        public static CadSegment PerpendicularSeg(CadVertex a, CadVertex b, CadVertex p)
+        public static CadSegment PerpSeg(CadVertex a, CadVertex b, CadVertex p)
         {
             CadSegment seg = default(CadSegment);
 
             seg.P0 = a;
             seg.P1 = b;
 
-            CrossInfo ci = CadMath.PerpendicularCrossLine(a.vector, b.vector, p.vector);
+            CrossInfo ci = CadMath.PerpCrossLine(a.vector, b.vector, p.vector);
 
             if (ci.IsCross)
             {
@@ -718,28 +718,28 @@ namespace Plotter
             return inchi * MILLI_PER_INCH;
         }
 
-        public static PointPair LeftTopRightBottom2D(CadVertex p0, CadVertex p1)
-        {
-            double lx = p0.X;
-            double rx = p1.X;
+        //public static PointPair LeftTopRightBottom2D(Vector3d p0, Vector3d p1)
+        //{
+        //    double lx = p0.X;
+        //    double rx = p1.X;
 
-            double ty = p0.Y;
-            double by = p1.Y;
+        //    double ty = p0.Y;
+        //    double by = p1.Y;
 
-            if (p0.X > p1.X)
-            {
-                lx = p1.X;
-                rx = p0.X;
-            }
+        //    if (p0.X > p1.X)
+        //    {
+        //        lx = p1.X;
+        //        rx = p0.X;
+        //    }
 
-            if (p0.Y > p1.Y)
-            {
-                ty = p1.Y;
-                by = p0.Y;
-            }
+        //    if (p0.Y > p1.Y)
+        //    {
+        //        ty = p1.Y;
+        //        by = p0.Y;
+        //    }
 
-            return new PointPair(CadVertex.Create(lx, ty, 0), CadVertex.Create(rx, by, 0));
-        }
+        //    return new PointPair(CadVertex.Create(lx, ty, 0), CadVertex.Create(rx, by, 0));
+        //}
 
         public static void Dump(Vector4d v, string prefix)
         {

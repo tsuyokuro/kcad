@@ -204,8 +204,7 @@
     <Compile Include="plotter\DrawContext\DrawContextGLPers.cs" />
     <Compile Include="plotter\HalfEdge\HeModelBuilder.cs" />
     <Compile Include="plotter\HalfEdge\HeModelConverter.cs" />
-    <Compile Include="plotter\Math\CadMath_Vector3d.cs" />
-    <Compile Include="plotter\Math\CadMath_CadVertex.cs" />
+    <Compile Include="plotter\Math\CadMath_2.cs" />
     <Compile Include="plotter\searcher\MarkPoint.cs" />
     <Compile Include="plotter\searcher\MarkSegment.cs" />
     <Compile Include="plotter\Serializer\CadMessagePack_v1000.cs" />
