@@ -340,11 +340,38 @@ namespace Plotter
         }
 
         // 法線の代表値を求める
-        public static CadVertex RepresentativeNormal(VertexList points)
+        //public static CadVertex RepresentativeNormal(VertexList points)
+        //{
+        //    if (points.Count < 3)
+        //    {
+        //        return CadVertex.Zero;
+        //    }
+
+        //    int idx = FindMaxDistantPointIndex(points[0], points);
+
+        //    int idxA = idx - 1;
+        //    int idxB = idx + 1;
+
+        //    if (idxA < 0)
+        //    {
+        //        idxA = points.Count - 1;
+        //    }
+
+        //    if (idxB >= points.Count)
+        //    {
+        //        idxB = idxB - points.Count;
+        //    }
+
+        //    CadVertex normal = CadMath.Normal(points[idx], points[idxA], points[idxB]);
+
+        //    return normal;
+        //}
+
+        public static Vector3d TypicalNormal(VertexList points)
         {
             if (points.Count < 3)
             {
-                return CadVertex.Zero;
+                return Vector3d.Zero;
             }
 
             int idx = FindMaxDistantPointIndex(points[0], points);
@@ -362,10 +389,11 @@ namespace Plotter
                 idxB = idxB - points.Count;
             }
 
-            CadVertex normal = CadMath.Normal(points[idx], points[idxA], points[idxB]);
+            Vector3d normal = CadMath.Normal(points[idx].vector, points[idxA].vector, points[idxB].vector);
 
             return normal;
         }
+
 
         // 図形は凸である
         public static bool IsConvex(VertexList points)
@@ -378,13 +406,13 @@ namespace Plotter
             }
 
             int i = 0;
-            CadVertex n = default(CadVertex);
-            CadVertex cn = default(CadVertex);
+            Vector3d n = default;
+            Vector3d cn = default;
             double scala = 0;
 
             for (;i < cnt - 2;)
             {
-                n = CadMath.Normal(points[i], points[i + 1], points[i + 2]);
+                n = CadMath.Normal(points[i].vector, points[i + 1].vector, points[i + 2].vector);
 
                 i++;
 
@@ -401,7 +429,7 @@ namespace Plotter
 
             for (;i<cnt-2;)
             {
-                cn = CadMath.Normal(points[i], points[i + 1], points[i + 2]);
+                cn = CadMath.Normal(points[i].vector, points[i + 1].vector, points[i + 2].vector);
 
                 i++;
 
@@ -420,7 +448,7 @@ namespace Plotter
             }
 
 
-            cn = CadMath.Normal(points[i], points[i + 1], points[0]);
+            cn = CadMath.Normal(points[i].vector, points[i + 1].vector, points[0].vector);
 
             scala = CadMath.InnerProduct(cn, n);
 

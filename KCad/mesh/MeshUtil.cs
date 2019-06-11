@@ -131,12 +131,12 @@ namespace MeshUtilNS
 
             for (int i=0; i< face.VList.Count; i++)
             {
-                CadVertex fv = mesh.VertexStore[ face.VList[i] ];
+                Vector3d fv = mesh.VertexStore[ face.VList[i] ].vector;
 
                 if (
-                    fv.Equals(mesh.VertexStore[ tps[0] ]) ||
-                    fv.Equals(mesh.VertexStore[ tps[1] ]) ||
-                    fv.Equals(mesh.VertexStore[ tps[2] ])
+                    fv.Equals(mesh.VertexStore[ tps[0] ].vector) ||
+                    fv.Equals(mesh.VertexStore[ tps[1] ].vector) ||
+                    fv.Equals(mesh.VertexStore[ tps[2] ].vector)
                     )
                 {
                     continue;
@@ -198,20 +198,20 @@ namespace MeshUtilNS
             return triangle;
         }
 
-        public static bool IsPointInTriangle(CadVertex p, CadFace triangle, CadMesh mesh)
+        public static bool IsPointInTriangle(Vector3d p, CadFace triangle, CadMesh mesh)
         {
             if (triangle.VList.Count < 3)
             {
                 return false;
             }
 
-            CadVertex p0 = mesh.VertexStore[ triangle.VList[0] ];
-            CadVertex p1 = mesh.VertexStore[ triangle.VList[1] ];
-            CadVertex p2 = mesh.VertexStore[ triangle.VList[2] ];
+            Vector3d p0 = mesh.VertexStore[ triangle.VList[0] ].vector;
+            Vector3d p1 = mesh.VertexStore[ triangle.VList[1] ].vector;
+            Vector3d p2 = mesh.VertexStore[ triangle.VList[2] ].vector;
 
-            CadVertex c1 = CadMath.CrossProduct(p, p0, p1);
-            CadVertex c2 = CadMath.CrossProduct(p, p1, p2);
-            CadVertex c3 = CadMath.CrossProduct(p, p2, p0);
+            Vector3d c1 = CadMath.CrossProduct(p, p0, p1);
+            Vector3d c2 = CadMath.CrossProduct(p, p1, p2);
+            Vector3d c3 = CadMath.CrossProduct(p, p2, p0);
 
             double ip12 = CadMath.InnerProduct(c1, c2);
             double ip13 = CadMath.InnerProduct(c1, c3);

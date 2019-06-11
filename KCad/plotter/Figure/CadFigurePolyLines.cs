@@ -152,7 +152,7 @@ namespace Plotter
 
             if (Normal.IsZero())
             {
-                Normal = (Vector3d)CadUtil.RepresentativeNormal(pl);
+                Normal = CadUtil.TypicalNormal(pl);
             }
 
             CadVertex a;
@@ -302,16 +302,16 @@ namespace Plotter
                 return;
             }
 
-            CadVertex prevNormal = (CadVertex)Normal;
+            Vector3d prevNormal = Normal;
 
-            CadVertex normal = CadUtil.RepresentativeNormal(PointList);
+            Vector3d normal = CadUtil.TypicalNormal(PointList);
 
             if (CadMath.InnerProduct(prevNormal, normal) < 0)
             {
                 normal *= -1;
             }
 
-            Normal = normal.vector;
+            Normal = normal;
         }
 
         private Centroid GetPointListCentroid()

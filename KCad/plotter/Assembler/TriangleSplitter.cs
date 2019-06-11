@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -28,12 +29,12 @@ namespace Plotter
 
             triangle = GetTriangleWithCenterPoint(pointList, i1);
 
-            CadVertex tp0 = triangle.PointList[0];
-            CadVertex tp1 = triangle.PointList[1];
-            CadVertex tp2 = triangle.PointList[2];
+            Vector3d tp0 = triangle.PointList[0].vector;
+            Vector3d tp1 = triangle.PointList[1].vector;
+            Vector3d tp2 = triangle.PointList[2].vector;
 
-            CadVertex dir = CadMath.Normal(tp1, tp0, tp2);
-            CadVertex currentDir = CadVertex.Zero;
+            Vector3d dir = CadMath.Normal(tp1, tp0, tp2);
+            Vector3d currentDir = Vector3d.Zero;
 
             while (pointList.Count > 3)
             {
@@ -48,9 +49,9 @@ namespace Plotter
 
                 triangle = GetTriangleWithCenterPoint(pointList, i1);
 
-                tp0 = triangle.PointList[0];
-                tp1 = triangle.PointList[1];
-                tp2 = triangle.PointList[2];
+                tp0 = triangle.PointList[0].vector;
+                tp1 = triangle.PointList[1].vector;
+                tp2 = triangle.PointList[2].vector;
 
                 currentDir = CadMath.Normal(tp1, tp0, tp2);
 

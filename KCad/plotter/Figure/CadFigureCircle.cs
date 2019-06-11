@@ -69,7 +69,7 @@ namespace Plotter
             CadVertex cp = PointList[0];
 
             CadVertex a = tp;
-            CadVertex b = getRP(dc, cp, tp, true);
+            CadVertex b = new CadVertex(getRP(dc, cp, tp, true));
 
             CadVertex c = -(a - cp) + cp;
             CadVertex d = -(b - cp) + cp;
@@ -102,7 +102,7 @@ namespace Plotter
                 return;
             }
 
-            CadVertex normal = CadMath.Normal(PointList[0], PointList[2], PointList[1]);
+            Vector3d normal = CadMath.Normal(PointList[0].vector, PointList[2].vector, PointList[1].vector);
 
             CircleExpander.ForEachSegs(PointList[0], PointList[1], PointList[2], 32, (p0, p1) =>
             {
@@ -173,7 +173,7 @@ namespace Plotter
 
             CadVertex a = mPointList[1];
 
-            CadVertex b = getRP(dc, cp, a, true);
+            CadVertex b = new CadVertex(getRP(dc, cp, a, true));
 
             AddPoint(b);
 
@@ -303,19 +303,19 @@ namespace Plotter
             return ret;
         }
 
-        private CadVertex getRP(DrawContext dc, CadVertex cp, CadVertex p, bool isA)
+        private Vector3d getRP(DrawContext dc, CadVertex cp, CadVertex p, bool isA)
         {
             if (p.Equals(cp))
             {
-                return cp;
+                return cp.vector;
             }
 
 
-            CadVertex r = CadMath.CrossProduct(p - cp, (CadVertex)dc.ViewDir);
+            Vector3d r = CadMath.CrossProduct(p.vector - cp.vector, dc.ViewDir);
 
             r = r.UnitVector();
 
-            r = r * (p - cp).Norm() + cp;
+            r = r * (p.vector - cp.vector).Norm() + cp.vector;
 
             return r;
         }

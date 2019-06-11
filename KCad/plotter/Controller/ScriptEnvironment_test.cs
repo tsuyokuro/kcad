@@ -73,7 +73,7 @@ namespace Plotter.Controller
             }
 
 
-            CadMesh cm = MeshMaker.CreateExtruded(tfig.GetPoints(16), CadVertex.UnitZ * -20);
+            CadMesh cm = MeshMaker.CreateExtruded(tfig.GetPoints(16), Vector3d.UnitZ * -20);
 
             HeModel hem = HeModelConverter.ToHeModel(cm);
 

@@ -295,7 +295,7 @@ namespace MeshMakerNS
             return mesh;
         }
 
-        public static CadMesh CreateExtruded(VertexList src, CadVertex dv, int div = 0)
+        public static CadMesh CreateExtruded(VertexList src, Vector3d dv, int div = 0)
         {
             if (src.Count < 3)
             {
@@ -306,10 +306,10 @@ namespace MeshMakerNS
 
             VertexList vl;
 
-            CadVertex n = CadUtil.RepresentativeNormal(src);
+            Vector3d n = CadUtil.TypicalNormal(src);
 
 
-            if (CadMath.InnerProduct(n.vector, dv.vector) <= 0)
+            if (CadMath.InnerProduct(n, dv) <= 0)
             {
                 vl = new VertexList(src);
                 vl.Reverse();
@@ -325,9 +325,9 @@ namespace MeshMakerNS
 
             CadFace f;
 
-            CadVertex dt = dv / div;
+            Vector3d dt = dv / div;
 
-            CadVertex sv = CadVertex.Zero;
+            Vector3d sv = Vector3d.Zero;
 
             // 頂点リスト作成
             for (int i = 0; i < div + 1; i++)

@@ -875,7 +875,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            Vector3d faceNormal = CadUtil.RepresentativeNormal(fig.PointList).vector;
+            Vector3d faceNormal = CadUtil.TypicalNormal(fig.PointList);
 
             if (faceNormal.EqualsThreshold(dir) || (-faceNormal).EqualsThreshold(dir))
             {
@@ -931,7 +931,7 @@ namespace Plotter.Controller
             Vector3d org = cfig.PointList[0].vector;
             Vector3d dir = Vector3d.UnitZ;
 
-            Vector3d faceNormal = CadUtil.RepresentativeNormal(cfig.PointList).vector;
+            Vector3d faceNormal = CadUtil.TypicalNormal(cfig.PointList);
 
             Vector3d rotateV = default;
 
@@ -987,7 +987,7 @@ namespace Plotter.Controller
         }
 
         // 押し出し
-        public void Extrude(uint id, CadVertex v, double d, int divide)
+        public void Extrude(uint id, Vector3d v, double d, int divide)
         {
             CadFigure tfig = Controller.DB.GetFigure(id);
 

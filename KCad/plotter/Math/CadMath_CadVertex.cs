@@ -17,10 +17,10 @@ namespace Plotter
         //    return InnrProduct2D(v1 - v0, v2 - v0);
         //}
 
-        public static double InnerProduct(CadVertex v1, CadVertex v2)
-        {
-            return (v1.X * v2.X) + (v1.Y * v2.Y) + (v1.Z * v2.Z);
-        }
+        //public static double InnerProduct(CadVertex v1, CadVertex v2)
+        //{
+        //    return (v1.X * v2.X) + (v1.Y * v2.Y) + (v1.Z * v2.Z);
+        //}
 
         //public static double InnerProduct(CadVertex v0, CadVertex v1, CadVertex v2)
         //{
@@ -31,31 +31,31 @@ namespace Plotter
 
         // 外積
         #region Cross product
-        public static double CrossProduct2D(CadVertex v1, CadVertex v2)
-        {
-            return (v1.X * v2.Y) - (v1.Y * v2.X);
-        }
+        //public static double CrossProduct2D(CadVertex v1, CadVertex v2)
+        //{
+        //    return (v1.X * v2.Y) - (v1.Y * v2.X);
+        //}
 
-        public static double CrossProduct2D(CadVertex v0, CadVertex v1, CadVertex v2)
-        {
-            return CrossProduct2D(v1 - v0, v2 - v0);
-        }
+        //public static double CrossProduct2D(CadVertex v0, CadVertex v1, CadVertex v2)
+        //{
+        //    return CrossProduct2D(v1 - v0, v2 - v0);
+        //}
 
-        public static CadVertex CrossProduct(CadVertex v1, CadVertex v2)
-        {
-            CadVertex res = default(CadVertex);
+        //public static CadVertex CrossProduct(CadVertex v1, CadVertex v2)
+        //{
+        //    CadVertex res = default(CadVertex);
 
-            res.X = v1.Y * v2.Z - v1.Z * v2.Y;
-            res.Y = v1.Z * v2.X - v1.X * v2.Z;
-            res.Z = v1.X * v2.Y - v1.Y * v2.X;
+        //    res.X = v1.Y * v2.Z - v1.Z * v2.Y;
+        //    res.Y = v1.Z * v2.X - v1.X * v2.Z;
+        //    res.Z = v1.X * v2.Y - v1.Y * v2.X;
 
-            return res;
-        }
+        //    return res;
+        //}
 
-        public static CadVertex CrossProduct(CadVertex v0, CadVertex v1, CadVertex v2)
-        {
-            return CrossProduct(v1 - v0, v2 - v0);
-        }
+        //public static CadVertex CrossProduct(CadVertex v0, CadVertex v1, CadVertex v2)
+        //{
+        //    return CrossProduct(v1 - v0, v2 - v0);
+        //}
         #endregion
 
         /**
@@ -67,23 +67,23 @@ namespace Plotter
          * v0/_________v1
          *
          */
-        public static CadVertex Normal(CadVertex v0, CadVertex v1, CadVertex v2)
-        {
-            CadVertex va = v1 - v0;
-            CadVertex vb = v2 - v0;
+        //public static CadVertex Normal(CadVertex v0, CadVertex v1, CadVertex v2)
+        //{
+        //    CadVertex va = v1 - v0;
+        //    CadVertex vb = v2 - v0;
 
-            CadVertex normal = CadMath.CrossProduct(va, vb);
+        //    CadVertex normal = CadMath.CrossProduct(va, vb);
 
-            if (normal.IsZero())
-            {
-                normal.Invalid = true;
-                return normal;
-            }
+        //    if (normal.IsZero())
+        //    {
+        //        normal.Invalid = true;
+        //        return normal;
+        //    }
 
-            normal = normal.UnitVector();
+        //    normal = normal.UnitVector();
 
-            return normal;
-        }
+        //    return normal;
+        //}
 
         /**
          * 法線を求める
@@ -94,28 +94,28 @@ namespace Plotter
          * 0 /_________va
          * 
          */
-        public static CadVertex Normal(CadVertex va, CadVertex vb)
-        {
-            CadVertex normal = CadMath.CrossProduct(va, vb);
+        //public static CadVertex Normal(CadVertex va, CadVertex vb)
+        //{
+        //    CadVertex normal = CadMath.CrossProduct(va, vb);
 
-            if (normal.IsZero())
-            {
-                return normal;
-            }
+        //    if (normal.IsZero())
+        //    {
+        //        return normal;
+        //    }
 
-            normal = normal.UnitVector();
+        //    normal = normal.UnitVector();
 
-            return normal;
-        }
+        //    return normal;
+        //}
 
-        public static bool IsParallel(CadVertex v1, CadVertex v2)
-        {
-            v1 = v1.UnitVector();
-            v2 = v2.UnitVector();
+        //public static bool IsParallel(CadVertex v1, CadVertex v2)
+        //{
+        //    v1 = v1.UnitVector();
+        //    v2 = v2.UnitVector();
 
-            double a = InnerProduct(v1, v2);
-            return Near_P1(a) || Near_M1(a);
-        }
+        //    double a = InnerProduct(v1, v2);
+        //    return Near_P1(a) || Near_M1(a);
+        //}
 
         /// <summary>
         /// 2つのVectorのなす角を求める 

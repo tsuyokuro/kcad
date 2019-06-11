@@ -721,7 +721,7 @@ namespace Plotter
 
         public virtual void RecalcNormal()
         {
-            Normal = CadUtil.RepresentativeNormal(PointList).vector;
+            Normal = CadUtil.TypicalNormal(PointList);
         }
 
         public virtual CadSegment GetSegmentAt(int n)

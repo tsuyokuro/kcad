@@ -129,15 +129,15 @@ namespace Plotter
 
             Vector3d ev = mLookAt - mEye;
 
-            CadVertex a = CadVertex.Create(ev);
-            CadVertex b = CadVertex.Create(mUpVector);
+            Vector3d a = new Vector3d(ev);
+            Vector3d b = new Vector3d(mUpVector);
 
-            CadVertex axis = CadMath.Normal(a, b);
+            Vector3d axis = CadMath.Normal(a, b);
 
             if (!axis.IsZero())
             {
 
-                q = CadQuaternion.RotateQuaternion(axis.vector, rx);
+                q = CadQuaternion.RotateQuaternion(axis, rx);
 
                 r = q.Conjugate();
 
