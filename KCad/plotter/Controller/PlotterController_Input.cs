@@ -687,13 +687,13 @@ namespace Plotter.Controller
             {
                 if (FigureCreator.Figure.PointCount == 1)
                 {
-                    mPointSearcher.Check(dc, FigureCreator.Figure.GetPointAt(0));
+                    mPointSearcher.Check(dc, FigureCreator.Figure.GetPointAt(0).vector);
                 }
             }
 
             if (mInteractCtrl.IsActive)
             {
-                foreach (CadVertex v in mInteractCtrl.PointList)
+                foreach (Vector3d v in mInteractCtrl.PointList)
                 {
                     mPointSearcher.Check(dc, v);
                 }
@@ -905,7 +905,7 @@ namespace Plotter.Controller
             // (0, 0, 0)にスナップするようにする
             if (SettingsHolder.Settings.SnapToZero)
             {
-                mPointSearcher.Check(dc, CadVertex.Zero);
+                mPointSearcher.Check(dc, Vector3d.Zero);
             }
 
             // 最後にマウスダウンしたポイントにスナップする

@@ -88,13 +88,13 @@ namespace Plotter
             CadFigure fig = fseg.Figure;
             int idxA = fseg.Index0;
             int idxB = fseg.Index1;
-            CadVertex a = fseg.Point0;
-            CadVertex b = fseg.Point1;
+            Vector3d a = fseg.Point0.vector;
+            Vector3d b = fseg.Point1.vector;
 
             if (fig.StoreList != null && fig.StoreList.Count > 1)
             {
-                a = fseg.StoredPoint0;
-                b = fseg.StoredPoint1;
+                a = fseg.StoredPoint0.vector;
+                b = fseg.StoredPoint1.vector;
             }
 
             Vector3d cwp = dc.DevPointToWorldPoint(Target.Pos);
@@ -102,11 +102,11 @@ namespace Plotter
             Vector3d xfaceNormal = dc.DevVectorToWorldVector(Target.DirX);
             Vector3d yfaceNormal = dc.DevVectorToWorldVector(Target.DirY);
 
-            Vector3d cx = CadMath.CrossSegPlane(a.vector, b.vector, cwp, xfaceNormal);
-            Vector3d cy = CadMath.CrossSegPlane(a.vector, b.vector, cwp, yfaceNormal);
+            Vector3d cx = CadMath.CrossSegPlane(a, b, cwp, xfaceNormal);
+            Vector3d cy = CadMath.CrossSegPlane(a, b, cwp, yfaceNormal);
 
-            CadVertex pa = dc.WorldPointToDevPoint(a);
-            CadVertex pb = dc.WorldPointToDevPoint(b);
+            Vector3d pa = dc.WorldPointToDevPoint(a);
+            Vector3d pb = dc.WorldPointToDevPoint(b);
 
             if (!cx.IsValid() && !cy.IsValid())
             {

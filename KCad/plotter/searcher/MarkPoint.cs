@@ -1,8 +1,9 @@
 ﻿using OpenTK;
+using System;
 
 namespace Plotter
 {
-    public struct MarkPoint
+    public struct MarkPoint : IEquatable<MarkPoint>
     {
         public bool IsValid;
 
@@ -67,14 +68,6 @@ namespace Plotter
             return Figure.IsPointSelected(PointIndex);
         }
 
-        public ulong Hash
-        {
-            get
-            {
-                return FigureID << 32 + PointIndex;
-            }
-        }
-
         public bool update()
         {
             if (Figure == null)
@@ -101,6 +94,21 @@ namespace Plotter
             Point.dump("Point");
             PointScrn.dump("PointScrn");
             DOut.pl("}");
+        }
+
+        public bool Equals(MarkPoint other)
+        {
+            return Layer == other.Layer &&
+                Figure == other.Figure &&
+                PointIndex == other.PointIndex &&
+                Point.Equals(other.Point);
+        }
+
+        public override int GetHashCode()
+        {
+            return Point.GetHashCode() + 
+                (int)(Layer == null ? 0 : Layer.ID) +
+                (int)(Figure == null ? 0 : Figure.ID);
         }
     }
 }
