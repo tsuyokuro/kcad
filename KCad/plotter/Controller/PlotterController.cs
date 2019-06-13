@@ -1005,7 +1005,7 @@ namespace Plotter.Controller
             }
         }
 
-        public void TextLine(string s)
+        public void TextCommand(string s)
         {
             //ScriptEnv.ExecuteCommandSync(s);
             ScriptEnv.ExecuteCommandAsync(s);
