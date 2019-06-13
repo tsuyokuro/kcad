@@ -198,6 +198,7 @@
     <Compile Include="Controls\PopupEx.cs" />
     <Compile Include="GLUtil\FontFaceW.cs" />
     <Compile Include="GLUtil\FrameBufferW.cs" />
+    <Compile Include="plotter\Controller\PlotterController_print.cs" />
     <Compile Include="plotter\Controller\SnapInfo.cs" />
     <Compile Include="plotter\DrawContext\PrintColors.cs" />
     <Compile Include="plotter\DrawContext\DarkColors.cs" />
@@ -231,12 +232,12 @@
     <Compile Include="MainView\ContextMenuEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="plotter\Controller\ContextMenuInfo.cs" />
+    <Compile Include="plotter\Controller\ContextMenu\ContextMenuInfo.cs" />
     <Compile Include="plotter\Controller\ControllerConst.cs" />
     <Compile Include="plotter\Controller\HighlightPointListItem.cs" />
     <Compile Include="plotter\Controller\InteractCtrl.cs" />
     <Compile Include="plotter\Controller\PlotterController_action.cs" />
-    <Compile Include="plotter\Controller\PlotterController_context_menu.cs" />
+    <Compile Include="plotter\Controller\ContextMenu\ContextMenuManager.cs" />
     <Compile Include="plotter\Controller\PlotterTaskRunner.cs" />
     <Compile Include="plotter\Controller\PlotterUtil.cs" />
     <Compile Include="plotter\Controller\PlotterClipboard.cs" />

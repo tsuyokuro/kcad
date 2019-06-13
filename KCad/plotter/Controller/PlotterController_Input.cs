@@ -592,8 +592,7 @@ namespace Plotter.Controller
         private void RButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
             DrawAll(dc);
-
-            RequestContextMenu(x, y);
+            mContextMenuMan.RequestContextMenu(x, y);
         }
 
         #region RubberBand

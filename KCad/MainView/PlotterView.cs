@@ -254,7 +254,7 @@ namespace Plotter
 
             if (infoItem != null)
             {
-                mController.ContextMenuEvent(infoItem);
+                mController.ContextMenuMan.ContextMenuEvent(infoItem);
             }
         }
 
