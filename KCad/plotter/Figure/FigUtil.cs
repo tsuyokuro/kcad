@@ -7,6 +7,7 @@ using CadDataTypes;
 using MessagePack;
 using OpenTK;
 using Plotter.Serializer;
+using Plotter.Serializer.v1001;
 
 namespace Plotter
 {

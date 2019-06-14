@@ -10,6 +10,7 @@ namespace Plotter
 {
     using OpenTK;
     using Plotter.Serializer;
+    using Plotter.Serializer.v1001;
     using static CadFigure;
 
     public partial class CadFigure
@@ -867,23 +868,23 @@ namespace Plotter
             }
         }
 
-        public virtual MpGeometricData GeometricDataToMp()
+        public virtual MpGeometricData_v1001 GeometricDataToMp_v1001()
         {
-            MpSimpleGeometricData geo = new MpSimpleGeometricData();
-            geo.PointList = MpUtil.VertexListToMp(PointList);
+            MpSimpleGeometricData_v1001 geo = new MpSimpleGeometricData_v1001();
+            geo.PointList = MpUtil_v1001.VertexListToMp(PointList);
             return geo;
         }
 
-        public virtual void GeometricDataFromMp(MpGeometricData geo)
+        public virtual void GeometricDataFromMp_v1001(MpGeometricData_v1001 geo)
         {
-            if (!(geo is MpSimpleGeometricData))
+            if (!(geo is MpSimpleGeometricData_v1001))
             {
                 return;
             }
 
-            MpSimpleGeometricData g = (MpSimpleGeometricData)geo;
+            MpSimpleGeometricData_v1001 g = (MpSimpleGeometricData_v1001)geo;
 
-            mPointList = MpUtil.VertexListFromMp(g.PointList);
+            mPointList = MpUtil_v1001.VertexListFromMp(g.PointList);
         }
 
         public virtual void Rotate(Vector3d org, CadQuaternion q, CadQuaternion r)

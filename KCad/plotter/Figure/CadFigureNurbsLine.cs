@@ -3,6 +3,7 @@ using SplineCurve;
 using Plotter.Serializer;
 using Newtonsoft.Json.Linq;
 using OpenTK;
+using Plotter.Serializer.v1001;
 
 namespace Plotter
 {
@@ -139,21 +140,21 @@ namespace Plotter
             RecalcNormal();
         }
 
-        public override MpGeometricData GeometricDataToMp()
+        public override MpGeometricData_v1001 GeometricDataToMp_v1001()
         {
-            MpNurbsLineGeometricData geo = new MpNurbsLineGeometricData();
-            geo.Nurbs = MpNurbsLine.Create(Nurbs);
+            MpNurbsLineGeometricData_v1001 geo = new MpNurbsLineGeometricData_v1001();
+            geo.Nurbs = MpNurbsLine_v1001.Create(Nurbs);
             return geo;
         }
 
-        public override void GeometricDataFromMp(MpGeometricData geo)
+        public override void GeometricDataFromMp_v1001(MpGeometricData_v1001 geo)
         {
-            if (!(geo is MpNurbsLineGeometricData))
+            if (!(geo is MpNurbsLineGeometricData_v1001))
             {
                 return;
             }
 
-            MpNurbsLineGeometricData g = (MpNurbsLineGeometricData)geo;
+            MpNurbsLineGeometricData_v1001 g = (MpNurbsLineGeometricData_v1001)geo;
 
             Nurbs = g.Nurbs.Restore();
 

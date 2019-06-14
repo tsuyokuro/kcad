@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using Plotter.Serializer.v1001;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -58,13 +59,12 @@ namespace Plotter.Serializer
 
             if (version[0] == 1 && version[1] == 0 && version[2] == 0 && version[3] == 0)
             {
-                MpCadData_v1000 mpdata = MessagePackSerializer.Deserialize<MpCadData_v1000>(data);
-                return CreateCadData(mpdata);
+                return null;
             }
             else if (version[0] == 1 && version[1] == 0 && version[2] == 0 && version[3] == 1)
             {
                 MpCadData_v1001 mpdata = MessagePackSerializer.Deserialize<MpCadData_v1001>(data);
-                return CreateCadData(mpdata);
+                return MpUtil_v1001.CreateCadData_v1001(mpdata);
             }
 
             return null;
@@ -72,7 +72,7 @@ namespace Plotter.Serializer
 
         public static void Save(string fname, CadData cd)
         {
-            MpCadData_v1001 mpcd = CreateMpCadData_v1001(cd);
+            MpCadData_v1001 mpcd = MpUtil_v1001.CreateMpCadData_v1001(cd);
 
             mpcd.MpDB.GarbageCollect();
 
@@ -89,7 +89,7 @@ namespace Plotter.Serializer
 
         public static void SaveAsJson(string fname, CadData cd)
         {
-            MpCadData_v1001 data = CreateMpCadData_v1001(cd);
+            MpCadData_v1001 data = MpUtil_v1001.CreateMpCadData_v1001(cd);
             string s = MessagePackSerializer.ToJson<MpCadData_v1001>(data);
 
             s = s.Trim();
@@ -148,99 +148,6 @@ namespace Plotter.Serializer
             }
 
             return null;
-        }
-
-        private static MpCadData_v1001 CreateMpCadData_v1001(CadData cd)
-        {
-            MpCadData_v1001 data = MpCadData_v1001.Create(cd.DB);
-
-            data.ViewInfo.WorldScale = cd.WorldScale;
-
-            data.ViewInfo.PaperSettings.Set(cd.PageSize);
-
-            return data;
-        }
-
-        private static CadData CreateCadData(MpCadData_v1000 mpcd)
-        {
-            CadData cd = new CadData();
-
-            MpViewInfo viewInfo = mpcd.ViewInfo;
-
-            double worldScale = 0;
-
-            PaperPageSize pps = null;
-
-            if (viewInfo != null)
-            {
-                worldScale = viewInfo.WorldScale;
-
-                if (viewInfo.PaperSettings != null)
-                {
-                    pps = viewInfo.PaperSettings.GetPaperPageSize();
-                }
-            }
-
-
-            if (worldScale == 0)
-            {
-                worldScale = 1.0;
-            }
-
-            cd.WorldScale = worldScale;
-
-
-            if (pps == null)
-            {
-                pps = new PaperPageSize();
-            }
-
-            cd.PageSize = pps;
-
-            cd.DB = mpcd.GetDB();
-
-            return cd;
-        }
-
-        private static CadData CreateCadData(MpCadData_v1001 mpcd)
-        {
-            CadData cd = new CadData();
-
-            MpViewInfo viewInfo = mpcd.ViewInfo;
-
-            double worldScale = 0;
-
-            PaperPageSize pps = null;
-
-            if (viewInfo != null)
-            {
-                worldScale = viewInfo.WorldScale;
-
-                if (viewInfo.PaperSettings != null)
-                {
-                    pps = viewInfo.PaperSettings.GetPaperPageSize();
-                }
-            }
-
-
-            if (worldScale == 0)
-            {
-                worldScale = 1.0;
-            }
-
-            cd.WorldScale = worldScale;
-
-
-            if (pps == null)
-            {
-                pps = new PaperPageSize();
-            }
-
-            cd.PageSize = pps;
-
-            cd.DB = mpcd.GetDB();
-
-            return cd;
         }
     }
 }

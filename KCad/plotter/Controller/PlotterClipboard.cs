@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows;
 using CadDataTypes;
 using OpenTK;
+using Plotter.Serializer.v1001;
 
 namespace Plotter.Controller
 {
@@ -23,7 +24,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            List<MpFigure_v1001> mpfigList = MpUtil.FigureListToMp_1001(figList, true);
+            List<MpFigure_v1001> mpfigList = MpUtil_v1001.FigureListToMp_1001(figList, true);
 
             byte[] bin = MessagePackSerializer.Serialize(mpfigList);
 
@@ -40,7 +41,7 @@ namespace Plotter.Controller
 
             List<MpFigure_v1001> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure_v1001>>(bin);
 
-            List<CadFigure> figList = MpUtil.FigureListFromMp_1001(mpfigList);
+            List<CadFigure> figList = MpUtil_v1001.FigureListFromMp_1001(mpfigList);
 
 
             // Pase figures in fig list
@@ -93,7 +94,7 @@ namespace Plotter.Controller
 
         public static byte[] FigureListToBin(List<CadFigure> figList)
         {
-            List<MpFigure_v1001> mpfigList = MpUtil.FigureListToMp_1001(figList, true);
+            List<MpFigure_v1001> mpfigList = MpUtil_v1001.FigureListToMp_1001(figList, true);
             byte[] bin = MessagePackSerializer.Serialize(mpfigList);
 
             return bin;
@@ -102,7 +103,7 @@ namespace Plotter.Controller
         public static List<CadFigure> FigureListFromBin(byte[] bin)
         {
             List<MpFigure_v1001> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure_v1001>>(bin);
-            List<CadFigure> figList = MpUtil.FigureListFromMp_1001(mpfigList);
+            List<CadFigure> figList = MpUtil_v1001.FigureListFromMp_1001(mpfigList);
 
             return figList;
         }

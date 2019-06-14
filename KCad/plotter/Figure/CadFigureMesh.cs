@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CadDataTypes;
+using Plotter.Serializer.v1001;
 
 namespace Plotter
 {
@@ -209,22 +210,22 @@ namespace Plotter
             mHeModel.InvertAllFace();
         }
 
-        public override MpGeometricData GeometricDataToMp()
+        public override MpGeometricData_v1001 GeometricDataToMp_v1001()
         {
-            MpMeshGeometricData mpGeo = new MpMeshGeometricData();
-            mpGeo.HeModel = MpHeModel.Create(mHeModel);
+            MpMeshGeometricData_v1001 mpGeo = new MpMeshGeometricData_v1001();
+            mpGeo.HeModel = MpHeModel_v1001.Create(mHeModel);
 
             return mpGeo;
         }
 
-        public override void GeometricDataFromMp(MpGeometricData mpGeo)
+        public override void GeometricDataFromMp_v1001(MpGeometricData_v1001 mpGeo)
         {
-            if (!(mpGeo is MpMeshGeometricData))
+            if (!(mpGeo is MpMeshGeometricData_v1001))
             {
                 return;
             }
 
-            MpMeshGeometricData meshGeo = (MpMeshGeometricData)mpGeo;
+            MpMeshGeometricData_v1001 meshGeo = (MpMeshGeometricData_v1001)mpGeo;
 
             mHeModel = meshGeo.HeModel.Restore();
 

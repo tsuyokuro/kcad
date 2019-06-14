@@ -7,6 +7,7 @@ using CadDataTypes;
 using SplineCurve;
 using Plotter.Serializer;
 using Newtonsoft.Json.Linq;
+using Plotter.Serializer.v1001;
 
 namespace Plotter
 {
@@ -240,21 +241,21 @@ namespace Plotter
             RecalcNormal();
         }
 
-        public override MpGeometricData GeometricDataToMp()
+        public override MpGeometricData_v1001 GeometricDataToMp_v1001()
         {
-            MpNurbsSurfaceGeometricData geo = new MpNurbsSurfaceGeometricData();
-            geo.Nurbs = MpNurbsSurface.Create(Nurbs);
+            MpNurbsSurfaceGeometricData_v1001 geo = new MpNurbsSurfaceGeometricData_v1001();
+            geo.Nurbs = MpNurbsSurface_v1001.Create(Nurbs);
             return geo;
         }
 
-        public override void GeometricDataFromMp(MpGeometricData geo)
+        public override void GeometricDataFromMp_v1001(MpGeometricData_v1001 geo)
         {
-            if (!(geo is MpNurbsSurfaceGeometricData))
+            if (!(geo is MpNurbsSurfaceGeometricData_v1001))
             {
                 return;
             }
 
-            MpNurbsSurfaceGeometricData g = (MpNurbsSurfaceGeometricData)geo;
+            MpNurbsSurfaceGeometricData_v1001 g = (MpNurbsSurfaceGeometricData_v1001)geo;
 
             Nurbs = g.Nurbs.Restore();
 
