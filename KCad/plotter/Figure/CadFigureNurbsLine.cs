@@ -162,5 +162,28 @@ namespace Plotter
 
             NurbsPointList = new VertexList(Nurbs.OutCnt);
         }
+
+        public override MpGeometricData_v1002 GeometricDataToMp_v1002()
+        {
+            MpNurbsLineGeometricData_v1002 geo = new MpNurbsLineGeometricData_v1002();
+            geo.Nurbs = MpNurbsLine_v1002.Create(Nurbs);
+            return geo;
+        }
+
+        public override void GeometricDataFromMp_v1002(MpGeometricData_v1002 geo)
+        {
+            if (!(geo is MpNurbsLineGeometricData_v1002))
+            {
+                return;
+            }
+
+            MpNurbsLineGeometricData_v1002 g = (MpNurbsLineGeometricData_v1002)geo;
+
+            Nurbs = g.Nurbs.Restore();
+
+            mPointList = Nurbs.CtrlPoints;
+
+            NurbsPointList = new VertexList(Nurbs.OutCnt);
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace Plotter.Serializer
     public class MpCadFile
     {
         private static byte[] Sign;
-        private static byte[] Version = { 1, 0, 0, 1 };
+        private static byte[] Version = { 1, 0, 0, 2 };
         private static string JsonSign = "KCAD_JSON";
         private static string JsonVersion = "1001";
 
@@ -57,55 +57,34 @@ namespace Plotter.Serializer
 
             fs.Close();
 
-            if (version[0] == 1 && version[1] == 0 && version[2] == 0 && version[3] == 0)
+            DOut.pl($"MpCadFile.Load {fname} {VersionStr(version)}");
+
+            if (IsVersion(version, 1, 0, 0, 0))
             {
                 return null;
             }
-            else if (version[0] == 1 && version[1] == 0 && version[2] == 0 && version[3] == 1)
+            else if (IsVersion(version, 1, 0, 0, 1))
             {
                 MpCadData_v1001 mpdata = MessagePackSerializer.Deserialize<MpCadData_v1001>(data);
                 return MpUtil_v1001.CreateCadData_v1001(mpdata);
+            }
+            else if (IsVersion(version, 1, 0, 0, 2))
+            {
+                MpCadData_v1002 mpdata = MessagePackSerializer.Deserialize<MpCadData_v1002>(data);
+                return MpUtil_v1002.CreateCadData_v1002(mpdata);
             }
 
             return null;
         }
 
-        public static void Save(string fname, CadData cd)
+        private static bool IsVersion(byte[] v, int v0, int v1, int v2, int v3)
         {
-            MpCadData_v1001 mpcd = MpUtil_v1001.CreateMpCadData_v1001(cd);
-
-            mpcd.MpDB.GarbageCollect();
-
-            byte[] data = MessagePackSerializer.Serialize(mpcd);
-
-            FileStream fs = new FileStream(fname, FileMode.Create, FileAccess.Write);
-
-            fs.Write(Sign, 0, Sign.Length);
-            fs.Write(Version, 0, Version.Length);
-            fs.Write(data, 0, data.Length);
-
-            fs.Close();
+            return v[0] == v0 && v[1] == v1 && v[2] == v2 && v[3] == v3;
         }
 
-        public static void SaveAsJson(string fname, CadData cd)
+        private static string VersionStr(byte[] v)
         {
-            MpCadData_v1001 data = MpUtil_v1001.CreateMpCadData_v1001(cd);
-            string s = MessagePackSerializer.ToJson<MpCadData_v1001>(data);
-
-            s = s.Trim();
-
-            s = s.Substring(1, s.Length - 2);
-
-            string ss = @"{" + "\n" +
-                        @"""header"":""" + "type=" + JsonSign + "," + "version=" + JsonVersion + @"""," + "\n" +
-                        s + "\n" +
-                        @"}";
-
-            StreamWriter writer = new StreamWriter(fname);
-
-            writer.Write(ss);
-
-            writer.Close();
+            return $"MpCadFile.Load {v[0]}.{v[1]}.{v[2]}.{v[3]}";
         }
 
         public static CadData? LoadJson(string fname)
@@ -146,8 +125,58 @@ namespace Plotter.Serializer
 
                 return cd;
             }
+            else if (version == "1002")
+            {
+                MpCadData_v1002 mpcd = MessagePackSerializer.Deserialize<MpCadData_v1002>(bin);
+
+                CadData cd = new CadData(
+                    mpcd.GetDB(),
+                    mpcd.ViewInfo.WorldScale,
+                    mpcd.ViewInfo.PaperSettings.GetPaperPageSize()
+                    );
+
+                return cd;
+            }
 
             return null;
+        }
+
+        public static void Save(string fname, CadData cd)
+        {
+            MpCadData_v1002 mpcd = MpUtil_v1002.CreateMpCadData_v1002(cd);
+
+            mpcd.MpDB.GarbageCollect();
+
+            byte[] data = MessagePackSerializer.Serialize(mpcd);
+
+            FileStream fs = new FileStream(fname, FileMode.Create, FileAccess.Write);
+
+            fs.Write(Sign, 0, Sign.Length);
+            fs.Write(Version, 0, Version.Length);
+            fs.Write(data, 0, data.Length);
+
+            fs.Close();
+        }
+
+        public static void SaveAsJson(string fname, CadData cd)
+        {
+            MpCadData_v1002 data = MpUtil_v1002.CreateMpCadData_v1002(cd);
+            string s = MessagePackSerializer.ToJson<MpCadData_v1002>(data);
+
+            s = s.Trim();
+
+            s = s.Substring(1, s.Length - 2);
+
+            string ss = @"{" + "\n" +
+                        @"""header"":""" + "type=" + JsonSign + "," + "version=" + JsonVersion + @"""," + "\n" +
+                        s + "\n" +
+                        @"}";
+
+            StreamWriter writer = new StreamWriter(fname);
+
+            writer.Write(ss);
+
+            writer.Close();
         }
     }
 }

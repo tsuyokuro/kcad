@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Windows;
 using CadDataTypes;
 using OpenTK;
-using Plotter.Serializer.v1001;
 
 namespace Plotter.Controller
 {
@@ -24,9 +23,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            List<MpFigure_v1001> mpfigList = MpUtil_v1001.FigureListToMp_1001(figList, true);
-
-            byte[] bin = MessagePackSerializer.Serialize(mpfigList);
+            byte[] bin = FigListToBin(figList);
 
             Clipboard.SetData(CadClipBoard.TypeNameBin, bin);
         }
@@ -37,12 +34,10 @@ namespace Plotter.Controller
             {
                 return;
             }
+
             byte[] bin = (byte[])Clipboard.GetData(CadClipBoard.TypeNameBin);
 
-            List<MpFigure_v1001> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure_v1001>>(bin);
-
-            List<CadFigure> figList = MpUtil_v1001.FigureListFromMp_1001(mpfigList);
-
+            List<CadFigure> figList = BinToFigList(bin);
 
             // Pase figures in fig list
             Vector3d pp = controller.LastDownPoint;
@@ -92,33 +87,27 @@ namespace Plotter.Controller
             }
         }
 
-        public static byte[] FigureListToBin(List<CadFigure> figList)
+        private static byte[] FigListToBin(List<CadFigure> figList)
         {
-            List<MpFigure_v1001> mpfigList = MpUtil_v1001.FigureListToMp_1001(figList, true);
-            byte[] bin = MessagePackSerializer.Serialize(mpfigList);
-
-            return bin;
+            return MpUtil.FigListToBin(figList);
         }
 
-        public static List<CadFigure> FigureListFromBin(byte[] bin)
+        private static List<CadFigure> BinToFigList(byte[] bin)
         {
-            List<MpFigure_v1001> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure_v1001>>(bin);
-            List<CadFigure> figList = MpUtil_v1001.FigureListFromMp_1001(mpfigList);
-
-            return figList;
+            return MpUtil.BinToFigList(bin);
         }
 
         public static List<CadFigure> CopyFigures(List<CadFigure> src)
         {
-            byte[] bin = FigureListToBin(src);
-            List<CadFigure> dest = FigureListFromBin(bin);
+            byte[] bin = FigListToBin(src);
+            List<CadFigure> dest = BinToFigList(bin);
             return dest;
         }
 
         public static List<CadFigure> CopyFigures(PlotterController controller, List<CadFigure> src)
         {
-            byte[] bin = FigureListToBin(src);
-            List<CadFigure> dest = FigureListFromBin(bin);
+            byte[] bin = FigListToBin(src);
+            List<CadFigure> dest = BinToFigList(bin);
 
             CadOpeList opeRoot = new CadOpeList();
 

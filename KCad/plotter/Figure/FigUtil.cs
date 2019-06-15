@@ -172,28 +172,40 @@ namespace Plotter
             return ret;
         }
 
+        //public static CadFigure Clone(CadFigure src)
+        //{
+        //    MpFigure_v1002 mpf = MpFigure_v1002.Create(src, false);
+
+        //    byte[] data = MessagePackSerializer.Serialize(mpf);
+
+        //    MpFigure_v1002 mpfCopy = MessagePackSerializer.Deserialize<MpFigure_v1002>(data);
+
+        //    CadFigure fig = mpfCopy.Restore();
+
+        //    fig.ID = 0;
+
+        //    return fig;
+        //}
+
         public static CadFigure Clone(CadFigure src)
         {
-            MpFigure_v1001 mpf = MpFigure_v1001.Create(src, false);
+            byte[] data = MpUtil.FigToBin(src, false);
 
-            byte[] data = MessagePackSerializer.Serialize(mpf);
-
-            MpFigure_v1001 mpfCopy = MessagePackSerializer.Deserialize<MpFigure_v1001>(data);
-
-            CadFigure fig = mpfCopy.Restore();
+            CadFigure fig = MpUtil.BinToFig(data);
 
             fig.ID = 0;
 
             return fig;
         }
 
+
         public static void CopyTo(CadFigure src, CadFigure dst)
         {
-            MpFigure_v1001 mpf = MpFigure_v1001.Create(src, false);
+            MpFigure_v1002 mpf = MpFigure_v1002.Create(src, false);
 
             byte[] data = MessagePackSerializer.Serialize(mpf);
 
-            MpFigure_v1001 mpfCopy = MessagePackSerializer.Deserialize<MpFigure_v1001>(data);
+            MpFigure_v1002 mpfCopy = MessagePackSerializer.Deserialize<MpFigure_v1002>(data);
 
             uint id = dst.ID;
 

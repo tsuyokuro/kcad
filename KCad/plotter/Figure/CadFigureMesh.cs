@@ -232,6 +232,28 @@ namespace Plotter
             mPointList = mHeModel.VertexStore;
         }
 
+        public override MpGeometricData_v1002 GeometricDataToMp_v1002()
+        {
+            MpMeshGeometricData_v1002 mpGeo = new MpMeshGeometricData_v1002();
+            mpGeo.HeModel = MpHeModel_v1002.Create(mHeModel);
+
+            return mpGeo;
+        }
+
+        public override void GeometricDataFromMp_v1002(MpGeometricData_v1002 mpGeo)
+        {
+            if (!(mpGeo is MpMeshGeometricData_v1002))
+            {
+                return;
+            }
+
+            MpMeshGeometricData_v1002 meshGeo = (MpMeshGeometricData_v1002)mpGeo;
+
+            mHeModel = meshGeo.HeModel.Restore();
+
+            mPointList = mHeModel.VertexStore;
+        }
+
         public override void RemoveSelected()
         {
             List<int> removeList = new List<int>();
