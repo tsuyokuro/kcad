@@ -298,7 +298,9 @@ namespace Plotter
 
             mController.Observer.ChangeMouseCursor = ChangeMouseCursor;
 
-            LayerListChanged(mController, mController.GetLayerListInfo());
+            //LayerListChanged(mController, mController.GetLayerListInfo());
+
+            mController.UpdateLayerList();
 
             PlotterView1 = new PlotterView();
             PlotterViewGL1 = PlotterViewGL.Create();

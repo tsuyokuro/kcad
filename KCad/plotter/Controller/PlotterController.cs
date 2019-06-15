@@ -160,12 +160,12 @@ namespace Plotter.Controller
         //    Observer.DataChanged(this, redraw);
         //}
 
-        private void UpdateLayerList()
+        public void UpdateLayerList()
         {
             Observer.LayerListChanged(this, GetLayerListInfo());
         }
 
-        public LayerListInfo GetLayerListInfo()
+        private LayerListInfo GetLayerListInfo()
         {
             LayerListInfo layerInfo = default(LayerListInfo);
             layerInfo.LayerList = mDB.LayerList;
@@ -193,23 +193,6 @@ namespace Plotter.Controller
 
         public void EndCreateFigure()
         {
-            CreatingFigType = CadFigure.Types.NONE;
-
-            State = States.SELECT;
-
-            if (FigureCreator != null)
-            {
-                FigureCreator.EndCreate(CurrentDC);
-                FigureCreator = null;
-            }
-
-            UpdateTreeView(true);
-
-            NotifyStateChange();
-        }
-
-        public void EndCreateFigureState()
-        {
             if (FigureCreator != null)
             {
                 FigureCreator.EndCreate(CurrentDC);
@@ -217,6 +200,42 @@ namespace Plotter.Controller
             }
 
             NextState();
+        }
+
+        public void CloseFigure()
+        {
+            if (FigureCreator != null)
+            {
+                FigureCreator.Figure.IsLoop = true;
+
+                CadOpe ope = new CadOpeSetClose(CurrentLayer.ID, FigureCreator.Figure.ID, true);
+                HistoryMan.foward(ope);
+
+                FigureCreator.EndCreate(CurrentDC);
+            }
+
+            NextState();
+        }
+
+        private void NextState()
+        {
+            if (State == States.CREATING)
+            {
+                if (ContinueCreate)
+                {
+                    FigureCreator = null;
+                    StartCreateFigure(CreatingFigType);
+                }
+                else
+                {
+                    FigureCreator = null;
+                    CreatingFigType = CadFigure.Types.NONE;
+                    State = States.SELECT;
+
+                    UpdateTreeView(true);
+                    NotifyStateChange();
+                }
+            }
         }
 
         public void StartMeasure(MeasureModes mode)
@@ -237,17 +256,6 @@ namespace Plotter.Controller
             MeasureFigureCreator = null;
         }
 
-        public void CloseFigure()
-        {
-            FigureCreator.Figure.IsLoop = true;
-
-            FigureCreator.EndCreate(CurrentDC);
-
-            CadOpe ope = new CadOpeSetClose(CurrentLayer.ID, FigureCreator.Figure.ID, true);
-            HistoryMan.foward(ope);
-
-            NextState();
-        }
         #endregion
 
         public void setCurrentLayer(uint id)
@@ -359,11 +367,6 @@ namespace Plotter.Controller
             }
         }
 
-        public void PushCurrent()
-        {
-            CurrentDC.Push();
-        }
-
         public void DrawGrid(DrawContext dc)
         {
             if (SettingsHolder.Settings.SnapToGrid)
@@ -441,28 +444,65 @@ namespace Plotter.Controller
             }
         }
 
-#endregion
-
-#region Private editing figure methods
-
-        private void NextState()
+        public void DrawAccordingState(DrawContext dc)
         {
-            if (State == States.CREATING)
+            switch (State)
             {
-                if (ContinueCreate)
-                {
-                    FigureCreator = null;
-                    StartCreateFigure(CreatingFigType);
-                }
-                else
-                {
-                    FigureCreator = null;
-                    CreatingFigType = CadFigure.Types.NONE;
-                    State = States.SELECT;
-                    NotifyStateChange();
-                }
+                case States.SELECT:
+                    break;
+
+                case States.START_DRAGING_POINTS:
+                    break;
+
+                case States.RUBBER_BAND_SELECT:
+                    DrawSelRect(dc);
+                    break;
+
+                case States.DRAGING_POINTS:
+                    break;
+
+                case States.START_CREATE:
+                    break;
+
+                case States.CREATING:
+                    if (FigureCreator != null)
+                    {
+                        Vector3d p = dc.DevPointToWorldPoint(CrossCursor.Pos);
+                        FigureCreator.DrawTemp(dc, (CadVertex)p, dc.GetPen(DrawTools.PEN_TEMP_FIGURE));
+                    }
+                    break;
+
+                case States.MEASURING:
+                    if (MeasureFigureCreator != null)
+                    {
+                        Vector3d p = dc.DevPointToWorldPoint(CrossCursor.Pos);
+                        MeasureFigureCreator.DrawTemp(dc, (CadVertex)p, dc.GetPen(DrawTools.PEN_TEMP_FIGURE));
+                    }
+                    break;
+            }
+
+            if (mInteractCtrl.IsActive)
+            {
+                mInteractCtrl.Draw(dc, SnapPoint);
             }
         }
+
+        public void DrawHighlightPoint(DrawContext dc)
+        {
+            HighlightPointList.ForEach(item =>
+            {
+                dc.Drawing.DrawHighlightPoint(item.Point, item.Pen);
+            });
+        }
+
+        #endregion
+
+        public void PushCurrent()
+        {
+            CurrentDC.Push();
+        }
+
+        #region Private editing figure methods
 
         public void ClearSelection()
         {

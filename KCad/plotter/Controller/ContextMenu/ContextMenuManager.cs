@@ -111,11 +111,11 @@ namespace Plotter.Controller
                     break;
 
                 case MenuInfo.Commands.CREATING_FIGURE_END:
-                    mController.EndCreateFigureState();
+                    mController.EndCreateFigure();
 
                     break;
                 case MenuInfo.Commands.CREATING_FIGURE_QUIT:
-                    mController.EndCreateFigureState();
+                    mController.EndCreateFigure();
                     break;
 
                 case MenuInfo.Commands.COPY:
