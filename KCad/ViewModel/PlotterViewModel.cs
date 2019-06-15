@@ -241,6 +241,27 @@ namespace Plotter
 
         MoveKeyHandler mMoveKeyHandler;
 
+        private string mCurrentFileName = null;
+
+        public string CurrentFileName
+        {
+            get => mCurrentFileName;
+
+            private set
+            {
+                mCurrentFileName = value;
+
+                if (mCurrentFileName != null)
+                {
+                    mMainWindow.FileName.Content = mCurrentFileName;
+                }
+                else
+                {
+                    mMainWindow.FileName.Content = "";
+                }
+            }
+        }
+
         public PlotterViewModel(MainWindow mainWindow)
         {
             mController = new PlotterController();
@@ -583,6 +604,7 @@ namespace Plotter
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 LoadFile(ofd.FileName);
+                CurrentFileName = ofd.FileName;
             }
         }
 
@@ -603,6 +625,7 @@ namespace Plotter
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 SaveFile(sfd.FileName);
+                CurrentFileName = sfd.FileName;
             }
         }
 
