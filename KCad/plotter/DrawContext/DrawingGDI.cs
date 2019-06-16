@@ -264,7 +264,8 @@ namespace Plotter
         }
         #endregion
 
-        public override void DrawHarfEdgeModel(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
+        public override void DrawHarfEdgeModel(
+            DrawBrush brush, DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
             for (int i = 0; i < model.FaceStore.Count; i++)
             {
@@ -355,39 +356,6 @@ namespace Plotter
             p1.X = p0.X + 0.1;
 
             DC.GdiGraphics.DrawLine(pen.GdiPen, (float)p0.X, (float)p0.Y, (float)p1.X, (float)p1.Y);
-
-            //if (p0.x >= 0 && p0.y >= 0 && p0.x < DC.ViewWidth && p0.y < DC.ViewHeight)
-            //{
-            //    DC.Image.SetPixel((int)p0.x, (int)p0.y, DC.PenColor(pen));
-            //}
-        }
-
-        //public override void DrawFace(DrawPen pen, VertexList pointList, Vector3d Normal, bool drawOutline)
-        //{
-        //    int cnt = pointList.Count;
-        //    if (cnt == 0)
-        //    {
-        //        return;
-        //    }
-
-        //    Vector3d p0 = pointList[0];
-        //    Vector3d p1;
-
-        //    int i;
-        //    for (i = 1; i < cnt; i++)
-        //    {
-        //        p1 = pointList[i];
-        //        DrawLine(pen, p0, p1);
-        //        p0 = p1;
-        //    }
-
-        //    p1 = pointList[0];
-        //    DrawLine(pen, p0, p1);
-        //}
-
-        public override void DrawHarfEdgeModel(DrawPen pen, HeModel model)
-        {
-            base.DrawHarfEdgeModel(pen, model);
         }
 
         public override void DrawText(int font, DrawBrush brush, Vector3d a, Vector3d xdir, Vector3d ydir, DrawTextOption opt, string s)

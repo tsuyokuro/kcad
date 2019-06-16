@@ -151,97 +151,24 @@ namespace Plotter
         //    #endregion
         //}
 
-        public override void DrawHarfEdgeModel(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
+        public override void DrawHarfEdgeModel(
+            DrawBrush brush, DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
             if (SettingsHolder.Settings.FillMesh)
             {
-                DrawHarfEdgeModel(pen, model);
+                DrawFaces(brush, model);
             }
 
             if (SettingsHolder.Settings.DrawMeshEdge)
             {
-                DrawEdge(pen, edgePen, edgeThreshold, model);
+                DrawEdges(pen, edgePen, edgeThreshold, model);
             }
         }
 
-        private void DrawEdge(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
-        {
-            DisableLight();
-
-            GL.LineWidth(1.0f);
-
-            Color4 color = pen.Color4();
-            Color4 edgeColor = edgePen.Color4();
-
-            Vector3d shift = GetShiftForOutLine();
-
-            Vector3d p0;
-            Vector3d p1;
-
-
-            for (int i = 0; i < model.FaceStore.Count; i++)
-            {
-                HeFace f = model.FaceStore[i];
-
-                HalfEdge head = f.Head;
-
-                HalfEdge c = head;
-
-                HalfEdge pair;
-
-                for (; ; )
-                {
-                    bool draw = false;
-
-                    pair = c.Pair;
-
-                    if (pair == null)
-                    {
-                        draw = true;
-                    }
-                    else
-                    {
-                        double s = CadMath.InnerProduct(model.NormalStore[c.Normal], model.NormalStore[pair.Normal]);
-
-                        if (Math.Abs(s) < edgeThreshold)
-                        {
-                            draw = true;
-                        }
-                    }
-
-                    HalfEdge next = c.Next;
-
-                    p0 = model.VertexStore.Ref(c.Vertex).vector * DC.WorldScale + shift;
-                    p1 = model.VertexStore.Ref(next.Vertex).vector * DC.WorldScale + shift;
-
-                    if (draw)
-                    {
-                        GL.Color4(edgeColor);
-                    }
-                    else
-                    {
-                        GL.Color4(color);
-                    }
-
-                    GL.Begin(PrimitiveType.Lines);
-                    GL.Vertex3(p0);
-                    GL.Vertex3(p1);
-                    GL.End();
-
-                    c = next;
-
-                    if (c == head)
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-
-        public override void DrawHarfEdgeModel(DrawPen pen, HeModel model)
+        private void DrawFaces(DrawBrush brush, HeModel model)
         {
             EnableLight();
-            
+
             for (int i = 0; i < model.FaceStore.Count; i++)
             {
                 HeFace f = model.FaceStore[i];
@@ -251,7 +178,7 @@ namespace Plotter
                 HalfEdge c = head;
 
                 GL.Begin(PrimitiveType.Polygon);
-                GL.Color4(0.8f, 0.8f, 0.8f, 1.0f);
+                GL.Color4(brush.Color4());
 
                 if (f.Normal != HeModel.INVALID_INDEX)
                 {
@@ -311,6 +238,80 @@ namespace Plotter
             }
 
             DisableLight();
+        }
+
+        private void DrawEdges(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
+        {
+            DisableLight();
+
+            GL.LineWidth(1.0f);
+
+            Color4 color = pen.Color4();
+            Color4 edgeColor = edgePen.Color4();
+
+            Vector3d shift = GetShiftForOutLine();
+
+            Vector3d p0;
+            Vector3d p1;
+
+
+            for (int i = 0; i < model.FaceStore.Count; i++)
+            {
+                HeFace f = model.FaceStore[i];
+
+                HalfEdge head = f.Head;
+
+                HalfEdge c = head;
+
+                HalfEdge pair;
+
+                for (; ; )
+                {
+                    bool draw = false;
+
+                    pair = c.Pair;
+
+                    if (pair == null)
+                    {
+                        draw = true;
+                    }
+                    else
+                    {
+                        double s = CadMath.InnerProduct(model.NormalStore[c.Normal], model.NormalStore[pair.Normal]);
+
+                        if (Math.Abs(s) <= edgeThreshold)
+                        {
+                            draw = true;
+                        }
+                    }
+
+                    HalfEdge next = c.Next;
+
+                    p0 = model.VertexStore.Ref(c.Vertex).vector * DC.WorldScale + shift;
+                    p1 = model.VertexStore.Ref(next.Vertex).vector * DC.WorldScale + shift;
+
+                    if (draw)
+                    {
+                        GL.Color4(edgeColor);
+                    }
+                    else
+                    {
+                        GL.Color4(color);
+                    }
+
+                    GL.Begin(PrimitiveType.Lines);
+                    GL.Vertex3(p0);
+                    GL.Vertex3(p1);
+                    GL.End();
+
+                    c = next;
+
+                    if (c == head)
+                    {
+                        break;
+                    }
+                }
+            }
         }
 
         public override void DrawAxis()

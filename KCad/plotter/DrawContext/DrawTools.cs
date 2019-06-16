@@ -70,7 +70,8 @@ namespace Plotter
         public const int BRUSH_BACKGROUND = 2;
         public const int BRUSH_TEXT = 3;
         public const int BRUSH_TRANSPARENT = 4;
-        public const int BRUSH_TBL_SIZE = 5;
+        public const int BRUSH_DEFAULT_MESH_FILL = 5;
+        public const int BRUSH_TBL_SIZE = 6;
 
         public const int FONT_DEFAULT = 1;
         public const int FONT_SMALL = 2;
@@ -426,6 +427,13 @@ namespace Plotter
 
         public Pen GdiPen;
 
+        public static DrawPen NullPen = New(Color.FromArgb(0, 0, 0, 0), 0);
+
+        public bool IsNullPen
+        {
+            get => ((uint)Argb & 0xff000000) == 0;
+        }
+
         public void DisposeGdiPen()
         {
             if (GdiPen != null)
@@ -493,6 +501,13 @@ namespace Plotter
         public int Argb;
 
         public SolidBrush GdiBrush;
+
+        public static DrawBrush NullBrush = New(Color.FromArgb(0, 0, 0, 0));
+
+        public bool IsNullBrush
+        {
+            get => ((uint)Argb & 0xff000000) == 0;
+        }
 
         public void DisposeGdiBrush()
         {

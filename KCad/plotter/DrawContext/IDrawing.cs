@@ -48,9 +48,10 @@ namespace Plotter
 
         //void DrawFace(DrawPen pen, VertexList pointList, Vector3d normal, bool drawOutline);
 
-        void DrawHarfEdgeModel(DrawPen pen, HeModel model);
+        //void DrawHarfEdgeModel(DrawPen pen, HeModel model);
 
-        void DrawHarfEdgeModel(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model);
+        void DrawHarfEdgeModel(
+            DrawBrush brush, DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model);
 
         void DrawText(int font, DrawBrush brush, Vector3d a, Vector3d xdir, Vector3d ydir, DrawTextOption opt, string s);
 

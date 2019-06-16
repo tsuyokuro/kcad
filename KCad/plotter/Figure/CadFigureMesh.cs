@@ -136,7 +136,11 @@ namespace Plotter
         public override void Draw(DrawContext dc, DrawPen pen)
         {
             dc.Drawing.DrawHarfEdgeModel(
-                dc.GetPen(DrawTools.PEN_MESH_LINE), pen, EDGE_THRESHOLD, mHeModel);
+                dc.GetBrush(DrawTools.BRUSH_DEFAULT_MESH_FILL),
+                dc.GetPen(DrawTools.PEN_MESH_LINE),
+                pen,
+                EDGE_THRESHOLD,
+                mHeModel);
         }
 
         public override void DrawSelected(DrawContext dc, DrawPen pen)

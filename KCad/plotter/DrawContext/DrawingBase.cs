@@ -67,37 +67,37 @@ namespace Plotter
         //{
         //}
 
-        public virtual void DrawHarfEdgeModel(DrawPen pen, HeModel model)
+        //public virtual void DrawHarfEdgeModel(DrawPen pen, HeModel model)
+        //{
+        //    for (int i = 0; i < model.FaceStore.Count; i++)
+        //    {
+        //        HeFace f = model.FaceStore[i];
+
+        //        HalfEdge head = f.Head;
+
+        //        HalfEdge c = head;
+
+        //        for (; ; )
+        //        {
+        //            HalfEdge next = c.Next;
+
+        //            DrawLine(pen,
+        //                model.VertexStore.Ref(c.Vertex).vector,
+        //                model.VertexStore.Ref(next.Vertex).vector);
+
+        //            c = next;
+
+        //            if (c == head)
+        //            {
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
+
+        public virtual void DrawHarfEdgeModel(
+            DrawBrush brush, DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
-            for (int i = 0; i < model.FaceStore.Count; i++)
-            {
-                HeFace f = model.FaceStore[i];
-
-                HalfEdge head = f.Head;
-
-                HalfEdge c = head;
-
-                for (; ; )
-                {
-                    HalfEdge next = c.Next;
-
-                    DrawLine(pen,
-                        model.VertexStore.Ref(c.Vertex).vector,
-                        model.VertexStore.Ref(next.Vertex).vector);
-
-                    c = next;
-
-                    if (c == head)
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-
-        public virtual void DrawHarfEdgeModel(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
-        {
-            DrawHarfEdgeModel(pen, model);
         }
 
         public virtual void DrawText(int font, DrawBrush brush, Vector3d a, Vector3d xdir, Vector3d ydir, DrawTextOption opt, string s)
