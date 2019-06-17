@@ -541,7 +541,7 @@ namespace Plotter
             double len = cv.Norm();
 
 
-            Vector3d up = new Vector3d(size+5, size+5, 0);
+            Vector3d up = new Vector3d(size + 5, size + 5, 0);
 
             Vector3d cp = DC.DevPointToWorldPoint(up);
 
@@ -623,6 +623,11 @@ namespace Plotter
             DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), xp, Vector3d.UnitX, default(DrawTextOption), "x");
             DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), yp, Vector3d.UnitX, default(DrawTextOption), "y");
             DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), zp, Vector3d.UnitX, default(DrawTextOption), "z");
+        }
+
+        public override void Dispose()
+        {
+
         }
     }
 }

@@ -138,6 +138,7 @@ namespace Plotter
         {
             DisposeGraphics();
             Tools.Dispose();
+            mDrawing.Dispose();
         }
 
         public override void CalcProjectionMatrix()

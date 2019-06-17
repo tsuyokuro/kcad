@@ -77,12 +77,19 @@ namespace Plotter
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
 
+            Disposed += OnDisposed;
+
             SetupCursor();
 
 #if MOUSE_THREAD
             mEventSequencer = new MyEventSequencer(this, 100);
             mEventSequencer.Start();
 #endif
+        }
+
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            mDrawContext.Dispose();
         }
 
         private void OnLoad(object sender, EventArgs e)

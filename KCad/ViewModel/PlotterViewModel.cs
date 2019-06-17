@@ -302,7 +302,9 @@ namespace Plotter
 
             mController.UpdateLayerList();
 
+#if USE_GDI_VIEW
             PlotterView1 = new PlotterView();
+#endif
             PlotterViewGL1 = PlotterViewGL.Create();
 
             ViewMode = ViewModes.FRONT;
@@ -593,7 +595,9 @@ namespace Plotter
         {
             CurrentFileName = null;
 
+#if USE_GDI_VIEW
             PlotterView1.DrawContext.WorldScale = 1.0;
+#endif
             PlotterViewGL1.DrawContext.WorldScale = 1.0;
 
             mController.ClearAll();
@@ -985,7 +989,7 @@ namespace Plotter
 
             dlg.Owner = mMainWindow;
 
-            dlg.WorldScale = PlotterView1.DrawContext.WorldScale;
+            dlg.WorldScale = mPlotterView.DrawContext.WorldScale;
 
             bool? result = dlg.ShowDialog();
 
@@ -998,7 +1002,9 @@ namespace Plotter
 
         public void SetWorldScale(double scale)
         {
+#if USE_GDI_VIEW
             PlotterView1.DrawContext.WorldScale = scale;
+#endif
             PlotterViewGL1.DrawContext.WorldScale = scale;
         }
 

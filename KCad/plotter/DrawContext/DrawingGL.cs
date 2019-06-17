@@ -32,6 +32,11 @@ namespace Plotter
             mFontRenderer.Init();
         }
 
+        public override void Dispose()
+        {
+            mFontRenderer.Dispose();
+        }
+
         public override void Clear(DrawBrush brush)
         {
             GL.ClearColor(brush.Color4());
@@ -154,19 +159,17 @@ namespace Plotter
         public override void DrawHarfEdgeModel(
             DrawBrush brush, DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
-            if (SettingsHolder.Settings.FillMesh)
-            {
-                DrawFaces(brush, model);
-            }
-
-            if (SettingsHolder.Settings.DrawMeshEdge)
-            {
-                DrawEdges(pen, edgePen, edgeThreshold, model);
-            }
+            DrawHeFaces(brush, model);
+            DrawHeEdges(pen, edgePen, edgeThreshold, model);
         }
 
-        private void DrawFaces(DrawBrush brush, HeModel model)
+        private void DrawHeFaces(DrawBrush brush, HeModel model)
         {
+            if (brush.IsNullBrush)
+            {
+                return;
+            }
+
             EnableLight();
 
             for (int i = 0; i < model.FaceStore.Count; i++)
@@ -240,20 +243,27 @@ namespace Plotter
             DisableLight();
         }
 
-        private void DrawEdges(DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
+        private void DrawHeEdges(DrawPen borderPen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
+            bool drawBorder = !borderPen.IsNullPen;
+            bool drawEdge = !edgePen.IsNullPen;
+
+            if (!drawBorder && !drawEdge)
+            {
+                return;
+            }
+
             DisableLight();
 
             GL.LineWidth(1.0f);
 
-            Color4 color = pen.Color4();
+            Color4 color = borderPen.Color4();
             Color4 edgeColor = edgePen.Color4();
 
             Vector3d shift = GetShiftForOutLine();
 
             Vector3d p0;
             Vector3d p1;
-
 
             for (int i = 0; i < model.FaceStore.Count; i++)
             {
@@ -267,21 +277,27 @@ namespace Plotter
 
                 for (; ; )
                 {
-                    bool draw = false;
+                    bool drawAsEdge = false;
 
                     pair = c.Pair;
 
-                    if (pair == null)
+                    if (drawEdge)
                     {
-                        draw = true;
-                    }
-                    else
-                    {
-                        double s = CadMath.InnerProduct(model.NormalStore[c.Normal], model.NormalStore[pair.Normal]);
-
-                        if (Math.Abs(s) <= edgeThreshold)
+                        if (pair == null)
                         {
-                            draw = true;
+                            drawAsEdge = true;
+                        }
+                        else
+                        {
+                            if (edgeThreshold != 0)
+                            {
+                                double s = CadMath.InnerProduct(model.NormalStore[c.Normal], model.NormalStore[pair.Normal]);
+
+                                if (Math.Abs(s) <= edgeThreshold)
+                                {
+                                    drawAsEdge = true;
+                                }
+                            }
                         }
                     }
 
@@ -290,19 +306,25 @@ namespace Plotter
                     p0 = model.VertexStore.Ref(c.Vertex).vector * DC.WorldScale + shift;
                     p1 = model.VertexStore.Ref(next.Vertex).vector * DC.WorldScale + shift;
 
-                    if (draw)
+                    if (drawAsEdge)
                     {
                         GL.Color4(edgeColor);
+                        GL.Begin(PrimitiveType.Lines);
+                        GL.Vertex3(p0);
+                        GL.Vertex3(p1);
+                        GL.End();
                     }
                     else
                     {
-                        GL.Color4(color);
+                        if (drawBorder)
+                        {
+                            GL.Color4(color);
+                            GL.Begin(PrimitiveType.Lines);
+                            GL.Vertex3(p0);
+                            GL.Vertex3(p1);
+                            GL.End();
+                        }
                     }
-
-                    GL.Begin(PrimitiveType.Lines);
-                    GL.Vertex3(p0);
-                    GL.Vertex3(p1);
-                    GL.End();
 
                     c = next;
 

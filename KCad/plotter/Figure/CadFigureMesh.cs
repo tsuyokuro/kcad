@@ -1,15 +1,9 @@
-﻿using HalfEdgeNS;
+﻿using CadDataTypes;
+using HalfEdgeNS;
 using MyCollections;
-using Newtonsoft.Json.Linq;
-using OpenTK;
-using Plotter.Serializer;
+using Plotter.Serializer.v1001;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CadDataTypes;
-using Plotter.Serializer.v1001;
 
 namespace Plotter
 {
@@ -135,10 +129,44 @@ namespace Plotter
 
         public override void Draw(DrawContext dc, DrawPen pen)
         {
+            DrawBrush brush;
+
+            if (SettingsHolder.Settings.FillMesh)
+            {
+                brush = dc.GetBrush(DrawTools.BRUSH_DEFAULT_MESH_FILL);
+            }
+            else
+            {
+                brush = DrawBrush.NullBrush;
+            }
+
+            DrawPen borderPen;
+            DrawPen edgePen;
+
+            if (SettingsHolder.Settings.DrawMeshEdge)
+            {
+                if (pen.ID == DrawTools.PEN_FIGURE_HIGHLIGHT)
+                {
+                    borderPen = pen;
+                }
+                else
+                {
+                    borderPen = dc.GetPen(DrawTools.PEN_MESH_LINE);
+                }
+
+                edgePen = pen;
+            }
+            else
+            {
+                borderPen = DrawPen.NullPen;
+                edgePen = DrawPen.NullPen;
+            }
+
+
             dc.Drawing.DrawHarfEdgeModel(
-                dc.GetBrush(DrawTools.BRUSH_DEFAULT_MESH_FILL),
-                dc.GetPen(DrawTools.PEN_MESH_LINE),
-                pen,
+                brush,
+                borderPen,
+                edgePen,
                 EDGE_THRESHOLD,
                 mHeModel);
         }

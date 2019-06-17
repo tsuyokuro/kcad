@@ -1,6 +1,7 @@
 ﻿using HalfEdgeNS;
 using System.Collections.Generic;
 using OpenTK;
+using System;
 
 namespace Plotter
 {
@@ -16,7 +17,7 @@ namespace Plotter
         }
     }
 
-    public interface IDrawing
+    public interface IDrawing : IDisposable
     {
         void Clear(DrawBrush brush);
 

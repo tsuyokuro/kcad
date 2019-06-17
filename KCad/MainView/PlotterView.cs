@@ -59,7 +59,14 @@ namespace Plotter
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
 
+            Disposed += OnDisposed;
+
             SetupCursor();
+        }
+
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            mDrawContext.Dispose();
         }
 
         protected void SetupCursor()

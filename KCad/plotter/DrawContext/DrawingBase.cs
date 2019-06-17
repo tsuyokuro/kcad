@@ -189,5 +189,10 @@ namespace Plotter
         public virtual void DrawCrossScrn(DrawPen pen, Vector3d p, double size)
         {
         }
+
+        public virtual void Dispose()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
