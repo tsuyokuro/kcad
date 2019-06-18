@@ -144,6 +144,11 @@ namespace Plotter
                 data[12], data[13], data[14], data[15]);
         }
 
+        public static UMatrix4 Scale(double s)
+        {
+            return Matrix4d.Scale(s);
+        }
+
         public static UMatrix4 operator *(UMatrix4 m1, UMatrix4 m2)
         {
             return product(m1, m2);

@@ -86,6 +86,11 @@ namespace Plotter
             base.Dispose(disposing);
         }
 
+        public void SetWorldScale(double scale)
+        {
+            mDrawContext.WorldScale = scale;
+        }
+
         override protected void OnPaintBackground(PaintEventArgs pevent)
         {
             mController.Redraw();

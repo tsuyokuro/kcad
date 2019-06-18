@@ -450,6 +450,11 @@ namespace Plotter
             mCurrentContextMenu.Show(this, new Point(x, y));
         }
 
+        public void SetWorldScale(double scale)
+        {
+            mDrawContextPers.WorldScale = scale;
+            mDrawContextOrtho.WorldScale = scale;
+        }
 
         class MyEvent : EventSequencer<MyEvent>.Event
         {
