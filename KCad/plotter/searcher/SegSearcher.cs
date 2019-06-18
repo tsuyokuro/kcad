@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -87,35 +88,35 @@ namespace Plotter
             CadFigure fig = fseg.Figure;
             int idxA = fseg.Index0;
             int idxB = fseg.Index1;
-            CadVertex a = fseg.Point0;
-            CadVertex b = fseg.Point1;
+            Vector3d a = fseg.Point0.vector;
+            Vector3d b = fseg.Point1.vector;
 
             if (fig.StoreList != null && fig.StoreList.Count > 1)
             {
-                a = fseg.StoredPoint0;
-                b = fseg.StoredPoint1;
+                a = fseg.StoredPoint0.vector;
+                b = fseg.StoredPoint1.vector;
             }
 
-            CadVertex cwp = dc.DevPointToWorldPoint(Target.Pos);
+            Vector3d cwp = dc.DevPointToWorldPoint(Target.Pos);
 
-            CadVertex xfaceNormal = dc.DevVectorToWorldVector(Target.DirX);
-            CadVertex yfaceNormal = dc.DevVectorToWorldVector(Target.DirY);
+            Vector3d xfaceNormal = dc.DevVectorToWorldVector(Target.DirX);
+            Vector3d yfaceNormal = dc.DevVectorToWorldVector(Target.DirY);
 
-            CadVertex cx = CadUtil.CrossSegPlane(a, b, cwp, xfaceNormal);
-            CadVertex cy = CadUtil.CrossSegPlane(a, b, cwp, yfaceNormal);
+            Vector3d cx = CadMath.CrossSegPlane(a, b, cwp, xfaceNormal);
+            Vector3d cy = CadMath.CrossSegPlane(a, b, cwp, yfaceNormal);
 
-            CadVertex pa = dc.WorldPointToDevPoint(a);
-            CadVertex pb = dc.WorldPointToDevPoint(b);
+            Vector3d pa = dc.WorldPointToDevPoint(a);
+            Vector3d pb = dc.WorldPointToDevPoint(b);
 
-            if (!cx.Valid && !cy.Valid)
+            if (!cx.IsValid() && !cy.IsValid())
             {
                 return;
             }
 
-            CadVertex p = CadVertex.InvalidValue;
+            Vector3d p = VectorExt.InvalidVector3d;
             double mind = Double.MaxValue;
 
-            CadVectorArray4 vtbl = default;
+            StackArray<Vector3d> vtbl = default;
 
             vtbl[0] = cx;
             vtbl[1] = cy;
@@ -123,14 +124,14 @@ namespace Plotter
 
             for (int i = 0; i < vtbl.Length; i++)
             {
-                CadVertex v = vtbl[i];
+                Vector3d v = vtbl[i];
 
-                if (!v.Valid)
+                if (!v.IsValid())
                 {
                     continue;
                 }
 
-                CadVertex devv = dc.WorldPointToDevPoint(v);
+                Vector3d devv = dc.WorldPointToDevPoint(v);
 
                 double td = (devv - Target.Pos).Norm();
 
@@ -141,7 +142,7 @@ namespace Plotter
                 }
             }
 
-            if (!p.Valid)
+            if (!p.IsValid())
             {
                 return;
             }
@@ -179,20 +180,20 @@ namespace Plotter
             }
 
 
-            CadVertex c = vl[0];
-            CadVertex a = vl[1];
-            CadVertex b = vl[2];
+            Vector3d c = vl[0].vector;
+            Vector3d a = vl[1].vector;
+            Vector3d b = vl[2].vector;
 
 
-            CadVertex pc = dc.WorldPointToDevPoint(c);
-            CadVertex pa = dc.WorldPointToDevPoint(a);
-            CadVertex pb = dc.WorldPointToDevPoint(b);
+            Vector3d pc = dc.WorldPointToDevPoint(c);
+            Vector3d pa = dc.WorldPointToDevPoint(a);
+            Vector3d pb = dc.WorldPointToDevPoint(b);
 
-            double r = CadUtil.SegNorm2D(pa, pc);
-            double tr = CadUtil.SegNorm2D(Target.Pos, pc);
+            double r = CadMath.SegNorm2D(pa, pc);
+            double tr = CadMath.SegNorm2D(Target.Pos, pc);
 
-            double pad = CadUtil.SegNorm2D(Target.Pos, pa);
-            double pbd = CadUtil.SegNorm2D(Target.Pos, pb);
+            double pad = CadMath.SegNorm2D(Target.Pos, pa);
+            double pbd = CadMath.SegNorm2D(Target.Pos, pb);
 
             int idxB = 1;
 
@@ -211,11 +212,11 @@ namespace Plotter
 
             if (dist < MinDist)
             {
-                CadVertex tp = dc.DevPointToWorldPoint(Target.Pos);
-                r = CadUtil.SegNorm(a, c);
-                tr = CadUtil.SegNorm(tp, c);
+                Vector3d tp = dc.DevPointToWorldPoint(Target.Pos);
+                r = CadMath.SegNorm(a, c);
+                tr = CadMath.SegNorm(tp, c);
 
-                CadVertex td = tp - c;
+                Vector3d td = tp - c;
 
                 td *= (r / tr);
                 td += c;

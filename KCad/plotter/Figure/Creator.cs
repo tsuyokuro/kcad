@@ -109,7 +109,7 @@ namespace Plotter
 
                 CadVertex lastPt = Figure.PointList[Figure.PointCount - 1];
 
-                dc.Drawing.DrawLine(pen, lastPt, tp);
+                dc.Drawing.DrawLine(pen, lastPt.vector, tp.vector);
             }
 
             public override void EndCreate(DrawContext dc)
@@ -189,7 +189,7 @@ namespace Plotter
                     return;
                 }
 
-                dc.Drawing.DrawRect(pen, Figure.PointList[0], tp);
+                dc.Drawing.DrawRect(pen, Figure.PointList[0].vector, tp.vector);
             }
 
             public override void EndCreate(DrawContext dc)

@@ -1,4 +1,5 @@
 ﻿using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -73,6 +74,17 @@ namespace Plotter
         }
 
         public static ArrowHead operator +(ArrowHead a, CadVertex d)
+        {
+            a.p0 += d;
+            a.p1 += d;
+            a.p2 += d;
+            a.p3 += d;
+            a.p4 += d;
+
+            return a;
+        }
+
+        public static ArrowHead operator +(ArrowHead a, Vector3d d)
         {
             a.p0 += d;
             a.p1 += d;

@@ -34,27 +34,27 @@ namespace Plotter
 
 
         #region Point Move
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             //base.MoveSelectedPoints(dc, delta);
 
             if (Locked) return;
 
-            CadVertex d;
+            Vector3d d;
 
 
             if (!IsSelectedAll() && mPointList.Count > 2 && RestrictionByNormal)
             {
-                CadVertex vdir = (CadVertex)dc.ViewDir;
+                Vector3d vdir = dc.ViewDir;
 
-                CadVertex a = delta;
-                CadVertex b = delta + vdir;
+                Vector3d a = delta;
+                Vector3d b = delta + vdir;
 
-                d = CadUtil.CrossPlane(a, b, StoreList[0], (CadVertex)Normal);
+                d = CadMath.CrossPlane(a, b, StoreList[0].vector, Normal);
 
-                if (!d.Valid)
+                if (!d.IsValid())
                 {
-                    CadVertex nvNormal = CadMath.Normal((CadVertex)Normal, vdir);
+                    Vector3d nvNormal = CadMath.Normal(Normal, vdir);
 
                     double ip = CadMath.InnerProduct(nvNormal, delta);
 
@@ -74,7 +74,7 @@ namespace Plotter
             });
         }
 
-        public override void MoveAllPoints(CadVertex delta)
+        public override void MoveAllPoints(Vector3d delta)
         {
             if (Locked) return;
 
@@ -131,7 +131,7 @@ namespace Plotter
             CadVertex a = PointList[idxA];
             CadVertex b = PointList[idxB];
 
-            dc.Drawing.DrawLine(pen, a, b);
+            dc.Drawing.DrawLine(pen, a.vector, b.vector);
         }
 
         public override void InvertDir()
@@ -152,7 +152,7 @@ namespace Plotter
 
             if (Normal.IsZero())
             {
-                Normal = (Vector3d)CadUtil.RepresentativeNormal(pl);
+                Normal = CadUtil.TypicalNormal(pl);
             }
 
             CadVertex a;
@@ -161,10 +161,10 @@ namespace Plotter
 
             if (cnt == 1)
             {
-                dc.Drawing.DrawCross(pen, a, 2);
+                dc.Drawing.DrawCross(pen, a.vector, 2);
                 if (a.Selected)
                 {
-                    dc.Drawing.DrawHighlightPoint(a, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT));
+                    dc.Drawing.DrawHighlightPoint(a.vector, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT));
                 }
 
                 return;
@@ -173,13 +173,13 @@ namespace Plotter
             PolyLineExpander.ForEachPoints(pl, start + 1, cnt - 1, 8,
                 (v) =>
                 {
-                    dc.Drawing.DrawLine(pen, a, v);
+                    dc.Drawing.DrawLine(pen, a.vector, v.vector);
                     a = v;
                 });
 
             if (IsLoop)
             {
-                dc.Drawing.DrawLine(pen, a, pl[start]);
+                dc.Drawing.DrawLine(pen, a.vector, pl[start].vector);
             }
         }
 
@@ -204,7 +204,7 @@ namespace Plotter
 
                 if (!p.Selected) continue;
 
-                dc.Drawing.DrawSelectedPoint(p, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                dc.Drawing.DrawSelectedPoint(p.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
 
 
                 if (p.IsHandle)
@@ -216,8 +216,8 @@ namespace Plotter
                         CadVertex np = GetPointAt(idx);
                         if (!np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
-                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p.vector, np.vector);
+                            dc.Drawing.DrawSelectedPoint(np.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
 
@@ -228,8 +228,8 @@ namespace Plotter
                         CadVertex np = GetPointAt(idx);
                         if (!np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
-                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p.vector, np.vector);
+                            dc.Drawing.DrawSelectedPoint(np.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
                 }
@@ -242,8 +242,8 @@ namespace Plotter
                         CadVertex np = GetPointAt(idx);
                         if (np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
-                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p.vector, np.vector);
+                            dc.Drawing.DrawSelectedPoint(np.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
 
@@ -254,8 +254,8 @@ namespace Plotter
                         CadVertex np = GetPointAt(idx);
                         if (np.IsHandle)
                         {
-                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p, np);
-                            dc.Drawing.DrawSelectedPoint(np, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p.vector, np.vector);
+                            dc.Drawing.DrawSelectedPoint(np.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
                 }
@@ -302,16 +302,16 @@ namespace Plotter
                 return;
             }
 
-            CadVertex prevNormal = (CadVertex)Normal;
+            Vector3d prevNormal = Normal;
 
-            CadVertex normal = CadUtil.RepresentativeNormal(PointList);
+            Vector3d normal = CadUtil.TypicalNormal(PointList);
 
             if (CadMath.InnerProduct(prevNormal, normal) < 0)
             {
                 normal *= -1;
             }
 
-            Normal = normal.vector;
+            Normal = normal;
         }
 
         private Centroid GetPointListCentroid()
@@ -329,7 +329,7 @@ namespace Plotter
         {
             Centroid ret = default(Centroid);
 
-            ret.Point = PointList[0];
+            ret.Point = PointList[0].vector;
             ret.Area = 0;
 
             return ret;
@@ -339,11 +339,11 @@ namespace Plotter
         {
             Centroid ret = default(Centroid);
 
-            CadVertex d = PointList[1] - PointList[0];
+            Vector3d d = PointList[1].vector - PointList[0].vector;
 
             d /= 2.0;
 
-            ret.Point = PointList[0] + d;
+            ret.Point = PointList[0].vector + d;
             ret.Area = 0;
 
             return ret;

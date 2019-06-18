@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
     public struct RulerInfo
     {
         public bool IsValid;
-        public CadVertex CrossPoint;
+        public Vector3d CrossPoint;
         public double Distance;
 
         public CadRuler Ruler;
@@ -21,32 +22,32 @@ namespace Plotter
         public int Idx0;
         public int Idx1;
 
-        public CadVertex P0
+        public Vector3d P0
         {
             get
             {
                 if (Fig.StoreList == null)
                 {
-                    return Fig.PointList[Idx0];
+                    return Fig.PointList[Idx0].vector;
                 }
                 else
                 {
-                    return Fig.StoreList[Idx0];
+                    return Fig.StoreList[Idx0].vector;
                 }
             }
         }
 
-        public CadVertex P1
+        public Vector3d P1
         {
             get
             {
                 if (Fig.StoreList == null)
                 {
-                    return Fig.PointList[Idx1];
+                    return Fig.PointList[Idx1].vector;
                 }
                 else
                 {
-                    return Fig.StoreList[Idx1];
+                    return Fig.StoreList[Idx1].vector;
                 }
             }
         }
@@ -55,40 +56,38 @@ namespace Plotter
         {
             RulerInfo ret = default(RulerInfo);
 
-            CadVertex cwp = dc.DevPointToWorldPoint(cursor.Pos);
+            Vector3d cwp = dc.DevPointToWorldPoint(cursor.Pos);
 
-            CadVertex xfaceNormal = dc.DevVectorToWorldVector(cursor.DirX);
-            CadVertex yfaceNormal = dc.DevVectorToWorldVector(cursor.DirY);
+            Vector3d xfaceNormal = dc.DevVectorToWorldVector(cursor.DirX);
+            Vector3d yfaceNormal = dc.DevVectorToWorldVector(cursor.DirY);
 
-            CadVertex cx = CadUtil.CrossPlane(P0, P1, cwp, xfaceNormal);
-            CadVertex cy = CadUtil.CrossPlane(P0, P1, cwp, yfaceNormal);
+            Vector3d cx = CadMath.CrossPlane(P0, P1, cwp, xfaceNormal);
+            Vector3d cy = CadMath.CrossPlane(P0, P1, cwp, yfaceNormal);
 
-            if (!cx.Valid && !cy.Valid)
+            if (!cx.IsValid() && !cy.IsValid())
             {
                 return ret;
             }
 
-            CadVertex p = CadVertex.InvalidValue;
+            Vector3d p = VectorExt.InvalidVector3d;
             double mind = Double.MaxValue;
 
-            CadVectorArray4 vtbl = default;
+            StackArray<Vector3d> vtbl = default;
 
             vtbl[0] = cx;
             vtbl[1] = cy;
             vtbl.Length = 2;
 
-            //Span<CadVector> vtbl = stackalloc CadVector[] { cx, cy };
-
             for (int i = 0; i < vtbl.Length; i++)
             {
-                CadVertex v = vtbl[i];
+                Vector3d v = vtbl[i];
 
-                if (!v.Valid)
+                if (!v.IsValid())
                 {
                     continue;
                 }
 
-                CadVertex devv = dc.WorldPointToDevPoint(v);
+                Vector3d devv = dc.WorldPointToDevPoint(v);
 
                 double td = (devv - cursor.Pos).Norm();
 
@@ -99,7 +98,7 @@ namespace Plotter
                 }
             }
 
-            if (!p.Valid)
+            if (!p.IsValid())
             {
                 return ret;
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -124,7 +125,7 @@ namespace Plotter
 
     class CadSegmentCutter
     {
-        public static EditResult CutSegment(CadObjectDB db, MarkSegment seg, CadVertex p)
+        public static EditResult CutSegment(CadObjectDB db, MarkSegment seg, Vector3d p)
         {
             EditResult result = new EditResult();
 
@@ -138,7 +139,7 @@ namespace Plotter
                 return result;
             }
 
-            var ci = CadUtil.PerpendicularCrossSeg(seg.pA, seg.pB, p);
+            CrossInfo ci = CadMath.PerpendicularCrossSeg(seg.pA.vector, seg.pB.vector, p);
 
             if (!ci.IsCross)
             {
@@ -155,9 +156,9 @@ namespace Plotter
             CadFigure fb = db.NewFigure(CadFigure.Types.POLY_LINES);
 
             fa.AddPoints(org.PointList, 0, a + 1);
-            fa.AddPoint(ci.CrossPoint);
+            fa.AddPoint(new CadVertex(ci.CrossPoint));
 
-            fb.AddPoint(ci.CrossPoint);
+            fb.AddPoint(new CadVertex(ci.CrossPoint));
             fb.AddPoints(org.PointList, b);
 
             if (org.IsLoop)

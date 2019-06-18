@@ -158,6 +158,7 @@ namespace Plotter
         public override void Dispose()
         {
             Tools.Dispose();
+            mDrawing.Dispose();
         }
 
         public override DrawPen GetPen(int idx)

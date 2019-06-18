@@ -147,7 +147,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            if (!ms.CrossPoint.Valid)
+            if (!ms.CrossPoint.IsValid())
             {
                 return;
             }
@@ -339,7 +339,7 @@ namespace Plotter.Controller
 
             DOut.pl($"ins={ins} pcnt={fig.PointCount}");
 
-            fig.InsertPointAt(ins, LastDownPoint);
+            fig.InsertPointAt(ins, (CadVertex)LastDownPoint);
 
             ClearSelection();
 
@@ -358,7 +358,7 @@ namespace Plotter.Controller
             }
 
             CadFigure pointFig = mDB.NewFigure(CadFigure.Types.POINT);
-            pointFig.AddPoint(cent.Point);
+            pointFig.AddPoint((CadVertex)cent.Point);
 
             pointFig.EndCreate(CurrentDC);
 

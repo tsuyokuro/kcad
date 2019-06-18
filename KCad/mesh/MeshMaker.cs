@@ -1,5 +1,6 @@
 ﻿using CadDataTypes;
 using MeshUtilNS;
+using OpenTK;
 using Plotter;
 using System;
 
@@ -13,13 +14,13 @@ namespace MeshMakerNS
             QUADRANGLE,
         }
 
-        public static CadMesh CreateBox(CadVertex pos, CadVertex sv, FaceType faceType = FaceType.TRIANGLE)
+        public static CadMesh CreateBox(Vector3d pos, Vector3d sizeV, FaceType faceType = FaceType.TRIANGLE)
         {
             CadMesh cm = CreateUnitCube(faceType);
 
             for (int i=0;i<cm.VertexStore.Count; i++)
             {
-                cm.VertexStore.Ref(i) *= sv;
+                cm.VertexStore.Ref(i) *= sizeV;
                 cm.VertexStore.Ref(i) += pos;
             }
 
@@ -79,7 +80,7 @@ namespace MeshMakerNS
             return cm;
         }
 
-        public static CadMesh CreateCylinder(CadVertex pos, int slices, double r, double len)
+        public static CadMesh CreateCylinder(Vector3d pos, int slices, double r, double len)
         {
             CadMesh mesh = CreateCylinder(slices, r, len);
 
@@ -131,7 +132,7 @@ namespace MeshMakerNS
             return mesh;
         }
 
-        public static CadMesh CreateSphere(double r, int slices1, int slices2)
+        public static CadMesh CreateSphere(Vector3d pos, double r, int slices1, int slices2)
         {
             VertexList vl = new VertexList(slices2);
 
@@ -151,7 +152,14 @@ namespace MeshMakerNS
             vl.Add(CadVertex.Create(0, -r, 0));
 
 
-            return CreateRotatingBody(slices1, vl);
+            CadMesh mesh = CreateRotatingBody(slices1, vl);
+
+            for (int i=0; i<mesh.VertexStore.Count; i++)
+            {
+                mesh.VertexStore.Ref(i).vector += pos;
+            }
+
+            return mesh;
         }
 
 
@@ -287,7 +295,7 @@ namespace MeshMakerNS
             return mesh;
         }
 
-        public static CadMesh CreateExtruded(VertexList src, CadVertex dv, int div = 0)
+        public static CadMesh CreateExtruded(VertexList src, Vector3d dv, int div = 0)
         {
             if (src.Count < 3)
             {
@@ -298,7 +306,7 @@ namespace MeshMakerNS
 
             VertexList vl;
 
-            CadVertex n = CadUtil.RepresentativeNormal(src);
+            Vector3d n = CadUtil.TypicalNormal(src);
 
 
             if (CadMath.InnerProduct(n, dv) <= 0)
@@ -317,9 +325,9 @@ namespace MeshMakerNS
 
             CadFace f;
 
-            CadVertex dt = dv / div;
+            Vector3d dt = dv / div;
 
-            CadVertex sv = CadVertex.Zero;
+            Vector3d sv = Vector3d.Zero;
 
             // 頂点リスト作成
             for (int i = 0; i < div + 1; i++)

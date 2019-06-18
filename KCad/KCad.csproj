@@ -198,21 +198,24 @@
     <Compile Include="Controls\PopupEx.cs" />
     <Compile Include="GLUtil\FontFaceW.cs" />
     <Compile Include="GLUtil\FrameBufferW.cs" />
+    <Compile Include="plotter\Controller\PlotterController_print.cs" />
+    <Compile Include="plotter\Controller\SnapInfo.cs" />
     <Compile Include="plotter\DrawContext\PrintColors.cs" />
     <Compile Include="plotter\DrawContext\DarkColors.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGLOrtho.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGLPers.cs" />
     <Compile Include="plotter\HalfEdge\HeModelBuilder.cs" />
     <Compile Include="plotter\HalfEdge\HeModelConverter.cs" />
-    <Compile Include="plotter\Math\CadMath_Vector3d.cs" />
-    <Compile Include="plotter\Math\CadMath_CadVertex.cs" />
+    <Compile Include="plotter\Math\CadMath_2.cs" />
     <Compile Include="plotter\searcher\MarkPoint.cs" />
     <Compile Include="plotter\searcher\MarkSegment.cs" />
-    <Compile Include="plotter\Serializer\CadMessagePack_v1000.cs" />
-    <Compile Include="plotter\Serializer\CadMessagePack_v1001.cs" />
     <Compile Include="plotter\Serializer\MpUtil.cs" />
-    <Compile Include="plotter\Util\CadVertexUtil.cs" />
-    <Compile Include="plotter\Util\VectorExtentions.cs" />
+    <Compile Include="plotter\Serializer\v1002\CadMessagePack_v1002.cs" />
+    <Compile Include="plotter\Serializer\v1002\MpUtil_v1002.cs" />
+    <Compile Include="plotter\Serializer\v1001\CadMessagePack_v1001.cs" />
+    <Compile Include="plotter\Serializer\v1001\MpUtil_v1001.cs" />
+    <Compile Include="plotter\Util\StackArray.cs" />
+    <Compile Include="plotter\Util\VectorExt.cs" />
     <Compile Include="WIndowsAPI\WindowsAPI.cs" />
     <Compile Include="Dialogs\AngleInputDialog.xaml.cs">
       <DependentUpon>AngleInputDialog.xaml</DependentUpon>
@@ -231,12 +234,12 @@
     <Compile Include="MainView\ContextMenuEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="plotter\Controller\ContextMenuInfo.cs" />
+    <Compile Include="plotter\Controller\ContextMenu\ContextMenuInfo.cs" />
     <Compile Include="plotter\Controller\ControllerConst.cs" />
     <Compile Include="plotter\Controller\HighlightPointListItem.cs" />
     <Compile Include="plotter\Controller\InteractCtrl.cs" />
     <Compile Include="plotter\Controller\PlotterController_action.cs" />
-    <Compile Include="plotter\Controller\PlotterController_context_menu.cs" />
+    <Compile Include="plotter\Controller\ContextMenu\ContextMenuManager.cs" />
     <Compile Include="plotter\Controller\PlotterTaskRunner.cs" />
     <Compile Include="plotter\Controller\PlotterUtil.cs" />
     <Compile Include="plotter\Controller\PlotterClipboard.cs" />

@@ -241,6 +241,27 @@ namespace Plotter
 
         MoveKeyHandler mMoveKeyHandler;
 
+        private string mCurrentFileName = null;
+
+        public string CurrentFileName
+        {
+            get => mCurrentFileName;
+
+            private set
+            {
+                mCurrentFileName = value;
+
+                if (mCurrentFileName != null)
+                {
+                    mMainWindow.FileName.Content = mCurrentFileName;
+                }
+                else
+                {
+                    mMainWindow.FileName.Content = "";
+                }
+            }
+        }
+
         public PlotterViewModel(MainWindow mainWindow)
         {
             mController = new PlotterController();
@@ -277,9 +298,13 @@ namespace Plotter
 
             mController.Observer.ChangeMouseCursor = ChangeMouseCursor;
 
-            LayerListChanged(mController, mController.GetLayerListInfo());
+            //LayerListChanged(mController, mController.GetLayerListInfo());
 
+            mController.UpdateLayerList();
+
+#if USE_GDI_VIEW
             PlotterView1 = new PlotterView();
+#endif
             PlotterViewGL1 = PlotterViewGL.Create();
 
             ViewMode = ViewModes.FRONT;
@@ -570,8 +595,12 @@ namespace Plotter
         {
             CurrentFileName = null;
 
-            PlotterView1.DrawContext.WorldScale = 1.0;
-            PlotterViewGL1.DrawContext.WorldScale = 1.0;
+#if USE_GDI_VIEW
+            //PlotterView1.DrawContext.WorldScale = 1.0;
+            PlotterView1.SetWorldScale(1.0);
+#endif
+            //PlotterViewGL1.DrawContext.WorldScale = 1.0;
+            PlotterViewGL1.SetWorldScale(1.0);
 
             mController.ClearAll();
             Redraw();
@@ -583,6 +612,7 @@ namespace Plotter
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 LoadFile(ofd.FileName);
+                CurrentFileName = ofd.FileName;
             }
         }
 
@@ -603,6 +633,7 @@ namespace Plotter
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 SaveFile(sfd.FileName);
+                CurrentFileName = sfd.FileName;
             }
         }
 
@@ -779,7 +810,7 @@ namespace Plotter
             return -1;
         }
 
-        private void CursorPosChanged(PlotterController sender, CadVertex pt, Plotter.Controller.CursorType type)
+        private void CursorPosChanged(PlotterController sender, Vector3d pt, Plotter.Controller.CursorType type)
         {
             if (type == Plotter.Controller.CursorType.TRACKING)
             {
@@ -960,7 +991,7 @@ namespace Plotter
 
             dlg.Owner = mMainWindow;
 
-            dlg.WorldScale = PlotterView1.DrawContext.WorldScale;
+            dlg.WorldScale = mPlotterView.DrawContext.WorldScale;
 
             bool? result = dlg.ShowDialog();
 
@@ -973,13 +1004,17 @@ namespace Plotter
 
         public void SetWorldScale(double scale)
         {
-            PlotterView1.DrawContext.WorldScale = scale;
-            PlotterViewGL1.DrawContext.WorldScale = scale;
+#if USE_GDI_VIEW
+            //PlotterView1.DrawContext.WorldScale = scale;
+            PlotterView1.SetWorldScale(scale);
+#endif
+            //PlotterViewGL1.DrawContext.WorldScale = scale;
+            PlotterViewGL1.SetWorldScale(scale);
         }
 
-        public void TextLine(string s)
+        public void TextCommand(string s)
         {
-            mController.TextLine(s);
+            mController.TextCommand(s);
         }
 
         private bool ChangeFigureType(CadFigure.Types newType)

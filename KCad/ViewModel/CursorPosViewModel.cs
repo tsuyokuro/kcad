@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -34,9 +35,9 @@ namespace Plotter
             get => mStrCursorPos2;
         }
 
-        private CadVertex mCursorPos;
+        private Vector3d mCursorPos;
 
-        public CadVertex CursorPos
+        public Vector3d CursorPos
         {
             set
             {
@@ -56,9 +57,9 @@ namespace Plotter
             get => mCursorPos;
         }
 
-        private CadVertex mCursorPos2;
+        private Vector3d mCursorPos2;
 
-        public CadVertex CursorPos2
+        public Vector3d CursorPos2
         {
             set
             {

@@ -1,4 +1,5 @@
 ﻿using CadDataTypes;
+using OpenTK;
 using System.Collections.Generic;
 
 namespace Plotter.Controller
@@ -46,8 +47,9 @@ namespace Plotter.Controller
     {
         public DrawContext DC;
 
-        public CadVertex CursorScrPt;
-        public CadVertex CursorWorldPt;
+        public Vector3d CursorScrPt;
+        public Vector3d CursorWorldPt;
+
         public CadCursor Cursor;
 
         public bool PointSelected;

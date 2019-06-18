@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CadDataTypes;
 using OpenTK;
+using Plotter.Serializer.v1001;
 
 namespace Plotter
 {
@@ -41,46 +42,23 @@ namespace Plotter
 
         public void StoreBefore(CadFigure fig)
         {
-            MpFigure_v1001 mpfig = MpFigure_v1001.Create(fig);
-            Before = LZ4MessagePackSerializer.Serialize(mpfig);
-
+            Before = MpUtil.FigToLz4Bin(fig);
             FigureID = fig.ID;
         }
 
         public void StoreAfter(CadFigure fig)
         {
-            MpFigure_v1001 mpfig = MpFigure_v1001.Create(fig);
-            After = LZ4MessagePackSerializer.Serialize(mpfig);
+            After = MpUtil.FigToLz4Bin(fig);
         }
 
         public override void Undo(CadObjectDB db)
         {
-            MpFigure_v1001 mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure_v1001>(Before);
-
-            CadFigure fig = db.GetFigure(mpfig.ID);
-
-            mpfig.RestoreTo(fig);
-
-            SetChildren(fig, mpfig.ChildIdList, db);
+            MpUtil.Lz4BinRestoreFig(Before, db);
         }
 
         public override void Redo(CadObjectDB db)
         {
-            MpFigure_v1001 mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure_v1001>(After);
-
-            CadFigure fig = db.GetFigure(mpfig.ID);
-
-            mpfig.RestoreTo(fig);
-
-            SetChildren(fig, mpfig.ChildIdList, db);
-        }
-
-        private void SetChildren(CadFigure fig, List<uint> idList, CadObjectDB db)
-        {
-            for (int i=0; i<idList.Count; i++)
-            {
-                fig.AddChild(db.GetFigure(idList[i]));
-            }
+            MpUtil.Lz4BinRestoreFig(After, db);
         }
     }
 

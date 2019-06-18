@@ -7,26 +7,6 @@ namespace Plotter
 {
     public partial class PlotterViewModel : INotifyPropertyChanged
     {
-        private string mCurrentFileName = null;
-
-        public string CurrentFileName
-        {
-            get => mCurrentFileName;
-
-            private set
-            {
-                mCurrentFileName = value;
-
-                if (mCurrentFileName != null)
-                {
-                    mMainWindow.Title = "KCad " + mCurrentFileName;
-                }
-                else
-                {
-                    mMainWindow.Title = "KCad";
-                }
-            }
-        }
 
         private void SaveFile(string fname)
         {
@@ -63,8 +43,6 @@ namespace Plotter
                                 );
 
             MpCadFile.Save(fname, cd);
-
-            CurrentFileName = fname;
         }
 
         private void LoadFromMsgPackFile(string fname)
@@ -84,8 +62,6 @@ namespace Plotter
             mController.PageSize = rcd.PageSize;
 
             mController.SetDB(rcd.DB);
-
-            CurrentFileName = fname;
         }
 
 
@@ -98,8 +74,6 @@ namespace Plotter
 
 
             MpCadFile.SaveAsJson(fname, cd);
-
-            CurrentFileName = fname;
         }
 
         private void LoadFromMsgPackJsonFile(string fname)
@@ -118,8 +92,6 @@ namespace Plotter
             mController.PageSize = rcd.PageSize;
 
             mController.SetDB(rcd.DB);
-
-            CurrentFileName = fname;
         }
         #endregion
     }

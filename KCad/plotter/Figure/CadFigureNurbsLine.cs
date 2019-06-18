@@ -2,6 +2,8 @@
 using SplineCurve;
 using Plotter.Serializer;
 using Newtonsoft.Json.Linq;
+using OpenTK;
+using Plotter.Serializer.v1001;
 
 namespace Plotter
 {
@@ -34,12 +36,12 @@ namespace Plotter
 
 
         #region Point Move
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             base.MoveSelectedPointsFromStored(dc, delta);
         }
 
-        public override void MoveAllPoints(CadVertex delta)
+        public override void MoveAllPoints(Vector3d delta)
         {
             if (Locked) return;
 
@@ -96,7 +98,7 @@ namespace Plotter
             {
                 n = PointList[i];
                 dc.Drawing.DrawLine(
-                    dc.GetPen(DrawTools.PEN_NURBS_CTRL_LINE), c, n);
+                    dc.GetPen(DrawTools.PEN_NURBS_CTRL_LINE), c.vector, n.vector);
 
                 c = n;
             }
@@ -115,7 +117,7 @@ namespace Plotter
             for (int i=1; i< NurbsPointList.Count; i++)
             {
                 n = NurbsPointList[i];
-                dc.Drawing.DrawLine(pen, c, n);
+                dc.Drawing.DrawLine(pen, c.vector, n.vector);
 
                 c = n;
             }
@@ -138,21 +140,44 @@ namespace Plotter
             RecalcNormal();
         }
 
-        public override MpGeometricData GeometricDataToMp()
+        public override MpGeometricData_v1001 GeometricDataToMp_v1001()
         {
-            MpNurbsLineGeometricData geo = new MpNurbsLineGeometricData();
-            geo.Nurbs = MpNurbsLine.Create(Nurbs);
+            MpNurbsLineGeometricData_v1001 geo = new MpNurbsLineGeometricData_v1001();
+            geo.Nurbs = MpNurbsLine_v1001.Create(Nurbs);
             return geo;
         }
 
-        public override void GeometricDataFromMp(MpGeometricData geo)
+        public override void GeometricDataFromMp_v1001(MpGeometricData_v1001 geo)
         {
-            if (!(geo is MpNurbsLineGeometricData))
+            if (!(geo is MpNurbsLineGeometricData_v1001))
             {
                 return;
             }
 
-            MpNurbsLineGeometricData g = (MpNurbsLineGeometricData)geo;
+            MpNurbsLineGeometricData_v1001 g = (MpNurbsLineGeometricData_v1001)geo;
+
+            Nurbs = g.Nurbs.Restore();
+
+            mPointList = Nurbs.CtrlPoints;
+
+            NurbsPointList = new VertexList(Nurbs.OutCnt);
+        }
+
+        public override MpGeometricData_v1002 GeometricDataToMp_v1002()
+        {
+            MpNurbsLineGeometricData_v1002 geo = new MpNurbsLineGeometricData_v1002();
+            geo.Nurbs = MpNurbsLine_v1002.Create(Nurbs);
+            return geo;
+        }
+
+        public override void GeometricDataFromMp_v1002(MpGeometricData_v1002 geo)
+        {
+            if (!(geo is MpNurbsLineGeometricData_v1002))
+            {
+                return;
+            }
+
+            MpNurbsLineGeometricData_v1002 g = (MpNurbsLineGeometricData_v1002)geo;
 
             Nurbs = g.Nurbs.Restore();
 

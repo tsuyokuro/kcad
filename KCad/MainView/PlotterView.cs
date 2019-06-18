@@ -59,7 +59,14 @@ namespace Plotter
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
 
+            Disposed += OnDisposed;
+
             SetupCursor();
+        }
+
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            mDrawContext.Dispose();
         }
 
         protected void SetupCursor()
@@ -77,6 +84,11 @@ namespace Plotter
             mDrawContext.Dispose();
 
             base.Dispose(disposing);
+        }
+
+        public void SetWorldScale(double scale)
+        {
+            mDrawContext.WorldScale = scale;
         }
 
         override protected void OnPaintBackground(PaintEventArgs pevent)
@@ -100,7 +112,7 @@ namespace Plotter
 
                     //DOut.pl($"{GetType().Name} onSizeChanged firstChange {Width}, {Height}");
 
-                    mController.SetCursorWoldPos(CadVertex.Zero);
+                    mController.SetCursorWoldPos(Vector3d.Zero);
 
                     firstSizeChange = false;
                 }
@@ -254,7 +266,7 @@ namespace Plotter
 
             if (infoItem != null)
             {
-                mController.ContextMenuEvent(infoItem);
+                mController.ContextMenuMan.ContextMenuEvent(infoItem);
             }
         }
 
