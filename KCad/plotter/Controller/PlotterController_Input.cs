@@ -44,7 +44,7 @@ namespace Plotter.Controller
         // 実際のMouse座標からCross cursorへのOffset
         private Vector3d OffsetScreen = default;
 
-        public Vector3d RubberBandScrnPoint0 = VectorUtil.InvalidVector3d;
+        public Vector3d RubberBandScrnPoint0 = VectorExt.InvalidVector3d;
 
         public Vector3d RubberBandScrnPoint1 = default;
 
@@ -154,7 +154,7 @@ namespace Plotter.Controller
         {
             SelectContext sc = default;
 
-            ObjDownPoint = VectorUtil.InvalidVector3d;
+            ObjDownPoint = VectorExt.InvalidVector3d;
 
             RulerSet.Clear();
 
@@ -601,8 +601,8 @@ namespace Plotter.Controller
             LastSelPoint = null;
             LastSelSegment = null;
 
-            Vector3d minp = VectorUtil.Min(p0, p1);
-            Vector3d maxp = VectorUtil.Max(p0, p1);
+            Vector3d minp = VectorExt.Min(p0, p1);
+            Vector3d maxp = VectorExt.Max(p0, p1);
 
             DB.WalkEditable(
                 (layer, fig) =>

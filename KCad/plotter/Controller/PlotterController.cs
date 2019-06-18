@@ -130,7 +130,7 @@ namespace Plotter.Controller
 
             mPlotterTaskRunner = new PlotterTaskRunner(this);
 
-            ObjDownPoint = VectorUtil.InvalidVector3d;
+            ObjDownPoint = VectorExt.InvalidVector3d;
 
             InitHid();
         }

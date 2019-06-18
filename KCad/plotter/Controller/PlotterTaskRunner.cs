@@ -211,7 +211,7 @@ namespace Plotter.Controller.TaskRunner
                 ClosePopupMessage();
                 ItConsole.println("Cancel!");
                 return (
-                    VectorUtil.InvalidVector3d,
+                    VectorExt.InvalidVector3d,
                     InteractCtrl.States.CANCEL);
             }
 
@@ -243,8 +243,8 @@ namespace Plotter.Controller.TaskRunner
                 ClosePopupMessage();
                 ItConsole.println("Cancel!");
                 return (
-                    VectorUtil.InvalidVector3d,
-                    VectorUtil.InvalidVector3d,
+                    VectorExt.InvalidVector3d,
+                    VectorExt.InvalidVector3d,
                     InteractCtrl.States.CANCEL);
             }
 
@@ -261,8 +261,8 @@ namespace Plotter.Controller.TaskRunner
                 ClosePopupMessage();
                 ItConsole.println("Cancel!");
                 return (
-                    VectorUtil.InvalidVector3d,
-                    VectorUtil.InvalidVector3d,
+                    VectorExt.InvalidVector3d,
+                    VectorExt.InvalidVector3d,
                     InteractCtrl.States.CANCEL);
             }
 

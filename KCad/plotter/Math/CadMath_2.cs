@@ -518,7 +518,7 @@ namespace Plotter
                 //DebugOut.Std.println("CrossPlane is parallel");
 
                 // 平面と直線は平行
-                return VectorUtil.InvalidVector3d;
+                return VectorExt.InvalidVector3d;
             }
 
             double d = CadMath.InnerProduct(normal, p);
@@ -544,17 +544,17 @@ namespace Plotter
 
             if (!cp.IsValid())
             {
-                return VectorUtil.InvalidVector3d;
+                return VectorExt.InvalidVector3d;
             }
 
             if (CadMath.InnerProduct((b - a), (cp - a)) < 0)
             {
-                return VectorUtil.InvalidVector3d;
+                return VectorExt.InvalidVector3d;
             }
 
             if (CadMath.InnerProduct((a - b), (cp - b)) < 0)
             {
-                return VectorUtil.InvalidVector3d;
+                return VectorExt.InvalidVector3d;
             }
 
             return cp;
@@ -632,14 +632,14 @@ namespace Plotter
 
             if (a.IsZero() || b.IsZero())
             {
-                return VectorUtil.InvalidVector3d;
+                return VectorExt.InvalidVector3d;
             }
 
             double cpBA = CadMath.CrossProduct2D(b, a);
 
             if (cpBA == 0)
             {
-                return VectorUtil.InvalidVector3d;
+                return VectorExt.InvalidVector3d;
             }
 
             return a1 + a * CadMath.CrossProduct2D(b, b1 - a1) / cpBA;

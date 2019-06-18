@@ -123,8 +123,8 @@ namespace Plotter
 
         public void Clean()
         {
-            CrossPoint = VectorUtil.InvalidVector3d;
-            CrossPointScrn = VectorUtil.InvalidVector3d;
+            CrossPoint = VectorExt.InvalidVector3d;
+            CrossPointScrn = VectorExt.InvalidVector3d;
         }
 
         public bool IsSelected()

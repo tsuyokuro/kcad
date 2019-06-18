@@ -1375,7 +1375,7 @@ namespace Plotter.Controller
             {
                 Env.ClosePopupMessage();
                 ItConsole.println("Cancel!");
-                return VectorUtil.InvalidVector3d;
+                return VectorExt.InvalidVector3d;
             }
 
             Vector3d p = ctrl.PointList[0];
@@ -1408,7 +1408,7 @@ namespace Plotter.Controller
             {
                 ctrl.End();
                 ItConsole.println("Cancel!");
-                return VectorUtil.InvalidVector3d;
+                return VectorExt.InvalidVector3d;
             }
 
             Vector3d p0 = ctrl.PointList[0];
@@ -1422,7 +1422,7 @@ namespace Plotter.Controller
             {
                 ctrl.End();
                 ItConsole.println("Cancel!");
-                return VectorUtil.InvalidVector3d;
+                return VectorExt.InvalidVector3d;
             }
 
             Vector3d p1 = Controller.mInteractCtrl.PointList[1];

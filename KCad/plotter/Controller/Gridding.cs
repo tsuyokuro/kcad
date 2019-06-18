@@ -36,11 +36,11 @@ namespace Plotter
 
         public void Clear()
         {
-            XMatchU = VectorUtil.InvalidVector3d;
-            YMatchU = VectorUtil.InvalidVector3d;
+            XMatchU = VectorExt.InvalidVector3d;
+            YMatchU = VectorExt.InvalidVector3d;
 
-            XMatchW = VectorUtil.InvalidVector3d;
-            YMatchW = VectorUtil.InvalidVector3d;
+            XMatchW = VectorExt.InvalidVector3d;
+            YMatchW = VectorExt.InvalidVector3d;
         }
 
         public void CopyFrom(Gridding g)

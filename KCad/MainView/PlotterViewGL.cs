@@ -3,13 +3,11 @@
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using System;
-using System.Windows.Forms;
-using CadDataTypes;
 using Plotter.Controller;
+using System;
 using System.Drawing;
+using System.Windows.Forms;
 using System.Windows.Resources;
-using KCad;
 
 namespace Plotter
 {
@@ -178,7 +176,7 @@ namespace Plotter
             }
             else
             {
-                VectorUtil.Set(out PrevMousePos, e.X, e.Y, 0);
+                VectorExt.Set(out PrevMousePos, e.X, e.Y, 0);
                 DownButton = e.Button;
 
                 if (DownButton != MouseButtons.Middle)
@@ -296,7 +294,8 @@ namespace Plotter
 
         public void Redraw()
         {
-            ThreadUtil.RunOnMainThread(()=>{
+            ThreadUtil.RunOnMainThread(() =>
+            {
                 mController.Redraw(mController.CurrentDC);
             }, wait: false);
         }
@@ -428,7 +427,8 @@ namespace Plotter
 
         public void ShowContextMenu(PlotterController sender, MenuInfo menuInfo, int x, int y)
         {
-            ThreadUtil.RunOnMainThread(() => {
+            ThreadUtil.RunOnMainThread(() =>
+            {
                 ShowContextMenuProc(sender, menuInfo, x, y);
             }, true);
         }

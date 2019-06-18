@@ -113,7 +113,7 @@ namespace Plotter
                 return;
             }
 
-            Vector3d p = VectorUtil.InvalidVector3d;
+            Vector3d p = VectorExt.InvalidVector3d;
             double mind = Double.MaxValue;
 
             StackArray<Vector3d> vtbl = default;
