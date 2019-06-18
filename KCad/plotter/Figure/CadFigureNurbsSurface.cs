@@ -7,6 +7,7 @@ using CadDataTypes;
 using SplineCurve;
 using Plotter.Serializer;
 using Newtonsoft.Json.Linq;
+using Plotter.Serializer.v1001;
 
 namespace Plotter
 {
@@ -40,14 +41,14 @@ namespace Plotter
         }
 
 
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             base.MoveSelectedPointsFromStored(dc, delta);
 
             NeedsEval = true;
         }
 
-        public override void MoveAllPoints(CadVertex delta)
+        public override void MoveAllPoints(Vector3d delta)
         {
             if (Locked) return;
 
@@ -125,7 +126,7 @@ namespace Plotter
 
                 if (p0.Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(p0, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                    dc.Drawing.DrawSelectedPoint(p0.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }
@@ -143,7 +144,7 @@ namespace Plotter
             for (int u = 1; u < ucnt; u++)
             {
                 p1 = mPointList[u];
-                dc.Drawing.DrawLine(pen, p0, p1);
+                dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 p0 = p1;
             }
 
@@ -152,7 +153,7 @@ namespace Plotter
             for (int v = 1; v < vcnt; v++)
             {
                 p1 = mPointList[ucnt * v];
-                dc.Drawing.DrawLine(pen, p0, p1);
+                dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 p0 = p1;
             }
 
@@ -163,12 +164,12 @@ namespace Plotter
                     p0 = mPointList[ucnt * v + u - 1];
                     p1 = mPointList[ucnt * v + u];
 
-                    dc.Drawing.DrawLine(pen, p0, p1);
+                    dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
 
                     p0 = mPointList[ucnt * (v - 1) + u];
                     p1 = mPointList[ucnt * v + u];
 
-                    dc.Drawing.DrawLine(pen, p0, p1);
+                    dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 }
             }
         }
@@ -194,7 +195,7 @@ namespace Plotter
             for (int u = 1; u < ucnt; u++)
             {
                 p1 = NurbsPointList[u];
-                dc.Drawing.DrawLine(pen, p0, p1);
+                dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 p0 = p1;
             }
 
@@ -203,7 +204,7 @@ namespace Plotter
             for (int v = 1; v < vcnt; v++)
             {
                 p1 = NurbsPointList[ucnt * v];
-                dc.Drawing.DrawLine(pen, p0, p1);
+                dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 p0 = p1;
             }
 
@@ -214,12 +215,12 @@ namespace Plotter
                     p0 = NurbsPointList[ucnt * v + u - 1];
                     p1 = NurbsPointList[ucnt * v + u];
 
-                    dc.Drawing.DrawLine(pen, p0, p1);
+                    dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
 
                     p0 = NurbsPointList[ucnt * (v - 1) + u];
                     p1 = NurbsPointList[ucnt * v + u];
 
-                    dc.Drawing.DrawLine(pen, p0, p1);
+                    dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
                 }
             }
         }
@@ -240,21 +241,46 @@ namespace Plotter
             RecalcNormal();
         }
 
-        public override MpGeometricData GeometricDataToMp()
+        public override MpGeometricData_v1001 GeometricDataToMp_v1001()
         {
-            MpNurbsSurfaceGeometricData geo = new MpNurbsSurfaceGeometricData();
-            geo.Nurbs = MpNurbsSurface.Create(Nurbs);
+            MpNurbsSurfaceGeometricData_v1001 geo = new MpNurbsSurfaceGeometricData_v1001();
+            geo.Nurbs = MpNurbsSurface_v1001.Create(Nurbs);
             return geo;
         }
 
-        public override void GeometricDataFromMp(MpGeometricData geo)
+        public override void GeometricDataFromMp_v1001(MpGeometricData_v1001 geo)
         {
-            if (!(geo is MpNurbsSurfaceGeometricData))
+            if (!(geo is MpNurbsSurfaceGeometricData_v1001))
             {
                 return;
             }
 
-            MpNurbsSurfaceGeometricData g = (MpNurbsSurfaceGeometricData)geo;
+            MpNurbsSurfaceGeometricData_v1001 g = (MpNurbsSurfaceGeometricData_v1001)geo;
+
+            Nurbs = g.Nurbs.Restore();
+
+            mPointList = Nurbs.CtrlPoints;
+
+            NurbsPointList = new VertexList(Nurbs.UOutCnt * Nurbs.VOutCnt);
+
+            NeedsEval = true;
+        }
+
+        public override MpGeometricData_v1002 GeometricDataToMp_v1002()
+        {
+            MpNurbsSurfaceGeometricData_v1002 geo = new MpNurbsSurfaceGeometricData_v1002();
+            geo.Nurbs = MpNurbsSurface_v1002.Create(Nurbs);
+            return geo;
+        }
+
+        public override void GeometricDataFromMp_v1002(MpGeometricData_v1002 geo)
+        {
+            if (!(geo is MpNurbsSurfaceGeometricData_v1002))
+            {
+                return;
+            }
+
+            MpNurbsSurfaceGeometricData_v1002 g = (MpNurbsSurfaceGeometricData_v1002)geo;
 
             Nurbs = g.Nurbs.Restore();
 

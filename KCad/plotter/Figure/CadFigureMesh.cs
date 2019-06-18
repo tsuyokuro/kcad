@@ -1,14 +1,9 @@
-﻿using HalfEdgeNS;
+﻿using CadDataTypes;
+using HalfEdgeNS;
 using MyCollections;
-using Newtonsoft.Json.Linq;
-using OpenTK;
-using Plotter.Serializer;
+using Plotter.Serializer.v1001;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CadDataTypes;
 
 namespace Plotter
 {
@@ -134,8 +129,46 @@ namespace Plotter
 
         public override void Draw(DrawContext dc, DrawPen pen)
         {
+            DrawBrush brush;
+
+            if (SettingsHolder.Settings.FillMesh)
+            {
+                brush = dc.GetBrush(DrawTools.BRUSH_DEFAULT_MESH_FILL);
+            }
+            else
+            {
+                brush = DrawBrush.NullBrush;
+            }
+
+            DrawPen borderPen;
+            DrawPen edgePen;
+
+            if (SettingsHolder.Settings.DrawMeshEdge)
+            {
+                if (pen.ID == DrawTools.PEN_FIGURE_HIGHLIGHT)
+                {
+                    borderPen = pen;
+                }
+                else
+                {
+                    borderPen = dc.GetPen(DrawTools.PEN_MESH_LINE);
+                }
+
+                edgePen = pen;
+            }
+            else
+            {
+                borderPen = DrawPen.NullPen;
+                edgePen = DrawPen.NullPen;
+            }
+
+
             dc.Drawing.DrawHarfEdgeModel(
-                dc.GetPen(DrawTools.PEN_MESH_LINE), pen, EDGE_THRESHOLD, mHeModel);
+                brush,
+                borderPen,
+                edgePen,
+                EDGE_THRESHOLD,
+                mHeModel);
         }
 
         public override void DrawSelected(DrawContext dc, DrawPen pen)
@@ -164,7 +197,7 @@ namespace Plotter
 
                 if (!p.Selected) continue;
 
-                dc.Drawing.DrawSelectedPoint(p, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                dc.Drawing.DrawSelectedPoint(p.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
             }
         }
 
@@ -193,12 +226,12 @@ namespace Plotter
                 int i2 = he.Next.Next.Vertex;
 
                 ct.set(
-                    mHeModel.VertexStore[i0],
-                    mHeModel.VertexStore[i1],
-                    mHeModel.VertexStore[i2]
+                    mHeModel.VertexStore[i0].vector,
+                    mHeModel.VertexStore[i1].vector,
+                    mHeModel.VertexStore[i2].vector
                     );
 
-                cent = CadUtil.MergeCentroid(cent, ct);
+                cent = cent.Merge(ct);
             }
 
             return cent;
@@ -209,22 +242,44 @@ namespace Plotter
             mHeModel.InvertAllFace();
         }
 
-        public override MpGeometricData GeometricDataToMp()
+        public override MpGeometricData_v1001 GeometricDataToMp_v1001()
         {
-            MpMeshGeometricData mpGeo = new MpMeshGeometricData();
-            mpGeo.HeModel = MpHeModel.Create(mHeModel);
+            MpMeshGeometricData_v1001 mpGeo = new MpMeshGeometricData_v1001();
+            mpGeo.HeModel = MpHeModel_v1001.Create(mHeModel);
 
             return mpGeo;
         }
 
-        public override void GeometricDataFromMp(MpGeometricData mpGeo)
+        public override void GeometricDataFromMp_v1001(MpGeometricData_v1001 mpGeo)
         {
-            if (!(mpGeo is MpMeshGeometricData))
+            if (!(mpGeo is MpMeshGeometricData_v1001))
             {
                 return;
             }
 
-            MpMeshGeometricData meshGeo = (MpMeshGeometricData)mpGeo;
+            MpMeshGeometricData_v1001 meshGeo = (MpMeshGeometricData_v1001)mpGeo;
+
+            mHeModel = meshGeo.HeModel.Restore();
+
+            mPointList = mHeModel.VertexStore;
+        }
+
+        public override MpGeometricData_v1002 GeometricDataToMp_v1002()
+        {
+            MpMeshGeometricData_v1002 mpGeo = new MpMeshGeometricData_v1002();
+            mpGeo.HeModel = MpHeModel_v1002.Create(mHeModel);
+
+            return mpGeo;
+        }
+
+        public override void GeometricDataFromMp_v1002(MpGeometricData_v1002 mpGeo)
+        {
+            if (!(mpGeo is MpMeshGeometricData_v1002))
+            {
+                return;
+            }
+
+            MpMeshGeometricData_v1002 meshGeo = (MpMeshGeometricData_v1002)mpGeo;
 
             mHeModel = meshGeo.HeModel.Restore();
 

@@ -3,13 +3,11 @@
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using System;
-using System.Windows.Forms;
-using CadDataTypes;
 using Plotter.Controller;
+using System;
 using System.Drawing;
+using System.Windows.Forms;
 using System.Windows.Resources;
-using KCad;
 
 namespace Plotter
 {
@@ -19,7 +17,7 @@ namespace Plotter
 
         private PlotterController mController = null;
 
-        CadVertex PrevMousePos = default(CadVertex);
+        Vector3d PrevMousePos = default;
 
         MouseButtons DownButton = MouseButtons.None;
 
@@ -77,12 +75,19 @@ namespace Plotter
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
 
+            Disposed += OnDisposed;
+
             SetupCursor();
 
 #if MOUSE_THREAD
             mEventSequencer = new MyEventSequencer(this, 100);
             mEventSequencer.Start();
 #endif
+        }
+
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            mDrawContext.Dispose();
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -171,7 +176,7 @@ namespace Plotter
             }
             else
             {
-                PrevMousePos.Set(e.X, e.Y, 0);
+                VectorExt.Set(out PrevMousePos, e.X, e.Y, 0);
                 DownButton = e.Button;
 
                 if (DownButton != MouseButtons.Middle)
@@ -257,7 +262,7 @@ namespace Plotter
 
                 if (DownButton == MouseButtons.Middle)
                 {
-                    CadVertex t = CadVertex.Create(e.X, e.Y, 0);
+                    Vector3d t = new Vector3d(e.X, e.Y, 0);
 
                     Vector2 prev = default(Vector2);
 
@@ -289,7 +294,8 @@ namespace Plotter
 
         public void Redraw()
         {
-            ThreadUtil.RunOnMainThread(()=>{
+            ThreadUtil.RunOnMainThread(() =>
+            {
                 mController.Redraw(mController.CurrentDC);
             }, wait: false);
         }
@@ -319,7 +325,7 @@ namespace Plotter
 
                 mDrawContext.SetViewOrg(org);
 
-                mController.SetCursorWoldPos(CadVertex.Zero);
+                mController.SetCursorWoldPos(Vector3d.Zero);
             }
 
             sizeChangeCnt++;
@@ -415,13 +421,14 @@ namespace Plotter
 
             if (infoItem != null)
             {
-                mController.ContextMenuEvent(infoItem);
+                mController.ContextMenuMan.ContextMenuEvent(infoItem);
             }
         }
 
         public void ShowContextMenu(PlotterController sender, MenuInfo menuInfo, int x, int y)
         {
-            ThreadUtil.RunOnMainThread(() => {
+            ThreadUtil.RunOnMainThread(() =>
+            {
                 ShowContextMenuProc(sender, menuInfo, x, y);
             }, true);
         }
@@ -443,6 +450,11 @@ namespace Plotter
             mCurrentContextMenu.Show(this, new Point(x, y));
         }
 
+        public void SetWorldScale(double scale)
+        {
+            mDrawContextPers.WorldScale = scale;
+            mDrawContextOrtho.WorldScale = scale;
+        }
 
         class MyEvent : EventSequencer<MyEvent>.Event
         {

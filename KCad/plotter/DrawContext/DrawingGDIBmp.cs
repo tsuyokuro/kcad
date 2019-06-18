@@ -3,12 +3,10 @@
  * 
  */
 
-using HalfEdgeNS;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -26,11 +24,11 @@ namespace Plotter
 
         public override void DrawGrid(Gridding grid)
         {
-            CadVertex lt = CadVertex.Zero;
-            CadVertex rb = CadVertex.Create(DC.ViewWidth, DC.ViewHeight, 0);
+            Vector3d lt = Vector3d.Zero;
+            Vector3d rb = new Vector3d(DC.ViewWidth, DC.ViewHeight, 0);
 
-            CadVertex ltw = DC.DevPointToWorldPoint(lt);
-            CadVertex rbw = DC.DevPointToWorldPoint(rb);
+            Vector3d ltw = DC.DevPointToWorldPoint(lt);
+            Vector3d rbw = DC.DevPointToWorldPoint(rb);
 
             double minx = Math.Min(ltw.X, rbw.X);
             double maxx = Math.Max(ltw.X, rbw.X);
@@ -77,8 +75,8 @@ namespace Plotter
             double y;
             double z;
 
-            CadVertex p = default(CadVertex);
-            CadVertex up = default(CadVertex);
+            Vector3d p = default;
+            Vector3d up = default;
 
 
             Bitmap tgt = BmpDC.Image;
@@ -167,9 +165,9 @@ namespace Plotter
             BmpDC.UnlockBits();
         }
 
-        public override void DrawDot(DrawPen pen, CadVertex p)
+        public override void DrawDot(DrawPen pen, Vector3d p)
         {
-            CadVertex p0 = DC.WorldPointToDevPoint(p);
+            Vector3d p0 = DC.WorldPointToDevPoint(p);
 
             if (p0.X >= 0 && p0.Y >= 0 && p0.X < DC.ViewWidth && p0.Y < DC.ViewHeight)
             {

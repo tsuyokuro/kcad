@@ -1,204 +1,132 @@
-﻿using HalfEdgeNS;
-using MyCollections;
+﻿using MessagePack;
+using Plotter.Serializer.v1001;
 using System;
 using System.Collections.Generic;
-using CadDataTypes;
-
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Plotter.Serializer
 {
-    public partial class MpUtil
+    public class MpUtil
     {
-        public static List<MpVertex> VertexListToMp(VertexList v)
+        public static byte[] FigListToBin(List<CadFigure> figList)
         {
-            List<MpVertex> ret = new List<MpVertex>();
-            for (int i=0; i<v.Count; i++)
-            {
-                ret.Add(MpVertex.Create(v[i]));
-            }
+            List<MpFigure_v1002> mpfigList = MpUtil_v1002.FigureListToMp_v1002(figList, true);
 
-            return ret;
+            byte[] bin = MessagePackSerializer.Serialize(mpfigList);
+
+            return bin;
         }
 
-        public static List<uint> FigureListToIdList(List<CadFigure> figList )
+        public static List<CadFigure> BinToFigList(byte[] bin)
         {
-            List<uint> ret = new List<uint>();
-            for (int i = 0; i < figList.Count; i++)
-            {
-                ret.Add(figList[i].ID);
-            }
+            List<MpFigure_v1002> mpfigList = MessagePackSerializer.Deserialize<List<MpFigure_v1002>>(bin);
 
-            return ret;
+            List<CadFigure> figList = MpUtil_v1002.FigureListFromMp_v1002(mpfigList);
+
+            return figList;
         }
 
-        public static VertexList VertexListFromMp(List<MpVertex> list)
+        public static byte[] FigToBin(CadFigure fig, bool withChild)
         {
-            VertexList ret = new VertexList(list.Count);
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(list[i].Restore());
-            }
-
-            return ret;
+            MpFigure_v1002 mpf = MpFigure_v1002.Create(fig, withChild);
+            return MessagePackSerializer.Serialize(mpf);
         }
 
-        public static List<MpVector3d> Vector3dListToMp(Vector3dList v)
+        public static CadFigure BinToFig(byte[] bin, CadObjectDB db = null)
         {
-            List<MpVector3d> ret = new List<MpVector3d>();
-            for (int i = 0; i < v.Count; i++)
+            MpFigure_v1002 mpfig = MessagePackSerializer.Deserialize<MpFigure_v1002>(bin);
+            CadFigure fig = mpfig.Restore();
+
+            if (db != null)
             {
-                ret.Add(MpVector3d.Create(v[i]));
+                SetChildren(fig, mpfig.ChildIdList, db);
             }
 
-            return ret;
+            return fig;
         }
 
-        public static Vector3dList Vector3dListFromMp(List<MpVector3d> list)
+        public static void BinRestoreFig(byte[] bin, CadFigure fig, CadObjectDB db = null)
         {
-            Vector3dList ret = new Vector3dList(list.Count);
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(list[i].Restore());
-            }
+            MpFigure_v1002 mpfig = MessagePackSerializer.Deserialize<MpFigure_v1002>(bin);
+            mpfig.RestoreTo(fig);
 
-            return ret;
+            SetChildren(fig, mpfig.ChildIdList, db);
         }
 
-        public static List<MpFigure_v1000> FigureListToMp_v1000(List<CadFigure> figList, bool withChild=false)
+        public static void BinRestoreFig(byte[] bin, CadObjectDB db = null)
         {
-            List<MpFigure_v1000> ret = new List<MpFigure_v1000>();
-            for (int i = 0; i < figList.Count; i++)
+            if (db == null)
             {
-                ret.Add(MpFigure_v1000.Create(figList[i], withChild));
+                return;
             }
 
-            return ret;
-        }
+            MpFigure_v1002 mpfig = MessagePackSerializer.Deserialize<MpFigure_v1002>(bin);
 
-        public static List<MpFigure_v1001> FigureListToMp_1001(List<CadFigure> figList, bool withChild = false)
-        {
-            List<MpFigure_v1001> ret = new List<MpFigure_v1001>();
-            for (int i = 0; i < figList.Count; i++)
-            {
-                ret.Add(MpFigure_v1001.Create(figList[i], withChild));
-            }
+            CadFigure fig = db.GetFigure(mpfig.ID);
 
-            return ret;
-        }
+            mpfig.RestoreTo(fig);
 
-        public static List<CadFigure> FigureListFromMp_v1000(List<MpFigure_v1000> list)
-        {
-            List<CadFigure> ret = new List<CadFigure>();
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(list[i].Restore());
-            }
-
-            return ret;
-        }
-
-        public static List<CadFigure> FigureListFromMp_1001(List<MpFigure_v1001> list)
-        {
-            List<CadFigure> ret = new List<CadFigure>();
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(list[i].Restore());
-            }
-
-            return ret;
-        }
-
-        public static List<MpFigure_v1000> FigureMapToMp_v1000(
-            Dictionary<uint, CadFigure> figMap, bool withChild = false)
-        {
-            List<MpFigure_v1000> ret = new List<MpFigure_v1000>();
-            foreach (CadFigure fig in figMap.Values)
-            {
-                ret.Add(MpFigure_v1000.Create(fig, withChild));
-            }
-
-            return ret;
-        }
-
-        public static List<MpFigure_v1001> FigureMapToMp_1001(
-            Dictionary<uint, CadFigure> figMap, bool withChild = false)
-        {
-            List<MpFigure_v1001> ret = new List<MpFigure_v1001>();
-            foreach (CadFigure fig in figMap.Values)
-            {
-                ret.Add(MpFigure_v1001.Create(fig, withChild));
-            }
-
-            return ret;
-        }
-
-        public static List<MpHeFace> HeFaceListToMp(FlexArray<HeFace> list)
-        {
-            List<MpHeFace> ret = new List<MpHeFace>();
-            for (int i = 0; i < list.Count; i++)
-            {
-                ret.Add(MpHeFace.Create(list[i]));
-            }
-
-            return ret;
+            SetChildren(fig, mpfig.ChildIdList, db);
         }
 
 
-        public static List<MpLayer> LayerListToMp(List<CadLayer> src)
+        #region LZ4
+        public static byte[] FigToLz4Bin(CadFigure fig, bool withChild = false)
         {
-            List<MpLayer> ret = new List<MpLayer>();
-            for (int i = 0; i < src.Count; i++)
-            {
-                ret.Add(MpLayer.Create(src[i]));
-            }
-
-            return ret;
+            MpFigure_v1002 mpf = MpFigure_v1002.Create(fig, withChild);
+            return LZ4MessagePackSerializer.Serialize(mpf);
         }
 
-        public static List<CadLayer> LayerListFromMp(
-            List<MpLayer> src, Dictionary<uint, CadFigure> dic)
+        public static CadFigure Lz4BinToFig(byte[] bin, CadObjectDB db = null)
         {
-            List<CadLayer> ret = new List<CadLayer>();
-            for (int i = 0; i < src.Count; i++)
+            MpFigure_v1002 mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure_v1002>(bin);
+            CadFigure fig = mpfig.Restore();
+
+            if (db != null)
             {
-                ret.Add(src[i].Restore(dic));
+                SetChildren(fig, mpfig.ChildIdList, db);
             }
 
-            return ret;
+            return fig;
         }
 
-        public static FlexArray<HeFace> HeFaceListFromMp(
-            List<MpHeFace> list,
-            Dictionary<uint, HalfEdge> dic
-            )
+        public static void Lz4BinRestoreFig(byte[] bin, CadFigure fig, CadObjectDB db = null)
         {
-            FlexArray<HeFace> ret = new FlexArray<HeFace>();
-            for (int i = 0; i < list.Count; i++)
+            MpFigure_v1002 mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure_v1002>(bin);
+            mpfig.RestoreTo(fig);
+
+            SetChildren(fig, mpfig.ChildIdList, db);
+        }
+
+        public static void Lz4BinRestoreFig(byte[] bin, CadObjectDB db = null)
+        {
+            if (db == null)
             {
-                ret.Add(list[i].Restore(dic));
+                return;
             }
 
-            return ret;
-        }
+            MpFigure_v1002 mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure_v1002>(bin);
 
-        public static List<MpHalfEdge> HalfEdgeListToMp(List<HalfEdge> list)
+            CadFigure fig = db.GetFigure(mpfig.ID);
+
+            mpfig.RestoreTo(fig);
+
+            SetChildren(fig, mpfig.ChildIdList, db);
+        }
+        #endregion LZ4
+
+
+
+
+
+        private static void SetChildren(CadFigure fig, List<uint> idList, CadObjectDB db)
         {
-            List<MpHalfEdge> ret = new List<MpHalfEdge>();
-            for (int i=0; i<list.Count; i++)
+            for (int i = 0; i < idList.Count; i++)
             {
-                ret.Add(MpHalfEdge.Create(list[i]));
+                fig.AddChild(db.GetFigure(idList[i]));
             }
-
-            return ret;
         }
-
-        public static T[] ArrayClone<T>(T[] src)
-        {
-            T[] dst = new T[src.Length];
-
-            Array.Copy(src, dst, src.Length);
-
-            return dst;
-        } 
     }
 }

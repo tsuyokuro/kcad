@@ -78,7 +78,7 @@ namespace Plotter
             {
                 if (p.Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(p, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                    dc.Drawing.DrawSelectedPoint(p.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }
@@ -109,13 +109,13 @@ namespace Plotter
                 return;
             }
 
-            CadSegment seg = CadUtil.PerpendicularSeg(PointList[0], PointList[1], PointList[2]);
+            CadSegment seg = CadUtil.PerpSeg(PointList[0], PointList[1], PointList[2]);
 
             PointList[2] = PointList[2].SetVector(seg.P1.vector);
             PointList.Add(seg.P0);
         }
 
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             if (PointList[0].Selected && PointList[1].Selected &&
                 PointList[2].Selected && PointList[3].Selected)
@@ -129,7 +129,7 @@ namespace Plotter
 
             if (PointList[2].Selected || PointList[3].Selected)
             {
-                CadVertex v0 = StoreList[3] - StoreList[0];
+                Vector3d v0 = StoreList[3].vector - StoreList[0].vector;
 
                 if (v0.IsZero())
                 {
@@ -138,11 +138,11 @@ namespace Plotter
                     return;
                 }
 
-                CadVertex v0u = v0.UnitVector();
+                Vector3d v0u = v0.UnitVector();
 
                 double d = CadMath.InnerProduct(v0u, delta);
 
-                CadVertex vd = v0u * d;
+                Vector3d vd = v0u * d;
 
                 CadVertex nv3 = StoreList[3] + vd;
                 CadVertex nv2 = StoreList[2] + vd;
@@ -161,27 +161,27 @@ namespace Plotter
 
             if (PointList[0].Selected || PointList[1].Selected)
             {
-                CadVertex v0 = StoreList[0];
-                CadVertex v1 = StoreList[1];
-                CadVertex v2 = StoreList[2];
-                CadVertex v3 = StoreList[3];
+                Vector3d v0 = StoreList[0].vector;
+                Vector3d v1 = StoreList[1].vector;
+                Vector3d v2 = StoreList[2].vector;
+                Vector3d v3 = StoreList[3].vector;
 
-                CadVertex lv = v3 - v0;
+                Vector3d lv = v3 - v0;
                 double h = lv.Norm();
 
-                CadVertex planeNormal = CadMath.Normal(v0, v1, v2);
+                Vector3d planeNormal = CadMath.Normal(v0, v1, v2);
 
-                CadVertex cp0 = v0;
-                CadVertex cp1 = v1;
+                Vector3d cp0 = v0;
+                Vector3d cp1 = v1;
 
                 if (PointList[0].Selected)
                 {
-                    cp0 = CadUtil.CrossPlane(v0 + delta, v0, planeNormal);
+                    cp0 = CadMath.CrossPlane(v0 + delta, v0, planeNormal);
                 }
 
                 if (PointList[1].Selected)
                 {
-                    cp1 = CadUtil.CrossPlane(v1 + delta, v1, planeNormal);
+                    cp1 = CadMath.CrossPlane(v1 + delta, v1, planeNormal);
                 }
 
                 if (cp0.EqualsThreshold(cp1, 0.001))
@@ -191,16 +191,16 @@ namespace Plotter
 
                 if (PointList[0].Selected)
                 {
-                    PointList[0] = PointList[0].SetVector(cp0.vector);
+                    PointList[0] = PointList[0].SetVector(cp0);
                 }
 
                 if (PointList[1].Selected)
                 {
-                    PointList[1] = PointList[1].SetVector(cp1.vector);
+                    PointList[1] = PointList[1].SetVector(cp1);
                 }
 
-                CadVertex normal = CadMath.Normal(cp0, cp0 + planeNormal, cp1);
-                CadVertex d = normal * h;
+                Vector3d normal = CadMath.Normal(cp0, cp0 + planeNormal, cp1);
+                Vector3d d = normal * h;
 
                 PointList[3] = PointList[3].SetVector(PointList[0] + d);
                 PointList[2] = PointList[2].SetVector(PointList[1] + d);
@@ -214,9 +214,9 @@ namespace Plotter
         // 高さが０の場合、移動方向が定まらないので
         // 投影座標系でz=0とした座標から,List[0] - List[1]への垂線を計算して
         // そこへ移動する
-        private void MoveSelectedPointWithHeight(DrawContext dc, CadVertex delta)
+        private void MoveSelectedPointWithHeight(DrawContext dc, Vector3d delta)
         {
-            CadSegment seg = CadUtil.PerpendicularSeg(PointList[0], PointList[1],
+            CadSegment seg = CadUtil.PerpSeg(PointList[0], PointList[1],
                 StoreList[2] + delta);
 
             PointList[2] = PointList[2].SetVector(seg.P1.vector);
@@ -232,7 +232,7 @@ namespace Plotter
                 return;
             }
 
-            CadSegment seg = CadUtil.PerpendicularSeg(PointList[0], PointList[1], PointList[2]);
+            CadSegment seg = CadUtil.PerpSeg(PointList[0], PointList[1], PointList[2]);
 
             PointList[2] = PointList[2].SetVector(seg.P1.vector);
             PointList[3] = PointList[3].SetVector(seg.P0.vector);
@@ -245,32 +245,32 @@ namespace Plotter
                             CadVertex p,
                             DrawPen pen)
         {
-            CadSegment seg = CadUtil.PerpendicularSeg(a, b, p);
+            CadSegment seg = CadUtil.PerpSeg(a, b, p);
 
-            dc.Drawing.DrawLine(pen, a, seg.P0);
-            dc.Drawing.DrawLine(pen, b, seg.P1);
+            dc.Drawing.DrawLine(pen, a.vector, seg.P0.vector);
+            dc.Drawing.DrawLine(pen, b.vector, seg.P1.vector);
 
-            CadVertex cp = CadUtil.CenterPoint(seg.P0, seg.P1);
+            Vector3d cp = CadMath.CenterPoint(seg.P0.vector, seg.P1.vector);
 
             double arrowW = ARROW_W / dc.WorldScale;
             double arrowL = ARROW_LEN / dc.WorldScale;
 
-            dc.Drawing.DrawArrow(pen, cp, seg.P0, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
-            dc.Drawing.DrawArrow(pen, cp, seg.P1, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp, seg.P0.vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp, seg.P1.vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
         }
 
         private void DrawDim(DrawContext dc, DrawPen pen)
         {
-            dc.Drawing.DrawLine(pen, PointList[0], PointList[3]);
-            dc.Drawing.DrawLine(pen, PointList[1], PointList[2]);
+            dc.Drawing.DrawLine(pen, PointList[0].vector, PointList[3].vector);
+            dc.Drawing.DrawLine(pen, PointList[1].vector, PointList[2].vector);
 
-            CadVertex cp = CadUtil.CenterPoint(PointList[3], PointList[2]);
+            Vector3d cp = CadMath.CenterPoint(PointList[3].vector, PointList[2].vector);
 
             double arrowW = ARROW_W / dc.WorldScale;
             double arrowL = ARROW_LEN / dc.WorldScale;
 
-            dc.Drawing.DrawArrow(pen, cp, PointList[3], ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
-            dc.Drawing.DrawArrow(pen, cp, PointList[2], ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp, PointList[3].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            dc.Drawing.DrawArrow(pen, cp, PointList[2].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
 
 
             CadVertex lineV = PointList[2] - PointList[3];
@@ -300,7 +300,7 @@ namespace Plotter
             // |  |                            |
             // up 0                            1 
             // 
-            dc.Drawing.DrawText(FontID, dc.GetBrush(BrushID), p, lineV, up,
+            dc.Drawing.DrawText(FontID, dc.GetBrush(BrushID), p.vector, lineV.vector, up.vector,
                 new DrawTextOption(DrawTextOption.H_CENTER),
                 lenStr);
         }

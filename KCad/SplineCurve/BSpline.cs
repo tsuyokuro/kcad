@@ -1,4 +1,5 @@
 using CadDataTypes;
+using OpenTK;
 
 namespace SplineCurve
 {
@@ -13,19 +14,19 @@ namespace SplineCurve
                     u
                  ucnt:4
         */
-        public static VertexList CreateFlatControlPoints(int ucnt, int vcnt, CadVertex uunit, CadVertex vunit)
+        public static VertexList CreateFlatControlPoints(int ucnt, int vcnt, Vector3d uunit, Vector3d vunit)
         {
             VertexList vl = new VertexList(ucnt * vcnt);
 
-            CadVertex ud = ((double)(ucnt-1) / 2.0) * uunit;
-            CadVertex vd = ((double)(vcnt-1) / 2.0) * vunit;
+            Vector3d ud = ((double)(ucnt-1) / 2.0) * uunit;
+            Vector3d vd = ((double)(vcnt-1) / 2.0) * vunit;
 
-            CadVertex p = CadVertex.Zero;
+            Vector3d p = Vector3d.Zero;
 
             p -= ud;
             p -= vd;
 
-            CadVertex lp = p;
+            Vector3d lp = p;
 
             for (int v = 0; v < vcnt; v++)
             {
@@ -33,7 +34,7 @@ namespace SplineCurve
 
                 for (int u = 0; u < ucnt; u++)
                 {
-                    vl.Add(p);
+                    vl.Add(new CadVertex(p));
                     p += uunit;
                 }
 
@@ -45,20 +46,20 @@ namespace SplineCurve
 
         public static VertexList CreateBoxControlPoints(
             int ucnt, int vcnt,
-            CadVertex uunit, CadVertex vunit, CadVertex tunit
+            Vector3d uunit, Vector3d vunit, Vector3d tunit
             )
         {
             VertexList vl = new VertexList(ucnt * vcnt);
 
-            CadVertex ud = ((double)(ucnt - 1) / 2.0) * uunit;
-            CadVertex vd = ((double)(vcnt - 1) / 2.0) * vunit;
+            Vector3d ud = ((double)(ucnt - 1) / 2.0) * uunit;
+            Vector3d vd = ((double)(vcnt - 1) / 2.0) * vunit;
 
-            CadVertex p = CadVertex.Zero;
+            Vector3d p = Vector3d.Zero;
 
             p -= ud;
             p -= vd;
 
-            CadVertex lp = p;
+            Vector3d lp = p;
 
             for (int v = 0; v < vcnt; v++)
             {
@@ -66,7 +67,7 @@ namespace SplineCurve
 
                 for (int u = 0; u < ucnt; u++)
                 {
-                    vl.Add(p);
+                    vl.Add(new CadVertex(p));
                     p += uunit;
                 }
 
@@ -76,7 +77,7 @@ namespace SplineCurve
 
                 for (int u = 0; u < ucnt; u++)
                 {
-                    vl.Add(p);
+                    vl.Add(new CadVertex(p));
                     p -= uunit;
                 }
 

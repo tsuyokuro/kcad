@@ -25,7 +25,7 @@ def puts(s):
 def add_rect(w=10, h=10):
     SE.Rect(w, h)
 
-#[AC] add_rect_at(pv=lastDown(), w=10, h=10)
+#[AC] add_rect_at(pv=last_down(), w=10, h=10)
 def add_rect_at(pv, w=10, h=10):
     SE.RectAt(pv, w, h)
 
@@ -97,9 +97,13 @@ def move_selected_point(x=0, y=0, z=0):
 def ins_point():
     SE.InsPoint()
 
-#[AC] create_vector(x, y, z)
-def create_vector(x, y, z):
+#[AC] vector(x, y, z)
+def vector(x, y, z):
     return SE.CreateVector(x, y, z)
+
+#[AC] vertex(x, y, z)
+def vertex(x, y, z):
+    return SE.CreateVertex(x, y, z)
 
 #[AC] get_last_down()
 def get_last_down():
@@ -118,11 +122,11 @@ def set_last_down(x, y, z):
 def sel_fig(id):
     SE.SelectFigure(id)
 
-#[AC] scale(id=current_fig_id(), org=lastDown(), ratio=1.5)
+#[AC] scale(id=current_fig_id(), org=last_down(), ratio=1.5)
 def scale(id, org, ratio):
     SE.Scale(id, org, ratio)
 
-#[AC] rotate(current_fig_id(), inputPoint(), viewDir(), 45)
+#[AC] rotate(current_fig_id(), input_point(), view_dir(), 45)
 def rotate(id, p0, v, t):
     SE.Rotate(id, p0, v, t)
 
@@ -160,22 +164,22 @@ def union(id1, id2):
 def intersection(id1, id2):
     SE.Intersection(id1, id2)
 
-#[AC] add_box(x=40,y=40,z=20)
-def add_box(x, y, z):
-    SE.AddBox(x, y, z)
+#[AC] add_box(last_down(), size_x=40, size_y=40, size_z=20)
+def add_box(pos, size_x, size_y, size_z):
+    SE.AddBox(pos, size_x, size_y, size_z)
 
 #[AC] spf(x=w_1x4, y=40, z=t_1x4)
 def spf(x, y, z):
     SE.AddBox(x, y, z)
 
-#[AC] add_cylinder(slices=16, r=10, len=40)
-def add_cylinder(slices, r, len):
-    SE.AddCylinder(slices, r, len)
+#[AC] add_cylinder(pos=last_down(), slices=16, r=10, len=40)
+def add_cylinder(pos, slices, r, len):
+    SE.AddCylinder(pos, slices, r, len)
 
 
-#[AC] add_sphere(slices=16, r=20)
-def add_sphere(slices, r):
-    SE.AddSphere(slices, r)
+#[AC] add_sphere(pos=last_down(), slices=16, r=20)
+def add_sphere(pos, slices, r):
+    SE.AddSphere(pos, slices, r)
 
 #[AC] extrude(id=current_fig_id(), dir=unit_vz, d=20, div=0)
 def extrude(id, dir, d, div):
@@ -225,7 +229,7 @@ def triangulate(id, area, deg):
 def triangulate_opt(id, option):
     SE.Triangulate(id, option)
 
-#[AC] add_line(create_vector(0, 0, 0), create_vector(10, 20, 0))
+#[AC] add_line(vector(0, 0, 0), vector(10, 20, 0))
 def add_line(v0, v1):
     SE.AddLine(v0, v1)
 
@@ -273,14 +277,14 @@ cout = MyConsoleOut()
 sys.stdout = cout
 
 #[AC] point0
-point0 = SE.CreateVector(0,0,0)
+point0 = Vector3d(0,0,0)
 
 #[AC] unit_vx
 #[AC] unit_vy
 #[AC] unit_vz
-unit_vx = SE.CreateVector(1,0,0)
-unit_vy = SE.CreateVector(0,1,0)
-unit_vz = SE.CreateVector(0,0,1)
+unit_vx = Vector3d(1,0,0)
+unit_vy = Vector3d(0,1,0)
+unit_vz = Vector3d(0,0,1)
 
 w_1x4 = 89
 t_1x4 = 19
@@ -326,10 +330,4 @@ esc_b_blue = "\x1b[94m"
 esc_b_magenta = "\x1b[95m"
 esc_b_cyan = "\x1b[96m"
 esc_b_white = "\x1b[97m"
-
-
-#test !!
-vv = CadVertex.Create(1,1,1);
-vl = VertexList();
-vl.Add(vv);
 

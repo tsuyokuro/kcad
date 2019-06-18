@@ -1,13 +1,14 @@
 ﻿using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
     public class HighlightPointListItem
     {
-        public CadVertex Point;
+        public Vector3d Point;
         public DrawPen Pen;
 
-        public HighlightPointListItem(CadVertex p, DrawPen pen)
+        public HighlightPointListItem(Vector3d p, DrawPen pen)
         {
             Point = p;
             Pen = pen;

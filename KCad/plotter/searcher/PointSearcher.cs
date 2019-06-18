@@ -1,20 +1,20 @@
 ﻿#define LOG_DEBUG
 
+using CadDataTypes;
+using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using CadDataTypes;
-
 
 namespace Plotter
 {
     public class PointSearcher
     {
-        private MarkPoint XMatch = default(MarkPoint);
-        private MarkPoint YMatch = default(MarkPoint);
-        private MarkPoint XYMatch = default(MarkPoint);
+        private MarkPoint XMatch = default;
+        private MarkPoint YMatch = default;
+        private MarkPoint XYMatch = default;
 
         private List<MarkPoint> XYMatchList = new List<MarkPoint>();
+        private HashSet<MarkPoint> XYMatchSet = new HashSet<MarkPoint>();
 
         public CadCursor Target;    // Cursor(スクリーン座標系)
 
@@ -68,6 +68,7 @@ namespace Plotter
             XYMatch.reset();
 
             XYMatchList.Clear();
+            XYMatchSet.Clear();
         }
 
         public void SetTargetPoint(CadCursor cursor)
@@ -87,7 +88,7 @@ namespace Plotter
 
         public MarkPoint GetXYMatch(int n = -1)
         {
-            if (n==-1)
+            if (n == -1)
             {
                 return XYMatch;
             }
@@ -137,7 +138,7 @@ namespace Plotter
                 Search(dc, db, db.CurrentLayer);
             }
 
-            for (int i=0; i<db.LayerList.Count; i++)
+            for (int i = 0; i < db.LayerList.Count; i++)
             {
                 CadLayer layer = db.LayerList[i];
 
@@ -162,23 +163,28 @@ namespace Plotter
                 return;
             }
 
-            for (int i=0; i< layer.FigureList.Count; i++)
+            for (int i = 0; i < layer.FigureList.Count; i++)
             {
                 CadFigure fig = layer.FigureList[i];
                 CheckFigure(dc, layer, fig);
             }
         }
 
-        public void Check(DrawContext dc, CadVertex pt)
+        //public void Check(DrawContext dc, CadVertex pt)
+        //{
+        //    CheckFigPoint(dc, pt, null, null, 0);
+        //}
+
+        public void Check(DrawContext dc, Vector3d pt)
         {
             CheckFigPoint(dc, pt, null, null, 0);
         }
 
         public void Check(DrawContext dc, VertexList list)
         {
-            for (int i=0;i< list.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
-                Check(dc, list[i]);
+                Check(dc, list[i].vector);
             }
         }
 
@@ -204,13 +210,13 @@ namespace Plotter
 
                 for (int i = 0; i < cnt; i++)
                 {
-                    CheckFigPoint(dc, list[i], layer, fig, i);
+                    CheckFigPoint(dc, list[i].vector, layer, fig, i);
                 }
             }
 
             if (fig.ChildList != null)
             {
-                for (int i=0; i< fig.ChildList.Count; i++)
+                for (int i = 0; i < fig.ChildList.Count; i++)
                 {
                     CadFigure c = fig.ChildList[i];
                     CheckFigure(dc, layer, c);
@@ -218,15 +224,15 @@ namespace Plotter
             }
         }
 
-        private void CheckFigPoint(DrawContext dc, CadVertex pt, CadLayer layer, CadFigure fig, int ptIdx)
+        private void CheckFigPoint(DrawContext dc, Vector3d pt, CadLayer layer, CadFigure fig, int ptIdx)
         {
-            CadVertex ppt = dc.WorldPointToDevPoint(pt);
+            Vector3d ppt = dc.WorldPointToDevPoint(pt);
 
             double dx = Math.Abs(ppt.X - Target.Pos.X);
             double dy = Math.Abs(ppt.Y - Target.Pos.Y);
 
-            CrossInfo cix = CadUtil.PerpendicularCrossLine(Target.Pos, Target.Pos + Target.DirX, ppt);
-            CrossInfo ciy = CadUtil.PerpendicularCrossLine(Target.Pos, Target.Pos + Target.DirY, ppt);
+            CrossInfo cix = CadMath.PerpCrossLine(Target.Pos, Target.Pos + Target.DirX, ppt);
+            CrossInfo ciy = CadMath.PerpCrossLine(Target.Pos, Target.Pos + Target.DirY, ppt);
 
             double nx = (ppt - ciy.CrossPoint).Norm(); // Cursor Y軸からの距離
             double ny = (ppt - cix.CrossPoint).Norm(); // Cursor X軸からの距離
@@ -235,7 +241,7 @@ namespace Plotter
             {
                 if (nx < XMatch.DistanceX || (nx == XMatch.DistanceX && ny < XMatch.DistanceY))
                 {
-                    XMatch = getMarkPoint();
+                    XMatch = GetMarkPoint(pt, ppt, nx, ny, layer, fig, ptIdx);
                 }
             }
 
@@ -243,7 +249,7 @@ namespace Plotter
             {
                 if (ny < YMatch.DistanceY || (ny == YMatch.DistanceY && nx < YMatch.DistanceX))
                 {
-                    YMatch = getMarkPoint();
+                    YMatch = GetMarkPoint(pt, ppt, nx, ny, layer, fig, ptIdx);
                 }
             }
 
@@ -254,58 +260,37 @@ namespace Plotter
 
                 if (curDist <= minDist)
                 {
-                    MarkPoint t = default(MarkPoint);
-
-                    t.IsValid = true;
-                    t.Layer = layer;
-                    t.Figure = fig;
-                    t.PointIndex = ptIdx;
-                    t.Point = pt;
-                    t.PointScrn = ppt;
-                    t.DistanceX = dx;
-                    t.DistanceY = dy;
+                    MarkPoint t = GetMarkPoint(pt, ppt, dx, dy, layer, fig, ptIdx);
 
                     //t.dump();
 
                     XYMatch = t;
 
-                    if (!ContainsXYMatch(t))
+                    if (!XYMatchSet.Contains(t))
                     {
                         XYMatchList.Add(XYMatch);
+                        XYMatchSet.Add(XYMatch);
+                        //DOut.pl($"PointSearcher XYMatchList cnt:{XYMatchList.Count}");
                     }
                 }
             }
-
-            MarkPoint getMarkPoint()
-            {
-                MarkPoint mp = default(MarkPoint);
-
-                mp.IsValid = true;
-                mp.Layer = layer;
-                mp.Figure = fig;
-                mp.PointIndex = ptIdx;
-                mp.Point = pt;
-                mp.PointScrn = ppt;
-                mp.DistanceX = nx;
-                mp.DistanceY = ny;
-
-                return mp;
-            }
         }
 
-        private bool ContainsXYMatch(MarkPoint mp)
+        private MarkPoint GetMarkPoint(
+            Vector3d pt, Vector3d ppt, double distx, double disty, CadLayer layer, CadFigure fig, int ptIdx)
         {
-            for (int i=0; i<XYMatchList.Count; i++)
-            {
-                MarkPoint lmp = XYMatchList[i];
+            MarkPoint mp = default;
 
-                if (mp.FigureID == lmp.FigureID && mp.PointIndex == lmp.PointIndex)
-                {
-                    return true;
-                }
-            }
+            mp.IsValid = true;
+            mp.Layer = layer;
+            mp.Figure = fig;
+            mp.PointIndex = ptIdx;
+            mp.Point = pt;
+            mp.PointScrn = ppt;
+            mp.DistanceX = distx;
+            mp.DistanceY = disty;
 
-            return false;
+            return mp;
         }
     }
 }

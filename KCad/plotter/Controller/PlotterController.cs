@@ -1,13 +1,10 @@
-﻿//#define COPY_AS_JSON
-//#define PRINT_WITH_GL_ONLY
-//#define PRINT_WITH_GDI_ONLY
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CadDataTypes;
 using System.Drawing.Printing;
 using Plotter.Controller.TaskRunner;
 using System.Drawing;
 using GLUtil;
+using OpenTK;
 
 namespace Plotter.Controller
 {
@@ -109,6 +106,13 @@ namespace Plotter.Controller
 
         public PlotterTaskRunner mPlotterTaskRunner;
 
+        private ContextMenuManager mContextMenuMan;
+
+        public ContextMenuManager ContextMenuMan
+        {
+            get => mContextMenuMan;
+        }
+
         #region Constructor
         public PlotterController()
         {
@@ -122,9 +126,11 @@ namespace Plotter.Controller
 
             ScriptEnv = new ScriptEnvironment(this);
 
+            mContextMenuMan = new ContextMenuManager(this);
+
             mPlotterTaskRunner = new PlotterTaskRunner(this);
 
-            ObjDownPoint.Valid = false;
+            ObjDownPoint = VectorExt.InvalidVector3d;
 
             InitHid();
         }
@@ -154,12 +160,12 @@ namespace Plotter.Controller
         //    Observer.DataChanged(this, redraw);
         //}
 
-        private void UpdateLayerList()
+        public void UpdateLayerList()
         {
             Observer.LayerListChanged(this, GetLayerListInfo());
         }
 
-        public LayerListInfo GetLayerListInfo()
+        private LayerListInfo GetLayerListInfo()
         {
             LayerListInfo layerInfo = default(LayerListInfo);
             layerInfo.LayerList = mDB.LayerList;
@@ -187,23 +193,6 @@ namespace Plotter.Controller
 
         public void EndCreateFigure()
         {
-            CreatingFigType = CadFigure.Types.NONE;
-
-            State = States.SELECT;
-
-            if (FigureCreator != null)
-            {
-                FigureCreator.EndCreate(CurrentDC);
-                FigureCreator = null;
-            }
-
-            UpdateTreeView(true);
-
-            NotifyStateChange();
-        }
-
-        public void EndCreateFigureState()
-        {
             if (FigureCreator != null)
             {
                 FigureCreator.EndCreate(CurrentDC);
@@ -211,6 +200,42 @@ namespace Plotter.Controller
             }
 
             NextState();
+        }
+
+        public void CloseFigure()
+        {
+            if (FigureCreator != null)
+            {
+                FigureCreator.Figure.IsLoop = true;
+
+                CadOpe ope = new CadOpeSetClose(CurrentLayer.ID, FigureCreator.Figure.ID, true);
+                HistoryMan.foward(ope);
+
+                FigureCreator.EndCreate(CurrentDC);
+            }
+
+            NextState();
+        }
+
+        private void NextState()
+        {
+            if (State == States.CREATING)
+            {
+                if (ContinueCreate)
+                {
+                    FigureCreator = null;
+                    StartCreateFigure(CreatingFigType);
+                }
+                else
+                {
+                    FigureCreator = null;
+                    CreatingFigType = CadFigure.Types.NONE;
+                    State = States.SELECT;
+
+                    UpdateTreeView(true);
+                    NotifyStateChange();
+                }
+            }
         }
 
         public void StartMeasure(MeasureModes mode)
@@ -231,17 +256,6 @@ namespace Plotter.Controller
             MeasureFigureCreator = null;
         }
 
-        public void CloseFigure()
-        {
-            FigureCreator.Figure.IsLoop = true;
-
-            FigureCreator.EndCreate(CurrentDC);
-
-            CadOpe ope = new CadOpeSetClose(CurrentLayer.ID, FigureCreator.Figure.ID, true);
-            HistoryMan.foward(ope);
-
-            NextState();
-        }
         #endregion
 
         public void setCurrentLayer(uint id)
@@ -314,7 +328,7 @@ namespace Plotter.Controller
         public void DrawBase(DrawContext dc)
         {
             dc.Drawing.DrawAxis();
-            dc.Drawing.DrawPageFrame(PageSize.Width, PageSize.Height, CadVertex.Zero);
+            dc.Drawing.DrawPageFrame(PageSize.Width, PageSize.Height, Vector3d.Zero);
             DrawGrid(dc);
         }
 
@@ -353,11 +367,6 @@ namespace Plotter.Controller
             }
         }
 
-        public void PushCurrent()
-        {
-            CurrentDC.Push();
-        }
-
         public void DrawGrid(DrawContext dc)
         {
             if (SettingsHolder.Settings.SnapToGrid)
@@ -381,7 +390,7 @@ namespace Plotter.Controller
                 LastDownPoint,
                 ControllerConst.MARK_CURSOR_SIZE);
 
-            if (ObjDownPoint.Valid)
+            if (ObjDownPoint.IsValid())
             {
                 dc.Drawing.DrawMarkCursor(
                     dc.GetPen(DrawTools.PEN_LAST_POINT_MARKER2),
@@ -435,104 +444,65 @@ namespace Plotter.Controller
             }
         }
 
-        public void PrintPage(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        public void DrawAccordingState(DrawContext dc)
         {
-            DOut.pl($"Dev Width:{deviceSize.Width} Height:{deviceSize.Height}");
-#if PRINT_WITH_GL_ONLY
-            PrintPageGL(printerGraphics, pageSize, deviceSize);
-#elif PRINT_WITH_GDI_ONLY
-            PrintPageGDI(printerGraphics, pageSize, deviceSize);
-#else
-            PrintPageSwitch(printerGraphics, pageSize, deviceSize);
-#endif
-        }
-
-
-        public void PrintPageSwitch(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
-        {
-            if (!(CurrentDC.GetType() == typeof(DrawContextGLPers)))
+            switch (State)
             {
-                DrawContextPrinter dc = new DrawContextPrinter(CurrentDC, printerGraphics, pageSize, deviceSize);
-                DrawAllFigure(dc);
-            }
-            else
-            {
-                Bitmap bmp = GetPrintableBmp(pageSize, deviceSize);
-                printerGraphics.DrawImage(bmp, 0, 0);
-            }
-        }
+                case States.SELECT:
+                    break;
 
-        //public void PrintPageGDI(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
-        //{
-        //    DrawContextPrinter dc = new DrawContextPrinter(CurrentDC, printerGraphics, pageSize, deviceSize);
-        //    DrawAllFigure(dc);
-        //}
+                case States.START_DRAGING_POINTS:
+                    break;
 
-        //public void PrintPageGL(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
-        //{
-        //    Bitmap bmp = GetPrintableBmp(pageSize, deviceSize);
+                case States.RUBBER_BAND_SELECT:
+                    DrawSelRect(dc);
+                    break;
 
-        //    if (bmp != null)
-        //    {
-        //        printerGraphics.DrawImage(bmp, 0, 0);
-        //    }
-        //}
+                case States.DRAGING_POINTS:
+                    break;
 
-        public Bitmap GetPrintableBmp(CadSize2D pageSize, CadSize2D deviceSize)
-        {
-            if (!(CurrentDC is DrawContextGL))
-            {
-                return null;
+                case States.START_CREATE:
+                    break;
+
+                case States.CREATING:
+                    if (FigureCreator != null)
+                    {
+                        Vector3d p = dc.DevPointToWorldPoint(CrossCursor.Pos);
+                        FigureCreator.DrawTemp(dc, (CadVertex)p, dc.GetPen(DrawTools.PEN_TEMP_FIGURE));
+                    }
+                    break;
+
+                case States.MEASURING:
+                    if (MeasureFigureCreator != null)
+                    {
+                        Vector3d p = dc.DevPointToWorldPoint(CrossCursor.Pos);
+                        MeasureFigureCreator.DrawTemp(dc, (CadVertex)p, dc.GetPen(DrawTools.PEN_TEMP_FIGURE));
+                    }
+                    break;
             }
 
-            DrawContext dc = CurrentDC.CreatePrinterContext(pageSize, deviceSize);
-
-            dc.SetupTools(DrawTools.ToolsType.PRINTER_GL);
-
-            FrameBufferW fb = new FrameBufferW();
-            fb.Create((int)deviceSize.Width, (int)deviceSize.Height);
-
-            fb.Begin();
-
-            dc.StartDraw();
-
-            dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
-
-            DrawAllFigure(dc);
-
-            dc.EndDraw();
-
-            Bitmap bmp = fb.GetBitmap();
-
-            fb.End();
-            fb.Dispose();
-
-            return bmp;
-        }
-
-
-#endregion
-
-#region Private editing figure methods
-
-        private void NextState()
-        {
-            if (State == States.CREATING)
+            if (mInteractCtrl.IsActive)
             {
-                if (ContinueCreate)
-                {
-                    FigureCreator = null;
-                    StartCreateFigure(CreatingFigType);
-                }
-                else
-                {
-                    FigureCreator = null;
-                    CreatingFigType = CadFigure.Types.NONE;
-                    State = States.SELECT;
-                    NotifyStateChange();
-                }
+                mInteractCtrl.Draw(dc, SnapPoint);
             }
         }
+
+        public void DrawHighlightPoint(DrawContext dc)
+        {
+            HighlightPointList.ForEach(item =>
+            {
+                dc.Drawing.DrawHighlightPoint(item.Point, item.Pen);
+            });
+        }
+
+        #endregion
+
+        public void PushCurrent()
+        {
+            CurrentDC.Push();
+        }
+
+        #region Private editing figure methods
 
         public void ClearSelection()
         {
@@ -653,14 +623,14 @@ namespace Plotter.Controller
             return opeList;
         }
 
-        public void MoveSelectedPoints(CadVertex delta)
+        public void MoveSelectedPoints(Vector3d delta)
         {
             StartEdit();
             MoveSelectedPoints(null, delta);
             EndEdit();
         }
 
-        private void MoveSelectedPoints(DrawContext dc, CadVertex delta)
+        private void MoveSelectedPoints(DrawContext dc, Vector3d delta)
         {
             List<uint> figIDList = DB.GetSelectedFigIDList();
 
@@ -736,86 +706,6 @@ namespace Plotter.Controller
             return figList;
         }
 
-        public void ClearLayer(uint layerID)
-        {
-            if (layerID == 0)
-            {
-                layerID = CurrentLayer.ID;
-            }
-            
-            CadLayer layer = mDB.GetLayer(layerID);
-
-            if (layer == null) return;
-
-            CadOpeList opeList = layer.Clear();
-
-            HistoryMan.foward(opeList);
-        }
-
-        public void AddLayer(string name)
-        {
-            CadLayer layer = mDB.NewLayer();
-
-            layer.Name = name;
-
-            CurrentLayer = layer;
-
-            mDB.LayerList.Add(layer);
-
-            UpdateLayerList();
-
-            ItConsole.println("Layer added.  Name:" + layer.Name + " ID:" + layer.ID);
-        }
-
-        public void RemoveLayer(uint id)
-        {
-            if (mDB.LayerList.Count == 1)
-            {
-                return;
-            }
-
-            CadLayer layer = mDB.GetLayer(id);
-
-            if (layer == null)
-            {
-                return;
-            }
-
-            int index = mDB.LayerIndex(id);
-
-            int nextCurrentIdx = -1;
-                       
-            if (CurrentLayer.ID == id)
-            {
-                nextCurrentIdx = mDB.LayerIndex(CurrentLayer.ID);
-            }
-
-            CadOpeRemoveLayer ope = new CadOpeRemoveLayer(layer, index);
-            HistoryMan.foward(ope);
-
-            mDB.RemoveLayer(id);
-
-            if (nextCurrentIdx >= 0)
-            {
-                if (nextCurrentIdx > mDB.LayerList.Count-1)
-                {
-                    nextCurrentIdx = mDB.LayerList.Count - 1;
-                }
-
-                CurrentLayer = mDB.LayerList[nextCurrentIdx];
-            }
-
-            UpdateLayerList();
-            ItConsole.println("Layer removed.  Name:" + layer.Name + " ID:" + layer.ID);
-        }
-
-        public void SelectAllInCurrentLayer()
-        {
-            foreach (CadFigure fig in CurrentLayer.FigureList)
-            {
-                fig.Select();
-            }
-        }
 
         public void Cancel()
         {
@@ -852,116 +742,6 @@ namespace Plotter.Controller
             }
         }
 
-        public void SelectById(uint id, int idx, bool clearSelect=true)
-        {
-            CadFigure fig = mDB.GetFigure(id);
-
-            if (fig == null)
-            {
-                return;
-            }
-
-            if (idx >= fig.PointCount)
-            {
-                return;
-            }
-
-            if (clearSelect)
-            {
-                ClearSelection();
-            }
-
-            if (idx>=0)
-            {
-                fig.SelectPointAt(idx, true);
-            }
-            else
-            {
-                fig.Select();
-            }
-
-            CurrentFigure = fig;
-        }
-
-        //public void ScaleSelectedFigure(CadVector org, double scale)
-        //{
-        //    StartEdit();
-
-        //    List<uint> idlist = DB.GetSelectedFigIDList();
-
-        //    foreach (uint id in idlist)
-        //    {
-        //        CadFigure fig = DB.GetFigure(id);
-
-        //        if (fig == null)
-        //        {
-        //            continue;
-        //        }
-
-        //        ScaleFugure(org, scale, fig);
-        //    }
-
-        //    EndEdit();
-        //}
-
-        //public void ScaleFugure(CadVector org, double scale, CadFigure fig)
-        //{
-        //    int n = fig.PointList.Count;
-
-        //    for (int i = 0; i < n; i++)
-        //    {
-        //        CadVector p = fig.PointList[i];
-        //        p -= org;
-        //        p *= scale;
-        //        p += org;
-
-        //        fig.SetPointAt(i, p);
-        //    }
-        //}
-
-        //
-        // p0 を原点として単位ベクトル v を軸に t ラジアン回転する
-        //
-        //public void RotateSelectedFigure(CadVector org, CadVector axisDir, double t)
-        //{
-        //    List<uint> idlist = DB.GetSelectedFigIDList();
-
-        //    foreach (uint id in idlist)
-        //    {
-        //        CadFigure fig = DB.GetFigure(id);
-
-        //        if (fig == null)
-        //        {
-        //            continue;
-        //        }
-
-        //        CadUtil.RotateFigure(fig, org, axisDir, t);
-        //    }
-        //}
-
-        public void SelectFigure(uint figID)
-        {
-            CadFigure fig = DB.GetFigure(figID);
-
-            if (fig == null)
-            {
-                return;
-            }
-
-            fig.Select();
-        }
-
-        public void ClearAll()
-        {
-            PageSize = new PaperPageSize();
-
-            mDB.ClearAll();
-            HistoryMan.Clear();
-
-            UpdateLayerList();
-            UpdateTreeView(true);
-        }
-
         public void SetDB(CadObjectDB db)
         {
             mDB = db;
@@ -975,36 +755,7 @@ namespace Plotter.Controller
             Redraw(CurrentDC);
         }
 
-        public void Copy()
-        {
-            PlotterClipboard.CopyFiguresAsBin(this);
-        }
-
-        public void Paste()
-        {
-            PlotterClipboard.PasteFiguresAsBin(this);
-            UpdateTreeView(true);
-        }
-
-        public void MovePointsFromStored(List<CadFigure> figList, CadVertex d)
-        {
-            if (figList == null)
-            {
-                return;
-            }
-
-            if (figList.Count == 0)
-            {
-                return;
-            }
-
-            foreach (CadFigure fig in figList)
-            {
-                fig.MoveSelectedPointsFromStored(CurrentDC, d);
-            }
-        }
-
-        public void TextLine(string s)
+        public void TextCommand(string s)
         {
             //ScriptEnv.ExecuteCommandSync(s);
             ScriptEnv.ExecuteCommandAsync(s);

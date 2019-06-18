@@ -10,6 +10,7 @@ namespace Plotter
 {
     using OpenTK;
     using Plotter.Serializer;
+    using Plotter.Serializer.v1001;
     using static CadFigure;
 
     public partial class CadFigure
@@ -628,7 +629,7 @@ namespace Plotter
 
         #endregion
 
-        public virtual void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public virtual void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             if (Locked) return;
 
@@ -646,7 +647,7 @@ namespace Plotter
             });
         }
 
-        public virtual void MoveAllPoints(CadVertex delta)
+        public virtual void MoveAllPoints(Vector3d delta)
         {
             if (Locked) return;
 
@@ -721,7 +722,7 @@ namespace Plotter
 
         public virtual void RecalcNormal()
         {
-            Normal = CadUtil.RepresentativeNormal(PointList).vector;
+            Normal = CadUtil.TypicalNormal(PointList);
         }
 
         public virtual CadSegment GetSegmentAt(int n)
@@ -867,25 +868,6 @@ namespace Plotter
             }
         }
 
-        public virtual MpGeometricData GeometricDataToMp()
-        {
-            MpSimpleGeometricData geo = new MpSimpleGeometricData();
-            geo.PointList = MpUtil.VertexListToMp(PointList);
-            return geo;
-        }
-
-        public virtual void GeometricDataFromMp(MpGeometricData geo)
-        {
-            if (!(geo is MpSimpleGeometricData))
-            {
-                return;
-            }
-
-            MpSimpleGeometricData g = (MpSimpleGeometricData)geo;
-
-            mPointList = MpUtil.VertexListFromMp(g.PointList);
-        }
-
         public virtual void Rotate(Vector3d org, CadQuaternion q, CadQuaternion r)
         {
             CadQuaternion qp;
@@ -911,5 +893,44 @@ namespace Plotter
             }
         }
 
+
+
+        public virtual MpGeometricData_v1001 GeometricDataToMp_v1001()
+        {
+            MpSimpleGeometricData_v1001 geo = new MpSimpleGeometricData_v1001();
+            geo.PointList = MpUtil_v1001.VertexListToMp(PointList);
+            return geo;
+        }
+
+        public virtual void GeometricDataFromMp_v1001(MpGeometricData_v1001 geo)
+        {
+            if (!(geo is MpSimpleGeometricData_v1001))
+            {
+                return;
+            }
+
+            MpSimpleGeometricData_v1001 g = (MpSimpleGeometricData_v1001)geo;
+
+            mPointList = MpUtil_v1001.VertexListFromMp(g.PointList);
+        }
+
+        public virtual MpGeometricData_v1002 GeometricDataToMp_v1002()
+        {
+            MpSimpleGeometricData_v1002 geo = new MpSimpleGeometricData_v1002();
+            geo.PointList = MpUtil_v1002.VertexListToMp(PointList);
+            return geo;
+        }
+
+        public virtual void GeometricDataFromMp_v1002(MpGeometricData_v1002 geo)
+        {
+            if (!(geo is MpSimpleGeometricData_v1002))
+            {
+                return;
+            }
+
+            MpSimpleGeometricData_v1002 g = (MpSimpleGeometricData_v1002)geo;
+
+            mPointList = MpUtil_v1002.VertexListFromMp(g.PointList);
+        }
     } // End of class CadFigure
 }

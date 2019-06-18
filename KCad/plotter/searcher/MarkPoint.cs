@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using CadDataTypes;
+﻿using OpenTK;
+using System;
 
 namespace Plotter
 {
-    public struct MarkPoint
+    public struct MarkPoint : IEquatable<MarkPoint>
     {
         public bool IsValid;
 
@@ -39,16 +39,16 @@ namespace Plotter
 
         public int PointIndex;
 
-        public CadVertex Point;     // Match座標 (World座標系)
+        public Vector3d Point;     // Match座標 (World座標系)
 
-        public CadVertex PointScrn; // Match座標 (Screen座標系)
+        public Vector3d PointScrn; // Match座標 (Screen座標系)
 
         public double DistanceX;    // X距離 (Screen座標系)
         public double DistanceY;    // Y距離 (Screen座標系)
 
         public void reset()
         {
-            this = default(MarkPoint);
+            this = default;
 
             IsValid = false;
 
@@ -66,14 +66,6 @@ namespace Plotter
             }
 
             return Figure.IsPointSelected(PointIndex);
-        }
-
-        public ulong Hash
-        {
-            get
-            {
-                return FigureID << 32 + PointIndex;
-            }
         }
 
         public bool update()
@@ -102,6 +94,21 @@ namespace Plotter
             Point.dump("Point");
             PointScrn.dump("PointScrn");
             DOut.pl("}");
+        }
+
+        public bool Equals(MarkPoint other)
+        {
+            return Layer == other.Layer &&
+                Figure == other.Figure &&
+                PointIndex == other.PointIndex &&
+                Point.Equals(other.Point);
+        }
+
+        public override int GetHashCode()
+        {
+            return Point.GetHashCode() + 
+                (int)(Layer == null ? 0 : Layer.ID) +
+                (int)(Figure == null ? 0 : Figure.ID);
         }
     }
 }

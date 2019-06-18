@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CadDataTypes;
+using OpenTK;
 using Plotter.Controller;
 
 namespace Plotter
@@ -138,7 +139,7 @@ namespace Plotter
                 CadVertex p0 = DC.WorldPointToDevPoint(seg.P0);
                 CadVertex p1 = DC.WorldPointToDevPoint(seg.P1);
 
-                double d = CadUtil.DistancePointToSeg(p0, p1, TargetPoint);
+                double d = CadMath.DistancePointToSeg(p0.vector, p1.vector, TargetPoint.vector);
 
                 if (d > Range)
                 {
@@ -173,9 +174,9 @@ namespace Plotter
                         continue;
                     }
 
-                    CadVertex cv = CrossLineScr(seg0, seg1);
+                    Vector3d cv = CrossLineScr(seg0, seg1);
 
-                    if (cv.Invalid)
+                    if (cv.IsInvalid())
                     {
                         continue;
                     }
@@ -194,34 +195,34 @@ namespace Plotter
                         continue;
                     }
 
-                    Result res = new ResultCross(DC.DevPointToWorldPoint(cv), dist, seg0, seg1);
+                    Result res = new ResultCross(new CadVertex(DC.DevPointToWorldPoint(cv)), dist, seg0, seg1);
                     ResultList.Add(res);
                 }
             }
         }
 
-        private bool IsSegVertex(CadVertex v, SegmentItem seg)
+        private bool IsSegVertex(Vector3d v, SegmentItem seg)
         {
             return (seg.ScrSegment.P0.Equals(v)) || (seg.ScrSegment.P1.Equals(v));
         }
 
         private bool CheckCrossSegSegScr(SegmentItem seg0, SegmentItem seg1)
         {
-            return CadUtil.CheckCrossSegSeg2D(
-                seg0.ScrSegment.P0,
-                seg0.ScrSegment.P1,
-                seg1.ScrSegment.P0,
-                seg1.ScrSegment.P1);
+            return CadMath.CheckCrossSegSeg2D(
+                seg0.ScrSegment.P0.vector,
+                seg0.ScrSegment.P1.vector,
+                seg1.ScrSegment.P0.vector,
+                seg1.ScrSegment.P1.vector);
 
         }
 
-        private CadVertex CrossLineScr(SegmentItem seg0, SegmentItem seg1)
+        private Vector3d CrossLineScr(SegmentItem seg0, SegmentItem seg1)
         {
-            return CadUtil.CrossLine2D(
-                seg0.ScrSegment.P0,
-                seg0.ScrSegment.P1,
-                seg1.ScrSegment.P0,
-                seg1.ScrSegment.P1);
+            return CadMath.CrossLine2D(
+                seg0.ScrSegment.P0.vector,
+                seg0.ScrSegment.P1.vector,
+                seg1.ScrSegment.P0.vector,
+                seg1.ScrSegment.P1.vector);
         }
 
 

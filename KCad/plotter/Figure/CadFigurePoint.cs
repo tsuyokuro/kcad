@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -81,7 +82,7 @@ namespace Plotter
 
             double size = dc.DevSizeToWoldSize(4);
 
-            dc.Drawing.DrawCross(pen, PointList[0], size);
+            dc.Drawing.DrawCross(pen, PointList[0].vector, size);
         }
 
         private void drawSelected_Point(DrawContext dc, DrawPen pen)
@@ -90,7 +91,7 @@ namespace Plotter
             {
                 if (PointList[0].Selected)
                 {
-                    dc.Drawing.DrawSelectedPoint(PointList[0], dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                    dc.Drawing.DrawSelectedPoint(PointList[0].vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                 }
             }
         }
@@ -104,7 +105,7 @@ namespace Plotter
         {
         }
 
-        public override void MoveSelectedPointsFromStored(DrawContext dc, CadVertex delta)
+        public override void MoveSelectedPointsFromStored(DrawContext dc, Vector3d delta)
         {
             CadVertex p = StoreList[0];
 
@@ -119,7 +120,7 @@ namespace Plotter
         {
             Centroid ret = default(Centroid);
 
-            ret.Point = mPointList[0];
+            ret.Point = mPointList[0].vector;
 
             return ret;
         }

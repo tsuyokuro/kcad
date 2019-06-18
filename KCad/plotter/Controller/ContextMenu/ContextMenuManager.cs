@@ -2,21 +2,29 @@
 
 namespace Plotter.Controller
 {
-    public partial class PlotterController
+    public class ContextMenuManager
     {
         MenuInfo mContextMenuInfo = new MenuInfo();
 
-        private void RequestContextMenu(double x, double y)
+        PlotterController mController;
+
+
+        public ContextMenuManager(PlotterController controller)
+        {
+            mController = controller;
+        }
+
+        public void RequestContextMenu(double x, double y)
         {
             mContextMenuInfo.Items.Clear();
 
 
-            if (FigureCreator != null)
+            if (mController.FigureCreator != null)
             {
-                switch (CreatingFigType)
+                switch (mController.CreatingFigType)
                 {
                     case CadFigure.Types.POLY_LINES:
-                        if (FigureCreator.Figure.PointCount > 2)
+                        if (mController.FigureCreator.Figure.PointCount > 2)
                         {
                             mContextMenuInfo.Items.Add(MenuInfo.CreatingFigureClose);
                         }
@@ -37,7 +45,7 @@ namespace Plotter.Controller
                     mContextMenuInfo.Items.Add(MenuInfo.InsertPoint);
                 }
 
-                bool hasSelect = HasSelect();
+                bool hasSelect = mController.HasSelect();
                 bool hasCopyData = PlotterClipboard.HasCopyData();
 
                 if (hasSelect)
@@ -53,20 +61,20 @@ namespace Plotter.Controller
 
             if (mContextMenuInfo.Items.Count > 0)
             {
-                Observer.RequestContextMenu(this, mContextMenuInfo, (int)x, (int)y);
+                mController.Observer.RequestContextMenu(mController, mContextMenuInfo, (int)x, (int)y);
             }
         }
 
         private bool SegSelected()
         {
-            if (LastSelSegment == null)
+            if (mController.LastSelSegment == null)
             {
                 return false;
             }
 
-            MarkSegment seg = LastSelSegment.Value;
+            MarkSegment seg = mController.LastSelSegment.Value;
 
-            CadFigure fig = DB.GetFigure(seg.FigureID);
+            CadFigure fig = mController.DB.GetFigure(seg.FigureID);
 
             if (fig == null)
             {
@@ -99,27 +107,27 @@ namespace Plotter.Controller
             switch (cmd)
             {
                 case MenuInfo.Commands.CREATING_FIGURE_CLOSE:
-                    CloseFigure();
+                    mController.CloseFigure();
                     break;
 
                 case MenuInfo.Commands.CREATING_FIGURE_END:
-                    EndCreateFigureState();
+                    mController.EndCreateFigure();
 
                     break;
                 case MenuInfo.Commands.CREATING_FIGURE_QUIT:
-                    EndCreateFigureState();
+                    mController.EndCreateFigure();
                     break;
 
                 case MenuInfo.Commands.COPY:
-                    Copy();
+                    mController.Copy();
                     break;
 
                 case MenuInfo.Commands.PASTE:
-                    Paste();
+                    mController.Paste();
                     break;
 
                 case MenuInfo.Commands.INSERT_POINT:
-                    InsPoint();
+                    mController.InsPoint();
                     break;
             }
         }

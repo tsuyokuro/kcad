@@ -1,4 +1,5 @@
 ﻿using CadDataTypes;
+using OpenTK;
 
 namespace SplineCurve
 {
@@ -118,9 +119,9 @@ namespace SplineCurve
             }
         }
 
-        private CadVertex CalcPoint(double u, double v)
+        private Vector3d CalcPoint(double u, double v)
         {
-            CadVertex pt = CadVertex.Zero;
+            Vector3d pt = Vector3d.Zero;
 
             double weight = 0f;
 
@@ -140,7 +141,7 @@ namespace SplineCurve
 
                     int cp = CtrlOrder[sp + i];
 
-                    pt += (ubs * vbs * Weights[cp]) * CtrlPoints[cp];
+                    pt += (ubs * vbs * Weights[cp]) * CtrlPoints[cp].vector;
 
                     weight += ubs * vbs * Weights[cp];
                 }
@@ -180,7 +181,7 @@ namespace SplineCurve
                         u = UBSpline.HighKnot - BSpline.Epsilon;
                     }
 
-                    vl.Add(CalcPoint(u, v));
+                    vl.Add(new CadVertex(CalcPoint(u, v)));
                 }
             }
         }
