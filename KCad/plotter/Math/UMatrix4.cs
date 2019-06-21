@@ -170,25 +170,9 @@ namespace Plotter
         //              |m21, m22, m23, m24|
         // (x, y, z, w) |m31, m32, m33, m34|
         //              |m41, m42, m43, m44|
-        public static CadVertex operator *(CadVertex p, UMatrix4 m)
-        {
-            return product(p, m);
-        }
-
         public static Vector4d operator *(Vector4d v, UMatrix4 m)
         {
             return product(v, m);
-        }
-
-        public static CadVertex product(CadVertex p, UMatrix4 m)
-        {
-            CadVertex rp = default(CadVertex);
-
-            Vector4d v = Vector4d.Transform((Vector4d)p, m.Matrix);
-
-            rp = (CadVertex)v;
-
-            return rp;
         }
 
         public static Vector4d product(Vector4d p, UMatrix4 m)

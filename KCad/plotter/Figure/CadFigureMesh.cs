@@ -158,8 +158,16 @@ namespace Plotter
             }
             else
             {
-                borderPen = DrawPen.NullPen;
-                edgePen = DrawPen.NullPen;
+                if (pen.ID == DrawTools.PEN_FIGURE_HIGHLIGHT)
+                {
+                    borderPen = pen;
+                    edgePen = pen;
+                }
+                else
+                {
+                    borderPen = DrawPen.NullPen;
+                    edgePen = DrawPen.NullPen;
+                }
             }
 
 

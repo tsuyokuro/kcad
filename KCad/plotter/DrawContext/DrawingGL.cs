@@ -509,23 +509,6 @@ namespace Plotter
             return vv;
         }
 
-        //private void DumpGLMatrix()
-        //{
-        //    GL.MatrixMode(MatrixMode.Modelview);
-
-        //    double[] model = new double[16];
-        //    double[] projection = new double[16];
-
-        //    GL.GetDouble(GetPName.ProjectionMatrix, projection);
-
-        //    UMatrix4 m4 = new UMatrix4(projection);
-
-
-        //    m4.dump("Get");
-
-        //    DC.ProjectionMatrix.dump("Set");
-        //}
-
         public override void DrawText(int font, DrawBrush brush, Vector3d a, Vector3d xdir, Vector3d ydir, DrawTextOption opt, string s)
         {
             a *= DC.WorldScale;
@@ -751,14 +734,14 @@ namespace Plotter
                 return;
             }
 
-            Vector3d pt = default(Vector3d);
+            Vector3d pt = default;
 
             // p0
             pt.X = -w / 2 + center.X;
             pt.Y = h / 2 + center.Y;
             pt.Z = 0;
 
-            Vector3d p0 = default(Vector3d);
+            Vector3d p0 = default;
             p0.X = pt.X * DC.UnitPerMilli;
             p0.Y = pt.Y * DC.UnitPerMilli;
 
@@ -769,13 +752,18 @@ namespace Plotter
             pt.Y = -h / 2 + center.Y;
             pt.Z = 0;
 
-            Vector3d p1 = default(Vector3d);
+            Vector3d p1 = default;
             p1.X = pt.X * DC.UnitPerMilli;
             p1.Y = pt.Y * DC.UnitPerMilli;
 
             p1 += DC.ViewOrg;
 
+            GL.Enable(EnableCap.LineStipple);
+            GL.LineStipple(1, 0b1100110011001100);
+
             DrawRectScrn(DrawPen.New(DC, DrawTools.PEN_PAGE_FRAME), p0, p1);
+
+            GL.Disable(EnableCap.LineStipple);
         }
 
         public void EnableLight()

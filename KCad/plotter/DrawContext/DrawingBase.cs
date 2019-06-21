@@ -58,43 +58,6 @@ namespace Plotter
         {
         }
 
-        //public virtual void DrawFace(DrawPen pen, VertexList pointList)
-        //{
-        //    DrawFace(pen, pointList, default(Vector3d), true);
-        //}
-
-        //public virtual void DrawFace(DrawPen pen, VertexList pointList, Vector3d normal, bool drawOutline)
-        //{
-        //}
-
-        //public virtual void DrawHarfEdgeModel(DrawPen pen, HeModel model)
-        //{
-        //    for (int i = 0; i < model.FaceStore.Count; i++)
-        //    {
-        //        HeFace f = model.FaceStore[i];
-
-        //        HalfEdge head = f.Head;
-
-        //        HalfEdge c = head;
-
-        //        for (; ; )
-        //        {
-        //            HalfEdge next = c.Next;
-
-        //            DrawLine(pen,
-        //                model.VertexStore.Ref(c.Vertex).vector,
-        //                model.VertexStore.Ref(next.Vertex).vector);
-
-        //            c = next;
-
-        //            if (c == head)
-        //            {
-        //                break;
-        //            }
-        //        }
-        //    }
-        //}
-
         public virtual void DrawHarfEdgeModel(
             DrawBrush brush, DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
