@@ -89,73 +89,6 @@ namespace Plotter
             GL.End();
         }
 
-        //public override void DrawFace(DrawPen pen, VertexList pointList, Vector3d normal, bool drawOutline)
-        //{
-        //    //DebugOut.Std.println("GL DrawFace");
-
-        //    Vector3d p;
-
-        //    if (normal.IsZero())
-        //    {
-        //        normal = CadMath.Normal(pointList[0], pointList[1], pointList[2]);
-        //    }
-
-        //    bool normalValid = !normal.IsZero();
-
-
-        //    GL.Enable(EnableCap.Lighting);
-        //    GL.Enable(EnableCap.Light0);
-
-
-        //    GL.Begin(PrimitiveType.Polygon);
-        //    GL.Color4(0.8f, 0.8f, 0.8f, 1.0f);
-
-        //    if (normalValid)
-        //    {
-        //        GL.Normal3(normal.vector);
-        //    }
-
-        //    foreach (Vector3d pt in pointList)
-        //    {
-        //        p = pt * DC.WorldScale;
-
-        //        GL.Vertex3(p.vector);
-        //    }
-
-        //    GL.End();
-
-        //    GL.Disable(EnableCap.Lighting);
-        //    GL.Disable(EnableCap.Light0);
-
-        //    #region 輪郭
-
-        //    if (drawOutline)
-        //    {
-        //        Color4 color = pen.Color4();
-
-        //        GL.Color4(color);
-        //        GL.LineWidth(1.0f);
-
-        //        Vector3d shift = GetShiftForOutLine();
-
-        //        GL.Begin(PrimitiveType.LineStrip);
-
-        //        foreach (Vector3d pt in pointList)
-        //        {
-        //            p = (pt + shift) * DC.WorldScale;
-        //            GL.Vertex3(p.vector);
-        //        }
-
-        //        Vector3d pt0 = pointList[0];
-        //        p = (pt0 + shift) * DC.WorldScale;
-
-        //        GL.Vertex3(p.vector);
-
-        //        GL.End();
-        //    }
-        //    #endregion
-        //}
-
         public override void DrawHarfEdgeModel(
             DrawBrush brush, DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
@@ -191,13 +124,9 @@ namespace Plotter
 
                 for (; ; )
                 {
-                    HalfEdge next = c.Next;
+                    GL.Vertex3((model.VertexStore.Ref(c.Vertex).vector * DC.WorldScale));
 
-                    Vector3d p = model.VertexStore.Ref(c.Vertex).vector;
-
-                    GL.Vertex3((p * DC.WorldScale));
-
-                    c = next;
+                    c = c.Next;
 
                     if (c == head)
                     {
@@ -301,10 +230,8 @@ namespace Plotter
                         }
                     }
 
-                    HalfEdge next = c.Next;
-
                     p0 = model.VertexStore.Ref(c.Vertex).vector * DC.WorldScale + shift;
-                    p1 = model.VertexStore.Ref(next.Vertex).vector * DC.WorldScale + shift;
+                    p1 = model.VertexStore.Ref(c.Next.Vertex).vector * DC.WorldScale + shift;
 
                     if (drawAsEdge)
                     {
@@ -326,7 +253,7 @@ namespace Plotter
                         }
                     }
 
-                    c = next;
+                    c = c.Next;
 
                     if (c == head)
                     {
