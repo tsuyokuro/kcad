@@ -204,6 +204,8 @@ namespace Plotter
 
                 HalfEdge pair;
 
+                p0 = model.VertexStore.Ref(c.Vertex).vector * DC.WorldScale + shift;
+
                 for (; ; )
                 {
                     bool drawAsEdge = false;
@@ -230,7 +232,6 @@ namespace Plotter
                         }
                     }
 
-                    p0 = model.VertexStore.Ref(c.Vertex).vector * DC.WorldScale + shift;
                     p1 = model.VertexStore.Ref(c.Next.Vertex).vector * DC.WorldScale + shift;
 
                     if (drawAsEdge)
@@ -252,6 +253,8 @@ namespace Plotter
                             GL.End();
                         }
                     }
+
+                    p0 = p1;
 
                     c = c.Next;
 
@@ -703,6 +706,34 @@ namespace Plotter
         {
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Light0);
+        }
+
+        public override void DrawBouncingBox(DrawPen pen, MinMax3D mm)
+        {
+            Vector3d p0 = new Vector3d(mm.Min.X, mm.Min.Y, mm.Min.Z);
+            Vector3d p1 = new Vector3d(mm.Min.X, mm.Min.Y, mm.Max.Z);
+            Vector3d p2 = new Vector3d(mm.Max.X, mm.Min.Y, mm.Max.Z);
+            Vector3d p3 = new Vector3d(mm.Max.X, mm.Min.Y, mm.Min.Z);
+
+            Vector3d p4 = new Vector3d(mm.Min.X, mm.Max.Y, mm.Min.Z);
+            Vector3d p5 = new Vector3d(mm.Min.X, mm.Max.Y, mm.Max.Z);
+            Vector3d p6 = new Vector3d(mm.Max.X, mm.Max.Y, mm.Max.Z);
+            Vector3d p7 = new Vector3d(mm.Max.X, mm.Max.Y, mm.Min.Z);
+
+            DC.Drawing.DrawLine(pen, p0, p1);
+            DC.Drawing.DrawLine(pen, p1, p2);
+            DC.Drawing.DrawLine(pen, p2, p3);
+            DC.Drawing.DrawLine(pen, p3, p0);
+
+            DC.Drawing.DrawLine(pen, p4, p5);
+            DC.Drawing.DrawLine(pen, p5, p6);
+            DC.Drawing.DrawLine(pen, p6, p7);
+            DC.Drawing.DrawLine(pen, p7, p4);
+
+            DC.Drawing.DrawLine(pen, p0, p4);
+            DC.Drawing.DrawLine(pen, p1, p5);
+            DC.Drawing.DrawLine(pen, p2, p6);
+            DC.Drawing.DrawLine(pen, p3, p7);
         }
     }
 }

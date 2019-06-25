@@ -1,6 +1,7 @@
 ﻿using CadDataTypes;
 using HalfEdgeNS;
 using MyCollections;
+using OpenTK;
 using Plotter.Serializer.v1001;
 using System;
 using System.Collections.Generic;
@@ -184,17 +185,23 @@ namespace Plotter
             int i;
             int num = PointList.Count;
 
+
+            MinMax3D mm = MinMax3D.Create();
+
             int selCount = 0;
 
             for (i = 0; i < num; i++)
             {
                 CadVertex p = PointList[i];
 
+                mm.Check(p.vector);
+
                 if (p.Selected) selCount++;
             }
 
             if (selCount >= num)
             {
+                dc.Drawing.DrawBouncingBox(dc.GetPen(DrawTools.PEN_SELECT_POINT), mm);
                 return;
             }
 

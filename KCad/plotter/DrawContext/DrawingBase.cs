@@ -155,7 +155,10 @@ namespace Plotter
 
         public virtual void Dispose()
         {
-            throw new System.NotImplementedException();
+        }
+
+        public virtual void DrawBouncingBox(DrawPen pen, MinMax3D mm)
+        {
         }
     }
 }

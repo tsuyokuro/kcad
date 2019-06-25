@@ -67,5 +67,7 @@ namespace Plotter
         void DrawRectScrn(DrawPen pen, Vector3d p0, Vector3d p1);
 
         void DrawCrossScrn(DrawPen pen, Vector3d p, double size);
+
+        void DrawBouncingBox(DrawPen pen, MinMax3D mm);
     }
 }
