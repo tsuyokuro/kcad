@@ -361,12 +361,27 @@ namespace Plotter
             PopMatrixes();
         }
 
+        //public override void DrawSelectedPoint(Vector3d pt, DrawPen pen)
+        //{
+        //    Vector3d p0 = DC.WorldPointToDevPoint(pt).Add(-2);
+        //    Vector3d p1 = p0.Add(4);
+
+        //    DrawRect2D(p0, p1, pen);
+        //}
+
         public override void DrawSelectedPoint(Vector3d pt, DrawPen pen)
         {
-            Vector3d p0 = DC.WorldPointToDevPoint(pt).Add(-2);
-            Vector3d p1 = p0.Add(4);
+            Vector3d p = DC.WorldPointToDevPoint(pt);
+            Start2D();
+            GL.Color4(pen.Color4());
+            GL.PointSize(3);
 
-            DrawRect2D(p0, p1, pen);
+            GL.Begin(PrimitiveType.Points);
+
+            GL.Vertex3(p);
+
+            GL.End();
+            End2D();
         }
 
         private void DrawRect2D(Vector3d p0, Vector3d p1, DrawPen pen)
@@ -543,6 +558,8 @@ namespace Plotter
 
         public override void DrawGrid(Gridding grid)
         {
+            GL.PointSize(1);
+
             if (DC is DrawContextGLOrtho)
             {
                 DrawGridOrtho(grid);

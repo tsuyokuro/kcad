@@ -185,26 +185,24 @@ namespace Plotter
             int i;
             int num = PointList.Count;
 
+            //MinMax3D mm = MinMax3D.Create();
 
-            MinMax3D mm = MinMax3D.Create();
+            //int selCount = 0;
 
-            int selCount = 0;
+            //for (i = 0; i < num; i++)
+            //{
+            //    CadVertex p = PointList[i];
 
-            for (i = 0; i < num; i++)
-            {
-                CadVertex p = PointList[i];
+            //    mm.Check(p.vector);
 
-                mm.Check(p.vector);
+            //    if (p.Selected) selCount++;
+            //}
 
-                if (p.Selected) selCount++;
-            }
-
-            if (selCount >= num)
-            {
-                dc.Drawing.DrawBouncingBox(dc.GetPen(DrawTools.PEN_SELECT_POINT), mm);
-                return;
-            }
-
+            //if (selCount >= num)
+            //{
+            //    dc.Drawing.DrawBouncingBox(dc.GetPen(DrawTools.PEN_SELECT_POINT), mm);
+            //    return;
+            //}
 
             for (i = 0; i < num; i++)
             {

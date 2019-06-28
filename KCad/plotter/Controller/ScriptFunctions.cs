@@ -712,7 +712,7 @@ namespace Plotter.Controller
         public double Area()
         {
             double area = PlotterUtil.Area(Controller);
-            ItConsole.println("Area: " + (area / 100).ToString() + " (㎠)");
+            ItConsole.println("Area: " + AnsiEsc.BYellow + (area / 100).ToString() + " (㎠)");
 
             return area;
         }
