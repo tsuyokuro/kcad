@@ -9,29 +9,6 @@ using System.Windows.Resources;
 
 namespace Plotter
 {
-    /*
-    public class GLPen
-    {
-        public Color4 Color;
-        public float Width;
-
-        public GLPen(Color4 color, float t)
-        {
-            Color = color;
-            Width = t;
-        }
-    }
-
-    public class GLBrush
-    {
-        public Color4 Color;
-
-        public GLBrush(Color4 color)
-        {
-            Color = color;
-        }
-    }
-    */
     public class DrawTools : IDisposable
     {
         public const int PEN_DEFAULT = 1;

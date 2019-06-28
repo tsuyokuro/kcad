@@ -1,4 +1,5 @@
-﻿using HalfEdgeNS;
+﻿using CadDataTypes;
+using HalfEdgeNS;
 using OpenTK;
 using System.Collections.Generic;
 
@@ -35,6 +36,10 @@ namespace Plotter
         }
 
         public virtual void DrawSelectedPoint(Vector3d pt, DrawPen pen)
+        {
+        }
+
+        public virtual void DrawSelectedPoints(VertexList pointList, DrawPen pen)
         {
         }
 

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using OpenTK;
+using CadDataTypes;
 
 namespace Plotter
 {
@@ -256,6 +257,17 @@ namespace Plotter
                 (int)pp.X - size, (int)pp.Y - size,
                 (int)pp.X + size, (int)pp.Y + size
                 );
+        }
+
+        public override void DrawSelectedPoints(VertexList pointList, DrawPen pen)
+        {
+            foreach (CadVertex p in pointList)
+            {
+                if (p.Selected)
+                {
+                    DrawSelectedPoint(p.vector, pen);
+                }
+            }
         }
 
         public override void DrawMarkCursor(DrawPen pen, Vector3d p, double pix_size)

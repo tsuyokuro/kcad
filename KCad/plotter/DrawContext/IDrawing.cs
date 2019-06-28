@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OpenTK;
 using System;
+using CadDataTypes;
 
 namespace Plotter
 {
@@ -34,6 +35,8 @@ namespace Plotter
         void DrawHighlightPoint(Vector3d pt, DrawPen pen);
 
         void DrawSelectedPoint(Vector3d pt, DrawPen pen);
+
+        void DrawSelectedPoints(VertexList pointList, DrawPen pen);
 
         void DrawMarkCursor(DrawPen pen, Vector3d p, double pix_size);
 

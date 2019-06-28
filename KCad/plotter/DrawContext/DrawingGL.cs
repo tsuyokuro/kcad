@@ -9,6 +9,7 @@ using System;
 using HalfEdgeNS;
 using GLFont;
 using OpenTK.Graphics;
+using CadDataTypes;
 
 namespace Plotter
 {
@@ -374,11 +375,31 @@ namespace Plotter
             Vector3d p = DC.WorldPointToDevPoint(pt);
             Start2D();
             GL.Color4(pen.Color4());
-            GL.PointSize(3);
+            GL.PointSize(5);
 
             GL.Begin(PrimitiveType.Points);
 
             GL.Vertex3(p);
+
+            GL.End();
+            End2D();
+        }
+
+        public override void DrawSelectedPoints(VertexList pointList, DrawPen pen)
+        {
+            Start2D();
+            GL.Color4(pen.Color4());
+            GL.PointSize(5);
+
+            GL.Begin(PrimitiveType.Points);
+
+            foreach (CadVertex p in pointList)
+            {
+                if (p.Selected)
+                {
+                    GL.Vertex3(DC.WorldPointToDevPoint(p.vector));
+                }
+            }
 
             GL.End();
             End2D();

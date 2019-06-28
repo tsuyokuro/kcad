@@ -182,36 +182,7 @@ namespace Plotter
 
         public override void DrawSelected(DrawContext dc, DrawPen pen)
         {
-            int i;
-            int num = PointList.Count;
-
-            //MinMax3D mm = MinMax3D.Create();
-
-            //int selCount = 0;
-
-            //for (i = 0; i < num; i++)
-            //{
-            //    CadVertex p = PointList[i];
-
-            //    mm.Check(p.vector);
-
-            //    if (p.Selected) selCount++;
-            //}
-
-            //if (selCount >= num)
-            //{
-            //    dc.Drawing.DrawBouncingBox(dc.GetPen(DrawTools.PEN_SELECT_POINT), mm);
-            //    return;
-            //}
-
-            for (i = 0; i < num; i++)
-            {
-                CadVertex p = PointList[i];
-
-                if (!p.Selected) continue;
-
-                dc.Drawing.DrawSelectedPoint(p.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
-            }
+            dc.Drawing.DrawSelectedPoints(PointList, dc.GetPen(DrawTools.PEN_SELECT_POINT));
         }
 
         public override void SelectPointAt(int index, bool sel)
