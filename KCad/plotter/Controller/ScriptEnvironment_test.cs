@@ -702,7 +702,7 @@ namespace Plotter.Controller
             RunOnMainThread(() => {
                 Controller.Clear();
                 Controller.DrawAll();
-                Controller.PushCurrent();
+                Controller.PushDraw();
             });
         }
     }

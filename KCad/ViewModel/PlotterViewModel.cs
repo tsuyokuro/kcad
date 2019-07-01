@@ -860,7 +860,7 @@ namespace Plotter
 
                 if (mController.CurrentLayer.ID != layer.ID)
                 {
-                    mController.setCurrentLayer(layer.ID);
+                    mController.SetCurrentLayer(layer.ID);
 
                     Redraw();
                 }

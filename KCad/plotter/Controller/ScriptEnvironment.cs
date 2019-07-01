@@ -79,7 +79,7 @@ namespace Plotter.Controller
 
             Controller.Clear();
             Controller.DrawAll();
-            Controller.PushCurrent();
+            Controller.PushDraw();
         }
 
         public async void ExecuteCommandAsync(string s)
@@ -104,7 +104,7 @@ namespace Plotter.Controller
 
             Controller.Clear();
             Controller.DrawAll();
-            Controller.PushCurrent();
+            Controller.PushDraw();
         }
 
         public dynamic RunScript(string s)
@@ -150,7 +150,7 @@ namespace Plotter.Controller
 
             Controller.Clear();
             Controller.DrawAll();
-            Controller.PushCurrent();
+            Controller.PushDraw();
 
             if (callback != null)
             {

@@ -52,7 +52,7 @@ namespace Plotter
                 {
                     if (a.Current)
                     {
-                        a.Draw(DC, DrawPen.New(DC, DrawTools.PEN_FIGURE_HIGHLIGHT));
+                        a.Draw(DC, DrawPen.Get(DC, DrawTools.PEN_FIGURE_HIGHLIGHT));
                     }
                     else
                     {
@@ -290,7 +290,7 @@ namespace Plotter
 
             if (!CadMath.IsParallel(p1 - p0, (Vector3d)DC.ViewDir))
             {
-                DrawArrow(DrawPen.New(DC, DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+                DrawArrow(DrawPen.Get(DC, DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
 
             // Y軸
@@ -307,7 +307,7 @@ namespace Plotter
 
             if (!CadMath.IsParallel(p1 - p0, (Vector3d)DC.ViewDir))
             {
-                DrawArrow(DrawPen.New(DC, DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+                DrawArrow(DrawPen.Get(DC, DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
 
             // Z軸
@@ -324,7 +324,7 @@ namespace Plotter
 
             if (!CadMath.IsParallel(p1 - p0, (Vector3d)DC.ViewDir))
             {
-                DrawArrow(DrawPen.New(DC, DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+                DrawArrow(DrawPen.Get(DC, DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
         }
 
@@ -608,7 +608,7 @@ namespace Plotter
             double minz = Math.Min(ltw.Z, rbw.Z);
             double maxz = Math.Max(ltw.Z, rbw.Z);
 
-            DrawPen pen = DrawPen.New(DC, DrawTools.PEN_GRID);
+            DrawPen pen = DrawPen.Get(DC, DrawTools.PEN_GRID);
 
             Vector3d p = default;
 
@@ -729,7 +729,7 @@ namespace Plotter
             GL.Enable(EnableCap.LineStipple);
             GL.LineStipple(1, 0b1100110011001100);
 
-            DrawRectScrn(DrawPen.New(DC, DrawTools.PEN_PAGE_FRAME), p0, p1);
+            DrawRectScrn(DrawPen.Get(DC, DrawTools.PEN_PAGE_FRAME), p0, p1);
 
             GL.Disable(EnableCap.LineStipple);
         }

@@ -111,7 +111,7 @@ namespace Plotter.Controller
             fig.Select();
         }
 
-        public void SelectById(uint id, int idx, bool clearSelect = true)
+        public void SelectFigureById(uint id, int idx, bool clearSelect = true)
         {
             CadFigure fig = mDB.GetFigure(id);
 

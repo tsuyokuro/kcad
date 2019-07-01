@@ -430,16 +430,14 @@ namespace Plotter
             return Color.FromArgb(Argb);
         }
 
-        public static DrawPen New(DrawContextGDI dc, int id)
+        public static DrawPen Get(DrawContextGDI dc, int id)
         {
-            DrawPen dt = dc.Tools.pen(id);
-            return dt;
+            return dc.Tools.pen(id);
         }
 
-        public static DrawPen New(DrawContextGL dc, int id)
+        public static DrawPen Get(DrawContextGL dc, int id)
         {
-            DrawPen dt = dc.Tools.glpen(id);
-            return dt;
+            return dc.Tools.glpen(id);
         }
 
         public static DrawPen New(Pen pen)
@@ -507,20 +505,17 @@ namespace Plotter
 
         public static DrawBrush New()
         {
-            DrawBrush dt = default;
-            return dt;
+            return default;
         }
 
         public static DrawBrush New(DrawContextGL dc, int id)
         {
-            DrawBrush dt = dc.Tools.glbrush(id);
-            return dt;
+            return dc.Tools.glbrush(id);
         }
 
         public static DrawBrush New(DrawContextGDI dc, int id)
         {
-            DrawBrush dt = dc.Tools.brush(id);
-            return dt;
+            return dc.Tools.brush(id);
         }
 
         public static DrawBrush New(SolidBrush brush)

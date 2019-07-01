@@ -98,7 +98,7 @@ namespace Plotter.Controller
             {
                 Env.Controller.Clear();
                 Env.Controller.DrawAll();
-                Env.Controller.PushCurrent();
+                Env.Controller.PushDraw();
             });
         }
     }
@@ -1461,7 +1461,7 @@ namespace Plotter.Controller
             {
                 Controller.Clear();
                 Controller.DrawAll();
-                Controller.PushCurrent();
+                Controller.PushDraw();
             });
         }
 

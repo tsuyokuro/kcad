@@ -154,7 +154,7 @@ namespace Plotter
 
         public Pen Pen(int id)
         {
-            DrawPen pen = DrawPen.New(this, id);
+            DrawPen pen = DrawPen.Get(this, id);
             return pen.GdiPen;
         }
 
@@ -187,7 +187,7 @@ namespace Plotter
 
         public override DrawPen GetPen(int idx)
         {
-            return DrawPen.New(this, idx);
+            return DrawPen.Get(this, idx);
         }
 
         public override DrawBrush GetBrush(int idx)

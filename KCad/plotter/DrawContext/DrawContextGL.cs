@@ -163,7 +163,7 @@ namespace Plotter
 
         public override DrawPen GetPen(int idx)
         {
-            return DrawPen.New(this, idx);
+            return DrawPen.Get(this, idx);
         }
 
         public override DrawBrush GetBrush(int idx)
