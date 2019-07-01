@@ -44,7 +44,7 @@ namespace Plotter.Controller
 
             DrawContext dc = CurrentDC.CreatePrinterContext(pageSize, deviceSize);
 
-            dc.SetupTools(DrawTools.ToolsType.PRINTER_GL);
+            dc.SetupTools(DrawTools.ToolsType.PRINTER);
 
             FrameBufferW fb = new FrameBufferW();
             fb.Create((int)deviceSize.Width, (int)deviceSize.Height);

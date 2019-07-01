@@ -54,7 +54,7 @@ namespace Plotter
 
             mUnitPerMilli = 1.0;
             WorldScale = 1.0f;
-            Tools.Setup(DrawTools.ToolsType.DARK_GL);
+            Tools.Setup(DrawTools.ToolsType.DARK);
 
             mDrawing = new DrawingGL(this);
 
@@ -121,10 +121,12 @@ namespace Plotter
 
         public override void SetupTools(DrawTools.ToolsType type)
         {
-            if (DrawTools.IsTypeForGL(type))
-            {
-                Tools.Setup(type);
-            }
+            //if (DrawTools.IsTypeForGL(type))
+            //{
+            //    Tools.Setup(type);
+            //}
+
+            Tools.Setup(type);
         }
 
         protected void SetupLight()
@@ -163,12 +165,12 @@ namespace Plotter
 
         public override DrawPen GetPen(int idx)
         {
-            return DrawPen.Get(this, idx);
+            return Tools.Pen(idx);
         }
 
         public override DrawBrush GetBrush(int idx)
         {
-            return DrawBrush.New(this, idx);
+            return Tools.Brush(idx);
         }
     }
 }

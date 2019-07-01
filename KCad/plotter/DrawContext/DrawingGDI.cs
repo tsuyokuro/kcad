@@ -40,7 +40,7 @@ namespace Plotter
                 {
                     if (a.Current)
                     {
-                        a.Draw(DC, DrawPen.Get(DC, DrawTools.PEN_FIGURE_HIGHLIGHT));
+                        a.Draw(DC, DC.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT));
                     }
                     else
                     {
@@ -79,7 +79,7 @@ namespace Plotter
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
 
-            DrawLine(DrawPen.Get(DC, DrawTools.PEN_AXIS), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS), p0, p1);
 
             // Y軸
             p0.X = 0;
@@ -93,7 +93,7 @@ namespace Plotter
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
 
-            DrawLine(DrawPen.Get(DC, DrawTools.PEN_AXIS), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS), p0, p1);
 
             // Z軸
             p0.X = 0;
@@ -107,7 +107,7 @@ namespace Plotter
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
 
-            DrawLine(DrawPen.Get(DC, DrawTools.PEN_AXIS), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS), p0, p1);
 
             //DrawAxis2();
         }
@@ -130,7 +130,7 @@ namespace Plotter
             double maxz = Math.Max(ltw.Z, rbw.Z);
 
 
-            DrawPen pen = DrawPen.Get(DC, DrawTools.PEN_GRID);
+            DrawPen pen = DC.GetPen(DrawTools.PEN_GRID);
 
             Vector3d p = default(Vector3d);
 
@@ -232,7 +232,7 @@ namespace Plotter
 
             p1 += DC.ViewOrg;
 
-            DrawRectScrn(DrawPen.Get(DC, DrawTools.PEN_PAGE_FRAME), p0, p1);
+            DrawRectScrn(DC.GetPen(DrawTools.PEN_PAGE_FRAME), p0, p1);
         }
         #endregion
 
@@ -578,7 +578,7 @@ namespace Plotter
             p1.Y = 0 + cp.Y;
             p1.Z = 0 + cp.Z;
 
-            DrawLine(DrawPen.Get(DC, DrawTools.PEN_AXIS2), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS2), p0, p1);
 
             tp = DC.WorldPointToDevPoint(p0);
             minMax2D.Check(tp);
@@ -595,7 +595,7 @@ namespace Plotter
             p1.Y = len + cp.Y;
             p1.Z = 0 + cp.Z;
 
-            DrawLine(DrawPen.Get(DC, DrawTools.PEN_AXIS2), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS2), p0, p1);
 
             tp = DC.WorldPointToDevPoint(p0);
             minMax2D.Check(tp);
@@ -613,7 +613,7 @@ namespace Plotter
             p1.Y = 0 + cp.Y;
             p1.Z = len + cp.Z;
 
-            DrawLine(DrawPen.Get(DC, DrawTools.PEN_AXIS2), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS2), p0, p1);
 
             tp = DC.WorldPointToDevPoint(p0);
             minMax2D.Check(tp);
@@ -632,9 +632,9 @@ namespace Plotter
             yp.Y -= 7;
             zp.Y -= 7;
 
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), xp, Vector3d.UnitX, default(DrawTextOption), "x");
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), yp, Vector3d.UnitX, default(DrawTextOption), "y");
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), zp, Vector3d.UnitX, default(DrawTextOption), "z");
+            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_TEXT), xp, Vector3d.UnitX, default(DrawTextOption), "x");
+            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_TEXT), yp, Vector3d.UnitX, default(DrawTextOption), "y");
+            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_TEXT), zp, Vector3d.UnitX, default(DrawTextOption), "z");
         }
 
         public override void Dispose()
