@@ -2,6 +2,7 @@
 using OpenTK;
 using Plotter.Controller.TaskRunner;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Printing;
 
 namespace Plotter.Controller
@@ -256,7 +257,7 @@ namespace Plotter.Controller
 
         #endregion Start and End creating figure
 
-        
+
         #region "undo redo"
 
         public void Undo()
@@ -274,10 +275,10 @@ namespace Plotter.Controller
             UpdateTreeView(true);
             UpdateLayerList();
         }
-        
+
         #endregion
 
-        
+
         #region "Draw methods"
 
         public void PushDraw()
@@ -766,6 +767,11 @@ namespace Plotter.Controller
         {
             //ScriptEnv.ExecuteCommandSync(s);
             ScriptEnv.ExecuteCommandAsync(s);
+        }
+
+        public void PrintPage(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            PlotterPrinter.PrintPage(this, printerGraphics, pageSize, deviceSize);
         }
     }
 }
