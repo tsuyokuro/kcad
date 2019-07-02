@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OpenTK;
 using System;
+using CadDataTypes;
 
 namespace Plotter
 {
@@ -35,6 +36,8 @@ namespace Plotter
 
         void DrawSelectedPoint(Vector3d pt, DrawPen pen);
 
+        void DrawSelectedPoints(VertexList pointList, DrawPen pen);
+
         void DrawMarkCursor(DrawPen pen, Vector3d p, double pix_size);
 
         void DrawRect(DrawPen pen, Vector3d p0, Vector3d p1);
@@ -67,5 +70,7 @@ namespace Plotter
         void DrawRectScrn(DrawPen pen, Vector3d p0, Vector3d p1);
 
         void DrawCrossScrn(DrawPen pen, Vector3d p, double size);
+
+        void DrawBouncingBox(DrawPen pen, MinMax3D mm);
     }
 }

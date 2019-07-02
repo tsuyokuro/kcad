@@ -216,38 +216,31 @@ namespace Plotter
 
     public struct MinMax2D
     {
-        public double MinX;
-        public double MinY;
-        public double MaxX;
-        public double MaxY;
+        public Vector2d Min;
+        public Vector2d Max;
 
-        public static MinMax2D Create(
-            double minx = Double.MaxValue,
-            double miny = Double.MaxValue,
-            double maxx = Double.MinValue,
-            double maxy = Double.MinValue
-            )
+        public static MinMax2D Create()
         {
             MinMax2D mm = default(MinMax2D);
 
-            mm.MinX = minx;
-            mm.MinY = miny;
-            mm.MaxX = maxx;
-            mm.MaxY = maxy;
+            mm.Min.X = Double.MaxValue;
+            mm.Min.Y = Double.MaxValue;
 
+            mm.Max.X = Double.MinValue;
+            mm.Max.Y = Double.MinValue;
             return mm;
         }
 
         public void CheckMin(Vector3d p)
         {
-            MinX = Math.Min(MinX, p.X);
-            MinY = Math.Min(MinY, p.Y);
+            Min.X = Math.Min(Min.X, p.X);
+            Min.Y = Math.Min(Min.Y, p.Y);
         }
 
         public void CheckMax(Vector3d p)
         {
-            MaxX = Math.Max(MaxX, p.X);
-            MaxY = Math.Max(MaxY, p.Y);
+            Max.X = Math.Max(Max.X, p.X);
+            Max.Y = Math.Max(Max.Y, p.Y);
         }
 
         public void Check(Vector3d p)
@@ -258,14 +251,14 @@ namespace Plotter
 
         public void CheckMin(MinMax3D mm)
         {
-            MinX = Math.Min(MinX, mm.MinX);
-            MinY = Math.Min(MinY, mm.MinY);
+            Min.X = Math.Min(Min.X, mm.Min.X);
+            Min.Y = Math.Min(Min.Y, mm.Min.Y);
         }
 
         public void CheckMax(MinMax3D mm)
         {
-            MaxX = Math.Max(MaxX, mm.MaxX);
-            MaxY = Math.Max(MaxY, mm.MaxY);
+            Max.X = Math.Max(Max.X, mm.Max.X);
+            Max.Y = Math.Max(Max.Y, mm.Max.Y);
         }
 
         public void Check(MinMax3D mm)
@@ -276,20 +269,20 @@ namespace Plotter
 
         public Vector3d GetMinAsVector()
         {
-            return new Vector3d(MinX, MinY, 0);
+            return new Vector3d(Min.X, Min.Y, 0);
         }
 
         public Vector3d GetMaxAsVector()
         {
-            return new Vector3d(MaxX, MaxY, 0);
+            return new Vector3d(Max.X, Max.Y, 0);
         }
 
         public Vector3d Inner(Vector3d v)
         {
-            if (v.X > MaxX) v.X = MaxX;
-            if (v.Y > MaxY) v.Y = MaxY;
-            if (v.X < MinX) v.X = MinX;
-            if (v.Y < MinY) v.Y = MinY;
+            if (v.X > Max.X) v.X = Max.X;
+            if (v.Y > Max.Y) v.Y = Max.Y;
+            if (v.X < Min.X) v.X = Min.X;
+            if (v.Y < Min.Y) v.Y = Min.Y;
 
             return v;
         }
@@ -297,46 +290,37 @@ namespace Plotter
 
     public struct MinMax3D
     {
-        public double MinX;
-        public double MinY;
-        public double MinZ;
-        public double MaxX;
-        public double MaxY;
-        public double MaxZ;
+        public Vector3d Min;
+        public Vector3d Max;
 
         public static MinMax3D Create(
-            double minx = Double.MaxValue,
-            double miny = Double.MaxValue,
-            double minz = Double.MaxValue,
-            double maxx = Double.MinValue,
-            double maxy = Double.MinValue,
-            double maxz = Double.MinValue
             )
         {
-            MinMax3D mm = default(MinMax3D);
+            MinMax3D mm = default;
 
-            mm.MinX = minx;
-            mm.MinY = miny;
-            mm.MinZ = minz;
-            mm.MaxX = maxx;
-            mm.MaxY = maxy;
-            mm.MaxZ = maxz;
+            mm.Min.X = Double.MaxValue;
+            mm.Min.Y = Double.MaxValue;
+            mm.Min.Z = Double.MaxValue;
+
+            mm.Max.X = Double.MinValue;
+            mm.Max.Y = Double.MinValue;
+            mm.Max.Z = Double.MinValue;
 
             return mm;
         }
 
         public void CheckMin(Vector3d p)
         {
-            MinX = Math.Min(MinX, p.X);
-            MinY = Math.Min(MinY, p.Y);
-            MinZ = Math.Min(MinZ, p.Z);
+            Min.X = Math.Min(Min.X, p.X);
+            Min.Y = Math.Min(Min.Y, p.Y);
+            Min.Z = Math.Min(Min.Z, p.Z);
         }
 
         public void CheckMax(Vector3d p)
         {
-            MaxX = Math.Max(MaxX, p.X);
-            MaxY = Math.Max(MaxY, p.Y);
-            MaxZ = Math.Max(MaxZ, p.Z);
+            Max.X = Math.Max(Max.X, p.X);
+            Max.Y = Math.Max(Max.Y, p.Y);
+            Max.Z = Math.Max(Max.Z, p.Z);
         }
 
         public void Check(Vector3d p)
@@ -347,16 +331,16 @@ namespace Plotter
 
         public void CheckMin(MinMax3D mm)
         {
-            MinX = Math.Min(MinX, mm.MinX);
-            MinY = Math.Min(MinY, mm.MinY);
-            MinZ = Math.Min(MinZ, mm.MinZ);
+            Min.X = Math.Min(Min.X, mm.Min.X);
+            Min.Y = Math.Min(Min.Y, mm.Min.Y);
+            Min.Z = Math.Min(Min.Z, mm.Min.Z);
         }
 
         public void CheckMax(MinMax3D mm)
         {
-            MaxX = Math.Max(MaxX, mm.MaxX);
-            MaxY = Math.Max(MaxY, mm.MaxY);
-            MaxZ = Math.Max(MaxZ, mm.MaxZ);
+            Max.X = Math.Max(Max.X, mm.Max.X);
+            Max.Y = Math.Max(Max.Y, mm.Max.Y);
+            Max.Z = Math.Max(Max.Z, mm.Max.Z);
         }
 
         public void Check(MinMax3D mm)
@@ -367,12 +351,12 @@ namespace Plotter
 
         public Vector3d GetMinAsVector()
         {
-            return new Vector3d(MinX, MinY, MinZ);
+            return Min;
         }
 
         public Vector3d GetMaxAsVector()
         {
-            return new Vector3d(MaxX, MaxY, MaxZ);
+            return Max;
         }
     }
 }

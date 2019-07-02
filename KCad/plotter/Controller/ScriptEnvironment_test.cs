@@ -167,45 +167,45 @@ namespace Plotter.Controller
                 p0 = dc.WorldPointToDevPoint(seg.P0);
                 p1 = dc.WorldPointToDevPoint(seg.P1);
 
-                if (p0.X < mm.MinX)
+                if (p0.X < mm.Min.X)
                 {
-                    mm.MinX = p0.X;
+                    mm.Min.X = p0.X;
                 }
 
-                if (p1.X < mm.MinX)
+                if (p1.X < mm.Min.X)
                 {
-                    mm.MinX = p1.X;
+                    mm.Min.X = p1.X;
                 }
 
-                if (p0.X > mm.MaxX)
+                if (p0.X > mm.Max.X)
                 {
-                    mm.MaxX = p0.X;
+                    mm.Max.X = p0.X;
                 }
 
-                if (p1.X > mm.MaxX)
+                if (p1.X > mm.Max.X)
                 {
-                    mm.MaxX = p1.X;
+                    mm.Max.X = p1.X;
                 }
 
 
-                if (p0.Y < mm.MinY)
+                if (p0.Y < mm.Min.Y)
                 {
-                    mm.MinY = p0.Y;
+                    mm.Min.Y = p0.Y;
                 }
 
-                if (p1.Y < mm.MinY)
+                if (p1.Y < mm.Min.Y)
                 {
-                    mm.MinY = p1.Y;
+                    mm.Min.Y = p1.Y;
                 }
 
-                if (p0.Y > mm.MaxY)
+                if (p0.Y > mm.Max.Y)
                 {
-                    mm.MaxY = p0.Y;
+                    mm.Max.Y = p0.Y;
                 }
 
-                if (p1.Y > mm.MaxY)
+                if (p1.Y > mm.Max.Y)
                 {
-                    mm.MaxY = p1.Y;
+                    mm.Max.Y = p1.Y;
                 }
 
                 return true;
@@ -702,7 +702,7 @@ namespace Plotter.Controller
             RunOnMainThread(() => {
                 Controller.Clear();
                 Controller.DrawAll();
-                Controller.PushCurrent();
+                Controller.PushDraw();
             });
         }
     }

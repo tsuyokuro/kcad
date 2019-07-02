@@ -14,7 +14,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_DEFAULT] = Color.White;
             PenColorTbl[DrawTools.PEN_SELECT_POINT] = Color.FromArgb(128, 255, 0);
             PenColorTbl[DrawTools.PEN_CURSOR] = Color.LightBlue;
-            PenColorTbl[DrawTools.PEN_CURSOR2] = Color.FromArgb(128, 255, 128);
+            PenColorTbl[DrawTools.PEN_CURSOR2] = Color.FromArgb(64, 128, 64);
             PenColorTbl[DrawTools.PEN_DEFAULT_FIGURE] = Color.White;
             PenColorTbl[DrawTools.PEN_TEMP_FIGURE] = Color.CadetBlue;
             PenColorTbl[DrawTools.PEN_POINT_HIGHLIGHT] = Color.Orange;

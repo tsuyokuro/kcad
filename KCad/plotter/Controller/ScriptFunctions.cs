@@ -98,7 +98,7 @@ namespace Plotter.Controller
             {
                 Env.Controller.Clear();
                 Env.Controller.DrawAll();
-                Env.Controller.PushCurrent();
+                Env.Controller.PushDraw();
             });
         }
     }
@@ -712,7 +712,7 @@ namespace Plotter.Controller
         public double Area()
         {
             double area = PlotterUtil.Area(Controller);
-            ItConsole.println("Area: " + (area / 100).ToString() + " (㎠)");
+            ItConsole.println("Area: " + AnsiEsc.BYellow + (area / 100).ToString() + " (㎠)");
 
             return area;
         }
@@ -1461,7 +1461,7 @@ namespace Plotter.Controller
             {
                 Controller.Clear();
                 Controller.DrawAll();
-                Controller.PushCurrent();
+                Controller.PushDraw();
             });
         }
 
@@ -1521,7 +1521,7 @@ namespace Plotter.Controller
 
             DrawContext dc = Controller.CurrentDC.CreatePrinterContext(pageSize, deviceSize);
 
-            dc.SetupTools(DrawTools.ToolsType.PRINTER_GL);
+            dc.SetupTools(DrawTools.ToolsType.PRINTER);
 
             FrameBufferW fb = new FrameBufferW();
             fb.Create((int)deviceSize.Width, (int)deviceSize.Height);

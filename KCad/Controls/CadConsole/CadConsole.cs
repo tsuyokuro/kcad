@@ -38,6 +38,7 @@ namespace KCad
 
         protected bool mIsLoaded = false;
 
+        public Action<string> Posting = s => { };
 
         #region Properties
         public Brush Background
@@ -159,11 +160,22 @@ namespace KCad
 
         private void CadConsoleView_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (Keyboard.Modifiers == ModifierKeys.Control && (e.Key == Key.C || e.Key == Key.Insert))
+            if (Keyboard.Modifiers == ModifierKeys.Control)
             {
-                string copyString = GetSelectedString();
+                if (e.Key == Key.C || e.Key == Key.Insert)
+                {
+                    string copyString = GetSelectedString();
+                    System.Windows.Clipboard.SetDataObject(copyString, true);
+                }
+                else if (e.Key == Key.D)
+                {
+                    string postString = GetSelectedString();
 
-                System.Windows.Clipboard.SetDataObject(copyString, true);
+                    if (postString != null && postString.Length > 0)
+                    {
+                        Posting(postString);
+                    }
+                }
             }
             else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.X)
             {

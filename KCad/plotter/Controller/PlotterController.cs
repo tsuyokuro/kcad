@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using CadDataTypes;
-using System.Drawing.Printing;
-using Plotter.Controller.TaskRunner;
-using System.Drawing;
-using GLUtil;
+﻿using CadDataTypes;
 using OpenTK;
+using Plotter.Controller.TaskRunner;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Printing;
 
 namespace Plotter.Controller
 {
@@ -136,6 +135,7 @@ namespace Plotter.Controller
         }
         #endregion
 
+
         #region TreeView
         public void UpdateTreeView(bool remakeTree)
         {
@@ -154,11 +154,8 @@ namespace Plotter.Controller
 
         #endregion TreeView
 
+
         #region Notify
-        //public void NotifyDataChanged(bool redraw)
-        //{
-        //    Observer.DataChanged(this, redraw);
-        //}
 
         public void UpdateLayerList()
         {
@@ -181,9 +178,11 @@ namespace Plotter.Controller
 
             Observer.StateChanged(this, si);
         }
-    #endregion
 
-    #region Start and End creating figure
+        #endregion Notify
+
+
+        #region Start and End creating figure
 
         public void StartCreateFigure(CadFigure.Types type)
         {
@@ -256,15 +255,11 @@ namespace Plotter.Controller
             MeasureFigureCreator = null;
         }
 
-        #endregion
+        #endregion Start and End creating figure
 
-        public void setCurrentLayer(uint id)
-        {
-            mDB.CurrentLayerID = id;
-            UpdateTreeView(true);
-        }
 
         #region "undo redo"
+
         public void Undo()
         {
             ClearSelection();
@@ -280,9 +275,17 @@ namespace Plotter.Controller
             UpdateTreeView(true);
             UpdateLayerList();
         }
+
         #endregion
 
+
         #region "Draw methods"
+
+        public void PushDraw()
+        {
+            CurrentDC.Push();
+        }
+
         public void Redraw(DrawContext dc = null)
         {
             if (dc == null)
@@ -340,7 +343,7 @@ namespace Plotter.Controller
             {
                 foreach (CadLayer layer in mDB.LayerList)
                 {
-                    if (!layer.Visible) { continue; }
+                    if (!layer.Visible) continue;
 
                     // Skip current layer.
                     // It will be drawn at the end.
@@ -352,7 +355,7 @@ namespace Plotter.Controller
                 }
 
                 // Draw current layer at last
-                if (CurrentLayer != null)
+                if (CurrentLayer != null && CurrentLayer.Visible)
                 {
                     DrawPen pen = dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE);
                     dc.Drawing.Draw(CurrentLayer.FigureList, pen);
@@ -497,10 +500,6 @@ namespace Plotter.Controller
 
         #endregion
 
-        public void PushCurrent()
-        {
-            CurrentDC.Push();
-        }
 
         #region Private editing figure methods
 
@@ -599,7 +598,7 @@ namespace Plotter.Controller
 
                 int i = list.Count - 1;
 
-                for (; i>=0; i--)
+                for (; i >= 0; i--)
                 {
                     CadFigure fig = list[i];
 
@@ -646,9 +645,10 @@ namespace Plotter.Controller
             }
         }
 
+        #endregion
 
-#endregion
 
+        #region Getting selection
         public bool HasSelect()
         {
             bool ret = false;
@@ -706,6 +706,8 @@ namespace Plotter.Controller
             return figList;
         }
 
+        #endregion Getting selection
+
 
         public void Cancel()
         {
@@ -755,10 +757,21 @@ namespace Plotter.Controller
             Redraw(CurrentDC);
         }
 
+        public void SetCurrentLayer(uint id)
+        {
+            mDB.CurrentLayerID = id;
+            UpdateTreeView(true);
+        }
+
         public void TextCommand(string s)
         {
             //ScriptEnv.ExecuteCommandSync(s);
             ScriptEnv.ExecuteCommandAsync(s);
+        }
+
+        public void PrintPage(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        {
+            PlotterPrinter.PrintPage(this, printerGraphics, pageSize, deviceSize);
         }
     }
 }

@@ -2,17 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using Newtonsoft.Json.Linq;
 using CadDataTypes;
+using OpenTK;
+using Plotter.Serializer.v1001;
 
 namespace Plotter
 {
-    using OpenTK;
-    using Plotter.Serializer;
-    using Plotter.Serializer.v1001;
-    using static CadFigure;
-
     public partial class CadFigure
     {
         #region Enums
@@ -64,6 +59,11 @@ namespace Plotter
             }
 
             return TypeNames[Types.NONE];
+
+            //string s = Enum.GetName(typeof(Types), type);
+            //if (s == null) return "UNKNOWN";
+
+            //return s;
         }
 
 

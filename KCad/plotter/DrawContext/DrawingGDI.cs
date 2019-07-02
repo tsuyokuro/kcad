@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using OpenTK;
+using CadDataTypes;
 
 namespace Plotter
 {
@@ -39,7 +40,7 @@ namespace Plotter
                 {
                     if (a.Current)
                     {
-                        a.Draw(DC, DrawPen.New(DC, DrawTools.PEN_FIGURE_HIGHLIGHT));
+                        a.Draw(DC, DC.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT));
                     }
                     else
                     {
@@ -78,7 +79,7 @@ namespace Plotter
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
 
-            DrawLine(DrawPen.New(DC, DrawTools.PEN_AXIS), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS), p0, p1);
 
             // Y軸
             p0.X = 0;
@@ -92,7 +93,7 @@ namespace Plotter
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
 
-            DrawLine(DrawPen.New(DC, DrawTools.PEN_AXIS), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS), p0, p1);
 
             // Z軸
             p0.X = 0;
@@ -106,7 +107,7 @@ namespace Plotter
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
 
-            DrawLine(DrawPen.New(DC, DrawTools.PEN_AXIS), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS), p0, p1);
 
             //DrawAxis2();
         }
@@ -129,7 +130,7 @@ namespace Plotter
             double maxz = Math.Max(ltw.Z, rbw.Z);
 
 
-            DrawPen pen = DrawPen.New(DC, DrawTools.PEN_GRID);
+            DrawPen pen = DC.GetPen(DrawTools.PEN_GRID);
 
             Vector3d p = default(Vector3d);
 
@@ -231,7 +232,7 @@ namespace Plotter
 
             p1 += DC.ViewOrg;
 
-            DrawRectScrn(DrawPen.New(DC, DrawTools.PEN_PAGE_FRAME), p0, p1);
+            DrawRectScrn(DC.GetPen(DrawTools.PEN_PAGE_FRAME), p0, p1);
         }
         #endregion
 
@@ -256,6 +257,17 @@ namespace Plotter
                 (int)pp.X - size, (int)pp.Y - size,
                 (int)pp.X + size, (int)pp.Y + size
                 );
+        }
+
+        public override void DrawSelectedPoints(VertexList pointList, DrawPen pen)
+        {
+            foreach (CadVertex p in pointList)
+            {
+                if (p.Selected)
+                {
+                    DrawSelectedPoint(p.vector, pen);
+                }
+            }
         }
 
         public override void DrawMarkCursor(DrawPen pen, Vector3d p, double pix_size)
@@ -566,7 +578,7 @@ namespace Plotter
             p1.Y = 0 + cp.Y;
             p1.Z = 0 + cp.Z;
 
-            DrawLine(DrawPen.New(DC, DrawTools.PEN_AXIS2), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS2), p0, p1);
 
             tp = DC.WorldPointToDevPoint(p0);
             minMax2D.Check(tp);
@@ -583,7 +595,7 @@ namespace Plotter
             p1.Y = len + cp.Y;
             p1.Z = 0 + cp.Z;
 
-            DrawLine(DrawPen.New(DC, DrawTools.PEN_AXIS2), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS2), p0, p1);
 
             tp = DC.WorldPointToDevPoint(p0);
             minMax2D.Check(tp);
@@ -601,7 +613,7 @@ namespace Plotter
             p1.Y = 0 + cp.Y;
             p1.Z = len + cp.Z;
 
-            DrawLine(DrawPen.New(DC, DrawTools.PEN_AXIS2), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS2), p0, p1);
 
             tp = DC.WorldPointToDevPoint(p0);
             minMax2D.Check(tp);
@@ -609,8 +621,8 @@ namespace Plotter
             minMax2D.Check(tp);
             zp = tp;
 
-            minMax2D.MaxX -= 8;
-            minMax2D.MaxY -= 8;
+            minMax2D.Max.X -= 8;
+            minMax2D.Max.Y -= 8;
 
             xp = minMax2D.Inner(xp);
             yp = minMax2D.Inner(yp);
@@ -620,14 +632,42 @@ namespace Plotter
             yp.Y -= 7;
             zp.Y -= 7;
 
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), xp, Vector3d.UnitX, default(DrawTextOption), "x");
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), yp, Vector3d.UnitX, default(DrawTextOption), "y");
-            DrawTextScrn(DrawTools.FONT_SMALL, DrawBrush.New(DC, DrawTools.BRUSH_TEXT), zp, Vector3d.UnitX, default(DrawTextOption), "z");
+            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_TEXT), xp, Vector3d.UnitX, default(DrawTextOption), "x");
+            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_TEXT), yp, Vector3d.UnitX, default(DrawTextOption), "y");
+            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_TEXT), zp, Vector3d.UnitX, default(DrawTextOption), "z");
         }
 
         public override void Dispose()
         {
 
+        }
+
+        public override void DrawBouncingBox(DrawPen pen, MinMax3D mm)
+        {
+            Vector3d p0 = new Vector3d(mm.Min.X, mm.Min.Y, mm.Min.Z);
+            Vector3d p1 = new Vector3d(mm.Min.X, mm.Min.Y, mm.Max.Z);
+            Vector3d p2 = new Vector3d(mm.Max.X, mm.Min.Y, mm.Max.Z);
+            Vector3d p3 = new Vector3d(mm.Max.X, mm.Min.Y, mm.Min.Z);
+
+            Vector3d p4 = new Vector3d(mm.Min.X, mm.Max.Y, mm.Min.Z);
+            Vector3d p5 = new Vector3d(mm.Min.X, mm.Max.Y, mm.Max.Z);
+            Vector3d p6 = new Vector3d(mm.Max.X, mm.Max.Y, mm.Max.Z);
+            Vector3d p7 = new Vector3d(mm.Max.X, mm.Max.Y, mm.Min.Z);
+
+            DC.Drawing.DrawLine(pen, p0, p1);
+            DC.Drawing.DrawLine(pen, p1, p2);
+            DC.Drawing.DrawLine(pen, p2, p3);
+            DC.Drawing.DrawLine(pen, p3, p0);
+
+            DC.Drawing.DrawLine(pen, p4, p5);
+            DC.Drawing.DrawLine(pen, p5, p6);
+            DC.Drawing.DrawLine(pen, p6, p7);
+            DC.Drawing.DrawLine(pen, p7, p4);
+
+            DC.Drawing.DrawLine(pen, p0, p4);
+            DC.Drawing.DrawLine(pen, p1, p5);
+            DC.Drawing.DrawLine(pen, p2, p6);
+            DC.Drawing.DrawLine(pen, p3, p7);
         }
     }
 }
