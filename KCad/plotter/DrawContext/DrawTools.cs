@@ -9,29 +9,6 @@ using System.Windows.Resources;
 
 namespace Plotter
 {
-    /*
-    public class GLPen
-    {
-        public Color4 Color;
-        public float Width;
-
-        public GLPen(Color4 color, float t)
-        {
-            Color = color;
-            Width = t;
-        }
-    }
-
-    public class GLBrush
-    {
-        public Color4 Color;
-
-        public GLBrush(Color4 color)
-        {
-            Color = color;
-        }
-    }
-    */
     public class DrawTools : IDisposable
     {
         public const int PEN_DEFAULT = 1;
@@ -84,8 +61,8 @@ namespace Plotter
         {
             DARK,
             PRINTER,
-            DARK_GL,
-            PRINTER_GL,
+            //DARK_GL,
+            //PRINTER_GL,
         }
 
 
@@ -96,8 +73,8 @@ namespace Plotter
         DrawBrush[] BrushTbl = null;
         Font[] FontTbl = null;
 
-        DrawPen[] GLPenTbl = null;
-        DrawBrush[] GLBrushTbl = null;
+        //DrawPen[] GLPenTbl = null;
+        //DrawBrush[] GLBrushTbl = null;
 
         private void AllocGDITbl()
         {
@@ -106,11 +83,11 @@ namespace Plotter
             FontTbl = new Font[FONT_TBL_SIZE];
         }
 
-        private void AllocGLTbl()
-        {
-            GLPenTbl = new DrawPen[PEN_TBL_SIZE];
-            GLBrushTbl = new DrawBrush[BRUSH_TBL_SIZE];
-        }
+        //private void AllocGLTbl()
+        //{
+        //    GLPenTbl = new DrawPen[PEN_TBL_SIZE];
+        //    GLBrushTbl = new DrawBrush[BRUSH_TBL_SIZE];
+        //}
 
         public void Setup(ToolsType t)
         {
@@ -122,35 +99,35 @@ namespace Plotter
             {
                 SetupPrinterSet();
             }
-            else if (t == ToolsType.DARK_GL)
-            {
-                SetupDarkSetGL();
-            }
-            else if (t == ToolsType.PRINTER_GL)
-            {
-                SetupPrinterSetGL();
-            }
+            //else if (t == ToolsType.DARK_GL)
+            //{
+            //    SetupDarkSetGL();
+            //}
+            //else if (t == ToolsType.PRINTER_GL)
+            //{
+            //    SetupPrinterSetGL();
+            //}
         }
 
-        public static bool IsTypeForGL(ToolsType t)
-        {
-            if (t == ToolsType.DARK_GL || t == ToolsType.PRINTER_GL)
-            {
-                return true;
-            }
+        //public static bool IsTypeForGL(ToolsType t)
+        //{
+        //    if (t == ToolsType.DARK_GL || t == ToolsType.PRINTER_GL)
+        //    {
+        //        return true;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
-        public static bool IsTypeForGDI(ToolsType t)
-        {
-            if (t == ToolsType.DARK || t == ToolsType.PRINTER)
-            {
-                return true;
-            }
+        //public static bool IsTypeForGDI(ToolsType t)
+        //{
+        //    if (t == ToolsType.DARK || t == ToolsType.PRINTER)
+        //    {
+        //        return true;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
 
         private void SetupDarkSet()
@@ -209,51 +186,51 @@ namespace Plotter
             FontTbl[FONT_SMALL]             = new Font(fontFamily, FONT_SIZE_SMALL);
         }
 
-        private void SetupDarkSetGL()
-        {
-            AllocGLTbl();
+        //private void SetupDarkSetGL()
+        //{
+        //    AllocGLTbl();
 
-            PenColorTbl = DarkColors.PenColorTbl;
-            BrushColorTbl = DarkColors.BrushColorTbl;
+        //    PenColorTbl = DarkColors.PenColorTbl;
+        //    BrushColorTbl = DarkColors.BrushColorTbl;
 
-            float width = 1.0f;
+        //    float width = 1.0f;
 
-            for (int i = 0; i < PEN_TBL_SIZE; i++)
-            {
-                GLPenTbl[i] = DrawPen.New(PenColorTbl[i], width);
-                GLPenTbl[i].ID = i;
-            }
+        //    for (int i = 0; i < PEN_TBL_SIZE; i++)
+        //    {
+        //        GLPenTbl[i] = DrawPen.New(PenColorTbl[i], width);
+        //        GLPenTbl[i].ID = i;
+        //    }
 
-            for (int i = 0; i < BRUSH_TBL_SIZE; i++)
-            {
-                GLBrushTbl[i] = DrawBrush.New(BrushColorTbl[i]);
-                GLBrushTbl[i].ID = i;
-            }
-        }
+        //    for (int i = 0; i < BRUSH_TBL_SIZE; i++)
+        //    {
+        //        GLBrushTbl[i] = DrawBrush.New(BrushColorTbl[i]);
+        //        GLBrushTbl[i].ID = i;
+        //    }
+        //}
 
-        private void SetupPrinterSetGL()
-        {
-            AllocGLTbl();
+        //private void SetupPrinterSetGL()
+        //{
+        //    AllocGLTbl();
 
-            PenColorTbl = PrintColors.PenColorTbl;
+        //    PenColorTbl = PrintColors.PenColorTbl;
 
-            BrushColorTbl = new Color[PrintColors.BrushColorTbl.Length];
-            Array.Copy(PrintColors.BrushColorTbl, BrushColorTbl, PrintColors.BrushColorTbl.Length);
+        //    BrushColorTbl = new Color[PrintColors.BrushColorTbl.Length];
+        //    Array.Copy(PrintColors.BrushColorTbl, BrushColorTbl, PrintColors.BrushColorTbl.Length);
 
-            float width = 1.0f;
+        //    float width = 1.0f;
 
-            for (int i = 0; i < PEN_TBL_SIZE; i++)
-            {
-                GLPenTbl[i] = DrawPen.New(PenColorTbl[i], width);
-            }
+        //    for (int i = 0; i < PEN_TBL_SIZE; i++)
+        //    {
+        //        GLPenTbl[i] = DrawPen.New(PenColorTbl[i], width);
+        //    }
 
-            BrushColorTbl[BRUSH_BACKGROUND] = Color.FromArgb(255, 255, 255, 255);
+        //    BrushColorTbl[BRUSH_BACKGROUND] = Color.FromArgb(255, 255, 255, 255);
 
-            for (int i = 0; i < BRUSH_TBL_SIZE; i++)
-            {
-                GLBrushTbl[i] = DrawBrush.New(BrushColorTbl[i]);
-            }
-        }
+        //    for (int i = 0; i < BRUSH_TBL_SIZE; i++)
+        //    {
+        //        GLBrushTbl[i] = DrawBrush.New(BrushColorTbl[i]);
+        //    }
+        //}
 
         public void Dispose()
         {
@@ -338,12 +315,12 @@ namespace Plotter
 
         #endregion
 
-        public DrawPen pen(int id)
+        public DrawPen Pen(int id)
         {
             return PenTbl[id];
         }
 
-        public DrawBrush brush(int id)
+        public DrawBrush Brush(int id)
         {
             return BrushTbl[id];
         }
@@ -363,15 +340,15 @@ namespace Plotter
             return FontTbl[id];
         }
 
-        public DrawPen glpen(int id)
-        {
-            return GLPenTbl[id];
-        }
+        //public DrawPen glpen(int id)
+        //{
+        //    return GLPenTbl[id];
+        //}
 
-        public DrawBrush glbrush(int id)
-        {
-            return GLBrushTbl[id];
-        }
+        //public DrawBrush glbrush(int id)
+        //{
+        //    return GLBrushTbl[id];
+        //}
     }
 
 
@@ -453,17 +430,15 @@ namespace Plotter
             return Color.FromArgb(Argb);
         }
 
-        public static DrawPen New(DrawContextGDI dc, int id)
-        {
-            DrawPen dt = dc.Tools.pen(id);
-            return dt;
-        }
+        //public static DrawPen Get(DrawContextGDI dc, int id)
+        //{
+        //    return dc.Tools.Pen(id);
+        //}
 
-        public static DrawPen New(DrawContextGL dc, int id)
-        {
-            DrawPen dt = dc.Tools.glpen(id);
-            return dt;
-        }
+        //public static DrawPen Get(DrawContextGL dc, int id)
+        //{
+        //    return dc.Tools.Pen(id);
+        //}
 
         public static DrawPen New(Pen pen)
         {
@@ -530,21 +505,18 @@ namespace Plotter
 
         public static DrawBrush New()
         {
-            DrawBrush dt = default;
-            return dt;
+            return default;
         }
 
-        public static DrawBrush New(DrawContextGL dc, int id)
-        {
-            DrawBrush dt = dc.Tools.glbrush(id);
-            return dt;
-        }
+        //public static DrawBrush Get(DrawContextGL dc, int id)
+        //{
+        //    return dc.Tools.Brush(id);
+        //}
 
-        public static DrawBrush New(DrawContextGDI dc, int id)
-        {
-            DrawBrush dt = dc.Tools.brush(id);
-            return dt;
-        }
+        //public static DrawBrush Get(DrawContextGDI dc, int id)
+        //{
+        //    return dc.Tools.Brush(id);
+        //}
 
         public static DrawBrush New(SolidBrush brush)
         {

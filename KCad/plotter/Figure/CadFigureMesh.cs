@@ -1,6 +1,7 @@
 ﻿using CadDataTypes;
 using HalfEdgeNS;
 using MyCollections;
+using OpenTK;
 using Plotter.Serializer.v1001;
 using System;
 using System.Collections.Generic;
@@ -158,8 +159,16 @@ namespace Plotter
             }
             else
             {
-                borderPen = DrawPen.NullPen;
-                edgePen = DrawPen.NullPen;
+                if (pen.ID == DrawTools.PEN_FIGURE_HIGHLIGHT)
+                {
+                    borderPen = pen;
+                    edgePen = pen;
+                }
+                else
+                {
+                    borderPen = DrawPen.NullPen;
+                    edgePen = DrawPen.NullPen;
+                }
             }
 
 
@@ -173,32 +182,7 @@ namespace Plotter
 
         public override void DrawSelected(DrawContext dc, DrawPen pen)
         {
-            int i;
-            int num = PointList.Count;
-
-            int selCount = 0;
-
-            for (i = 0; i < num; i++)
-            {
-                CadVertex p = PointList[i];
-
-                if (p.Selected) selCount++;
-            }
-
-            if (selCount >= num)
-            {
-                return;
-            }
-
-
-            for (i = 0; i < num; i++)
-            {
-                CadVertex p = PointList[i];
-
-                if (!p.Selected) continue;
-
-                dc.Drawing.DrawSelectedPoint(p.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
-            }
+            dc.Drawing.DrawSelectedPoints(PointList, dc.GetPen(DrawTools.PEN_SELECT_POINT));
         }
 
         public override void SelectPointAt(int index, bool sel)

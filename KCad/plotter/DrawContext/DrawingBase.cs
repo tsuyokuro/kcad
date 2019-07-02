@@ -1,4 +1,5 @@
-﻿using HalfEdgeNS;
+﻿using CadDataTypes;
+using HalfEdgeNS;
 using OpenTK;
 using System.Collections.Generic;
 
@@ -38,6 +39,10 @@ namespace Plotter
         {
         }
 
+        public virtual void DrawSelectedPoints(VertexList pointList, DrawPen pen)
+        {
+        }
+
         public virtual void DrawMarkCursor(DrawPen pen, Vector3d p, double pix_size)
         {
         }
@@ -57,43 +62,6 @@ namespace Plotter
         public virtual void DrawDot(DrawPen pen, Vector3d p)
         {
         }
-
-        //public virtual void DrawFace(DrawPen pen, VertexList pointList)
-        //{
-        //    DrawFace(pen, pointList, default(Vector3d), true);
-        //}
-
-        //public virtual void DrawFace(DrawPen pen, VertexList pointList, Vector3d normal, bool drawOutline)
-        //{
-        //}
-
-        //public virtual void DrawHarfEdgeModel(DrawPen pen, HeModel model)
-        //{
-        //    for (int i = 0; i < model.FaceStore.Count; i++)
-        //    {
-        //        HeFace f = model.FaceStore[i];
-
-        //        HalfEdge head = f.Head;
-
-        //        HalfEdge c = head;
-
-        //        for (; ; )
-        //        {
-        //            HalfEdge next = c.Next;
-
-        //            DrawLine(pen,
-        //                model.VertexStore.Ref(c.Vertex).vector,
-        //                model.VertexStore.Ref(next.Vertex).vector);
-
-        //            c = next;
-
-        //            if (c == head)
-        //            {
-        //                break;
-        //            }
-        //        }
-        //    }
-        //}
 
         public virtual void DrawHarfEdgeModel(
             DrawBrush brush, DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
@@ -192,7 +160,10 @@ namespace Plotter
 
         public virtual void Dispose()
         {
-            throw new System.NotImplementedException();
+        }
+
+        public virtual void DrawBouncingBox(DrawPen pen, MinMax3D mm)
+        {
         }
     }
 }
