@@ -79,7 +79,7 @@ namespace Plotter.Controller
         private MeasureModes mMeasureMode = MeasureModes.NONE;
         public MeasureModes MeasureMode
         {
-            get => MeasureMode;
+            get => mMeasureMode;
         }
 
         private CadFigure.Creator mFigureCreator = null;
