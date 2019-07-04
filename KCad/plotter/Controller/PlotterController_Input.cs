@@ -10,7 +10,12 @@ namespace Plotter.Controller
 {
     public partial class PlotterController
     {
-        public InteractCtrl mInteractCtrl = new InteractCtrl();
+        private InteractCtrl mInteractCtrl = new InteractCtrl();
+
+        public InteractCtrl InteractCtrl
+        {
+            get => mInteractCtrl;
+        }
 
         public CadMouse Mouse { get; } = new CadMouse();
 
@@ -429,7 +434,7 @@ namespace Plotter.Controller
 
                         CadFigure fig = mDB.NewFigure(CreatingFigType);
 
-                        FigureCreator = CadFigure.Creator.Get(CreatingFigType, fig);
+                        mFigureCreator = CadFigure.Creator.Get(CreatingFigType, fig);
 
                         State = States.CREATING;
 

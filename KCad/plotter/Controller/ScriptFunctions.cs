@@ -1362,7 +1362,7 @@ namespace Plotter.Controller
         {
             Env.OpenPopupMessage("Input point", PlotterObserver.MessageType.INPUT);
 
-            InteractCtrl ctrl = Controller.mInteractCtrl;
+            InteractCtrl ctrl = Controller.InteractCtrl;
 
             ctrl.Start();
 
@@ -1394,7 +1394,7 @@ namespace Plotter.Controller
 
         public Vector3d InputUnitVector()
         {
-            InteractCtrl ctrl = Controller.mInteractCtrl;
+            InteractCtrl ctrl = Controller.InteractCtrl;
 
             ctrl.Start();
 
@@ -1425,7 +1425,7 @@ namespace Plotter.Controller
                 return VectorExt.InvalidVector3d;
             }
 
-            Vector3d p1 = Controller.mInteractCtrl.PointList[1];
+            Vector3d p1 = Controller.InteractCtrl.PointList[1];
 
             ctrl.End();
 

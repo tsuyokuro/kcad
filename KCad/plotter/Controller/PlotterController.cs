@@ -22,8 +22,9 @@ namespace Plotter.Controller
         }
 
         private CadObjectDB mDB = new CadObjectDB();
+        public CadObjectDB DB => mDB;
 
-        States mState = States.SELECT;
+        private States mState = States.SELECT;
         public States State
         {
             private set
@@ -39,12 +40,10 @@ namespace Plotter.Controller
             get => mState;
         }
 
-        public States mBackState;
+        private States mBackState;
 
-        public CadObjectDB DB => mDB;
 
         private PaperPageSize mPageSize = new PaperPageSize(PaperKind.A4, false);
-
         public PaperPageSize PageSize
         {
             get => mPageSize;
@@ -77,10 +76,17 @@ namespace Plotter.Controller
             get => mCreatingFigType;
         }
 
-        public MeasureModes MeasureMode = MeasureModes.NONE;
+        private MeasureModes mMeasureMode = MeasureModes.NONE;
+        public MeasureModes MeasureMode
+        {
+            get => MeasureMode;
+        }
 
-
-        public CadFigure.Creator FigureCreator = null;
+        private CadFigure.Creator mFigureCreator = null;
+        public CadFigure.Creator FigureCreator
+        {
+            get => mFigureCreator;
+        }
 
         public CadFigure.Creator MeasureFigureCreator = null;
 
@@ -192,10 +198,10 @@ namespace Plotter.Controller
 
         public void EndCreateFigure()
         {
-            if (FigureCreator != null)
+            if (mFigureCreator != null)
             {
-                FigureCreator.EndCreate(CurrentDC);
-                FigureCreator = null;
+                mFigureCreator.EndCreate(CurrentDC);
+                mFigureCreator = null;
             }
 
             NextState();
@@ -222,12 +228,12 @@ namespace Plotter.Controller
             {
                 if (ContinueCreate)
                 {
-                    FigureCreator = null;
+                    mFigureCreator = null;
                     StartCreateFigure(CreatingFigType);
                 }
                 else
                 {
-                    FigureCreator = null;
+                    mFigureCreator = null;
                     CreatingFigType = CadFigure.Types.NONE;
                     State = States.SELECT;
 
@@ -240,7 +246,7 @@ namespace Plotter.Controller
         public void StartMeasure(MeasureModes mode)
         {
             State = States.MEASURING;
-            MeasureMode = mode;
+            mMeasureMode = mode;
             MeasureFigureCreator =
                 CadFigure.Creator.Get(
                     CadFigure.Types.POLY_LINES,
@@ -251,7 +257,7 @@ namespace Plotter.Controller
         public void EndMeasure()
         {
             State = States.SELECT;
-            MeasureMode = MeasureModes.NONE;
+            mMeasureMode = MeasureModes.NONE;
             MeasureFigureCreator = null;
         }
 
@@ -737,7 +743,7 @@ namespace Plotter.Controller
             else if (State == States.MEASURING)
             {
                 State = States.SELECT;
-                MeasureMode = MeasureModes.NONE;
+                mMeasureMode = MeasureModes.NONE;
                 MeasureFigureCreator = null;
 
                 NotifyStateChange();

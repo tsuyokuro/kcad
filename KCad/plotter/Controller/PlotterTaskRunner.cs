@@ -194,7 +194,7 @@ namespace Plotter.Controller.TaskRunner
 
         public (Vector3d p0, InteractCtrl.States state) InputPoint()
         {
-            InteractCtrl ctrl = Controller.mInteractCtrl;
+            InteractCtrl ctrl = Controller.InteractCtrl;
 
             ctrl.Start();
 
@@ -226,7 +226,7 @@ namespace Plotter.Controller.TaskRunner
 
         public (Vector3d p0, Vector3d p1, InteractCtrl.States state) InputLine()
         {
-            InteractCtrl ctrl = Controller.mInteractCtrl;
+            InteractCtrl ctrl = Controller.InteractCtrl;
 
             ctrl.Start();
 
