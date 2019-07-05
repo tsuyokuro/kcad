@@ -362,14 +362,6 @@ namespace Plotter
             PopMatrixes();
         }
 
-        //public override void DrawSelectedPoint(Vector3d pt, DrawPen pen)
-        //{
-        //    Vector3d p0 = DC.WorldPointToDevPoint(pt).Add(-2);
-        //    Vector3d p1 = p0.Add(4);
-
-        //    DrawRect2D(p0, p1, pen);
-        //}
-
         public override void DrawSelectedPoint(Vector3d pt, DrawPen pen)
         {
             Vector3d p = DC.WorldPointToDevPoint(pt);
@@ -562,8 +554,29 @@ namespace Plotter
 
         public override void DrawHighlightPoint(Vector3d pt, DrawPen pen)
         {
-            Vector3d size = DC.DevVectorToWorldVector(Vector3d.UnitX * 4);
-            DrawCross(pen, pt, size.Norm());
+            GL.LineWidth(2);
+
+            Start2D();
+            DrawCross(pen, DC.WorldPointToDevPoint(pt), 6);
+            End2D();
+
+            GL.LineWidth(1);
+        }
+
+        public override void DrawHighlightPoints(List<HighlightPointListItem> list)
+        {
+            Start2D();
+
+            GL.LineWidth(2);
+
+            list.ForEach(item =>
+            {
+                DrawCross(item.Pen, DC.WorldPointToDevPoint(item.Point), 6);
+            });
+
+            GL.LineWidth(1);
+
+            End2D();
         }
 
         public override void DrawDot(DrawPen pen, Vector3d p)

@@ -498,10 +498,7 @@ namespace Plotter.Controller
 
         public void DrawHighlightPoint(DrawContext dc)
         {
-            HighlightPointList.ForEach(item =>
-            {
-                dc.Drawing.DrawHighlightPoint(item.Point, item.Pen);
-            });
+            dc.Drawing.DrawHighlightPoints(HighlightPointList);
         }
 
         #endregion

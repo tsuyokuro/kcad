@@ -34,6 +34,8 @@ namespace Plotter
 
         void DrawHighlightPoint(Vector3d pt, DrawPen pen);
 
+        void DrawHighlightPoints(List<HighlightPointListItem> list);
+
         void DrawSelectedPoint(Vector3d pt, DrawPen pen);
 
         void DrawSelectedPoints(VertexList pointList, DrawPen pen);

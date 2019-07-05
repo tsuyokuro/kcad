@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Plotter
 {
-    public class DrawingBase : IDrawing
+    public abstract class DrawingBase : IDrawing
     {
         public virtual void Clear(DrawBrush brush)
         {
@@ -31,13 +31,11 @@ namespace Plotter
         {
         }
 
-        public virtual void DrawHighlightPoint(Vector3d pt, DrawPen pen)
-        {
-        }
+        public abstract void DrawHighlightPoint(Vector3d pt, DrawPen pen);
 
-        public virtual void DrawSelectedPoint(Vector3d pt, DrawPen pen)
-        {
-        }
+        public abstract void DrawHighlightPoints(List<HighlightPointListItem> list);
+
+        public abstract void DrawSelectedPoint(Vector3d pt, DrawPen pen);
 
         public virtual void DrawSelectedPoints(VertexList pointList, DrawPen pen)
         {

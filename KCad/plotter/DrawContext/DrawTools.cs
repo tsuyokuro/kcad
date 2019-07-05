@@ -290,7 +290,7 @@ namespace Plotter
         }
     }
 
-    public struct DrawPen
+    public class DrawPen
     {
         public int ID;
 
@@ -328,7 +328,7 @@ namespace Plotter
 
         public static DrawPen New(Pen pen)
         {
-            DrawPen dt = default;
+            DrawPen dt = new DrawPen();
 
             dt.GdiPen = pen;
             dt.Argb = pen.Color.ToArgb();
@@ -338,7 +338,7 @@ namespace Plotter
 
         public static DrawPen New(Color color, float width)
         {
-            DrawPen dt = default;
+            DrawPen dt = new DrawPen();
 
             dt.Argb = color.ToArgb();
             dt.Width = width;
@@ -347,7 +347,7 @@ namespace Plotter
 
         public static DrawPen New(Color4 color, float width)
         {
-            DrawPen dt = default;
+            DrawPen dt = new DrawPen();
 
             dt.Argb = color.ToArgb();
             dt.Width = width;
@@ -355,7 +355,7 @@ namespace Plotter
         }
     }
 
-    public struct DrawBrush
+    public class DrawBrush
     {
         public int ID;
 
@@ -389,14 +389,9 @@ namespace Plotter
             return Color.FromArgb(Argb);
         }
 
-        public static DrawBrush New()
-        {
-            return default;
-        }
-
         public static DrawBrush New(SolidBrush brush)
         {
-            DrawBrush dt = default;
+            DrawBrush dt = new DrawBrush();
             dt.GdiBrush = brush;
             dt.Argb = brush.Color.ToArgb();
             return dt;
@@ -404,14 +399,14 @@ namespace Plotter
 
         public static DrawBrush New(Color color)
         {
-            DrawBrush dt = default;
+            DrawBrush dt = new DrawBrush();
             dt.Argb = color.ToArgb();
             return dt;
         }
 
         public static DrawBrush New(Color4 color)
         {
-            DrawBrush dt = default;
+            DrawBrush dt = new DrawBrush();
             dt.Argb = color.ToArgb();
             return dt;
         }

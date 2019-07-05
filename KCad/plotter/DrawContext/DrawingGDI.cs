@@ -246,6 +246,14 @@ namespace Plotter
             DrawCrossScrn(pen, pp, 4);
         }
 
+        public override void DrawHighlightPoints(List<HighlightPointListItem> list)
+        {
+            list.ForEach(item =>
+            {
+                DrawHighlightPoint(item.Point, item.Pen);
+            });
+        }
+
         public override void DrawSelectedPoint(Vector3d pt, DrawPen pen)
         {
             Vector3d pp = DC.WorldPointToDevPoint(pt);
