@@ -201,8 +201,8 @@
     <Compile Include="plotter\Controller\PlotterDrawer.cs" />
     <Compile Include="plotter\Controller\PlotterPrinter.cs" />
     <Compile Include="plotter\Controller\SnapInfo.cs" />
-    <Compile Include="plotter\DrawContext\PrintColors.cs" />
-    <Compile Include="plotter\DrawContext\DarkColors.cs" />
+    <Compile Include="plotter\DrawContext\DrawTools\PrintColors.cs" />
+    <Compile Include="plotter\DrawContext\DrawTools\DarkColors.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGLOrtho.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGLPers.cs" />
     <Compile Include="plotter\HalfEdge\HeModelBuilder.cs" />
@@ -248,7 +248,7 @@
     <Compile Include="plotter\Controller\ScriptFunctions.cs" />
     <Compile Include="plotter\Controller\ControllerTypes.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGDIBmp.cs" />
-    <Compile Include="plotter\DrawContext\DrawingGDIBmp.cs" />
+    <Compile Include="plotter\DrawContext\Drawing\DrawingGDIBmp.cs" />
     <Compile Include="plotter\Figure\CircleExpander.cs" />
     <Compile Include="plotter\Figure\PolyLineExpander.cs" />
     <Compile Include="plotter\Controller\CadCursor.cs" />
@@ -283,7 +283,7 @@
       <DependentUpon>MySplashWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="plotter\DrawContext\DrawContextPrinter.cs" />
-    <Compile Include="plotter\DrawContext\IDrawing.cs" />
+    <Compile Include="plotter\DrawContext\Drawing\IDrawing.cs" />
     <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
     <Compile Include="plotter\PlotterSettings.cs" />
     <Compile Include="plotter\primitive\CadPrimitive.cs" />
@@ -391,13 +391,13 @@
     <Compile Include="plotter\Assembler\TriangleSplitter.cs" />
     <Compile Include="plotter\Figure\CadFigurePoint.cs" />
     <Compile Include="plotter\HID\CadKeyboard.cs" />
-    <Compile Include="plotter\DrawContext\ArrowHead.cs" />
+    <Compile Include="plotter\DrawContext\DrawTools\ArrowHead.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGL.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGDI.cs" />
-    <Compile Include="plotter\DrawContext\DrawingGL.cs" />
-    <Compile Include="plotter\DrawContext\DrawingGDI.cs" />
+    <Compile Include="plotter\DrawContext\Drawing\DrawingGL.cs" />
+    <Compile Include="plotter\DrawContext\Drawing\DrawingGDI.cs" />
     <Compile Include="plotter\DrawContext\PaperPageSize.cs" />
-    <Compile Include="plotter\DrawContext\DrawTools.cs" />
+    <Compile Include="plotter\DrawContext\DrawTools\DrawTools.cs" />
     <Compile Include="plotter\Figure\CadFigure.cs" />
     <Compile Include="plotter\Assembler\CadFigureAssembler.cs" />
     <Compile Include="plotter\Figure\Creator.cs" />
