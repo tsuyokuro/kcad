@@ -396,7 +396,6 @@
     <Compile Include="plotter\DrawContext\DrawContextGDI.cs" />
     <Compile Include="plotter\DrawContext\DrawingGL.cs" />
     <Compile Include="plotter\DrawContext\DrawingGDI.cs" />
-    <Compile Include="plotter\DrawContext\DrawingBase.cs" />
     <Compile Include="plotter\DrawContext\PaperPageSize.cs" />
     <Compile Include="plotter\DrawContext\DrawTools.cs" />
     <Compile Include="plotter\Figure\CadFigure.cs" />
