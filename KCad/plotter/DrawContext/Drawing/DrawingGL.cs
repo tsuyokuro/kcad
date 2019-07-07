@@ -557,7 +557,9 @@ namespace Plotter
             GL.LineWidth(2);
 
             Start2D();
-            DrawCross(pen, DC.WorldPointToDevPoint(pt), 6);
+            // DrawCrossが呼び出すDrawLineがWorldScaleを掛けてるので、割っておく
+            // TODO 要改善 
+            DrawCross(pen, DC.WorldPointToDevPoint(pt) / DC.WorldScale, 6 / DC.WorldScale);
             End2D();
 
             GL.LineWidth(1);
@@ -571,7 +573,9 @@ namespace Plotter
 
             list.ForEach(item =>
             {
-                DrawCross(item.Pen, DC.WorldPointToDevPoint(item.Point), 6);
+                // DrawCrossが呼び出すDrawLineがWorldScaleを掛けてるので、割っておく
+                // TODO 要改善 
+                DrawCross(item.Pen, DC.WorldPointToDevPoint(item.Point) / DC.WorldScale, 6 / DC.WorldScale);
             });
 
             GL.LineWidth(1);

@@ -28,7 +28,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_RELATIVE_POINT] = Color.CornflowerBlue;
             PenColorTbl[DrawTools.PEN_TEST_FIGURE] = Color.Yellow;
             PenColorTbl[DrawTools.PEN_GRID] = Color.FromArgb(192, 128, 92);
-            PenColorTbl[DrawTools.PEN_POINT_HIGHLIGHT2] = Color.FromArgb(255, 0, 0);
+            PenColorTbl[DrawTools.PEN_POINT_HIGHLIGHT2] = Color.FromArgb(64, 255, 255);
             PenColorTbl[DrawTools.PEN_FIGURE_HIGHLIGHT] = Color.HotPink;
             PenColorTbl[DrawTools.PEN_AXIS2] = Color.LightSeaGreen;
             PenColorTbl[DrawTools.PEN_PALE_FIGURE] = Color.FromArgb(0x7E, 0x7E, 0x7E);
