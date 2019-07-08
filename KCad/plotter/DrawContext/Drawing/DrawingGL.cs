@@ -557,9 +557,10 @@ namespace Plotter
             GL.LineWidth(2);
 
             Start2D();
-            // DrawCrossが呼び出すDrawLineがWorldScaleを掛けてるので、割っておく
-            // TODO 要改善 
-            DrawCross(pen, DC.WorldPointToDevPoint(pt) / DC.WorldScale, 6 / DC.WorldScale);
+
+            GL.Color4(pen.Color4());
+            DrawCrossRaw(DC.WorldPointToDevPoint(pt), 6);
+
             End2D();
 
             GL.LineWidth(1);
@@ -567,20 +568,58 @@ namespace Plotter
 
         public void DrawHighlightPoints(List<HighlightPointListItem> list)
         {
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
+
             Start2D();
 
             GL.LineWidth(2);
 
             list.ForEach(item =>
             {
-                // DrawCrossが呼び出すDrawLineがWorldScaleを掛けてるので、割っておく
-                // TODO 要改善 
-                DrawCross(item.Pen, DC.WorldPointToDevPoint(item.Point) / DC.WorldScale, 6 / DC.WorldScale);
+                GL.Color4(item.Pen.Color4());
+                DrawCrossRaw(DC.WorldPointToDevPoint(item.Point), 6);
             });
 
             GL.LineWidth(1);
 
             End2D();
+        }
+
+        // Point sizeをそのまま使って十字を描画
+        private void DrawCrossRaw(Vector3d p, double size)
+        {
+            double hs = size;
+
+            Vector3d px0 = p;
+            px0.X -= hs;
+            Vector3d px1 = p;
+            px1.X += hs;
+
+            Vector3d py0 = p;
+            py0.Y -= hs;
+            Vector3d py1 = p;
+            py1.Y += hs;
+
+            Vector3d pz0 = p;
+            pz0.Z -= hs;
+            Vector3d pz1 = p;
+            pz1.Z += hs;
+
+            GL.Begin(PrimitiveType.LineStrip);
+            GL.Vertex3(px0);
+            GL.Vertex3(px1);
+            GL.End();
+
+            GL.Begin(PrimitiveType.LineStrip);
+            GL.Vertex3(py0);
+            GL.Vertex3(py1);
+            GL.End();
+
+            GL.Begin(PrimitiveType.LineStrip);
+            GL.Vertex3(pz0);
+            GL.Vertex3(pz1);
+            GL.End();
         }
 
         public void DrawDot(DrawPen pen, Vector3d p)

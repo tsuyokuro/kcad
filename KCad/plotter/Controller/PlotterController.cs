@@ -336,7 +336,15 @@ namespace Plotter.Controller
 
         public void DrawBase(DrawContext dc)
         {
-            dc.Drawing.DrawAxis();
+            if (dc.GetType() == typeof(DrawContextGLPers))
+            {
+                dc.Drawing.DrawAxis();
+            }
+            else
+            {
+                dc.Drawing.DrawCross(dc.GetPen(DrawTools.PEN_AXIS), Vector3d.Zero, 5 / dc.WorldScale);
+            }
+
             dc.Drawing.DrawPageFrame(PageSize.Width, PageSize.Height, Vector3d.Zero);
             DrawGrid(dc);
         }
