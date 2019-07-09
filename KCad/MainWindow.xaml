@@ -397,15 +397,19 @@
                             Header="Snap Settings..."
                             Tag="snap_settings" />
                     </MenuItem>
-                    <MenuItem x:Name="DrawOptionMenu" Header="Draw">
+                    <MenuItem x:Name="DrawOptionMenu" Header="{x:Static properties:Resources.menu_draw}">
                         <MenuItem
-                            Header="Draw face outline"
+                            Header="{x:Static properties:Resources.menu_draw_mesh_outline}"
                             IsCheckable="True"
                             IsChecked="{Binding DrawMeshEdge}" />
                         <MenuItem
-                            Header="Fill face"
+                            Header="{x:Static properties:Resources.menu_fill_mesh}"
                             IsCheckable="True"
                             IsChecked="{Binding FillMesh}" />
+                        <MenuItem
+                            Header="Draw axis"
+                            IsCheckable="True"
+                            IsChecked="{Binding DrawAxis}" />
                     </MenuItem>
                     <MenuItem Header="Script">
                         <MenuItem

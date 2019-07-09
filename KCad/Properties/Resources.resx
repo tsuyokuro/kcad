@@ -139,11 +139,20 @@
   <data name="menu_doc_settings" xml:space="preserve">
     <value>Document settings ...</value>
   </data>
+  <data name="menu_draw" xml:space="preserve">
+    <value>Draw</value>
+  </data>
+  <data name="menu_draw_mesh_outline" xml:space="preserve">
+    <value>Draw mesh outline</value>
+  </data>
   <data name="menu_edit" xml:space="preserve">
     <value>Edit</value>
   </data>
   <data name="menu_file" xml:space="preserve">
     <value>File</value>
+  </data>
+  <data name="menu_fill_mesh" xml:space="preserve">
+    <value>Fill mesh</value>
   </data>
   <data name="menu_load" xml:space="preserve">
     <value>Load</value>

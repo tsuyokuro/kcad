@@ -129,11 +129,20 @@
   <data name="menu_doc_settings" xml:space="preserve">
     <value>図面の設定...</value>
   </data>
+  <data name="menu_draw" xml:space="preserve">
+    <value>描画</value>
+  </data>
+  <data name="menu_draw_mesh_outline" xml:space="preserve">
+    <value>Meshのアウトラインを描画</value>
+  </data>
   <data name="menu_edit" xml:space="preserve">
     <value>編集</value>
   </data>
   <data name="menu_file" xml:space="preserve">
     <value>ファイル</value>
+  </data>
+  <data name="menu_fill_mesh" xml:space="preserve">
+    <value>Meshを塗りつぶす</value>
   </data>
   <data name="menu_load" xml:space="preserve">
     <value>読み込み</value>

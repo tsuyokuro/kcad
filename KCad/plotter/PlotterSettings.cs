@@ -128,6 +128,19 @@ namespace Plotter
             get => SettingsHolder.Settings.FillMesh;
         }
 
+        public bool DrawAxis
+        {
+            set
+            {
+                SettingsHolder.Settings.DrawAxis = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawAxis)));
+
+                Redraw();
+            }
+
+            get => SettingsHolder.Settings.DrawAxis;
+        }
+
         public double InitialMoveLimit
         {
             set
@@ -234,12 +247,15 @@ namespace Plotter
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawMeshEdge)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillMesh)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToZero)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLastDownPoint)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSelfPoint)));
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawMeshEdge)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillMesh)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawAxis)));
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
 
             Controller.Grid.GridSize = SettingsHolder.Settings.GridSize;
         }
@@ -272,12 +288,7 @@ namespace Plotter
 
         public double KeyMoveUnit = 1.0;
 
-        public bool DrawMeshEdge = true;
-
-        public bool FillMesh = true;
-
         public bool FilterTreeView = false;
-
 
         public double InitialMoveLimit = 6.0;
 
@@ -286,6 +297,14 @@ namespace Plotter
         public bool SnapToLastDownPoint = true;
 
         public bool SnapToSelfPoint = true;
+
+        #region Draw settings
+        public bool DrawMeshEdge = true;
+
+        public bool FillMesh = true;
+
+        public bool DrawAxis = true;       
+        #endregion
 
         public PlotterSettings()
         {
@@ -354,6 +373,7 @@ namespace Plotter
             jo = new JObject();
             jo.Add("DrawFaceOutline", DrawMeshEdge);
             jo.Add("FillFace", FillMesh);
+            jo.Add("DrawAxis", DrawAxis);
             root.Add("DrawSettings", jo);
 
             StreamWriter writer = new StreamWriter(fileName);
@@ -421,6 +441,7 @@ namespace Plotter
             jo = (JObject)root["DrawSettings"];
             DrawMeshEdge = jo.GetBool("DrawFaceOutline", DrawMeshEdge);
             FillMesh = jo.GetBool("FillFace", FillMesh);
+            DrawAxis = jo.GetBool("DrawAxis", DrawAxis);
 
             jo = (JObject)root["GridInfo"];
             if (jo != null)

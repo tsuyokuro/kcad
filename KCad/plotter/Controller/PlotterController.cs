@@ -336,13 +336,13 @@ namespace Plotter.Controller
 
         public void DrawBase(DrawContext dc)
         {
-            if (dc.GetType() == typeof(DrawContextGLPers))
+            if (SettingsHolder.Settings.DrawAxis)
             {
                 dc.Drawing.DrawAxis();
             }
             else
             {
-                dc.Drawing.DrawCross(dc.GetPen(DrawTools.PEN_AXIS), Vector3d.Zero, 5 / dc.WorldScale);
+                dc.Drawing.DrawCrossScrn(dc.GetPen(DrawTools.PEN_AXIS), dc.WorldPointToDevPoint(Vector3d.Zero), 8);
             }
 
             dc.Drawing.DrawPageFrame(PageSize.Width, PageSize.Height, Vector3d.Zero);
