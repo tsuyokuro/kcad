@@ -162,6 +162,12 @@
   <data name="menu_save_as" xml:space="preserve">
     <value>名前を付けて保存...</value>
   </data>
+  <data name="menu_script" xml:space="preserve">
+    <value>スクリプト</value>
+  </data>
+  <data name="menu_show_script_editor" xml:space="preserve">
+    <value>スクリプトエディタを表示</value>
+  </data>
   <data name="menu_snap" xml:space="preserve">
     <value>スナップ</value>
   </data>

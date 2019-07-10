@@ -411,10 +411,10 @@
                             IsCheckable="True"
                             IsChecked="{Binding DrawAxis}" />
                     </MenuItem>
-                    <MenuItem Header="Script">
+                    <MenuItem Header="{x:Static properties:Resources.menu_script}">
                         <MenuItem
                             Click="Command_Clicked"
-                            Header="Show editor"
+                            Header="{x:Static properties:Resources.menu_show_script_editor}"
                             Tag="show_editor" />
                     </MenuItem>
 

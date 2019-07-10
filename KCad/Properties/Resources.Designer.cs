@@ -224,6 +224,24 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Script に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_script {
+            get {
+                return ResourceManager.GetString("menu_script", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Show script editor に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_show_script_editor {
+            get {
+                return ResourceManager.GetString("menu_show_script_editor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Snap に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_snap {

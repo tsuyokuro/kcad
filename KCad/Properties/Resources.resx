@@ -172,6 +172,12 @@
   <data name="menu_save_as" xml:space="preserve">
     <value>Save as ...</value>
   </data>
+  <data name="menu_script" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="menu_show_script_editor" xml:space="preserve">
+    <value>Show script editor</value>
+  </data>
   <data name="menu_snap" xml:space="preserve">
     <value>Snap</value>
   </data>
