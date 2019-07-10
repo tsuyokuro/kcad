@@ -15,12 +15,19 @@ namespace Plotter
         public static PlotterSettings Settings = new PlotterSettings();
     }
 
+    public class UserSettingDataAttribute : System.Attribute
+    {
+    }
+
+
+
     public class SettingsVeiwModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         public PlotterController Controller;
 
+        [UserSettingData]
         public bool SnapToGrid
         {
             set
@@ -37,6 +44,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToGrid;
         }
 
+        [UserSettingData]
         public bool SnapToPoint
         {
             set
@@ -48,6 +56,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToPoint;
         }
 
+        [UserSettingData]
         public bool SnapToSegment
         {
             set
@@ -59,6 +68,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToSegment;
         }
 
+        [UserSettingData]
         public bool SnapToLine
         {
             set
@@ -70,6 +80,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToLine;
         }
 
+        [UserSettingData]
         public bool FilterTreeView
         {
             set
@@ -86,6 +97,7 @@ namespace Plotter
             get => SettingsHolder.Settings.FilterTreeView;
         }
 
+        [UserSettingData]
         public bool DrawMeshEdge
         {
             set
@@ -107,6 +119,7 @@ namespace Plotter
             get => SettingsHolder.Settings.DrawMeshEdge;
         }
 
+        [UserSettingData]
         public bool FillMesh
         {
             set
@@ -128,6 +141,7 @@ namespace Plotter
             get => SettingsHolder.Settings.FillMesh;
         }
 
+        [UserSettingData]
         public bool DrawAxis
         {
             set
@@ -141,6 +155,7 @@ namespace Plotter
             get => SettingsHolder.Settings.DrawAxis;
         }
 
+        [UserSettingData]
         public double InitialMoveLimit
         {
             set
@@ -152,6 +167,7 @@ namespace Plotter
             get => SettingsHolder.Settings.InitialMoveLimit;
         }
 
+        [UserSettingData]
         public bool SnapToZero
         {
             set
@@ -163,6 +179,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToZero;
         }
 
+        [UserSettingData]
         public bool SnapToLastDownPoint
         {
             set
@@ -174,6 +191,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToLastDownPoint;
         }
 
+        [UserSettingData]
         public bool SnapToSelfPoint
         {
             set
@@ -185,6 +203,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToSelfPoint;
         }
 
+        [UserSettingData]
         public Vector3d GridSize
         {
             set
@@ -196,6 +215,7 @@ namespace Plotter
             get => SettingsHolder.Settings.GridSize;
         }
 
+        [UserSettingData]
         public double PointSnapRange
         {
             set
@@ -207,6 +227,7 @@ namespace Plotter
             get => SettingsHolder.Settings.PointSnapRange;
         }
 
+        [UserSettingData]
         public double LineSnapRange
         {
             set
@@ -218,6 +239,7 @@ namespace Plotter
             get => SettingsHolder.Settings.LineSnapRange;
         }
 
+        [UserSettingData]
         public double KeyMoveUnit
         {
             set
@@ -243,19 +265,35 @@ namespace Plotter
         {
             SettingsHolder.Settings.Load();
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToZero)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLastDownPoint)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSelfPoint)));
+            MemberInfo[] memberes = typeof(SettingsVeiwModel).GetMembers();
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawMeshEdge)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillMesh)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawAxis)));
+            foreach (MemberInfo member in memberes)
+            {
+                if (member.MemberType == MemberTypes.Property)
+                {
+                    UserSettingDataAttribute userSetting =
+                        (UserSettingDataAttribute)member.GetCustomAttribute(typeof(UserSettingDataAttribute));
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
+                    if (userSetting != null)
+                    {
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(member.Name));
+                    }
+                }
+            }
+
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToZero)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLastDownPoint)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSelfPoint)));
+
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawMeshEdge)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillMesh)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawAxis)));
+
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
 
             Controller.Grid.GridSize = SettingsHolder.Settings.GridSize;
         }
