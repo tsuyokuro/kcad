@@ -181,6 +181,9 @@
   <data name="menu_snap" xml:space="preserve">
     <value>Snap</value>
   </data>
+  <data name="menu_sttings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="notice_operation_success" xml:space="preserve">
     <value>Operation success</value>
   </data>

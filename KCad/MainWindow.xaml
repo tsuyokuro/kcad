@@ -359,6 +359,17 @@
                             Header="Select all"
                             Tag="select_all" />
                     </MenuItem>
+                    <MenuItem x:Name="SettingsMenu" Header="{x:Static properties:Resources.menu_sttings}">
+                        <MenuItem
+                            Click="Command_Clicked"
+                            Header="Grid Settings..."
+                            Tag="grid_settings" />
+                        <MenuItem
+                            Click="Command_Clicked"
+                            Header="Snap Settings..."
+                            Tag="snap_settings" />
+                    </MenuItem>
+
                     <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
                         <MenuItem
                             Header="Snap to grid"
@@ -388,14 +399,6 @@
                             Header="Snap to self"
                             IsCheckable="True"
                             IsChecked="{Binding SnapToSelfPoint}" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Grid Settings..."
-                            Tag="grid_settings" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Snap Settings..."
-                            Tag="snap_settings" />
                     </MenuItem>
                     <MenuItem x:Name="DrawOptionMenu" Header="{x:Static properties:Resources.menu_draw}">
                         <MenuItem

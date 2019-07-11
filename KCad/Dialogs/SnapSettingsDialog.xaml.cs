@@ -20,7 +20,21 @@ namespace KCad
             ok_button.Click += Ok_button_Click;
             cancel_button.Click += Cancel_button_Click;
 
+            PreviewKeyDown += SnapSettingsDialog_PreviewKeyDown;
+
             this.Loaded += SnapSettingsDialog_Loaded;
+        }
+
+        private void SnapSettingsDialog_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                HandleOK();
+            }
+            else if (e.Key == Key.Escape)
+            {
+                HandleCancel();
+            }
         }
 
         private void SnapSettingsDialog_Loaded(object sender, RoutedEventArgs e)
@@ -31,10 +45,20 @@ namespace KCad
 
         private void Cancel_button_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
+            HandleCancel();
         }
 
         private void Ok_button_Click(object sender, RoutedEventArgs e)
+        {
+            HandleOK();
+        }
+
+        private void HandleCancel()
+        {
+            DialogResult = false;
+        }
+
+        private void HandleOK()
         {
             bool ret = true;
 

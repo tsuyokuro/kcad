@@ -171,6 +171,9 @@
   <data name="menu_snap" xml:space="preserve">
     <value>スナップ</value>
   </data>
+  <data name="menu_sttings" xml:space="preserve">
+    <value>設定</value>
+  </data>
   <data name="notice_operation_success" xml:space="preserve">
     <value>操作は成功しました</value>
   </data>

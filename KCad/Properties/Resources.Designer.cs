@@ -251,6 +251,15 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Settings に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_sttings {
+            get {
+                return ResourceManager.GetString("menu_sttings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Operation success に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string notice_operation_success {
