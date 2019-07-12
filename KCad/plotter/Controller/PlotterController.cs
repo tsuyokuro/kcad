@@ -1,6 +1,7 @@
 ﻿using CadDataTypes;
 using OpenTK;
 using Plotter.Controller.TaskRunner;
+using Plotter.Settings;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;

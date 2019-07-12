@@ -8,7 +8,7 @@ using System.ComponentModel;
 using Plotter.Controller;
 using OpenTK;
 
-namespace Plotter
+namespace Plotter.Settings
 {
     public static class SettingsHolder
     {

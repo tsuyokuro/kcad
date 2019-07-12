@@ -3,6 +3,7 @@
 using CadDataTypes;
 using KCad;
 using OpenTK;
+using Plotter.Settings;
 using System;
 using System.Collections.Generic;
 

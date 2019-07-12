@@ -3,6 +3,7 @@ using HalfEdgeNS;
 using MyCollections;
 using OpenTK;
 using Plotter.Serializer.v1001;
+using Plotter.Settings;
 using System;
 using System.Collections.Generic;
 
