@@ -410,6 +410,10 @@
                             IsCheckable="True"
                             IsChecked="{Binding FillMesh}" />
                         <MenuItem
+                            Header="Draw normal"
+                            IsCheckable="True"
+                            IsChecked="{Binding DrawNormal}" />
+                        <MenuItem
                             Header="Draw axis"
                             IsCheckable="True"
                             IsChecked="{Binding DrawAxis}" />

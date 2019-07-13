@@ -142,6 +142,20 @@ namespace Plotter.Settings
         }
 
         [UserSettingData]
+        public bool DrawNormal
+        {
+            set
+            {
+                SettingsHolder.Settings.DrawNormal = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawNormal)));
+
+                Redraw();
+            }
+
+            get => SettingsHolder.Settings.DrawNormal;
+        }
+
+        [UserSettingData]
         public bool DrawAxis
         {
             set
@@ -341,6 +355,8 @@ namespace Plotter.Settings
 
         public bool FillMesh = true;
 
+        public bool DrawNormal = false;
+
         public bool DrawAxis = true;       
         #endregion
 
@@ -411,6 +427,7 @@ namespace Plotter.Settings
             jo = new JObject();
             jo.Add("DrawFaceOutline", DrawMeshEdge);
             jo.Add("FillFace", FillMesh);
+            jo.Add("DrawNormal", DrawNormal);
             jo.Add("DrawAxis", DrawAxis);
             root.Add("DrawSettings", jo);
 
@@ -479,6 +496,7 @@ namespace Plotter.Settings
             jo = (JObject)root["DrawSettings"];
             DrawMeshEdge = jo.GetBool("DrawFaceOutline", DrawMeshEdge);
             FillMesh = jo.GetBool("FillFace", FillMesh);
+            DrawNormal = jo.GetBool("DrawNormal", DrawNormal);
             DrawAxis = jo.GetBool("DrawAxis", DrawAxis);
 
             jo = (JObject)root["GridInfo"];

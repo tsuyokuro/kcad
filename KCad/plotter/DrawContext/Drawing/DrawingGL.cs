@@ -1,4 +1,4 @@
-﻿//#define DEBUG_DRAW_NORMAL
+﻿#define DEBUG_DRAW_NORMAL
 #define DRAW_HALF_EDGE_OUTLINE
 
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using HalfEdgeNS;
 using GLFont;
 using OpenTK.Graphics;
 using CadDataTypes;
+using Plotter.Settings;
 
 namespace Plotter
 {
@@ -95,6 +96,11 @@ namespace Plotter
         {
             DrawHeFaces(brush, model);
             DrawHeEdges(pen, edgePen, edgeThreshold, model);
+
+            if (SettingsHolder.Settings.DrawNormal)
+            {
+                DrawHeFacesNormal(model);
+            }
         }
 
         private void DrawHeFaces(DrawBrush brush, HeModel model)
@@ -136,27 +142,38 @@ namespace Plotter
                 }
 
                 GL.End();
+            }
 
-#if DEBUG_DRAW_NORMAL
-                DisableLight();
+            DisableLight();
+        }
 
-                c = head;
+        private void DrawHeFacesNormal(HeModel model)
+        {
+            DisableLight();
+
+            for (int i = 0; i < model.FaceStore.Count; i++)
+            {
+                HeFace f = model.FaceStore[i];
+
+                HalfEdge head = f.Head;
+
+                HalfEdge c = head;
+
 
                 for (; ; )
                 {
                     HalfEdge next = c.Next;
 
-                    Vector3d p = model.VertexStore.Ref(c.Vertex);
+                    Vector3d p = model.VertexStore.Ref(c.Vertex).vector;
 
                     if (c.Normal != HeModel.INVALID_INDEX)
                     {
                         Vector3d nv = model.NormalStore[c.Normal];
                         Vector3d np0 = p;
-                        Vector3d np1 = p + (nv * 15);
+                        Vector3d np1 = p + (nv * 10);
 
-                        DrawArrow(pen, np0, np1, ArrowTypes.CROSS, ArrowPos.END, 3, 3);
+                        DrawArrow(DC.GetPen(DrawTools.PEN_NORMAL), np0, np1, ArrowTypes.CROSS, ArrowPos.END, 3, 3);
                     }
-
 
                     c = next;
 
@@ -165,12 +182,9 @@ namespace Plotter
                         break;
                     }
                 }
-
-                EnableLight();
-#endif
             }
 
-            DisableLight();
+            EnableLight();
         }
 
         private void DrawHeEdges(DrawPen borderPen, DrawPen edgePen, double edgeThreshold, HeModel model)
