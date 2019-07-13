@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="dialog_title_drawing_settings" xml:space="preserve">
+    <value>図面の設定</value>
+  </data>
   <data name="error_operation_failed" xml:space="preserve">
     <value>失敗しました</value>
   </data>
@@ -182,5 +185,14 @@
   </data>
   <data name="notice_was_ungrouped" xml:space="preserve">
     <value>グループが解除されました</value>
+  </data>
+  <data name="string_angle" xml:space="preserve">
+    <value>角度</value>
+  </data>
+  <data name="string_degree" xml:space="preserve">
+    <value>度</value>
+  </data>
+  <data name="string_magnification_rate" xml:space="preserve">
+    <value>拡大率</value>
   </data>
 </root>

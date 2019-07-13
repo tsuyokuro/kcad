@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace KCad.Dialogs
 {
@@ -32,6 +23,19 @@ namespace KCad.Dialogs
 
             Loaded += DocumentSettingsDialog_Loaded;
 
+            PreviewKeyDown += DocumentSettingsDialog_PreviewKeyDown;
+        }
+
+        private void DocumentSettingsDialog_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                HandleOK();
+            }
+            else if (e.Key == Key.Escape)
+            {
+                HandleCancel();
+            }
         }
 
         private void DocumentSettingsDialog_Loaded(object sender, RoutedEventArgs e)
@@ -41,10 +45,15 @@ namespace KCad.Dialogs
 
         private void Cancel_button_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
+            HandleCancel();
         }
 
         private void Ok_button_Click(object sender, RoutedEventArgs e)
+        {
+            HandleOK();
+        }
+
+        private void HandleOK()
         {
             bool ret;
             double v;
@@ -54,6 +63,11 @@ namespace KCad.Dialogs
             WorldScale = v;
 
             DialogResult = ret;
+        }
+
+        private void HandleCancel()
+        {
+            DialogResult = false;
         }
 
         private void PreviewTextInputForNum(object sender, TextCompositionEventArgs e)

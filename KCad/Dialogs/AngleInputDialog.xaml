@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:KCad.Dialogs"
+    xmlns:properties="clr-namespace:KCad.Properties"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Input angle"
     Width="246.285"
@@ -51,7 +52,7 @@
                         Width="Auto"
                         Height="Auto"
                         Margin="0,0,8,0"
-                        Content="Angle" />
+                        Content="{x:Static properties:Resources.string_angle}" />
 
                     <TextBox
                         x:Name="input"
@@ -62,7 +63,7 @@
                     <Label
                         Width="Auto"
                         Height="Auto"
-                        Content="degree" />
+                        Content="{x:Static properties:Resources.string_degree}" />
 
                 </StackPanel>
             </StackPanel>

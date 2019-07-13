@@ -71,6 +71,15 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Drawing settings に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string dialog_title_drawing_settings {
+            get {
+                return ResourceManager.GetString("dialog_title_drawing_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Operation failed に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string error_operation_failed {
@@ -283,6 +292,33 @@ namespace KCad.Properties {
         public static string notice_was_ungrouped {
             get {
                 return ResourceManager.GetString("notice_was_ungrouped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Angle に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string string_angle {
+            get {
+                return ResourceManager.GetString("string_angle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   degree に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string string_degree {
+            get {
+                return ResourceManager.GetString("string_degree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Magnification rate に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string string_magnification_rate {
+            get {
+                return ResourceManager.GetString("string_magnification_rate", resourceCulture);
             }
         }
         

@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace KCad.Dialogs
@@ -18,7 +11,7 @@ namespace KCad.Dialogs
             InitializeComponent();
             MainWindow wnd = (MainWindow)Application.Current.MainWindow;
 
-            Point p = wnd.viewContainer.PointToScreen(new Point(0,0));
+            Point p = wnd.viewContainer.PointToScreen(new Point(0, 0));
 
             this.Left = p.X;
             this.Top = p.Y;
@@ -35,11 +28,11 @@ namespace KCad.Dialogs
         {
             if (e.Key == Key.Enter)
             {
-                this.DialogResult = true;
+                HandleOK();
             }
             else if (e.Key == Key.Escape)
             {
-                this.DialogResult = false;
+                HandleCancel();
             }
         }
 
@@ -50,10 +43,20 @@ namespace KCad.Dialogs
 
         private void Ok_button_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
+            HandleOK();
         }
 
         private void Cancel_button_Click(object sender, RoutedEventArgs e)
+        {
+            HandleCancel();
+        }
+
+        private void HandleOK()
+        {
+            this.DialogResult = true;
+        }
+
+        private void HandleCancel()
         {
             this.DialogResult = false;
         }
