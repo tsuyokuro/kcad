@@ -35,6 +35,8 @@ namespace Plotter.Controller
 
         private Vector3d SnapPoint;
 
+        private SnapInfo mSnapInfo;
+
         private Vector3d MoveOrgScrnPoint;
 
         // 生のL button down point (デバイス座標系)
@@ -461,7 +463,17 @@ namespace Plotter.Controller
                 case States.MEASURING:
                     {
                         LastDownPoint = SnapPoint;
-                        CadVertex p = (CadVertex)dc.DevPointToWorldPoint(CrossCursor.Pos);
+
+                        CadVertex p;
+
+                        if (mSnapInfo.SnapType == SnapInfo.SanpTypes.POINT_MATCH)
+                        {
+                            p = new CadVertex(SnapPoint);
+                        }
+                        else
+                        {
+                            p = (CadVertex)dc.DevPointToWorldPoint(CrossCursor.Pos);
+                        }
 
                         SetPointInMeasuring(dc, p);
                         PutMeasure();
@@ -740,6 +752,7 @@ namespace Plotter.Controller
                 si.Cursor.Pos = dc.WorldPointToDevPoint(si.SnapPoint);
 
                 si.SnapPoint = mxy.Point;
+                si.SnapType = SnapInfo.SanpTypes.POINT_MATCH;
             }
 
             return si;
@@ -777,6 +790,7 @@ namespace Plotter.Controller
                     else
                     {
                         si.SnapPoint = markSeg.CrossPoint;
+                        si.SnapType = SnapInfo.SanpTypes.POINT_MATCH;
 
                         si.Cursor.Pos = markSeg.CrossPointScrn;
                         si.Cursor.Pos.Z = 0;
@@ -957,6 +971,8 @@ namespace Plotter.Controller
 
             CrossCursor = si.Cursor;
             SnapPoint = si.SnapPoint;
+
+            mSnapInfo = si;
         }
 
         private void MouseMove(CadMouse pointer, DrawContext dc, double x, double y)
