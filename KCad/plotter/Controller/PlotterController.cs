@@ -736,7 +736,9 @@ namespace Plotter.Controller
 
             if (State == States.START_CREATE || State == States.CREATING)
             {
-                StartCreateFigure(CadFigure.Types.NONE);
+                State = States.SELECT;
+                CreatingFigType = CadFigure.Types.NONE;
+
                 NotifyStateChange();
             }
             else if (State == States.DRAGING_POINTS)
