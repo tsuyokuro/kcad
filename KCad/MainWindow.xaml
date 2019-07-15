@@ -359,6 +359,17 @@
                             Header="Select all"
                             Tag="select_all" />
                     </MenuItem>
+                    <MenuItem x:Name="SettingsMenu" Header="{x:Static properties:Resources.menu_sttings}">
+                        <MenuItem
+                            Click="Command_Clicked"
+                            Header="Grid Settings..."
+                            Tag="grid_settings" />
+                        <MenuItem
+                            Click="Command_Clicked"
+                            Header="Snap Settings..."
+                            Tag="snap_settings" />
+                    </MenuItem>
+
                     <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
                         <MenuItem
                             Header="Snap to grid"
@@ -388,29 +399,29 @@
                             Header="Snap to self"
                             IsCheckable="True"
                             IsChecked="{Binding SnapToSelfPoint}" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Grid Settings..."
-                            Tag="grid_settings" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Snap Settings..."
-                            Tag="snap_settings" />
                     </MenuItem>
-                    <MenuItem x:Name="DrawOptionMenu" Header="Draw">
+                    <MenuItem x:Name="DrawOptionMenu" Header="{x:Static properties:Resources.menu_draw}">
                         <MenuItem
-                            Header="Draw face outline"
+                            Header="{x:Static properties:Resources.menu_draw_mesh_outline}"
                             IsCheckable="True"
                             IsChecked="{Binding DrawMeshEdge}" />
                         <MenuItem
-                            Header="Fill face"
+                            Header="{x:Static properties:Resources.menu_fill_mesh}"
                             IsCheckable="True"
                             IsChecked="{Binding FillMesh}" />
+                        <MenuItem
+                            Header="Draw normal"
+                            IsCheckable="True"
+                            IsChecked="{Binding DrawNormal}" />
+                        <MenuItem
+                            Header="Draw axis"
+                            IsCheckable="True"
+                            IsChecked="{Binding DrawAxis}" />
                     </MenuItem>
-                    <MenuItem Header="Script">
+                    <MenuItem Header="{x:Static properties:Resources.menu_script}">
                         <MenuItem
                             Click="Command_Clicked"
-                            Header="Show editor"
+                            Header="{x:Static properties:Resources.menu_show_script_editor}"
                             Tag="show_editor" />
                     </MenuItem>
 

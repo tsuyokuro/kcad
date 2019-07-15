@@ -59,20 +59,7 @@ namespace Plotter.Controller.TaskRunner
 
         public void FlipWithPlane(CadFigure fig, Vector3d p0, Vector3d normal)
         {
-            VertexList vl = fig.PointList;
-
-            for (int i = 0; i < vl.Count; i++)
-            {
-                CadVertex v = vl[i];
-
-                Vector3d cp = CadMath.CrossPlane(v.vector, p0, normal);
-
-                CadVertex d = v - cp;
-
-                v = cp - d;
-
-                vl[i] = v;
-            }
+            fig.FlipWithPlane(p0, normal);
         }
 
         public async void FlipAndCopyWithInteractive(List<CadFigure> rootFigList)
@@ -109,10 +96,10 @@ namespace Plotter.Controller.TaskRunner
 
             foreach (CadFigure fig in cpy)
             {
-                fig.ForEachFig(d =>
+                fig.ForEachFig(f =>
                 {
-                    FlipWithPlane(d, p0, normal);
-                    Controller.DB.AddFigure(d);
+                    FlipWithPlane(f, p0, normal);
+                    Controller.DB.AddFigure(f);
                 });
 
                 layer.AddFigure(fig);
@@ -194,7 +181,7 @@ namespace Plotter.Controller.TaskRunner
 
         public (Vector3d p0, InteractCtrl.States state) InputPoint()
         {
-            InteractCtrl ctrl = Controller.mInteractCtrl;
+            InteractCtrl ctrl = Controller.InteractCtrl;
 
             ctrl.Start();
 
@@ -226,7 +213,7 @@ namespace Plotter.Controller.TaskRunner
 
         public (Vector3d p0, Vector3d p1, InteractCtrl.States state) InputLine()
         {
-            InteractCtrl ctrl = Controller.mInteractCtrl;
+            InteractCtrl ctrl = Controller.InteractCtrl;
 
             ctrl.Start();
 

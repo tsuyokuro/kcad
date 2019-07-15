@@ -3,6 +3,7 @@ using HalfEdgeNS;
 using MyCollections;
 using OpenTK;
 using Plotter.Serializer.v1001;
+using Plotter.Settings;
 using System;
 using System.Collections.Generic;
 
@@ -290,6 +291,39 @@ namespace Plotter
             }
 
             mHeModel.RemoveVertexs(removeList);
+        }
+
+        public override void FlipWithPlane(Vector3d p0, Vector3d normal)
+        {
+            VertexList vl = PointList;
+
+            for (int i = 0; i < vl.Count; i++)
+            {
+                CadVertex v = vl[i];
+
+                Vector3d cp = CadMath.CrossPlane(v.vector, p0, normal);
+
+                CadVertex d = v - cp;
+
+                v = cp - d;
+
+                vl[i] = v;
+            }
+
+            Vector3dList nl = mHeModel.NormalStore;
+
+            for (int i = 0; i < nl.Count; i++)
+            {
+                Vector3d v = nl[i];
+
+                Vector3d cp = CadMath.CrossPlane(v, Vector3d.Zero, normal);
+
+                Vector3d d = v - cp;
+
+                v = cp - d;
+
+                nl[i] = v;
+            }
         }
     }
 }

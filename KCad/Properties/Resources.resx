@@ -121,6 +121,9 @@
   <data name="BaseScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BaseScript.py;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="dialog_title_drawing_settings" xml:space="preserve">
+    <value>Drawing settings</value>
+  </data>
   <data name="error_operation_failed" xml:space="preserve">
     <value>Operation failed</value>
   </data>
@@ -139,11 +142,20 @@
   <data name="menu_doc_settings" xml:space="preserve">
     <value>Document settings ...</value>
   </data>
+  <data name="menu_draw" xml:space="preserve">
+    <value>Draw</value>
+  </data>
+  <data name="menu_draw_mesh_outline" xml:space="preserve">
+    <value>Draw mesh outline</value>
+  </data>
   <data name="menu_edit" xml:space="preserve">
     <value>Edit</value>
   </data>
   <data name="menu_file" xml:space="preserve">
     <value>File</value>
+  </data>
+  <data name="menu_fill_mesh" xml:space="preserve">
+    <value>Fill mesh</value>
   </data>
   <data name="menu_load" xml:space="preserve">
     <value>Load</value>
@@ -163,8 +175,17 @@
   <data name="menu_save_as" xml:space="preserve">
     <value>Save as ...</value>
   </data>
+  <data name="menu_script" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="menu_show_script_editor" xml:space="preserve">
+    <value>Show script editor</value>
+  </data>
   <data name="menu_snap" xml:space="preserve">
     <value>Snap</value>
+  </data>
+  <data name="menu_sttings" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="notice_operation_success" xml:space="preserve">
     <value>Operation success</value>
@@ -174,6 +195,15 @@
   </data>
   <data name="notice_was_ungrouped" xml:space="preserve">
     <value>Objects was ungrouped</value>
+  </data>
+  <data name="string_angle" xml:space="preserve">
+    <value>Angle</value>
+  </data>
+  <data name="string_degree" xml:space="preserve">
+    <value>degree</value>
+  </data>
+  <data name="string_magnification_rate" xml:space="preserve">
+    <value>Magnification rate</value>
   </data>
   <data name="warning_select_objects_before_flip" xml:space="preserve">
     <value>Select objects before flip commnad</value>

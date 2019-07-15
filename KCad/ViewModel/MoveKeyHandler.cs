@@ -2,6 +2,7 @@
 using CadDataTypes;
 using OpenTK;
 using Plotter.Controller;
+using Plotter.Settings;
 
 namespace Plotter
 {

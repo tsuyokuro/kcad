@@ -19,7 +19,7 @@ namespace KCad.Properties {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -67,6 +67,15 @@ namespace KCad.Properties {
             get {
                 object obj = ResourceManager.GetObject("BaseScript", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Drawing settings に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string dialog_title_drawing_settings {
+            get {
+                return ResourceManager.GetString("dialog_title_drawing_settings", resourceCulture);
             }
         }
         
@@ -125,6 +134,24 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Draw に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_draw {
+            get {
+                return ResourceManager.GetString("menu_draw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Draw mesh outline に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_draw_mesh_outline {
+            get {
+                return ResourceManager.GetString("menu_draw_mesh_outline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Edit に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_edit {
@@ -139,6 +166,15 @@ namespace KCad.Properties {
         public static string menu_file {
             get {
                 return ResourceManager.GetString("menu_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Fill mesh に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_fill_mesh {
+            get {
+                return ResourceManager.GetString("menu_fill_mesh", resourceCulture);
             }
         }
         
@@ -197,11 +233,38 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Script に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_script {
+            get {
+                return ResourceManager.GetString("menu_script", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Show script editor に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_show_script_editor {
+            get {
+                return ResourceManager.GetString("menu_show_script_editor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Snap に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_snap {
             get {
                 return ResourceManager.GetString("menu_snap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Settings に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_sttings {
+            get {
+                return ResourceManager.GetString("menu_sttings", resourceCulture);
             }
         }
         
@@ -229,6 +292,33 @@ namespace KCad.Properties {
         public static string notice_was_ungrouped {
             get {
                 return ResourceManager.GetString("notice_was_ungrouped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Angle に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string string_angle {
+            get {
+                return ResourceManager.GetString("string_angle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   degree に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string string_degree {
+            get {
+                return ResourceManager.GetString("string_degree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Magnification rate に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string string_magnification_rate {
+            get {
+                return ResourceManager.GetString("string_magnification_rate", resourceCulture);
             }
         }
         

@@ -8,12 +8,18 @@ using System.ComponentModel;
 using Plotter.Controller;
 using OpenTK;
 
-namespace Plotter
+namespace Plotter.Settings
 {
     public static class SettingsHolder
     {
         public static PlotterSettings Settings = new PlotterSettings();
     }
+
+    public class UserSettingDataAttribute : System.Attribute
+    {
+    }
+
+
 
     public class SettingsVeiwModel : INotifyPropertyChanged
     {
@@ -21,6 +27,7 @@ namespace Plotter
 
         public PlotterController Controller;
 
+        [UserSettingData]
         public bool SnapToGrid
         {
             set
@@ -37,6 +44,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToGrid;
         }
 
+        [UserSettingData]
         public bool SnapToPoint
         {
             set
@@ -48,6 +56,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToPoint;
         }
 
+        [UserSettingData]
         public bool SnapToSegment
         {
             set
@@ -59,6 +68,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToSegment;
         }
 
+        [UserSettingData]
         public bool SnapToLine
         {
             set
@@ -70,6 +80,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToLine;
         }
 
+        [UserSettingData]
         public bool FilterTreeView
         {
             set
@@ -86,6 +97,7 @@ namespace Plotter
             get => SettingsHolder.Settings.FilterTreeView;
         }
 
+        [UserSettingData]
         public bool DrawMeshEdge
         {
             set
@@ -107,6 +119,7 @@ namespace Plotter
             get => SettingsHolder.Settings.DrawMeshEdge;
         }
 
+        [UserSettingData]
         public bool FillMesh
         {
             set
@@ -128,6 +141,35 @@ namespace Plotter
             get => SettingsHolder.Settings.FillMesh;
         }
 
+        [UserSettingData]
+        public bool DrawNormal
+        {
+            set
+            {
+                SettingsHolder.Settings.DrawNormal = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawNormal)));
+
+                Redraw();
+            }
+
+            get => SettingsHolder.Settings.DrawNormal;
+        }
+
+        [UserSettingData]
+        public bool DrawAxis
+        {
+            set
+            {
+                SettingsHolder.Settings.DrawAxis = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawAxis)));
+
+                Redraw();
+            }
+
+            get => SettingsHolder.Settings.DrawAxis;
+        }
+
+        [UserSettingData]
         public double InitialMoveLimit
         {
             set
@@ -139,6 +181,7 @@ namespace Plotter
             get => SettingsHolder.Settings.InitialMoveLimit;
         }
 
+        [UserSettingData]
         public bool SnapToZero
         {
             set
@@ -150,6 +193,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToZero;
         }
 
+        [UserSettingData]
         public bool SnapToLastDownPoint
         {
             set
@@ -161,6 +205,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToLastDownPoint;
         }
 
+        [UserSettingData]
         public bool SnapToSelfPoint
         {
             set
@@ -172,6 +217,7 @@ namespace Plotter
             get => SettingsHolder.Settings.SnapToSelfPoint;
         }
 
+        [UserSettingData]
         public Vector3d GridSize
         {
             set
@@ -183,6 +229,7 @@ namespace Plotter
             get => SettingsHolder.Settings.GridSize;
         }
 
+        [UserSettingData]
         public double PointSnapRange
         {
             set
@@ -194,6 +241,7 @@ namespace Plotter
             get => SettingsHolder.Settings.PointSnapRange;
         }
 
+        [UserSettingData]
         public double LineSnapRange
         {
             set
@@ -205,6 +253,7 @@ namespace Plotter
             get => SettingsHolder.Settings.LineSnapRange;
         }
 
+        [UserSettingData]
         public double KeyMoveUnit
         {
             set
@@ -230,16 +279,35 @@ namespace Plotter
         {
             SettingsHolder.Settings.Load();
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawMeshEdge)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillMesh)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToZero)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLastDownPoint)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSelfPoint)));
+            MemberInfo[] memberes = typeof(SettingsVeiwModel).GetMembers();
+
+            foreach (MemberInfo member in memberes)
+            {
+                if (member.MemberType == MemberTypes.Property)
+                {
+                    UserSettingDataAttribute userSetting =
+                        (UserSettingDataAttribute)member.GetCustomAttribute(typeof(UserSettingDataAttribute));
+
+                    if (userSetting != null)
+                    {
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(member.Name));
+                    }
+                }
+            }
+
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToZero)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLastDownPoint)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSelfPoint)));
+
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawMeshEdge)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillMesh)));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawAxis)));
+
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
 
             Controller.Grid.GridSize = SettingsHolder.Settings.GridSize;
         }
@@ -272,12 +340,7 @@ namespace Plotter
 
         public double KeyMoveUnit = 1.0;
 
-        public bool DrawMeshEdge = true;
-
-        public bool FillMesh = true;
-
         public bool FilterTreeView = false;
-
 
         public double InitialMoveLimit = 6.0;
 
@@ -286,6 +349,16 @@ namespace Plotter
         public bool SnapToLastDownPoint = true;
 
         public bool SnapToSelfPoint = true;
+
+        #region Draw settings
+        public bool DrawMeshEdge = true;
+
+        public bool FillMesh = true;
+
+        public bool DrawNormal = false;
+
+        public bool DrawAxis = true;       
+        #endregion
 
         public PlotterSettings()
         {
@@ -354,6 +427,8 @@ namespace Plotter
             jo = new JObject();
             jo.Add("DrawFaceOutline", DrawMeshEdge);
             jo.Add("FillFace", FillMesh);
+            jo.Add("DrawNormal", DrawNormal);
+            jo.Add("DrawAxis", DrawAxis);
             root.Add("DrawSettings", jo);
 
             StreamWriter writer = new StreamWriter(fileName);
@@ -421,6 +496,8 @@ namespace Plotter
             jo = (JObject)root["DrawSettings"];
             DrawMeshEdge = jo.GetBool("DrawFaceOutline", DrawMeshEdge);
             FillMesh = jo.GetBool("FillFace", FillMesh);
+            DrawNormal = jo.GetBool("DrawNormal", DrawNormal);
+            DrawAxis = jo.GetBool("DrawAxis", DrawAxis);
 
             jo = (JObject)root["GridInfo"];
             if (jo != null)

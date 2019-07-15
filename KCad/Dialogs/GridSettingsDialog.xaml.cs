@@ -16,6 +16,8 @@ namespace KCad
         {
             InitializeComponent();
 
+            PreviewKeyDown += GridSettingsDialog_PreviewKeyDown;
+
             grid_x_size.PreviewTextInput += PreviewTextInputForNum;
             grid_y_size.PreviewTextInput += PreviewTextInputForNum;
             grid_z_size.PreviewTextInput += PreviewTextInputForNum;
@@ -24,6 +26,18 @@ namespace KCad
             cancel_button.Click += Cancel_button_Click;
 
             this.Loaded += GridSettingsDialog_Loaded;
+        }
+
+        private void GridSettingsDialog_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                HandleOK();
+            }
+            else if (e.Key == Key.Escape)
+            {
+                HandleCancel();
+            }
         }
 
         private void GridSettingsDialog_Loaded(object sender, RoutedEventArgs e)
@@ -35,10 +49,15 @@ namespace KCad
 
         private void Cancel_button_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
+            HandleCancel();
         }
 
         private void Ok_button_Click(object sender, RoutedEventArgs e)
+        {
+            HandleOK();
+        }
+
+        private void HandleOK()
         {
             bool ret = true;
 
@@ -54,6 +73,11 @@ namespace KCad
             GridSize.Z = v;
 
             this.DialogResult = ret;
+        }
+
+        private void HandleCancel()
+        {
+            this.DialogResult = false;
         }
 
         private void PreviewTextInputForNum(object sender, TextCompositionEventArgs e)

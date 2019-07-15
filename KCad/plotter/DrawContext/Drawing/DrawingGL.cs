@@ -1,4 +1,4 @@
-﻿//#define DEBUG_DRAW_NORMAL
+﻿#define DEBUG_DRAW_NORMAL
 #define DRAW_HALF_EDGE_OUTLINE
 
 using System.Collections.Generic;
@@ -10,10 +10,11 @@ using HalfEdgeNS;
 using GLFont;
 using OpenTK.Graphics;
 using CadDataTypes;
+using Plotter.Settings;
 
 namespace Plotter
 {
-    class DrawingGL : DrawingBase
+    class DrawingGL : IDrawing
     {
         private DrawContextGL DC;
 
@@ -33,18 +34,18 @@ namespace Plotter
             mFontRenderer.Init();
         }
 
-        public override void Dispose()
+        public void Dispose()
         {
             mFontRenderer.Dispose();
         }
 
-        public override void Clear(DrawBrush brush)
+        public void Clear(DrawBrush brush)
         {
             GL.ClearColor(brush.Color4());
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
-        public override void Draw(List<CadFigure> list, DrawPen pen)
+        public void Draw(List<CadFigure> list, DrawPen pen)
         {
             foreach (CadFigure fig in list)
             {
@@ -62,7 +63,7 @@ namespace Plotter
             }
         }
 
-        public override void DrawSelected(List<CadFigure> list, DrawPen pen)
+        public void DrawSelected(List<CadFigure> list, DrawPen pen)
         {
             DisableLight();
 
@@ -75,7 +76,7 @@ namespace Plotter
             }
         }
 
-        public override void DrawLine(DrawPen pen, Vector3d a, Vector3d b)
+        public void DrawLine(DrawPen pen, Vector3d a, Vector3d b)
         {
             a *= DC.WorldScale;
             b *= DC.WorldScale;
@@ -90,11 +91,16 @@ namespace Plotter
             GL.End();
         }
 
-        public override void DrawHarfEdgeModel(
+        public void DrawHarfEdgeModel(
             DrawBrush brush, DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
             DrawHeFaces(brush, model);
             DrawHeEdges(pen, edgePen, edgeThreshold, model);
+
+            if (SettingsHolder.Settings.DrawNormal)
+            {
+                DrawHeFacesNormal(model);
+            }
         }
 
         private void DrawHeFaces(DrawBrush brush, HeModel model)
@@ -136,27 +142,38 @@ namespace Plotter
                 }
 
                 GL.End();
+            }
 
-#if DEBUG_DRAW_NORMAL
-                DisableLight();
+            DisableLight();
+        }
 
-                c = head;
+        private void DrawHeFacesNormal(HeModel model)
+        {
+            DisableLight();
+
+            for (int i = 0; i < model.FaceStore.Count; i++)
+            {
+                HeFace f = model.FaceStore[i];
+
+                HalfEdge head = f.Head;
+
+                HalfEdge c = head;
+
 
                 for (; ; )
                 {
                     HalfEdge next = c.Next;
 
-                    Vector3d p = model.VertexStore.Ref(c.Vertex);
+                    Vector3d p = model.VertexStore.Ref(c.Vertex).vector;
 
                     if (c.Normal != HeModel.INVALID_INDEX)
                     {
                         Vector3d nv = model.NormalStore[c.Normal];
                         Vector3d np0 = p;
-                        Vector3d np1 = p + (nv * 15);
+                        Vector3d np1 = p + (nv * 10);
 
-                        DrawArrow(pen, np0, np1, ArrowTypes.CROSS, ArrowPos.END, 3, 3);
+                        DrawArrow(DC.GetPen(DrawTools.PEN_NORMAL), np0, np1, ArrowTypes.CROSS, ArrowPos.END, 3, 3);
                     }
-
 
                     c = next;
 
@@ -165,12 +182,9 @@ namespace Plotter
                         break;
                     }
                 }
-
-                EnableLight();
-#endif
             }
 
-            DisableLight();
+            EnableLight();
         }
 
         private void DrawHeEdges(DrawPen borderPen, DrawPen edgePen, double edgeThreshold, HeModel model)
@@ -267,7 +281,7 @@ namespace Plotter
             }
         }
 
-        public override void DrawAxis()
+        public void DrawAxis()
         {
             Vector3d p0 = default(Vector3d);
             Vector3d p1 = default(Vector3d);
@@ -362,15 +376,7 @@ namespace Plotter
             PopMatrixes();
         }
 
-        //public override void DrawSelectedPoint(Vector3d pt, DrawPen pen)
-        //{
-        //    Vector3d p0 = DC.WorldPointToDevPoint(pt).Add(-2);
-        //    Vector3d p1 = p0.Add(4);
-
-        //    DrawRect2D(p0, p1, pen);
-        //}
-
-        public override void DrawSelectedPoint(Vector3d pt, DrawPen pen)
+        public void DrawSelectedPoint(Vector3d pt, DrawPen pen)
         {
             Vector3d p = DC.WorldPointToDevPoint(pt);
             Start2D();
@@ -385,7 +391,7 @@ namespace Plotter
             End2D();
         }
 
-        public override void DrawSelectedPoints(VertexList pointList, DrawPen pen)
+        public void DrawSelectedPoints(VertexList pointList, DrawPen pen)
         {
             Start2D();
             GL.Color4(pen.Color4());
@@ -440,7 +446,7 @@ namespace Plotter
             End2D();
         }
 
-        public override void DrawCross(DrawPen pen, Vector3d p, double size)
+        public void DrawCross(DrawPen pen, Vector3d p, double size)
         {
             GL.Disable(EnableCap.Lighting);
             GL.Disable(EnableCap.Light0);
@@ -475,7 +481,7 @@ namespace Plotter
             return vv;
         }
 
-        public override void DrawText(int font, DrawBrush brush, Vector3d a, Vector3d xdir, Vector3d ydir, DrawTextOption opt, string s)
+        public void DrawText(int font, DrawBrush brush, Vector3d a, Vector3d xdir, Vector3d ydir, DrawTextOption opt, string s)
         {
             a *= DC.WorldScale;
 
@@ -499,7 +505,7 @@ namespace Plotter
             mFontRenderer.Render(tex, a, xv, yv);
         }
 
-        public override void DrawCrossCursorScrn(CadCursor pp, DrawPen pen)
+        public void DrawCrossCursorScrn(CadCursor pp, DrawPen pen)
         {
             double size = Math.Max(DC.ViewWidth, DC.ViewHeight);
 
@@ -524,7 +530,7 @@ namespace Plotter
             GL.Enable(EnableCap.DepthTest);
         }
 
-        public override void DrawMarkCursor(DrawPen pen, Vector3d p, double pix_size)
+        public void DrawMarkCursor(DrawPen pen, Vector3d p, double pix_size)
         {
             GL.Disable(EnableCap.DepthTest);
 
@@ -534,7 +540,7 @@ namespace Plotter
             GL.Enable(EnableCap.DepthTest);
         }
 
-        public override void DrawRect(DrawPen pen, Vector3d p0, Vector3d p1)
+        public void DrawRect(DrawPen pen, Vector3d p0, Vector3d p1)
         {
             GL.Disable(EnableCap.DepthTest);
 
@@ -560,13 +566,77 @@ namespace Plotter
             GL.Enable(EnableCap.DepthTest);
         }
 
-        public override void DrawHighlightPoint(Vector3d pt, DrawPen pen)
+        public void DrawHighlightPoint(Vector3d pt, DrawPen pen)
         {
-            Vector3d size = DC.DevVectorToWorldVector(Vector3d.UnitX * 4);
-            DrawCross(pen, pt, size.Norm());
+            GL.LineWidth(2);
+
+            Start2D();
+
+            GL.Color4(pen.Color4());
+            DrawCrossRaw(DC.WorldPointToDevPoint(pt), 6);
+
+            End2D();
+
+            GL.LineWidth(1);
         }
 
-        public override void DrawDot(DrawPen pen, Vector3d p)
+        public void DrawHighlightPoints(List<HighlightPointListItem> list)
+        {
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
+
+            Start2D();
+
+            GL.LineWidth(2);
+
+            list.ForEach(item =>
+            {
+                GL.Color4(item.Pen.Color4());
+                DrawCrossRaw(DC.WorldPointToDevPoint(item.Point), 6);
+            });
+
+            GL.LineWidth(1);
+
+            End2D();
+        }
+
+        // Point sizeをそのまま使って十字を描画
+        private void DrawCrossRaw(Vector3d p, double size)
+        {
+            double hs = size;
+
+            Vector3d px0 = p;
+            px0.X -= hs;
+            Vector3d px1 = p;
+            px1.X += hs;
+
+            Vector3d py0 = p;
+            py0.Y -= hs;
+            Vector3d py1 = p;
+            py1.Y += hs;
+
+            Vector3d pz0 = p;
+            pz0.Z -= hs;
+            Vector3d pz1 = p;
+            pz1.Z += hs;
+
+            GL.Begin(PrimitiveType.LineStrip);
+            GL.Vertex3(px0);
+            GL.Vertex3(px1);
+            GL.End();
+
+            GL.Begin(PrimitiveType.LineStrip);
+            GL.Vertex3(py0);
+            GL.Vertex3(py1);
+            GL.End();
+
+            GL.Begin(PrimitiveType.LineStrip);
+            GL.Vertex3(pz0);
+            GL.Vertex3(pz1);
+            GL.End();
+        }
+
+        public void DrawDot(DrawPen pen, Vector3d p)
         {
             GL.Color4(pen.Color4());
 
@@ -577,7 +647,7 @@ namespace Plotter
             GL.End();
         }
 
-        public override void DrawGrid(Gridding grid)
+        public void DrawGrid(Gridding grid)
         {
             GL.PointSize(1);
 
@@ -591,7 +661,7 @@ namespace Plotter
             }
         }
 
-        public void DrawGridOrtho(Gridding grid)
+        protected void DrawGridOrtho(Gridding grid)
         {
             Vector3d lt = Vector3d.Zero;
             Vector3d rb = new Vector3d(DC.ViewWidth, DC.ViewHeight, 0);
@@ -683,11 +753,11 @@ namespace Plotter
             }
         }
 
-        public void DrawGridPerse(Gridding grid)
+        protected void DrawGridPerse(Gridding grid)
         {
         }
 
-        public override void DrawRectScrn(DrawPen pen, Vector3d pp0, Vector3d pp1)
+        public void DrawRectScrn(DrawPen pen, Vector3d pp0, Vector3d pp1)
         {
             Vector3d p0 = DC.DevPointToWorldPoint(pp0);
             Vector3d p1 = DC.DevPointToWorldPoint(pp1);
@@ -695,7 +765,7 @@ namespace Plotter
             DrawRect(pen, p0, p1);
         }
 
-        public override void DrawPageFrame(double w, double h, Vector3d center)
+        public void DrawPageFrame(double w, double h, Vector3d center)
         {
             if (!(DC is DrawContextGLOrtho))
             {
@@ -746,7 +816,7 @@ namespace Plotter
             GL.Disable(EnableCap.Light0);
         }
 
-        public override void DrawBouncingBox(DrawPen pen, MinMax3D mm)
+        public void DrawBouncingBox(DrawPen pen, MinMax3D mm)
         {
             Vector3d p0 = new Vector3d(mm.Min.X, mm.Min.Y, mm.Min.Z);
             Vector3d p1 = new Vector3d(mm.Min.X, mm.Min.Y, mm.Max.Z);
@@ -772,6 +842,18 @@ namespace Plotter
             DC.Drawing.DrawLine(pen, p1, p5);
             DC.Drawing.DrawLine(pen, p2, p6);
             DC.Drawing.DrawLine(pen, p3, p7);
+        }
+
+        public void DrawCrossScrn(DrawPen pen, Vector3d p, double size)
+        {
+            Start2D();
+            DrawCross(pen, p, size);
+            End2D();
+        }
+
+        public void DrawArrow(DrawPen pen, Vector3d pt0, Vector3d pt1, ArrowTypes type, ArrowPos pos, double len, double width)
+        {
+            DrawUtil.DrawArrow(this, pen, pt0, pt1, type, pos, len, width);
         }
     }
 }
