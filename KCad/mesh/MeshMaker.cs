@@ -18,7 +18,7 @@ namespace MeshMakerNS
         {
             CadMesh cm = CreateUnitCube(faceType);
 
-            for (int i=0;i<cm.VertexStore.Count; i++)
+            for (int i = 0; i < cm.VertexStore.Count; i++)
             {
                 cm.VertexStore.Ref(i) *= sizeV;
                 cm.VertexStore.Ref(i) += pos;
@@ -80,11 +80,47 @@ namespace MeshMakerNS
             return cm;
         }
 
+        public static CadMesh CreateTetrahedron(Vector3d pos, Vector3d sizeV)
+        {
+            CadMesh cm = CreateUnitTetrahedron();
+
+            for (int i = 0; i < cm.VertexStore.Count; i++)
+            {
+                cm.VertexStore.Ref(i) *= sizeV;
+                cm.VertexStore.Ref(i) += pos;
+            }
+
+            return cm;
+        }
+
+        // 単位正四面体作成
+        public static CadMesh CreateUnitTetrahedron()
+        {
+            CadMesh cm = new CadMesh(8, 12);
+
+            var v0 = new CadVertex(-0.81649658, -0.47140452, -0.33333333);
+            var v1 = new CadVertex(0.81649658, -0.47140452, -0.33333333);
+            var v2 = new CadVertex(0.00000000, 0.00000000, 1.00000000);
+            var v3 = new CadVertex(0.00000000, 0.94280904, -0.33333333);
+
+            cm.VertexStore.Add(v0);
+            cm.VertexStore.Add(v1);
+            cm.VertexStore.Add(v2);
+            cm.VertexStore.Add(v3);
+
+            cm.FaceStore.Add(new CadFace(3, 1, 0));
+            cm.FaceStore.Add(new CadFace(2, 3, 0));
+            cm.FaceStore.Add(new CadFace(1, 2, 0));
+            cm.FaceStore.Add(new CadFace(3, 2, 1));
+
+            return cm;
+        }
+
         public static CadMesh CreateCylinder(Vector3d pos, int slices, double r, double len)
         {
             CadMesh mesh = CreateCylinder(slices, r, len);
 
-            for (int i=0; i<mesh.VertexStore.Count; i++)
+            for (int i = 0; i < mesh.VertexStore.Count; i++)
             {
                 mesh.VertexStore.Ref(i) += pos;
             }
@@ -139,7 +175,7 @@ namespace MeshMakerNS
             double d = Math.PI / slices2;
 
 
-            for (int i=0; i<slices2; i++)
+            for (int i = 0; i < slices2; i++)
             {
                 double a = i * d;
 
@@ -154,7 +190,7 @@ namespace MeshMakerNS
 
             CadMesh mesh = CreateRotatingBody(slices1, vl);
 
-            for (int i=0; i<mesh.VertexStore.Count; i++)
+            for (int i = 0; i < mesh.VertexStore.Count; i++)
             {
                 mesh.VertexStore.Ref(i).vector += pos;
             }
@@ -193,7 +229,7 @@ namespace MeshMakerNS
                 ps++;
             }
 
-            if (vl[vl.Count-1].X == 0)
+            if (vl[vl.Count - 1].X == 0)
             {
                 mesh.VertexStore.Add(vl[vl.Count - 1]);
                 e -= 1;
@@ -208,7 +244,7 @@ namespace MeshMakerNS
             {
                 double a = i * d;
 
-                for (int vi=s; vi<e; vi++)
+                for (int vi = s; vi < e; vi++)
                 {
                     CadVertex v = vl[vi];
                     CadVertex vv = default(CadVertex);
@@ -355,12 +391,12 @@ namespace MeshMakerNS
             // 裏面
             f = new CadFace();
 
-            int si = (div + 1) * vlCnt -1;
-            int ei = si - (vlCnt-1);
+            int si = (div + 1) * vlCnt - 1;
+            int ei = si - (vlCnt - 1);
 
             for (int i = si; i >= ei; i--)
             {
-                f.VList.Add(i);                
+                f.VList.Add(i);
             }
 
             mesh.FaceStore.Add(f);

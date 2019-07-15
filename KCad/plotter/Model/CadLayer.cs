@@ -7,11 +7,7 @@ namespace Plotter
 
     public class CadLayer
     {
-        private uint mId = 0;
-        public uint ID {
-            get => mId;
-            set => mId = value;
-        }
+        public uint ID;
 
         private String mName = null;
         public String Name
@@ -23,7 +19,7 @@ namespace Plotter
                     return mName;
                 }
 
-                return "layer" + mId;
+                return "layer" + ID;
             }
 
             set => mName = value;
@@ -41,12 +37,7 @@ namespace Plotter
             get => mLocked;
         }
 
-        private bool mVisible = true;
-        public bool Visible
-        {
-            set => mVisible = value;
-            get => mVisible;
-        }
+        public bool Visible = true;
 
         private List<CadFigure> mFigureList = new List<CadFigure>();
         public List<CadFigure> FigureList

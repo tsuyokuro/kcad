@@ -371,6 +371,37 @@ namespace Plotter
             return ret;
         }
 
+        // 点pから線分abに向かう垂線との交点が線分ab内にあるか
+        public static bool IsPointInSeg2D(Vector3d a, Vector3d b, Vector3d p)
+        {
+            double t1;
+
+            Vector3d ab = b - a;
+            Vector3d ap = p - a;
+
+            t1 = CadMath.InnrProduct2D(ab, ap);
+
+            if (t1 < 0)
+            {
+                return false;
+            }
+
+            double t2;
+
+            Vector3d ba = a - b;
+            Vector3d bp = p - b;
+
+            t2 = CadMath.InnrProduct2D(ba, bp);
+
+            if (t2 < 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+
         // 点pから直線abに向かう垂線との交点を求める
         public static CrossInfo PerpCrossLine(Vector3d a, Vector3d b, Vector3d p)
         {

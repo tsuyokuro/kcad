@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using static Plotter.CadFigure;
 using CadDataTypes;
+using Plotter.Settings;
 
 namespace Plotter
 {
@@ -118,6 +119,13 @@ namespace Plotter
                 }
 
                 DrawLines(dc, pen, mPointList);
+            }
+
+            if (SettingsHolder.Settings.DrawNormal && !Normal.IsZero())
+            {
+                Vector3d np0 = PointList[0].vector;
+                Vector3d np1 = np0 + (Normal * 10);
+                dc.Drawing.DrawArrow(dc.GetPen(DrawTools.PEN_NORMAL), np0, np1, ArrowTypes.CROSS, ArrowPos.END, 3, 3);
             }
         }
 

@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KCad.Dialogs"
+        xmlns:properties="clr-namespace:KCad.Properties"
         mc:Ignorable="d"
-        Title="DocumentSettingsDialog" Height="175" Width="290"
+        Title="{x:Static properties:Resources.dialog_title_drawing_settings}" Height="175" Width="290"
         ResizeMode="NoResize"
         >
 
@@ -28,7 +29,7 @@
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
 
                     <Label
-                        Content="Reduced scale"
+                        Content="{x:Static properties:Resources.string_magnification_rate }"
                         Width="120"
                         HorizontalContentAlignment="Right"
                         />

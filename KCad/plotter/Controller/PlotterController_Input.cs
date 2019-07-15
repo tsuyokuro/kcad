@@ -1,16 +1,22 @@
 ﻿#define LOG_DEBUG
 
-using System;
-using System.Collections.Generic;
 using CadDataTypes;
 using KCad;
 using OpenTK;
+using Plotter.Settings;
+using System;
+using System.Collections.Generic;
 
 namespace Plotter.Controller
 {
     public partial class PlotterController
     {
-        public InteractCtrl mInteractCtrl = new InteractCtrl();
+        private InteractCtrl mInteractCtrl = new InteractCtrl();
+
+        public InteractCtrl InteractCtrl
+        {
+            get => mInteractCtrl;
+        }
 
         public CadMouse Mouse { get; } = new CadMouse();
 
@@ -28,6 +34,8 @@ namespace Plotter.Controller
         private Vector3d StoreViewOrg = default;
 
         private Vector3d SnapPoint;
+
+        private SnapInfo mSnapInfo;
 
         private Vector3d MoveOrgScrnPoint;
 
@@ -429,7 +437,7 @@ namespace Plotter.Controller
 
                         CadFigure fig = mDB.NewFigure(CreatingFigType);
 
-                        FigureCreator = CadFigure.Creator.Get(CreatingFigType, fig);
+                        mFigureCreator = CadFigure.Creator.Get(CreatingFigType, fig);
 
                         State = States.CREATING;
 
@@ -455,7 +463,17 @@ namespace Plotter.Controller
                 case States.MEASURING:
                     {
                         LastDownPoint = SnapPoint;
-                        CadVertex p = (CadVertex)dc.DevPointToWorldPoint(CrossCursor.Pos);
+
+                        CadVertex p;
+
+                        if (mSnapInfo.SnapType == SnapInfo.SanpTypes.POINT_MATCH)
+                        {
+                            p = new CadVertex(SnapPoint);
+                        }
+                        else
+                        {
+                            p = (CadVertex)dc.DevPointToWorldPoint(CrossCursor.Pos);
+                        }
 
                         SetPointInMeasuring(dc, p);
                         PutMeasure();
@@ -480,7 +498,7 @@ namespace Plotter.Controller
             int pcnt = MeasureFigureCreator.Figure.PointCount;
 
             double currentD = 0;
-                       
+
             if (pcnt > 1)
             {
                 int idx0 = pcnt - 1;
@@ -734,6 +752,7 @@ namespace Plotter.Controller
                 si.Cursor.Pos = dc.WorldPointToDevPoint(si.SnapPoint);
 
                 si.SnapPoint = mxy.Point;
+                si.SnapType = SnapInfo.SanpTypes.POINT_MATCH;
             }
 
             return si;
@@ -761,21 +780,22 @@ namespace Plotter.Controller
 
                     if ((t - si.Cursor.Pos).Norm() < SettingsHolder.Settings.LineSnapRange)
                     {
-                        HighlightPointList.Add(new HighlightPointListItem(center, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
-
                         si.SnapPoint = center;
 
                         si.Cursor.Pos = t;
                         si.Cursor.Pos.Z = 0;
+
+                        HighlightPointList.Add(new HighlightPointListItem(center, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT2)));
                     }
                     else
                     {
                         si.SnapPoint = markSeg.CrossPoint;
+                        si.SnapType = SnapInfo.SanpTypes.POINT_MATCH;
 
                         si.Cursor.Pos = markSeg.CrossPointScrn;
                         si.Cursor.Pos.Z = 0;
 
-                        HighlightPointList.Add(new HighlightPointListItem(SnapPoint, dc.GetPen(DrawTools.PEN_LINE_SNAP)));
+                        HighlightPointList.Add(new HighlightPointListItem(si.SnapPoint, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
                     }
                 }
                 else
@@ -853,7 +873,16 @@ namespace Plotter.Controller
                 }
 
                 HighlightPointList.Add(new HighlightPointListItem(ri.Ruler.P1, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
-                HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
+
+                // 点が線分上にある時は、EvalSegSeracherで登録されているのでポイントを追加しない
+                Vector3d p0 = dc.WorldPointToDevPoint(ri.Ruler.P0);
+                Vector3d p1 = dc.WorldPointToDevPoint(ri.Ruler.P1);
+                Vector3d crp = dc.WorldPointToDevPoint(ri.CrossPoint);
+
+                if (!CadMath.IsPointInSeg2D(p0, p1, crp))
+                {
+                    HighlightPointList.Add(new HighlightPointListItem(ri.CrossPoint, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
+                }
             }
 
             return si;
@@ -942,6 +971,8 @@ namespace Plotter.Controller
 
             CrossCursor = si.Cursor;
             SnapPoint = si.SnapPoint;
+
+            mSnapInfo = si;
         }
 
         private void MouseMove(CadMouse pointer, DrawContext dc, double x, double y)

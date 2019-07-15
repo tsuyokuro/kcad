@@ -547,6 +547,24 @@ namespace Plotter.Controller
             Session.PostRemakeTreeView();
         }
 
+        public void AddTetrahedron(Vector3d pos, double x, double y, double z)
+        {
+            CadMesh cm =
+                MeshMaker.CreateTetrahedron(pos, new Vector3d(x, y, z));
+
+            HeModel hem = HeModelConverter.ToHeModel(cm);
+
+            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+
+            fig.SetMesh(hem);
+
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
+            Session.AddOpe(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+
+            Session.PostRemakeTreeView();
+        }
+
         public void AddCylinder(Vector3d pos, int slices, double r, double len)
         {
             CadMesh cm = MeshMaker.CreateCylinder(pos, slices, r, len);
@@ -1362,7 +1380,7 @@ namespace Plotter.Controller
         {
             Env.OpenPopupMessage("Input point", PlotterObserver.MessageType.INPUT);
 
-            InteractCtrl ctrl = Controller.mInteractCtrl;
+            InteractCtrl ctrl = Controller.InteractCtrl;
 
             ctrl.Start();
 
@@ -1394,7 +1412,7 @@ namespace Plotter.Controller
 
         public Vector3d InputUnitVector()
         {
-            InteractCtrl ctrl = Controller.mInteractCtrl;
+            InteractCtrl ctrl = Controller.InteractCtrl;
 
             ctrl.Start();
 
@@ -1425,7 +1443,7 @@ namespace Plotter.Controller
                 return VectorExt.InvalidVector3d;
             }
 
-            Vector3d p1 = Controller.mInteractCtrl.PointList[1];
+            Vector3d p1 = Controller.InteractCtrl.PointList[1];
 
             ctrl.End();
 

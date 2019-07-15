@@ -893,7 +893,25 @@ namespace Plotter
             }
         }
 
+        public virtual void FlipWithPlane(Vector3d p0, Vector3d normal)
+        {
+            VertexList vl = PointList;
 
+            for (int i = 0; i < vl.Count; i++)
+            {
+                CadVertex v = vl[i];
+
+                Vector3d cp = CadMath.CrossPlane(v.vector, p0, normal);
+
+                CadVertex d = v - cp;
+
+                v = cp - d;
+
+                vl[i] = v;
+            }
+
+            RecalcNormal();
+        }
 
         public virtual MpGeometricData_v1001 GeometricDataToMp_v1001()
         {
