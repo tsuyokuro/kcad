@@ -159,6 +159,9 @@ def add_line(v0, v1):
 def add_tetra(pos, size_x, size_y, size_z):
     SE.AddTetrahedron(pos, size_x, size_y, size_z)
 
+#[AC] add_octa(last_down(), size_x=20, size_y=20, size_z=20)
+def add_octa(pos, size_x, size_y, size_z):
+    SE.AddOctahedron(pos, size_x, size_y, size_z)
 
 
 ###############################################################################

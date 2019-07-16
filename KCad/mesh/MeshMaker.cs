@@ -116,6 +116,51 @@ namespace MeshMakerNS
             return cm;
         }
 
+        public static CadMesh CreateOctahedron(Vector3d pos, Vector3d sizeV)
+        {
+            CadMesh cm = CreateUnitOctahedron();
+
+            for (int i = 0; i < cm.VertexStore.Count; i++)
+            {
+                cm.VertexStore.Ref(i) *= sizeV;
+                cm.VertexStore.Ref(i) += pos;
+            }
+
+            return cm;
+        }
+
+        // 単位正八面体作成
+        public static CadMesh CreateUnitOctahedron()
+        {
+            CadMesh cm = new CadMesh(8, 12);
+
+            var v0 = new CadVertex(-0.70710678, -0.70710678, 0.00000000);
+            var v1 = new CadVertex(-0.70710678, 0.70710678, 0.00000000);
+            var v2 = new CadVertex(0.70710678, 0.70710678, 0.00000000);
+            var v3 = new CadVertex(0.70710678, -0.70710678, 0.00000000);
+            var v4 = new CadVertex(0.00000000, 0.00000000, -1.00000000);
+            var v5 = new CadVertex(0.00000000, 0.00000000, 1.00000000);
+
+            cm.VertexStore.Add(v0);
+            cm.VertexStore.Add(v1);
+            cm.VertexStore.Add(v2);
+            cm.VertexStore.Add(v3);
+            cm.VertexStore.Add(v4);
+            cm.VertexStore.Add(v5);
+
+            cm.FaceStore.Add(new CadFace(0, 1, 4));
+            cm.FaceStore.Add(new CadFace(0, 4, 3));
+            cm.FaceStore.Add(new CadFace(0, 3, 5));
+            cm.FaceStore.Add(new CadFace(0, 5, 1));
+
+            cm.FaceStore.Add(new CadFace(1, 2, 4));
+            cm.FaceStore.Add(new CadFace(1, 5, 2));
+            cm.FaceStore.Add(new CadFace(2, 3, 4));
+            cm.FaceStore.Add(new CadFace(2, 5, 3));
+
+            return cm;
+        }
+
         public static CadMesh CreateCylinder(Vector3d pos, int slices, double r, double len)
         {
             CadMesh mesh = CreateCylinder(slices, r, len);
