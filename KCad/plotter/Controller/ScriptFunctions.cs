@@ -529,16 +529,69 @@ namespace Plotter.Controller
             return (int)fig.ID;
         }
 
-        public void AddBox(Vector3d pos, double x, double y, double z)
+        public CadMesh CreateCadMesh(List<Vector3d> plist, List<CadFace> flist)
         {
-            CadMesh cm =
-                MeshMaker.CreateBox(pos, new Vector3d(x, y, z), MeshMaker.FaceType.TRIANGLE);
+            CadMesh cm = new CadMesh(plist.Count, flist.Count);
 
+            foreach (Vector3d p in plist)
+            {
+                cm.VertexStore.Add(new CadVertex(p));
+            }
+
+            foreach (CadFace f in flist)
+            {
+                cm.FaceStore.Add(f);
+            }
+
+            return cm;
+        }
+
+        public CadMesh CreateCadMesh(List<CadVertex> plist, List<CadFace> flist)
+        {
+            CadMesh cm = new CadMesh(plist.Count, flist.Count);
+
+            foreach (CadVertex p in plist)
+            {
+                cm.VertexStore.Add(p);
+            }
+
+            foreach (CadFace f in flist)
+            {
+                cm.FaceStore.Add(f);
+            }
+
+            return cm;
+        }
+
+        public CadFigure MesthToFig(CadMesh cm)
+        {
             HeModel hem = HeModelConverter.ToHeModel(cm);
 
             CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
 
             fig.SetMesh(hem);
+
+            return fig;
+        }
+
+        public CadFigure CreateMeshFig(List<Vector3d> plist, List<CadFace> flist)
+        {
+            var cm = CreateCadMesh(plist, flist);
+            return MesthToFig(cm);
+        }
+
+        public CadFigure CreateMeshFig(List<CadVertex> plist, List<CadFace> flist)
+        {
+            var cm = CreateCadMesh(plist, flist);
+            return MesthToFig(cm);
+        }
+
+        public void AddBox(Vector3d pos, double x, double y, double z)
+        {
+            CadMesh cm =
+                MeshMaker.CreateBox(pos, new Vector3d(x, y, z), MeshMaker.FaceType.TRIANGLE);
+
+            CadFigure fig = MesthToFig(cm);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
@@ -552,11 +605,7 @@ namespace Plotter.Controller
             CadMesh cm =
                 MeshMaker.CreateTetrahedron(pos, new Vector3d(x, y, z));
 
-            HeModel hem = HeModelConverter.ToHeModel(cm);
-
-            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
-
-            fig.SetMesh(hem);
+            CadFigure fig = MesthToFig(cm);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
@@ -570,11 +619,7 @@ namespace Plotter.Controller
             CadMesh cm =
                 MeshMaker.CreateOctahedron(pos, new Vector3d(x, y, z));
 
-            HeModel hem = HeModelConverter.ToHeModel(cm);
-
-            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
-
-            fig.SetMesh(hem);
+            CadFigure fig = MesthToFig(cm);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
@@ -587,11 +632,7 @@ namespace Plotter.Controller
         {
             CadMesh cm = MeshMaker.CreateCylinder(pos, slices, r, len);
 
-            HeModel hem = HeModelConverter.ToHeModel(cm);
-
-            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
-
-            fig.SetMesh(hem);
+            CadFigure fig = MesthToFig(cm);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
@@ -604,11 +645,7 @@ namespace Plotter.Controller
         {
             CadMesh cm = MeshMaker.CreateSphere(pos, r, slices, slices);
 
-            HeModel hem = HeModelConverter.ToHeModel(cm);
-
-            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
-
-            fig.SetMesh(hem);
+            CadFigure fig = MesthToFig(cm);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
@@ -1483,14 +1520,6 @@ namespace Plotter.Controller
             });
         }
 
-        //public void UpdateViews(bool redraw, bool remakeTree)
-        //{
-        //    Env.RunOnMainThread(() => {
-        //        Controller.NotifyDataChanged(redraw);
-        //        Controller.UpdateTreeView(remakeTree);
-        //    });
-        //}
-
         public void Redraw()
         {
             Env.RunOnMainThread(() =>
@@ -1500,30 +1529,6 @@ namespace Plotter.Controller
                 Controller.PushDraw();
             });
         }
-
-        //public void RunOnMainThread(Action action)
-        //{
-        //    if (mMainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)
-        //    {
-        //        action();
-        //        return;
-        //    }
-
-        //    Task task = new Task(() =>
-        //    {
-        //        action();
-        //    }
-        //    );
-
-        //    task.Start(mMainThreadScheduler);
-        //    task.Wait();
-        //}
-
-        //public void SeturePoint(uint figID, int idx, CadVertex p)
-        //{
-        //    CadFigure fig = Controller.DB.GetFigure(figID);
-        //    fig.SetPointAt(idx, p);
-        //}
 
         public CadFigure CreatePolyLines()
         {

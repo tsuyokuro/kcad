@@ -13,6 +13,8 @@ clr.AddReference('OpenTK')
 
 import CadDataTypes.CadVertex as CadVertex
 import CadDataTypes.VertexList as VertexList
+import CadDataTypes.CadMesh as CadMesh
+import CadDataTypes.CadFace as CadFace
 
 import OpenTK.Vector3d as Vector3d
 
