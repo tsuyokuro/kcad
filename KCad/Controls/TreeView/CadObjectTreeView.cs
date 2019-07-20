@@ -14,13 +14,14 @@ namespace KCad
         }
 
         #region Event
-        public event EventHandler CheckChanged;
 
-        protected virtual void OnCheckChanged(EventArgs e)
+        public event Action<CadObjTreeItem> CheckChanged;
+
+        protected virtual void OnCheckChanged(CadObjTreeItem item)
         {
             if (CheckChanged != null)
             {
-                CheckChanged(this, e);
+                CheckChanged(item);
             }
         }
         #endregion
@@ -205,7 +206,7 @@ namespace KCad
                 if (p.X > (level) * mIndentSize)
                 {
                     item.IsChecked = item.IsChecked == false;
-                    OnCheckChanged(EventArgs.Empty);
+                    OnCheckChanged(item);
                 }
                 else
                 {
@@ -216,7 +217,7 @@ namespace KCad
             else
             {
                 item.IsChecked = item.IsChecked == false;
-                OnCheckChanged(EventArgs.Empty);
+                OnCheckChanged(item);
             }
 
             InvalidateVisual();

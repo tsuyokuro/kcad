@@ -13,6 +13,8 @@ clr.AddReference('OpenTK')
 
 import CadDataTypes.CadVertex as CadVertex
 import CadDataTypes.VertexList as VertexList
+import CadDataTypes.CadMesh as CadMesh
+import CadDataTypes.CadFace as CadFace
 
 import OpenTK.Vector3d as Vector3d
 
@@ -159,6 +161,9 @@ def add_line(v0, v1):
 def add_tetra(pos, size_x, size_y, size_z):
     SE.AddTetrahedron(pos, size_x, size_y, size_z)
 
+#[AC] add_octa(last_down(), size_x=20, size_y=20, size_z=20)
+def add_octa(pos, size_x, size_y, size_z):
+    SE.AddOctahedron(pos, size_x, size_y, size_z)
 
 
 ###############################################################################
