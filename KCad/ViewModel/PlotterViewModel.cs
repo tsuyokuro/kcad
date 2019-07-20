@@ -368,8 +368,11 @@ namespace Plotter
             get => mCadObjectTreeView;
         }
 
-        private void ObjectTreeView_CheckChanged(object sender, EventArgs e)
+        private void ObjectTreeView_CheckChanged(CadObjTreeItem item)
         {
+            mController.CurrentFigure = 
+                TreeViewUtil.GetCurrentFigure(item, mController.CurrentFigure);
+
             Redraw();
         }
 
