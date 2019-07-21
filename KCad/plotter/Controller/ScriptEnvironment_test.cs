@@ -578,49 +578,13 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
         }
 
-        private void SimpleCommand(string s)
+        private bool TestCommand(string s)
         {
             string[] ss = Regex.Split(s, @"[ \t]+");
 
             string cmd = ss[0];
 
-
-            if (cmd == "@clear" || s == "@cls")
-            {
-                ItConsole.clear();
-            }
-
-            else if (cmd == "@dump")
-            {
-                if (ss[1] == "db")
-                {
-                    Controller.DB.dump();
-                }
-                else if (ss[1] == "dc")
-                {
-                    Controller.CurrentDC.dump();
-                }
-                else if (ss[1] == "fig")
-                {
-                    if (Controller.CurrentFigure != null)
-                    {
-                        Controller.CurrentFigure.Dump();
-                    }
-                }
-                else if (ss[1] == "layer")
-                {
-                    if (Controller.CurrentLayer != null)
-                    {
-                        Controller.CurrentLayer.dump();
-                    }
-                }
-            }
-
-            else if (cmd == "@clearTemp")
-            {
-                Controller.TempFigureList.Clear();
-            }
-            else if (cmd == "@loadOff")
+            if (cmd == "@loadOff")
             {
                 testLoadOff();
 
@@ -694,7 +658,20 @@ namespace Plotter.Controller
             }
             else
             {
+                return false;
             }
+
+            return true;
+        }
+
+        public void HelpOfKey(string keyword)
+        {
+            List<string> res = Controller.Observer.HelpOfKey(keyword);
+
+            res.ForEach((s) =>
+            {
+                ItConsole.println(s);
+            });
         }
 
         public void Redraw()

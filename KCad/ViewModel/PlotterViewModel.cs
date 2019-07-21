@@ -14,6 +14,7 @@ using CadDataTypes;
 using Plotter.Controller;
 using Plotter.Settings;
 using KCad.Dialogs;
+using System.Text.RegularExpressions;
 
 namespace Plotter
 {
@@ -299,6 +300,8 @@ namespace Plotter
 
             mController.Observer.ChangeMouseCursor = ChangeMouseCursor;
 
+            mController.Observer.HelpOfKey = HelpOfKey;
+
             //LayerListChanged(mController, mController.GetLayerListInfo());
 
             mController.UpdateLayerList();
@@ -421,41 +424,90 @@ namespace Plotter
             };
         }
 
-        struct KeyAction
-        {
-            public Action Down;
-            public Action Up;
-
-            public KeyAction(Action down, Action up)
-            {
-                Down = down;
-                Up = up;
-            }
-        }
-
         private void InitKeyMap()
         {
             KeyMap = new Dictionary<string, KeyAction>
             {
-                { "ctrl+z", new KeyAction(Undo , null)},
-                { "ctrl+y", new KeyAction(Redo , null)},
-                { "ctrl+c", new KeyAction(Copy , null)},
-                { "ctrl+insert", new KeyAction(Copy , null)},
-                { "ctrl+v", new KeyAction(Paste , null)},
+                { "ctrl+z", new KeyAction(Undo , null,
+                    AnsiEsc.BGreen + "Ctrl+Z" + AnsiEsc.Reset + " Undo")},
+
+                { "ctrl+y", new KeyAction(Redo , null,
+                    AnsiEsc.BGreen + "Ctrl+Y" + AnsiEsc.Reset + " Rendo")},
+
+                { "ctrl+c", new KeyAction(Copy , null,
+                    AnsiEsc.BGreen + "Ctrl+C" + AnsiEsc.Reset + " Copy")},
+
+                { "ctrl+insert", new KeyAction(Copy , null, null)},
+
+                { "ctrl+v", new KeyAction(Paste ,null,
+                    AnsiEsc.BGreen + "Ctrl+C" + AnsiEsc.Reset + " Paste")},
+
                 { "shift+insert", new KeyAction(Paste , null)},
+
                 { "delete", new KeyAction(Remove , null)},
-                { "ctrl+s", new KeyAction(Save , null)},
-                { "ctrl+a", new KeyAction(SelectAll , null)},
+
+                { "ctrl+s", new KeyAction(Save , null,
+                    AnsiEsc.BGreen + "Ctrl+S" + AnsiEsc.Reset + " Save")},
+
+                { "ctrl+a", new KeyAction(SelectAll , null,
+                    AnsiEsc.BGreen + "Ctrl+A" + AnsiEsc.Reset + " Select All")},
+
                 { "escape", new KeyAction(Cancel , null)},
-                { "ctrl+p", new KeyAction(InsPoint , null)},
-                //{ "ctrl+oemplus", new KeyAction(SearchNearestPoint , null)},
-                { "f3", new KeyAction(SearchNearPoint , null)},
-                { "f2", new KeyAction(CursorLock , null)},
+
+                { "ctrl+p", new KeyAction(InsPoint , null,
+                    AnsiEsc.BGreen + "Ctrl+P" + AnsiEsc.Reset + " Inser Point")},
+
+                { "f3", new KeyAction(SearchNearPoint , null,
+                    AnsiEsc.BGreen + "F3" + AnsiEsc.Reset + " Search near Point")},
+
+                { "f2", new KeyAction(CursorLock , null,
+                    AnsiEsc.BGreen + "F2" + AnsiEsc.Reset + " Lock Cursor")},
+
                 { "left", new KeyAction(MoveKeyDown, MoveKeyUp)},
+
                 { "right", new KeyAction(MoveKeyDown, MoveKeyUp)},
+
                 { "up", new KeyAction(MoveKeyDown, MoveKeyUp)},
+
                 { "down", new KeyAction(MoveKeyDown, MoveKeyUp)},
+
+                { "m", new KeyAction(AddMark, null,
+                    AnsiEsc.BGreen + "M" + AnsiEsc.Reset + " Add snap point")},
+
+                { "ctrl+m", new KeyAction(CleanMark, null,
+                    AnsiEsc.BGreen + "Ctrl+M" + AnsiEsc.Reset + " Clear snap points")},
             };
+        }
+
+        public List<string> HelpOfKey(string keyword)
+        {
+            List<string> ret = new List<string>();
+
+            if (keyword == null)
+            {
+                foreach (KeyAction a in KeyMap.Values)
+                {
+                    if (a.Description == null) continue;
+
+                    ret.Add(a.Description);
+                }
+
+                return ret;
+            }
+
+            Regex re = new Regex(keyword, RegexOptions.IgnoreCase);
+
+            foreach (KeyAction a in KeyMap.Values)
+            {
+                if (a.Description == null) continue;
+
+                if (re.Match(a.Description).Success)
+                {
+                    ret.Add(a.Description);
+                }
+            }
+
+            return ret;
         }
 
         public void ExecCommand(string cmd)
@@ -749,10 +801,23 @@ namespace Plotter
             mMoveKeyHandler.MoveKeyUp();
         }
 
-#endregion
+
+        public void AddMark()
+        {
+            mController.AddExtendSnapPoint();
+            Redraw();
+        }
+
+        public void CleanMark()
+        {
+            mController.ClearExtendSnapPointList();
+            Redraw();
+        }
+
+        #endregion
 
         // Handle events from PlotterController
-#region Event From PlotterController
+        #region Event From PlotterController
 
         //public void DataChanged(PlotterController sender, bool redraw)
         //{

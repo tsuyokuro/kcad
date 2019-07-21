@@ -62,6 +62,8 @@ namespace Plotter.Controller
                 string s = m.Groups[1].Value.TrimEnd('\r', '\n');
                 mAutoCompleteList.Add(s);
             }
+
+            mAutoCompleteList.AddRange(GetAutoCompleteForSimpleCmd());
         }
 
         public void ExecuteCommandSync(string s)
@@ -71,7 +73,10 @@ namespace Plotter.Controller
 
             if (s.StartsWith("@"))
             {
-                SimpleCommand(s);
+                if (!SimpleCommand(s))
+                {
+                    TestCommand(s);
+                }
                 return;
             }
 
@@ -91,7 +96,10 @@ namespace Plotter.Controller
             {
                 await Task.Run(() =>
                 {
-                    SimpleCommand(s);
+                    if (!SimpleCommand(s))
+                    {
+                        TestCommand(s);
+                    }
                 });
 
                 return;

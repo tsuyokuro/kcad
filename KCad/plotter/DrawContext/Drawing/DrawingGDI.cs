@@ -682,5 +682,13 @@ namespace Plotter
         {
             DrawUtil.DrawArrow(this, pen, pt0, pt1, type, pos, len, width);
         }
+
+        public void DrawExtSnapPoints(Vector3dList pointList, DrawPen pen)
+        {
+            pointList.ForEach(v =>
+            {
+                DrawHighlightPoint(v, pen);
+            });
+        }
     }
 }
