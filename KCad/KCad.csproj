@@ -198,9 +198,8 @@
     <Compile Include="Controls\PopupEx.cs" />
     <Compile Include="GLUtil\FontFaceW.cs" />
     <Compile Include="GLUtil\FrameBufferW.cs" />
-    <Compile Include="plotter\Controller\PlotterDrawer.cs" />
     <Compile Include="plotter\Controller\PlotterPrinter.cs" />
-    <Compile Include="plotter\Controller\ScriptEnvironment_simple_cmd.cs" />
+    <Compile Include="plotter\Controller\Scripting\SimpleCommands.cs" />
     <Compile Include="plotter\Controller\SnapInfo.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\PrintColors.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\DarkColors.cs" />
@@ -255,7 +254,7 @@
     <Compile Include="plotter\Controller\PlotterUtil.cs" />
     <Compile Include="plotter\Controller\PlotterClipboard.cs" />
     <Compile Include="plotter\Controller\PlotterObserver.cs" />
-    <Compile Include="plotter\Controller\ScriptFunctions.cs" />
+    <Compile Include="plotter\Controller\Scripting\ScriptFunctions.cs" />
     <Compile Include="plotter\Controller\ControllerTypes.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGDIBmp.cs" />
     <Compile Include="plotter\DrawContext\Drawing\DrawingGDIBmp.cs" />
@@ -279,7 +278,7 @@
     </Compile>
     <Compile Include="mesh\MeshMaker.cs" />
     <Compile Include="mesh\MeshUtil.cs" />
-    <Compile Include="plotter\Controller\ScriptEnvironment_test.cs" />
+    <Compile Include="plotter\Controller\Scripting\TestCommnads.cs" />
     <Compile Include="plotter\Figure\CadFigureMesh.cs" />
     <Compile Include="plotter\Figure\CadFigureNurbsLine.cs" />
     <Compile Include="plotter\Figure\CadFigureNurbsSurface.cs" />
@@ -433,7 +432,7 @@
     <Compile Include="plotter\Controller\PlotterController.cs" />
     <Compile Include="plotter\Controller\PlotterController_edit.cs" />
     <Compile Include="plotter\Controller\PlotterController_Input.cs" />
-    <Compile Include="plotter\Controller\ScriptEnvironment.cs" />
+    <Compile Include="plotter\Controller\Scripting\ScriptEnvironment.cs" />
     <Compile Include="plotter\Controller\ViewController.cs" />
     <Compile Include="plotter\searcher\PointSearcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
