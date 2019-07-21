@@ -1,6 +1,7 @@
 ﻿using CadDataTypes;
 using OpenTK;
 using System;
+using System.Collections.Generic;
 
 namespace Plotter.Controller
 {
@@ -43,5 +44,7 @@ namespace Plotter.Controller
         public Action<bool> CursorLocked = (locked) => {}; 
 
         public Action<MouseCursorType> ChangeMouseCursor = (cursorType) => {};
+
+        public Func<string, List<string>> HelpOfKey = (keyword) => { return null; };
     }
 }

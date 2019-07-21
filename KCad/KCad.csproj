@@ -225,6 +225,7 @@
     <Compile Include="plotter\TreeViewItem\TreeViewUtil.cs" />
     <Compile Include="plotter\Util\StackArray.cs" />
     <Compile Include="plotter\Util\VectorExt.cs" />
+    <Compile Include="ViewModel\KeyAction.cs" />
     <Compile Include="WIndowsAPI\WindowsAPI.cs" />
     <Compile Include="Dialogs\AngleInputDialog.xaml.cs">
       <DependentUpon>AngleInputDialog.xaml</DependentUpon>

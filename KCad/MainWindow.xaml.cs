@@ -35,8 +35,8 @@ namespace KCad
             ViewModel.SetupTextCommandView(textCommand);
             textCommand.Determine += TextCommand_OnDetermine;
 
-            KeyDown += onKeyDown;
-            KeyUp += onKeyUp;
+            KeyDown += OnKeyDown;
+            KeyUp += OnKeyUp;
 
             Loaded += MainWindow_Loaded;
             Closed += MainWindow_Closed;
@@ -259,19 +259,26 @@ namespace KCad
         #endregion
 
         #region "Key handling"
-        private void onKeyDown(object sender, KeyEventArgs e)
+        private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (!textCommand.IsFocused)
+            if (!textCommand.IsFocused && !MyConsole.IsFocused)
             {
                 e.Handled = ViewModel.OnKeyDown(sender, e);
             }
         }
 
-        private void onKeyUp(object sender, KeyEventArgs e)
+        private void OnKeyUp(object sender, KeyEventArgs e)
         {
             if (!textCommand.IsFocused && !MyConsole.IsFocused)
             {
                e.Handled = ViewModel.OnKeyUp(sender, e);
+            }
+            else
+            {
+                if (e.Key == Key.Escape)
+                {
+                    viewContainer.Focus();
+                }
             }
         }
         #endregion

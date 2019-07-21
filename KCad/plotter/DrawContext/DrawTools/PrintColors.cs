@@ -41,6 +41,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_LINE_SNAP] = Color.Black;
             PenColorTbl[DrawTools.PEN_DRAG_LINE] = Color.Black;
             PenColorTbl[DrawTools.PEN_NORMAL] = Color.Black;
+            PenColorTbl[DrawTools.PEN_EXT_SNAP] = Color.Transparent;
 
 
             BrushColorTbl = new Color[DrawTools.BRUSH_TBL_SIZE];

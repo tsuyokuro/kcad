@@ -114,6 +114,8 @@ namespace Plotter.Controller
 
         private ContextMenuManager mContextMenuMan;
 
+        private Vector3dList ExtendSnapPointList = new Vector3dList(20);
+
         public ContextMenuManager ContextMenuMan
         {
             get => mContextMenuMan;
@@ -325,13 +327,21 @@ namespace Plotter.Controller
             }
 
             DrawBase(dc);
+
             DrawDragLine(dc);
+
             DrawCrossCursor(dc);
+
             Draw(dc);
+
             DrawSelectedItems(dc);
+
             DrawLastPoint(dc);
 
             DrawHighlightPoint(dc);
+
+            DrawExtendSnapPoint(dc);
+
             DrawAccordingState(dc);
         }
 
@@ -508,6 +518,11 @@ namespace Plotter.Controller
         public void DrawHighlightPoint(DrawContext dc)
         {
             dc.Drawing.DrawHighlightPoints(HighlightPointList);
+        }
+
+        public void DrawExtendSnapPoint(DrawContext dc)
+        {
+            dc.Drawing.DrawExtSnapPoints(ExtendSnapPointList, dc.GetPen(DrawTools.PEN_EXT_SNAP));
         }
 
         #endregion

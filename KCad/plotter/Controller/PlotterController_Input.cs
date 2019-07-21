@@ -62,7 +62,6 @@ namespace Plotter.Controller
 
         public MarkPoint? LastSelPoint = null;
 
-
         public CadFigure CurrentFigure
         {
             set
@@ -708,6 +707,8 @@ namespace Plotter.Controller
                 mPointSearcher.Check(dc, MeasureFigureCreator.Figure.PointList);
             }
 
+            CheckExtendSnapPoints(dc);
+
             // Search point
             mPointSearcher.SearchAllLayer(dc, mDB);
         }
@@ -1147,6 +1148,21 @@ namespace Plotter.Controller
         {
             LastDownPoint = v;
             Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
+        }
+
+        public void AddExtendSnapPoint()
+        {
+            ExtendSnapPointList.Add(LastDownPoint);
+        }
+
+        public void ClearExtendSnapPointList()
+        {
+            ExtendSnapPointList.Clear();
+        }
+
+        private void CheckExtendSnapPoints(DrawContext dc)
+        {
+            ExtendSnapPointList.ForEach(v => mPointSearcher.Check(dc, v));
         }
     }
 }

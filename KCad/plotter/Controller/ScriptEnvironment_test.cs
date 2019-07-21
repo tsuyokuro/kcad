@@ -615,7 +615,16 @@ namespace Plotter.Controller
                     }
                 }
             }
-
+            else if (cmd == "@help")
+            {
+                if (ss.Length > 1)
+                {
+                    if (ss[1] == "key")
+                    {
+                        HelpOfKey(ss.Length > 2 ? ss[2] : null);
+                    }
+                }
+            }
             else if (cmd == "@clearTemp")
             {
                 Controller.TempFigureList.Clear();
@@ -695,6 +704,16 @@ namespace Plotter.Controller
             else
             {
             }
+        }
+
+        public void HelpOfKey(string keyword)
+        {
+            List<string> res = Controller.Observer.HelpOfKey(keyword);
+
+            res.ForEach((s) =>
+            {
+                ItConsole.println(s);
+            });
         }
 
         public void Redraw()
