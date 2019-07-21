@@ -21,8 +21,15 @@ using OpenTK;
 
 namespace Plotter.Controller
 {
-    public partial class ScriptEnvironment
+    public class TestCommands
     {
+        PlotterController Controller;
+
+        public TestCommands(PlotterController controller)
+        {
+            Controller = controller;
+        }
+
         private void test001()
         {
             VertexList vl = new VertexList();
@@ -578,7 +585,7 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
         }
 
-        private bool TestCommand(string s)
+        public bool ExecCommand(string s)
         {
             string[] ss = Regex.Split(s, @"[ \t]+");
 
@@ -664,16 +671,6 @@ namespace Plotter.Controller
             return true;
         }
 
-        public void HelpOfKey(string keyword)
-        {
-            List<string> res = Controller.Observer.HelpOfKey(keyword);
-
-            res.ForEach((s) =>
-            {
-                ItConsole.println(s);
-            });
-        }
-
         public void Redraw()
         {
             RunOnMainThread(() => {
@@ -681,6 +678,11 @@ namespace Plotter.Controller
                 Controller.DrawAll();
                 Controller.PushDraw();
             });
+        }
+
+        public void RunOnMainThread(Action action)
+        {
+            ThreadUtil.RunOnMainThread(action, true);
         }
     }
 }

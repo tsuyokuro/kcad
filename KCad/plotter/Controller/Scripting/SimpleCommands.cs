@@ -3,9 +3,16 @@ using System.Text.RegularExpressions;
 
 namespace Plotter.Controller
 {
-    public partial class ScriptEnvironment
+    public class SipmleCommands
     {
-        private List<string> GetAutoCompleteForSimpleCmd()
+        private PlotterController Controller;
+
+        public SipmleCommands(PlotterController controller)
+        {
+            Controller = controller;
+        }
+
+        public List<string> GetAutoCompleteForSimpleCmd()
         {
             List<string> autoComps = new List<string>();
 
@@ -20,7 +27,7 @@ namespace Plotter.Controller
             return autoComps;
         }
 
-        private bool SimpleCommand(string s)
+        public bool ExecCommand(string s)
         {
             string[] ss = Regex.Split(s, @"[ \t]+");
 
@@ -77,6 +84,16 @@ namespace Plotter.Controller
             }
 
             return true;
+        }
+
+        private void HelpOfKey(string keyword)
+        {
+            List<string> res = Controller.Observer.HelpOfKey(keyword);
+
+            res.ForEach((s) =>
+            {
+                ItConsole.println(s);
+            });
         }
     }
 }

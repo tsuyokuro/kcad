@@ -33,11 +33,20 @@ namespace Plotter.Controller
 
         private ScriptFunctions mScriptFunctions;
 
+        private SipmleCommands mSimpleCommands;
+
+        private TestCommands mTestCommands;
+
+
         public ScriptEnvironment(PlotterController controller)
         {
             Controller = controller;
 
             mScriptFunctions = new ScriptFunctions(this);
+
+            mSimpleCommands = new SipmleCommands(controller);
+
+            mTestCommands = new TestCommands(controller);
 
             InitScriptingEngine();
         }
@@ -63,7 +72,7 @@ namespace Plotter.Controller
                 mAutoCompleteList.Add(s);
             }
 
-            mAutoCompleteList.AddRange(GetAutoCompleteForSimpleCmd());
+            mAutoCompleteList.AddRange(mSimpleCommands.GetAutoCompleteForSimpleCmd());
         }
 
         public void ExecuteCommandSync(string s)
@@ -73,9 +82,9 @@ namespace Plotter.Controller
 
             if (s.StartsWith("@"))
             {
-                if (!SimpleCommand(s))
+                if (!mSimpleCommands.ExecCommand(s))
                 {
-                    TestCommand(s);
+                    mTestCommands.ExecCommand(s);
                 }
                 return;
             }
@@ -96,9 +105,9 @@ namespace Plotter.Controller
             {
                 await Task.Run(() =>
                 {
-                    if (!SimpleCommand(s))
+                    if (!mSimpleCommands.ExecCommand(s))
                     {
-                        TestCommand(s);
+                        mTestCommands.ExecCommand(s);
                     }
                 });
 
