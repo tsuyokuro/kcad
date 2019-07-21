@@ -200,6 +200,7 @@
     <Compile Include="GLUtil\FrameBufferW.cs" />
     <Compile Include="plotter\Controller\PlotterDrawer.cs" />
     <Compile Include="plotter\Controller\PlotterPrinter.cs" />
+    <Compile Include="plotter\Controller\ScriptEnvironment_simple_cmd.cs" />
     <Compile Include="plotter\Controller\SnapInfo.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\PrintColors.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\DarkColors.cs" />

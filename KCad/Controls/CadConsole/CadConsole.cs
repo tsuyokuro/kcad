@@ -390,6 +390,21 @@ namespace KCad
 
         public void Clear()
         {
+            if (Dispatcher.CheckAccess())
+            {
+                HandleClear();
+            }
+            else
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    HandleClear();
+                }));
+            }
+        }
+
+        private void HandleClear()
+        {
             mList.Clear();
             //RecalcSize();
             NewLine();

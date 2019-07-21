@@ -275,7 +275,7 @@ namespace KCad
             return true;
         }
 
-        Regex WordPattern = new Regex(@"[a-zA-Z_0-9]+[\(]*");
+        Regex WordPattern = new Regex(@"[@a-zA-Z_0-9]+[\(]*");
 
         int mReplacePos = -1;
 
