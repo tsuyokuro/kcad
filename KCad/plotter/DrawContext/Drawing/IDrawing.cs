@@ -40,6 +40,8 @@ namespace Plotter
 
         void DrawSelectedPoints(VertexList pointList, DrawPen pen);
 
+        void DrawExtSnapPoints(Vector3dList pointList, DrawPen pen);
+
         void DrawMarkCursor(DrawPen pen, Vector3d p, double pix_size);
 
         void DrawRect(DrawPen pen, Vector3d p0, Vector3d p1);

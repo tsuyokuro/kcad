@@ -855,5 +855,25 @@ namespace Plotter
         {
             DrawUtil.DrawArrow(this, pen, pt0, pt1, type, pos, len, width);
         }
+
+        public void DrawExtSnapPoints(Vector3dList pointList, DrawPen pen)
+        {
+            GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
+
+            Start2D();
+
+            GL.LineWidth(1);
+            GL.Color4(pen.Color4());
+
+            pointList.ForEach(v =>
+            {
+                DrawCrossRaw(DC.WorldPointToDevPoint(v), 6);
+            });
+
+            GL.LineWidth(1);
+
+            End2D();
+        }
     }
 }
