@@ -13,7 +13,7 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
-            DrawPen pen = DrawPen.New(Color.FromArgb(0x45, 1, 2, 3), 0);
+            DrawPen pen = new DrawPen(Color.FromArgb(0x45, 1, 2, 3), 0);
 
             uint a = (uint)pen.Argb & 0xff000000;
 
