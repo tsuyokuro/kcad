@@ -201,6 +201,7 @@
     <Compile Include="plotter\Controller\PlotterPrinter.cs" />
     <Compile Include="plotter\Controller\Scripting\SimpleCommands.cs" />
     <Compile Include="plotter\Controller\SnapInfo.cs" />
+    <Compile Include="plotter\Controller\svg\SvgExporter.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\PrintColors.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\DarkColors.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGLOrtho.cs" />

@@ -194,5 +194,20 @@ namespace Plotter
         {
             return Tools.Brush(idx);
         }
+
+        public override DrawContext Clone()
+        {
+            DrawContextGDI dc = new DrawContextGDI();
+
+            dc.CopyProjectionMetrics(this);
+            dc.WorldScale = WorldScale;
+
+            dc.CopyCamera(this);
+            dc.SetViewSize(ViewWidth, ViewHeight);
+
+            dc.SetViewOrg(ViewOrg);
+
+            return dc;
+        }
     }
 }

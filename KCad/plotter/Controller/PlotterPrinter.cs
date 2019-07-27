@@ -1,4 +1,4 @@
-﻿//#define PRINT_WITH_GL_ONLY
+﻿#define PRINT_WITH_GL_ONLY
 //#define PRINT_WITH_GDI_ONLY
 
 using GLUtil;
@@ -12,7 +12,8 @@ namespace Plotter.Controller
         {
             DOut.pl($"Dev Width:{deviceSize.Width} Height:{deviceSize.Height}");
 #if PRINT_WITH_GL_ONLY
-            PrintPageGL(printerGraphics, pageSize, deviceSize);
+            Bitmap bmp = GetPrintableBmp(pc, pageSize, deviceSize);
+            printerGraphics.DrawImage(bmp, 0, 0);
 #elif PRINT_WITH_GDI_ONLY
             PrintPageGDI(printerGraphics, pageSize, deviceSize);
 #else

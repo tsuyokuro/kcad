@@ -18,6 +18,8 @@ using Newtonsoft.Json.Linq;
 using System.Drawing;
 using OpenTK.Graphics;
 using OpenTK;
+using Plotter.svg;
+using System.Xml.Linq;
 
 namespace Plotter.Controller
 {
@@ -585,6 +587,19 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
         }
 
+        private void testSvg()
+        {
+            List<CadFigure> figList = Controller.DB.GetSelectedFigList();
+
+            XDocument doc = SvgExporter.ToSvg(figList,
+                        Controller.CurrentDC,
+                        Controller.PageSize.Width,
+                        Controller.PageSize.Height);
+
+            DOut.pl(doc.ToString());
+            doc.Save(@"f:\work2\test.svg");
+        }
+
         public bool ExecCommand(string s)
         {
             string[] ss = Regex.Split(s, @"[ \t]+");
@@ -594,8 +609,13 @@ namespace Plotter.Controller
             if (cmd == "@loadOff")
             {
                 testLoadOff();
-
             }
+
+            else if (cmd == "@svg")
+            {
+                testSvg();
+            }
+
             else if (cmd == "@triangle")
             {
                 testTriangulate();

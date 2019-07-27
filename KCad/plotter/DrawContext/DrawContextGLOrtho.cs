@@ -124,5 +124,22 @@ namespace Plotter
 
             return dc;
         }
+
+        public override DrawContext Clone()
+        {
+            DrawContextGLOrtho dc = new DrawContextGLOrtho();
+
+            dc.CopyProjectionMetrics(this);
+            dc.WorldScale = WorldScale;
+
+            dc.CopyCamera(this);
+            dc.SetViewSize(ViewWidth, ViewHeight);
+
+            dc.SetViewOrg(ViewOrg);
+
+            dc.UnitPerMilli = UnitPerMilli;
+
+            return dc;
+        }
     }
 }

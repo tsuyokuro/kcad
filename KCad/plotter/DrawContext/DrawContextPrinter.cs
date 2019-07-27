@@ -40,6 +40,10 @@ namespace Plotter
             mDrawing = new DrawingGDI(this);
         }
 
+        public DrawContextPrinter()
+        {
+        }
+
         protected override void DisposeGraphics()
         {
             // NOP
@@ -48,6 +52,21 @@ namespace Plotter
         protected override void CreateGraphics()
         {
             // NOP
+        }
+
+        public override DrawContext Clone()
+        {
+            DrawContextPrinter dc = new DrawContextPrinter();
+
+            dc.CopyProjectionMetrics(this);
+            dc.WorldScale = WorldScale;
+
+            dc.CopyCamera(this);
+            dc.SetViewSize(ViewWidth, ViewHeight);
+
+            dc.SetViewOrg(ViewOrg);
+
+            return dc;
         }
     }
 }

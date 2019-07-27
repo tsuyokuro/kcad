@@ -326,7 +326,7 @@ namespace Plotter
         }
 
         public abstract void Dispose();
-
+        public abstract DrawContext Clone();
         public abstract DrawPen GetPen(int idx);
         public abstract DrawBrush GetBrush(int idx);
     }
