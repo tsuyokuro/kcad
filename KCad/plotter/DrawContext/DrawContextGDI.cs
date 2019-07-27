@@ -85,11 +85,6 @@ namespace Plotter
             CalcProjectionZW();
         }
 
-        public override void SetViewOrg(Vector3d org)
-        {
-            mViewOrg = org;
-        }
-
         public override void SetViewSize(double w, double h)
         {
             mViewWidth = w;

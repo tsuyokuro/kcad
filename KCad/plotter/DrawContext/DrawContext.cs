@@ -120,7 +120,7 @@ namespace Plotter
 
         }
 
-        public virtual void SetViewOrg(Vector3d org)
+        public void SetViewOrg(Vector3d org)
         {
             mViewOrg = org;
         }
@@ -240,16 +240,21 @@ namespace Plotter
             return wv.ToVector3d();
         }
 
-        public virtual void CalcViewDir()
+        public virtual double DevSizeToWoldSize(double s)
+        {
+            CadVertex size = DevVectorToWorldVector(CadVertex.UnitX * s);
+            return size.Norm();
+        }
+
+
+        protected virtual void CalcViewDir()
         {
             Vector3d ret = mLookAt - mEye;
             ret.Normalize();
             mViewDir = ret;
         }
 
-        public abstract void CalcProjectionMatrix();
-
-        public virtual void CalcProjectionZW()
+        protected virtual void CalcProjectionZW()
         {
             Vector4d wv = Vector4d.Zero;
             wv.W = 1.0f;
@@ -261,11 +266,12 @@ namespace Plotter
             mProjectionZ = pv.Z;
         }
 
-        public virtual void CalcViewMatrix()
+        protected virtual void CalcViewMatrix()
         {
             mViewMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
             mViewMatrixInv = mViewMatrix.Invert();
         }
+
 
         public virtual void CopyCamera(DrawContext dc)
         {
@@ -295,12 +301,6 @@ namespace Plotter
             CalcProjectionZW();
         }
 
-        public virtual double DevSizeToWoldSize(double s)
-        {
-            CadVertex size = DevVectorToWorldVector(CadVertex.UnitX * s);
-            return size.Norm();
-        }
-
         public virtual DrawContext CreatePrinterContext(CadSize2D pageSize, CadSize2D deviceSize)
         {
             return null;
@@ -325,6 +325,7 @@ namespace Plotter
             DOut.pl($"ProjectionZ={mProjectionZ}");
         }
 
+        public abstract void CalcProjectionMatrix();
         public abstract void Dispose();
         public abstract void SetupDrawing();
         public abstract DrawContext Clone();
