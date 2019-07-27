@@ -120,7 +120,7 @@ namespace Plotter
 
             dc.SetViewOrg(org);
 
-            dc.UnitPerMilli = (deviceSize.Width / pageSize.Width) * 0.96;
+            dc.UnitPerMilli = deviceSize.Width / pageSize.Width;
 
             return dc;
         }

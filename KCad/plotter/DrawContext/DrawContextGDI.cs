@@ -83,8 +83,6 @@ namespace Plotter
 
             CalcProjectionMatrix();
             CalcProjectionZW();
-
-            mDrawing = new DrawingGDI(this);
         }
 
         public override void SetViewOrg(Vector3d org)
@@ -137,8 +135,16 @@ namespace Plotter
         public override void Dispose()
         {
             DisposeGraphics();
-            Tools.Dispose();
-            mDrawing.Dispose();
+
+            if (Tools != null)
+            {
+                Tools.Dispose();
+            }
+
+            if (mDrawing != null)
+            {
+                mDrawing.Dispose();
+            }
         }
 
         public override void CalcProjectionMatrix()
@@ -208,6 +214,11 @@ namespace Plotter
             dc.SetViewOrg(ViewOrg);
 
             return dc;
+        }
+
+        public override void SetupDrawing()
+        {
+            mDrawing = new DrawingGDI(this);
         }
     }
 }

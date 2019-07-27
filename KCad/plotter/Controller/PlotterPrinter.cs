@@ -1,4 +1,4 @@
-﻿#define PRINT_WITH_GL_ONLY
+﻿//#define PRINT_WITH_GL_ONLY
 //#define PRINT_WITH_GDI_ONLY
 
 using GLUtil;
@@ -26,6 +26,9 @@ namespace Plotter.Controller
             if (!(pc.CurrentDC.GetType() == typeof(DrawContextGLPers)))
             {
                 DrawContextPrinter dc = new DrawContextPrinter(pc.CurrentDC, printerGraphics, pageSize, deviceSize);
+                dc.SetupDrawing();
+                dc.SetupTools(DrawTools.ToolsType.PRINTER);
+
                 pc.DrawAllFigure(dc);
             }
             else
@@ -43,8 +46,11 @@ namespace Plotter.Controller
             }
 
             DrawContext dc = pc.CurrentDC.CreatePrinterContext(pageSize, deviceSize);
-
+            dc.SetupDrawing();
             dc.SetupTools(DrawTools.ToolsType.PRINTER);
+
+            // Bitmapを印刷すると大きさが小さくされてしまうので、補正
+            dc.UnitPerMilli *= 0.96;
 
             FrameBufferW fb = new FrameBufferW();
             fb.Create((int)deviceSize.Width, (int)deviceSize.Height);

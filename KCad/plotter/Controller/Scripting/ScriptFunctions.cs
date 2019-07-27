@@ -868,6 +868,7 @@ namespace Plotter.Controller
             wr.p1 = dc.DevPointToWorldPoint(r.p1);
 
             DrawContextGDIBmp tdc = new DrawContextGDIBmp();
+            tdc.SetupDrawing();
 
             tdc.WorldScale = dc.WorldScale;
 
@@ -1561,7 +1562,7 @@ namespace Plotter.Controller
             CadSize2D pageSize = new CadSize2D(210, 297);
 
             DrawContext dc = Controller.CurrentDC.CreatePrinterContext(pageSize, deviceSize);
-
+            dc.SetupDrawing();
             dc.SetupTools(DrawTools.ToolsType.PRINTER);
 
             FrameBufferW fb = new FrameBufferW();

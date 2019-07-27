@@ -54,9 +54,6 @@ namespace Plotter
 
             mUnitPerMilli = 1.0;
             WorldScale = 1.0f;
-            Tools.Setup(DrawTools.ToolsType.DARK);
-
-            mDrawing = new DrawingGL(this);
 
             InitCamera(ViewingAngleType.STANDERD);
 
@@ -119,16 +116,6 @@ namespace Plotter
             }
         }
 
-        public override void SetupTools(DrawTools.ToolsType type)
-        {
-            //if (DrawTools.IsTypeForGL(type))
-            //{
-            //    Tools.Setup(type);
-            //}
-
-            Tools.Setup(type);
-        }
-
         protected void SetupLight()
         {
             if (!LightingEnable)
@@ -159,8 +146,15 @@ namespace Plotter
 
         public override void Dispose()
         {
-            Tools.Dispose();
-            mDrawing.Dispose();
+            if (Tools != null)
+            {
+                Tools.Dispose();
+            }
+
+            if (mDrawing!=null)
+            {
+                mDrawing.Dispose();
+            }
         }
 
         public override DrawPen GetPen(int idx)
@@ -171,6 +165,11 @@ namespace Plotter
         public override DrawBrush GetBrush(int idx)
         {
             return Tools.Brush(idx);
+        }
+
+        public override void SetupDrawing()
+        {
+            mDrawing = new DrawingGL(this);
         }
     }
 }

@@ -9,7 +9,6 @@ namespace Plotter
         public DrawContextPrinter(DrawContext currentDC, Graphics g, CadSize2D pageSize, CadSize2D deviceSize)
         {
             GdiGraphics = g;
-            SetupTools(DrawTools.ToolsType.PRINTER);
 
             if (currentDC.GetType() == typeof(DrawContextGLPers))
             {
@@ -36,8 +35,6 @@ namespace Plotter
             org.Y = deviceSize.Height / 2.0;
             
             SetViewOrg(org);
-
-            mDrawing = new DrawingGDI(this);
         }
 
         public DrawContextPrinter()
@@ -67,6 +64,11 @@ namespace Plotter
             dc.SetViewOrg(ViewOrg);
 
             return dc;
+        }
+
+        public override void SetupDrawing()
+        {
+            mDrawing = new DrawingGDI(this);
         }
     }
 }
