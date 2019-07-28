@@ -101,13 +101,13 @@ namespace Plotter
 
             for (int i=0; i<PEN_TBL_SIZE; i++)
             {
-                PenTbl[i] = DrawPen.New(new Pen(PenColorTbl[i]));
+                PenTbl[i] = new DrawPen(new Pen(PenColorTbl[i]));
                 PenTbl[i].ID = i;
             }
 
             for (int i = 0; i < BRUSH_TBL_SIZE; i++)
             {
-                BrushTbl[i] = DrawBrush.New(new SolidBrush(BrushColorTbl[i]));
+                BrushTbl[i] = new DrawBrush(new SolidBrush(BrushColorTbl[i]));
                 BrushTbl[i].ID = i;
             }
 
@@ -128,17 +128,17 @@ namespace Plotter
 
             for (int i = 0; i < PEN_TBL_SIZE; i++)
             {
-                PenTbl[i] = DrawPen.New(new Pen(PenColorTbl[i]));
+                PenTbl[i] = new DrawPen(new Pen(PenColorTbl[i]));
                 PenTbl[i].ID = i;
             }
 
             for (int i = 0; i < BRUSH_TBL_SIZE; i++)
             {
-                BrushTbl[i] = DrawBrush.New(new SolidBrush(BrushColorTbl[i]));
+                BrushTbl[i] = new DrawBrush(new SolidBrush(BrushColorTbl[i]));
                 BrushTbl[i].ID = i;
             }
 
-            BrushTbl[BRUSH_BACKGROUND].DisposeGdiBrush();
+            BrushTbl[BRUSH_BACKGROUND].Dispose();
 
             //FontFamily fontFamily = LoadFontFamily("/Fonts/mplus-1m-thin.ttf");
             //FontFamily fontFamily = new FontFamily("MS UI Gothic");
@@ -154,7 +154,7 @@ namespace Plotter
             {
                 foreach (DrawPen pen in PenTbl)
                 {
-                    pen.DisposeGdiPen();
+                    pen.Dispose();
                 }
 
                 PenTbl = null;
@@ -164,7 +164,7 @@ namespace Plotter
             {
                 foreach (DrawBrush brush in BrushTbl)
                 {
-                    brush.DisposeGdiBrush();
+                    brush.Dispose();
                 }
 
                 BrushTbl = null;
@@ -292,7 +292,7 @@ namespace Plotter
         }
     }
 
-    public class DrawPen
+    public struct DrawPen
     {
         public int ID;
 
@@ -300,21 +300,25 @@ namespace Plotter
 
         public float Width;
 
-        public Pen GdiPen;
+        public Pen mGdiPen;
+        public Pen GdiPen
+        {
+            get => mGdiPen;
+        }
 
-        public static DrawPen NullPen = New(Color.FromArgb(0, 0, 0, 0), 0);
+        public static DrawPen NullPen = new DrawPen(Color.FromArgb(0, 0, 0, 0), 0);
 
         public bool IsNullPen
         {
             get => ((uint)Argb & 0xff000000) == 0;
         }
 
-        public void DisposeGdiPen()
+        public void Dispose()
         {
-            if (GdiPen != null)
+            if (mGdiPen != null)
             {
-                GdiPen.Dispose();
-                GdiPen = null;
+                mGdiPen.Dispose();
+                mGdiPen = null;
             }
         }
 
@@ -328,56 +332,56 @@ namespace Plotter
             return Color.FromArgb(Argb);
         }
 
-        public static DrawPen New(Pen pen)
+        public DrawPen(Pen pen)
         {
-            DrawPen dt = new DrawPen();
-
-            dt.GdiPen = pen;
-            dt.Argb = pen.Color.ToArgb();
-            dt.Width = pen.Width;
-            return dt;
+            ID = 0;
+            mGdiPen = pen;
+            Argb = pen.Color.ToArgb();
+            Width = pen.Width;
         }
 
-        public static DrawPen New(Color color, float width)
+        public DrawPen(Color color, float width)
         {
-            DrawPen dt = new DrawPen();
-
-            dt.Argb = color.ToArgb();
-            dt.Width = width;
-            return dt;
+            ID = 0;
+            mGdiPen = null;
+            Argb = color.ToArgb();
+            Width = width;
         }
 
-        public static DrawPen New(Color4 color, float width)
+        public DrawPen(Color4 color, float width)
         {
-            DrawPen dt = new DrawPen();
-
-            dt.Argb = color.ToArgb();
-            dt.Width = width;
-            return dt;
+            ID = 0;
+            mGdiPen = null;
+            Argb = color.ToArgb();
+            Width = width;
         }
     }
 
-    public class DrawBrush
+    public struct DrawBrush
     {
         public int ID;
 
         public int Argb;
 
-        public SolidBrush GdiBrush;
+        public SolidBrush mGdiBrush;
+        public SolidBrush GdiBrush
+        {
+            get => mGdiBrush;
+        }
 
-        public static DrawBrush NullBrush = New(Color.FromArgb(0, 0, 0, 0));
+        public static DrawBrush NullBrush = new DrawBrush(Color.FromArgb(0, 0, 0, 0));
 
         public bool IsNullBrush
         {
             get => ((uint)Argb & 0xff000000) == 0;
         }
 
-        public void DisposeGdiBrush()
+        public void Dispose()
         {
-            if (GdiBrush != null)
+            if (mGdiBrush != null)
             {
-                GdiBrush.Dispose();
-                GdiBrush = null;
+                mGdiBrush.Dispose();
+                mGdiBrush = null;
             }
         }
 
@@ -391,26 +395,25 @@ namespace Plotter
             return Color.FromArgb(Argb);
         }
 
-        public static DrawBrush New(SolidBrush brush)
+        public DrawBrush(SolidBrush brush)
         {
-            DrawBrush dt = new DrawBrush();
-            dt.GdiBrush = brush;
-            dt.Argb = brush.Color.ToArgb();
-            return dt;
+            ID = 0;
+            mGdiBrush = brush;
+            Argb = brush.Color.ToArgb();
         }
 
-        public static DrawBrush New(Color color)
+        public DrawBrush(Color color)
         {
-            DrawBrush dt = new DrawBrush();
-            dt.Argb = color.ToArgb();
-            return dt;
+            ID = 0;
+            mGdiBrush = null;
+            Argb = color.ToArgb();
         }
 
-        public static DrawBrush New(Color4 color)
+        public DrawBrush(Color4 color)
         {
-            DrawBrush dt = new DrawBrush();
-            dt.Argb = color.ToArgb();
-            return dt;
+            ID = 0;
+            mGdiBrush = null;
+            Argb = color.ToArgb();
         }
     }
 }

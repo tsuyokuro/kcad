@@ -868,6 +868,7 @@ namespace Plotter.Controller
             wr.p1 = dc.DevPointToWorldPoint(r.p1);
 
             DrawContextGDIBmp tdc = new DrawContextGDIBmp();
+            tdc.SetupDrawing();
 
             tdc.WorldScale = dc.WorldScale;
 
@@ -882,7 +883,7 @@ namespace Plotter.Controller
 
             Pen pen = new Pen(Color.FromArgb((int)argb), lineW);
 
-            DrawPen drawPen = DrawPen.New(pen);
+            DrawPen drawPen = new DrawPen(pen);
 
             double sw = r.p1.X - r.p0.X;
             double sh = r.p1.Y - r.p0.Y;
@@ -921,7 +922,7 @@ namespace Plotter.Controller
                 }
 
                 tdc.Dispose();
-                drawPen.DisposeGdiPen();
+                drawPen.Dispose();
             }));
         }
 
@@ -1561,7 +1562,7 @@ namespace Plotter.Controller
             CadSize2D pageSize = new CadSize2D(210, 297);
 
             DrawContext dc = Controller.CurrentDC.CreatePrinterContext(pageSize, deviceSize);
-
+            dc.SetupDrawing();
             dc.SetupTools(DrawTools.ToolsType.PRINTER);
 
             FrameBufferW fb = new FrameBufferW();

@@ -9,7 +9,6 @@ namespace Plotter
         public DrawContextPrinter(DrawContext currentDC, Graphics g, CadSize2D pageSize, CadSize2D deviceSize)
         {
             GdiGraphics = g;
-            SetupTools(DrawTools.ToolsType.PRINTER);
 
             if (currentDC.GetType() == typeof(DrawContextGLPers))
             {
@@ -36,8 +35,10 @@ namespace Plotter
             org.Y = deviceSize.Height / 2.0;
             
             SetViewOrg(org);
+        }
 
-            mDrawing = new DrawingGDI(this);
+        public DrawContextPrinter()
+        {
         }
 
         protected override void DisposeGraphics()
@@ -48,6 +49,26 @@ namespace Plotter
         protected override void CreateGraphics()
         {
             // NOP
+        }
+
+        public override DrawContext Clone()
+        {
+            DrawContextPrinter dc = new DrawContextPrinter();
+
+            dc.CopyProjectionMetrics(this);
+            dc.WorldScale = WorldScale;
+
+            dc.CopyCamera(this);
+            dc.SetViewSize(ViewWidth, ViewHeight);
+
+            dc.SetViewOrg(ViewOrg);
+
+            return dc;
+        }
+
+        public override void SetupDrawing()
+        {
+            mDrawing = new DrawingGDI(this);
         }
     }
 }

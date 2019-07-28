@@ -83,13 +83,6 @@ namespace Plotter
 
             CalcProjectionMatrix();
             CalcProjectionZW();
-
-            mDrawing = new DrawingGDI(this);
-        }
-
-        public override void SetViewOrg(Vector3d org)
-        {
-            mViewOrg = org;
         }
 
         public override void SetViewSize(double w, double h)
@@ -137,8 +130,16 @@ namespace Plotter
         public override void Dispose()
         {
             DisposeGraphics();
-            Tools.Dispose();
-            mDrawing.Dispose();
+
+            if (Tools != null)
+            {
+                Tools.Dispose();
+            }
+
+            if (mDrawing != null)
+            {
+                mDrawing.Dispose();
+            }
         }
 
         public override void CalcProjectionMatrix()
@@ -193,6 +194,26 @@ namespace Plotter
         public override DrawBrush GetBrush(int idx)
         {
             return Tools.Brush(idx);
+        }
+
+        public override DrawContext Clone()
+        {
+            DrawContextGDI dc = new DrawContextGDI();
+
+            dc.CopyProjectionMetrics(this);
+            dc.WorldScale = WorldScale;
+
+            dc.CopyCamera(this);
+            dc.SetViewSize(ViewWidth, ViewHeight);
+
+            dc.SetViewOrg(ViewOrg);
+
+            return dc;
+        }
+
+        public override void SetupDrawing()
+        {
+            mDrawing = new DrawingGDI(this);
         }
     }
 }

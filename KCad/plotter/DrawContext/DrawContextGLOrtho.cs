@@ -120,7 +120,24 @@ namespace Plotter
 
             dc.SetViewOrg(org);
 
-            dc.UnitPerMilli = (deviceSize.Width / pageSize.Width) * 0.96;
+            dc.UnitPerMilli = deviceSize.Width / pageSize.Width;
+
+            return dc;
+        }
+
+        public override DrawContext Clone()
+        {
+            DrawContextGLOrtho dc = new DrawContextGLOrtho();
+
+            dc.CopyProjectionMetrics(this);
+            dc.WorldScale = WorldScale;
+
+            dc.CopyCamera(this);
+            dc.SetViewSize(ViewWidth, ViewHeight);
+
+            dc.SetViewOrg(ViewOrg);
+
+            dc.UnitPerMilli = UnitPerMilli;
 
             return dc;
         }

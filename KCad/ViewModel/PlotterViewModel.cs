@@ -15,6 +15,8 @@ using Plotter.Controller;
 using Plotter.Settings;
 using KCad.Dialogs;
 using System.Text.RegularExpressions;
+using Plotter.svg;
+using System.Xml.Linq;
 
 namespace Plotter
 {
@@ -421,6 +423,7 @@ namespace Plotter
                 { "select_all", SelectAll },
                 { "snap_settings", SnapSettings },
                 { "show_editor", ShowEditor },
+                { "export_svg", ExportSVG },
             };
         }
 
@@ -747,6 +750,29 @@ namespace Plotter
             else
             {
                 mEditorWindow.Activate();
+            }
+        }
+
+        public void ExportSVG()
+        {
+            System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
+
+            if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                List<CadFigure> figList = Controller.DB.GetSelectedFigList();
+
+                XDocument doc = SvgExporter.ToSvg(figList, Controller.CurrentDC,
+                    Controller.PageSize.Width, Controller.PageSize.Height);
+
+                try
+                {
+                    doc.Save(sfd.FileName);
+                    ItConsole.println("Success Export SVG: " + sfd.FileName);
+                }
+                catch (Exception e)
+                {
+                    ItConsole.printError(e.Message);
+                }
             }
         }
 

@@ -188,5 +188,20 @@ namespace Plotter
             CalcProjectionZW();
             CalcViewDir();
         }
+
+        public override DrawContext Clone()
+        {
+            DrawContextGLPers dc = new DrawContextGLPers();
+
+            dc.CopyProjectionMetrics(this);
+            dc.WorldScale = WorldScale;
+
+            dc.CopyCamera(this);
+            dc.SetViewSize(ViewWidth, ViewHeight);
+
+            dc.SetViewOrg(ViewOrg);
+
+            return dc;
+        }
     }
 }

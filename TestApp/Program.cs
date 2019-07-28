@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace TestApp
 {
@@ -13,9 +14,22 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
-            DrawPen pen = DrawPen.New(Color.FromArgb(0x45, 1, 2, 3), 0);
+            XDocument doc = new XDocument();
 
-            uint a = (uint)pen.Argb & 0xff000000;
+            XDocumentType docType = new XDocumentType(
+                @"svg", @" -//W3C//DTD SVG 1.1//EN",
+                @"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd",
+                null);
+
+
+            string pd = "M 100 100 L 300 100 L 200 300 z";
+
+            XElement fig = new XElement("path", new XAttribute("d", pd));
+
+            doc.Add(docType, fig);
+
+
+            Console.WriteLine(doc.ToString());
 
             Console.WriteLine("end");
 
