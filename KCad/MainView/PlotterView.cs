@@ -39,6 +39,8 @@ namespace Plotter
         public PlotterView()
         {
             mDrawContext = new DrawContextGDI(this);
+            mDrawContext.SetupDrawing();
+            mDrawContext.SetupTools(DrawTools.ToolsType.DARK);
 
             SetupContextMenu();
 
@@ -49,8 +51,6 @@ namespace Plotter
             mEventSequencer = new MyEventSequencer(this, 100);
 
             mEventSequencer.Start();
-
-            mDrawContext.SetupTools(DrawTools.ToolsType.DARK);
 
             mDrawContext.PushDraw = PushDraw;
 

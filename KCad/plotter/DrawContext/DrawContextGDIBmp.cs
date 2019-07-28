@@ -32,8 +32,6 @@ namespace Plotter
             mProjectionMatrix = UMatrix4.Unit;
             mProjectionMatrixInv = UMatrix4.Unit;
 
-            mDrawing = new DrawingGDIBmp(this);
-
             CalcProjectionMatrix();
             CalcProjectionZW();
         }
@@ -105,6 +103,26 @@ namespace Plotter
         {
             DisposeGraphics();
             Tools.Dispose();
+        }
+
+        public override DrawContext Clone()
+        {
+            DrawContextGDIBmp dc = new DrawContextGDIBmp();
+
+            dc.CopyProjectionMetrics(this);
+            dc.WorldScale = WorldScale;
+
+            dc.CopyCamera(this);
+            dc.SetViewSize(ViewWidth, ViewHeight);
+
+            dc.SetViewOrg(ViewOrg);
+
+            return dc;
+        }
+
+        public override void SetupDrawing()
+        {
+            mDrawing = new DrawingGDIBmp(this);
         }
     }
 }

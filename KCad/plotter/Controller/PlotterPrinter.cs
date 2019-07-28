@@ -12,7 +12,8 @@ namespace Plotter.Controller
         {
             DOut.pl($"Dev Width:{deviceSize.Width} Height:{deviceSize.Height}");
 #if PRINT_WITH_GL_ONLY
-            PrintPageGL(printerGraphics, pageSize, deviceSize);
+            Bitmap bmp = GetPrintableBmp(pc, pageSize, deviceSize);
+            printerGraphics.DrawImage(bmp, 0, 0);
 #elif PRINT_WITH_GDI_ONLY
             PrintPageGDI(printerGraphics, pageSize, deviceSize);
 #else
@@ -25,6 +26,9 @@ namespace Plotter.Controller
             if (!(pc.CurrentDC.GetType() == typeof(DrawContextGLPers)))
             {
                 DrawContextPrinter dc = new DrawContextPrinter(pc.CurrentDC, printerGraphics, pageSize, deviceSize);
+                dc.SetupDrawing();
+                dc.SetupTools(DrawTools.ToolsType.PRINTER);
+
                 pc.DrawAllFigure(dc);
             }
             else
@@ -42,8 +46,11 @@ namespace Plotter.Controller
             }
 
             DrawContext dc = pc.CurrentDC.CreatePrinterContext(pageSize, deviceSize);
-
+            dc.SetupDrawing();
             dc.SetupTools(DrawTools.ToolsType.PRINTER);
+
+            // Bitmapを印刷すると大きさが小さくされてしまうので、補正
+            dc.UnitPerMilli *= 0.96;
 
             FrameBufferW fb = new FrameBufferW();
             fb.Create((int)deviceSize.Width, (int)deviceSize.Height);
