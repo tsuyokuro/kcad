@@ -292,7 +292,7 @@ namespace Plotter.Controller
 
         public void PushDraw()
         {
-            CurrentDC.Push();
+            CurrentDC.PushDraw();
         }
 
         public void Redraw(DrawContext dc = null)
@@ -306,7 +306,7 @@ namespace Plotter.Controller
             Clear(dc);
             DrawAll(dc);
             dc.EndDraw();
-            dc.Push();
+            dc.PushDraw();
         }
 
         public void Clear(DrawContext dc = null)
