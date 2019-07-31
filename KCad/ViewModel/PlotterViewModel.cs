@@ -761,13 +761,18 @@ namespace Plotter
             {
                 List<CadFigure> figList = Controller.DB.GetSelectedFigList();
 
-                XDocument doc = SvgExporter.ToSvg(figList, Controller.CurrentDC,
+                SvgExporter exporter = new SvgExporter();
+
+                XDocument doc = exporter.ToSvg(figList, Controller.CurrentDC,
                     Controller.PageSize.Width, Controller.PageSize.Height);
 
                 try
                 {
                     doc.Save(sfd.FileName);
                     ItConsole.println("Success Export SVG: " + sfd.FileName);
+
+                    System.Diagnostics.Process.Start(
+                        "EXPLORER.EXE", $@"/select,""{sfd.FileName}""");
                 }
                 catch (Exception e)
                 {

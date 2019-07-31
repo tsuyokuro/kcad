@@ -591,7 +591,9 @@ namespace Plotter.Controller
         {
             List<CadFigure> figList = Controller.DB.GetSelectedFigList();
 
-            XDocument doc = SvgExporter.ToSvg(figList,
+            SvgExporter svgExporter = new SvgExporter();
+
+            XDocument doc = svgExporter.ToSvg(figList,
                         Controller.CurrentDC,
                         Controller.PageSize.Width,
                         Controller.PageSize.Height);

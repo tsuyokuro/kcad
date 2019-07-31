@@ -11,7 +11,7 @@ namespace Plotter.svg
 {
     public static class FigureXmlExt
     {
-        public static XElement ToPath(CadFigurePolyLines fig, DrawContext dc, double width, double height)
+        public static XElement ToPath(CadFigurePolyLines fig, DrawContext dc, double width, double height, double lineW)
         {
             StringBuilder sb = new StringBuilder("");
 
@@ -41,7 +41,7 @@ namespace Plotter.svg
                 new XAttribute("d", sb.ToString()),
                 new XAttribute("fill", "none"),
                 new XAttribute("stroke", "black"),
-                new XAttribute("stroke-width", 0.2)
+                new XAttribute("stroke-width", lineW)
                 );
 
             //DOut.pl(ele.ToString());
@@ -52,26 +52,50 @@ namespace Plotter.svg
 
     public class SvgExporter
     {
-        public static XDocument ToSvg(List<CadFigure> figList, DrawContext currentDC, double width, double height)
-        {
-            DrawContext dc = null;
+        public double DefaultLineW = 0.2;
 
-            ThreadUtil.RunOnMainThread(() => {
-                dc = currentDC.Clone();
-            }, true);
+
+        public static XDocumentType DocType = new XDocumentType(
+                @"svg", @" -//W3C//DTD SVG 1.1//EN",
+                @"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd",
+                null);
+
+
+        public XDocument ToSvg(List<CadFigure> figList, DrawContext currentDC, double width, double height)
+        {
+            DrawContext dc = currentDC.Clone();
 
             dc.SetViewSize(width, height);
             dc.SetViewOrg(new Vector3d(width / 2, height / 2, 0));
             dc.UnitPerMilli = 1;
 
             XDocument doc = new XDocument();
-            XDocumentType docType = new XDocumentType(
-                @"svg", @" -//W3C//DTD SVG 1.1//EN",
-                @"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd",
-                null);
 
-            doc.Add(docType);
+            doc.Add(DocType);
 
+            XElement root = CreateRoot(width, height);
+
+            AddFiguresToElement(root, figList, dc, width, height);
+
+            doc.Add(root);
+            return doc;
+        }
+
+        public void AddFiguresToElement(
+            XElement parent, List<CadFigure> figList, DrawContext dc, double width, double height)
+        {
+            foreach (CadFigure fig in figList)
+            {
+                if (fig is CadFigurePolyLines)
+                {
+                    XElement ele = FigureXmlExt.ToPath((CadFigurePolyLines)fig, dc, width, height, DefaultLineW);
+                    parent.Add(ele);
+                }
+            }
+        }
+
+        public static XElement CreateRoot(double width, double height)
+        {
             XElement root = new XElement("svg",
                 new XAttribute("width", $"{width}mm"),
                 new XAttribute("height", $"{height}mm"),
@@ -79,18 +103,7 @@ namespace Plotter.svg
                 new XAttribute(XNamespace.Xmlns + "svg", "http://www.w3.org/2000/svg"),
                 new XAttribute("version", "1.1")
                 );
-
-            foreach (CadFigure fig in figList)
-            {
-                if (fig is CadFigurePolyLines)
-                {
-                    XElement ele = FigureXmlExt.ToPath((CadFigurePolyLines)fig, dc, width, height);
-                    root.Add(ele);
-                }
-            }
-
-            doc.Add(root);
-            return doc;
+            return root;
         }
     }
 }

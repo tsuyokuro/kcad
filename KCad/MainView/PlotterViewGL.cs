@@ -106,8 +106,8 @@ namespace Plotter
 
             mDrawContext = mDrawContextOrtho;
 
-            mDrawContextOrtho.PushDraw = OnPushDraw;
-            mDrawContextPers.PushDraw = OnPushDraw;
+            mDrawContextOrtho.OnPushDraw = OnPushDraw;
+            mDrawContextPers.OnPushDraw = OnPushDraw;
 
             SwapBuffers();
         }

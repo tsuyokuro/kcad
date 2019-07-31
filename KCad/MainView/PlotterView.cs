@@ -52,7 +52,7 @@ namespace Plotter
 
             mEventSequencer.Start();
 
-            mDrawContext.PushDraw = PushDraw;
+            mDrawContext.OnPushDraw = OnPushDraw;
 
             MouseMove += OnMouseMove;
             MouseDown += OnMouseDown;
@@ -121,7 +121,7 @@ namespace Plotter
             }
         }
 
-        public void PushDraw(DrawContext dc)
+        public void OnPushDraw(DrawContext dc)
         {
             //DOut.tpl("PushDraw");
 
