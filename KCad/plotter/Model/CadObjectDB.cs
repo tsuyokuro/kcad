@@ -57,7 +57,9 @@ namespace Plotter
                 return null;
             }
 
-            return mLayerIdMap[id];
+            CadLayer layer;
+            mLayerIdMap.TryGetValue(id, out layer);
+            return layer;
         }
 
         public CadLayer NewLayer()
@@ -135,7 +137,10 @@ namespace Plotter
                 return null;
             }
 
-            return mFigureIdMap[id];
+            CadFigure fig;
+            mFigureIdMap.TryGetValue(id, out fig);
+
+            return fig;
         }
 
         public CadFigure NewFigure(CadFigure.Types type)

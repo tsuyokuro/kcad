@@ -31,7 +31,7 @@ namespace Plotter
 
         public override Centroid GetCentroid()
         {
-            Centroid ret = default(Centroid);
+            Centroid ret = default;
 
             ret.IsInvalid = true;
 

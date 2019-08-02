@@ -515,32 +515,24 @@ namespace Plotter
 
         public void ExecCommand(string cmd)
         {
-            if (!CommandMap.ContainsKey(cmd))
-            {
-                return;
-            }
-
-            Action action = CommandMap[cmd];
+            Action action;
+            CommandMap.TryGetValue(cmd, out action);
 
             action?.Invoke();
         }
 
         public bool ExecShortcutKey(string keyCmd, bool down)
         {
-            if (!KeyMap.ContainsKey(keyCmd))
-            {
-                return false;
-            }
-
-            KeyAction ka = KeyMap[keyCmd];
+            KeyAction ka;
+            KeyMap.TryGetValue(keyCmd, out ka);
 
             if (down)
             {
-                ka.Down?.Invoke();
+                ka?.Down?.Invoke();
             }
             else
             {
-                ka.Up?.Invoke();
+                ka?.Up?.Invoke();
             }
 
             return true;
@@ -971,7 +963,7 @@ namespace Plotter
 
         // Keyboard handling
 #region Keyboard handling
-        private string ModifyerKeysStr()
+        private string GetModifyerKeysString()
         {
             ModifierKeys modifierKeys = Keyboard.Modifiers;
 
@@ -997,7 +989,7 @@ namespace Plotter
 
         private string KeyString(KeyEventArgs e)
         {
-            string ks = ModifyerKeysStr();
+            string ks = GetModifyerKeysString();
 
             ks += e.Key.ToString().ToLower();
 

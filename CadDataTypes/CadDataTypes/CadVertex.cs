@@ -126,7 +126,7 @@ namespace CadDataTypes
             vector.Y = y;
             vector.Z = z;
 
-            this.Flag = 0;
+            Flag = 0;
             Attr = null;
         }
 

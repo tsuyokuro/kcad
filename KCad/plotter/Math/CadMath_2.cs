@@ -1,6 +1,5 @@
-﻿using System;
-using CadDataTypes;
-using OpenTK;
+﻿using OpenTK;
+using System;
 
 namespace Plotter
 {
@@ -51,7 +50,7 @@ namespace Plotter
 
         public static Vector3d CrossProduct(Vector3d v1, Vector3d v2)
         {
-            Vector3d res = default(Vector3d);
+            Vector3d res = default;
 
             res.X = v1.Y * v2.Z - v1.Z * v2.Y;
             res.Y = v1.Z * v2.X - v1.X * v2.Z;
@@ -103,7 +102,7 @@ namespace Plotter
          */
         public static Vector3d Normal(Vector3d va, Vector3d vb)
         {
-            Vector3d normal = CadMath.CrossProduct(va, vb);
+            Vector3d normal = CrossProduct(va, vb);
 
             if (normal.IsZero())
             {
@@ -153,7 +152,7 @@ namespace Plotter
             Vector3d v1 = p0 - p1;
             Vector3d v2 = p2 - p1;
 
-            Vector3d cp = CadMath.CrossProduct(v1, v2);
+            Vector3d cp = CrossProduct(v1, v2);
 
             double area = cp.Norm() / 2.0;
 
@@ -163,7 +162,7 @@ namespace Plotter
         // 三角形の重心を求める
         public static Vector3d TriangleCentroid(Vector3d p0, Vector3d p1, Vector3d p2)
         {
-            Vector3d gp = default(Vector3d);
+            Vector3d gp = default;
 
             gp.X = (p0.X + p1.X + p2.X) / 3.0;
             gp.Y = (p0.Y + p1.Y + p2.Y) / 3.0;
@@ -182,7 +181,7 @@ namespace Plotter
             Vector3d ab = b - a;
             Vector3d ap = p - a;
 
-            t = CadMath.InnrProduct2D(ab, ap);
+            t = InnrProduct2D(ab, ap);
 
             if (t < 0)
             {
@@ -192,7 +191,7 @@ namespace Plotter
             Vector3d ba = a - b;
             Vector3d bp = p - b;
 
-            t = CadMath.InnrProduct2D(ba, bp);
+            t = InnrProduct2D(ba, bp);
 
             if (t < 0)
             {
@@ -200,7 +199,7 @@ namespace Plotter
             }
 
             // 外積結果が a->p a->b を辺とする平行四辺形の面積になる
-            double d = Math.Abs(CadMath.CrossProduct2D(ab, ap));
+            double d = Math.Abs(CrossProduct2D(ab, ap));
 
             double abl = ab.Norm2D();
 
@@ -218,7 +217,7 @@ namespace Plotter
             Vector3d ab = b - a;
             Vector3d ap = p - a;
 
-            t = CadMath.InnerProduct(ab, ap);
+            t = InnerProduct(ab, ap);
 
             if (t < 0)
             {
@@ -228,14 +227,14 @@ namespace Plotter
             Vector3d ba = a - b;
             Vector3d bp = p - b;
 
-            t = CadMath.InnerProduct(ba, bp);
+            t = InnerProduct(ba, bp);
 
             if (t < 0)
             {
                 return bp.Norm();
             }
 
-            Vector3d cp = CadMath.CrossProduct(ab, ap);
+            Vector3d cp = CrossProduct(ab, ap);
 
             // 外積結果の長さが a->p a->b を辺とする平行四辺形の面積になる
             double s = cp.Norm();
@@ -252,9 +251,9 @@ namespace Plotter
             Vector3d p2
             )
         {
-            double c1 = CadMath.CrossProduct2D(p, p0, p1);
-            double c2 = CadMath.CrossProduct2D(p, p1, p2);
-            double c3 = CadMath.CrossProduct2D(p, p2, p0);
+            double c1 = CrossProduct2D(p, p0, p1);
+            double c2 = CrossProduct2D(p, p1, p2);
+            double c3 = CrossProduct2D(p, p2, p0);
 
             // 外積の結果の符号が全て同じなら点は三角形の中
             // When all corossProduct result's sign are same, Point is in triangle
@@ -274,12 +273,12 @@ namespace Plotter
             Vector3d p2
             )
         {
-            Vector3d c1 = CadMath.CrossProduct(p, p0, p1);
-            Vector3d c2 = CadMath.CrossProduct(p, p1, p2);
-            Vector3d c3 = CadMath.CrossProduct(p, p2, p0);
+            Vector3d c1 = GetC1(p, p0, p1);
+            Vector3d c2 = CrossProduct(p, p1, p2);
+            Vector3d c3 = CrossProduct(p, p2, p0);
 
-            double ip12 = CadMath.InnerProduct(c1, c2);
-            double ip13 = CadMath.InnerProduct(c1, c3);
+            double ip12 = InnerProduct(c1, c2);
+            double ip13 = InnerProduct(c1, c3);
 
             // 外積の結果の符号が全て同じなら点は三角形の中
             // When all corossProduct result's sign are same, Point is in triangle
@@ -291,11 +290,16 @@ namespace Plotter
             return false;
         }
 
+        private static Vector3d GetC1(Vector3d p, Vector3d p0, Vector3d p1)
+        {
+            return CrossProduct(p, p0, p1);
+        }
+
 
         // 点pから線分abに向かう垂線との交点を求める
         public static CrossInfo PerpendicularCrossSeg(Vector3d a, Vector3d b, Vector3d p)
         {
-            CrossInfo ret = default(CrossInfo);
+            CrossInfo ret = default;
 
             Vector3d ab = b - a;
             Vector3d ap = p - a;
@@ -304,7 +308,6 @@ namespace Plotter
             Vector3d bp = p - b;
 
             // A-B 単位ベクトル
-            //CadPoint unit_ab = CadMath.unitVector(ab);
             Vector3d unit_ab = ab.UnitVector();
 
             // B-A 単位ベクトル　(A-B単位ベクトルを反転) B側の中外判定に使用
@@ -313,10 +316,10 @@ namespace Plotter
             // Aから交点までの距離 
             // A->交点->B or A->B->交点なら +
             // 交点<-A->B なら -
-            double dist_ax = CadMath.InnerProduct(unit_ab, ap);
+            double dist_ax = InnerProduct(unit_ab, ap);
 
             // Bから交点までの距離 B側の中外判定に使用
-            double dist_bx = CadMath.InnerProduct(unit_ba, bp);
+            double dist_bx = InnerProduct(unit_ba, bp);
 
             //Console.WriteLine("getNormCross dist_ax={0} dist_bx={1}" , dist_ax.ToString(), dist_bx.ToString());
 
@@ -335,14 +338,14 @@ namespace Plotter
         // 点pから線分abに向かう垂線との交点を求める2D
         public static CrossInfo PerpendicularCrossSeg2D(Vector3d a, Vector3d b, Vector3d p)
         {
-            CrossInfo ret = default(CrossInfo);
+            CrossInfo ret = default;
 
             double t1;
 
             Vector3d ab = b - a;
             Vector3d ap = p - a;
 
-            t1 = CadMath.InnrProduct2D(ab, ap);
+            t1 = InnrProduct2D(ab, ap);
 
             if (t1 < 0)
             {
@@ -354,7 +357,7 @@ namespace Plotter
             Vector3d ba = a - b;
             Vector3d bp = p - b;
 
-            t2 = CadMath.InnrProduct2D(ba, bp);
+            t2 = InnrProduct2D(ba, bp);
 
             if (t2 < 0)
             {
@@ -379,7 +382,7 @@ namespace Plotter
             Vector3d ab = b - a;
             Vector3d ap = p - a;
 
-            t1 = CadMath.InnrProduct2D(ab, ap);
+            t1 = InnrProduct2D(ab, ap);
 
             if (t1 < 0)
             {
@@ -391,7 +394,7 @@ namespace Plotter
             Vector3d ba = a - b;
             Vector3d bp = p - b;
 
-            t2 = CadMath.InnrProduct2D(ba, bp);
+            t2 = InnrProduct2D(ba, bp);
 
             if (t2 < 0)
             {
@@ -405,7 +408,7 @@ namespace Plotter
         // 点pから直線abに向かう垂線との交点を求める
         public static CrossInfo PerpCrossLine(Vector3d a, Vector3d b, Vector3d p)
         {
-            CrossInfo ret = default(CrossInfo);
+            CrossInfo ret = default;
 
             if (a.Equals(b))
             {
@@ -419,7 +422,7 @@ namespace Plotter
             Vector3d unit_ab = ab.UnitVector();
 
             // Aから交点までの距離 
-            double dist_ax = CadMath.InnerProduct(unit_ab, ap);
+            double dist_ax = InnerProduct(unit_ab, ap);
 
             ret.CrossPoint.X = a.X + (unit_ab.X * dist_ax);
             ret.CrossPoint.Y = a.Y + (unit_ab.Y * dist_ax);
@@ -433,7 +436,7 @@ namespace Plotter
         // 点pから直線abに向かう垂線との交点を求める2D
         public static CrossInfo PerpendicularCrossLine2D(Vector3d a, Vector3d b, Vector3d p)
         {
-            CrossInfo ret = default(CrossInfo);
+            CrossInfo ret = default;
 
             double t1;
 
@@ -516,10 +519,10 @@ namespace Plotter
 
             // 法線とpaの内積をとる
             // 法線の順方向に点Aがあれば d>0 逆方向だと d<0
-            double d = CadMath.InnerProduct(normal, pa);
+            double d = InnerProduct(normal, pa);
 
             //内積値から平面上の最近点を求める
-            Vector3d cp = default(Vector3d);
+            Vector3d cp = default;
             cp.X = a.X - (normal.X * d);
             cp.Y = a.Y - (normal.Y * d);
             cp.Z = a.Z - (normal.Z * d);
@@ -528,7 +531,7 @@ namespace Plotter
         }
 
         /// <summary>
-        /// 直線 a b と p と normalが示す平面との交点を求める
+        /// [直線ab] と [点pと法線normalが示す平面] との交点を求める
         /// </summary>
         /// <param name="a">直線上の点</param>
         /// <param name="b">直線上の点</param>
@@ -538,13 +541,13 @@ namespace Plotter
         /// 
         public static Vector3d CrossPlane(Vector3d a, Vector3d b, Vector3d p, Vector3d normal)
         {
-            Vector3d cp = default(Vector3d);
+            Vector3d cp = default;
 
             Vector3d e = b - a;
 
-            double de = CadMath.InnerProduct(normal, e);
+            double de = InnerProduct(normal, e);
 
-            if (de > CadMath.R0Min && de < CadMath.R0Max)
+            if (de > GetR0Min() && de < GetR0Max())
             {
                 //DebugOut.Std.println("CrossPlane is parallel");
 
@@ -552,12 +555,42 @@ namespace Plotter
                 return VectorExt.InvalidVector3d;
             }
 
-            double d = CadMath.InnerProduct(normal, p);
-            double t = (d - CadMath.InnerProduct(normal, a)) / de;
+            double d = InnerProduct(normal, p);
+            double t = (d - NewMethod1(a, normal)) / de;
 
             cp = a + (e * t);
 
             return cp;
+        }
+
+        private static double NewMethod1(Vector3d a, Vector3d normal)
+        {
+            return InnerProduct(normal, a);
+        }
+
+        private static double GetR0Max()
+        {
+            return GetR0Max1();
+        }
+
+        private static double GetR0Max1()
+        {
+            return GetR0Max2();
+        }
+
+        private static double GetR0Max2()
+        {
+            return GetR0Max3();
+        }
+
+        private static double GetR0Max3()
+        {
+            return R0Max;
+        }
+
+        private static double GetR0Min()
+        {
+            return R0Min;
         }
 
         /// <summary>
@@ -578,17 +611,22 @@ namespace Plotter
                 return VectorExt.InvalidVector3d;
             }
 
-            if (CadMath.InnerProduct((b - a), (cp - a)) < 0)
+            if (InnerProduct((b - a), (cp - a)) < 0)
             {
                 return VectorExt.InvalidVector3d;
             }
 
-            if (CadMath.InnerProduct((a - b), (cp - b)) < 0)
+            if (NewMethod(a, b, cp) < 0)
             {
                 return VectorExt.InvalidVector3d;
             }
 
             return cp;
+        }
+
+        private static double NewMethod(Vector3d a, Vector3d b, Vector3d cp)
+        {
+            return InnerProduct((a - b), (cp - b));
         }
 
         /// <summary>
@@ -666,14 +704,14 @@ namespace Plotter
                 return VectorExt.InvalidVector3d;
             }
 
-            double cpBA = CadMath.CrossProduct2D(b, a);
+            double cpBA = CrossProduct2D(b, a);
 
             if (cpBA == 0)
             {
                 return VectorExt.InvalidVector3d;
             }
 
-            return a1 + a * CadMath.CrossProduct2D(b, b1 - a1) / cpBA;
+            return a1 + a * CrossProduct2D(b, b1 - a1) / cpBA;
         }
     }
 }
