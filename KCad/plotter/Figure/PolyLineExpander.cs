@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CadDataTypes;
+﻿using CadDataTypes;
+using System;
 
 namespace Plotter
 {
@@ -24,7 +20,7 @@ namespace Plotter
         {
             VertexList ret = new VertexList(curveSplitNum * ((cnt + 1) / 2));
 
-            ForEachPoints(src, start, cnt, curveSplitNum, (v)=> { ret.Add(v); });
+            ForEachPoints(src, start, cnt, curveSplitNum, (v) => { ret.Add(v); });
 
             return ret;
         }

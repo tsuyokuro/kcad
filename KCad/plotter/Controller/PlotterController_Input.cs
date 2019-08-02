@@ -719,7 +719,7 @@ namespace Plotter.Controller
             MarkPoint mx = mPointSearcher.GetXMatch();
             MarkPoint my = mPointSearcher.GetYMatch();
 
-            if (mx.IsValid)
+            if (mx.IsValid && !mxy.IsValid)
             {
                 HighlightPointList.Add(
                     new HighlightPointListItem(mx.Point, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
@@ -728,12 +728,12 @@ namespace Plotter.Controller
 
                 Vector3d distanceX = si.Cursor.DistanceX(tp);
 
-                si.Cursor.Pos += distanceX;
+                Vector3d sp = si.Cursor.Pos + distanceX;
 
-                si.SnapPoint = dc.DevPointToWorldPoint(si.Cursor.Pos);
+                si.SnapPoint = dc.DevPointToWorldPoint(sp);
             }
 
-            if (my.IsValid)
+            if (my.IsValid && !mxy.IsValid)
             {
                 HighlightPointList.Add(new HighlightPointListItem(my.Point, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
 
@@ -741,17 +741,15 @@ namespace Plotter.Controller
 
                 Vector3d distanceY = si.Cursor.DistanceY(tp);
 
-                si.Cursor.Pos += distanceY;
+                Vector3d sp = si.Cursor.Pos + distanceY;
 
-                si.SnapPoint = dc.DevPointToWorldPoint(si.Cursor.Pos);
+                si.SnapPoint = dc.DevPointToWorldPoint(sp);
             }
 
             if (mxy.IsValid)
             {
+                HighlightPointList.Clear();
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT2)));
-
-                si.Cursor.Pos = dc.WorldPointToDevPoint(si.SnapPoint);
-
                 si.SnapPoint = mxy.Point;
                 si.SnapType = SnapInfo.SanpTypes.POINT_MATCH;
             }
@@ -786,6 +784,7 @@ namespace Plotter.Controller
                         si.Cursor.Pos = t;
                         si.Cursor.Pos.Z = 0;
 
+                        HighlightPointList.Clear();
                         HighlightPointList.Add(new HighlightPointListItem(center, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT2)));
                     }
                     else
@@ -907,15 +906,14 @@ namespace Plotter.Controller
             mPointSearcher.CheckStorePoint = SettingsHolder.Settings.SnapToSelfPoint;
             mPointSearcher.SetTargetPoint(CrossCursor);
 
-            //if (!SettingsHolder.Settings.SnapToSelfPoint)
-            //{
-            //    DOut.pl("SnapToSelf");
-
-            //    if (CurrentFigure != null)
-            //    {
-            //        mPointSearcher.AddIgnore(CurrentFigure);
-            //    }
-            //}
+            if (!SettingsHolder.Settings.SnapToSelfPoint)
+            {
+                // Current figure にスナップしない
+                if (CurrentFigure != null)
+                {
+                    mPointSearcher.AddIgnoreFigureID(CurrentFigure.ID);
+                }
+            }
 
             // (0, 0, 0)にスナップするようにする
             if (SettingsHolder.Settings.SnapToZero)
@@ -970,8 +968,8 @@ namespace Plotter.Controller
                 }
             }
 
-            CrossCursor = si.Cursor;
             SnapPoint = si.SnapPoint;
+            CrossCursor.Pos = dc.WorldPointToDevPoint(SnapPoint);
 
             mSnapInfo = si;
         }

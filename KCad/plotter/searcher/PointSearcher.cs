@@ -51,6 +51,8 @@ namespace Plotter
             }
         }
 
+        HashSet<uint> IgnoreFigureIDSet = new HashSet<uint>();
+
         public PointSearcher()
         {
             Clean();
@@ -61,6 +63,11 @@ namespace Plotter
             Range = pixel;
         }
 
+        public void AddIgnoreFigureID(uint id)
+        {
+            IgnoreFigureIDSet.Add(id);
+        }
+
         public void Clean()
         {
             XMatch.reset();
@@ -69,6 +76,8 @@ namespace Plotter
 
             XYMatchList.Clear();
             XYMatchSet.Clear();
+
+            IgnoreFigureIDSet.Clear();
         }
 
         public void SetTargetPoint(CadCursor cursor)
@@ -190,6 +199,11 @@ namespace Plotter
 
         public void CheckFigure(DrawContext dc, CadLayer layer, CadFigure fig)
         {
+            if (IgnoreFigureIDSet.Contains(fig.ID))
+            {
+                return;
+            }
+
             VertexList list = fig.PointList;
 
             if (fig.StoreList != null)
