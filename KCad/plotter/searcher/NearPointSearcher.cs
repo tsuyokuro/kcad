@@ -203,7 +203,7 @@ namespace Plotter
 
         private bool IsSegVertex(Vector3d v, SegmentItem seg)
         {
-            return (seg.ScrSegment.P0.Equals(v)) || (seg.ScrSegment.P1.Equals(v));
+            return (seg.ScrSegment.P0.vector.Equals(v)) || (seg.ScrSegment.P1.vector.Equals(v));
         }
 
         private bool CheckCrossSegSegScr(SegmentItem seg0, SegmentItem seg1)
