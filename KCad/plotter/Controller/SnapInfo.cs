@@ -9,9 +9,11 @@ namespace Plotter.Controller
     {
         public struct SnapInfo
         {
-            public enum SanpTypes
+            public enum MatchType
             {
                 NONE,
+                X_MATCH,
+                Y_MATCH,
                 POINT_MATCH,
             }
 
@@ -19,14 +21,17 @@ namespace Plotter.Controller
             public Vector3d SnapPoint;
             public double Distance;
 
-            public SanpTypes SnapType;
+            public bool IsPointMatch;
+
+            public MatchType PriorityMatch;
 
             public SnapInfo(CadCursor cursor, Vector3d snapPoint, double dist = Double.MaxValue)
             {
                 Cursor = cursor;
                 SnapPoint = snapPoint;
                 Distance = dist;
-                SnapType = SanpTypes.NONE;
+                IsPointMatch = false;
+                PriorityMatch = MatchType.NONE;
             }
         }
     }

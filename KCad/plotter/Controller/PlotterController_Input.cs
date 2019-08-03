@@ -465,7 +465,7 @@ namespace Plotter.Controller
 
                         CadVertex p;
 
-                        if (mSnapInfo.SnapType == SnapInfo.SanpTypes.POINT_MATCH)
+                        if (mSnapInfo.IsPointMatch)
                         {
                             p = new CadVertex(SnapPoint);
                         }
@@ -733,6 +733,7 @@ namespace Plotter.Controller
                 cp += distanceX;
 
                 si.SnapPoint = dc.DevPointToWorldPoint(cp);
+                si.PriorityMatch = SnapInfo.MatchType.X_MATCH;
             }
 
             if (my.IsValid)
@@ -747,6 +748,11 @@ namespace Plotter.Controller
                 cp += distanceY;
 
                 si.SnapPoint = dc.DevPointToWorldPoint(cp);
+
+                if (my.DistanceY < mx.DistanceX)
+                {
+                    si.PriorityMatch = SnapInfo.MatchType.Y_MATCH;
+                }
             }
 
             if (mxy.IsValid)
@@ -754,7 +760,9 @@ namespace Plotter.Controller
                 HighlightPointList.Clear();
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT2)));
                 si.SnapPoint = mxy.Point;
-                si.SnapType = SnapInfo.SanpTypes.POINT_MATCH;
+                si.IsPointMatch = true;
+                si.PriorityMatch = SnapInfo.MatchType.POINT_MATCH;
+
                 cp = dc.WorldPointToDevPoint(mxy.Point);
             }
 
@@ -776,8 +784,6 @@ namespace Plotter.Controller
             {
                 if (markSeg.Distance < si.Distance)
                 {
-                    //DOut.tpl($"EvalSegSearcher {si.Cursor.Pos.X}, {si.Cursor.Pos.Y}");
-
                     CadFigure fig = mDB.GetFigure(markSeg.FigureID);
                     fig.DrawSeg(dc, dc.GetPen(DrawTools.PEN_MATCH_SEG), markSeg.PtIndexA, markSeg.PtIndexB);
 
@@ -790,6 +796,7 @@ namespace Plotter.Controller
                         //DOut.tpl($"EvalSegSearcher center");
 
                         si.SnapPoint = center;
+                        si.IsPointMatch = true;
 
                         si.Cursor.Pos = t;
                         si.Cursor.Pos.Z = 0;
@@ -799,8 +806,11 @@ namespace Plotter.Controller
                     }
                     else
                     {
+                        //DOut.tpl($"EvalSegSearcher cursor: {si.Cursor.Pos.X}, {si.Cursor.Pos.Y}");
+                        //DOut.tpl($"EvalSegSearcher cross: {markSeg.CrossPoint.X}, {markSeg.CrossPoint.Y}");
+
                         si.SnapPoint = markSeg.CrossPoint;
-                        si.SnapType = SnapInfo.SanpTypes.POINT_MATCH;
+                        si.IsPointMatch = true;
 
                         si.Cursor.Pos = markSeg.CrossPointScrn;
                         si.Cursor.Pos.Z = 0;
@@ -941,6 +951,8 @@ namespace Plotter.Controller
             {
                 PointSnap(dc);
                 si = EvalPointSearcher(dc, si);
+
+                //DOut.tpl($"si.si.PriorityMatch: {si.PriorityMatch}");
             }
 
             #endregion
@@ -950,6 +962,7 @@ namespace Plotter.Controller
             mSegSearcher.Clean();
             mSegSearcher.SetRangePixel(dc, SettingsHolder.Settings.LineSnapRange);
             mSegSearcher.SetTargetPoint(si.Cursor);
+            mSegSearcher.SetCheckPriorityWithSnapInfo(si);
 
             if (SettingsHolder.Settings.SnapToSegment)
             {
