@@ -47,7 +47,7 @@ namespace Plotter.Controller
 
         // 選択したObjectの点の座標 (World座標系)
         private Vector3d ObjDownPoint = default;
-        private Vector3d SObjDownPoint = default;
+        private Vector3d StoredObjDownPoint = default;
 
         // 実際のMouse座標からCross cursorへのOffset
         private Vector3d OffsetScreen = default;
@@ -177,6 +177,8 @@ namespace Plotter.Controller
 
             if (!sc.PointSelected)
             {
+                //DOut.tpl("SelectNearest: sc.PointSelected=false");
+
                 sc = SegSelectNearest(sc);
 
                 if (!sc.SegmentSelected)
@@ -417,7 +419,9 @@ namespace Plotter.Controller
 
                         OffsetScreen = pixp - CrossCursor.Pos;
 
-                        SObjDownPoint = ObjDownPoint;
+                        StoredObjDownPoint = ObjDownPoint;
+
+                        Redraw(dc);
                     }
                     else
                     {
@@ -500,9 +504,6 @@ namespace Plotter.Controller
 
             if (pcnt > 1)
             {
-                int idx0 = pcnt - 1;
-                int idx1 = pcnt;
-
                 CadVertex p0 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 2);
                 CadVertex p1 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 1);
 
@@ -1049,7 +1050,7 @@ namespace Plotter.Controller
 
                 MoveSelectedPoints(dc, delta);
 
-                ObjDownPoint = SObjDownPoint + delta;
+                ObjDownPoint = StoredObjDownPoint + delta;
             }
 
             Observer.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);

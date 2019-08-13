@@ -43,6 +43,7 @@ namespace Plotter
         {
             MarkSeg = default(MarkSegment);
             MarkSeg.Clean();
+            CheckPriority = Priority.NONE;
         }
 
         public void SetTargetPoint(CadCursor cursor)
