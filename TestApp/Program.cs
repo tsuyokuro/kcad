@@ -12,7 +12,7 @@ namespace TestApp
 {
     class Program
     {
-        static void Main(string[] args)
+        static void XmlTest()
         {
             XDocument doc = new XDocument();
 
@@ -34,6 +34,12 @@ namespace TestApp
             Console.WriteLine("end");
 
             Console.ReadLine();
+
+        }
+
+        static void Main(string[] args)
+        {
+            XmlTest();
         }
     }
 }
