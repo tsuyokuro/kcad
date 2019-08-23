@@ -138,9 +138,12 @@ namespace Plotter
             }
 
             Vector3d p = VectorExt.InvalidVector3d;
-            double mind = Double.MaxValue;
+            double mind = double.MaxValue;
 
-            if (CheckPriority == Priority.NONE)
+            Vector3d dcenter = dc.WorldPointToDevPoint(CadMath.CenterPoint(a, b));
+            double centerDist = (dcenter - Target.Pos).Norm();
+
+            if (CheckPriority == Priority.NONE || centerDist < Range)
             {
                 StackArray<Vector3d> vtbl = default;
 

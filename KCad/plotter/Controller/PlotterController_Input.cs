@@ -794,8 +794,6 @@ namespace Plotter.Controller
 
                     if ((t - si.Cursor.Pos).Norm() < SettingsHolder.Settings.LineSnapRange)
                     {
-                        //DOut.tpl($"EvalSegSearcher center");
-
                         si.SnapPoint = center;
                         si.IsPointMatch = true;
 
@@ -807,9 +805,6 @@ namespace Plotter.Controller
                     }
                     else
                     {
-                        //DOut.tpl($"EvalSegSearcher cursor: {si.Cursor.Pos.X}, {si.Cursor.Pos.Y}");
-                        //DOut.tpl($"EvalSegSearcher cross: {markSeg.CrossPoint.X}, {markSeg.CrossPoint.Y}");
-
                         si.SnapPoint = markSeg.CrossPoint;
                         si.IsPointMatch = true;
 
