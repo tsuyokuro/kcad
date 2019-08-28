@@ -10,7 +10,6 @@ using System.Windows.Input;
 using System.Drawing;
 using KCad;
 using System.Drawing.Printing;
-using CadDataTypes;
 using Plotter.Controller;
 using Plotter.Settings;
 using KCad.Dialogs;
@@ -20,11 +19,6 @@ using System.Xml.Linq;
 
 namespace Plotter
 {
-    public class SelectModeConverter : EnumBoolConverter<SelectModes> { }
-    public class FigureTypeConverter : EnumBoolConverter<CadFigure.Types> { }
-    public class MeasureModeConverter : EnumBoolConverter<MeasureModes> { }
-    public class ViewModeConverter : EnumBoolConverter<ViewModes> { }
-
     public partial class PlotterViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -662,7 +656,7 @@ namespace Plotter
             System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                LoadFile(ofd.FileName);
+                CadFileAccessor.LoadFile(ofd.FileName, this);
                 CurrentFileName = ofd.FileName;
             }
         }
@@ -671,7 +665,7 @@ namespace Plotter
         {
             if (CurrentFileName != null)
             {
-                SaveFile(CurrentFileName);
+                CadFileAccessor.SaveFile(CurrentFileName, this);
                 return;
             }
 
@@ -683,7 +677,7 @@ namespace Plotter
             System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                SaveFile(sfd.FileName);
+                CadFileAccessor.SaveFile(sfd.FileName, this);
                 CurrentFileName = sfd.FileName;
             }
         }
@@ -842,14 +836,6 @@ namespace Plotter
         // Handle events from PlotterController
         #region Event From PlotterController
 
-        //public void DataChanged(PlotterController sender, bool redraw)
-        //{
-        //    if (redraw)
-        //    {
-        //        Redraw();
-        //    }
-        //}
-
         public void StateChanged(PlotterController sender, PlotterStateInfo si)
         {
             if (CreatingFigureType != si.CreatingFigureType)
@@ -932,11 +918,11 @@ namespace Plotter
             }, true);
         }
 
-#endregion
+        #endregion Event From PlotterController
 
 
         // Layer list handling
-#region LayerList
+        #region LayerList
         public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             LayerHolder lh = (LayerHolder)sender;
@@ -958,11 +944,11 @@ namespace Plotter
                 }
             }
         }
-#endregion
+        #endregion LayerList
 
 
         // Keyboard handling
-#region Keyboard handling
+        #region Keyboard handling
         private string GetModifyerKeysString()
         {
             ModifierKeys modifierKeys = Keyboard.Modifiers;
@@ -1008,9 +994,9 @@ namespace Plotter
             string ks = KeyString(e);
             return ExecShortcutKey(ks, false);
         }
-#endregion
+        #endregion Keyboard handling
 
-#region helper
+        #region helper
         public void Redraw()
         {
             ThreadUtil.RunOnMainThread(() =>
@@ -1018,9 +1004,9 @@ namespace Plotter
                 mController.Redraw();
             }, true);
         }
-#endregion
+        #endregion helper
 
-#region "print"
+        #region print
         public void StartPrint()
         {
             PrintDocument pd =
@@ -1054,7 +1040,7 @@ namespace Plotter
 
             Controller.PrintPage(g, pageSize, deviceSize);
         }
-#endregion
+        #endregion print
 
         public void PageSetting()
         {
