@@ -226,6 +226,7 @@
     <Compile Include="plotter\TreeViewItem\TreeViewUtil.cs" />
     <Compile Include="plotter\Util\StackArray.cs" />
     <Compile Include="plotter\Util\VectorExt.cs" />
+    <Compile Include="ViewModel\Converter\BindingConverter.cs" />
     <Compile Include="ViewModel\KeyAction.cs" />
     <Compile Include="WIndowsAPI\WindowsAPI.cs" />
     <Compile Include="Dialogs\AngleInputDialog.xaml.cs">
@@ -241,7 +242,7 @@
     <Compile Include="plotter\Util\ThreadUtil.cs" />
     <Compile Include="ViewModel\CursorPosViewModel.cs" />
     <Compile Include="ViewModel\MoveKeyHandler.cs" />
-    <Compile Include="ViewModel\PlotterViewModel_serialize.cs" />
+    <Compile Include="ViewModel\CadFileAccessor.cs" />
     <Compile Include="MainView\ContextMenuEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -388,7 +389,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ViewModel\EnumBoolConverter.cs" />
+    <Compile Include="ViewModel\Converter\EnumBoolConverter.cs" />
     <Compile Include="ViewModel\LayerHolder.cs" />
     <Compile Include="ViewModel\PlotterViewModel.cs" />
     <Compile Include="MainView\IPlotterView.cs" />

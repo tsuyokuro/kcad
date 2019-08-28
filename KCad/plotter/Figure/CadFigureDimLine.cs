@@ -31,7 +31,7 @@ namespace Plotter
 
         public override Centroid GetCentroid()
         {
-            Centroid ret = default(Centroid);
+            Centroid ret = default;
 
             ret.IsInvalid = true;
 
@@ -269,9 +269,26 @@ namespace Plotter
             double arrowW = ARROW_W / dc.WorldScale;
             double arrowL = ARROW_LEN / dc.WorldScale;
 
-            dc.Drawing.DrawArrow(pen, cp, PointList[3].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
-            dc.Drawing.DrawArrow(pen, cp, PointList[2].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            double ww = (PointList[1] - PointList[0]).Norm() / 4.0;
 
+            if (ww > arrowL)
+            {
+                dc.Drawing.DrawArrow(pen, cp, PointList[3].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+                dc.Drawing.DrawArrow(pen, cp, PointList[2].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            }
+            else
+            {
+                Vector3d v0 = cp - PointList[3].vector;
+                Vector3d v1 = cp - PointList[2].vector;
+
+                v0 = -(v0.Normalized() * (arrowL * 1.5)) + PointList[3].vector;
+                v1 = -(v1.Normalized() * (arrowL * 1.5)) + PointList[2].vector;
+
+                dc.Drawing.DrawArrow(pen, v0, PointList[3].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+                dc.Drawing.DrawArrow(pen, v1, PointList[2].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+
+                dc.Drawing.DrawLine(pen, PointList[2].vector, PointList[3].vector);
+            }
 
             CadVertex lineV = PointList[2] - PointList[3];
 
@@ -280,6 +297,8 @@ namespace Plotter
             string lenStr = CadUtil.ValToString(len);
 
             CadVertex p = PointList[3] + (lineV / 2);
+
+            p += (PointList[3] - PointList[0]).UnitVector() * (arrowW);
 
             CadVertex up = PointList[3] - PointList[0];
 

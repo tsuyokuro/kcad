@@ -287,7 +287,7 @@ namespace Plotter
         {
             if (PointList.Count == 0)
             {
-                return default(Centroid);
+                return default;
             }
 
             if (PointList.Count == 1)
@@ -324,7 +324,7 @@ namespace Plotter
 
         private Centroid GetPointListCentroid()
         {
-            Centroid ret = default(Centroid);
+            Centroid ret = default;
 
             List<CadFigure> triangles = TriangleSplitter.Split(this);
 
@@ -335,7 +335,7 @@ namespace Plotter
 
         private Centroid GetPointCentroid()
         {
-            Centroid ret = default(Centroid);
+            Centroid ret = default;
 
             ret.Point = PointList[0].vector;
             ret.Area = 0;
@@ -345,7 +345,7 @@ namespace Plotter
 
         private Centroid GetSegCentroid()
         {
-            Centroid ret = default(Centroid);
+            Centroid ret = default;
 
             Vector3d d = PointList[1].vector - PointList[0].vector;
 

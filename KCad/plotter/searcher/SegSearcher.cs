@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using CadDataTypes;
 using OpenTK;
+using static Plotter.Controller.PlotterController;
 
 namespace Plotter
 {
     public class SegSearcher
     {
+        public enum Priority
+        {
+            NONE,
+            PRIORITY_X,
+            PRIORITY_Y,
+        }
+
         private MarkSegment MarkSeg;
 
         private CadCursor Target;
@@ -24,6 +32,8 @@ namespace Plotter
             }
         }
 
+        public Priority CheckPriority = Priority.NONE;
+
         public void SetRangePixel(DrawContext dc, double pixel)
         {
             Range = pixel;
@@ -33,6 +43,7 @@ namespace Plotter
         {
             MarkSeg = default(MarkSegment);
             MarkSeg.Clean();
+            CheckPriority = Priority.NONE;
         }
 
         public void SetTargetPoint(CadCursor cursor)
@@ -83,6 +94,22 @@ namespace Plotter
             }
         }
 
+        public void SetCheckPriorityWithSnapInfo(SnapInfo si)
+        {
+            if (si.PriorityMatch == SnapInfo.MatchType.X_MATCH)
+            {
+                CheckPriority = Priority.PRIORITY_X;
+            }
+            else if (si.PriorityMatch == SnapInfo.MatchType.Y_MATCH)
+            {
+                CheckPriority = Priority.PRIORITY_Y;
+            }
+            else
+            {
+                CheckPriority = Priority.NONE;
+            }
+        }
+
         private void CheckSeg(DrawContext dc, CadLayer layer, FigureSegment fseg)
         {
             CadFigure fig = fseg.Figure;
@@ -105,41 +132,62 @@ namespace Plotter
             Vector3d cx = CadMath.CrossSegPlane(a, b, cwp, xfaceNormal);
             Vector3d cy = CadMath.CrossSegPlane(a, b, cwp, yfaceNormal);
 
-            Vector3d pa = dc.WorldPointToDevPoint(a);
-            Vector3d pb = dc.WorldPointToDevPoint(b);
-
             if (!cx.IsValid() && !cy.IsValid())
             {
                 return;
             }
 
             Vector3d p = VectorExt.InvalidVector3d;
-            double mind = Double.MaxValue;
+            double mind = double.MaxValue;
 
-            StackArray<Vector3d> vtbl = default;
+            Vector3d dcenter = dc.WorldPointToDevPoint(CadMath.CenterPoint(a, b));
+            double centerDist = (dcenter - Target.Pos).Norm();
 
-            vtbl[0] = cx;
-            vtbl[1] = cy;
-            vtbl.Length = 2;
-
-            for (int i = 0; i < vtbl.Length; i++)
+            if (CheckPriority == Priority.NONE || centerDist < Range)
             {
-                Vector3d v = vtbl[i];
+                StackArray<Vector3d> vtbl = default;
 
-                if (!v.IsValid())
+                vtbl[0] = cx;
+                vtbl[1] = cy;
+                vtbl.Length = 2;
+
+                for (int i = 0; i < vtbl.Length; i++)
                 {
-                    continue;
+                    Vector3d v = vtbl[i];
+
+                    if (!v.IsValid())
+                    {
+                        continue;
+                    }
+
+                    Vector3d devv = dc.WorldPointToDevPoint(v);
+                    double td = (devv - Target.Pos).Norm();
+
+                    if (td < mind)
+                    {
+                        mind = td;
+                        p = v;
+                    }
+                }
+            }
+            else
+            {
+                if (CheckPriority == Priority.PRIORITY_X)
+                {
+                    p = cx;
+                }
+                else if (CheckPriority == Priority.PRIORITY_Y)
+                {
+                    p = cy;
                 }
 
-                Vector3d devv = dc.WorldPointToDevPoint(v);
-
-                double td = (devv - Target.Pos).Norm();
-
-                if (td < mind)
+                if (p.IsInvalid())
                 {
-                    mind = td;
-                    p = v;
+                    return;
                 }
+
+                Vector3d devv = dc.WorldPointToDevPoint(p);
+                mind = (devv - Target.Pos).Norm();
             }
 
             if (!p.IsValid())

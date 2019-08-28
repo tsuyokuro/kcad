@@ -47,7 +47,7 @@ namespace Plotter.Controller
 
         // 選択したObjectの点の座標 (World座標系)
         private Vector3d ObjDownPoint = default;
-        private Vector3d SObjDownPoint = default;
+        private Vector3d StoredObjDownPoint = default;
 
         // 実際のMouse座標からCross cursorへのOffset
         private Vector3d OffsetScreen = default;
@@ -177,6 +177,8 @@ namespace Plotter.Controller
 
             if (!sc.PointSelected)
             {
+                //DOut.tpl("SelectNearest: sc.PointSelected=false");
+
                 sc = SegSelectNearest(sc);
 
                 if (!sc.SegmentSelected)
@@ -417,7 +419,9 @@ namespace Plotter.Controller
 
                         OffsetScreen = pixp - CrossCursor.Pos;
 
-                        SObjDownPoint = ObjDownPoint;
+                        StoredObjDownPoint = ObjDownPoint;
+
+                        Redraw(dc);
                     }
                     else
                     {
@@ -465,7 +469,7 @@ namespace Plotter.Controller
 
                         CadVertex p;
 
-                        if (mSnapInfo.SnapType == SnapInfo.SanpTypes.POINT_MATCH)
+                        if (mSnapInfo.IsPointMatch)
                         {
                             p = new CadVertex(SnapPoint);
                         }
@@ -500,9 +504,6 @@ namespace Plotter.Controller
 
             if (pcnt > 1)
             {
-                int idx0 = pcnt - 1;
-                int idx1 = pcnt;
-
                 CadVertex p0 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 2);
                 CadVertex p1 = MeasureFigureCreator.Figure.GetPointAt(pcnt - 1);
 
@@ -719,6 +720,8 @@ namespace Plotter.Controller
             MarkPoint mx = mPointSearcher.GetXMatch();
             MarkPoint my = mPointSearcher.GetYMatch();
 
+            Vector3d cp = si.Cursor.Pos;
+
             if (mx.IsValid)
             {
                 HighlightPointList.Add(
@@ -728,33 +731,43 @@ namespace Plotter.Controller
 
                 Vector3d distanceX = si.Cursor.DistanceX(tp);
 
-                si.Cursor.Pos += distanceX;
+                cp += distanceX;
 
-                si.SnapPoint = dc.DevPointToWorldPoint(si.Cursor.Pos);
+                si.SnapPoint = dc.DevPointToWorldPoint(cp);
+                si.PriorityMatch = SnapInfo.MatchType.X_MATCH;
             }
 
             if (my.IsValid)
             {
-                HighlightPointList.Add(new HighlightPointListItem(my.Point, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
+                HighlightPointList.Add(
+                    new HighlightPointListItem(my.Point, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
 
                 Vector3d tp = dc.WorldPointToDevPoint(my.Point);
 
                 Vector3d distanceY = si.Cursor.DistanceY(tp);
 
-                si.Cursor.Pos += distanceY;
+                cp += distanceY;
 
-                si.SnapPoint = dc.DevPointToWorldPoint(si.Cursor.Pos);
+                si.SnapPoint = dc.DevPointToWorldPoint(cp);
+
+                if (my.DistanceY < mx.DistanceX)
+                {
+                    si.PriorityMatch = SnapInfo.MatchType.Y_MATCH;
+                }
             }
 
             if (mxy.IsValid)
             {
+                HighlightPointList.Clear();
                 HighlightPointList.Add(new HighlightPointListItem(mxy.Point, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT2)));
-
-                si.Cursor.Pos = dc.WorldPointToDevPoint(si.SnapPoint);
-
                 si.SnapPoint = mxy.Point;
-                si.SnapType = SnapInfo.SanpTypes.POINT_MATCH;
+                si.IsPointMatch = true;
+                si.PriorityMatch = SnapInfo.MatchType.POINT_MATCH;
+
+                cp = dc.WorldPointToDevPoint(mxy.Point);
             }
+
+            si.Cursor.Pos = cp;
 
             return si;
         }
@@ -782,16 +795,18 @@ namespace Plotter.Controller
                     if ((t - si.Cursor.Pos).Norm() < SettingsHolder.Settings.LineSnapRange)
                     {
                         si.SnapPoint = center;
+                        si.IsPointMatch = true;
 
                         si.Cursor.Pos = t;
                         si.Cursor.Pos.Z = 0;
 
+                        HighlightPointList.Clear();
                         HighlightPointList.Add(new HighlightPointListItem(center, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT2)));
                     }
                     else
                     {
                         si.SnapPoint = markSeg.CrossPoint;
-                        si.SnapType = SnapInfo.SanpTypes.POINT_MATCH;
+                        si.IsPointMatch = true;
 
                         si.Cursor.Pos = markSeg.CrossPointScrn;
                         si.Cursor.Pos.Z = 0;
@@ -907,15 +922,14 @@ namespace Plotter.Controller
             mPointSearcher.CheckStorePoint = SettingsHolder.Settings.SnapToSelfPoint;
             mPointSearcher.SetTargetPoint(CrossCursor);
 
-            //if (!SettingsHolder.Settings.SnapToSelfPoint)
-            //{
-            //    DOut.pl("SnapToSelf");
-
-            //    if (CurrentFigure != null)
-            //    {
-            //        mPointSearcher.AddIgnore(CurrentFigure);
-            //    }
-            //}
+            if (!SettingsHolder.Settings.SnapToSelfPoint)
+            {
+                // Current figure にスナップしない
+                if (CurrentFigure != null)
+                {
+                    mPointSearcher.AddIgnoreFigureID(CurrentFigure.ID);
+                }
+            }
 
             // (0, 0, 0)にスナップするようにする
             if (SettingsHolder.Settings.SnapToZero)
@@ -933,6 +947,8 @@ namespace Plotter.Controller
             {
                 PointSnap(dc);
                 si = EvalPointSearcher(dc, si);
+
+                //DOut.tpl($"si.si.PriorityMatch: {si.PriorityMatch}");
             }
 
             #endregion
@@ -941,7 +957,8 @@ namespace Plotter.Controller
 
             mSegSearcher.Clean();
             mSegSearcher.SetRangePixel(dc, SettingsHolder.Settings.LineSnapRange);
-            mSegSearcher.SetTargetPoint(CrossCursor);
+            mSegSearcher.SetTargetPoint(si.Cursor);
+            mSegSearcher.SetCheckPriorityWithSnapInfo(si);
 
             if (SettingsHolder.Settings.SnapToSegment)
             {
@@ -970,8 +987,8 @@ namespace Plotter.Controller
                 }
             }
 
-            CrossCursor = si.Cursor;
             SnapPoint = si.SnapPoint;
+            CrossCursor.Pos = si.Cursor.Pos;
 
             mSnapInfo = si;
         }
@@ -1028,7 +1045,7 @@ namespace Plotter.Controller
 
                 MoveSelectedPoints(dc, delta);
 
-                ObjDownPoint = SObjDownPoint + delta;
+                ObjDownPoint = StoredObjDownPoint + delta;
             }
 
             Observer.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);

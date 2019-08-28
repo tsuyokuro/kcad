@@ -79,7 +79,7 @@ namespace Plotter
 
         public override CadSegment GetSegmentAt(int n)
         {
-            CadSegment seg = default(CadSegment);
+            CadSegment seg = default;
             seg.P0 = mPointList[SegList[n].Idx0];
             seg.P1 = mPointList[SegList[n].Idx1];
 
@@ -195,8 +195,8 @@ namespace Plotter
 
         public override Centroid GetCentroid()
         {
-            Centroid cent = default(Centroid);
-            Centroid ct = default(Centroid);
+            Centroid cent = default;
+            Centroid ct = default;
 
             for (int i = 0; i < mHeModel.FaceStore.Count; i++)
             {

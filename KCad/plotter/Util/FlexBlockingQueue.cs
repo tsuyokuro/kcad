@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace Plotter
 {
-    class FlexBlockingQueue<T>
+    public class FlexBlockingQueue<T>
     {
         public delegate void Removed(T item);
 

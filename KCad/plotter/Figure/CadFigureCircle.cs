@@ -288,7 +288,7 @@ namespace Plotter
 
         public override Centroid GetCentroid()
         {
-            Centroid ret = default(Centroid);
+            Centroid ret = default;
 
             Vector3d cp = StoreList[0].vector;
             Vector3d rp = StoreList[1].vector;
