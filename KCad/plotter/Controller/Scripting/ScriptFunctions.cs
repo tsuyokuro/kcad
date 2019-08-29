@@ -1245,6 +1245,20 @@ namespace Plotter.Controller
             Session.AddOpe(opeRoot);
         }
 
+        public void SetFigName(uint id, string name)
+        {
+            CadFigure fig = Controller.DB.GetFigure(id);
+            if (fig == null)
+            {
+                return;
+            }
+
+            if (name == "") name = null;
+            fig.Name = name;
+
+            UpdateTV();
+        }
+
         private CadFigureMesh GetCadFigureMesh(uint id)
         {
             CadFigure fig = Controller.DB.GetFigure(id);

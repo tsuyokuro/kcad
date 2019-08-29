@@ -217,6 +217,11 @@ def ins_point():
 def set_seg_len(len):
     SE.SetSelectedSegLen(len)
 
+#[AC] set_fig_name(id=current_fig_id(), name="name")
+def set_fig_name(id, name):
+    SE.SetFigName(id, name)
+
+
 ###############################################################################
 
 

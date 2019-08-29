@@ -25,7 +25,14 @@ namespace Plotter
         {
             get
             {
-                return CadFigure.TypeName(Fig.Type) + " ID:"+ Fig.ID.ToString();
+                if (Fig.Name == null)
+                {
+                    return CadFigure.TypeName(Fig.Type) + " ID:" + Fig.ID.ToString();
+                }
+                else
+                {
+                    return Fig.Name + " ID:" + Fig.ID.ToString();
+                }
             }
         }
 
