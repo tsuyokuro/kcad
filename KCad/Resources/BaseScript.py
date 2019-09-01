@@ -129,6 +129,16 @@ def add_rect(w=10, h=10):
 def add_rect_at(pv, w=10, h=10):
     SE.RectAt(pv, w, h)
 
+
+#[AC] add_rectc(w=10, h=10, c=1)
+def add_rectc(w=10, h=10, c=1):
+    SE.RectChamfer(w, h, c)
+
+#[AC] add_rectc_at(pv=last_down(), w=10, h=10, c=1)
+def add_rectc_at(pv, w=10, h=10, c=1):
+    SE.RectChamferAt(pv, w, h, c)
+
+
 #[AC] add_point(x=0, y=0, z=0)
 def add_point(x, y, z):
     SE.AddPoint(x, y, z)
@@ -221,6 +231,13 @@ def set_seg_len(len):
 def set_fig_name(id, name):
     SE.SetFigName(id, name)
 
+#[AC] get_point(figID=current_fig_id(), index=0)
+def get_point(figID, index):
+	return SE.GetPoint(figID, index);
+
+#[AC] set_point(figID=current_fig_id(), index=0, dv=Vector3d(0,0,0))
+def set_point(figID, index, dv):
+	return SE.SetPoint(figID, index, dv);
 
 ###############################################################################
 
@@ -356,8 +373,11 @@ unit_vx = Vector3d(1,0,0)
 unit_vy = Vector3d(0,1,0)
 unit_vz = Vector3d(0,0,1)
 
+#[AC] w_1x4
+#[AC] t_1x4
 w_1x4 = 89
 t_1x4 = 19
+
 
 esc_reset = "\x1b[0m"
 
