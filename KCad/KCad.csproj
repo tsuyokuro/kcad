@@ -199,6 +199,7 @@
     <Compile Include="GLUtil\FontFaceW.cs" />
     <Compile Include="GLUtil\FrameBufferW.cs" />
     <Compile Include="plotter\Controller\PlotterPrinter.cs" />
+    <Compile Include="plotter\Controller\Scripting\ScriptSession.cs" />
     <Compile Include="plotter\Controller\Scripting\SimpleCommands.cs" />
     <Compile Include="plotter\Controller\SnapInfo.cs" />
     <Compile Include="plotter\Controller\svg\SvgExporter.cs" />
