@@ -1,25 +1,16 @@
-﻿using ICSharpCode.AvalonEdit.Highlighting;
+﻿using ICSharpCode.AvalonEdit.CodeCompletion;
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Editing;
+using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using ICSharpCode.AvalonEdit.Search;
 using Plotter.Controller;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Xml;
-using ICSharpCode.AvalonEdit.Search;
-using ICSharpCode.AvalonEdit.CodeCompletion;
-using Plotter;
-using ICSharpCode.AvalonEdit.Editing;
-using ICSharpCode.AvalonEdit.Document;
 
 namespace KCad
 {
@@ -135,7 +126,7 @@ namespace KCad
         {
             int offset = textEditor.TextArea.Caret.Offset;
 
-            WordData wd = getDocumentWord(offset-1);
+            WordData wd = getDocumentWord(offset - 1);
 
             //DebugOut.println(w.StartPos.ToString() + " " + w.Word);
 
@@ -246,11 +237,13 @@ namespace KCad
 
             var callback = new ScriptEnvironment.RunCallback();
 
-            callback.OnStart = () => {
+            callback.OnStart = () =>
+            {
                 BtnRun.IsEnabled = false;
             };
 
-            callback.OnEnd = () => {
+            callback.OnEnd = () =>
+            {
                 BtnRun.IsEnabled = true;
             };
 

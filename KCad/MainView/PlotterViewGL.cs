@@ -1,4 +1,4 @@
-﻿#define MOUSE_THREAD
+﻿//#define MOUSE_THREAD
 
 using OpenTK;
 using OpenTK.Graphics;

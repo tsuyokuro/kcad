@@ -97,6 +97,8 @@ namespace Plotter
 
         public bool IsSelected { get; set; } = false;
 
+        public string Name { get; set; } = null;
+
         #endregion
 
         protected VertexList mPointList = new VertexList();
@@ -597,6 +599,10 @@ namespace Plotter
             DOut.pl(this.GetType().Name + "(" + this.GetHashCode().ToString() + ") {");
             DOut.Indent++;
             DOut.pl("ID=" + ID.ToString());
+
+            string name = Name == null ? "null" : Name.ToString();
+
+            DOut.pl("Name=" + name);
             DOut.pl("LayerID=" + LayerID.ToString());
             DOut.pl("Type=" + Type.ToString());
 

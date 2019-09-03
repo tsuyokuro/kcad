@@ -298,6 +298,10 @@ namespace Plotter.Serializer.v1001
         [Key("GeoData")]
         public MpGeometricData_v1002 GeoData;
 
+        [Key("Name")]
+        public string Name;
+
+
         [IgnoreMember]
         public CadFigure TempFigure = null;
 
@@ -362,6 +366,8 @@ namespace Plotter.Serializer.v1001
             Normal = MpVector3d_v1002.Create(fig.Normal);
 
             GeoData = fig.GeometricDataToMp_v1002();
+
+            Name = fig.Name;
         }
 
         public void StoreChildIdList(CadFigure fig)
@@ -397,6 +403,8 @@ namespace Plotter.Serializer.v1001
             }
 
             fig.GeometricDataFromMp_v1002(GeoData);
+
+            fig.Name = Name;
         }
 
         public CadFigure Restore()

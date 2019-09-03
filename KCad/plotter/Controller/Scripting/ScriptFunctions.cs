@@ -16,94 +16,6 @@ using OpenTK;
 
 namespace Plotter.Controller
 {
-    public class ScriptSession
-    {
-        ScriptEnvironment Env;
-
-        private CadOpeList mCadOpeList = null;
-
-        private bool NeedUpdateTreeView = false;
-        private bool NeedRemakeTreeView = false;
-        private bool NeedRedraw = false;
-
-        public ScriptSession(ScriptEnvironment env)
-        {
-            Env = env;
-        }
-
-        public CadOpeList OpeList
-        {
-            get => mCadOpeList;
-        }
-
-        public void AddOpe(CadOpe ope)
-        {
-            mCadOpeList.Add(ope);
-        }
-
-        public void Start()
-        {
-            mCadOpeList = new CadOpeList();
-
-            ResetFlags();
-        }
-
-        public void End()
-        {
-            if (NeedUpdateTreeView)
-            {
-                UpdateTV(NeedRemakeTreeView);
-            }
-
-            if (NeedRedraw)
-            {
-                Redraw();
-            }
-        }
-
-        public void ResetFlags()
-        {
-            NeedUpdateTreeView = false;
-            NeedRemakeTreeView = false;
-            NeedRedraw = false;
-        }
-
-        public void PostUpdateTreeView()
-        {
-            NeedUpdateTreeView = true;
-        }
-
-        public void PostRemakeTreeView()
-        {
-            NeedUpdateTreeView = true;
-            NeedRemakeTreeView = true;
-        }
-
-        public void PostRedraw()
-        {
-            NeedRedraw = true;
-        }
-
-        public void UpdateTV(bool remakeTree)
-        {
-            Env.RunOnMainThread(() =>
-            {
-                Env.Controller.UpdateTreeView(remakeTree);
-            });
-        }
-
-        public void Redraw()
-        {
-            Env.RunOnMainThread(() =>
-            {
-                Env.Controller.Clear();
-                Env.Controller.DrawAll();
-                Env.Controller.PushDraw();
-            });
-        }
-    }
-
-
     public class ScriptFunctions
     {
         PlotterController Controller;
@@ -487,6 +399,33 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
         }
 
+        public Vector3d GetPoint(uint figID, int index)
+        {
+            CadFigure fig = Controller.DB.GetFigure(figID);
+            if (fig == null)
+            {
+                return VectorExt.InvalidVector3d;
+            }
+
+            return fig.GetPointAt(index).vector;
+        }
+
+        public bool IsValidVector(Vector3d v)
+        {
+            return v.IsInvalid();
+        }
+
+        public void SetPoint(uint figID, int index, Vector3d v)
+        {
+            CadFigure fig = Controller.DB.GetFigure(figID);
+            if (fig == null)
+            {
+                return;
+            }
+
+            fig.PointList.Ref(index).vector = v;
+        }
+
         public int Rect(double w, double h)
         {
             return RectAt(Controller.LastDownPoint, w, h);
@@ -515,6 +454,68 @@ namespace Plotter.Controller
 
             p1 = p0 + hd;
             fig.AddPoint(p1);
+
+            fig.IsLoop = true;
+
+            fig.EndCreate(Controller.CurrentDC);
+
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
+            Session.AddOpe(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+
+            Session.PostRemakeTreeView();
+
+            return (int)fig.ID;
+        }
+
+        public int RectChamfer(double w, double h, double c)
+        {
+            return RectRectChamferAt(Controller.LastDownPoint, w, h, c);
+        }
+
+        public int RectRectChamferAt(Vector3d p, double w, double h, double c)
+        {
+            Vector3d viewDir = Controller.CurrentDC.ViewDir;
+            Vector3d upDir = Controller.CurrentDC.UpVector;
+
+            Vector3d wdir = CadMath.Normal(viewDir, upDir);
+            Vector3d hdir = upDir.UnitVector();
+
+            Vector3d wd = wdir * w;
+            Vector3d hd = hdir * h;
+
+            CadVertex sp = (CadVertex)p;
+            CadVertex tp = sp;
+
+            Vector3d wc = wdir * c;
+            Vector3d hc = hdir * c;
+
+
+            CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.RECT);
+
+            fig.AddPoint(tp + wc);
+
+            tp += wd;
+
+            fig.AddPoint(tp - wc);
+
+            fig.AddPoint(tp + hc);
+
+            tp += hd;
+
+            fig.AddPoint(tp - hc);
+
+            fig.AddPoint(tp - wc);
+
+            tp = sp + hd;
+
+            fig.AddPoint(tp + wc);
+
+            fig.AddPoint(tp - hc);
+
+            tp = sp;
+
+            fig.AddPoint(tp + hc);
 
             fig.IsLoop = true;
 
@@ -1243,6 +1244,20 @@ namespace Plotter.Controller
             }
 
             Session.AddOpe(opeRoot);
+        }
+
+        public void SetFigName(uint id, string name)
+        {
+            CadFigure fig = Controller.DB.GetFigure(id);
+            if (fig == null)
+            {
+                return;
+            }
+
+            if (name == "") name = null;
+            fig.Name = name;
+
+            UpdateTV();
         }
 
         private CadFigureMesh GetCadFigureMesh(uint id)
