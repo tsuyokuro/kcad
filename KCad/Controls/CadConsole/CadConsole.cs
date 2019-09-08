@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Plotter;
+using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -159,17 +161,11 @@ namespace KCad
             {
                 if (e.Key == Key.C || e.Key == Key.Insert)
                 {
-                    string copyString = GetSelectedString();
-                    Clipboard.SetDataObject(copyString, true);
+                    CopySelected();
                 }
                 else if (e.Key == Key.D)
                 {
-                    string postString = GetSelectedString();
-
-                    if (postString != null && postString.Length > 0)
-                    {
-                        Posting(postString);
-                    }
+                    PostSelected();
                 }
                 else if (e.Key == Key.X)
                 {
@@ -221,6 +217,71 @@ namespace KCad
             NewLine();
 
             UpdateView();
+
+            SetContextMenu();
+        }
+
+        private void CopySelected()
+        {
+            string copyString = GetSelectedString();
+
+            if (copyString == null || copyString.Length == 0)
+            {
+                return;
+            }
+
+            Clipboard.SetDataObject(copyString, true);
+        }
+
+        private void PostSelected()
+        {
+            string postString = GetSelectedString();
+
+            if (postString == null || postString.Length == 0)
+            {
+                return;
+            }
+
+            Posting(postString);
+        }
+
+        private void SetContextMenu()
+        {
+            ContextMenu = new ContextMenu();
+
+            ContextMenu.BorderBrush = Brushes.Black;
+            ContextMenu.Padding = new Thickness(0, 1, 0, 1);
+
+            MenuItem menuItem = new MenuItem();
+            menuItem.Header = "Copy";
+            menuItem.Foreground = Brushes.White;
+
+            menuItem.Click += (obj, args) =>
+            {
+                CopySelected();
+            };
+
+            menuItem.MouseEnter += (sender, e) =>
+            {
+                menuItem.Foreground = Brushes.Black;
+            };
+
+            menuItem.MouseLeave += (sender, e) =>
+            {
+                menuItem.Foreground = Brushes.White;
+            };
+
+            ContextMenu.Items.Add(menuItem);
+        }
+
+        private void RemoveContextMenu()
+        {
+            if (ContextMenu != null)
+            {
+                ContextMenu.IsOpen = false;
+            }
+
+            ContextMenu = null;
         }
 
         //
@@ -232,12 +293,14 @@ namespace KCad
         {
             Point p = e.GetPosition(this);
 
-            TextPos tp = PointToTextPos(p);
-
-            Sel.Reset();
-
-            RawSel.Start(tp.Row, tp.Col);
-            Selecting = true;
+            if (e.ClickCount == 1)
+            {
+                StartSelect(p);
+            }
+            else if (e.ClickCount == 2)
+            {
+                SelectWord(p);
+            }
 
             UpdateView();
 
@@ -247,6 +310,53 @@ namespace KCad
             }
 
             base.OnMouseDown(e);
+        }
+
+        protected void StartSelect(Point p)
+        {
+            TextPos tp = PointToTextPos(p);
+
+            Sel.Reset();
+
+            RawSel.Start(tp.Row, tp.Col);
+            Selecting = true;
+        }
+
+        private Regex WordRegex = new Regex(@"([^ \t,:=/\\]+)");
+
+        protected void SelectWord(Point p)
+        {
+            TextPos tp = PointToTextPos(p);
+            Sel.Reset();
+
+            if (tp.Row >= mList.Count)
+            {
+                return;
+            }
+
+            TextLine item = mList[tp.Row];
+
+            if (tp.Col >= item.Data.Length)
+            {
+                return;
+            }
+
+            MatchCollection matches = WordRegex.Matches(item.Data);
+
+            foreach (Match match in matches)
+            {
+                int sp = match.Index;
+                int ep = match.Index + match.Length;
+
+                if (tp.Col >= sp && tp.Col <= ep)
+                {
+                    Sel.SP.Row = tp.Row;
+                    Sel.SP.Col = sp;
+                    Sel.EP.Row = tp.Row;
+                    Sel.EP.Col = ep;
+                    break;
+                }
+            }
         }
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
