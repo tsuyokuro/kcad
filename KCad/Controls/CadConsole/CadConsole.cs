@@ -1,5 +1,4 @@
-﻿using Plotter;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,10 +18,9 @@ namespace KCad
 
         protected Brush mBackground = Brushes.White;
 
-        protected Brush mSelectedForeground = Brushes.White;
+        protected Brush mSelectedBackground = Brushes.White;
 
-        protected Brush mSelectedBackground = new SolidColorBrush(Color.FromRgb(0x22, 0x8B, 0x22));
-
+        protected double mSelectedBackgroundOpacity = 0.2;
 
         protected double mLineHeight = 14.0;
 
@@ -59,10 +57,10 @@ namespace KCad
             set => mSelectedBackground = value;
         }
 
-        public Brush SelectedForeground
+        public double SelectedBackgroundOpacity
         {
-            get => mSelectedForeground;
-            set => mSelectedForeground = value;
+            get => mSelectedBackgroundOpacity;
+            set => mSelectedBackgroundOpacity = value;
         }
 
         public double TextSize
@@ -121,7 +119,7 @@ namespace KCad
         protected TextAttr CurrentAttr = default;
 
         protected Pen FocusedBorderPen = new Pen(
-                new SolidColorBrush(Color.FromRgb(0x56, 0x9D, 0xE5)), 1);
+                new SolidColorBrush(Color.FromArgb(0xff, 0x56, 0x9D, 0xE5)), 1.5);
 
         protected double CW = 1;
 
@@ -129,7 +127,7 @@ namespace KCad
 
         private TextRange RawSel = new TextRange();
         private TextRange Sel = new TextRange();
-        private bool Selecting = false; 
+        private bool Selecting = false;
 
         public CadConsoleView()
         {
@@ -162,7 +160,7 @@ namespace KCad
                 if (e.Key == Key.C || e.Key == Key.Insert)
                 {
                     string copyString = GetSelectedString();
-                    System.Windows.Clipboard.SetDataObject(copyString, true);
+                    Clipboard.SetDataObject(copyString, true);
                 }
                 else if (e.Key == Key.D)
                 {
@@ -173,10 +171,10 @@ namespace KCad
                         Posting(postString);
                     }
                 }
-            }
-            else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.X)
-            {
-                Clear();
+                else if (e.Key == Key.X)
+                {
+                    Clear();
+                }
             }
         }
 
@@ -511,7 +509,7 @@ namespace KCad
                 tp.X = mTextLeftMargin;
                 tp.Y += textOffset;
 
-                DrawText(dc, item, tp, n-1);
+                DrawText(dc, item, tp, n - 1);
 
                 DrawSelectedRange(dc, n - 1);
 
@@ -526,7 +524,7 @@ namespace KCad
 
             if (IsFocused)
             {
-                Rect sr = new Rect(0, offset, ActualWidth, dispHeight);
+                Rect sr = new Rect(0, offset + 1, ActualWidth, dispHeight-1);
                 dc.DrawRectangle(null, FocusedBorderPen, sr);
             }
         }
@@ -555,8 +553,8 @@ namespace KCad
                 r.X = ts.Start * CW + mTextLeftMargin;
                 r.Width = ts.Len * CW;
 
-                dc.PushOpacity(0.5);
-                dc.DrawRectangle(Brushes.White, null, r);
+                dc.PushOpacity(mSelectedBackgroundOpacity);
+                dc.DrawRectangle(mSelectedBackground, null, r);
                 dc.Pop();
             }
         }
