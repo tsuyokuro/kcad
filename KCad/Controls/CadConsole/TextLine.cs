@@ -23,7 +23,6 @@ namespace KCad
 
     public class TextLine
     {
-        public bool IsSelected = false;
         public string Data = "";
         public List<AttrSpan> Attrs = new List<AttrSpan>();
 
