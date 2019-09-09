@@ -723,8 +723,6 @@
                                 FontFamily="Fonts/mplus-1m-light.ttf#M+ 1m light"
                                 Foreground="#FFAAAAAA"
                                 LineHeight="20"
-                                SelectedBackground="#FFFFFFFF"
-                                SelectedBackgroundOpacity="0.2"
                                 SnapsToDevicePixels="True"
                                 TextOptions.TextFormattingMode="Display"
                                 TextSize="13" />

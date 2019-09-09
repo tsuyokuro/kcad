@@ -38,8 +38,6 @@ namespace KCad
 
         protected bool mIsLoaded = false;
 
-        public Action<string> Posting = s => { };
-
         #region Properties
         public Brush Background
         {
@@ -163,10 +161,6 @@ namespace KCad
                 {
                     CopySelected();
                 }
-                else if (e.Key == Key.D)
-                {
-                    PostSelected();
-                }
                 else if (e.Key == Key.X)
                 {
                     Clear();
@@ -231,18 +225,6 @@ namespace KCad
             }
 
             Clipboard.SetDataObject(copyString, true);
-        }
-
-        private void PostSelected()
-        {
-            string postString = GetSelectedString();
-
-            if (postString == null || postString.Length == 0)
-            {
-                return;
-            }
-
-            Posting(postString);
         }
 
         private void SetContextMenu()
@@ -672,9 +654,7 @@ namespace KCad
         protected Point RenderText(
             DrawingContext dc, TextAttr attr, string s, Point pt, int row, int col)
         {
-            Brush foreground;
-
-            foreground = Esc.Palette[attr.FColor];
+            Brush foreground = Esc.Palette[attr.FColor];
 
             FormattedText ft = GetFormattedText(s, foreground);
 
@@ -682,9 +662,7 @@ namespace KCad
             pt2.X += ft.WidthIncludingTrailingWhitespace; // 末尾のspaceも含む幅
             pt2.Y += mLineHeight;
 
-            Brush background;
-
-            background = Esc.Palette[attr.BColor];
+            Brush background = Esc.Palette[attr.BColor];
 
             dc.DrawRectangle(background, null, new Rect(pt, pt2));
 
