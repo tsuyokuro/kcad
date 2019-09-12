@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Plotter;
+using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -35,8 +37,6 @@ namespace KCad
         protected double mTextLeftMargin = 4.0;
 
         protected bool mIsLoaded = false;
-
-        public Action<string> Posting = s => { };
 
         #region Properties
         public Brush Background
@@ -159,17 +159,7 @@ namespace KCad
             {
                 if (e.Key == Key.C || e.Key == Key.Insert)
                 {
-                    string copyString = GetSelectedString();
-                    Clipboard.SetDataObject(copyString, true);
-                }
-                else if (e.Key == Key.D)
-                {
-                    string postString = GetSelectedString();
-
-                    if (postString != null && postString.Length > 0)
-                    {
-                        Posting(postString);
-                    }
+                    CopySelected();
                 }
                 else if (e.Key == Key.X)
                 {
@@ -221,6 +211,59 @@ namespace KCad
             NewLine();
 
             UpdateView();
+
+            SetContextMenu();
+        }
+
+        private void CopySelected()
+        {
+            string copyString = GetSelectedString();
+
+            if (copyString == null || copyString.Length == 0)
+            {
+                return;
+            }
+
+            Clipboard.SetDataObject(copyString, true);
+        }
+
+        private void SetContextMenu()
+        {
+            ContextMenu = new ContextMenu();
+
+            ContextMenu.BorderBrush = Brushes.Black;
+            ContextMenu.Padding = new Thickness(0, 1, 0, 1);
+
+            MenuItem menuItem = new MenuItem();
+            menuItem.Header = "Copy";
+            menuItem.Foreground = Brushes.White;
+
+            menuItem.Click += (obj, args) =>
+            {
+                CopySelected();
+            };
+
+            menuItem.MouseEnter += (sender, e) =>
+            {
+                menuItem.Foreground = Brushes.Black;
+            };
+
+            menuItem.MouseLeave += (sender, e) =>
+            {
+                menuItem.Foreground = Brushes.White;
+            };
+
+            ContextMenu.Items.Add(menuItem);
+        }
+
+        private void RemoveContextMenu()
+        {
+            if (ContextMenu != null)
+            {
+                ContextMenu.IsOpen = false;
+            }
+
+            ContextMenu = null;
         }
 
         //
@@ -232,12 +275,14 @@ namespace KCad
         {
             Point p = e.GetPosition(this);
 
-            TextPos tp = PointToTextPos(p);
-
-            Sel.Reset();
-
-            RawSel.Start(tp.Row, tp.Col);
-            Selecting = true;
+            if (e.ClickCount == 1)
+            {
+                StartSelect(p);
+            }
+            else if (e.ClickCount == 2)
+            {
+                SelectWord(p);
+            }
 
             UpdateView();
 
@@ -247,6 +292,53 @@ namespace KCad
             }
 
             base.OnMouseDown(e);
+        }
+
+        protected void StartSelect(Point p)
+        {
+            TextPos tp = PointToTextPos(p);
+
+            Sel.Reset();
+
+            RawSel.Start(tp.Row, tp.Col);
+            Selecting = true;
+        }
+
+        private Regex WordRegex = new Regex(@"([^ \t,:=/\\]+)");
+
+        protected void SelectWord(Point p)
+        {
+            TextPos tp = PointToTextPos(p);
+            Sel.Reset();
+
+            if (tp.Row >= mList.Count)
+            {
+                return;
+            }
+
+            TextLine item = mList[tp.Row];
+
+            if (tp.Col >= item.Data.Length)
+            {
+                return;
+            }
+
+            MatchCollection matches = WordRegex.Matches(item.Data);
+
+            foreach (Match match in matches)
+            {
+                int sp = match.Index;
+                int ep = match.Index + match.Length - 1;
+
+                if (tp.Col >= sp && tp.Col <= ep)
+                {
+                    Sel.SP.Row = tp.Row;
+                    Sel.SP.Col = sp;
+                    Sel.EP.Row = tp.Row;
+                    Sel.EP.Col = ep;
+                    break;
+                }
+            }
         }
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
@@ -277,7 +369,6 @@ namespace KCad
             TextPos tp = new TextPos();
 
             int row = (int)(p.Y / mLineHeight);
-            int col = (int)((p.X - mTextLeftMargin) / CW);
 
             row = Math.Min(row, mList.Count - 1);
 
@@ -286,12 +377,104 @@ namespace KCad
                 row = 0;
             }
 
+            int col = PointToTextCol(p.X - mTextLeftMargin, mList[row].Data, CW, CW*2);
+
             tp.Row = row;
             tp.Col = col;
 
             return tp;
         }
 
+        protected static int PointToTextCol(double x, string s, double cw, double cwf)
+        {
+            //return (int)(x / cw);
+
+            int col = -1;
+
+            double p = 0;
+
+            int i = 0;
+            for (;i<s.Length;i++)
+            {
+                char c = s[i];
+
+                if (IsHankaku(c))
+                {
+                    p += cw;
+                }
+                else
+                {
+                    p += cwf;
+                }
+
+                if (p >= x)
+                {
+                    col = i;
+                    break;
+                }
+            }
+
+            if (col == -1)
+            {
+                col = s.Length - 1 + (int)((x - p) / cw);
+            }
+
+            return col;
+        }
+
+        protected static double TextColToPoint(int col, string s, double cw, double cwf)
+        {
+            //return (col + 1) * cw;
+
+            double w = 0;
+
+            if (col < 0)
+            {
+                return 0;
+            }
+
+            int endCol = s.Length - 1;
+
+            int e = Math.Min(col, endCol);
+            int i = 0;
+
+            for (; i <= e; i++)
+            {
+                char c = s[i];
+
+                if (IsHankaku(c))
+                {
+                    w += cw;
+                }
+                else
+                {
+                    w += cwf;
+                }
+            }
+
+            if (col > endCol)
+            {
+                w += cw * (col - endCol);
+            }
+
+            return w;
+        }
+
+        protected static bool IsHankaku(char c)
+        {
+            if ((c <= '\u007e') || // 英数字
+                (c == '\u00a5') || // \記号
+                (c == '\u203e') || // ~記号
+                (c >= '\uff61' && c <= '\uff9f') // 半角カナ
+            )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
@@ -490,6 +673,8 @@ namespace KCad
 
             double rangeY = offset + dispHeight;
 
+            //DOut.pl($"sr:{Sel.SP.Row} sc:{Sel.SP.Col} - er:{Sel.EP.Row} ec:{Sel.EP.Col}");
+
             while (p.Y < rangeY)
             {
                 if (n >= mList.Count)
@@ -550,8 +735,13 @@ namespace KCad
 
                 TextSpan ts = Sel.GetRowSpan(row, mList[row].Data.Length);
 
-                r.X = ts.Start * CW + mTextLeftMargin;
-                r.Width = ts.Len * CW;
+                DOut.pl($"row:{row} ts.Start:{ts.Start} ts.Len{ts.Len}");
+
+                double sp = TextColToPoint(ts.Start - 1, mList[row].Data, CW, CW*2);
+                double ep = TextColToPoint(ts.Start + ts.Len - 1, mList[row].Data, CW, CW * 2);
+
+                r.X = sp + mTextLeftMargin;
+                r.Width = ep - sp;
 
                 dc.PushOpacity(mSelectedBackgroundOpacity);
                 dc.DrawRectangle(mSelectedBackground, null, r);
@@ -562,9 +752,7 @@ namespace KCad
         protected Point RenderText(
             DrawingContext dc, TextAttr attr, string s, Point pt, int row, int col)
         {
-            Brush foreground;
-
-            foreground = Esc.Palette[attr.FColor];
+            Brush foreground = Esc.Palette[attr.FColor];
 
             FormattedText ft = GetFormattedText(s, foreground);
 
@@ -572,9 +760,7 @@ namespace KCad
             pt2.X += ft.WidthIncludingTrailingWhitespace; // 末尾のspaceも含む幅
             pt2.Y += mLineHeight;
 
-            Brush background;
-
-            background = Esc.Palette[attr.BColor];
+            Brush background = Esc.Palette[attr.BColor];
 
             dc.DrawRectangle(background, null, new Rect(pt, pt2));
 

@@ -43,20 +43,11 @@ namespace KCad
 
             RunTextCommandButton.Click += RunTextCommandButtonClicked;
 
-            MyConsole.Posting = ConsolePosting;
-
             SetupDataContext();
 
             InitWindowChrome();
 
             InitPopup();
-        }
-
-        private void ConsolePosting(string s)
-        {
-            string[] del = { "\n" };
-            string[] lines = s.Split(del, StringSplitOptions.None);
-            textCommand.Text = lines[0].Trim();
         }
 
         private void SetupDebugConsole()

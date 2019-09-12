@@ -847,8 +847,6 @@ namespace Plotter.Controller
 
         public void CreateBitmap(int w, int h, uint argb, int lineW, string fname)
         {
-            // TODO tdcのスケーリングがおかしいので直す必要がある
-
             DrawContext dc = Controller.CurrentDC;
 
             CadObjectDB db = Controller.DB;
