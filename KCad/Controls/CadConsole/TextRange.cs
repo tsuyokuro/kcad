@@ -99,12 +99,12 @@
             if (row == SP.Row && row == EP.Row)
             {
                 r.Start = SP.Col;
-                r.Len = EP.Col - SP.Col;
+                r.Len = EP.Col - SP.Col + 1;
             }
             else if (row > SP.Row && row == EP.Row)
             {
                 r.Start = 0;
-                r.Len = EP.Col;
+                r.Len = EP.Col + 1;
             }
             else if (row < EP.Row && row == SP.Row)
             {

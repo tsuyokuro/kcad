@@ -328,7 +328,7 @@ namespace KCad
             foreach (Match match in matches)
             {
                 int sp = match.Index;
-                int ep = match.Index + match.Length;
+                int ep = match.Index + match.Length - 1;
 
                 if (tp.Col >= sp && tp.Col <= ep)
                 {
@@ -369,7 +369,6 @@ namespace KCad
             TextPos tp = new TextPos();
 
             int row = (int)(p.Y / mLineHeight);
-            int col = (int)((p.X - mTextLeftMargin) / CW);
 
             row = Math.Min(row, mList.Count - 1);
 
@@ -378,12 +377,104 @@ namespace KCad
                 row = 0;
             }
 
+            int col = PointToTextCol(p.X - mTextLeftMargin, mList[row].Data, CW, CW*2);
+
             tp.Row = row;
             tp.Col = col;
 
             return tp;
         }
 
+        protected static int PointToTextCol(double x, string s, double cw, double cwf)
+        {
+            //return (int)(x / cw);
+
+            int col = -1;
+
+            double p = 0;
+
+            int i = 0;
+            for (;i<s.Length;i++)
+            {
+                char c = s[i];
+
+                if (IsHankaku(c))
+                {
+                    p += cw;
+                }
+                else
+                {
+                    p += cwf;
+                }
+
+                if (p >= x)
+                {
+                    col = i;
+                    break;
+                }
+            }
+
+            if (col == -1)
+            {
+                col = s.Length - 1 + (int)((x - p) / cw);
+            }
+
+            return col;
+        }
+
+        protected static double TextColToPoint(int col, string s, double cw, double cwf)
+        {
+            //return (col + 1) * cw;
+
+            double w = 0;
+
+            if (col < 0)
+            {
+                return 0;
+            }
+
+            int endCol = s.Length - 1;
+
+            int e = Math.Min(col, endCol);
+            int i = 0;
+
+            for (; i <= e; i++)
+            {
+                char c = s[i];
+
+                if (IsHankaku(c))
+                {
+                    w += cw;
+                }
+                else
+                {
+                    w += cwf;
+                }
+            }
+
+            if (col > endCol)
+            {
+                w += cw * (col - endCol);
+            }
+
+            return w;
+        }
+
+        protected static bool IsHankaku(char c)
+        {
+            if ((c <= '\u007e') || // 英数字
+                (c == '\u00a5') || // \記号
+                (c == '\u203e') || // ~記号
+                (c >= '\uff61' && c <= '\uff9f') // 半角カナ
+            )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
@@ -582,6 +673,8 @@ namespace KCad
 
             double rangeY = offset + dispHeight;
 
+            //DOut.pl($"sr:{Sel.SP.Row} sc:{Sel.SP.Col} - er:{Sel.EP.Row} ec:{Sel.EP.Col}");
+
             while (p.Y < rangeY)
             {
                 if (n >= mList.Count)
@@ -642,8 +735,13 @@ namespace KCad
 
                 TextSpan ts = Sel.GetRowSpan(row, mList[row].Data.Length);
 
-                r.X = ts.Start * CW + mTextLeftMargin;
-                r.Width = ts.Len * CW;
+                DOut.pl($"row:{row} ts.Start:{ts.Start} ts.Len{ts.Len}");
+
+                double sp = TextColToPoint(ts.Start - 1, mList[row].Data, CW, CW*2);
+                double ep = TextColToPoint(ts.Start + ts.Len - 1, mList[row].Data, CW, CW * 2);
+
+                r.X = sp + mTextLeftMargin;
+                r.Width = ep - sp;
 
                 dc.PushOpacity(mSelectedBackgroundOpacity);
                 dc.DrawRectangle(mSelectedBackground, null, r);

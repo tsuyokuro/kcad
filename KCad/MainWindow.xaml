@@ -722,10 +722,10 @@
                                 Focusable="True"
                                 FontFamily="Fonts/mplus-1m-light.ttf#M+ 1m light"
                                 Foreground="#FFAAAAAA"
-                                LineHeight="20"
+                                LineHeight="19"
                                 SnapsToDevicePixels="True"
                                 TextOptions.TextFormattingMode="Display"
-                                TextSize="13" />
+                                TextSize="16" />
 
                         </ScrollViewer>
                         <Grid Grid.Row="1" Height="auto">
