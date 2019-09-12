@@ -324,10 +324,6 @@ namespace HalfEdgeNS
 
         public FlexArray<int> GetOuterEdge()
         {
-            // TODO 全てのHalfEdgeをチェックしているので遅い
-            // HalfEdgeのリンクをたどる方式にいづれ変更する必要がある
-
-
             // Pairを持たないHalfEdgeのリストを作成
             List<HalfEdge> heList = new List<HalfEdge>();
             
