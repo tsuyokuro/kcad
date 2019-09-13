@@ -194,6 +194,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\CadConsole\AnsiEsc.cs" />
+    <Compile Include="Controls\CadConsole\RingBuffer.cs" />
     <Compile Include="Controls\CadConsole\TextLine.cs" />
     <Compile Include="Controls\CadConsole\TextRange.cs" />
     <Compile Include="Controls\PopupEx.cs" />

@@ -1,6 +1,5 @@
 ﻿using Plotter;
 using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,8 +28,6 @@ namespace KCad
         protected double mTextSize = 10.0;
 
         protected double mIndentSize = 8.0;
-
-        protected int mMaxLine = 200;
 
         protected int mTopIndex = 0;
 
@@ -85,21 +82,6 @@ namespace KCad
             set => mLineHeight = value;
         }
 
-        public int MaxLine
-        {
-            set
-            {
-                mMaxLine = value;
-
-                if (mList.Count > mMaxLine)
-                {
-                    mList.RemoveRange(0, mList.Count - mMaxLine);
-                }
-            }
-
-            get => mMaxLine;
-        }
-
         public FontFamily FontFamily
         {
             get => mFontFamily;
@@ -110,7 +92,7 @@ namespace KCad
 
         protected ScrollViewer Scroll;
 
-        protected List<TextLine> mList = new List<TextLine>();
+        protected RingBuffer<TextLine> mList = new RingBuffer<TextLine>(); 
 
         protected AnsiEsc Esc = new AnsiEsc();
 
@@ -131,6 +113,8 @@ namespace KCad
 
         public CadConsoleView()
         {
+            mList.CreateBuffer(200);
+
             Focusable = true;
 
             Loaded += CadConsoleView_Loaded;
@@ -551,10 +535,10 @@ namespace KCad
             var line = new TextLine(DefaultAttr);
             mList.Add(line);
 
-            while (mList.Count > mMaxLine)
-            {
-                mList.RemoveAt(0);
-            }
+            //while (mList.Count > mMaxLine)
+            //{
+            //    mList.RemoveAt(0);
+            //}
 
             if (prevCnt != mList.Count)
             {
@@ -735,7 +719,7 @@ namespace KCad
 
                 TextSpan ts = Sel.GetRowSpan(row, mList[row].Data.Length);
 
-                DOut.pl($"row:{row} ts.Start:{ts.Start} ts.Len{ts.Len}");
+                //DOut.pl($"row:{row} ts.Start:{ts.Start} ts.Len{ts.Len}");
 
                 double sp = TextColToPoint(ts.Start - 1, mList[row].Data, CW, CW*2);
                 double ep = TextColToPoint(ts.Start + ts.Len - 1, mList[row].Data, CW, CW * 2);

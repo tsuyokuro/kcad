@@ -47,9 +47,14 @@ namespace Plotter.Controller
             }
         }
 
-        public void PutMsg(string s)
+        public void Println(string s)
         {
             ItConsole.println(s);
+        }
+
+        public void Print(string s)
+        {
+            ItConsole.print(s);
         }
 
         public void CursorAngleX(double d)
