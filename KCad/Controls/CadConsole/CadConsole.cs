@@ -105,6 +105,8 @@ namespace KCad
 
         protected double CW = 1;
 
+        protected double CWF = 2;
+
         protected double CH = 1;
 
         private TextRange RawSel = new TextRange();
@@ -187,16 +189,25 @@ namespace KCad
 
             CurrentAttr = DefaultAttr;
 
-            FormattedText ft = GetFormattedText("A", mForeground);
-
-            CW = ft.Width;
-            CH = ft.Height;
+            RecalcCharSize();
 
             NewLine();
 
             UpdateView();
 
             SetContextMenu();
+        }
+
+        private void RecalcCharSize()
+        {
+            FormattedText ft = GetFormattedText("A", mForeground);
+
+            CW = ft.Width;
+            CH = ft.Height;
+
+            ft = GetFormattedText("漢", mForeground);
+
+            CWF = ft.Width;
         }
 
         private void CopySelected()
@@ -328,6 +339,7 @@ namespace KCad
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             Selecting = false;
+            //DOut.pl($"Sel.IsValid:{Sel.IsValid}");
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -361,7 +373,7 @@ namespace KCad
                 row = 0;
             }
 
-            int col = PointToTextCol(p.X - mTextLeftMargin, mList[row].Data, CW, CW*2);
+            int col = PointToTextCol(p.X - mTextLeftMargin, mList[row].Data, CW, CWF);
 
             tp.Row = row;
             tp.Col = col;
@@ -721,8 +733,8 @@ namespace KCad
 
                 //DOut.pl($"row:{row} ts.Start:{ts.Start} ts.Len{ts.Len}");
 
-                double sp = TextColToPoint(ts.Start - 1, mList[row].Data, CW, CW*2);
-                double ep = TextColToPoint(ts.Start + ts.Len - 1, mList[row].Data, CW, CW * 2);
+                double sp = TextColToPoint(ts.Start - 1, mList[row].Data, CW, CWF);
+                double ep = TextColToPoint(ts.Start + ts.Len - 1, mList[row].Data, CW, CWF);
 
                 r.X = sp + mTextLeftMargin;
                 r.Width = ep - sp;
