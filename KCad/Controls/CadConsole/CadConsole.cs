@@ -11,21 +11,22 @@ namespace KCad
 {
     public partial class CadConsoleView : FrameworkElement
     {
-        protected FontFamily mFontFamily = new FontFamily("ＭＳ ゴシック");
+        protected FontFamily mFontFamily = null;
+
+        protected double mFontSize = 10.0;
 
         protected Typeface mTypeface;
+
 
         protected Brush mForeground = Brushes.Black;
 
         protected Brush mBackground = Brushes.White;
 
-        protected Brush mSelectedBackground = Brushes.White;
+        protected Brush mSelectedBackground = Brushes.LightPink;
 
         protected double mSelectedBackgroundOpacity = 0.2;
 
         protected double mLineHeight = 14.0;
-
-        protected double mTextSize = 10.0;
 
         protected double mIndentSize = 8.0;
 
@@ -60,12 +61,6 @@ namespace KCad
             set => mSelectedBackgroundOpacity = value;
         }
 
-        public double TextSize
-        {
-            get => mTextSize;
-            set => mTextSize = value;
-        }
-
         public double TextLeftMargin
         {
             get => mTextLeftMargin;
@@ -85,7 +80,22 @@ namespace KCad
         public FontFamily FontFamily
         {
             get => mFontFamily;
-            set => mFontFamily = value;
+            set
+            {
+                mFontFamily = value;
+                mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.UltraLight, FontStretches.Normal);
+                RecalcCharaSize();
+            }
+        }
+
+        public double FontSize
+        {
+            get => mFontSize;
+            set
+            {
+                mFontSize = value;
+                RecalcCharaSize();
+            }
         }
 
         #endregion
@@ -167,7 +177,10 @@ namespace KCad
         {
             mIsLoaded = true;
 
-            mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.UltraLight, FontStretches.Normal);
+            if (FontFamily == null)
+            {
+                FontFamily = new FontFamily("ＭＳ ゴシック");
+            }
 
             FrameworkElement parent = (FrameworkElement)Parent;
 
@@ -189,7 +202,7 @@ namespace KCad
 
             CurrentAttr = DefaultAttr;
 
-            RecalcCharSize();
+            RecalcCharaSize();
 
             NewLine();
 
@@ -198,16 +211,36 @@ namespace KCad
             SetContextMenu();
         }
 
-        private void RecalcCharSize()
+        private void RecalcCharaSize()
         {
+            if (mTypeface == null)
+            {
+                return;
+            }
+
             FormattedText ft = GetFormattedText("A", mForeground);
 
-            CW = ft.Width;
-            CH = ft.Height;
+            if (ft != null)
+            {
+                CW = ft.Width;
+                CH = ft.Height;
 
-            ft = GetFormattedText("漢", mForeground);
-
-            CWF = ft.Width;
+                FormattedText ftk = GetFormattedText("漢", mForeground);
+                if (ftk != null)
+                {
+                    CWF = ftk.Width;
+                }
+                else
+                {
+                    CWF = CW * 2;
+                }
+            }
+            else
+            {
+                CW = 1;
+                CH = 1;
+                CWF = 1;
+            }
         }
 
         private void CopySelected()
@@ -653,7 +686,7 @@ namespace KCad
 
             long topNumber = (long)offset / (long)mLineHeight;
 
-            double textOffset = (mLineHeight - mTextSize) / 2.0 - 3;
+            double textOffset = (mLineHeight - mFontSize) / 2.0 - 3;
 
             p.X = 0;
             p.Y = mLineHeight * topNumber;
@@ -776,7 +809,7 @@ namespace KCad
                                                       System.Globalization.CultureInfo.CurrentCulture,
                                                       FlowDirection.LeftToRight,
                                                       mTypeface,
-                                                      mTextSize,
+                                                      mFontSize,
                                                       brush,
                                                       VisualTreeHelper.GetDpi(this).PixelsPerDip);
             return formattedText;

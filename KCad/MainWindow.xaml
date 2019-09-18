@@ -720,12 +720,13 @@
                                 VerticalAlignment="Top"
                                 Background="{StaticResource MsgBGColor}"
                                 Focusable="True"
+                                FontSize="14"
                                 FontFamily="Fonts/mplus-1m-light.ttf#M+ 1m light"
                                 Foreground="#FFAAAAAA"
                                 LineHeight="17"
                                 SnapsToDevicePixels="True"
                                 TextOptions.TextFormattingMode="Display"
-                                TextSize="14" />
+                                />
 
                         </ScrollViewer>
                         <Grid Grid.Row="1" Height="auto">
