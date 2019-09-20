@@ -12,9 +12,8 @@ namespace Plotter
 
         public static String space = "";
 
-        public static PrintFunc PrintFunc = Console.Write;
-        public static PrintFunc PrintLnFunc = Console.WriteLine;
-        public static FormatPrintFunc FormatPrintFunc = Console.Write;
+        public static PrintFunc PrintFunc = (s)=> { };
+        public static PrintFunc PrintLnFunc = (s)=> { };
 
         public static Mutex Lock = new Mutex();
 
@@ -82,15 +81,6 @@ namespace Plotter
             Begin();
             PutCount++;
             PrintLnFunc(dt.ToString("HH:mm:ss.fff") + " " + space + s);
-            End();
-        }
-
-        // Format print without new line
-        public static void pf(String format, params object[] args)
-        {
-            Begin();
-            PutCount++;
-            FormatPrintFunc(space + format, args);
             End();
         }
     }

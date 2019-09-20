@@ -345,7 +345,7 @@ namespace Plotter.Controller
             Session.AddOpe(opeList);
 
             ItConsole.println(
-                global::KCad.Properties.Resources.notice_was_ungrouped
+                KCad.Properties.Resources.notice_was_ungrouped
                 );
 
             Session.PostRemakeTreeView();

@@ -15,6 +15,7 @@
 #define USE_CONSOLE
 //#define USE_CONSOL_INPUT
 
+using KCad.Util;
 using Plotter;
 using Plotter.Serializer;
 using System;
@@ -41,6 +42,8 @@ namespace KCad
 #else
         public const bool UseConsole = false;
 #endif
+
+        private DebugClient DClient;
 
         public static App GetCurrent()
         {
@@ -143,6 +146,12 @@ namespace KCad
         {
             base.OnStartup(e);
 
+            SplashWindow = new MySplashWindow();
+            SplashWindow.Show();
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
 #if USE_CONSOLE
             WinAPI.AllocConsole();
             Console.WriteLine("App OnStartup USE_CONSOLE");
@@ -159,18 +168,14 @@ namespace KCad
 
             OpenTK.Toolkit.Init();
 
-            SplashWindow = new MySplashWindow();
-            SplashWindow.Show();
-
-            Stopwatch sw = new Stopwatch();
-                       
-            sw.Start();
-
             // MessagePack for C# は、初回の実行が遅いので、起動時にダミーを実行して
             // 紛れさせる
             MpInitializer.Init();
 
             MainWindow = new MainWindow();
+
+            SetupDebugConsole();
+
             MainWindow.Show();
 
             sw.Stop();
@@ -180,6 +185,34 @@ namespace KCad
             SplashWindow.Close();
             SplashWindow = null;
         }
+
+        private void SetupDebugConsole()
+        {
+            if (UseConsole)
+            {
+                DOut.PrintFunc = Console.Write;
+                DOut.PrintLnFunc = Console.WriteLine;
+
+                DOut.pl("DOut's output setting is Console");
+
+                //DClient = new DebugClient();
+
+                ////if (DClient.IsValid)
+                //{
+                //    DOut.PrintFunc = DClient.Write;
+                //    DOut.PrintLnFunc = DClient.WriteLine;
+
+                //    DOut.pl("DOut's output setting is DebugServer");
+                //}
+            }
+            else
+            {
+                MainWindow wnd = (MainWindow)MainWindow;
+                DOut.PrintFunc = wnd.GetBuiltinConsole().Print;
+                DOut.PrintLnFunc = wnd.GetBuiltinConsole().PrintLn;
+            }
+        }
+
 
         // e.g. ReadResourceText("/Shader/font_fragment.shader")
         public static string ReadResourceText(string path)

@@ -1,4 +1,5 @@
-﻿using Plotter;
+﻿using KCad.Util;
+using Plotter;
 using Plotter.Controller;
 using System;
 using System.Threading;
@@ -22,7 +23,6 @@ namespace KCad
         {
             InitializeComponent();
 
-            SetupDebugConsole();
             SetupInteractionConsole();
 
             ViewModel = new PlotterViewModel(this);
@@ -50,20 +50,9 @@ namespace KCad
             InitPopup();
         }
 
-        private void SetupDebugConsole()
+        public CadConsoleView GetBuiltinConsole()
         {
-            if (App.UseConsole)
-            {
-                // DOutの出力はデフォルトでConsoleになっているので、UseConsoleの場合は、
-                // あらためて設定する必要はない
-                DOut.pl("DOut's output setting is Console");
-            }
-            else
-            {
-                DOut.PrintFunc = MyConsole.Print;
-                DOut.PrintLnFunc = MyConsole.PrintLn;
-                DOut.FormatPrintFunc = MyConsole.Printf;
-            }
+            return MyConsole;
         }
 
         private void SetupInteractionConsole()
