@@ -341,7 +341,7 @@ namespace Plotter
 
             foreach (MenuInfo.Item item in menuInfo.Items)
             {
-                ToolStripMenuItem m = new ToolStripMenuItem(item.DefaultText);
+                ToolStripMenuItem m = new ToolStripMenuItem(item.Text);
                 m.Tag = item;
                 m.Click += ContextMenueClick;
 

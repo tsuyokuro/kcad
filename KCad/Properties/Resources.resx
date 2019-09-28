@@ -139,6 +139,9 @@
   <data name="faile_title" xml:space="preserve">
     <value>Failed</value>
   </data>
+  <data name="menu_copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
   <data name="menu_doc_settings" xml:space="preserve">
     <value>Document settings ...</value>
   </data>
@@ -151,11 +154,17 @@
   <data name="menu_edit" xml:space="preserve">
     <value>Edit</value>
   </data>
+  <data name="menu_end_create" xml:space="preserve">
+    <value>End create</value>
+  </data>
   <data name="menu_file" xml:space="preserve">
     <value>File</value>
   </data>
   <data name="menu_fill_mesh" xml:space="preserve">
     <value>Fill mesh</value>
+  </data>
+  <data name="menu_insert_point" xml:space="preserve">
+    <value>Insert point</value>
   </data>
   <data name="menu_load" xml:space="preserve">
     <value>Load</value>
@@ -166,8 +175,14 @@
   <data name="menu_page_settings" xml:space="preserve">
     <value>Page settings ...</value>
   </data>
+  <data name="menu_paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
   <data name="menu_print" xml:space="preserve">
     <value>Print</value>
+  </data>
+  <data name="menu_quit_create" xml:space="preserve">
+    <value>Quit create</value>
   </data>
   <data name="menu_save" xml:space="preserve">
     <value>Save</value>
@@ -186,6 +201,9 @@
   </data>
   <data name="menu_sttings" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="menu_to_loop" xml:space="preserve">
+    <value>To loop</value>
   </data>
   <data name="notice_operation_success" xml:space="preserve">
     <value>Operation success</value>
