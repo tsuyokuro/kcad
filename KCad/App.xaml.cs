@@ -15,13 +15,19 @@
 #define USE_CONSOLE
 //#define USE_CONSOL_INPUT
 
+// 強制的にリソース文字列をUSにする
+// Force resource string to US
+//#define FORCE_US
+
 using KCad.Util;
 using Plotter;
 using Plotter.Serializer;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Resources;
@@ -62,11 +68,12 @@ namespace KCad
 
         public App()
         {
-            //CultureInfo ci = new CultureInfo("en-US");
-            //Thread.CurrentThread.CurrentCulture = ci;
-            //Thread.CurrentThread.CurrentUICulture = ci;
-
-            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+#if FORCE_US
+            CultureInfo ci = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = ci;
+            Thread.CurrentThread.CurrentUICulture = ci;
+#endif
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
             AppDomain currentDomain = AppDomain.CurrentDomain;
