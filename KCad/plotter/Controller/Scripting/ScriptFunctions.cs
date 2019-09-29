@@ -8,7 +8,7 @@ using HalfEdgeNS;
 using CarveWapper;
 using MeshUtilNS;
 using MeshMakerNS;
-using KCad;
+using KCad.Controls;
 using static Plotter.CadFigure;
 using LibiglWrapper;
 using GLUtil;

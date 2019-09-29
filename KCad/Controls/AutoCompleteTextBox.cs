@@ -9,7 +9,7 @@ using System.Windows;
 using System.Text.RegularExpressions;
 using Plotter;
 
-namespace KCad
+namespace KCad.Controls
 {
     public class AutoCompleteTextBox : TextBox
     {

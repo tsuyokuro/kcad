@@ -11,7 +11,7 @@ using HalfEdgeNS;
 using CarveWapper;
 using MeshMakerNS;
 using SplineCurve;
-using KCad;
+using KCad.Controls;
 using Plotter.Serializer;
 using MessagePack;
 using Newtonsoft.Json.Linq;

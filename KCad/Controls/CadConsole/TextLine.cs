@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace KCad
+namespace KCad.Controls
 {
     public struct TextAttr
     {

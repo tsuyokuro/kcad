@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Media;
 
-namespace KCad
+namespace KCad.Controls
 {
     public abstract class CadObjTreeItem
     {

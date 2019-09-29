@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Drawing;
 using KCad;
+using KCad.Controls;
 using System.Drawing.Printing;
 using Plotter.Controller;
 using Plotter.Settings;

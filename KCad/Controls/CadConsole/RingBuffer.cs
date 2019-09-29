@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace KCad
+namespace KCad.Controls
 {
     public class RingBuffer<T>
     {

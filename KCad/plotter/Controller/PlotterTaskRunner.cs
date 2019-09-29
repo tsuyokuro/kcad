@@ -1,5 +1,5 @@
 ﻿using CadDataTypes;
-using KCad;
+using KCad.Controls;
 using KCad.Dialogs;
 using OpenTK;
 using System;

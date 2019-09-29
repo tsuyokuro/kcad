@@ -194,6 +194,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\CadConsole\AnsiEsc.cs" />
+    <Compile Include="Controls\CadConsole\CadConsoleRes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CadConsoleRes.resx</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CadConsole\RingBuffer.cs" />
     <Compile Include="Controls\CadConsole\TextLine.cs" />
     <Compile Include="Controls\CadConsole\TextRange.cs" />
@@ -454,6 +459,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Controls\CadConsole\CadConsoleRes.ja.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CadConsoleRes.ja.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\CadConsole\CadConsoleRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CadConsoleRes.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>KCad.Controls.CadConsole</CustomToolNamespace>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.ja.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

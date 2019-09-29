@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:KCad"
+    xmlns:cc="clr-namespace:KCad.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pl="clr-namespace:Plotter"
     xmlns:properties="clr-namespace:KCad.Properties"
@@ -132,7 +133,7 @@
             <RowDefinition Height="100*" />
         </Grid.RowDefinitions>
 
-        <local:PopupEx
+        <cc:PopupEx
             x:Name="PopupMessage"
             Focusable="false"
             IsOpen="False"
@@ -159,7 +160,7 @@
                         VerticalAlignment="Center" />
                 </StackPanel>
             </Border>
-        </local:PopupEx>
+        </cc:PopupEx>
 
         <!--  Caption area  -->
         <Grid
@@ -715,7 +716,7 @@
                             Style="{StaticResource CustomScrollViewerStyle}"
                             VerticalScrollBarVisibility="Auto">
 
-                            <local:CadConsoleView
+                            <cc:CadConsoleView
                                 x:Name="MyConsole"
                                 VerticalAlignment="Top"
                                 Background="{StaticResource MsgBGColor}"
@@ -745,7 +746,7 @@
                                     Tag="run_text_command" />
                             </Border>
 
-                            <local:AutoCompleteTextBox
+                            <cc:AutoCompleteTextBox
                                 x:Name="textCommand"
                                 Grid.Column="1"
                                 Padding="2,2,2,2"
@@ -930,7 +931,7 @@
                                     Style="{StaticResource CustomScrollViewerStyle}"
                                     VerticalScrollBarVisibility="Visible">
 
-                                    <local:CadObjectTreeView
+                                    <cc:CadObjectTreeView
                                         x:Name="ObjTree"
                                         Height="0"
                                         HorizontalAlignment="Stretch"

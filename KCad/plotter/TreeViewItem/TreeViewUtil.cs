@@ -1,4 +1,4 @@
-﻿using KCad;
+﻿using KCad.Controls;
 
 namespace Plotter
 {

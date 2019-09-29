@@ -1,13 +1,12 @@
-﻿using Plotter;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-
-namespace KCad
+using KCad.Controls.CadConsole;
+namespace KCad.Controls
 {
     public partial class CadConsoleView : FrameworkElement
     {
@@ -263,7 +262,8 @@ namespace KCad
             ContextMenu.Padding = new Thickness(0, 1, 0, 1);
 
             MenuItem menuItem = new MenuItem();
-            menuItem.Header = "Copy";
+            //menuItem.Header = "Copy";
+            menuItem.Header = CadConsoleRes.menu_copy;
             menuItem.Foreground = Brushes.White;
 
             menuItem.Click += (obj, args) =>

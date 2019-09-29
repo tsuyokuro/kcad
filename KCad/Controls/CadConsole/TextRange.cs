@@ -1,4 +1,4 @@
-﻿namespace KCad
+﻿namespace KCad.Controls
 {
     public struct TextPos
     {
