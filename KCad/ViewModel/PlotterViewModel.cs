@@ -193,8 +193,34 @@ namespace Plotter
             return idx;
         }
 
-#endregion
+        public void ObjectTreeView_ItemCommand(CadObjTreeItem treeItem, string cmd)
+        {
+            if (treeItem is CadFigTreeItem)
+            {
+                CadFigTreeItem figItem = (CadFigTreeItem)treeItem;
 
+                CadFigure fig = figItem.Fig;
+
+                InputStringDialog dlg = new InputStringDialog();
+
+                dlg.Message = "Input figure name";
+
+                if (fig.Name != null)
+                {
+                    dlg.InputString = fig.Name;
+                }
+
+                bool? dlgRet = dlg.ShowDialog();
+
+                if (dlgRet.Value)
+                {
+                    fig.Name = dlg.InputString;
+                    UpdateTreeView(false);
+                }
+            }
+        }
+
+        #endregion
 
         ListBox mLayerListView;
 
@@ -355,6 +381,7 @@ namespace Plotter
                 if (mCadObjectTreeView != null)
                 {
                     mCadObjectTreeView.CheckChanged -= ObjectTreeView_CheckChanged;
+                    mCadObjectTreeView.ItemCommand -= ObjectTreeView_ItemCommand;
                 }
 
                 mCadObjectTreeView = value;
@@ -362,6 +389,7 @@ namespace Plotter
                 if (mCadObjectTreeView != null)
                 {
                     mCadObjectTreeView.CheckChanged += ObjectTreeView_CheckChanged;
+                    mCadObjectTreeView.ItemCommand += ObjectTreeView_ItemCommand;
                 }
             }
 

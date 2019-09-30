@@ -23,7 +23,7 @@ namespace Plotter
         {
             get
             {
-                return "LAYER:" + Layer.Name;
+                return $"ID:{Layer.ID} {Layer.Name}";
             }
         }
 

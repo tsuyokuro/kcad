@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace KCad.Controls
 {
     public abstract class CadObjTreeItem
     {
+        public class ContextMenuTag
+        {
+            public string Tag;
+            public CadObjTreeItem TreeItem;
+        }
+
         public bool IsExpand
         {
             get; set;
@@ -101,6 +108,19 @@ namespace KCad.Controls
             return cnt;
         }
 
+        protected ContextMenuTag CreateContextMenuTag(string tagText)
+        {
+            var tag = new ContextMenuTag();
+            tag.Tag = tagText;
+            tag.TreeItem = this;
+            return tag;
+        }
+
+        public virtual List<MenuItem> GetContextMenuItems()
+        {
+            return null;
+        }
+
         public bool ForEach(Func<CadObjTreeItem, bool> func)
         {
             if (!func(this))
@@ -130,6 +150,23 @@ namespace KCad.Controls
             }
 
             return true;
+        }
+
+        public void ForEachAll(Action<CadObjTreeItem> action)
+        {
+            action(this);
+
+            if (mChildren == null)
+            {
+                return;
+            }
+
+            int i;
+            for (i = 0; i < mChildren.Count; i++)
+            {
+                CadObjTreeItem item = mChildren[i];
+                item.ForEachAll(action);
+            }
         }
 
         public bool ForEach(Func<CadObjTreeItem, int, bool> func, int level)

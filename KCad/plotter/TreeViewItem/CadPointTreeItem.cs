@@ -41,10 +41,7 @@ namespace Plotter
                 if (Index >= 0 && Index < Fig.PointCount)
                 {
                     v = Fig.GetPointAt(Index);
-
-                    //return String.Format("{0, 7:F2},{1, 7:F2},{2, 7:F2}", v.x, v.y, v.z);
-
-                    return v.X.ToString("F2") + ", " + v.Y.ToString("F2") + ", " + v.Z.ToString("F2");
+                    return $"{v.X.ToString("F2")}, {v.Y.ToString("F2")}, {v.Z.ToString("F2")}";
                 }
 
                 return "removed";

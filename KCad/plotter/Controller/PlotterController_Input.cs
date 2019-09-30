@@ -381,7 +381,7 @@ namespace Plotter.Controller
 
         private void LButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
-            DOut.tpl($"LButtonDown ({x},{y})");
+            //DOut.tpl($"LButtonDown ({x},{y})");
 
             if (CursorLocked)
             {

@@ -203,6 +203,9 @@
     <Compile Include="Controls\CadConsole\TextLine.cs" />
     <Compile Include="Controls\CadConsole\TextRange.cs" />
     <Compile Include="Controls\PopupEx.cs" />
+    <Compile Include="Dialogs\InputStringDialog.xaml.cs">
+      <DependentUpon>InputStringDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GLUtil\FontFaceW.cs" />
     <Compile Include="GLUtil\FrameBufferW.cs" />
     <Compile Include="plotter\Controller\PlotterPrinter.cs" />
@@ -316,6 +319,10 @@
     <Compile Include="Controls\TreeView\CadObjTreeItem.cs" />
     <Compile Include="SplineCurve\NurbsSurface.cs" />
     <Compile Include="plotter\Util\ColorUtil.cs" />
+    <Page Include="Dialogs\InputStringDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\AngleInputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -1,5 +1,7 @@
 ﻿using KCad.Controls;
 using CadDataTypes;
+using System.Windows.Controls;
+using System.Collections.Generic;
 
 namespace Plotter
 {
@@ -27,11 +29,11 @@ namespace Plotter
             {
                 if (Fig.Name == null)
                 {
-                    return CadFigure.TypeName(Fig.Type) + " ID:" + Fig.ID.ToString();
+                    return $"ID:{Fig.ID} {CadFigure.TypeName(Fig.Type)}";
                 }
                 else
                 {
-                    return Fig.Name + " ID:" + Fig.ID.ToString();
+                    return $"ID:{Fig.ID} {Fig.Name}({CadFigure.TypeName(Fig.Type)})";
                 }
             }
         }
@@ -55,6 +57,19 @@ namespace Plotter
                 CadFigTreeItem pi = new CadFigTreeItem(c);
                 Add(pi);
             }
+        }
+
+        public override List<MenuItem> GetContextMenuItems()
+        {
+            List<MenuItem> list = new List<MenuItem>();
+
+            MenuItem menuItem = new MenuItem();
+            menuItem.Header = "Change name";
+            menuItem.Tag = CreateContextMenuTag("change_name");
+
+            list.Add(menuItem);
+
+            return list;
         }
 
         private void SelectAllPoints(bool sel)
