@@ -292,7 +292,7 @@ namespace Plotter
         }
     }
 
-    public struct DrawPen
+    public class DrawPen
     {
         public int ID;
 
@@ -357,7 +357,7 @@ namespace Plotter
         }
     }
 
-    public struct DrawBrush
+    public class DrawBrush
     {
         public int ID;
 
