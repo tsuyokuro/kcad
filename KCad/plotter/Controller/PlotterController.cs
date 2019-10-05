@@ -332,7 +332,7 @@ namespace Plotter.Controller
 
             DrawCrossCursor(dc);
 
-            Draw(dc);
+            DrawFigures(dc);
 
             DrawSelectedItems(dc);
 
@@ -360,7 +360,7 @@ namespace Plotter.Controller
             DrawGrid(dc);
         }
 
-        public void Draw(DrawContext dc)
+        protected void DrawFigures(DrawContext dc)
         {
             if (dc == null) return;
 
@@ -395,7 +395,7 @@ namespace Plotter.Controller
             }
         }
 
-        public void DrawGrid(DrawContext dc)
+        protected void DrawGrid(DrawContext dc)
         {
             if (SettingsHolder.Settings.SnapToGrid)
             {
@@ -403,7 +403,7 @@ namespace Plotter.Controller
             }
         }
 
-        public void DrawSelectedItems(DrawContext dc)
+        protected void DrawSelectedItems(DrawContext dc)
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
@@ -411,7 +411,7 @@ namespace Plotter.Controller
             }
         }
 
-        public void DrawLastPoint(DrawContext dc)
+        protected void DrawLastPoint(DrawContext dc)
         {
             dc.Drawing.DrawMarkCursor(
                 dc.GetPen(DrawTools.PEN_LAST_POINT_MARKER),
@@ -427,7 +427,7 @@ namespace Plotter.Controller
             }
         }
 
-        public void DrawDragLine(DrawContext dc)
+        protected void DrawDragLine(DrawContext dc)
         {
             if (State != States.DRAGING_POINTS)
             {
@@ -438,7 +438,7 @@ namespace Plotter.Controller
                 LastDownPoint, dc.DevPointToWorldPoint(CrossCursor.Pos));
         }
 
-        public void DrawCrossCursor(DrawContext dc)
+        protected void DrawCrossCursor(DrawContext dc)
         {
             dc.Drawing.DrawCrossCursorScrn(CrossCursor, dc.GetPen(DrawTools.PEN_CURSOR2));
 
@@ -451,7 +451,7 @@ namespace Plotter.Controller
             }
         }
 
-        public void DrawSelRect(DrawContext dc)
+        protected void DrawSelRect(DrawContext dc)
         {
             dc.Drawing.DrawRectScrn(
                 dc.GetPen(DrawTools.PEN_TEMP_FIGURE),
@@ -459,20 +459,17 @@ namespace Plotter.Controller
                 RubberBandScrnPoint1);
         }
 
-        public void DrawAllFigure(DrawContext dc)
+        public void DrawAllFigures(DrawContext dc)
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                if (!layer.Visible)
-                {
-                    continue;
-                }
+                if (!layer.Visible) continue;
 
                 dc.Drawing.Draw(layer.FigureList, dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE));
             }
         }
 
-        public void DrawAccordingState(DrawContext dc)
+        protected void DrawAccordingState(DrawContext dc)
         {
             switch (State)
             {
@@ -515,12 +512,12 @@ namespace Plotter.Controller
             }
         }
 
-        public void DrawHighlightPoint(DrawContext dc)
+        protected void DrawHighlightPoint(DrawContext dc)
         {
             dc.Drawing.DrawHighlightPoints(HighlightPointList);
         }
 
-        public void DrawExtendSnapPoint(DrawContext dc)
+        protected void DrawExtendSnapPoint(DrawContext dc)
         {
             dc.Drawing.DrawExtSnapPoints(ExtendSnapPointList, dc.GetPen(DrawTools.PEN_EXT_SNAP));
         }

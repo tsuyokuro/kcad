@@ -1592,7 +1592,7 @@ namespace Plotter.Controller
 
             dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
 
-            Controller.DrawAllFigure(dc);
+            Controller.DrawAllFigures(dc);
 
             dc.EndDraw();
 

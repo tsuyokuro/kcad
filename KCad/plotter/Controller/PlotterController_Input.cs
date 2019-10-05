@@ -611,7 +611,7 @@ namespace Plotter.Controller
 
         private void RButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
-            DrawAll(dc);
+            //DrawAll(dc);
             mContextMenuMan.RequestContextMenu(x, y);
         }
 
