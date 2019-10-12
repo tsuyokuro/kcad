@@ -21,9 +21,9 @@ namespace KCad.Controls
 
         protected Brush mBackground = Brushes.White;
 
-        protected Brush mSelectedBackground = Brushes.LightPink;
+        protected Brush mSelectedBackground = Brushes.GreenYellow;
 
-        protected double mSelectedBackgroundOpacity = 0.2;
+        protected double mSelectedBackgroundOpacity = 0.3;
 
         protected double mLineHeight = 14.0;
 
@@ -154,7 +154,7 @@ namespace KCad.Controls
             {
                 if (e.Key == Key.C || e.Key == Key.Insert)
                 {
-                    CopySelected();
+                    CopySelected(this, null);
                 }
                 else if (e.Key == Key.X)
                 {
@@ -242,7 +242,7 @@ namespace KCad.Controls
             }
         }
 
-        private void CopySelected()
+        private void CopySelected(Object obj, RoutedEventArgs args)
         {
             string copyString = GetSelectedString();
 
@@ -262,14 +262,19 @@ namespace KCad.Controls
             ContextMenu.Padding = new Thickness(0, 1, 0, 1);
 
             MenuItem menuItem = new MenuItem();
-            //menuItem.Header = "Copy";
-            menuItem.Header = CadConsoleRes.menu_copy;
-            menuItem.Foreground = Brushes.White;
 
-            menuItem.Click += (obj, args) =>
-            {
-                CopySelected();
-            };
+            menuItem.Header = CadConsoleRes.menu_copy;
+            menuItem.Click += CopySelected;
+
+            SetupMenuItem(menuItem);
+
+            ContextMenu.Items.Add(menuItem);
+        }
+
+        private void SetupMenuItem(MenuItem menuItem)
+        {
+            menuItem.Foreground = Brushes.White;
+            menuItem.BorderThickness = new Thickness(0, 0, 0, 0);
 
             menuItem.MouseEnter += (sender, e) =>
             {
@@ -280,8 +285,6 @@ namespace KCad.Controls
             {
                 menuItem.Foreground = Brushes.White;
             };
-
-            ContextMenu.Items.Add(menuItem);
         }
 
         private void RemoveContextMenu()

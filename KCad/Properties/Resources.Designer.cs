@@ -125,6 +125,15 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Change Figure Name ... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_change_fig_name {
+            get {
+                return ResourceManager.GetString("menu_change_fig_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Copy に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_copy {
@@ -364,6 +373,15 @@ namespace KCad.Properties {
         public static string string_degree {
             get {
                 return ResourceManager.GetString("string_degree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Input figure name に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string string_input_fig_name {
+            get {
+                return ResourceManager.GetString("string_input_fig_name", resourceCulture);
             }
         }
         

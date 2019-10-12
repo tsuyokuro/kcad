@@ -286,6 +286,7 @@ namespace KCad.Controls
         protected void SetupContextMenuItem(MenuItem menuItem)
         {
             menuItem.Foreground = Brushes.White;
+            menuItem.BorderThickness = new Thickness(0, 0, 0, 0);
 
             menuItem.Click -= ContextMenuClickHandler;
             menuItem.Click += ContextMenuClickHandler;

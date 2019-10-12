@@ -139,6 +139,9 @@
   <data name="faile_title" xml:space="preserve">
     <value>Failed</value>
   </data>
+  <data name="menu_change_fig_name" xml:space="preserve">
+    <value>Change Figure Name ...</value>
+  </data>
   <data name="menu_copy" xml:space="preserve">
     <value>Copy</value>
   </data>
@@ -219,6 +222,9 @@
   </data>
   <data name="string_degree" xml:space="preserve">
     <value>degree</value>
+  </data>
+  <data name="string_input_fig_name" xml:space="preserve">
+    <value>Input figure name</value>
   </data>
   <data name="string_magnification_rate" xml:space="preserve">
     <value>Magnification rate</value>

@@ -129,6 +129,9 @@
   <data name="error_select_2_points" xml:space="preserve">
     <value>Pointを2個選択してください</value>
   </data>
+  <data name="menu_change_fig_name" xml:space="preserve">
+    <value>図形の名前を変更</value>
+  </data>
   <data name="menu_copy" xml:space="preserve">
     <value>コピー</value>
   </data>
@@ -209,6 +212,9 @@
   </data>
   <data name="string_degree" xml:space="preserve">
     <value>度</value>
+  </data>
+  <data name="string_input_fig_name" xml:space="preserve">
+    <value>図形の名前を入力してください</value>
   </data>
   <data name="string_magnification_rate" xml:space="preserve">
     <value>拡大率</value>

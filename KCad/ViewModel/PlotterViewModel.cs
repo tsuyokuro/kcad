@@ -195,15 +195,20 @@ namespace Plotter
 
         public void ObjectTreeView_ItemCommand(CadObjTreeItem treeItem, string cmd)
         {
-            if (treeItem is CadFigTreeItem)
+            if (!(treeItem is CadFigTreeItem))
             {
-                CadFigTreeItem figItem = (CadFigTreeItem)treeItem;
+                return;
+            }
 
+            CadFigTreeItem figItem = (CadFigTreeItem)treeItem;
+
+            if (cmd == CadFigTreeItem.ITEM_CMD_CHANGE_NAME)
+            {
                 CadFigure fig = figItem.Fig;
 
                 InputStringDialog dlg = new InputStringDialog();
 
-                dlg.Message = "Input figure name";
+                dlg.Message = KCad.Properties.Resources.string_input_fig_name;
 
                 if (fig.Name != null)
                 {
