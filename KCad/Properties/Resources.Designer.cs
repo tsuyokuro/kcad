@@ -125,6 +125,24 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Change Figure Name ... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_change_fig_name {
+            get {
+                return ResourceManager.GetString("menu_change_fig_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Copy に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_copy {
+            get {
+                return ResourceManager.GetString("menu_copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Document settings ... に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_doc_settings {
@@ -161,6 +179,15 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   End create に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_end_create {
+            get {
+                return ResourceManager.GetString("menu_end_create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   File に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_file {
@@ -175,6 +202,15 @@ namespace KCad.Properties {
         public static string menu_fill_mesh {
             get {
                 return ResourceManager.GetString("menu_fill_mesh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Insert point に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_insert_point {
+            get {
+                return ResourceManager.GetString("menu_insert_point", resourceCulture);
             }
         }
         
@@ -206,11 +242,29 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Paste に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_paste {
+            get {
+                return ResourceManager.GetString("menu_paste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Print に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_print {
             get {
                 return ResourceManager.GetString("menu_print", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Quit create に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_quit_create {
+            get {
+                return ResourceManager.GetString("menu_quit_create", resourceCulture);
             }
         }
         
@@ -269,6 +323,15 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   To loop に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_to_loop {
+            get {
+                return ResourceManager.GetString("menu_to_loop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Operation success に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string notice_operation_success {
@@ -310,6 +373,15 @@ namespace KCad.Properties {
         public static string string_degree {
             get {
                 return ResourceManager.GetString("string_degree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Input figure name に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string string_input_fig_name {
+            get {
+                return ResourceManager.GetString("string_input_fig_name", resourceCulture);
             }
         }
         

@@ -1,4 +1,4 @@
-﻿using KCad;
+﻿using KCad.Controls;
 using System;
 
 namespace Plotter
@@ -23,7 +23,7 @@ namespace Plotter
         {
             get
             {
-                return "LAYER:" + Layer.Name;
+                return $"ID:{Layer.ID} {Layer.Name}";
             }
         }
 

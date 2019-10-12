@@ -1,7 +1,7 @@
 ﻿#define LOG_DEBUG
 
 using CadDataTypes;
-using KCad;
+using KCad.Controls;
 using OpenTK;
 using Plotter.Settings;
 using System;
@@ -381,6 +381,8 @@ namespace Plotter.Controller
 
         private void LButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
+            //DOut.tpl($"LButtonDown ({x},{y})");
+
             if (CursorLocked)
             {
                 x = CrossCursor.Pos.X;
@@ -609,7 +611,7 @@ namespace Plotter.Controller
 
         private void RButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
-            DrawAll(dc);
+            //DrawAll(dc);
             mContextMenuMan.RequestContextMenu(x, y);
         }
 

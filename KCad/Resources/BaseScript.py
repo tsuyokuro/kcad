@@ -357,7 +357,7 @@ def test():
 
 class MyConsoleOut:
 	def write(self, s):
-		SE.PutMsg(s)
+		SE.Print(s)
 
 cout = MyConsoleOut()
 

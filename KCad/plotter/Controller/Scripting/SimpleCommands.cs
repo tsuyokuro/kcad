@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace Plotter.Controller
@@ -23,8 +24,30 @@ namespace Plotter.Controller
             autoComps.Add("@dump dc");
             autoComps.Add("@dump fig");
             autoComps.Add("@dump layer");
+            autoComps.Add("@bench draw");
 
             return autoComps;
+        }
+
+        public void BenchDraw()
+        {
+            ItConsole.println("BenchDraw start");
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            int i = 0;
+            while (i<120)
+            {
+                ThreadUtil.RunOnMainThread(() =>
+                {
+                    Controller.PushDraw();
+                }, true);
+                i++;
+            }
+            sw.Stop();
+
+            ItConsole.println("BenchDraw end");
+            ItConsole.println($"BenchDraw cnt:{i} time:{sw.ElapsedMilliseconds}ms");
         }
 
         public bool ExecCommand(string s)
@@ -38,7 +61,13 @@ namespace Plotter.Controller
             {
                 ItConsole.clear();
             }
-
+            else if (cmd == "@bench")
+            {
+                if (ss[1] == "draw")
+                {
+                    BenchDraw();
+                }
+            }
             else if (cmd == "@dump")
             {
                 if (ss[1] == "db")

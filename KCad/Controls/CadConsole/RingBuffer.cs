@@ -1,14 +1,6 @@
-﻿using OpenTK;
-using Plotter;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System;
 
-namespace TestApp
+namespace KCad.Controls
 {
     public class RingBuffer<T>
     {
@@ -124,60 +116,6 @@ namespace TestApp
             {
                 Top = (Top + 1) & Mask;
             }
-        }
-    }
-
-    class Program
-    {
-        static void XmlTest()
-        {
-            XDocument doc = new XDocument();
-
-            XDocumentType docType = new XDocumentType(
-                @"svg", @" -//W3C//DTD SVG 1.1//EN",
-                @"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd",
-                null);
-
-
-            string pd = "M 100 100 L 300 100 L 200 300 z";
-
-            XElement fig = new XElement("path", new XAttribute("d", pd));
-
-            doc.Add(docType, fig);
-
-
-            Console.WriteLine(doc.ToString());
-
-            Console.WriteLine("end");
-
-            Console.ReadLine();
-
-        }
-
-        static void Main(string[] args)
-        {
-            RingBuffer<int> rb = new RingBuffer<int>(16);
-
-            for (int i=0; i<30; i++)
-            {
-                rb.Add(i);
-            }
-
-            for (int i=0; i<rb.Count; i++)
-            {
-                Console.WriteLine($"rb[{i}]:{rb[i]}");
-            }
-
-            Console.WriteLine("=============");
-
-            rb.ResizeBuffer(8);
-
-            for (int i = 0; i < rb.Count; i++)
-            {
-                Console.WriteLine($"rb[{i}]:{rb[i]}");
-            }
-
-            Console.ReadLine();
         }
     }
 }

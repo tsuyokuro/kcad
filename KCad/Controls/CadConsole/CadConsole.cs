@@ -1,36 +1,33 @@
-﻿using Plotter;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-
-namespace KCad
+using KCad.Controls.CadConsole;
+namespace KCad.Controls
 {
     public partial class CadConsoleView : FrameworkElement
     {
-        protected FontFamily mFontFamily = new FontFamily("ＭＳ ゴシック");
+        protected FontFamily mFontFamily = null;
+
+        protected double mFontSize = 10.0;
 
         protected Typeface mTypeface;
+
 
         protected Brush mForeground = Brushes.Black;
 
         protected Brush mBackground = Brushes.White;
 
-        protected Brush mSelectedBackground = Brushes.White;
+        protected Brush mSelectedBackground = Brushes.GreenYellow;
 
-        protected double mSelectedBackgroundOpacity = 0.2;
+        protected double mSelectedBackgroundOpacity = 0.3;
 
         protected double mLineHeight = 14.0;
 
-        protected double mTextSize = 10.0;
-
         protected double mIndentSize = 8.0;
-
-        protected int mMaxLine = 200;
 
         protected int mTopIndex = 0;
 
@@ -63,12 +60,6 @@ namespace KCad
             set => mSelectedBackgroundOpacity = value;
         }
 
-        public double TextSize
-        {
-            get => mTextSize;
-            set => mTextSize = value;
-        }
-
         public double TextLeftMargin
         {
             get => mTextLeftMargin;
@@ -85,32 +76,32 @@ namespace KCad
             set => mLineHeight = value;
         }
 
-        public int MaxLine
-        {
-            set
-            {
-                mMaxLine = value;
-
-                if (mList.Count > mMaxLine)
-                {
-                    mList.RemoveRange(0, mList.Count - mMaxLine);
-                }
-            }
-
-            get => mMaxLine;
-        }
-
         public FontFamily FontFamily
         {
             get => mFontFamily;
-            set => mFontFamily = value;
+            set
+            {
+                mFontFamily = value;
+                mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.UltraLight, FontStretches.Normal);
+                RecalcCharaSize();
+            }
+        }
+
+        public double FontSize
+        {
+            get => mFontSize;
+            set
+            {
+                mFontSize = value;
+                RecalcCharaSize();
+            }
         }
 
         #endregion
 
         protected ScrollViewer Scroll;
 
-        protected List<TextLine> mList = new List<TextLine>();
+        protected RingBuffer<TextLine> mList = new RingBuffer<TextLine>(); 
 
         protected AnsiEsc Esc = new AnsiEsc();
 
@@ -123,6 +114,8 @@ namespace KCad
 
         protected double CW = 1;
 
+        protected double CWF = 2;
+
         protected double CH = 1;
 
         private TextRange RawSel = new TextRange();
@@ -131,6 +124,8 @@ namespace KCad
 
         public CadConsoleView()
         {
+            mList.CreateBuffer(200);
+
             Focusable = true;
 
             Loaded += CadConsoleView_Loaded;
@@ -159,7 +154,7 @@ namespace KCad
             {
                 if (e.Key == Key.C || e.Key == Key.Insert)
                 {
-                    CopySelected();
+                    CopySelected(this, null);
                 }
                 else if (e.Key == Key.X)
                 {
@@ -181,7 +176,10 @@ namespace KCad
         {
             mIsLoaded = true;
 
-            mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.UltraLight, FontStretches.Normal);
+            if (FontFamily == null)
+            {
+                FontFamily = new FontFamily("ＭＳ ゴシック");
+            }
 
             FrameworkElement parent = (FrameworkElement)Parent;
 
@@ -203,10 +201,7 @@ namespace KCad
 
             CurrentAttr = DefaultAttr;
 
-            FormattedText ft = GetFormattedText("A", mForeground);
-
-            CW = ft.Width;
-            CH = ft.Height;
+            RecalcCharaSize();
 
             NewLine();
 
@@ -215,7 +210,39 @@ namespace KCad
             SetContextMenu();
         }
 
-        private void CopySelected()
+        private void RecalcCharaSize()
+        {
+            if (mTypeface == null)
+            {
+                return;
+            }
+
+            FormattedText ft = GetFormattedText("A", mForeground);
+
+            if (ft != null)
+            {
+                CW = ft.Width;
+                CH = ft.Height;
+
+                FormattedText ftk = GetFormattedText("漢", mForeground);
+                if (ftk != null)
+                {
+                    CWF = ftk.Width;
+                }
+                else
+                {
+                    CWF = CW * 2;
+                }
+            }
+            else
+            {
+                CW = 1;
+                CH = 1;
+                CWF = 1;
+            }
+        }
+
+        private void CopySelected(Object obj, RoutedEventArgs args)
         {
             string copyString = GetSelectedString();
 
@@ -235,13 +262,19 @@ namespace KCad
             ContextMenu.Padding = new Thickness(0, 1, 0, 1);
 
             MenuItem menuItem = new MenuItem();
-            menuItem.Header = "Copy";
-            menuItem.Foreground = Brushes.White;
 
-            menuItem.Click += (obj, args) =>
-            {
-                CopySelected();
-            };
+            menuItem.Header = CadConsoleRes.menu_copy;
+            menuItem.Click += CopySelected;
+
+            SetupMenuItem(menuItem);
+
+            ContextMenu.Items.Add(menuItem);
+        }
+
+        private void SetupMenuItem(MenuItem menuItem)
+        {
+            menuItem.Foreground = Brushes.White;
+            menuItem.BorderThickness = new Thickness(0, 0, 0, 0);
 
             menuItem.MouseEnter += (sender, e) =>
             {
@@ -252,8 +285,6 @@ namespace KCad
             {
                 menuItem.Foreground = Brushes.White;
             };
-
-            ContextMenu.Items.Add(menuItem);
         }
 
         private void RemoveContextMenu()
@@ -344,6 +375,7 @@ namespace KCad
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             Selecting = false;
+            //DOut.pl($"Sel.IsValid:{Sel.IsValid}");
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -377,7 +409,7 @@ namespace KCad
                 row = 0;
             }
 
-            int col = PointToTextCol(p.X - mTextLeftMargin, mList[row].Data, CW, CW*2);
+            int col = PointToTextCol(p.X - mTextLeftMargin, mList[row].Data, CW, CWF);
 
             tp.Row = row;
             tp.Col = col;
@@ -551,10 +583,10 @@ namespace KCad
             var line = new TextLine(DefaultAttr);
             mList.Add(line);
 
-            while (mList.Count > mMaxLine)
-            {
-                mList.RemoveAt(0);
-            }
+            //while (mList.Count > mMaxLine)
+            //{
+            //    mList.RemoveAt(0);
+            //}
 
             if (prevCnt != mList.Count)
             {
@@ -657,7 +689,7 @@ namespace KCad
 
             long topNumber = (long)offset / (long)mLineHeight;
 
-            double textOffset = (mLineHeight - mTextSize) / 2.0 - 3;
+            double textOffset = (mLineHeight - mFontSize) / 2.0 - 3;
 
             p.X = 0;
             p.Y = mLineHeight * topNumber;
@@ -735,10 +767,10 @@ namespace KCad
 
                 TextSpan ts = Sel.GetRowSpan(row, mList[row].Data.Length);
 
-                DOut.pl($"row:{row} ts.Start:{ts.Start} ts.Len{ts.Len}");
+                //DOut.pl($"row:{row} ts.Start:{ts.Start} ts.Len{ts.Len}");
 
-                double sp = TextColToPoint(ts.Start - 1, mList[row].Data, CW, CW*2);
-                double ep = TextColToPoint(ts.Start + ts.Len - 1, mList[row].Data, CW, CW * 2);
+                double sp = TextColToPoint(ts.Start - 1, mList[row].Data, CW, CWF);
+                double ep = TextColToPoint(ts.Start + ts.Len - 1, mList[row].Data, CW, CWF);
 
                 r.X = sp + mTextLeftMargin;
                 r.Width = ep - sp;
@@ -780,7 +812,7 @@ namespace KCad
                                                       System.Globalization.CultureInfo.CurrentCulture,
                                                       FlowDirection.LeftToRight,
                                                       mTypeface,
-                                                      mTextSize,
+                                                      mFontSize,
                                                       brush,
                                                       VisualTreeHelper.GetDpi(this).PixelsPerDip);
             return formattedText;

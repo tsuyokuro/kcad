@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-namespace KCad
+namespace KCad.Controls
 {
     public class CadObjectTreeView : FrameworkElement
     {
@@ -143,6 +144,9 @@ namespace KCad
 
         protected double mSmallIndentSize = 4.0;
 
+        protected ContextMenu mContextMenu;
+
+        public Action<CadObjTreeItem, string> ItemCommand; 
 
         FormattedText mExpand;
 
@@ -151,6 +155,10 @@ namespace KCad
         public CadObjectTreeView()
         {
             FontFamily font;
+
+            mContextMenu = new ContextMenu();
+            mContextMenu.BorderBrush = Brushes.Black;
+            mContextMenu.Padding = new Thickness(0, 1, 0, 1);
 
             //font = new FontFamily("ＭＳ ゴシック");
             font = new FontFamily("Consolas");
@@ -180,7 +188,6 @@ namespace KCad
             CreateParts();
         }
 
-
         protected void CadObjectTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Point p = e.GetPosition(this);
@@ -199,28 +206,100 @@ namespace KCad
                 return;
             }
 
-            int level = item.GetLevel();
-
-            if (item.Children != null)
+            if (e.RightButton == MouseButtonState.Pressed)
             {
-                if (p.X > (level) * mIndentSize)
+                mRoot.ForEachAll((v)=>{
+                    v.IsChecked = false;
+                });
+
+                item.IsChecked = true;
+                OnCheckChanged(item);
+
+                if (ItemCommand != null)
                 {
-                    item.IsChecked = item.IsChecked == false;
-                    OnCheckChanged(item);
-                }
-                else
-                {
-                    item.IsExpand = item.IsExpand == false;
-                    RecalcSize();
+                    mContextMenu.Items.Clear();
+
+                    List<MenuItem> list = item.GetContextMenuItems();
+
+                    if (list != null)
+                    {
+                        foreach (MenuItem m in list)
+                        {
+                            SetupContextMenuItem(m);
+                            mContextMenu.Items.Add(m);
+                        }
+                    }
+
+                    if (mContextMenu.Items.Count > 0)
+                    {
+                        ContextMenu = mContextMenu;
+                    }
+                    else
+                    {
+                        ContextMenu = null;
+                    }
+
+                    base.OnMouseDown(e);
                 }
             }
             else
             {
-                item.IsChecked = item.IsChecked == false;
-                OnCheckChanged(item);
+                int level = item.GetLevel();
+
+                if (item.Children != null)
+                {
+                    if (p.X > (level) * mIndentSize)
+                    {
+                        item.IsChecked = item.IsChecked == false;
+                        OnCheckChanged(item);
+                    }
+                    else
+                    {
+                        item.IsExpand = item.IsExpand == false;
+                        RecalcSize();
+                    }
+                }
+                else
+                {
+                    item.IsChecked = item.IsChecked == false;
+                    OnCheckChanged(item);
+                }
             }
 
             InvalidateVisual();
+        }
+
+        protected void ContextMenuClickHandler(object sender, RoutedEventArgs e)
+        {
+            MenuItem m = (MenuItem)sender;
+
+            if (!(m.Tag is CadObjTreeItem.ContextMenuTag))
+            {
+                return;
+            }
+
+            CadObjTreeItem.ContextMenuTag tag = (CadObjTreeItem.ContextMenuTag)m.Tag;
+
+            ItemCommand?.Invoke(tag.TreeItem, tag.Tag);
+        }
+
+        protected void SetupContextMenuItem(MenuItem menuItem)
+        {
+            menuItem.Foreground = Brushes.White;
+            menuItem.BorderThickness = new Thickness(0, 0, 0, 0);
+
+            menuItem.Click -= ContextMenuClickHandler;
+            menuItem.Click += ContextMenuClickHandler;
+
+            menuItem.MouseEnter += (sender, e) =>
+            {
+                menuItem.Foreground = Brushes.Black;
+            };
+
+            menuItem.MouseLeave += (sender, e) =>
+            {
+                menuItem.Foreground = Brushes.White;
+            };
         }
 
         public void SetVPos(int pos)

@@ -8,7 +8,7 @@ using HalfEdgeNS;
 using CarveWapper;
 using MeshUtilNS;
 using MeshMakerNS;
-using KCad;
+using KCad.Controls;
 using static Plotter.CadFigure;
 using LibiglWrapper;
 using GLUtil;
@@ -47,9 +47,14 @@ namespace Plotter.Controller
             }
         }
 
-        public void PutMsg(string s)
+        public void Println(string s)
         {
             ItConsole.println(s);
+        }
+
+        public void Print(string s)
+        {
+            ItConsole.print(s);
         }
 
         public void CursorAngleX(double d)
@@ -340,7 +345,7 @@ namespace Plotter.Controller
             Session.AddOpe(opeList);
 
             ItConsole.println(
-                global::KCad.Properties.Resources.notice_was_ungrouped
+                KCad.Properties.Resources.notice_was_ungrouped
                 );
 
             Session.PostRemakeTreeView();
@@ -1587,7 +1592,7 @@ namespace Plotter.Controller
 
             dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
 
-            Controller.DrawAllFigure(dc);
+            Controller.DrawAllFigures(dc);
 
             dc.EndDraw();
 

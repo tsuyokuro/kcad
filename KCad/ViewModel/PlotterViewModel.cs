@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Drawing;
 using KCad;
+using KCad.Controls;
 using System.Drawing.Printing;
 using Plotter.Controller;
 using Plotter.Settings;
@@ -192,8 +193,39 @@ namespace Plotter
             return idx;
         }
 
-#endregion
+        public void ObjectTreeView_ItemCommand(CadObjTreeItem treeItem, string cmd)
+        {
+            if (!(treeItem is CadFigTreeItem))
+            {
+                return;
+            }
 
+            CadFigTreeItem figItem = (CadFigTreeItem)treeItem;
+
+            if (cmd == CadFigTreeItem.ITEM_CMD_CHANGE_NAME)
+            {
+                CadFigure fig = figItem.Fig;
+
+                InputStringDialog dlg = new InputStringDialog();
+
+                dlg.Message = KCad.Properties.Resources.string_input_fig_name;
+
+                if (fig.Name != null)
+                {
+                    dlg.InputString = fig.Name;
+                }
+
+                bool? dlgRet = dlg.ShowDialog();
+
+                if (dlgRet.Value)
+                {
+                    fig.Name = dlg.InputString;
+                    UpdateTreeView(false);
+                }
+            }
+        }
+
+        #endregion
 
         ListBox mLayerListView;
 
@@ -354,6 +386,7 @@ namespace Plotter
                 if (mCadObjectTreeView != null)
                 {
                     mCadObjectTreeView.CheckChanged -= ObjectTreeView_CheckChanged;
+                    mCadObjectTreeView.ItemCommand -= ObjectTreeView_ItemCommand;
                 }
 
                 mCadObjectTreeView = value;
@@ -361,6 +394,7 @@ namespace Plotter
                 if (mCadObjectTreeView != null)
                 {
                     mCadObjectTreeView.CheckChanged += ObjectTreeView_CheckChanged;
+                    mCadObjectTreeView.ItemCommand += ObjectTreeView_ItemCommand;
                 }
             }
 

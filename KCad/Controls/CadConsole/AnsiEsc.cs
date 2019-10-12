@@ -1,7 +1,7 @@
 ﻿using Plotter;
 using System.Windows.Media;
 
-namespace KCad
+namespace KCad.Controls
 {
     public class AnsiEsc
     {

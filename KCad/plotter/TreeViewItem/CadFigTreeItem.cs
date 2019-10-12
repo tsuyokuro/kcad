@@ -1,10 +1,14 @@
-﻿using KCad;
+﻿using KCad.Controls;
 using CadDataTypes;
+using System.Windows.Controls;
+using System.Collections.Generic;
 
 namespace Plotter
 {
     class CadFigTreeItem : CadObjTreeItem
     {
+        public const string ITEM_CMD_CHANGE_NAME = "change_name";
+
         public CadFigure Fig;
 
         public override bool IsChecked
@@ -27,11 +31,11 @@ namespace Plotter
             {
                 if (Fig.Name == null)
                 {
-                    return CadFigure.TypeName(Fig.Type) + " ID:" + Fig.ID.ToString();
+                    return $"ID:{Fig.ID} {CadFigure.TypeName(Fig.Type)}";
                 }
                 else
                 {
-                    return Fig.Name + " ID:" + Fig.ID.ToString();
+                    return $"ID:{Fig.ID} {Fig.Name}({CadFigure.TypeName(Fig.Type)})";
                 }
             }
         }
@@ -55,6 +59,19 @@ namespace Plotter
                 CadFigTreeItem pi = new CadFigTreeItem(c);
                 Add(pi);
             }
+        }
+
+        public override List<MenuItem> GetContextMenuItems()
+        {
+            List<MenuItem> list = new List<MenuItem>();
+
+            MenuItem menuItem = new MenuItem();
+            menuItem.Header = KCad.Properties.Resources.menu_change_fig_name;
+            menuItem.Tag = CreateContextMenuTag(ITEM_CMD_CHANGE_NAME);
+
+            list.Add(menuItem);
+
+            return list;
         }
 
         private void SelectAllPoints(bool sel)
