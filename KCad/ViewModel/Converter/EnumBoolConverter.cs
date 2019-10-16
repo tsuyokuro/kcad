@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Data;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
     public class EnumBoolConverter<T> : IValueConverter
     {

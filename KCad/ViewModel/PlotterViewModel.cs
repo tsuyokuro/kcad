@@ -17,8 +17,9 @@ using KCad.Dialogs;
 using System.Text.RegularExpressions;
 using Plotter.svg;
 using System.Xml.Linq;
+using Plotter;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
     public partial class PlotterViewModel : INotifyPropertyChanged
     {
@@ -314,11 +315,11 @@ namespace Plotter
 
             mController.Observer.CursorPosChanged = CursorPosChanged;
 
-            mController.Observer.UpdateTreeView = UpdateTreeView;
+            mController.Observer.UpdateObjectTree = UpdateTreeView;
 
-            mController.Observer.SetTreeViewPos = SetTreeViewPos;
+            mController.Observer.SetObjectTreePos = SetTreeViewPos;
 
-            mController.Observer.FindTreeViewItem = FindTreeViewItem;
+            mController.Observer.FindObjectTreeItem = FindTreeViewItem;
 
             mController.Observer.OpenPopupMessage = OpenPopupMessage;
 

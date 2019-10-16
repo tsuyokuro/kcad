@@ -269,7 +269,7 @@ namespace Plotter.Controller
                 fig.RemoveGarbageChildren();
             }
 
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
         }
 
         public void FlipNormal()

@@ -675,7 +675,7 @@ namespace Plotter.Controller
                     break;
             }
 
-            UpdateTreeView(false);
+            UpdateObjectTree(false);
 
             OffsetScreen = default;
         }

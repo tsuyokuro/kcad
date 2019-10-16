@@ -134,7 +134,7 @@ namespace Plotter.Controller
 
         public void FindFigureById(uint id)
         {
-            int idx = Controller.FindTreeViewItem(id);
+            int idx = Controller.FindObjectTreeItem(id);
 
             if (idx < 0)
             {
@@ -143,7 +143,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            Controller.SetTreeViewPos(idx);
+            Controller.SetObjectTreePos(idx);
         }
 
         public void LayerList()
@@ -286,7 +286,7 @@ namespace Plotter.Controller
                     global::KCad.Properties.Resources.notice_was_grouped
                 );
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void Ungroup(IList<int> idList)
@@ -348,7 +348,7 @@ namespace Plotter.Controller
                 KCad.Properties.Resources.notice_was_ungrouped
                 );
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void MoveLastDownPoint(double x, double y, double z)
@@ -468,7 +468,7 @@ namespace Plotter.Controller
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
 
             return (int)fig.ID;
         }
@@ -530,7 +530,7 @@ namespace Plotter.Controller
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
 
             return (int)fig.ID;
         }
@@ -603,7 +603,7 @@ namespace Plotter.Controller
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void AddTetrahedron(Vector3d pos, double x, double y, double z)
@@ -617,7 +617,7 @@ namespace Plotter.Controller
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void AddOctahedron(Vector3d pos, double x, double y, double z)
@@ -631,7 +631,7 @@ namespace Plotter.Controller
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void AddCylinder(Vector3d pos, int slices, double r, double len)
@@ -644,7 +644,7 @@ namespace Plotter.Controller
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void AddSphere(Vector3d pos, int slices, double r)
@@ -657,7 +657,7 @@ namespace Plotter.Controller
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void AddLayer(string name)
@@ -1061,7 +1061,7 @@ namespace Plotter.Controller
             Controller.CurrentLayer.RemoveFigureByID(figID);
             Controller.CurrentFigure = null;
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         // 押し出し
@@ -1102,7 +1102,7 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
             Controller.CurrentLayer.RemoveFigureByID(tfig.ID);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void ToPolyLine(uint id)
@@ -1156,7 +1156,7 @@ namespace Plotter.Controller
                 Controller.ClearSelection();
             });
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void ToMesh(uint id)
@@ -1226,7 +1226,7 @@ namespace Plotter.Controller
                 Controller.ClearSelection();
             });
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
             //PrintSuccess();
         }
 
@@ -1304,7 +1304,7 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void Union(uint idA, uint idB)
@@ -1339,7 +1339,7 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void Intersection(uint idA, uint idB)
@@ -1374,7 +1374,7 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void DumpMesh(uint id)
@@ -1535,7 +1535,7 @@ namespace Plotter.Controller
         {
             Env.RunOnMainThread(() =>
             {
-                Controller.UpdateTreeView(true);
+                Controller.UpdateObjectTree(true);
             });
         }
 

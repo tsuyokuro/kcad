@@ -234,7 +234,7 @@
     <Compile Include="plotter\Serializer\v1002\MpUtil_v1002.cs" />
     <Compile Include="plotter\Serializer\v1001\CadMessagePack_v1001.cs" />
     <Compile Include="plotter\Serializer\v1001\MpUtil_v1001.cs" />
-    <Compile Include="plotter\TreeViewItem\TreeViewUtil.cs" />
+    <Compile Include="ViewModel\TreeViewItem\TreeViewUtil.cs" />
     <Compile Include="Util\DebugClient.cs" />
     <Compile Include="plotter\Util\StackArray.cs" />
     <Compile Include="plotter\Util\VectorExt.cs" />
@@ -277,9 +277,9 @@
     <Compile Include="plotter\Controller\CadCursor.cs" />
     <Compile Include="plotter\Serializer\MpCadFile.cs" />
     <Compile Include="plotter\Serializer\MpInitializer.cs" />
-    <Compile Include="plotter\TreeViewItem\CadFigTreeItem.cs" />
-    <Compile Include="plotter\TreeViewItem\CadLayerTreeItem.cs" />
-    <Compile Include="plotter\TreeViewItem\CadPointTreeItem.cs" />
+    <Compile Include="ViewModel\TreeViewItem\CadFigTreeItem.cs" />
+    <Compile Include="ViewModel\TreeViewItem\CadLayerTreeItem.cs" />
+    <Compile Include="ViewModel\TreeViewItem\CadPointTreeItem.cs" />
     <Compile Include="plotter\Util\DebugOut.cs" />
     <Compile Include="plotter\Math\MatrixMN.cs" />
     <Compile Include="SplineCurve\BSplineParam.cs" />
@@ -298,7 +298,6 @@
     <Compile Include="plotter\Figure\CadFigureNurbsSurface.cs" />
     <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
     <Compile Include="plotter\Figure\FigUtil.cs" />
-    <Compile Include="plotter\Serializer\CadMessagePack.cs" />
     <Compile Include="plotter\Serializer\JsonExtends.cs" />
     <Compile Include="plotter\Util\BitmapUtil.cs" />
     <Compile Include="Controls\TreeView\CadObjectTreeView.cs" />

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using KCad.Controls;
+using KCad.ViewModel;
 
 namespace KCad
 {

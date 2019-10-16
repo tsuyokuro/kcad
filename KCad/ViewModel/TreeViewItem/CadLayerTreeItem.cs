@@ -1,7 +1,8 @@
 ﻿using KCad.Controls;
+using Plotter;
 using System;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
     class CadLayerTreeItem : CadObjTreeItem
     {

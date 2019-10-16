@@ -113,7 +113,7 @@ namespace Plotter.Controller.TaskRunner
             RunOnMainThread(() =>
             {
                 Controller.Redraw();
-                Controller.UpdateTreeView(true);
+                Controller.UpdateObjectTree(true);
             });
         }
 

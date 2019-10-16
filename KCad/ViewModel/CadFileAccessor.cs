@@ -1,8 +1,7 @@
 ﻿using Plotter.Serializer;
-using System.ComponentModel;
 using Plotter.Controller;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
     public class CadFileAccessor
     {

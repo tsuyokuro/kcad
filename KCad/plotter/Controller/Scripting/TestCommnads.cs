@@ -53,7 +53,7 @@ namespace Plotter.Controller
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            Controller.UpdateTreeView(true);
+            Controller.UpdateObjectTree(true);
         }
 
         private void test002()
@@ -69,7 +69,7 @@ namespace Plotter.Controller
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            Controller.UpdateTreeView(true);
+            Controller.UpdateObjectTree(true);
         }
 
         private void test003()
@@ -93,7 +93,7 @@ namespace Plotter.Controller
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            Controller.UpdateTreeView(true);
+            Controller.UpdateObjectTree(true);
         }
 
         private void test004()
@@ -340,7 +340,7 @@ namespace Plotter.Controller
                 Controller.HistoryMan.foward(opeRoot);
             }
 
-            Controller.UpdateTreeView(true);
+            Controller.UpdateObjectTree(true);
         }
 
         private void test013()
@@ -457,7 +457,7 @@ namespace Plotter.Controller
 
             RunOnMainThread(() =>
             {
-                Controller.UpdateTreeView(true);
+                Controller.UpdateObjectTree(true);
             });
 
             Redraw();
@@ -482,7 +482,7 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(meshFig);
 
-            Controller.UpdateTreeView(true);
+            Controller.UpdateObjectTree(true);
         }
 
         private void testNu()
@@ -502,7 +502,7 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(nfig);
 
-            Controller.UpdateTreeView(true);
+            Controller.UpdateObjectTree(true);
         }
 
         private void testNus()
@@ -521,7 +521,7 @@ namespace Plotter.Controller
 
             RunOnMainThread(() =>
             {
-                Controller.UpdateTreeView(true);
+                Controller.UpdateObjectTree(true);
             });
         }
 
@@ -541,7 +541,7 @@ namespace Plotter.Controller
 
             RunOnMainThread(() =>
             {
-                Controller.UpdateTreeView(true);
+                Controller.UpdateObjectTree(true);
             });
         }
 

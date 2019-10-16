@@ -1,6 +1,7 @@
-﻿using Plotter.Controller;
+﻿using Plotter;
+using Plotter.Controller;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
     public class SelectModeConverter : EnumBoolConverter<SelectModes> { }
     public class FigureTypeConverter : EnumBoolConverter<CadFigure.Types> { }

@@ -1,8 +1,9 @@
 ﻿using KCad.Controls;
 using CadDataTypes;
 using System.Windows.Media;
+using Plotter;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
 
     class CadPointTreeItem : CadObjTreeItem

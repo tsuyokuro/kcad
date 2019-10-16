@@ -64,7 +64,7 @@ namespace Plotter.Controller
             set
             {
                 mDB.CurrentLayer = value;
-                UpdateTreeView(true);
+                UpdateObjectTree(true);
             }
         }
 
@@ -145,23 +145,23 @@ namespace Plotter.Controller
         #endregion
 
 
-        #region TreeView
-        public void UpdateTreeView(bool remakeTree)
+        #region ObjectTree
+        public void UpdateObjectTree(bool remakeTree)
         {
-            Observer.UpdateTreeView(remakeTree);
+            Observer.UpdateObjectTree(remakeTree);
         }
 
-        public void SetTreeViewPos(int index)
+        public void SetObjectTreePos(int index)
         {
-            Observer.SetTreeViewPos(index);
+            Observer.SetObjectTreePos(index);
         }
 
-        public int FindTreeViewItem(uint id)
+        public int FindObjectTreeItem(uint id)
         {
-            return Observer.FindTreeViewItem(id);
+            return Observer.FindObjectTreeItem(id);
         }
 
-        #endregion TreeView
+        #endregion ObjectTree
 
 
         #region Notify
@@ -240,7 +240,7 @@ namespace Plotter.Controller
                     CreatingFigType = CadFigure.Types.NONE;
                     State = States.SELECT;
 
-                    UpdateTreeView(true);
+                    UpdateObjectTree(true);
                     NotifyStateChange();
                 }
             }
@@ -273,7 +273,7 @@ namespace Plotter.Controller
         {
             ClearSelection();
             HistoryMan.undo();
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
             UpdateLayerList();
         }
 
@@ -281,7 +281,7 @@ namespace Plotter.Controller
         {
             ClearSelection();
             HistoryMan.redo();
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
             UpdateLayerList();
         }
 
@@ -640,7 +640,7 @@ namespace Plotter.Controller
 
             if (removeCnt > 0)
             {
-                UpdateTreeView(true);
+                UpdateObjectTree(true);
             }
 
             return opeList;
@@ -778,7 +778,7 @@ namespace Plotter.Controller
 
             UpdateLayerList();
 
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
 
             Redraw(CurrentDC);
         }
@@ -786,7 +786,7 @@ namespace Plotter.Controller
         public void SetCurrentLayer(uint id)
         {
             mDB.CurrentLayerID = id;
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
         }
 
         public void TextCommand(string s)

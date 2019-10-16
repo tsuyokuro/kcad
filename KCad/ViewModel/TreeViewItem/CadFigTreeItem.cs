@@ -2,8 +2,9 @@
 using CadDataTypes;
 using System.Windows.Controls;
 using System.Collections.Generic;
+using Plotter;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
     class CadFigTreeItem : CadObjTreeItem
     {

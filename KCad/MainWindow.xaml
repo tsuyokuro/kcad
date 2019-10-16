@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:KCad"
     xmlns:cc="clr-namespace:KCad.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pl="clr-namespace:Plotter"
+    xmlns:vm="clr-namespace:KCad.ViewModel"
     xmlns:properties="clr-namespace:KCad.Properties"
     Title="KCad"
     Width="1177.667"
@@ -88,10 +88,10 @@
             </Style>
 
 
-            <pl:SelectModeConverter x:Key="SelModeConv" />
-            <pl:FigureTypeConverter x:Key="FigTypeConv" />
-            <pl:ViewModeConverter x:Key="ViewModeConv" />
-            <pl:MeasureModeConverter x:Key="MeasureModeConv" />
+            <vm:SelectModeConverter x:Key="SelModeConv" />
+            <vm:FigureTypeConverter x:Key="FigTypeConv" />
+            <vm:ViewModeConverter x:Key="ViewModeConv" />
+            <vm:MeasureModeConverter x:Key="MeasureModeConv" />
 
 
             <!--<DataTemplate x:Key="AutoCompleteBoxItemTemplate">

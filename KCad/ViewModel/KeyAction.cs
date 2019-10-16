@@ -1,7 +1,7 @@
 ﻿//#define USE_GDI_VIEW
 using System;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
 
     public partial class PlotterViewModel
