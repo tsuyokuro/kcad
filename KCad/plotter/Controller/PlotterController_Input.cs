@@ -240,16 +240,16 @@ namespace Plotter.Controller
             mPointSearcher.SetRangePixel(sc.DC, SettingsHolder.Settings.PointSnapRange);
             mPointSearcher.CheckStorePoint = SettingsHolder.Settings.SnapToSelfPoint;
 
-            if (CurrentFigure != null)
-            {
-                mPointSearcher.CheckFigure(sc.DC, CurrentLayer, CurrentFigure);
-            }
-
             //sc.Cursor.Pos.dump("CursorPos");
 
             mPointSearcher.SetTargetPoint(sc.Cursor);
 
             mPointSearcher.SearchAllLayer(sc.DC, mDB);
+
+            if (CurrentFigure != null)
+            {
+                mPointSearcher.CheckFigure(sc.DC, CurrentLayer, CurrentFigure);
+            }
 
             sc.MarkPt = mPointSearcher.GetXYMatch();
 
