@@ -85,7 +85,7 @@ namespace Plotter.Settings
         {
             set
             {
-                SettingsHolder.Settings.FilterTreeView = value;
+                SettingsHolder.Settings.FilterObjectTree = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterObjectTree)));
 
                 if (Controller != null)
@@ -94,7 +94,7 @@ namespace Plotter.Settings
                 }
             }
 
-            get => SettingsHolder.Settings.FilterTreeView;
+            get => SettingsHolder.Settings.FilterObjectTree;
         }
 
         [UserSettingData]
@@ -326,7 +326,7 @@ namespace Plotter.Settings
 
         public double KeyMoveUnit = 1.0;
 
-        public bool FilterTreeView = false;
+        public bool FilterObjectTree = false;
 
         public double InitialMoveLimit = 6.0;
 

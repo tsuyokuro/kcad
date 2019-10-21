@@ -136,7 +136,7 @@ namespace KCad.ViewModel
                 return;
             }
 
-            if (SettingsHolder.Settings.FilterTreeView)
+            if (SettingsHolder.Settings.FilterObjectTree)
             {
                 CadLayerTreeItem item = new CadLayerTreeItem();
                 item.AddChildren(Controller.CurrentLayer, fig =>

@@ -906,7 +906,7 @@
                                     <StackPanel x:Name="TreeViewToolBar" Orientation="Horizontal">
                                         <ToggleButton
                                             Margin="2,2,2,2"
-                                            IsChecked="{Binding FilterTreeView}"
+                                            IsChecked="{Binding FilterObjectTree}"
                                             Style="{StaticResource ToolToggleButton}">
 
                                             <Border>
