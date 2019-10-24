@@ -83,7 +83,7 @@ namespace KCad
 
             DrawOptionMenu.DataContext = ViewModel.Settings;
 
-            ToolBar1.DataContext = ViewModel.Settings;
+            SnapToolBar.DataContext = ViewModel.Settings;
 
             TreeViewToolBar.DataContext = ViewModel.Settings;
         }

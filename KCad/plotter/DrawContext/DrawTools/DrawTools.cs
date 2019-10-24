@@ -126,7 +126,7 @@ namespace Plotter
 
             for (int i = 0; i < PEN_TBL_SIZE; i++)
             {
-                PenTbl[i] = new DrawPen(new Pen(PenColorTbl[i]));
+                PenTbl[i] = new DrawPen(new Pen(PenColorTbl[i], 1));
                 PenTbl[i].ID = i;
             }
 

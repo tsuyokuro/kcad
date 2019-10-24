@@ -443,13 +443,15 @@
                 Orientation="Vertical">
 
                 <StackPanel
-                    x:Name="ToolBar1"
+                    x:Name="SnapToolBar"
                     Height="Auto"
-                    HorizontalAlignment="Stretch"
+                    Width="Auto"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
                     Background="{StaticResource BaseColor}"
                     Orientation="Horizontal">
 
-                    <Label Width="16" Height="16" />
+                    <Label Width="4" Height="Auto" />
 
                     <ToggleButton
                         Margin="1,2,0,2"
@@ -550,6 +552,7 @@
                         </Border>
                     </ToggleButton>
 
+                    <Label Width="4" Height="Auto" />
                 </StackPanel>
 
                 <Label

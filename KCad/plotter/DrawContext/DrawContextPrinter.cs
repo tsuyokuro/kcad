@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 using CadDataTypes;
 using OpenTK;
 
@@ -9,6 +10,9 @@ namespace Plotter
         public DrawContextPrinter(DrawContext currentDC, Graphics g, CadSize2D pageSize, CadSize2D deviceSize)
         {
             GdiGraphics = g;
+
+            GdiGraphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            GdiGraphics.SmoothingMode = SmoothingMode.HighQuality;
 
             if (currentDC.GetType() == typeof(DrawContextGLPers))
             {
