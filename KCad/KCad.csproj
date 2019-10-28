@@ -212,7 +212,9 @@
     <Compile Include="Dialogs\InputStringDialog.xaml.cs">
       <DependentUpon>InputStringDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GLUtil\FontFaceW.cs" />
+    <Compile Include="GLUtil\Font\FontFaceW.cs" />
+    <Compile Include="GLUtil\Font\FontRenderer.cs" />
+    <Compile Include="GLUtil\Font\FontTex.cs" />
     <Compile Include="GLUtil\FrameBufferW.cs" />
     <Compile Include="plotter\Controller\PlotterPrinter.cs" />
     <Compile Include="plotter\Controller\Scripting\ScriptSession.cs" />

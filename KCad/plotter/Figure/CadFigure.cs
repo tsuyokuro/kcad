@@ -91,10 +91,6 @@ namespace Plotter
         
         public bool Current { set; get; } = false;
 
-        public int FontID { set; get; } = DrawTools.FONT_SMALL;
-
-        public int BrushID { set; get; } = DrawTools.BRUSH_TEXT;
-
         public bool IsSelected { get; set; } = false;
 
         public string Name { get; set; } = null;
@@ -114,7 +110,6 @@ namespace Plotter
             set => mParent = value;
             get => mParent;
         }
-
 
         protected List<CadFigure> mChildList = new List<CadFigure>();
 
@@ -138,7 +133,7 @@ namespace Plotter
                 return false;
             }
 
-            for (i=0; i< mChildList.Count; i++)
+            for (i=0; i < mChildList.Count; i++)
             {
                 CadFigure c = mChildList[i];
 

@@ -417,44 +417,6 @@ namespace Plotter.Serializer.v1001
         }
     }
 
-    [MessagePack.Union(0, typeof(MpSimpleGeometricData_v1002))]
-    [MessagePack.Union(1, typeof(MpMeshGeometricData_v1002))]
-    [MessagePack.Union(2, typeof(MpNurbsLineGeometricData_v1002))]
-    [MessagePack.Union(3, typeof(MpNurbsSurfaceGeometricData_v1002))]
-    public interface MpGeometricData_v1002
-    {
-    }
-
-    [MessagePackObject]
-    public class MpSimpleGeometricData_v1002 : MpGeometricData_v1002
-    {
-        [Key("PointList")]
-        public List<MpVertex_v1002> PointList;
-    }
-
-
-    [MessagePackObject]
-    public class MpMeshGeometricData_v1002 : MpGeometricData_v1002
-    {
-        [Key("HeModel")]
-        public MpHeModel_v1002 HeModel;
-    }
-
-    [MessagePackObject]
-    public class MpNurbsLineGeometricData_v1002 : MpGeometricData_v1002
-    {
-        [Key("Nurbs")]
-        public MpNurbsLine_v1002 Nurbs;
-    }
-
-    [MessagePackObject]
-    public class MpNurbsSurfaceGeometricData_v1002 : MpGeometricData_v1002
-    {
-        [Key("Nurbs")]
-        public MpNurbsSurface_v1002 Nurbs;
-    }
-
-
     [MessagePackObject]
     public struct MpVector3d_v1002
     {
@@ -513,6 +475,41 @@ namespace Plotter.Serializer.v1001
         }
     }
 
+    [MessagePack.Union(0, typeof(MpSimpleGeometricData_v1002))]
+    [MessagePack.Union(1, typeof(MpMeshGeometricData_v1002))]
+    [MessagePack.Union(2, typeof(MpNurbsLineGeometricData_v1002))]
+    [MessagePack.Union(3, typeof(MpNurbsSurfaceGeometricData_v1002))]
+    public interface MpGeometricData_v1002
+    {
+    }
+
+    [MessagePackObject]
+    public class MpSimpleGeometricData_v1002 : MpGeometricData_v1002
+    {
+        [Key("PointList")]
+        public List<MpVertex_v1002> PointList;
+    }
+
+    [MessagePackObject]
+    public class MpMeshGeometricData_v1002 : MpGeometricData_v1002
+    {
+        [Key("HeModel")]
+        public MpHeModel_v1002 HeModel;
+    }
+
+    [MessagePackObject]
+    public class MpNurbsLineGeometricData_v1002 : MpGeometricData_v1002
+    {
+        [Key("Nurbs")]
+        public MpNurbsLine_v1002 Nurbs;
+    }
+
+    [MessagePackObject]
+    public class MpNurbsSurfaceGeometricData_v1002 : MpGeometricData_v1002
+    {
+        [Key("Nurbs")]
+        public MpNurbsSurface_v1002 Nurbs;
+    }
 
     [MessagePackObject]
     public class MpHeModel_v1002
