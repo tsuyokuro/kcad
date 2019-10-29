@@ -677,7 +677,11 @@ namespace Plotter
             }
         }
 
-        public virtual void Draw(DrawContext dc, DrawPen pen)
+        public virtual void Draw(DrawContext dc)
+        {
+        }
+
+        public virtual void Draw(DrawContext dc, DrawParams dp)
         {
         }
 

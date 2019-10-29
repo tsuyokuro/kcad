@@ -364,6 +364,34 @@ namespace Plotter.Controller
         {
             if (dc == null) return;
 
+            DrawParams pdp = default;
+            DrawParams tdp = default;
+            DrawParams cdp = default;
+            DrawParams mdp = default;
+
+            DrawParams edp = default;
+            edp.Empty = true;
+
+            pdp.LinePen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
+            pdp.EdgePen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
+            pdp.FillBrush = DrawBrush.NullBrush;
+            pdp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
+
+            tdp.LinePen = dc.GetPen(DrawTools.PEN_TEST_FIGURE);
+            tdp.EdgePen = dc.GetPen(DrawTools.PEN_TEST_FIGURE);
+            tdp.FillBrush = DrawBrush.NullBrush;
+            tdp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
+
+            cdp.LinePen = dc.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT);
+            cdp.EdgePen = dc.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT);
+            cdp.FillBrush = DrawBrush.NullBrush;
+            cdp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
+
+            mdp.LinePen = dc.GetPen(DrawTools.PEN_MEASURE_FIGURE);
+            mdp.EdgePen = dc.GetPen(DrawTools.PEN_MEASURE_FIGURE);
+            mdp.FillBrush = DrawBrush.NullBrush;
+            mdp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
+
             lock (DB)
             {
                 foreach (CadLayer layer in mDB.LayerList)
@@ -376,22 +404,32 @@ namespace Plotter.Controller
 
                     DrawPen pen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
 
-                    dc.Drawing.Draw(layer.FigureList, pen);
+                    dc.Drawing.DrawFigures(layer.FigureList, pdp, pdp);
                 }
 
                 // Draw current layer at last
                 if (CurrentLayer != null && CurrentLayer.Visible)
                 {
                     DrawPen pen = dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE);
-                    dc.Drawing.Draw(CurrentLayer.FigureList, pen);
+                    dc.Drawing.DrawFigures(CurrentLayer.FigureList, edp, cdp);
                 }
 
-                dc.Drawing.Draw(TempFigureList, dc.GetPen(DrawTools.PEN_TEST_FIGURE));
+                dc.Drawing.DrawFigures(TempFigureList, tdp, tdp);
 
                 if (MeasureFigureCreator != null)
                 {
-                    MeasureFigureCreator.Figure.Draw(dc, dc.GetPen(DrawTools.PEN_MEASURE_FIGURE));
+                    MeasureFigureCreator.Figure.Draw(dc, mdp);
                 }
+            }
+        }
+
+        public void DrawAllFigures(DrawContext dc)
+        {
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                if (!layer.Visible) continue;
+
+                dc.Drawing.DrawFigures(layer.FigureList);
             }
         }
 
@@ -457,16 +495,6 @@ namespace Plotter.Controller
                 dc.GetPen(DrawTools.PEN_TEMP_FIGURE),
                 RubberBandScrnPoint0,
                 RubberBandScrnPoint1);
-        }
-
-        public void DrawAllFigures(DrawContext dc)
-        {
-            foreach (CadLayer layer in mDB.LayerList)
-            {
-                if (!layer.Visible) continue;
-
-                dc.Drawing.Draw(layer.FigureList, dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE));
-            }
         }
 
         protected void DrawAccordingState(DrawContext dc)

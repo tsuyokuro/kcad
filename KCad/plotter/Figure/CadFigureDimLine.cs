@@ -62,14 +62,14 @@ namespace Plotter
             }
         }
 
-        public override void Draw(DrawContext dc, DrawPen pen)
+        public override void Draw(DrawContext dc)
         {
-            if (pen.ID == DrawTools.PEN_DEFAULT_FIGURE)
-            {
-                pen = dc.GetPen(DrawTools.PEN_DIMENTION);
-            }
+            DrawDim(dc, dc.GetPen(DrawTools.PEN_DIMENTION), dc.GetBrush(DrawTools.BRUSH_TEXT));
+        }
 
-            DrawDim(dc, pen, dc.GetBrush(TextBrushID));
+        public override void Draw(DrawContext dc, DrawParams dp)
+        {
+            DrawDim(dc, dp.LinePen, dp.TextBrush);
         }
 
         public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)

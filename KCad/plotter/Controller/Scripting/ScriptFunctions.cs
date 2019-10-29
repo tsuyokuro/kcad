@@ -905,6 +905,11 @@ namespace Plotter.Controller
 
             tdc.SetViewOrg(tdc.ViewOrg - d);
 
+            DrawParams dp = default;
+
+            dp.LinePen = drawPen;
+            dp.EdgePen = drawPen;
+
             Env.RunOnMainThread((Action)(() =>
             {
                 tdc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_TRANSPARENT));
@@ -913,7 +918,7 @@ namespace Plotter.Controller
 
                 foreach (CadFigure fig in figList)
                 {
-                    fig.Draw(tdc, drawPen);
+                    fig.Draw(tdc, dp);
                 }
 
                 if (fname.Length > 0)

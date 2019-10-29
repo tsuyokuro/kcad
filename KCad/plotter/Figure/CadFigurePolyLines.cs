@@ -107,7 +107,17 @@ namespace Plotter
             mPointList.Add(p);
         }
 
-        public override void Draw(DrawContext dc, DrawPen pen)
+        public override void Draw(DrawContext dc)
+        {
+            DrawPolyLines(dc, dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE));
+        }
+
+        public override void Draw(DrawContext dc, DrawParams dp)
+        {
+            DrawPolyLines(dc, dp.LinePen);
+        }
+
+        public void DrawPolyLines(DrawContext dc, DrawPen pen)
         {
             bool drawed = false;
 
