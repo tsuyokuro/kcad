@@ -48,7 +48,8 @@ namespace Plotter
         public const int BRUSH_TEXT = 3;
         public const int BRUSH_TRANSPARENT = 4;
         public const int BRUSH_DEFAULT_MESH_FILL = 5;
-        public const int BRUSH_TBL_SIZE = 6;
+        public const int BRUSH_PALE_TEXT = 6;
+        public const int BRUSH_TBL_SIZE = 7;
 
         public const int FONT_DEFAULT = 1;
         public const int FONT_SMALL = 2;

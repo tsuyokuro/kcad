@@ -364,33 +364,33 @@ namespace Plotter.Controller
         {
             if (dc == null) return;
 
-            DrawParams pdp = default;
-            DrawParams tdp = default;
-            DrawParams cdp = default;
-            DrawParams mdp = default;
+            DrawParams pale_dp = default;
+            DrawParams test_dp = default;
+            DrawParams current_dp = default;
+            DrawParams measure_dp = default;
 
-            DrawParams edp = default;
-            edp.Empty = true;
+            DrawParams empty_dp = default;
+            empty_dp.Empty = true;
 
-            pdp.LinePen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
-            pdp.EdgePen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
-            pdp.FillBrush = DrawBrush.NullBrush;
-            pdp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
+            pale_dp.LinePen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
+            pale_dp.EdgePen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
+            pale_dp.FillBrush = DrawBrush.NullBrush;
+            pale_dp.TextBrush = dc.GetBrush(DrawTools.BRUSH_PALE_TEXT);
 
-            tdp.LinePen = dc.GetPen(DrawTools.PEN_TEST_FIGURE);
-            tdp.EdgePen = dc.GetPen(DrawTools.PEN_TEST_FIGURE);
-            tdp.FillBrush = DrawBrush.NullBrush;
-            tdp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
+            test_dp.LinePen = dc.GetPen(DrawTools.PEN_TEST_FIGURE);
+            test_dp.EdgePen = dc.GetPen(DrawTools.PEN_TEST_FIGURE);
+            test_dp.FillBrush = DrawBrush.NullBrush;
+            test_dp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
 
-            cdp.LinePen = dc.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT);
-            cdp.EdgePen = dc.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT);
-            cdp.FillBrush = DrawBrush.NullBrush;
-            cdp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
+            current_dp.LinePen = dc.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT);
+            current_dp.EdgePen = dc.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT);
+            current_dp.FillBrush = DrawBrush.NullBrush;
+            current_dp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
 
-            mdp.LinePen = dc.GetPen(DrawTools.PEN_MEASURE_FIGURE);
-            mdp.EdgePen = dc.GetPen(DrawTools.PEN_MEASURE_FIGURE);
-            mdp.FillBrush = DrawBrush.NullBrush;
-            mdp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
+            measure_dp.LinePen = dc.GetPen(DrawTools.PEN_MEASURE_FIGURE);
+            measure_dp.EdgePen = dc.GetPen(DrawTools.PEN_MEASURE_FIGURE);
+            measure_dp.FillBrush = DrawBrush.NullBrush;
+            measure_dp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
 
             lock (DB)
             {
@@ -399,26 +399,26 @@ namespace Plotter.Controller
                     if (!layer.Visible) continue;
 
                     // Skip current layer.
-                    // It will be drawn at the end.
+                    // It will be drawn at the end of this loop.
                     if (layer == CurrentLayer) { continue; }
 
                     DrawPen pen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
 
-                    dc.Drawing.DrawFigures(layer.FigureList, pdp, pdp);
+                    dc.Drawing.DrawFigures(layer.FigureList, pale_dp, pale_dp);
                 }
 
                 // Draw current layer at last
                 if (CurrentLayer != null && CurrentLayer.Visible)
                 {
                     DrawPen pen = dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE);
-                    dc.Drawing.DrawFigures(CurrentLayer.FigureList, edp, cdp);
+                    dc.Drawing.DrawFigures(CurrentLayer.FigureList, empty_dp, current_dp);
                 }
 
-                dc.Drawing.DrawFigures(TempFigureList, tdp, tdp);
+                dc.Drawing.DrawFigures(TempFigureList, test_dp, test_dp);
 
                 if (MeasureFigureCreator != null)
                 {
-                    MeasureFigureCreator.Figure.Draw(dc, mdp);
+                    MeasureFigureCreator.Figure.Draw(dc, measure_dp);
                 }
             }
         }

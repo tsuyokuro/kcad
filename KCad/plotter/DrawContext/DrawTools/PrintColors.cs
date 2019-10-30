@@ -51,6 +51,7 @@ namespace Plotter
             BrushColorTbl[DrawTools.BRUSH_TEXT] = Color.Black;
             BrushColorTbl[DrawTools.BRUSH_DEFAULT_MESH_FILL] = Color.LightGray;
             BrushColorTbl[DrawTools.BRUSH_TRANSPARENT] = Color.Transparent;
+            BrushColorTbl[DrawTools.BRUSH_PALE_TEXT] = Color.Black;
         }
     }
 }
