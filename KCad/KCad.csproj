@@ -229,6 +229,7 @@
     <Compile Include="plotter\DrawContext\DrawTools\DarkColors.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGLOrtho.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGLPers.cs" />
+    <Compile Include="plotter\Figure\CadFigureGroup.cs" />
     <Compile Include="plotter\HalfEdge\HeModelBuilder.cs" />
     <Compile Include="plotter\HalfEdge\HeModelConverter.cs" />
     <Compile Include="plotter\Math\CadMath_2.cs" />

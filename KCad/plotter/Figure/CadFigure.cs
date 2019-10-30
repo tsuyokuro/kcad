@@ -8,7 +8,7 @@ using Plotter.Serializer.v1001;
 
 namespace Plotter
 {
-    public partial class CadFigure
+    public abstract partial class CadFigure
     {
         #region Enums
         public enum Types : byte
@@ -208,11 +208,6 @@ namespace Plotter
             Type = Types.NONE;
         }
 
-        public static CadFigure Create()
-        {
-            return new CadFigure();
-        }
-
         public static CadFigure Create(Types type)
         {
             CadFigure fig = null;
@@ -240,8 +235,7 @@ namespace Plotter
                     break;
 
                 case Types.GROUP:
-                    fig = new CadFigure();
-                    fig.Type = Types.GROUP;
+                    fig = new CadFigureGroup();
                     break;
 
                 case Types.DIMENTION_LINE:
@@ -677,33 +671,19 @@ namespace Plotter
             }
         }
 
-        public virtual void Draw(DrawContext dc)
-        {
-        }
+        public abstract void Draw(DrawContext dc);
 
-        public virtual void Draw(DrawContext dc, DrawParams dp)
-        {
-        }
+        public abstract void Draw(DrawContext dc, DrawParams dp);
 
-        public virtual void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
-        {
-        }
+        public abstract void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB);
 
-        public virtual void DrawSelected(DrawContext dc, DrawPen pen)
-        {
-        }
+        public abstract void DrawSelected(DrawContext dc, DrawPen pen);
 
-        public virtual void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
-        {
-        }
+        public abstract void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen);
 
-        public virtual void StartCreate(DrawContext dc)
-        {
-        }
+        public abstract void StartCreate(DrawContext dc);
 
-        public virtual void EndCreate(DrawContext dc)
-        {
-        }
+        public abstract void EndCreate(DrawContext dc);
 
         public virtual CadRect GetContainsRect()
         {
@@ -955,5 +935,6 @@ namespace Plotter
 
             mPointList = MpUtil_v1002.VertexListFromMp(g.PointList);
         }
+
     } // End of class CadFigure
 }

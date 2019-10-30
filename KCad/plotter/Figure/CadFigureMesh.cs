@@ -320,5 +320,21 @@ namespace Plotter
                 nl[i] = v;
             }
         }
+
+        public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
+        {
+        }
+
+        public override void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
+        {
+        }
+
+        public override void StartCreate(DrawContext dc)
+        {
+        }
+
+        public override void EndCreate(DrawContext dc)
+        {
+        }
     }
 }

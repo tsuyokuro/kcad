@@ -195,5 +195,13 @@ namespace Plotter
 
             NurbsPointList = new VertexList(Nurbs.OutCnt);
         }
+
+        public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
+        {
+        }
+
+        public override void DrawSelected(DrawContext dc, DrawPen pen)
+        {
+        }
     }
 }

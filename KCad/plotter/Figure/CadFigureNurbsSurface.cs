@@ -300,5 +300,9 @@ namespace Plotter
 
             NeedsEval = true;
         }
+
+        public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
+        {
+        }
     }
 }
