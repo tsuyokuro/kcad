@@ -205,6 +205,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CadConsoleRes.resx</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CadConsole\CadConsoleRes.ja.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CadConsoleRes.ja.resx</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CadConsole\RingBuffer.cs" />
     <Compile Include="Controls\CadConsole\TextLine.cs" />
     <Compile Include="Controls\CadConsole\TextRange.cs" />
