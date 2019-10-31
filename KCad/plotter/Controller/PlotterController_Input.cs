@@ -68,14 +68,14 @@ namespace Plotter.Controller
             {
                 if (mCurrentFigure != null)
                 {
-                    mCurrentFigure.Current = false;
+                    mCurrentFigure.GetGroupRoot().Current = false;
                 }
 
                 mCurrentFigure = value;
 
                 if (mCurrentFigure != null)
                 {
-                    mCurrentFigure.Current = true;
+                    mCurrentFigure.GetGroupRoot().Current = true;
                 }
             }
 

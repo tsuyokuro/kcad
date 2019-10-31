@@ -402,19 +402,39 @@ namespace Plotter.Controller
                     // It will be drawn at the end of this loop.
                     if (layer == CurrentLayer) { continue; }
 
-                    DrawPen pen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
-
-                    dc.Drawing.DrawFigures(layer.FigureList, pale_dp, pale_dp);
+                    foreach (CadFigure fig in layer.FigureList)
+                    {
+                        if (fig.Current)
+                        {
+                            fig.DrawEach(dc, current_dp);
+                        }
+                        else
+                        {
+                            fig.DrawEach(dc, pale_dp);
+                        }
+                    }
                 }
 
                 // Draw current layer at last
                 if (CurrentLayer != null && CurrentLayer.Visible)
                 {
-                    DrawPen pen = dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE);
-                    dc.Drawing.DrawFigures(CurrentLayer.FigureList, empty_dp, current_dp);
+                    foreach (CadFigure fig in CurrentLayer.FigureList)
+                    {
+                        if (fig.Current)
+                        {
+                            fig.DrawEach(dc, current_dp);
+                        }
+                        else
+                        {
+                            fig.DrawEach(dc);
+                        }
+                    }
                 }
 
-                dc.Drawing.DrawFigures(TempFigureList, test_dp, test_dp);
+                foreach (CadFigure fig in TempFigureList)
+                {
+                    fig.DrawEach(dc, test_dp);
+                }
 
                 if (MeasureFigureCreator != null)
                 {
@@ -429,7 +449,10 @@ namespace Plotter.Controller
             {
                 if (!layer.Visible) continue;
 
-                dc.Drawing.DrawFigures(layer.FigureList);
+                foreach (CadFigure fig in layer.FigureList)
+                {
+                    fig.DrawEach(dc);
+                }
             }
         }
 

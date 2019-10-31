@@ -45,55 +45,6 @@ namespace Plotter
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
-        public void DrawFigures(List<CadFigure> list)
-        {
-            foreach (CadFigure fig in list)
-            {
-                fig.ForEachFig((Action<CadFigure>)(a =>
-                {
-                    a.Draw(DC);
-                }));
-            }
-        }
-
-        public void DrawFigures(List<CadFigure> list, DrawParams dp, DrawParams cdp)
-        {
-            if (dp.Empty)
-            {
-                foreach (CadFigure fig in list)
-                {
-                    fig.ForEachFig((Action<CadFigure>)(a =>
-                    {
-                        if (a.Current)
-                        {
-                            a.Draw(DC, cdp);
-                        }
-                        else
-                        {
-                            a.Draw(DC);
-                        }
-                    }));
-                }
-            }
-            else
-            {
-                foreach (CadFigure fig in list)
-                {
-                    fig.ForEachFig((Action<CadFigure>)(a =>
-                    {
-                        if (a.Current)
-                        {
-                            a.Draw(DC, cdp);
-                        }
-                        else
-                        {
-                            a.Draw(DC, dp);
-                        }
-                    }));
-                }
-            }
-        }
-
         public void DrawSelected(List<CadFigure> list, DrawPen pen)
         {
             DisableLight();

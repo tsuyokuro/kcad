@@ -685,6 +685,26 @@ namespace Plotter
 
         public abstract void EndCreate(DrawContext dc);
 
+        public void DrawEach(DrawContext dc)
+        {
+            Draw(dc);
+
+            foreach (CadFigure c in ChildList)
+            {
+                c.DrawEach(dc);
+            }
+        }
+
+        public void DrawEach(DrawContext dc, DrawParams dp)
+        {
+            Draw(dc, dp);
+
+            foreach (CadFigure c in ChildList)
+            {
+                c.DrawEach(dc, dp);
+            }
+        }
+
         public virtual CadRect GetContainsRect()
         {
             return FigUtil.GetContainsRect(this);
