@@ -785,60 +785,6 @@ namespace Plotter
             return PointList[idx].Selected;
         }
 
-        public virtual void ForEachSegment(Func<CadSegment, bool> dg)
-        {
-            int cnt = SegmentCount;
-            for (int i = 0; i < cnt; i++)
-            {
-                if (!dg( GetSegmentAt(i) ))
-                {
-                    break;
-                }
-            }
-        }
-
-        public virtual void ForEachPoint(Action<CadVertex> dg)
-        {
-            int cnt = PointCount;
-            for (int i = 0; i < cnt; i++)
-            {
-                dg(GetPointAt(i));
-            }
-        }
-
-        public virtual void ForEachPointB(Func<CadVertex, bool> dg)
-        {
-            int cnt = PointCount;
-            for (int i = 0; i < cnt; i++)
-            {
-                if (!dg(GetPointAt(i)))
-                {
-                    break;
-                }
-            }
-        }
-
-        public virtual void ForEachPoint(Action<CadVertex, int> dg)
-        {
-            int cnt = PointCount;
-            for (int i = 0; i < cnt; i++)
-            {
-                dg(GetPointAt(i), i);
-            }
-        }
-
-        public virtual void ForEachPointB(Func<CadVertex, int, bool> dg)
-        {
-            int cnt = PointCount;
-            for (int i = 0; i < cnt; i++)
-            {
-                if (!dg(GetPointAt(i), i))
-                {
-                    break;
-                }
-            }
-        }
-
         public virtual void InvertDir()
         {
         }
