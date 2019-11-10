@@ -10,14 +10,9 @@ namespace Plotter
             VertexList src,
             int curveSplitNum)
         {
-            return GetExpandList(src, 0, src.Count, curveSplitNum);
-        }
+            int start = 0;
+            int cnt = src.Count;
 
-        public static VertexList GetExpandList(
-            VertexList src,
-            int start, int cnt,
-            int curveSplitNum)
-        {
             VertexList ret = new VertexList(curveSplitNum * ((cnt + 1) / 2));
 
             ForEachPoints<Object>(src, start, cnt, curveSplitNum, (v, d) => { ret.Add(v); return null; }, null);
@@ -25,15 +20,19 @@ namespace Plotter
             return ret;
         }
 
-        //public static void ForEachPoints(
+        //public static VertexList GetExpandList(
         //    VertexList src,
-        //    int curveSplitNum,
-        //    Action<CadVertex> action)
+        //    int start, int cnt,
+        //    int curveSplitNum)
         //{
-        //    ForEachPoints(src, 0, src.Count, curveSplitNum, action);
+        //    VertexList ret = new VertexList(curveSplitNum * ((cnt + 1) / 2));
+
+        //    ForEachPoints<Object>(src, start, cnt, curveSplitNum, (v, d) => { ret.Add(v); return null; }, null);
+
+        //    return ret;
         //}
 
-        public static void ForEachPoints<T>(
+        public static CadVertex ForEachPoints<T>(
             VertexList src,
             int start, int cnt,
             int curveSplitNum,
@@ -43,11 +42,13 @@ namespace Plotter
 
             if (cnt <= 0)
             {
-                return;
+                return CadVertex.InvalidValue;
             }
 
             int i = start;
             int end = start + cnt - 1;
+
+            CadVertex last = default;
 
             for (; i <= end;)
             {
@@ -56,14 +57,14 @@ namespace Plotter
                     if (pl[i + 1].IsHandle &&
                         pl[i + 2].IsHandle)
                     {
-                        CadUtil.ForEachBezierPoints4<T>(pl[i], pl[i + 1], pl[i + 2], pl[i + 3], curveSplitNum, func, param);
+                        last = CadUtil.ForEachBezierPoints4<T>(pl[i], pl[i + 1], pl[i + 2], pl[i + 3], curveSplitNum, func, param);
 
                         i += 4;
                         continue;
                     }
                     else if (pl[i + 1].IsHandle && !pl[i + 2].IsHandle)
                     {
-                        CadUtil.ForEachBezierPoints3<T>(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, func, param);
+                        last = CadUtil.ForEachBezierPoints3<T>(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, func, param);
 
                         i += 3;
                         continue;
@@ -74,7 +75,7 @@ namespace Plotter
                 {
                     if (pl[i + 1].IsHandle && !pl[i + 2].IsHandle)
                     {
-                        CadUtil.ForEachBezierPoints3<T>(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, func, param);
+                        last = CadUtil.ForEachBezierPoints3<T>(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, func, param);
 
                         i += 3;
                         continue;
@@ -82,21 +83,26 @@ namespace Plotter
                 }
 
                 param = func(pl[i], param);
+                last = pl[i];
                 i++;
             }
+
+            return last;
         }
 
-        public static void ForEachSegs<T>(
-            VertexList src,
-            int start, int cnt,
+        public static CadVertex ForEachSegs<T>(
+            VertexList src, bool isloop, 
             int curveSplitNum,
             Action<CadVertex, CadVertex, T> action, T param)
         {
             VertexList pl = src;
 
+            int start = 0;
+            int cnt = pl.Count;
+
             if (cnt <= 0)
             {
-                return;
+                return CadVertex.InvalidValue;
             }
 
             CadVertex p0 = src[start];
@@ -146,6 +152,13 @@ namespace Plotter
                 p0 = pl[i];
                 i++;
             }
+
+            if (isloop)
+            {
+                action(p0, pl[0], param);
+            }
+
+            return p0;
         }
     }
 }

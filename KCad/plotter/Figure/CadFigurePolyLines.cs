@@ -215,37 +215,30 @@ namespace Plotter
                 return;
             }
 
-            DrawParam2 dp2 = new DrawParam2(dc, pen, a.vector);
-
-            //PolyLineExpander.ForEachPoints<DrawParam2>(pl, start + 1, cnt - 1, 8,
+            //DrawParam2 dp2 = new DrawParam2(dc, pen, a.vector);
+            //a =PolyLineExpander.ForEachPoints<DrawParam2>(pl, start + 1, cnt - 1, 8,
             //    (v, p) =>
             //    {
             //        dc.Drawing.DrawLine(pen, p.PrevV, v.vector);
             //        p.PrevV = v.vector;
             //        return p;
             //    }, dp2);
+            //if (IsLoop)
+            //{
+            //    dc.Drawing.DrawLine(pen, a.vector, pl[start].vector);
+            //}
 
             DrawParam dp = new DrawParam(dc, pen);
-            PolyLineExpander.ForEachSegs<DrawParam>(pl, start, cnt, 8,
+            PolyLineExpander.ForEachSegs<DrawParam>(pl, IsLoop, 8, 
                 (v0, v1, p) =>
                 {
                     p.DC.Drawing.DrawLine(p.Pen, v0.vector, v1.vector);
                 }, dp);
-
-            if (IsLoop)
-            {
-                dc.Drawing.DrawLine(pen, pl[cnt-1].vector, pl[start].vector);
-            }
         }
 
         public override VertexList GetPoints(int curveSplitNum)
         {
-            return GetPointsPart(0, mPointList.Count, curveSplitNum);
-        }
-
-        private VertexList GetPointsPart(int start, int cnt, int curveSplitNum)
-        {
-            return PolyLineExpander.GetExpandList(mPointList, start, cnt, curveSplitNum);
+            return PolyLineExpander.GetExpandList(mPointList, curveSplitNum);
         }
 
         private void DrawSelectedLines(DrawContext dc, DrawPen pen)

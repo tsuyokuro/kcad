@@ -491,6 +491,13 @@ namespace Plotter.Controller
 
         private void Test()
         {
+            CadFigure fig = Controller.CurrentFigure;
+
+            if (fig == null) return;
+
+            VertexList vl = fig.GetPoints(4);
+
+            int a = vl.Count;        
         }
 
         private void testTriangulate()

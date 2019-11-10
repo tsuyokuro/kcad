@@ -245,7 +245,7 @@ namespace Plotter
         //    }
         //}
 
-        public static bool ForEachBezierPoints3<T>(
+        public static CadVertex ForEachBezierPoints3<T>(
             CadVertex p0, CadVertex p1, CadVertex p2, int s, Func<CadVertex, T, T> func, T param)
         {
             double t = 0;
@@ -272,10 +272,10 @@ namespace Plotter
                 t += d;
             }
 
-            return true;
+            return t1;
         }
 
-        public static void ForEachBezierPoints4<T>(
+        public static CadVertex ForEachBezierPoints4<T>(
             CadVertex p0, CadVertex p1, CadVertex p2, CadVertex p3, int s, Func<CadVertex, T, T> func, T param)
         {
             double t = 0;
@@ -302,6 +302,8 @@ namespace Plotter
 
                 t += d;
             }
+
+            return t1;
         }
 
         public static CadVertex ForEachBezierSegs3<T>(
