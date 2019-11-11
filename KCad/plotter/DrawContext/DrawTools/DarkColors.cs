@@ -42,6 +42,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_DRAG_LINE] = Color.FromArgb(0xFF, 0x60, 0x60, 0x80);
             PenColorTbl[DrawTools.PEN_NORMAL] = Color.FromArgb(0xFF, 0x00, 0xff, 0x7f);
             PenColorTbl[DrawTools.PEN_EXT_SNAP] = Color.FromArgb(0xFF, 0xff, 0x00, 0x00);
+            PenColorTbl[DrawTools.PEN_HANDLE_LINE] = Color.YellowGreen;
 
 
             BrushColorTbl = new Color[DrawTools.BRUSH_TBL_SIZE];

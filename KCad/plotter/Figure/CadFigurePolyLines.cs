@@ -259,25 +259,26 @@ namespace Plotter
                 {
                     int idx = i + 1;
 
-                    if (idx < PointCount)
+                    if (idx >= num) idx = 0;
+
+                    CadVertex next = GetPointAt(idx);
+                    if (!next.IsHandle)
                     {
-                        CadVertex np = GetPointAt(idx);
-                        if (!np.IsHandle)
-                        {
-                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p.vector, np.vector);
-                            dc.Drawing.DrawSelectedPoint(np.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
-                        }
+                        // Draw handle
+                        dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_HANDLE_LINE), p.vector, next.vector);
+                        dc.Drawing.DrawSelectedPoint(next.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                     }
 
                     idx = i - 1;
 
                     if (idx >= 0)
                     {
-                        CadVertex np = GetPointAt(idx);
-                        if (!np.IsHandle)
+                        CadVertex prev = GetPointAt(idx);
+                        if (!prev.IsHandle)
                         {
-                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p.vector, np.vector);
-                            dc.Drawing.DrawSelectedPoint(np.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                            // Draw handle
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_HANDLE_LINE), p.vector, prev.vector);
+                            dc.Drawing.DrawSelectedPoint(prev.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
                 }

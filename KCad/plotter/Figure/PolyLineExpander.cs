@@ -3,101 +3,37 @@ using System;
 
 namespace Plotter
 {
-    // PolyLineの直線部分に含めてスプライン曲線部分を点リストに展開する
     public static class PolyLineExpander
     {
         public static VertexList GetExpandList(
             VertexList src,
             int curveSplitNum)
         {
-            int start = 0;
             int cnt = src.Count;
 
             VertexList ret = new VertexList(curveSplitNum * ((cnt + 1) / 2));
 
-            ForEachPoints<Object>(src, start, cnt, curveSplitNum, (v, d) => { ret.Add(v); return null; }, null);
+            ForEachPoints<Object>(src, curveSplitNum, (v, d) => { ret.Add(v); }, null);
 
             return ret;
         }
 
-        //public static VertexList GetExpandList(
-        //    VertexList src,
-        //    int start, int cnt,
-        //    int curveSplitNum)
-        //{
-        //    VertexList ret = new VertexList(curveSplitNum * ((cnt + 1) / 2));
+        private enum ScanState
+        {
+            START,
+            MAIN,
+            HANDLE_1,
+            HANDLE_2,
 
-        //    ForEachPoints<Object>(src, start, cnt, curveSplitNum, (v, d) => { ret.Add(v); return null; }, null);
-
-        //    return ret;
-        //}
+        }
 
         public static CadVertex ForEachPoints<T>(
             VertexList src,
-            int start, int cnt,
             int curveSplitNum,
-            Func<CadVertex, T, T> func, T param)
+            Action<CadVertex, T> action, T param)
         {
             VertexList pl = src;
 
-            if (cnt <= 0)
-            {
-                return CadVertex.InvalidValue;
-            }
-
-            int i = start;
-            int end = start + cnt - 1;
-
-            CadVertex last = default;
-
-            for (; i <= end;)
-            {
-                if (i + 3 <= end)
-                {
-                    if (pl[i + 1].IsHandle &&
-                        pl[i + 2].IsHandle)
-                    {
-                        last = CadUtil.ForEachBezierPoints4<T>(pl[i], pl[i + 1], pl[i + 2], pl[i + 3], curveSplitNum, func, param);
-
-                        i += 4;
-                        continue;
-                    }
-                    else if (pl[i + 1].IsHandle && !pl[i + 2].IsHandle)
-                    {
-                        last = CadUtil.ForEachBezierPoints3<T>(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, func, param);
-
-                        i += 3;
-                        continue;
-                    }
-                }
-
-                if (i + 2 <= end)
-                {
-                    if (pl[i + 1].IsHandle && !pl[i + 2].IsHandle)
-                    {
-                        last = CadUtil.ForEachBezierPoints3<T>(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, func, param);
-
-                        i += 3;
-                        continue;
-                    }
-                }
-
-                param = func(pl[i], param);
-                last = pl[i];
-                i++;
-            }
-
-            return last;
-        }
-
-        public static CadVertex ForEachSegs<T>(
-            VertexList src, bool isloop, 
-            int curveSplitNum,
-            Action<CadVertex, CadVertex, T> action, T param)
-        {
-            VertexList pl = src;
-
-            int start = 0;
             int cnt = pl.Count;
 
             if (cnt <= 0)
@@ -105,60 +41,142 @@ namespace Plotter
                 return CadVertex.InvalidValue;
             }
 
-            CadVertex p0 = src[start];
+            CadVertex p0 = src[0];
 
-            int i = start + 1;
-            int end = start + cnt - 1;
+            int i = 0;
 
-            for (; i <= end;)
+            ScanState state = ScanState.START;
+
+            for (; i < cnt; i++)
             {
-                if (i + 3 <= end)
+                if (state == ScanState.START)
                 {
-                    if (pl[i + 1].IsHandle &&
-                        pl[i + 2].IsHandle)
-                    {
-                        action(p0, pl[i], param);
+                    p0 = src[i];
+                    action(p0, param);
 
-                        p0 = CadUtil.ForEachBezierSegs4<T>(pl[i], pl[i + 1], pl[i + 2], pl[i + 3], curveSplitNum, action, param);
-                        
-                        i += 4;
-                        continue;
+                    state = ScanState.MAIN;
+                }
+                else if (state == ScanState.MAIN)
+                {
+                    if (pl[i].IsHandle)
+                    {
+                        state = ScanState.HANDLE_1;
                     }
-                    else if (pl[i + 1].IsHandle && !pl[i + 2].IsHandle)
+                    else
                     {
-                        action(p0, pl[i], param);
-
-                        p0 = CadUtil.ForEachBezierSegs3<T>(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, action, param);
-
-                        i += 3;
-                        continue;
+                        p0 = pl[i];
+                        action(p0, param);
                     }
                 }
-
-                if (i + 2 <= end)
+                else if (state == ScanState.HANDLE_1)
                 {
-                    if (pl[i + 1].IsHandle && !pl[i + 2].IsHandle)
+                    if (pl[i].IsHandle)
                     {
-                        action(p0, pl[i], param);
-
-                        p0 = CadUtil.ForEachBezierSegs3<T>(pl[i], pl[i + 1], pl[i + 2], curveSplitNum, action, param);
-
-                        i += 3;
-                        continue;
+                        state = ScanState.HANDLE_2;
+                    }
+                    else
+                    {
+                        p0 = CadUtil.ForEachBezierPoints3<T>(pl[i - 2], pl[i - 1], pl[i], curveSplitNum, action, param);
+                        state = ScanState.MAIN;
                     }
                 }
-
-                action(p0, pl[i], param);
-                p0 = pl[i];
-                i++;
+                else if (state == ScanState.HANDLE_2)
+                {
+                    p0 = CadUtil.ForEachBezierPoints4<T>(pl[i - 3], pl[i - 2], pl[i - 1], pl[i], curveSplitNum, action, param);
+                    state = ScanState.MAIN;
+                }
             }
 
-            if (isloop)
+            if (state == ScanState.MAIN)
             {
-                action(p0, pl[0], param);
+            }
+            else if (state == ScanState.HANDLE_1)
+            {
+                p0 = CadUtil.ForEachBezierPoints3<T>(pl[cnt - 2], pl[cnt - 1], pl[0], curveSplitNum, action, param);
+            }
+            else if (state == ScanState.HANDLE_2)
+            {
+                p0 = CadUtil.ForEachBezierPoints4<T>(pl[cnt - 3], pl[cnt - 2], pl[cnt - 1], pl[0], curveSplitNum, action, param);
             }
 
             return p0;
         }
+
+        public static CadVertex ForEachSegs<T>(
+            VertexList src, bool isloop,
+            int curveSplitNum,
+            Action<CadVertex, CadVertex, T> action, T param)
+        {
+            VertexList pl = src;
+
+            int cnt = pl.Count;
+
+            if (cnt <= 0)
+            {
+                return CadVertex.InvalidValue;
+            }
+
+            CadVertex p0 = src[0];
+
+            int i = 0;
+
+            ScanState state = ScanState.START;
+
+            for (; i < cnt; i++)
+            {
+                if (state == ScanState.START)
+                {
+                    p0 = src[i];
+                    state = ScanState.MAIN;
+                }
+                else if (state == ScanState.MAIN)
+                {
+                    if (pl[i].IsHandle)
+                    {
+                        state = ScanState.HANDLE_1;
+                    }
+                    else
+                    {
+                        action(p0, pl[i], param);
+                        p0 = pl[i];
+                    }
+                }
+                else if (state == ScanState.HANDLE_1)
+                {
+                    if (pl[i].IsHandle)
+                    {
+                        state = ScanState.HANDLE_2;
+                    }
+                    else
+                    {
+                        p0 = CadUtil.ForEachBezierSegs3<T>(pl[i-2], pl[i-1], pl[i], curveSplitNum, action, param);
+                        state = ScanState.MAIN;
+                    }
+                }
+                else if (state == ScanState.HANDLE_2)
+                {
+                    p0 = CadUtil.ForEachBezierSegs4<T>(pl[i-3], pl[i-2], pl[i-1], pl[i], curveSplitNum, action, param);
+                    state = ScanState.MAIN;
+                }
+            }
+
+            if (state == ScanState.MAIN) {
+                if (isloop)
+                {
+                    action(p0, pl[0], param);
+                }
+            }
+            else if (state == ScanState.HANDLE_1)
+            {
+                p0 = CadUtil.ForEachBezierSegs3<T>(pl[cnt - 2], pl[cnt - 1], pl[0], curveSplitNum, action, param);
+            }
+            else if (state == ScanState.HANDLE_2)
+            {
+                p0 = CadUtil.ForEachBezierSegs4<T>(pl[cnt - 3], pl[cnt - 2], pl[cnt - 1], pl[0], curveSplitNum, action, param);
+            }
+
+            return p0;
+        }
+
     }
 }

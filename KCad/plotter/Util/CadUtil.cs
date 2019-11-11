@@ -161,13 +161,6 @@ namespace Plotter
 
         public static int InitBezier(CadFigure fig, int idx1, int idx2)
         {
-            if (idx1 > idx2)
-            {
-                int t = idx1;
-                idx1 = idx2;
-                idx2 = t;
-            }
-
             CadVertex a = fig.GetPointAt(idx1);
             CadVertex b = fig.GetPointAt(idx2);
 
@@ -246,7 +239,7 @@ namespace Plotter
         //}
 
         public static CadVertex ForEachBezierPoints3<T>(
-            CadVertex p0, CadVertex p1, CadVertex p2, int s, Func<CadVertex, T, T> func, T param)
+            CadVertex p0, CadVertex p1, CadVertex p2, int s, Action<CadVertex, T> action, T param)
         {
             double t = 0;
             double d = 1.0 / (double)s;
@@ -258,7 +251,7 @@ namespace Plotter
             CadVertex t0 = p0;
             CadVertex t1 = p0;
 
-            param = func(t0, param);
+            action(t0, param);
 
             while (t <= 1.0)
             {
@@ -267,7 +260,7 @@ namespace Plotter
                 t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
                 t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
 
-                param = func(t1, param);
+                action(t1, param);
 
                 t += d;
             }
@@ -276,7 +269,7 @@ namespace Plotter
         }
 
         public static CadVertex ForEachBezierPoints4<T>(
-            CadVertex p0, CadVertex p1, CadVertex p2, CadVertex p3, int s, Func<CadVertex, T, T> func, T param)
+            CadVertex p0, CadVertex p1, CadVertex p2, CadVertex p3, int s, Action<CadVertex, T> action, T param)
         {
             double t = 0;
             double d = 1.0 / (double)s;
@@ -288,7 +281,7 @@ namespace Plotter
             CadVertex t0 = p0;
             CadVertex t1 = p0;
 
-            param = func(t0, param);
+            action(t0, param);
 
             while (t <= 1.0)
             {
@@ -298,7 +291,7 @@ namespace Plotter
                 t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
                 t1 += p3 * CadMath.BernsteinBasisF(n - 1, 3, t);
 
-                param = func(t1, param);
+                action(t1, param);
 
                 t += d;
             }
