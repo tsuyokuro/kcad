@@ -489,7 +489,7 @@ namespace Plotter.Controller
             return Controller.DB.GetFigure(idlist[0]);
         }
 
-        private void Test()
+        private void GetPointsTest()
         {
             CadFigure fig = Controller.CurrentFigure;
 
@@ -497,7 +497,48 @@ namespace Plotter.Controller
 
             VertexList vl = fig.GetPoints(4);
 
-            int a = vl.Count;        
+            int a = vl.Count;
+
+            CadFigurePolyLines tmpFig = (CadFigurePolyLines)Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
+
+            tmpFig.AddPoints(vl);
+
+            Controller.CurrentLayer.AddFigure(tmpFig);
+
+            Controller.UpdateObjectTree(true);
+        }
+
+        private void GetSegsTest()
+        {
+            CadFigure fig = Controller.CurrentFigure;
+
+            if (fig == null) return;
+
+            VertexList vl = new VertexList(20);
+
+            PolyLineExpander.ForEachSegs<Object>(fig.PointList, fig.IsLoop, 4, local, null);
+
+
+            CadFigurePolyLines tmpFig = (CadFigurePolyLines)Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
+
+            tmpFig.AddPoints(vl);
+
+            Controller.CurrentLayer.AddFigure(tmpFig);
+
+            Controller.UpdateObjectTree(true);
+
+
+            void local(CadVertex v1, CadVertex v2, Object p)
+            {
+                vl.Add(v1);
+            }
+        }
+
+
+        private void Test()
+        {
+            GetPointsTest();
+            //GetSegsTest();
         }
 
         private void testTriangulate()

@@ -49,54 +49,61 @@ namespace Plotter
 
             for (; i < cnt; i++)
             {
-                if (state == ScanState.START)
+                switch (state)
                 {
-                    p0 = src[i];
-                    action(p0, param);
+                    case ScanState.START:
+                        p0 = src[i];
+                        action(p0, param);
 
-                    state = ScanState.MAIN;
-                }
-                else if (state == ScanState.MAIN)
-                {
-                    if (pl[i].IsHandle)
-                    {
-                        state = ScanState.HANDLE_1;
-                    }
-                    else
-                    {
+                        state = ScanState.MAIN;
+                        break;
+
+                    case ScanState.MAIN:
+                        if (pl[i].IsHandle)
+                        {
+                            state = ScanState.HANDLE_1;
+                        }
+                        else
+                        {
+                            p0 = pl[i];
+                            action(p0, param);
+                        }
+                        break;
+
+                    case ScanState.HANDLE_1:
+                        if (pl[i].IsHandle)
+                        {
+                            state = ScanState.HANDLE_2;
+                        }
+                        else
+                        {
+                            ForEachBezierPoints3<T>(pl[i - 2], pl[i - 1], pl[i], curveSplitNum, true, action, param);
+                            p0 = pl[i];
+                            action(p0, param);
+                            state = ScanState.MAIN;
+                        }
+                        break;
+
+                    case ScanState.HANDLE_2:
+                        ForEachBezierPoints4<T>(pl[i - 3], pl[i - 2], pl[i - 1], pl[i], curveSplitNum, true, action, param);
                         p0 = pl[i];
                         action(p0, param);
-                    }
-                }
-                else if (state == ScanState.HANDLE_1)
-                {
-                    if (pl[i].IsHandle)
-                    {
-                        state = ScanState.HANDLE_2;
-                    }
-                    else
-                    {
-                        p0 = CadUtil.ForEachBezierPoints3<T>(pl[i - 2], pl[i - 1], pl[i], curveSplitNum, action, param);
                         state = ScanState.MAIN;
-                    }
-                }
-                else if (state == ScanState.HANDLE_2)
-                {
-                    p0 = CadUtil.ForEachBezierPoints4<T>(pl[i - 3], pl[i - 2], pl[i - 1], pl[i], curveSplitNum, action, param);
-                    state = ScanState.MAIN;
+                        break;
                 }
             }
 
-            if (state == ScanState.MAIN)
+            switch (state)
             {
-            }
-            else if (state == ScanState.HANDLE_1)
-            {
-                p0 = CadUtil.ForEachBezierPoints3<T>(pl[cnt - 2], pl[cnt - 1], pl[0], curveSplitNum, action, param);
-            }
-            else if (state == ScanState.HANDLE_2)
-            {
-                p0 = CadUtil.ForEachBezierPoints4<T>(pl[cnt - 3], pl[cnt - 2], pl[cnt - 1], pl[0], curveSplitNum, action, param);
+                case ScanState.MAIN:
+                    break;
+                case ScanState.HANDLE_1:
+                    p0 = ForEachBezierPoints3<T>(pl[cnt - 2], pl[cnt - 1], pl[0], curveSplitNum, true, action, param);
+                    break;
+
+                case ScanState.HANDLE_2:
+                    p0 = ForEachBezierPoints4<T>(pl[cnt - 3], pl[cnt - 2], pl[cnt - 1], pl[0], curveSplitNum, true, action, param);
+                    break;
             }
 
             return p0;
@@ -124,59 +131,201 @@ namespace Plotter
 
             for (; i < cnt; i++)
             {
-                if (state == ScanState.START)
+                switch (state)
                 {
-                    p0 = src[i];
-                    state = ScanState.MAIN;
-                }
-                else if (state == ScanState.MAIN)
-                {
-                    if (pl[i].IsHandle)
-                    {
-                        state = ScanState.HANDLE_1;
-                    }
-                    else
-                    {
-                        action(p0, pl[i], param);
-                        p0 = pl[i];
-                    }
-                }
-                else if (state == ScanState.HANDLE_1)
-                {
-                    if (pl[i].IsHandle)
-                    {
-                        state = ScanState.HANDLE_2;
-                    }
-                    else
-                    {
-                        p0 = CadUtil.ForEachBezierSegs3<T>(pl[i-2], pl[i-1], pl[i], curveSplitNum, action, param);
+                    case ScanState.START:
+                        p0 = src[i];
                         state = ScanState.MAIN;
-                    }
-                }
-                else if (state == ScanState.HANDLE_2)
-                {
-                    p0 = CadUtil.ForEachBezierSegs4<T>(pl[i-3], pl[i-2], pl[i-1], pl[i], curveSplitNum, action, param);
-                    state = ScanState.MAIN;
+                        break;
+
+                    case ScanState.MAIN:
+                        if (pl[i].IsHandle)
+                        {
+                            state = ScanState.HANDLE_1;
+                        }
+                        else
+                        {
+                            action(p0, pl[i], param);
+                            p0 = pl[i];
+                        }
+                        break;
+
+                    case ScanState.HANDLE_1:
+                        if (pl[i].IsHandle)
+                        {
+                            state = ScanState.HANDLE_2;
+                        }
+                        else
+                        {
+                            p0 = ForEachBezierSegs3<T>(pl[i - 2], pl[i - 1], pl[i], curveSplitNum, action, param);
+                            state = ScanState.MAIN;
+                        }
+                        break;
+
+                    case ScanState.HANDLE_2:
+                        p0 = ForEachBezierSegs4<T>(pl[i - 3], pl[i - 2], pl[i - 1], pl[i], curveSplitNum, action, param);
+                        state = ScanState.MAIN;
+                        break;
                 }
             }
 
-            if (state == ScanState.MAIN) {
-                if (isloop)
-                {
-                    action(p0, pl[0], param);
-                }
-            }
-            else if (state == ScanState.HANDLE_1)
+            switch (state)
             {
-                p0 = CadUtil.ForEachBezierSegs3<T>(pl[cnt - 2], pl[cnt - 1], pl[0], curveSplitNum, action, param);
-            }
-            else if (state == ScanState.HANDLE_2)
-            {
-                p0 = CadUtil.ForEachBezierSegs4<T>(pl[cnt - 3], pl[cnt - 2], pl[cnt - 1], pl[0], curveSplitNum, action, param);
+                case ScanState.MAIN:
+                    if (isloop)
+                    {
+                        action(p0, pl[0], param);
+                    }
+                    break;
+
+                case ScanState.HANDLE_1:
+                    p0 = ForEachBezierSegs3<T>(pl[cnt - 2], pl[cnt - 1], pl[0], curveSplitNum, action, param);
+                    break;
+                case ScanState.HANDLE_2:
+                    p0 = ForEachBezierSegs4<T>(pl[cnt - 3], pl[cnt - 2], pl[cnt - 1], pl[0], curveSplitNum, action, param);
+                    break;
             }
 
             return p0;
         }
 
+        private static CadVertex ForEachBezierPoints3<T>(
+            CadVertex p0, CadVertex p1, CadVertex p2, int scnt, bool excludeEdge, Action<CadVertex, T> action, T param)
+        {
+            double t = 0;
+            double d = 1.0 / (double)scnt;
+            double e = 1.0;
+
+            t = d;
+
+
+            int n = 3;
+
+            CadVertex t0 = p0;
+            CadVertex t1 = p0;
+
+            if (excludeEdge)
+            {
+                e -= d;
+            }
+            else
+            {
+                action(t0, param);
+            }
+
+            while (t <= e)
+            {
+                t1 = default(CadVertex);
+                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
+                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
+                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
+
+                action(t1, param);
+
+                t += d;
+            }
+
+            return t1;
+        }
+
+        private static CadVertex ForEachBezierPoints4<T>(
+            CadVertex p0, CadVertex p1, CadVertex p2, CadVertex p3, int scnt, bool excludeEdge, Action<CadVertex, T> action, T param)
+        {
+            double t = 0;
+            double d = 1.0 / (double)scnt;
+            double e = 1.0;
+
+            t = d;
+
+            int n = 4;
+
+            CadVertex t0 = p0;
+            CadVertex t1 = p0;
+
+            if (excludeEdge)
+            {
+                e -= d;
+            }
+            else
+            {
+                action(t0, param);
+            }
+
+            while (t <= e)
+            {
+                t1 = default(CadVertex);
+                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
+                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
+                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
+                t1 += p3 * CadMath.BernsteinBasisF(n - 1, 3, t);
+
+                action(t1, param);
+
+                t += d;
+            }
+
+            return t1;
+        }
+
+        private static CadVertex ForEachBezierSegs3<T>(
+            CadVertex p0, CadVertex p1, CadVertex p2, int s, Action<CadVertex, CadVertex, T> action, T param)
+        {
+            double t = 0;
+            double d = 1.0 / (double)s;
+
+            t = d;
+
+            int n = 3;
+
+            CadVertex t0 = p0;
+            CadVertex t1 = p0;
+
+            while (t <= 1.0)
+            {
+                t1 = default(CadVertex);
+                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
+                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
+                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
+
+                action(t0, t1, param);
+
+                t0 = t1;
+
+                t += d;
+            }
+
+            return t1;
+        }
+
+        private static CadVertex ForEachBezierSegs4<T>(
+            CadVertex p0, CadVertex p1, CadVertex p2, CadVertex p3, int s, Action<CadVertex, CadVertex, T> action, T param)
+        {
+            double t = 0;
+            double d = 1.0 / (double)s;
+
+            t = d;
+
+            int n = 4;
+
+            CadVertex t0 = p0;
+            CadVertex t1 = p0;
+
+            while (t <= 1.0)
+            {
+                t1 = default(CadVertex);
+                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
+                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
+                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
+                t1 += p3 * CadMath.BernsteinBasisF(n - 1, 3, t);
+
+                action(t0, t1, param);
+
+                t0 = t1;
+
+                t += d;
+            }
+
+            return t1;
+        }
     }
 }

@@ -215,19 +215,6 @@ namespace Plotter
                 return;
             }
 
-            //DrawParam2 dp2 = new DrawParam2(dc, pen, a.vector);
-            //a =PolyLineExpander.ForEachPoints<DrawParam2>(pl, start + 1, cnt - 1, 8,
-            //    (v, p) =>
-            //    {
-            //        dc.Drawing.DrawLine(pen, p.PrevV, v.vector);
-            //        p.PrevV = v.vector;
-            //        return p;
-            //    }, dp2);
-            //if (IsLoop)
-            //{
-            //    dc.Drawing.DrawLine(pen, a.vector, pl[start].vector);
-            //}
-
             DrawParam dp = new DrawParam(dc, pen);
             PolyLineExpander.ForEachSegs<DrawParam>(pl, IsLoop, 8, 
                 (v0, v1, p) =>
