@@ -105,7 +105,17 @@ namespace Plotter
             NurbsPointList = new VertexList(Nurbs.UOutCnt * Nurbs.VOutCnt);
         }
 
-        public override void Draw(DrawContext dc, DrawPen pen)
+        public override void Draw(DrawContext dc)
+        {
+            DrawNurbs(dc, dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE));
+        }
+
+        public override void Draw(DrawContext dc, DrawParams dp)
+        {
+            DrawNurbs(dc, dp.LinePen);
+        }
+
+        private void DrawNurbs(DrawContext dc, DrawPen pen)
         {
             if (PointList.Count < 2)
             {
@@ -289,6 +299,10 @@ namespace Plotter
             NurbsPointList = new VertexList(Nurbs.UOutCnt * Nurbs.VOutCnt);
 
             NeedsEval = true;
+        }
+
+        public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
+        {
         }
     }
 }

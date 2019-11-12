@@ -1,4 +1,5 @@
 ﻿//#define MOUSE_THREAD
+//#define VSYNC
 
 using OpenTK;
 using OpenTK.Graphics;
@@ -66,6 +67,12 @@ namespace Plotter
         private PlotterViewGL(GraphicsMode mode) : base(mode)
         {
             SetupContextMenu();
+
+#if VSYNC
+            VSync = true;
+#else
+            VSync = false;
+#endif
 
             Load += OnLoad;
             SizeChanged += OnResize;

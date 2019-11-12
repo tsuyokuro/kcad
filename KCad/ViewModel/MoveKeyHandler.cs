@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using CadDataTypes;
 using OpenTK;
+using Plotter;
 using Plotter.Controller;
 using Plotter.Settings;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
     public class MoveKeyHandler
     {

@@ -48,9 +48,14 @@ namespace Plotter
             }
         }
 
-        public override void Draw(DrawContext dc, DrawPen pen)
+        public override void Draw(DrawContext dc)
         {
-            drawPoint(dc, pen);
+            drawPoint(dc, dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE));
+        }
+
+        public override void Draw(DrawContext dc, DrawParams dp)
+        {
+            drawPoint(dc, dp.LinePen);
         }
 
         public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)

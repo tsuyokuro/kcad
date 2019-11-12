@@ -17,8 +17,9 @@ using KCad.Dialogs;
 using System.Text.RegularExpressions;
 using Plotter.svg;
 using System.Xml.Linq;
+using Plotter;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
     public partial class PlotterViewModel : INotifyPropertyChanged
     {
@@ -135,7 +136,7 @@ namespace Plotter
                 return;
             }
 
-            if (SettingsHolder.Settings.FilterTreeView)
+            if (SettingsHolder.Settings.FilterObjectTree)
             {
                 CadLayerTreeItem item = new CadLayerTreeItem();
                 item.AddChildren(Controller.CurrentLayer, fig =>
@@ -314,11 +315,11 @@ namespace Plotter
 
             mController.Observer.CursorPosChanged = CursorPosChanged;
 
-            mController.Observer.UpdateTreeView = UpdateTreeView;
+            mController.Observer.UpdateObjectTree = UpdateTreeView;
 
-            mController.Observer.SetTreeViewPos = SetTreeViewPos;
+            mController.Observer.SetObjectTreePos = SetTreeViewPos;
 
-            mController.Observer.FindTreeViewItem = FindTreeViewItem;
+            mController.Observer.FindObjectTreeItem = FindTreeViewItem;
 
             mController.Observer.OpenPopupMessage = OpenPopupMessage;
 
@@ -675,10 +676,8 @@ namespace Plotter
             CurrentFileName = null;
 
 #if USE_GDI_VIEW
-            //PlotterView1.DrawContext.WorldScale = 1.0;
             PlotterView1.SetWorldScale(1.0);
 #endif
-            //PlotterViewGL1.DrawContext.WorldScale = 1.0;
             PlotterViewGL1.SetWorldScale(1.0);
 
             mController.ClearAll();
@@ -1117,10 +1116,8 @@ namespace Plotter
         public void SetWorldScale(double scale)
         {
 #if USE_GDI_VIEW
-            //PlotterView1.DrawContext.WorldScale = scale;
             PlotterView1.SetWorldScale(scale);
 #endif
-            //PlotterViewGL1.DrawContext.WorldScale = scale;
             PlotterViewGL1.SetWorldScale(scale);
         }
 

@@ -1,10 +1,6 @@
 ﻿using MessagePack;
 using Plotter.Serializer.v1001;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Plotter.Serializer
 {

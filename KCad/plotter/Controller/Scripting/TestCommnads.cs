@@ -53,7 +53,7 @@ namespace Plotter.Controller
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            Controller.UpdateTreeView(true);
+            Controller.UpdateObjectTree(true);
         }
 
         private void test002()
@@ -69,7 +69,7 @@ namespace Plotter.Controller
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            Controller.UpdateTreeView(true);
+            Controller.UpdateObjectTree(true);
         }
 
         private void test003()
@@ -93,7 +93,7 @@ namespace Plotter.Controller
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Controller.HistoryMan.foward(ope);
             Controller.CurrentLayer.AddFigure(fig);
-            Controller.UpdateTreeView(true);
+            Controller.UpdateObjectTree(true);
         }
 
         private void test004()
@@ -153,74 +153,6 @@ namespace Plotter.Controller
                     fig.PointList[j] = p;
                 }
             }
-        }
-
-        private void test008()
-        {
-            var dc = Controller.CurrentDC;
-
-            CadFigure fig = GetTargetFigure();
-
-
-            MinMax2D mm = FigureMinMaxScrn(dc, fig);
-        }
-
-        public static MinMax2D FigureMinMaxScrn(DrawContext dc, CadFigure fig)
-        {
-            MinMax2D mm = MinMax2D.Create();
-            CadVertex p0;
-            CadVertex p1;
-
-            fig.ForEachSegment(seg =>
-            {
-                p0 = dc.WorldPointToDevPoint(seg.P0);
-                p1 = dc.WorldPointToDevPoint(seg.P1);
-
-                if (p0.X < mm.Min.X)
-                {
-                    mm.Min.X = p0.X;
-                }
-
-                if (p1.X < mm.Min.X)
-                {
-                    mm.Min.X = p1.X;
-                }
-
-                if (p0.X > mm.Max.X)
-                {
-                    mm.Max.X = p0.X;
-                }
-
-                if (p1.X > mm.Max.X)
-                {
-                    mm.Max.X = p1.X;
-                }
-
-
-                if (p0.Y < mm.Min.Y)
-                {
-                    mm.Min.Y = p0.Y;
-                }
-
-                if (p1.Y < mm.Min.Y)
-                {
-                    mm.Min.Y = p1.Y;
-                }
-
-                if (p0.Y > mm.Max.Y)
-                {
-                    mm.Max.Y = p0.Y;
-                }
-
-                if (p1.Y > mm.Max.Y)
-                {
-                    mm.Max.Y = p1.Y;
-                }
-
-                return true;
-            });
-
-            return mm;
         }
 
         private void test009()
@@ -340,7 +272,7 @@ namespace Plotter.Controller
                 Controller.HistoryMan.foward(opeRoot);
             }
 
-            Controller.UpdateTreeView(true);
+            Controller.UpdateObjectTree(true);
         }
 
         private void test013()
@@ -457,7 +389,7 @@ namespace Plotter.Controller
 
             RunOnMainThread(() =>
             {
-                Controller.UpdateTreeView(true);
+                Controller.UpdateObjectTree(true);
             });
 
             Redraw();
@@ -482,7 +414,7 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(meshFig);
 
-            Controller.UpdateTreeView(true);
+            Controller.UpdateObjectTree(true);
         }
 
         private void testNu()
@@ -502,7 +434,7 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(nfig);
 
-            Controller.UpdateTreeView(true);
+            Controller.UpdateObjectTree(true);
         }
 
         private void testNus()
@@ -521,7 +453,7 @@ namespace Plotter.Controller
 
             RunOnMainThread(() =>
             {
-                Controller.UpdateTreeView(true);
+                Controller.UpdateObjectTree(true);
             });
         }
 
@@ -541,7 +473,7 @@ namespace Plotter.Controller
 
             RunOnMainThread(() =>
             {
-                Controller.UpdateTreeView(true);
+                Controller.UpdateObjectTree(true);
             });
         }
 
@@ -557,8 +489,56 @@ namespace Plotter.Controller
             return Controller.DB.GetFigure(idlist[0]);
         }
 
+        private void GetPointsTest()
+        {
+            CadFigure fig = Controller.CurrentFigure;
+
+            if (fig == null) return;
+
+            VertexList vl = fig.GetPoints(4);
+
+            int a = vl.Count;
+
+            CadFigurePolyLines tmpFig = (CadFigurePolyLines)Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
+
+            tmpFig.AddPoints(vl);
+
+            Controller.CurrentLayer.AddFigure(tmpFig);
+
+            Controller.UpdateObjectTree(true);
+        }
+
+        private void GetSegsTest()
+        {
+            CadFigure fig = Controller.CurrentFigure;
+
+            if (fig == null) return;
+
+            VertexList vl = new VertexList(20);
+
+            PolyLineExpander.ForEachSegs<Object>(fig.PointList, fig.IsLoop, 4, local, null);
+
+
+            CadFigurePolyLines tmpFig = (CadFigurePolyLines)Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
+
+            tmpFig.AddPoints(vl);
+
+            Controller.CurrentLayer.AddFigure(tmpFig);
+
+            Controller.UpdateObjectTree(true);
+
+
+            void local(CadVertex v1, CadVertex v2, Object p)
+            {
+                vl.Add(v1);
+            }
+        }
+
+
         private void Test()
         {
+            GetPointsTest();
+            //GetSegsTest();
         }
 
         private void testTriangulate()

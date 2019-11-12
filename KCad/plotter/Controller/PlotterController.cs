@@ -64,7 +64,7 @@ namespace Plotter.Controller
             set
             {
                 mDB.CurrentLayer = value;
-                UpdateTreeView(true);
+                UpdateObjectTree(true);
             }
         }
 
@@ -145,23 +145,23 @@ namespace Plotter.Controller
         #endregion
 
 
-        #region TreeView
-        public void UpdateTreeView(bool remakeTree)
+        #region ObjectTree
+        public void UpdateObjectTree(bool remakeTree)
         {
-            Observer.UpdateTreeView(remakeTree);
+            Observer.UpdateObjectTree(remakeTree);
         }
 
-        public void SetTreeViewPos(int index)
+        public void SetObjectTreePos(int index)
         {
-            Observer.SetTreeViewPos(index);
+            Observer.SetObjectTreePos(index);
         }
 
-        public int FindTreeViewItem(uint id)
+        public int FindObjectTreeItem(uint id)
         {
-            return Observer.FindTreeViewItem(id);
+            return Observer.FindObjectTreeItem(id);
         }
 
-        #endregion TreeView
+        #endregion ObjectTree
 
 
         #region Notify
@@ -240,7 +240,7 @@ namespace Plotter.Controller
                     CreatingFigType = CadFigure.Types.NONE;
                     State = States.SELECT;
 
-                    UpdateTreeView(true);
+                    UpdateObjectTree(true);
                     NotifyStateChange();
                 }
             }
@@ -273,7 +273,7 @@ namespace Plotter.Controller
         {
             ClearSelection();
             HistoryMan.undo();
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
             UpdateLayerList();
         }
 
@@ -281,7 +281,7 @@ namespace Plotter.Controller
         {
             ClearSelection();
             HistoryMan.redo();
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
             UpdateLayerList();
         }
 
@@ -364,6 +364,34 @@ namespace Plotter.Controller
         {
             if (dc == null) return;
 
+            DrawParams pale_dp = default;
+            DrawParams test_dp = default;
+            DrawParams current_dp = default;
+            DrawParams measure_dp = default;
+
+            DrawParams empty_dp = default;
+            empty_dp.Empty = true;
+
+            pale_dp.LinePen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
+            pale_dp.EdgePen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
+            pale_dp.FillBrush = DrawBrush.NullBrush;
+            pale_dp.TextBrush = dc.GetBrush(DrawTools.BRUSH_PALE_TEXT);
+
+            test_dp.LinePen = dc.GetPen(DrawTools.PEN_TEST_FIGURE);
+            test_dp.EdgePen = dc.GetPen(DrawTools.PEN_TEST_FIGURE);
+            test_dp.FillBrush = DrawBrush.NullBrush;
+            test_dp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
+
+            current_dp.LinePen = dc.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT);
+            current_dp.EdgePen = dc.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT);
+            current_dp.FillBrush = DrawBrush.NullBrush;
+            current_dp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
+
+            measure_dp.LinePen = dc.GetPen(DrawTools.PEN_MEASURE_FIGURE);
+            measure_dp.EdgePen = dc.GetPen(DrawTools.PEN_MEASURE_FIGURE);
+            measure_dp.FillBrush = DrawBrush.NullBrush;
+            measure_dp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
+
             lock (DB)
             {
                 foreach (CadLayer layer in mDB.LayerList)
@@ -371,26 +399,59 @@ namespace Plotter.Controller
                     if (!layer.Visible) continue;
 
                     // Skip current layer.
-                    // It will be drawn at the end.
+                    // It will be drawn at the end of this loop.
                     if (layer == CurrentLayer) { continue; }
 
-                    DrawPen pen = dc.GetPen(DrawTools.PEN_PALE_FIGURE);
-
-                    dc.Drawing.Draw(layer.FigureList, pen);
+                    foreach (CadFigure fig in layer.FigureList)
+                    {
+                        if (fig.Current)
+                        {
+                            fig.DrawEach(dc, current_dp);
+                        }
+                        else
+                        {
+                            fig.DrawEach(dc, pale_dp);
+                        }
+                    }
                 }
 
                 // Draw current layer at last
                 if (CurrentLayer != null && CurrentLayer.Visible)
                 {
-                    DrawPen pen = dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE);
-                    dc.Drawing.Draw(CurrentLayer.FigureList, pen);
+                    foreach (CadFigure fig in CurrentLayer.FigureList)
+                    {
+                        if (fig.Current)
+                        {
+                            fig.DrawEach(dc, current_dp);
+                        }
+                        else
+                        {
+                            fig.DrawEach(dc);
+                        }
+                    }
                 }
 
-                dc.Drawing.Draw(TempFigureList, dc.GetPen(DrawTools.PEN_TEST_FIGURE));
+                foreach (CadFigure fig in TempFigureList)
+                {
+                    fig.DrawEach(dc, test_dp);
+                }
 
                 if (MeasureFigureCreator != null)
                 {
-                    MeasureFigureCreator.Figure.Draw(dc, dc.GetPen(DrawTools.PEN_MEASURE_FIGURE));
+                    MeasureFigureCreator.Figure.Draw(dc, measure_dp);
+                }
+            }
+        }
+
+        public void DrawAllFigures(DrawContext dc)
+        {
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                if (!layer.Visible) continue;
+
+                foreach (CadFigure fig in layer.FigureList)
+                {
+                    fig.DrawEach(dc);
                 }
             }
         }
@@ -457,16 +518,6 @@ namespace Plotter.Controller
                 dc.GetPen(DrawTools.PEN_TEMP_FIGURE),
                 RubberBandScrnPoint0,
                 RubberBandScrnPoint1);
-        }
-
-        public void DrawAllFigures(DrawContext dc)
-        {
-            foreach (CadLayer layer in mDB.LayerList)
-            {
-                if (!layer.Visible) continue;
-
-                dc.Drawing.Draw(layer.FigureList, dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE));
-            }
         }
 
         protected void DrawAccordingState(DrawContext dc)
@@ -640,7 +691,7 @@ namespace Plotter.Controller
 
             if (removeCnt > 0)
             {
-                UpdateTreeView(true);
+                UpdateObjectTree(true);
             }
 
             return opeList;
@@ -778,7 +829,7 @@ namespace Plotter.Controller
 
             UpdateLayerList();
 
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
 
             Redraw(CurrentDC);
         }
@@ -786,7 +837,7 @@ namespace Plotter.Controller
         public void SetCurrentLayer(uint id)
         {
             mDB.CurrentLayerID = id;
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
         }
 
         public void TextCommand(string s)

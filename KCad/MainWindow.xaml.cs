@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using KCad.Controls;
+using KCad.ViewModel;
 
 namespace KCad
 {
@@ -82,7 +83,7 @@ namespace KCad
 
             DrawOptionMenu.DataContext = ViewModel.Settings;
 
-            ToolBar1.DataContext = ViewModel.Settings;
+            SnapToolBar.DataContext = ViewModel.Settings;
 
             TreeViewToolBar.DataContext = ViewModel.Settings;
         }

@@ -8,7 +8,7 @@ using Plotter.Serializer.v1001;
 
 namespace Plotter
 {
-    public partial class CadFigure
+    public abstract partial class CadFigure
     {
         #region Enums
         public enum Types : byte
@@ -91,10 +91,6 @@ namespace Plotter
         
         public bool Current { set; get; } = false;
 
-        public int FontID { set; get; } = DrawTools.FONT_SMALL;
-
-        public int BrushID { set; get; } = DrawTools.BRUSH_TEXT;
-
         public bool IsSelected { get; set; } = false;
 
         public string Name { get; set; } = null;
@@ -114,7 +110,6 @@ namespace Plotter
             set => mParent = value;
             get => mParent;
         }
-
 
         protected List<CadFigure> mChildList = new List<CadFigure>();
 
@@ -138,7 +133,7 @@ namespace Plotter
                 return false;
             }
 
-            for (i=0; i< mChildList.Count; i++)
+            for (i=0; i < mChildList.Count; i++)
             {
                 CadFigure c = mChildList[i];
 
@@ -213,11 +208,6 @@ namespace Plotter
             Type = Types.NONE;
         }
 
-        public static CadFigure Create()
-        {
-            return new CadFigure();
-        }
-
         public static CadFigure Create(Types type)
         {
             CadFigure fig = null;
@@ -245,8 +235,7 @@ namespace Plotter
                     break;
 
                 case Types.GROUP:
-                    fig = new CadFigure();
-                    fig.Type = Types.GROUP;
+                    fig = new CadFigureGroup();
                     break;
 
                 case Types.DIMENTION_LINE:
@@ -682,28 +671,38 @@ namespace Plotter
             }
         }
 
-        public virtual void Draw(DrawContext dc, DrawPen pen)
+        public abstract void Draw(DrawContext dc);
+
+        public abstract void Draw(DrawContext dc, DrawParams dp);
+
+        public abstract void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB);
+
+        public abstract void DrawSelected(DrawContext dc, DrawPen pen);
+
+        public abstract void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen);
+
+        public abstract void StartCreate(DrawContext dc);
+
+        public abstract void EndCreate(DrawContext dc);
+
+        public void DrawEach(DrawContext dc)
         {
+            Draw(dc);
+
+            foreach (CadFigure c in ChildList)
+            {
+                c.DrawEach(dc);
+            }
         }
 
-        public virtual void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
+        public void DrawEach(DrawContext dc, DrawParams dp)
         {
-        }
+            Draw(dc, dp);
 
-        public virtual void DrawSelected(DrawContext dc, DrawPen pen)
-        {
-        }
-
-        public virtual void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
-        {
-        }
-
-        public virtual void StartCreate(DrawContext dc)
-        {
-        }
-
-        public virtual void EndCreate(DrawContext dc)
-        {
+            foreach (CadFigure c in ChildList)
+            {
+                c.DrawEach(dc, dp);
+            }
         }
 
         public virtual CadRect GetContainsRect()
@@ -784,60 +783,6 @@ namespace Plotter
         {
             if (idx >= PointCount) return false;
             return PointList[idx].Selected;
-        }
-
-        public virtual void ForEachSegment(Func<CadSegment, bool> dg)
-        {
-            int cnt = SegmentCount;
-            for (int i = 0; i < cnt; i++)
-            {
-                if (!dg( GetSegmentAt(i) ))
-                {
-                    break;
-                }
-            }
-        }
-
-        public virtual void ForEachPoint(Action<CadVertex> dg)
-        {
-            int cnt = PointCount;
-            for (int i = 0; i < cnt; i++)
-            {
-                dg(GetPointAt(i));
-            }
-        }
-
-        public virtual void ForEachPointB(Func<CadVertex, bool> dg)
-        {
-            int cnt = PointCount;
-            for (int i = 0; i < cnt; i++)
-            {
-                if (!dg(GetPointAt(i)))
-                {
-                    break;
-                }
-            }
-        }
-
-        public virtual void ForEachPoint(Action<CadVertex, int> dg)
-        {
-            int cnt = PointCount;
-            for (int i = 0; i < cnt; i++)
-            {
-                dg(GetPointAt(i), i);
-            }
-        }
-
-        public virtual void ForEachPointB(Func<CadVertex, int, bool> dg)
-        {
-            int cnt = PointCount;
-            for (int i = 0; i < cnt; i++)
-            {
-                if (!dg(GetPointAt(i), i))
-                {
-                    break;
-                }
-            }
         }
 
         public virtual void InvertDir()
@@ -956,5 +901,6 @@ namespace Plotter
 
             mPointList = MpUtil_v1002.VertexListFromMp(g.PointList);
         }
+
     } // End of class CadFigure
 }

@@ -22,8 +22,6 @@ namespace Plotter
     {
         void Clear(DrawBrush brush);
 
-        void Draw(List<CadFigure> list, DrawPen pen);
-
         void DrawSelected(List<CadFigure> list, DrawPen pen);
 
         void DrawAxis();

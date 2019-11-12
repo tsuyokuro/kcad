@@ -32,24 +32,6 @@ namespace Plotter
                 0, 0, (int)DC.ViewWidth, (int)DC.ViewHeight);
         }
 
-        public void Draw(List<CadFigure> list, DrawPen pen)
-        {
-            foreach (CadFigure fig in list)
-            {
-                fig.ForEachFig((Action<CadFigure>)(a =>
-                {
-                    if (a.Current)
-                    {
-                        a.Draw(DC, DC.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT));
-                    }
-                    else
-                    {
-                        a.Draw(DC, pen);
-                    }
-                }));
-            }
-        }
-
         public void DrawSelected(List<CadFigure> list, DrawPen pen)
         {
             foreach (CadFigure fig in list)
@@ -108,8 +90,6 @@ namespace Plotter
             p1 /= DC.WorldScale;
 
             DrawLine(DC.GetPen(DrawTools.PEN_AXIS), p0, p1);
-
-            //DrawAxis2();
         }
 
         public virtual void DrawGrid(Gridding grid)
@@ -549,105 +529,8 @@ namespace Plotter
             DC.GdiGraphics.FillRectangle(brush.GdiBrush, lx, ty, dx, dy);
         }
 
-        protected void DrawAxis2()
-        {
-            double size = 20;
-
-
-            Vector3d uv = new Vector3d(size, 0, 0);
-
-            Vector3d cv = DC.DevVectorToWorldVector(uv);
-
-            double len = cv.Norm();
-
-
-            Vector3d up = new Vector3d(size + 5, size + 5, 0);
-
-            Vector3d cp = DC.DevPointToWorldPoint(up);
-
-
-            Vector3d p0 = default;
-            Vector3d p1 = default;
-
-            Vector3d tp = default;
-
-            MinMax2D minMax2D = MinMax2D.Create();
-
-            Vector3d xp = default;
-            Vector3d yp = default;
-            Vector3d zp = default;
-
-            // X軸
-            p0.X = -len + cp.X;
-            p0.Y = 0 + cp.Y;
-            p0.Z = 0 + cp.Z;
-
-            p1.X = len + cp.X;
-            p1.Y = 0 + cp.Y;
-            p1.Z = 0 + cp.Z;
-
-            DrawLine(DC.GetPen(DrawTools.PEN_AXIS2), p0, p1);
-
-            tp = DC.WorldPointToDevPoint(p0);
-            minMax2D.Check(tp);
-            tp = DC.WorldPointToDevPoint(p1);
-            minMax2D.Check(tp);
-            xp = tp;
-
-            // Y軸
-            p0.X = 0 + cp.X;
-            p0.Y = -len + cp.Y;
-            p0.Z = 0 + cp.Z;
-
-            p1.X = 0 + cp.X;
-            p1.Y = len + cp.Y;
-            p1.Z = 0 + cp.Z;
-
-            DrawLine(DC.GetPen(DrawTools.PEN_AXIS2), p0, p1);
-
-            tp = DC.WorldPointToDevPoint(p0);
-            minMax2D.Check(tp);
-            tp = DC.WorldPointToDevPoint(p1);
-            minMax2D.Check(tp);
-
-            yp = tp;
-
-            // Z軸
-            p0.X = 0 + cp.X;
-            p0.Y = 0 + cp.Y;
-            p0.Z = -len + cp.Z;
-
-            p1.X = 0 + cp.X;
-            p1.Y = 0 + cp.Y;
-            p1.Z = len + cp.Z;
-
-            DrawLine(DC.GetPen(DrawTools.PEN_AXIS2), p0, p1);
-
-            tp = DC.WorldPointToDevPoint(p0);
-            minMax2D.Check(tp);
-            tp = DC.WorldPointToDevPoint(p1);
-            minMax2D.Check(tp);
-            zp = tp;
-
-            minMax2D.Max.X -= 8;
-            minMax2D.Max.Y -= 8;
-
-            xp = minMax2D.Inner(xp);
-            yp = minMax2D.Inner(yp);
-            zp = minMax2D.Inner(zp);
-
-            xp.Y -= 7;
-            yp.Y -= 7;
-            zp.Y -= 7;
-
-            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_TEXT), xp, Vector3d.UnitX, default(DrawTextOption), "x");
-            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_TEXT), yp, Vector3d.UnitX, default(DrawTextOption), "y");
-            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_TEXT), zp, Vector3d.UnitX, default(DrawTextOption), "z");
-        }
-
         public void Dispose()
         {
-
         }
 
         public void DrawBouncingBox(DrawPen pen, MinMax3D mm)

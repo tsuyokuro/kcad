@@ -45,24 +45,6 @@ namespace Plotter
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
-        public void Draw(List<CadFigure> list, DrawPen pen)
-        {
-            foreach (CadFigure fig in list)
-            {
-                fig.ForEachFig((Action<CadFigure>)(a =>
-                {
-                    if (a.Current)
-                    {
-                        a.Draw(DC, DC.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT));
-                    }
-                    else
-                    {
-                        a.Draw(DC, pen);
-                    }
-                }));
-            }
-        }
-
         public void DrawSelected(List<CadFigure> list, DrawPen pen)
         {
             DisableLight();

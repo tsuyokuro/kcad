@@ -13,7 +13,7 @@ namespace Plotter.Controller
             HistoryMan.Clear();
 
             UpdateLayerList();
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
         }
 
         #region Layer
@@ -190,7 +190,7 @@ namespace Plotter.Controller
         public void Paste()
         {
             PlotterClipboard.PasteFiguresAsBin(this);
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
         }
     }
 }

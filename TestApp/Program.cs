@@ -1,4 +1,7 @@
-﻿using OpenTK;
+﻿using MessagePack;
+using MessagePack.Formatters;
+using MessagePack.Resolvers;
+using OpenTK;
 using Plotter;
 using System;
 using System.Collections.Generic;
@@ -127,6 +130,76 @@ namespace TestApp
         }
     }
 
+    [MessagePackObject]
+    public class Vect2d
+    {
+        [Key("x")]
+        public int x;
+
+        [Key("y")]
+        public int y;
+
+        public Vect2d(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+        public Vect2d()
+        {
+            x = -1;
+            y = -1;
+        }
+    }
+
+    [MessagePackObject]
+    public class Vect3d
+    {
+        [Key("x")]
+        public int x = 1;
+
+        [Key("y")]
+        public int y = 2;
+
+        [Key("z")]
+        public int z = 3;
+
+        public Vect3d(int x, int y, int z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public Vect3d()
+        {
+            x = -1;
+            y = -1;
+            z = -1;
+        }
+    }
+
+
+    [MessagePackObject]
+    public class Line2d
+    {
+        [Key("p0")]
+        public Vect2d p0 = new Vect2d(101, 102);
+
+        [Key("p1")]
+        public Vect2d p1 = new Vect2d(201, 202);
+    }
+
+    [MessagePackObject]
+    public class Line3d
+    {
+        [Key("p0")]
+        public Vect3d p0 = new Vect3d(301, 302, 303);
+
+        [Key("p1")]
+        public Vect3d p1 = new Vect3d(401, 402, 403);
+    }
+
     class Program
     {
         static void XmlTest()
@@ -154,16 +227,16 @@ namespace TestApp
 
         }
 
-        static void Main(string[] args)
+        static void RingBufferTest()
         {
             RingBuffer<int> rb = new RingBuffer<int>(16);
 
-            for (int i=0; i<30; i++)
+            for (int i = 0; i < 30; i++)
             {
                 rb.Add(i);
             }
 
-            for (int i=0; i<rb.Count; i++)
+            for (int i = 0; i < rb.Count; i++)
             {
                 Console.WriteLine($"rb[{i}]:{rb[i]}");
             }
@@ -176,7 +249,30 @@ namespace TestApp
             {
                 Console.WriteLine($"rb[{i}]:{rb[i]}");
             }
+        }
 
+        static void MessagePackTest()
+        {
+            //Line3d line3d = new Line3d();
+
+            //byte[] pack = MessagePackSerializer.Serialize(line3d);
+
+            //Line2d line2d = MessagePackSerializer.Deserialize<Line2d>(pack, StandardResolver.Instance);
+
+            Vect2d v2d = new Vect2d();
+
+            byte[] pack2 = MessagePackSerializer.Serialize(v2d);
+
+            Vect3d v3d = MessagePackSerializer.Deserialize<Vect3d>(pack2);
+
+            //Vect3d v3dx = (Vect3d)Activator.CreateInstance(typeof(Vect3d));
+
+            Console.WriteLine($"End");
+        }
+
+        static void Main(string[] args)
+        {
+            MessagePackTest();
             Console.ReadLine();
         }
     }

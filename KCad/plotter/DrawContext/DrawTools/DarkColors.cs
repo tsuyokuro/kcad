@@ -42,6 +42,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_DRAG_LINE] = Color.FromArgb(0xFF, 0x60, 0x60, 0x80);
             PenColorTbl[DrawTools.PEN_NORMAL] = Color.FromArgb(0xFF, 0x00, 0xff, 0x7f);
             PenColorTbl[DrawTools.PEN_EXT_SNAP] = Color.FromArgb(0xFF, 0xff, 0x00, 0x00);
+            PenColorTbl[DrawTools.PEN_HANDLE_LINE] = Color.YellowGreen;
 
 
             BrushColorTbl = new Color[DrawTools.BRUSH_TBL_SIZE];
@@ -51,6 +52,7 @@ namespace Plotter
             BrushColorTbl[DrawTools.BRUSH_TEXT] = Color.White;
             BrushColorTbl[DrawTools.BRUSH_DEFAULT_MESH_FILL] = Color.FromArgb(204,204,204);
             BrushColorTbl[DrawTools.BRUSH_TRANSPARENT] = Color.FromArgb(0,0,0,0);
+            BrushColorTbl[DrawTools.BRUSH_PALE_TEXT] = Color.FromArgb(0x7E, 0x7E, 0x7E);
         }
     }
 }

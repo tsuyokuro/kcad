@@ -107,7 +107,17 @@ namespace Plotter
             mPointList.Add(p);
         }
 
-        public override void Draw(DrawContext dc, DrawPen pen)
+        public override void Draw(DrawContext dc)
+        {
+            DrawPolyLines(dc, dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE));
+        }
+
+        public override void Draw(DrawContext dc, DrawParams dp)
+        {
+            DrawPolyLines(dc, dp.LinePen);
+        }
+
+        public void DrawPolyLines(DrawContext dc, DrawPen pen)
         {
             bool drawed = false;
 
@@ -148,6 +158,33 @@ namespace Plotter
             Normal = -Normal;
         }
 
+        struct DrawParam
+        {
+            public DrawContext DC;
+            public DrawPen Pen;
+
+            public DrawParam(DrawContext dc, DrawPen pen)
+            {
+                DC = dc;
+                Pen = pen;
+            }
+        }
+
+        struct DrawParam2
+        {
+            public DrawContext DC;
+            public DrawPen Pen;
+            public Vector3d PrevV;
+
+            public DrawParam2(DrawContext dc, DrawPen pen, Vector3d p)
+            {
+                DC = dc;
+                Pen = pen;
+                PrevV = p;
+            }
+        }
+
+
         protected void DrawLines(DrawContext dc, DrawPen pen, VertexList pl)
         {
             int start = 0;
@@ -178,27 +215,17 @@ namespace Plotter
                 return;
             }
 
-            PolyLineExpander.ForEachPoints(pl, start + 1, cnt - 1, 8,
-                (v) =>
+            DrawParam dp = new DrawParam(dc, pen);
+            PolyLineExpander.ForEachSegs<DrawParam>(pl, IsLoop, 8, 
+                (v0, v1, p) =>
                 {
-                    dc.Drawing.DrawLine(pen, a.vector, v.vector);
-                    a = v;
-                });
-
-            if (IsLoop)
-            {
-                dc.Drawing.DrawLine(pen, a.vector, pl[start].vector);
-            }
+                    p.DC.Drawing.DrawLine(p.Pen, v0.vector, v1.vector);
+                }, dp);
         }
 
         public override VertexList GetPoints(int curveSplitNum)
         {
-            return GetPointsPart(0, mPointList.Count, curveSplitNum);
-        }
-
-        private VertexList GetPointsPart(int start, int cnt, int curveSplitNum)
-        {
-            return PolyLineExpander.GetExpandList(mPointList, start, cnt, curveSplitNum);
+            return PolyLineExpander.GetExpandList(mPointList, curveSplitNum);
         }
 
         private void DrawSelectedLines(DrawContext dc, DrawPen pen)
@@ -219,25 +246,26 @@ namespace Plotter
                 {
                     int idx = i + 1;
 
-                    if (idx < PointCount)
+                    if (idx >= num) idx = 0;
+
+                    CadVertex next = GetPointAt(idx);
+                    if (!next.IsHandle)
                     {
-                        CadVertex np = GetPointAt(idx);
-                        if (!np.IsHandle)
-                        {
-                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p.vector, np.vector);
-                            dc.Drawing.DrawSelectedPoint(np.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
-                        }
+                        // Draw handle
+                        dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_HANDLE_LINE), p.vector, next.vector);
+                        dc.Drawing.DrawSelectedPoint(next.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                     }
 
                     idx = i - 1;
 
                     if (idx >= 0)
                     {
-                        CadVertex np = GetPointAt(idx);
-                        if (!np.IsHandle)
+                        CadVertex prev = GetPointAt(idx);
+                        if (!prev.IsHandle)
                         {
-                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_MATCH_SEG), p.vector, np.vector);
-                            dc.Drawing.DrawSelectedPoint(np.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                            // Draw handle
+                            dc.Drawing.DrawLine(dc.GetPen(DrawTools.PEN_HANDLE_LINE), p.vector, prev.vector);
+                            dc.Drawing.DrawSelectedPoint(prev.vector, dc.GetPen(DrawTools.PEN_SELECT_POINT));
                         }
                     }
                 }

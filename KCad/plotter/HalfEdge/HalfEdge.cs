@@ -140,13 +140,11 @@ namespace HalfEdgeNS
                     VertexStore[c.Next.Next.Vertex].vector
                     );
 
-                int nidx = newNormalStore.Add(n);
-
-                face.Normal = nidx;
-
+                face.Normal = newNormalStore.Add(n);
+                
                 for (; ; )
                 {
-                    c.Normal = nidx;
+                    c.Normal = newNormalStore.Add(n);
 
                     c = c.Next;
 

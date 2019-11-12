@@ -129,7 +129,27 @@ namespace Plotter
             }
         }
 
-        public override void Draw(DrawContext dc, DrawPen pen)
+        public override void Draw(DrawContext dc)
+        {
+            DrawParams dp = default;
+
+            if (SettingsHolder.Settings.DrawMeshEdge)
+            {
+                dp.LinePen = dc.GetPen(DrawTools.PEN_MESH_LINE);
+                dp.EdgePen = dc.GetPen(DrawTools.PEN_DEFAULT_FIGURE);
+            }
+            else
+            {
+                dp.LinePen = DrawPen.NullPen;
+                dp.EdgePen = DrawPen.NullPen;
+            }
+
+            dp.FillBrush = dc.GetBrush(DrawTools.BRUSH_DEFAULT_MESH_FILL);
+
+            Draw(dc, dp);
+        }
+
+        public override void Draw(DrawContext dc, DrawParams dp)
         {
             DrawBrush brush;
 
@@ -145,33 +165,8 @@ namespace Plotter
             DrawPen borderPen;
             DrawPen edgePen;
 
-            if (SettingsHolder.Settings.DrawMeshEdge)
-            {
-                if (pen.ID == DrawTools.PEN_FIGURE_HIGHLIGHT)
-                {
-                    borderPen = pen;
-                }
-                else
-                {
-                    borderPen = dc.GetPen(DrawTools.PEN_MESH_LINE);
-                }
-
-                edgePen = pen;
-            }
-            else
-            {
-                if (pen.ID == DrawTools.PEN_FIGURE_HIGHLIGHT)
-                {
-                    borderPen = pen;
-                    edgePen = pen;
-                }
-                else
-                {
-                    borderPen = DrawPen.NullPen;
-                    edgePen = DrawPen.NullPen;
-                }
-            }
-
+            borderPen = dp.LinePen;
+            edgePen = dp.EdgePen;
 
             dc.Drawing.DrawHarfEdgeModel(
                 brush,
@@ -324,6 +319,22 @@ namespace Plotter
 
                 nl[i] = v;
             }
+        }
+
+        public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
+        {
+        }
+
+        public override void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
+        {
+        }
+
+        public override void StartCreate(DrawContext dc)
+        {
+        }
+
+        public override void EndCreate(DrawContext dc)
+        {
         }
     }
 }

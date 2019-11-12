@@ -1,9 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using CadDataTypes;
 using OpenTK;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
     public class CursorPosViewModel : INotifyPropertyChanged
     {

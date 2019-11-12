@@ -6,8 +6,8 @@
 
         private CadOpeList mCadOpeList = null;
 
-        private bool NeedUpdateTreeView = false;
-        private bool NeedRemakeTreeView = false;
+        private bool NeedUpdateObjectTree = false;
+        private bool NeedRemakeObjectTree = false;
         private bool NeedRedraw = false;
 
         public ScriptSession(ScriptEnvironment env)
@@ -34,9 +34,9 @@
 
         public void End()
         {
-            if (NeedUpdateTreeView)
+            if (NeedUpdateObjectTree)
             {
-                UpdateTV(NeedRemakeTreeView);
+                UpdateTV(NeedRemakeObjectTree);
             }
 
             if (NeedRedraw)
@@ -47,20 +47,20 @@
 
         public void ResetFlags()
         {
-            NeedUpdateTreeView = false;
-            NeedRemakeTreeView = false;
+            NeedUpdateObjectTree = false;
+            NeedRemakeObjectTree = false;
             NeedRedraw = false;
         }
 
-        public void PostUpdateTreeView()
+        public void PostUpdateObjectTree()
         {
-            NeedUpdateTreeView = true;
+            NeedUpdateObjectTree = true;
         }
 
-        public void PostRemakeTreeView()
+        public void PostRemakeObjectTree()
         {
-            NeedUpdateTreeView = true;
-            NeedRemakeTreeView = true;
+            NeedUpdateObjectTree = true;
+            NeedRemakeObjectTree = true;
         }
 
         public void PostRedraw()
@@ -72,7 +72,7 @@
         {
             Env.RunOnMainThread(() =>
             {
-                Env.Controller.UpdateTreeView(remakeTree);
+                Env.Controller.UpdateObjectTree(remakeTree);
             });
         }
 

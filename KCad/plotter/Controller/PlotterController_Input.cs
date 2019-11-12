@@ -68,14 +68,14 @@ namespace Plotter.Controller
             {
                 if (mCurrentFigure != null)
                 {
-                    mCurrentFigure.Current = false;
+                    mCurrentFigure.GetGroupRoot().Current = false;
                 }
 
                 mCurrentFigure = value;
 
                 if (mCurrentFigure != null)
                 {
-                    mCurrentFigure.Current = true;
+                    mCurrentFigure.GetGroupRoot().Current = true;
                 }
             }
 
@@ -240,16 +240,16 @@ namespace Plotter.Controller
             mPointSearcher.SetRangePixel(sc.DC, SettingsHolder.Settings.PointSnapRange);
             mPointSearcher.CheckStorePoint = SettingsHolder.Settings.SnapToSelfPoint;
 
-            if (CurrentFigure != null)
-            {
-                mPointSearcher.CheckFigure(sc.DC, CurrentLayer, CurrentFigure);
-            }
-
             //sc.Cursor.Pos.dump("CursorPos");
 
             mPointSearcher.SetTargetPoint(sc.Cursor);
 
             mPointSearcher.SearchAllLayer(sc.DC, mDB);
+
+            if (CurrentFigure != null)
+            {
+                mPointSearcher.CheckFigure(sc.DC, CurrentLayer, CurrentFigure);
+            }
 
             sc.MarkPt = mPointSearcher.GetXYMatch();
 
@@ -675,7 +675,7 @@ namespace Plotter.Controller
                     break;
             }
 
-            UpdateTreeView(false);
+            UpdateObjectTree(false);
 
             OffsetScreen = default;
         }

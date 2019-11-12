@@ -224,8 +224,6 @@ namespace Plotter.Serializer.v1001
         }
     }
 
-
-
     [MessagePackObject]
     public class MpLayer_v1001
     {
@@ -409,73 +407,6 @@ namespace Plotter.Serializer.v1001
         }
     }
 
-    [MessagePack.Union(0, typeof(MpSimpleGeometricData_v1001))]
-    [MessagePack.Union(1, typeof(MpMeshGeometricData_v1001))]
-    [MessagePack.Union(2, typeof(MpNurbsLineGeometricData_v1001))]
-    [MessagePack.Union(3, typeof(MpNurbsSurfaceGeometricData_v1001))]
-    public interface MpGeometricData_v1001
-    {
-    }
-
-    [MessagePackObject]
-    public class MpSimpleGeometricData_v1001 : MpGeometricData_v1001
-    {
-        [Key("PointList")]
-        public List<MpVertex_v1001> PointList;
-    }
-
-
-    [MessagePackObject]
-    public class MpMeshGeometricData_v1001 : MpGeometricData_v1001
-    {
-        [Key("HeModel")]
-        public MpHeModel_v1001 HeModel;
-    }
-
-    [MessagePackObject]
-    public class MpNurbsLineGeometricData_v1001 : MpGeometricData_v1001
-    {
-        [Key("Nurbs")]
-        public MpNurbsLine_v1001 Nurbs;
-    }
-
-    [MessagePackObject]
-    public class MpNurbsSurfaceGeometricData_v1001 : MpGeometricData_v1001
-    {
-        [Key("Nurbs")]
-        public MpNurbsSurface_v1001 Nurbs;
-    }
-
-
-    [MessagePackObject]
-    public struct MpVector3d_v1001
-    {
-        [Key(0)]
-        public double X;
-
-        [Key(1)]
-        public double Y;
-
-        [Key(2)]
-        public double Z;
-
-        public static MpVector3d_v1001 Create(Vector3d v)
-        {
-            MpVector3d_v1001 ret = new MpVector3d_v1001();
-
-            ret.X = v.X;
-            ret.Y = v.Y;
-            ret.Z = v.Z;
-
-            return ret;
-        }
-
-        public Vector3d Restore()
-        {
-            return new Vector3d(X, Y, Z);
-        }
-    }
-
     [MessagePackObject]
     public struct MpVertex_v1001
     {
@@ -510,7 +441,70 @@ namespace Plotter.Serializer.v1001
         }
     }
 
+    [MessagePackObject]
+    public struct MpVector3d_v1001
+    {
+        [Key(0)]
+        public double X;
 
+        [Key(1)]
+        public double Y;
+
+        [Key(2)]
+        public double Z;
+
+        public static MpVector3d_v1001 Create(Vector3d v)
+        {
+            MpVector3d_v1001 ret = new MpVector3d_v1001();
+
+            ret.X = v.X;
+            ret.Y = v.Y;
+            ret.Z = v.Z;
+
+            return ret;
+        }
+
+        public Vector3d Restore()
+        {
+            return new Vector3d(X, Y, Z);
+        }
+    }
+
+    [MessagePack.Union(0, typeof(MpSimpleGeometricData_v1001))]
+    [MessagePack.Union(1, typeof(MpMeshGeometricData_v1001))]
+    [MessagePack.Union(2, typeof(MpNurbsLineGeometricData_v1001))]
+    [MessagePack.Union(3, typeof(MpNurbsSurfaceGeometricData_v1001))]
+    public interface MpGeometricData_v1001
+    {
+    }
+
+    [MessagePackObject]
+    public class MpSimpleGeometricData_v1001 : MpGeometricData_v1001
+    {
+        [Key("PointList")]
+        public List<MpVertex_v1001> PointList;
+    }
+
+    [MessagePackObject]
+    public class MpMeshGeometricData_v1001 : MpGeometricData_v1001
+    {
+        [Key("HeModel")]
+        public MpHeModel_v1001 HeModel;
+    }
+
+    [MessagePackObject]
+    public class MpNurbsLineGeometricData_v1001 : MpGeometricData_v1001
+    {
+        [Key("Nurbs")]
+        public MpNurbsLine_v1001 Nurbs;
+    }
+
+    [MessagePackObject]
+    public class MpNurbsSurfaceGeometricData_v1001 : MpGeometricData_v1001
+    {
+        [Key("Nurbs")]
+        public MpNurbsSurface_v1001 Nurbs;
+    }
 
 
     [MessagePackObject]

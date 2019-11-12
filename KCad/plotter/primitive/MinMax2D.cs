@@ -65,15 +65,5 @@ namespace Plotter
         {
             return new Vector3d(Max.X, Max.Y, 0);
         }
-
-        public Vector3d Inner(Vector3d v)
-        {
-            if (v.X > Max.X) v.X = Max.X;
-            if (v.Y > Max.Y) v.Y = Max.Y;
-            if (v.X < Min.X) v.X = Min.X;
-            if (v.Y < Min.Y) v.Y = Min.Y;
-
-            return v;
-        }
     }
 }

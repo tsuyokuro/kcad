@@ -81,20 +81,20 @@ namespace Plotter.Settings
         }
 
         [UserSettingData]
-        public bool FilterTreeView
+        public bool FilterObjectTree
         {
             set
             {
-                SettingsHolder.Settings.FilterTreeView = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
+                SettingsHolder.Settings.FilterObjectTree = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterObjectTree)));
 
                 if (Controller != null)
                 {
-                    Controller.UpdateTreeView(true);
+                    Controller.UpdateObjectTree(true);
                 }
             }
 
-            get => SettingsHolder.Settings.FilterTreeView;
+            get => SettingsHolder.Settings.FilterObjectTree;
         }
 
         [UserSettingData]
@@ -295,20 +295,6 @@ namespace Plotter.Settings
                 }
             }
 
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToPoint)));
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSegment)));
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLine)));
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToZero)));
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToLastDownPoint)));
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToSelfPoint)));
-
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawMeshEdge)));
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FillMesh)));
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawAxis)));
-
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterTreeView)));
-
             Controller.Grid.GridSize = SettingsHolder.Settings.GridSize;
         }
 
@@ -340,7 +326,7 @@ namespace Plotter.Settings
 
         public double KeyMoveUnit = 1.0;
 
-        public bool FilterTreeView = false;
+        public bool FilterObjectTree = false;
 
         public double InitialMoveLimit = 6.0;
 
