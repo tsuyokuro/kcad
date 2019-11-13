@@ -1274,6 +1274,7 @@ namespace KCad.ViewModel
             return true;
         }
 
+#if (USE_GDI_VIEW)
         private bool ChangeViewModeGdi(ViewModes newMode)
         {
             if (mViewMode == newMode)
@@ -1356,7 +1357,7 @@ namespace KCad.ViewModel
             Redraw();
             return true;
         }
-
+#endif
 
         public void SetupTextCommandView(AutoCompleteTextBox textBox)
         {
