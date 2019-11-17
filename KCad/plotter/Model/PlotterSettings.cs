@@ -7,6 +7,7 @@ using CadDataTypes;
 using System.ComponentModel;
 using Plotter.Controller;
 using OpenTK;
+using KCad.ViewModel;
 
 namespace Plotter.Settings
 {
@@ -25,7 +26,9 @@ namespace Plotter.Settings
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public PlotterController Controller;
+        //public PlotterController Controller;
+
+        public ViewModelContext mContext;
 
         [UserSettingData]
         public bool SnapToGrid
@@ -88,9 +91,9 @@ namespace Plotter.Settings
                 SettingsHolder.Settings.FilterObjectTree = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FilterObjectTree)));
 
-                if (Controller != null)
+                if (mContext.Controller != null)
                 {
-                    Controller.UpdateObjectTree(true);
+                    mContext.Controller.UpdateObjectTree(true);
                 }
             }
 
@@ -223,7 +226,7 @@ namespace Plotter.Settings
             set
             {
                 SettingsHolder.Settings.GridSize = value;
-                Controller.Grid.GridSize = value;
+                mContext.Controller.Grid.GridSize = value;
             }
 
             get => SettingsHolder.Settings.GridSize;
@@ -265,14 +268,14 @@ namespace Plotter.Settings
             get => SettingsHolder.Settings.KeyMoveUnit;
         }
 
-        public SettingsVeiwModel(PlotterController controller)
+        public SettingsVeiwModel(ViewModelContext context)
         {
-            Controller = controller;
+            mContext = context;
         }
 
         private void Redraw()
         {
-            Controller.Redraw(Controller.CurrentDC);
+            mContext.Controller.Redraw(mContext.Controller.CurrentDC);
         }
 
         public void Load()
@@ -295,14 +298,14 @@ namespace Plotter.Settings
                 }
             }
 
-            Controller.Grid.GridSize = SettingsHolder.Settings.GridSize;
+            mContext.Controller.Grid.GridSize = SettingsHolder.Settings.GridSize;
         }
 
         public void Save()
         {
             PlotterSettings settings = SettingsHolder.Settings;
 
-            settings.GridSize = Controller.Grid.GridSize;
+            settings.GridSize = mContext.Controller.Grid.GridSize;
 
             settings.Save();
         }

@@ -123,11 +123,11 @@ namespace KCad.ViewModel
 
         public DrawContext CurrentDC => mController?.CurrentDC;
 
-        private SettingsVeiwModel mSettingsVeiwModel;
+        private SettingsVeiwModel SettingsVM;
 
         public SettingsVeiwModel Settings
         {
-            get => mSettingsVeiwModel;
+            get => SettingsVM;
         }
 
 
@@ -174,7 +174,7 @@ namespace KCad.ViewModel
         {
             mController = new PlotterController();
 
-            mSettingsVeiwModel = new SettingsVeiwModel(mController);
+            SettingsVM = new SettingsVeiwModel(this);
 
             ObjTreeVM = new ObjectTreeViewModel(this);
 
