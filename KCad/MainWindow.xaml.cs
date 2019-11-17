@@ -32,7 +32,7 @@ namespace KCad
             viewContainer.Focusable = true;
 
             ViewModel.LayerListView = LayerListView;
-            ViewModel.ObjectTreeView = ObjTree;
+            ViewModel.ObjTreeVM.ObjectTreeView = ObjTree;
 
             ViewModel.SetupTextCommandView(textCommand);
             textCommand.Determine += TextCommand_OnDetermine;

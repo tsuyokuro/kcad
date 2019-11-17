@@ -252,12 +252,13 @@
     <Compile Include="plotter\Serializer\v1002\MpUtil_v1002.cs" />
     <Compile Include="plotter\Serializer\v1001\CadMessagePack_v1001.cs" />
     <Compile Include="plotter\Serializer\v1001\MpUtil_v1001.cs" />
+    <Compile Include="ViewModel\ObjectTreeViewModel.cs" />
     <Compile Include="ViewModel\TreeViewItem\TreeViewUtil.cs" />
     <Compile Include="Util\DebugClient.cs" />
     <Compile Include="plotter\Util\StackArray.cs" />
     <Compile Include="plotter\Util\VectorExt.cs" />
     <Compile Include="ViewModel\Converter\BindingConverter.cs" />
-    <Compile Include="ViewModel\KeyAction.cs" />
+    <Compile Include="ViewModel\ViewModelContext.cs" />
     <Compile Include="WIndowsAPI\WindowsAPI.cs" />
     <Compile Include="Dialogs\AngleInputDialog.xaml.cs">
       <DependentUpon>AngleInputDialog.xaml</DependentUpon>

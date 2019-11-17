@@ -21,15 +21,22 @@ using Plotter;
 
 namespace KCad.ViewModel
 {
-    public partial class PlotterViewModel : INotifyPropertyChanged
+    public class PlotterViewModel : ViewModelContext, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private PlotterController mController;
-
-        public PlotterController Controller
+        public class KeyAction
         {
-            get => mController;
+            public Action Down;
+            public Action Up;
+            public string Description;
+
+            public KeyAction(Action down, Action up, string description = null)
+            {
+                Down = down;
+                Up = up;
+                Description = description;
+            }
         }
 
         private Dictionary<string, Action> CommandMap;
@@ -41,6 +48,8 @@ namespace KCad.ViewModel
         public ObservableCollection<LayerHolder> LayerList = new ObservableCollection<LayerHolder>();
 
         public CursorPosViewModel CursorPosVM = new CursorPosViewModel();
+
+        public ObjectTreeViewModel ObjTreeVM;
 
         public SelectModes SelectMode
         {
@@ -120,114 +129,6 @@ namespace KCad.ViewModel
             get => mSettingsVeiwModel;
         }
 
-#region Tree view
-        private void UpdateTreeView(bool remakeTree)
-        {
-            ThreadUtil.RunOnMainThread(() =>
-            {
-                UpdateTreeViewProc(remakeTree);
-            }, true);
-        }
-
-        private void UpdateTreeViewProc(bool remakeTree)
-        {
-            if (mCadObjectTreeView == null)
-            {
-                return;
-            }
-
-            if (SettingsHolder.Settings.FilterObjectTree)
-            {
-                CadLayerTreeItem item = new CadLayerTreeItem();
-                item.AddChildren(Controller.CurrentLayer, fig =>
-                {
-                    return fig.HasSelectedPointInclueChild();
-                });
-
-                mCadObjectTreeView.AttachRoot(item);
-                mCadObjectTreeView.Redraw();
-            }
-            else
-            {
-                if (remakeTree)
-                {
-                    CadLayerTreeItem item = new CadLayerTreeItem(Controller.CurrentLayer);
-                    mCadObjectTreeView.AttachRoot(item);
-                    mCadObjectTreeView.Redraw();
-                }
-                else
-                {
-                    mCadObjectTreeView.Redraw();
-                }
-            }
-        }
-
-        private void SetTreeViewPos(int index)
-        {
-            if (mCadObjectTreeView == null)
-            {
-                return;
-            }
-
-            ThreadUtil.RunOnMainThread(() => {
-                mCadObjectTreeView.SetVPos(index);
-            }, true);
-        }
-
-        private int FindTreeViewItem(uint id)
-        {
-            int idx = mCadObjectTreeView.Find((item) =>
-            {
-                if (item is CadFigTreeItem)
-                {
-                    CadFigTreeItem figItem = (CadFigTreeItem)item;
-
-                    if (figItem.Fig.ID == id)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
-
-            return idx;
-        }
-
-        public void ObjectTreeView_ItemCommand(CadObjTreeItem treeItem, string cmd)
-        {
-            if (!(treeItem is CadFigTreeItem))
-            {
-                return;
-            }
-
-            CadFigTreeItem figItem = (CadFigTreeItem)treeItem;
-
-            if (cmd == CadFigTreeItem.ITEM_CMD_CHANGE_NAME)
-            {
-                CadFigure fig = figItem.Fig;
-
-                InputStringDialog dlg = new InputStringDialog();
-
-                dlg.Message = KCad.Properties.Resources.string_input_fig_name;
-
-                if (fig.Name != null)
-                {
-                    dlg.InputString = fig.Name;
-                }
-
-                bool? dlgRet = dlg.ShowDialog();
-
-                if (dlgRet.Value)
-                {
-                    fig.Name = dlg.InputString;
-                    UpdateTreeView(false);
-                }
-            }
-        }
-
-        #endregion
-
         ListBox mLayerListView;
 
         public ListBox LayerListView
@@ -299,6 +200,8 @@ namespace KCad.ViewModel
 
             mSettingsVeiwModel = new SettingsVeiwModel(mController);
 
+            ObjTreeVM = new ObjectTreeViewModel(this);
+
             mMainWindow = mainWindow;
 
             InitCommandMap();
@@ -311,15 +214,7 @@ namespace KCad.ViewModel
 
             mController.Observer.LayerListChanged =  LayerListChanged;
 
-            //mController.Observer.DataChanged = DataChanged;
-
             mController.Observer.CursorPosChanged = CursorPosChanged;
-
-            mController.Observer.UpdateObjectTree = UpdateTreeView;
-
-            mController.Observer.SetObjectTreePos = SetTreeViewPos;
-
-            mController.Observer.FindObjectTreeItem = FindTreeViewItem;
 
             mController.Observer.OpenPopupMessage = OpenPopupMessage;
 
@@ -331,7 +226,6 @@ namespace KCad.ViewModel
 
             mController.Observer.HelpOfKey = HelpOfKey;
 
-            //LayerListChanged(mController, mController.GetLayerListInfo());
 
             mController.UpdateLayerList();
 
@@ -378,37 +272,6 @@ namespace KCad.ViewModel
             mMainWindow.SetMainView(view);
         }
 
-        CadObjectTreeView mCadObjectTreeView;
-
-        public CadObjectTreeView ObjectTreeView
-        {
-            set
-            {
-                if (mCadObjectTreeView != null)
-                {
-                    mCadObjectTreeView.CheckChanged -= ObjectTreeView_CheckChanged;
-                    mCadObjectTreeView.ItemCommand -= ObjectTreeView_ItemCommand;
-                }
-
-                mCadObjectTreeView = value;
-
-                if (mCadObjectTreeView != null)
-                {
-                    mCadObjectTreeView.CheckChanged += ObjectTreeView_CheckChanged;
-                    mCadObjectTreeView.ItemCommand += ObjectTreeView_ItemCommand;
-                }
-            }
-
-            get => mCadObjectTreeView;
-        }
-
-        private void ObjectTreeView_CheckChanged(CadObjTreeItem item)
-        {
-            mController.CurrentFigure = 
-                TreeViewUtil.GetCurrentFigure(item, mController.CurrentFigure);
-
-            Redraw();
-        }
 
         public void ViewFocus()
         {
@@ -1029,15 +892,6 @@ namespace KCad.ViewModel
         }
         #endregion Keyboard handling
 
-        #region helper
-        public void Redraw()
-        {
-            ThreadUtil.RunOnMainThread(() =>
-            {
-                mController.Redraw();
-            }, true);
-        }
-        #endregion helper
 
         #region print
         public void StartPrint()
