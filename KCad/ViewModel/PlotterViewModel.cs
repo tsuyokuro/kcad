@@ -45,11 +45,12 @@ namespace KCad.ViewModel
 
         private SelectModes mSelectMode = SelectModes.POINT;
 
-        public ObservableCollection<LayerHolder> LayerList = new ObservableCollection<LayerHolder>();
 
         public CursorPosViewModel CursorPosVM = new CursorPosViewModel();
 
         public ObjectTreeViewModel ObjTreeVM;
+
+        public LayerListViewModel LayerListVM;
 
         public SelectModes SelectMode
         {
@@ -129,31 +130,6 @@ namespace KCad.ViewModel
             get => mSettingsVeiwModel;
         }
 
-        ListBox mLayerListView;
-
-        public ListBox LayerListView
-        {
-            set
-            {
-                if (value == null)
-                {
-                    if (mLayerListView != null)
-                    {
-                        mLayerListView.SelectionChanged -= LayerListSelectionChanged;
-                    }
-                }
-                else
-                {
-                    value.SelectionChanged += LayerListSelectionChanged;
-                    int idx = GetLayerListIndex(mController.CurrentLayer.ID);
-                    value.SelectedIndex = idx;
-                }
-
-                mLayerListView = value;
-            }
-
-            get => mLayerListView;
-        }
 
         private MainWindow mMainWindow;
 
@@ -202,6 +178,8 @@ namespace KCad.ViewModel
 
             ObjTreeVM = new ObjectTreeViewModel(this);
 
+            LayerListVM = new LayerListViewModel(this);
+
             mMainWindow = mainWindow;
 
             InitCommandMap();
@@ -211,8 +189,6 @@ namespace KCad.ViewModel
             CreatingFigureType = mController.CreatingFigType;
 
             mController.Observer.StateChanged = StateChanged;
-
-            mController.Observer.LayerListChanged =  LayerListChanged;
 
             mController.Observer.CursorPosChanged = CursorPosChanged;
 
@@ -745,45 +721,6 @@ namespace KCad.ViewModel
             }
         }
 
-        public void LayerListChanged(PlotterController sender, LayerListInfo layerListInfo)
-        {
-            foreach (LayerHolder lh in LayerList)
-            {
-                lh.PropertyChanged -= LayerListItemPropertyChanged;
-            }
-
-            LayerList.Clear();
-
-            foreach (CadLayer layer in layerListInfo.LayerList)
-            {
-                LayerHolder layerHolder = new LayerHolder(layer);
-                layerHolder.PropertyChanged += LayerListItemPropertyChanged;
-
-                LayerList.Add(layerHolder);
-            }
-
-            if (mLayerListView != null)
-            {
-                int idx = GetLayerListIndex(layerListInfo.CurrentID);
-                mLayerListView.SelectedIndex = idx;
-            }
-        }
-
-        private int GetLayerListIndex(uint id)
-        {
-            int idx = 0;
-            foreach (LayerHolder layer in LayerList)
-            {
-                if (layer.ID == id)
-                {
-                    return idx;
-                }
-                idx++;
-            }
-
-            return -1;
-        }
-
         private void CursorPosChanged(PlotterController sender, Vector3d pt, Plotter.Controller.CursorType type)
         {
             if (type == Plotter.Controller.CursorType.TRACKING)
@@ -815,32 +752,6 @@ namespace KCad.ViewModel
         }
 
         #endregion Event From PlotterController
-
-
-        // Layer list handling
-        #region LayerList
-        public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            LayerHolder lh = (LayerHolder)sender;
-            //Draw(clearFlag:true);
-            Redraw();
-        }
-
-        public void LayerListSelectionChanged(object sender, SelectionChangedEventArgs args)
-        {
-            if (args.AddedItems.Count > 0)
-            {
-                LayerHolder layer = (LayerHolder)args.AddedItems[0];
-
-                if (mController.CurrentLayer.ID != layer.ID)
-                {
-                    mController.SetCurrentLayer(layer.ID);
-
-                    Redraw();
-                }
-            }
-        }
-        #endregion LayerList
 
 
         // Keyboard handling
