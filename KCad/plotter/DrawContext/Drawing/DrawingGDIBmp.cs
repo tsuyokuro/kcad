@@ -1,15 +1,14 @@
-﻿/**
- * GDI向け描画クラス
- * 
- */
-
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using OpenTK;
 
 namespace Plotter
 {
+    /**
+     * GDI向け描画クラス
+     * Drawing class for GDI Bitmap
+     */
     public class DrawingGDIBmp : DrawingGDI
     {
         public DrawContextGDIBmp BmpDC

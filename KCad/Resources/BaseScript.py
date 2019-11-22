@@ -350,6 +350,16 @@ def worldVToDevV(v):
     return SE.WorldVToDevV(v)
 
 
+#[AC] rad2deg(rad)
+def rad2deg(rad):
+	return 180.0 * rad / math.pi
+
+#[AC] deg2rad(deg)
+def deg2rad(deg):
+	return math.pi * deg / 180.0
+
+
+
 #[AC] test()
 def test():
 	SE.Test()

@@ -49,8 +49,6 @@ namespace Plotter
 
         private DrawContextGLPers mDrawContextPers;
 
-        private bool mEnablePerse = false;
-
         public static PlotterViewGL Create()
         {
             GraphicsMode mode = GraphicsMode.Default;
@@ -297,12 +295,30 @@ namespace Plotter
 
         public void CursorLocked(bool locked)
         {
-            // NOP
+            if (locked)
+            {
+                base.Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                base.Cursor = PointCursor;
+            }
         }
 
         public void ChangeMouseCursor(PlotterObserver.MouseCursorType cursorType)
         {
-            // NOP
+            switch (cursorType)
+            {
+                case PlotterObserver.MouseCursorType.CROSS:
+                    base.Cursor = PointCursor;
+                    break;
+                case PlotterObserver.MouseCursorType.NORMAL_ARROW:
+                    base.Cursor = Cursors.Arrow;
+                    break;
+                case PlotterObserver.MouseCursorType.HAND:
+                    base.Cursor = Cursors.SizeAll;
+                    break;
+            }
         }
 
         private void SetupContextMenu()

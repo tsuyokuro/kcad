@@ -1,9 +1,4 @@
-﻿/**
- * GDI向け描画クラス
- * 
- */
-
-using HalfEdgeNS;
+﻿using HalfEdgeNS;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,6 +7,10 @@ using CadDataTypes;
 
 namespace Plotter
 {
+    /**
+     * GDI向け描画クラス
+     * Drawing class for GDI 
+     */
     public class DrawingGDI : IDrawing
     {
         public DrawContextGDI DC;
