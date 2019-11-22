@@ -1,7 +1,4 @@
-﻿using System;
-
-using OpenTK;
-using OpenTK.Graphics;
+﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using CadDataTypes;
 using System.Windows.Forms;

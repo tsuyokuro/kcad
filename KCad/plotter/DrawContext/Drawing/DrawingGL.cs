@@ -1,8 +1,4 @@
-﻿#define DEBUG_DRAW_NORMAL
-#define DRAW_HALF_EDGE_OUTLINE
-
-using System.Collections.Generic;
-
+﻿using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;

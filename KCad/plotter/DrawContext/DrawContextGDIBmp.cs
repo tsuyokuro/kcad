@@ -1,8 +1,5 @@
-﻿using OpenTK;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
-using CadDataTypes;
-using System.Windows.Forms;
 
 namespace Plotter
 {

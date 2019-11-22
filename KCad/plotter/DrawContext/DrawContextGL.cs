@@ -3,9 +3,7 @@
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using CadDataTypes;
 using System.Windows.Forms;
-using System.Drawing;
 
 namespace Plotter
 {
@@ -48,7 +46,7 @@ namespace Plotter
             mUnitPerMilli = 1;
         }
 
-        public void Init(Control control)
+        protected void Init(Control control)
         {
             ViewCtrl = control;
 
