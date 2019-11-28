@@ -468,7 +468,7 @@ namespace Plotter.Controller
         {
             foreach (CadLayer layer in mDB.LayerList)
             {
-                dc.Drawing.DrawSelected(layer.FigureList, dc.GetPen(DrawTools.PEN_SELECT_POINT));
+                dc.Drawing.DrawSelected(layer.FigureList);
             }
         }
 

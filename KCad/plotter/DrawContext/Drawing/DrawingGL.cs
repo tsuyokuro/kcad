@@ -41,16 +41,13 @@ namespace Plotter
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
-        public void DrawSelected(List<CadFigure> list, DrawPen pen)
+        public void DrawSelected(List<CadFigure> list)
         {
             DisableLight();
 
             foreach (CadFigure fig in list)
             {
-                fig.ForEachFig(a =>
-                {
-                    a.DrawSelected(DC, pen);
-                });
+                fig.DrawSelectedEach(DC);
             }
         }
 

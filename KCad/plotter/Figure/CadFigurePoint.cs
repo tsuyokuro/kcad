@@ -63,9 +63,9 @@ namespace Plotter
             // NOP
         }
 
-        public override void DrawSelected(DrawContext dc, DrawPen pen)
+        public override void DrawSelected(DrawContext dc)
         {
-            drawSelected_Point(dc, pen);
+            drawSelected_Point(dc);
         }
 
         public override void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
@@ -90,7 +90,7 @@ namespace Plotter
             dc.Drawing.DrawCross(pen, PointList[0].vector, size);
         }
 
-        private void drawSelected_Point(DrawContext dc, DrawPen pen)
+        private void drawSelected_Point(DrawContext dc)
         {
             if (PointList.Count > 0)
             {

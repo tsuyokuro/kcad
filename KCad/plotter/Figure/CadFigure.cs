@@ -677,7 +677,7 @@ namespace Plotter
 
         public abstract void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB);
 
-        public abstract void DrawSelected(DrawContext dc, DrawPen pen);
+        public abstract void DrawSelected(DrawContext dc);
 
         public abstract void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen);
 
@@ -702,6 +702,16 @@ namespace Plotter
             foreach (CadFigure c in ChildList)
             {
                 c.DrawEach(dc, dp);
+            }
+        }
+
+        public void DrawSelectedEach(DrawContext dc)
+        {
+            DrawSelected(dc);
+
+            foreach (CadFigure c in ChildList)
+            {
+                c.DrawSelectedEach(dc);
             }
         }
 

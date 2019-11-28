@@ -31,14 +31,11 @@ namespace Plotter
                 0, 0, (int)DC.ViewWidth, (int)DC.ViewHeight);
         }
 
-        public void DrawSelected(List<CadFigure> list, DrawPen pen)
+        public void DrawSelected(List<CadFigure> list)
         {
             foreach (CadFigure fig in list)
             {
-                fig.ForEachFig(a =>
-                {
-                    a.DrawSelected(DC, pen);
-                });
+                fig.DrawSelectedEach(DC);
             }
         }
 

@@ -128,7 +128,7 @@ namespace Plotter
                 dc.GetPen(DrawTools.PEN_NURBS_CTRL_LINE));
         }
 
-        public override void DrawSelected(DrawContext dc, DrawPen pen)
+        public override void DrawSelected(DrawContext dc)
         {
             for (int i=0; i<mPointList.Count; i++)
             {
