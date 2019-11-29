@@ -726,23 +726,18 @@ namespace Plotter.Controller
         #region Getting selection
         public bool HasSelect()
         {
-            bool ret = false;
-
             foreach (CadLayer layer in mDB.LayerList)
             {
-                layer.ForEachFigF(fig =>
+                foreach (CadFigure fig in layer.FigureList )
                 {
                     if (fig.HasSelectedPointInclueChild())
                     {
-                        ret = true;
-                        return false;
+                        return true;
                     }
-
-                    return true;
-                });
+                }
             }
 
-            return ret;
+            return false;
         }
 
         public List<CadFigure> GetSelectedFigureList()

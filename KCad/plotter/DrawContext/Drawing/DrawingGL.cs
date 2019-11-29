@@ -10,7 +10,7 @@ using Plotter.Settings;
 
 namespace Plotter
 {
-    class DrawingGL : IDrawing
+    public class DrawingGL : IDrawing
     {
         private DrawContextGL DC;
 

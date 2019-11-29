@@ -169,23 +169,6 @@ namespace Plotter
 
         
         #region Walk
-
-        public void Walk(Action<CadLayer, CadFigure> walk, Func<CadLayer, bool> layerFilter)
-        {
-            mLayerList.ForEach(layer =>
-            {
-                if (layerFilter != null && !layerFilter(layer))
-                {
-                    return;
-                }
-
-                layer.ForEachFig(fig =>
-                {
-                    walk(layer, fig);
-                });
-            });
-        }
-
         public static Func<CadLayer, bool> EditableLayerFilter = (layer) =>
         {
             if (layer.Locked) return false;

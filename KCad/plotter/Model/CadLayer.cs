@@ -140,25 +140,6 @@ namespace Plotter
         }
 
         /// <summary>
-        /// 全てのFigureを列挙(中止可能版)
-        /// Figureが子を持つ場合もフラットに列挙される
-        /// </summary>
-        /// <param name="d"></param>
-        public void ForEachFigF(ForEachDelegate<CadFigure> d)
-        {
-            int i;
-            for (i=0; i<mFigureList.Count; i++)
-            {
-                CadFigure fig = mFigureList[i];
-
-                if (!fig.ForEachFig(d))
-                {
-                    break;
-                }
-            }
-        }
-
-        /// <summary>
         /// 全てのFigureを列挙(中止不可版)
         /// Figureが子を持つ場合もフラットに列挙される
         /// </summary>
