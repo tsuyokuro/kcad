@@ -169,28 +169,58 @@ namespace Plotter
 
         
         #region Walk
-        public static Func<CadLayer, bool> EditableLayerFilter = (layer) =>
-        {
-            if (layer.Locked) return false;
-            if (!layer.Visible) return false;
+        //public static Func<CadLayer, bool> EditableLayerFilter = (layer) =>
+        //{
+        //    if (layer.Locked) return false;
+        //    if (!layer.Visible) return false;
 
-            return true;
-        };
+        //    return true;
+        //};
 
-        public void WalkEditable(Action<CadLayer, CadFigure> walk)
+        //public void ForEachEditableFigure(Action<CadLayer, CadFigure> walk)
+        //{
+        //    mLayerList.ForEach(layer =>
+        //    {
+        //        if (!EditableLayerFilter(layer))
+        //        {
+        //            return;
+        //        }
+
+        //        layer.ForEachFig(fig =>
+        //        {
+        //            walk(layer, fig);
+        //        });
+        //    });
+        //}
+
+
+        private void FigureAction(CadLayer layer, CadFigure fig, Action<CadLayer, CadFigure> action)
         {
-            mLayerList.ForEach(layer =>
+            action(layer, fig);
+
+            if (fig.ChildList == null)
             {
-                if (!EditableLayerFilter(layer))
-                {
-                    return;
-                }
+                return;
+            }
 
-                layer.ForEachFig(fig =>
+            foreach (CadFigure c in fig.ChildList)
+            {
+                FigureAction(layer, c, action);
+            }
+        }
+
+        public void ForEachEditableFigure(Action<CadLayer, CadFigure> action)
+        {
+            foreach (CadLayer layer in mLayerList)
+            {
+                if (layer.Locked) continue;
+                if (!layer.Visible) continue;
+
+                foreach (CadFigure fig in layer.FigureList)
                 {
-                    walk(layer, fig);
-                });
-            });
+                    FigureAction(layer, fig, action);
+                }
+            }
         }
 
         #endregion Walk

@@ -624,7 +624,7 @@ namespace Plotter.Controller
             Vector3d minp = VectorExt.Min(p0, p1);
             Vector3d maxp = VectorExt.Max(p0, p1);
 
-            DB.WalkEditable(
+            DB.ForEachEditableFigure(
                 (layer, fig) =>
                 {
                     SelectIfContactRect(minp, maxp, layer, fig);

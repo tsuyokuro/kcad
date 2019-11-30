@@ -97,7 +97,7 @@ namespace Plotter
 
         #endregion
 
-        protected VertexList mPointList = new VertexList();
+        protected VertexList mPointList = new VertexList(4);
 
         protected VertexList mStoreList = null;
 
@@ -120,19 +120,19 @@ namespace Plotter
         }
 
         /// <summary>
-        /// 自分とその下にあるFigureを全て列挙
+        /// 自分自身とその下にあるFigureを全て列挙
         /// </summary>
-        /// <param name="d"></param>
+        /// <param name="action"></param>
         /// <returns>true:列挙を継続</returns>
-        public void ForEachFig(Action<CadFigure> d)
+        public void ForEachFig(Action<CadFigure> action)
         {
-            d(this);
+            action(this);
 
             int i;
             for (i = 0; i < mChildList.Count; i++)
             {
                 CadFigure c = mChildList[i];
-                c.ForEachFig(d);
+                c.ForEachFig(action);
             }
         }
         #endregion
