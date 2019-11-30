@@ -58,9 +58,9 @@ namespace Plotter
             //drawCircle(dc, pen);
         }
 
-        public override void DrawSelected(DrawContext dc, DrawPen pen)
+        public override void DrawSelected(DrawContext dc)
         {
-            drawSelected_Circle(dc, pen);
+            drawSelected_Circle(dc);
         }
 
         public override void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen)
@@ -148,7 +148,7 @@ namespace Plotter
         //    dc.Drawing.DrawLine(pen, mPointList[2], mPointList[4]);
         //}
 
-        private void drawSelected_Circle(DrawContext dc, DrawPen pen)
+        private void drawSelected_Circle(DrawContext dc)
         {
             for (int i=0; i<PointList.Count; i++)
             {

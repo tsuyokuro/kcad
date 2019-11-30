@@ -176,7 +176,7 @@ namespace Plotter
                 mHeModel);
         }
 
-        public override void DrawSelected(DrawContext dc, DrawPen pen)
+        public override void DrawSelected(DrawContext dc)
         {
             dc.Drawing.DrawSelectedPoints(PointList, dc.GetPen(DrawTools.PEN_SELECT_POINT));
         }

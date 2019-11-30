@@ -139,9 +139,9 @@ namespace Plotter
             }
         }
 
-        public override void DrawSelected(DrawContext dc, DrawPen pen)
+        public override void DrawSelected(DrawContext dc)
         {
-            DrawSelectedLines(dc, pen);
+            DrawSelectedLines(dc);
         }
 
         public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
@@ -228,7 +228,7 @@ namespace Plotter
             return PolyLineExpander.GetExpandList(mPointList, curveSplitNum);
         }
 
-        private void DrawSelectedLines(DrawContext dc, DrawPen pen)
+        private void DrawSelectedLines(DrawContext dc)
         {
             int i;
             int num = PointList.Count;

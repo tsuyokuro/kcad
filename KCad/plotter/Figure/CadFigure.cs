@@ -97,7 +97,7 @@ namespace Plotter
 
         #endregion
 
-        protected VertexList mPointList = new VertexList();
+        protected VertexList mPointList = new VertexList(4);
 
         protected VertexList mStoreList = null;
 
@@ -120,87 +120,23 @@ namespace Plotter
         }
 
         /// <summary>
-        /// 自分とその下にあるFigureを全て列挙(中止可能版)
+        /// 自分自身とその下にあるFigureを全て列挙
         /// </summary>
-        /// <param name="d"></param>
+        /// <param name="action"></param>
         /// <returns>true:列挙を継続</returns>
-        public virtual bool ForEachFig(ForEachDelegate<CadFigure> d)
+        public void ForEachFig(Action<CadFigure> action)
         {
-            int i;
-
-            if (!d(this))
-            {
-                return false;
-            }
-
-            for (i=0; i < mChildList.Count; i++)
-            {
-                CadFigure c = mChildList[i];
-
-                if (!c.ForEachFig(d))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// 自分の下にあるFigureを全て列挙(中止可能版)
-        /// </summary>
-        /// <param name="d"></param>
-        /// <returns>true:列挙を継続</returns>
-        public virtual bool ForEachNode(ForEachDelegate<CadFigure> d)
-        {
-            int i;
-            for (i = 0; i < mChildList.Count; i++)
-            {
-                CadFigure c = mChildList[i];
-
-                if (!c.ForEachFig(d))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-
-        /// <summary>
-        /// 自分とその下にあるFigureを全て列挙(中止不可版)
-        /// </summary>
-        /// <param name="d"></param>
-        /// <returns>true:列挙を継続</returns>
-        public virtual void ForEachFig(Action<CadFigure> d)
-        {
-            d(this);
+            action(this);
 
             int i;
             for (i = 0; i < mChildList.Count; i++)
             {
                 CadFigure c = mChildList[i];
-                c.ForEachFig(d);
+                c.ForEachFig(action);
             }
         }
-
-        /// <summary>
-        /// 自分の下にあるFigureを全て列挙(中止不可版)
-        /// </summary>
-        /// <param name="d"></param>
-        /// <returns>true:列挙を継続</returns>
-        public virtual void ForEachNode(Action<CadFigure> d)
-        {
-            int i;
-            for (i = 0; i < mChildList.Count; i++)
-            {
-                CadFigure c = mChildList[i];
-                c.ForEachFig(d);
-            }
-        }
-
         #endregion
+
         protected CadFigure()
         {
             ID = 0;
@@ -677,7 +613,7 @@ namespace Plotter
 
         public abstract void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB);
 
-        public abstract void DrawSelected(DrawContext dc, DrawPen pen);
+        public abstract void DrawSelected(DrawContext dc);
 
         public abstract void DrawTemp(DrawContext dc, CadVertex tp, DrawPen pen);
 
@@ -702,6 +638,16 @@ namespace Plotter
             foreach (CadFigure c in ChildList)
             {
                 c.DrawEach(dc, dp);
+            }
+        }
+
+        public void DrawSelectedEach(DrawContext dc)
+        {
+            DrawSelected(dc);
+
+            foreach (CadFigure c in ChildList)
+            {
+                c.DrawSelectedEach(dc);
             }
         }
 
@@ -748,22 +694,6 @@ namespace Plotter
                 return FigUtil.SegmentCount(this);
             }
         }
-
-        /*
-        public virtual void ForEachFigureSegment(Func<FigureSegment, bool> dg)
-        {
-            int cnt = SegmentCount;
-            for (int i=0; i<cnt; i++)
-            {
-                FigureSegment fseg = GetFigSegmentAt(i);
-
-                if (!dg( fseg ))
-                {
-                    break;
-                }
-            }
-        }
-        */
 
         public virtual bool IsSelectedAll()
         {

@@ -23,7 +23,7 @@ namespace Plotter
         {
         }
 
-        public override void DrawSelected(DrawContext dc, DrawPen pen)
+        public override void DrawSelected(DrawContext dc)
         {
         }
 

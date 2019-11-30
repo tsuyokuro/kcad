@@ -58,7 +58,7 @@ namespace Plotter
 
             CheckZeroPoint();
 
-            Controller.DB.WalkEditable(CheckFig);
+            Controller.DB.ForEachEditableFigure(CheckFig);
 
             CheckCross();
 

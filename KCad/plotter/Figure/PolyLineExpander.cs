@@ -216,9 +216,9 @@ namespace Plotter
             while (t <= e)
             {
                 t1 = default(CadVertex);
-                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
-                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
-                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
+                t1 += p0 * BezierFuncs.BernsteinBasisF(n - 1, 0, t);
+                t1 += p1 * BezierFuncs.BernsteinBasisF(n - 1, 1, t);
+                t1 += p2 * BezierFuncs.BernsteinBasisF(n - 1, 2, t);
 
                 action(t1, param);
 
@@ -254,10 +254,10 @@ namespace Plotter
             while (t <= e)
             {
                 t1 = default(CadVertex);
-                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
-                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
-                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
-                t1 += p3 * CadMath.BernsteinBasisF(n - 1, 3, t);
+                t1 += p0 * BezierFuncs.BernsteinBasisF(n - 1, 0, t);
+                t1 += p1 * BezierFuncs.BernsteinBasisF(n - 1, 1, t);
+                t1 += p2 * BezierFuncs.BernsteinBasisF(n - 1, 2, t);
+                t1 += p3 * BezierFuncs.BernsteinBasisF(n - 1, 3, t);
 
                 action(t1, param);
 
@@ -282,10 +282,10 @@ namespace Plotter
 
             while (t <= 1.0)
             {
-                t1 = default(CadVertex);
-                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
-                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
-                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
+                t1 = default;
+                t1 += p0 * BezierFuncs.BernsteinBasisF(n - 1, 0, t);
+                t1 += p1 * BezierFuncs.BernsteinBasisF(n - 1, 1, t);
+                t1 += p2 * BezierFuncs.BernsteinBasisF(n - 1, 2, t);
 
                 action(t0, t1, param);
 
@@ -312,11 +312,11 @@ namespace Plotter
 
             while (t <= 1.0)
             {
-                t1 = default(CadVertex);
-                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
-                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
-                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
-                t1 += p3 * CadMath.BernsteinBasisF(n - 1, 3, t);
+                t1 = default;
+                t1 += p0 * BezierFuncs.BernsteinBasisF(n - 1, 0, t);
+                t1 += p1 * BezierFuncs.BernsteinBasisF(n - 1, 1, t);
+                t1 += p2 * BezierFuncs.BernsteinBasisF(n - 1, 2, t);
+                t1 += p3 * BezierFuncs.BernsteinBasisF(n - 1, 3, t);
 
                 action(t0, t1, param);
 

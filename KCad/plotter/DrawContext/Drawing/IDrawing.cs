@@ -22,7 +22,7 @@ namespace Plotter
     {
         void Clear(DrawBrush brush);
 
-        void DrawSelected(List<CadFigure> list, DrawPen pen);
+        void DrawSelected(List<CadFigure> list);
 
         void DrawAxis();
 
