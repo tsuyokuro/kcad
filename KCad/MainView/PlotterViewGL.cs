@@ -1,4 +1,4 @@
-﻿//#define MOUSE_THREAD
+﻿#define MOUSE_THREAD
 //#define VSYNC
 
 using OpenTK;
