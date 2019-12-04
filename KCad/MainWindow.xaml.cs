@@ -69,7 +69,7 @@ namespace KCad
         {
             LayerListView.DataContext = ViewModel.LayerListVM.LayerList;
 
-            SlsectModePanel.DataContext = ViewModel;
+            SelectModePanel.DataContext = ViewModel;
             FigurePanel.DataContext = ViewModel;
 
             textBlockXYZ.DataContext = ViewModel.CursorPosVM;

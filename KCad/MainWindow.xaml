@@ -589,7 +589,7 @@
                             <RowDefinition Height="100*" />
                         </Grid.RowDefinitions>
 
-                        <StackPanel x:Name="SlsectModePanel" Grid.Row="0">
+                        <StackPanel x:Name="SelectModePanel" Grid.Row="0">
                             <Label
                                 Height="Auto"
                                 Content="Select mode"

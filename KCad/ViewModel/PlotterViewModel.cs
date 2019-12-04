@@ -21,6 +21,15 @@ using Plotter;
 
 namespace KCad.ViewModel
 {
+    public interface IMainWindow
+    {
+        Window GetWindow();
+        void SetFileName(string file_name);
+        void OpenPopupMessage(string text, PlotterObserver.MessageType messageType);
+        void ClosePopupMessage();
+        void SetMainView(IPlotterView view);
+    }
+
     public class PlotterViewModel : ViewModelContext, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -43,15 +52,13 @@ namespace KCad.ViewModel
 
         private Dictionary<string, KeyAction> KeyMap;
 
-        private SelectModes mSelectMode = SelectModes.POINT;
-
-
         public CursorPosViewModel CursorPosVM = new CursorPosViewModel();
 
         public ObjectTreeViewModel ObjTreeVM;
 
         public LayerListViewModel LayerListVM;
 
+        private SelectModes mSelectMode = SelectModes.OBJECT;
         public SelectModes SelectMode
         {
             set
@@ -124,17 +131,16 @@ namespace KCad.ViewModel
         public DrawContext CurrentDC => mController?.CurrentDC;
 
         private SettingsVeiwModel SettingsVM;
-
         public SettingsVeiwModel Settings
         {
             get => SettingsVM;
         }
 
-
         private MainWindow mMainWindow;
 
+#if USE_GDI_VIEW
         private PlotterView PlotterView1 = null;
-
+#endif
         private PlotterViewGL PlotterViewGL1 = null;
 
 
@@ -703,10 +709,10 @@ namespace KCad.ViewModel
             Redraw();
         }
 
-        #endregion
+#endregion
 
         // Handle events from PlotterController
-        #region Event From PlotterController
+#region Event From PlotterController
 
         public void StateChanged(PlotterController sender, PlotterStateInfo si)
         {
@@ -751,11 +757,11 @@ namespace KCad.ViewModel
             }, true);
         }
 
-        #endregion Event From PlotterController
+#endregion Event From PlotterController
 
 
         // Keyboard handling
-        #region Keyboard handling
+#region Keyboard handling
         private string GetModifyerKeysString()
         {
             ModifierKeys modifierKeys = Keyboard.Modifiers;
@@ -801,10 +807,10 @@ namespace KCad.ViewModel
             string ks = KeyString(e);
             return ExecShortcutKey(ks, false);
         }
-        #endregion Keyboard handling
+#endregion Keyboard handling
 
 
-        #region print
+#region print
         public void StartPrint()
         {
             PrintDocument pd =
@@ -838,7 +844,7 @@ namespace KCad.ViewModel
 
             Controller.PrintPage(g, pageSize, deviceSize);
         }
-        #endregion print
+#endregion print
 
         public void PageSetting()
         {
