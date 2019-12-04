@@ -15,7 +15,7 @@ using KCad.ViewModel;
 
 namespace KCad
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, ICadMainWindow
     {
         public PlotterViewModel ViewModel;
 
@@ -130,40 +130,10 @@ namespace KCad
             return ttplaces;
         }
 
-        public void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
-        {
-            Application.Current.Dispatcher.Invoke(() => {
-                if (PopupMessage.IsOpen)
-                {
-                    return;
-                }
-
-                PopupMessageIcon.Source = SelectPopupMessageIcon(messageType);
-
-                PopupMessageText.Text = text;
-                PopupMessage.IsOpen = true;
-            }); 
-        }
-
-        public void ClosePopupMessage()
-        {
-            if (Application.Current.Dispatcher.Thread.ManagedThreadId ==
-                System.Threading.Thread.CurrentThread.ManagedThreadId)
-            {
-                PopupMessage.IsOpen = false;
-                return;
-            }
-
-            Application.Current.Dispatcher.Invoke(() => {
-                PopupMessage.IsOpen = false;
-            });
-        }
-
         ImageSource SelectPopupMessageIcon(PlotterObserver.MessageType type)
         {
             return PopupMessageIcons[(int)type];
         }
-
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
         {
@@ -265,7 +235,7 @@ namespace KCad
         }
         #endregion
 
-        public void SetMainView(IPlotterView view)
+        public void SetPlotterView(IPlotterView view)
         {
             viewContainer.Child = view.FormsControl;
         }
@@ -291,5 +261,46 @@ namespace KCad
             }
             return IntPtr.Zero;
         }
+
+        #region IMainWindow
+        public Window GetWindow()
+        {
+            return this;
+        }
+
+        public void SetCurrentFileName(string file_name)
+        {
+            FileName.Content = file_name;
+        }
+
+        public void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
+        {
+            Application.Current.Dispatcher.Invoke(() => {
+                if (PopupMessage.IsOpen)
+                {
+                    return;
+                }
+
+                PopupMessageIcon.Source = SelectPopupMessageIcon(messageType);
+
+                PopupMessageText.Text = text;
+                PopupMessage.IsOpen = true;
+            });
+        }
+
+        public void ClosePopupMessage()
+        {
+            if (Application.Current.Dispatcher.Thread.ManagedThreadId ==
+                System.Threading.Thread.CurrentThread.ManagedThreadId)
+            {
+                PopupMessage.IsOpen = false;
+                return;
+            }
+
+            Application.Current.Dispatcher.Invoke(() => {
+                PopupMessage.IsOpen = false;
+            });
+        }
+        #endregion
     }
 }

@@ -240,6 +240,7 @@
     <Compile Include="plotter\HalfEdge\HeModelConverter.cs" />
     <Compile Include="plotter\Math\BezierFuncs.cs" />
     <Compile Include="plotter\Math\CrossInfo.cs" />
+    <Compile Include="ViewModel\ICadMainWindow.cs" />
     <Compile Include="ViewModel\SettingsVeiwModel.cs" />
     <Compile Include="plotter\primitive\CadRect.cs" />
     <Compile Include="plotter\primitive\CadSegment.cs" />

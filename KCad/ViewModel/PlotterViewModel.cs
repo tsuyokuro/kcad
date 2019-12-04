@@ -2,17 +2,13 @@
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Drawing;
-using KCad;
 using KCad.Controls;
 using System.Drawing.Printing;
 using Plotter.Controller;
-using Plotter.Settings;
 using KCad.Dialogs;
 using System.Text.RegularExpressions;
 using Plotter.svg;
@@ -21,14 +17,6 @@ using Plotter;
 
 namespace KCad.ViewModel
 {
-    public interface IMainWindow
-    {
-        Window GetWindow();
-        void SetFileName(string file_name);
-        void OpenPopupMessage(string text, PlotterObserver.MessageType messageType);
-        void ClosePopupMessage();
-        void SetMainView(IPlotterView view);
-    }
 
     public class PlotterViewModel : ViewModelContext, INotifyPropertyChanged
     {
@@ -136,7 +124,7 @@ namespace KCad.ViewModel
             get => SettingsVM;
         }
 
-        private MainWindow mMainWindow;
+        private ICadMainWindow mMainWindow;
 
 #if USE_GDI_VIEW
         private PlotterView PlotterView1 = null;
@@ -156,7 +144,6 @@ namespace KCad.ViewModel
         MoveKeyHandler mMoveKeyHandler;
 
         private string mCurrentFileName = null;
-
         public string CurrentFileName
         {
             get => mCurrentFileName;
@@ -164,19 +151,11 @@ namespace KCad.ViewModel
             private set
             {
                 mCurrentFileName = value;
-
-                if (mCurrentFileName != null)
-                {
-                    mMainWindow.FileName.Content = mCurrentFileName;
-                }
-                else
-                {
-                    mMainWindow.FileName.Content = "";
-                }
+                ChangeCurrentFileName(mCurrentFileName);
             }
         }
 
-        public PlotterViewModel(MainWindow mainWindow)
+        public PlotterViewModel(ICadMainWindow mainWindow)
         {
             mController = new PlotterController();
 
@@ -223,6 +202,19 @@ namespace KCad.ViewModel
             mMoveKeyHandler = new MoveKeyHandler(Controller);
         }
 
+        #region handling IMainWindow
+        private void ChangeCurrentFileName(string fname)
+        {
+            if (fname != null)
+            {
+                mMainWindow.SetCurrentFileName(fname);
+            }
+            else
+            {
+                mMainWindow.SetCurrentFileName("");
+            }
+        }
+
         private void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
         {
             mMainWindow.OpenPopupMessage(text, messageType);
@@ -251,9 +243,9 @@ namespace KCad.ViewModel
 
             mController.CurrentDC = view.DrawContext;
 
-            mMainWindow.SetMainView(view);
+            mMainWindow.SetPlotterView(view);
         }
-
+#endregion handling IMainWindow
 
         public void ViewFocus()
         {
@@ -566,14 +558,13 @@ namespace KCad.ViewModel
 
             dlg.GridSize = Settings.GridSize;
 
-            dlg.Owner = mMainWindow;
+            dlg.Owner = mMainWindow.GetWindow();
 
             bool? result = dlg.ShowDialog();
 
             if (result.Value)
             {
                 Settings.GridSize = dlg.GridSize;
-
                 Redraw();
             }
         }
@@ -582,7 +573,7 @@ namespace KCad.ViewModel
         {
             SnapSettingsDialog dlg = new SnapSettingsDialog();
 
-            dlg.Owner = mMainWindow;
+            dlg.Owner = mMainWindow.GetWindow();
 
             dlg.PointSnapRange = Settings.PointSnapRange;
             dlg.LineSnapRange = Settings.LineSnapRange;
@@ -603,7 +594,7 @@ namespace KCad.ViewModel
             if (mEditorWindow == null)
             {
                 mEditorWindow = new EditorWindow(mController.ScriptEnv);
-                mEditorWindow.Owner = mMainWindow;
+                mEditorWindow.Owner = mMainWindow.GetWindow();
                 mEditorWindow.Show();
 
                 mEditorWindow.Closed += delegate
@@ -871,7 +862,7 @@ namespace KCad.ViewModel
         {
             DocumentSettingsDialog dlg = new DocumentSettingsDialog();
 
-            dlg.Owner = mMainWindow;
+            dlg.Owner = mMainWindow.GetWindow();
 
             dlg.WorldScale = mPlotterView.DrawContext.WorldScale;
 
