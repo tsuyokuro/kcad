@@ -250,13 +250,29 @@ namespace KCad
                         wnd.viewContainer.Visibility = Visibility.Hidden;
                     }
                     break;
+                
                 case WinAPI.WM_EXITSIZEMOVE:
                     {
                         MainWindow wnd = (MainWindow)Application.Current.MainWindow;
-                        wnd.viewContainer.Visibility = Visibility.Visible;
-
-                        ViewModel.Redraw();
+                        if (wnd.viewContainer.Visibility != Visibility.Visible)
+                        {
+                            wnd.viewContainer.Visibility = Visibility.Visible;
+                            ViewModel.Redraw();
+                        }
                     }
+                    break;
+                
+                case WinAPI.WM_MOVE:
+                    {
+                        MainWindow wnd = (MainWindow)Application.Current.MainWindow;
+                        if (wnd.viewContainer.Visibility != Visibility.Visible)
+                        {
+                            wnd.viewContainer.Visibility = Visibility.Visible;
+                        }
+                    }
+                    break;
+
+                case WinAPI.WM_SIZE:
                     break;
             }
             return IntPtr.Zero;
