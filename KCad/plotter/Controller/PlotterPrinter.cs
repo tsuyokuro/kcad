@@ -23,9 +23,9 @@ namespace Plotter.Controller
 
         private static void PrintPageSwitch(PlotterController pc, Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
         {
-            if (!(pc.CurrentDC.GetType() == typeof(DrawContextGLPers)))
+            if (!(pc.DC.GetType() == typeof(DrawContextGLPers)))
             {
-                DrawContextPrinter dc = new DrawContextPrinter(pc.CurrentDC, printerGraphics, pageSize, deviceSize);
+                DrawContextPrinter dc = new DrawContextPrinter(pc.DC, printerGraphics, pageSize, deviceSize);
                 dc.SetupDrawing();
                 dc.SetupTools(DrawTools.ToolsType.PRINTER);
 
@@ -40,12 +40,12 @@ namespace Plotter.Controller
 
         private static Bitmap GetPrintableBmp(PlotterController pc, CadSize2D pageSize, CadSize2D deviceSize)
         {
-            if (!(pc.CurrentDC is DrawContextGL))
+            if (!(pc.DC is DrawContextGL))
             {
                 return null;
             }
 
-            DrawContext dc = pc.CurrentDC.CreatePrinterContext(pageSize, deviceSize);
+            DrawContext dc = pc.DC.CreatePrinterContext(pageSize, deviceSize);
             dc.SetupDrawing();
             dc.SetupTools(DrawTools.ToolsType.PRINTER);
 

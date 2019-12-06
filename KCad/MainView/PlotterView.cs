@@ -276,7 +276,7 @@ namespace Plotter
 
             // PushDraw is called to redraw
             // PushDrawが呼ばれて再描画が行われる
-            mController.Redraw(mController.CurrentDC);
+            mController.Redraw(mController.DC);
         }
 
         public void SetController(PlotterController controller)

@@ -37,7 +37,7 @@ namespace KCad.ViewModel
 
             CadData cd = new CadData(
                                 pc.DB,
-                                pc.CurrentDC.WorldScale,
+                                pc.DC.WorldScale,
                                 pc.PageSize
                                 );
 
@@ -72,7 +72,7 @@ namespace KCad.ViewModel
 
             CadData cd = new CadData(
                 pc.DB,
-                pc.CurrentDC.WorldScale,
+                pc.DC.WorldScale,
                 pc.PageSize);
 
 

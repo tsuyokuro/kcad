@@ -6,6 +6,8 @@ using OpenTK;
 
 namespace Plotter.Controller
 {
+    // Edit figure functions
+
     public partial class PlotterController
     {
         public bool ToBezier()
@@ -369,7 +371,7 @@ namespace Plotter.Controller
             CadFigure pointFig = mDB.NewFigure(CadFigure.Types.POINT);
             pointFig.AddPoint((CadVertex)cent.Point);
 
-            pointFig.EndCreate(CurrentDC);
+            pointFig.EndCreate(DC);
 
             CadOpe ope = new CadOpeAddFigure(CurrentLayer.ID, pointFig.ID);
             HistoryMan.foward(ope);

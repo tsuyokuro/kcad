@@ -116,7 +116,7 @@ namespace KCad.ViewModel
             get => mViewMode;
         }
 
-        public DrawContext CurrentDC => mController?.CurrentDC;
+        public DrawContext CurrentDC => mController?.DC;
 
         private SettingsVeiwModel SettingsVM;
         public SettingsVeiwModel Settings
@@ -241,7 +241,7 @@ namespace KCad.ViewModel
 
             mPlotterView.SetController(mController);
 
-            mController.CurrentDC = view.DrawContext;
+            mController.DC = view.DrawContext;
 
             mMainWindow.SetPlotterView(view);
         }
@@ -618,7 +618,7 @@ namespace KCad.ViewModel
 
                 SvgExporter exporter = new SvgExporter();
 
-                XDocument doc = exporter.ToSvg(figList, Controller.CurrentDC,
+                XDocument doc = exporter.ToSvg(figList, Controller.DC,
                     Controller.PageSize.Width, Controller.PageSize.Height);
 
                 try

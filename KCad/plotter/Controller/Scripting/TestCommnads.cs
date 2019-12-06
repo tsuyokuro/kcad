@@ -122,7 +122,7 @@ namespace Plotter.Controller
 
         private void test006()
         {
-            DrawContext dc = Controller.CurrentDC;
+            DrawContext dc = Controller.DC;
 
             CadObjectDB db = Controller.DB;
 
@@ -157,7 +157,7 @@ namespace Plotter.Controller
 
         private void test009()
         {
-            DrawContext dc = Controller.CurrentDC;
+            DrawContext dc = Controller.DC;
 
             CadObjectDB db = Controller.DB;
 
@@ -574,7 +574,7 @@ namespace Plotter.Controller
             SvgExporter svgExporter = new SvgExporter();
 
             XDocument doc = svgExporter.ToSvg(figList,
-                        Controller.CurrentDC,
+                        Controller.DC,
                         Controller.PageSize.Width,
                         Controller.PageSize.Height);
 
