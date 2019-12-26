@@ -360,7 +360,8 @@ namespace Plotter.Controller
 
         public void PrintPage(Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
         {
-            PlotterPrinter.PrintPage(this, printerGraphics, pageSize, deviceSize);
+            PlotterPrinter printer = new PlotterPrinter();
+            printer.PrintPage(this, printerGraphics, pageSize, deviceSize);
         }
     }
 }

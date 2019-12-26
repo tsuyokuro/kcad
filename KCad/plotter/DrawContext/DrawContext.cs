@@ -124,9 +124,9 @@ namespace Plotter
             mViewOrg = org;
         }
 
-        public void SetupTools(DrawTools.ToolsType type)
+        public void SetupTools(DrawTools.ToolsType type, int penW=0)
         {
-            Tools.Setup(type);
+            Tools.Setup(type, penW);
         }
 
         public virtual void SetViewSize(double w, double h)
