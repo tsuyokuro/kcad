@@ -2,17 +2,13 @@
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Drawing;
-using KCad;
 using KCad.Controls;
 using System.Drawing.Printing;
 using Plotter.Controller;
-using Plotter.Settings;
 using KCad.Dialogs;
 using System.Text.RegularExpressions;
 using Plotter.svg;
@@ -21,6 +17,7 @@ using Plotter;
 
 namespace KCad.ViewModel
 {
+
     public class PlotterViewModel : ViewModelContext, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -43,15 +40,13 @@ namespace KCad.ViewModel
 
         private Dictionary<string, KeyAction> KeyMap;
 
-        private SelectModes mSelectMode = SelectModes.POINT;
-
-
         public CursorPosViewModel CursorPosVM = new CursorPosViewModel();
 
         public ObjectTreeViewModel ObjTreeVM;
 
         public LayerListViewModel LayerListVM;
 
+        private SelectModes mSelectMode = SelectModes.OBJECT;
         public SelectModes SelectMode
         {
             set
@@ -121,20 +116,19 @@ namespace KCad.ViewModel
             get => mViewMode;
         }
 
-        public DrawContext CurrentDC => mController?.CurrentDC;
+        public DrawContext CurrentDC => mController?.DC;
 
         private SettingsVeiwModel SettingsVM;
-
         public SettingsVeiwModel Settings
         {
             get => SettingsVM;
         }
 
+        private ICadMainWindow mMainWindow;
 
-        private MainWindow mMainWindow;
-
+#if USE_GDI_VIEW
         private PlotterView PlotterView1 = null;
-
+#endif
         private PlotterViewGL PlotterViewGL1 = null;
 
 
@@ -150,7 +144,6 @@ namespace KCad.ViewModel
         MoveKeyHandler mMoveKeyHandler;
 
         private string mCurrentFileName = null;
-
         public string CurrentFileName
         {
             get => mCurrentFileName;
@@ -158,19 +151,11 @@ namespace KCad.ViewModel
             private set
             {
                 mCurrentFileName = value;
-
-                if (mCurrentFileName != null)
-                {
-                    mMainWindow.FileName.Content = mCurrentFileName;
-                }
-                else
-                {
-                    mMainWindow.FileName.Content = "";
-                }
+                ChangeCurrentFileName(mCurrentFileName);
             }
         }
 
-        public PlotterViewModel(MainWindow mainWindow)
+        public PlotterViewModel(ICadMainWindow mainWindow)
         {
             mController = new PlotterController();
 
@@ -217,6 +202,19 @@ namespace KCad.ViewModel
             mMoveKeyHandler = new MoveKeyHandler(Controller);
         }
 
+        #region handling IMainWindow
+        private void ChangeCurrentFileName(string fname)
+        {
+            if (fname != null)
+            {
+                mMainWindow.SetCurrentFileName(fname);
+            }
+            else
+            {
+                mMainWindow.SetCurrentFileName("");
+            }
+        }
+
         private void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
         {
             mMainWindow.OpenPopupMessage(text, messageType);
@@ -243,11 +241,11 @@ namespace KCad.ViewModel
 
             mPlotterView.SetController(mController);
 
-            mController.CurrentDC = view.DrawContext;
+            mController.DC = view.DrawContext;
 
-            mMainWindow.SetMainView(view);
+            mMainWindow.SetPlotterView(view);
         }
-
+#endregion handling IMainWindow
 
         public void ViewFocus()
         {
@@ -560,14 +558,13 @@ namespace KCad.ViewModel
 
             dlg.GridSize = Settings.GridSize;
 
-            dlg.Owner = mMainWindow;
+            dlg.Owner = mMainWindow.GetWindow();
 
             bool? result = dlg.ShowDialog();
 
             if (result.Value)
             {
                 Settings.GridSize = dlg.GridSize;
-
                 Redraw();
             }
         }
@@ -576,7 +573,7 @@ namespace KCad.ViewModel
         {
             SnapSettingsDialog dlg = new SnapSettingsDialog();
 
-            dlg.Owner = mMainWindow;
+            dlg.Owner = mMainWindow.GetWindow();
 
             dlg.PointSnapRange = Settings.PointSnapRange;
             dlg.LineSnapRange = Settings.LineSnapRange;
@@ -597,7 +594,7 @@ namespace KCad.ViewModel
             if (mEditorWindow == null)
             {
                 mEditorWindow = new EditorWindow(mController.ScriptEnv);
-                mEditorWindow.Owner = mMainWindow;
+                mEditorWindow.Owner = mMainWindow.GetWindow();
                 mEditorWindow.Show();
 
                 mEditorWindow.Closed += delegate
@@ -621,7 +618,7 @@ namespace KCad.ViewModel
 
                 SvgExporter exporter = new SvgExporter();
 
-                XDocument doc = exporter.ToSvg(figList, Controller.CurrentDC,
+                XDocument doc = exporter.ToSvg(figList, Controller.DC,
                     Controller.PageSize.Width, Controller.PageSize.Height);
 
                 try
@@ -703,10 +700,10 @@ namespace KCad.ViewModel
             Redraw();
         }
 
-        #endregion
+#endregion
 
         // Handle events from PlotterController
-        #region Event From PlotterController
+#region Event From PlotterController
 
         public void StateChanged(PlotterController sender, PlotterStateInfo si)
         {
@@ -751,11 +748,11 @@ namespace KCad.ViewModel
             }, true);
         }
 
-        #endregion Event From PlotterController
+#endregion Event From PlotterController
 
 
         // Keyboard handling
-        #region Keyboard handling
+#region Keyboard handling
         private string GetModifyerKeysString()
         {
             ModifierKeys modifierKeys = Keyboard.Modifiers;
@@ -801,10 +798,10 @@ namespace KCad.ViewModel
             string ks = KeyString(e);
             return ExecShortcutKey(ks, false);
         }
-        #endregion Keyboard handling
+#endregion Keyboard handling
 
 
-        #region print
+#region print
         public void StartPrint()
         {
             PrintDocument pd =
@@ -838,7 +835,7 @@ namespace KCad.ViewModel
 
             Controller.PrintPage(g, pageSize, deviceSize);
         }
-        #endregion print
+#endregion print
 
         public void PageSetting()
         {
@@ -865,7 +862,7 @@ namespace KCad.ViewModel
         {
             DocumentSettingsDialog dlg = new DocumentSettingsDialog();
 
-            dlg.Owner = mMainWindow;
+            dlg.Owner = mMainWindow.GetWindow();
 
             dlg.WorldScale = mPlotterView.DrawContext.WorldScale;
 

@@ -44,7 +44,7 @@ namespace Plotter
         public NearPointSearcher(PlotterController controller)
         {
             Controller = controller;
-            DC = Controller.CurrentDC;
+            DC = Controller.DC;
         }
 
         public List<Result> Search(CadVertex p, double range)

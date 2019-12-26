@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace Plotter.Controller
 {
+    // Actions for DB
+
     public partial class PlotterController
     {
         public void ClearAll()
@@ -156,7 +158,7 @@ namespace Plotter.Controller
 
             foreach (CadFigure fig in figList)
             {
-                fig.MoveSelectedPointsFromStored(CurrentDC, d);
+                fig.MoveSelectedPointsFromStored(DC, d);
             }
         }
 

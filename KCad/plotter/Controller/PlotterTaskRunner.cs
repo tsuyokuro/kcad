@@ -38,7 +38,7 @@ namespace Plotter.Controller.TaskRunner
                 }
 
                 Vector3d normal = CadMath.Normal(
-                    res.p1 - res.p0, (Controller.CurrentDC.ViewDir));
+                    res.p1 - res.p0, (Controller.DC.ViewDir));
 
                 FlipWithPlane(rootFigList, res.p0, normal);
                 Controller.EndEdit();
@@ -80,7 +80,7 @@ namespace Plotter.Controller.TaskRunner
                 }
 
                 Vector3d normal = CadMath.Normal(
-                    res.p1 - res.p0, Controller.CurrentDC.ViewDir);
+                    res.p1 - res.p0, Controller.DC.ViewDir);
 
                 FlipAndCopyWithPlane(rootFigList, res.p0, normal);
             });
@@ -160,7 +160,7 @@ namespace Plotter.Controller.TaskRunner
                 RotateWithAxis(
                     rootFigList,
                     p0,
-                    Controller.CurrentDC.ViewDir,
+                    Controller.DC.ViewDir,
                     CadMath.Deg2Rad(angle));
 
                 Controller.EndEdit();

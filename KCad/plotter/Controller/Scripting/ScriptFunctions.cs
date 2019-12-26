@@ -88,22 +88,22 @@ namespace Plotter.Controller
 
         public Vector3d WorldVToDevV(Vector3d w)
         {
-            return Controller.CurrentDC.WorldVectorToDevVector(w);
+            return Controller.DC.WorldVectorToDevVector(w);
         }
 
         public Vector3d DevVToWorldV(Vector3d d)
         {
-            return Controller.CurrentDC.DevVectorToWorldVector(d);
+            return Controller.DC.DevVectorToWorldVector(d);
         }
 
         public Vector3d WorldPToDevP(Vector3d w)
         {
-            return Controller.CurrentDC.WorldVectorToDevVector(w);
+            return Controller.DC.WorldVectorToDevVector(w);
         }
 
         public Vector3d DevPToWorldP(Vector3d d)
         {
-            return Controller.CurrentDC.DevVectorToWorldVector(d);
+            return Controller.DC.DevVectorToWorldVector(d);
         }
 
         public void DumpVector(Vector3d v)
@@ -129,7 +129,7 @@ namespace Plotter.Controller
 
         public Vector3d GetProjectionDir()
         {
-            return -Controller.CurrentDC.ViewDir;
+            return -Controller.DC.ViewDir;
         }
 
         public void FindFigureById(uint id)
@@ -379,7 +379,7 @@ namespace Plotter.Controller
             fig.AddPoint((CadVertex)v0);
             fig.AddPoint((CadVertex)v1);
 
-            fig.EndCreate(Controller.CurrentDC);
+            fig.EndCreate(Controller.DC);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
@@ -397,7 +397,7 @@ namespace Plotter.Controller
             CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POINT);
             fig.AddPoint((CadVertex)p);
 
-            fig.EndCreate(Controller.CurrentDC);
+            fig.EndCreate(Controller.DC);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
@@ -438,8 +438,8 @@ namespace Plotter.Controller
 
         public int RectAt(Vector3d p, double w, double h)
         {
-            Vector3d viewDir = Controller.CurrentDC.ViewDir;
-            Vector3d upDir = Controller.CurrentDC.UpVector;
+            Vector3d viewDir = Controller.DC.ViewDir;
+            Vector3d upDir = Controller.DC.UpVector;
 
             Vector3d wd = CadMath.Normal(viewDir, upDir) * w;
             Vector3d hd = upDir.UnitVector() * h;
@@ -462,7 +462,7 @@ namespace Plotter.Controller
 
             fig.IsLoop = true;
 
-            fig.EndCreate(Controller.CurrentDC);
+            fig.EndCreate(Controller.DC);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
@@ -480,8 +480,8 @@ namespace Plotter.Controller
 
         public int RectRectChamferAt(Vector3d p, double w, double h, double c)
         {
-            Vector3d viewDir = Controller.CurrentDC.ViewDir;
-            Vector3d upDir = Controller.CurrentDC.UpVector;
+            Vector3d viewDir = Controller.DC.ViewDir;
+            Vector3d upDir = Controller.DC.UpVector;
 
             Vector3d wdir = CadMath.Normal(viewDir, upDir);
             Vector3d hdir = upDir.UnitVector();
@@ -524,7 +524,7 @@ namespace Plotter.Controller
 
             fig.IsLoop = true;
 
-            fig.EndCreate(Controller.CurrentDC);
+            fig.EndCreate(Controller.DC);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
@@ -852,7 +852,7 @@ namespace Plotter.Controller
 
         public void CreateBitmap(int w, int h, uint argb, int lineW, string fname)
         {
-            DrawContext dc = Controller.CurrentDC;
+            DrawContext dc = Controller.DC;
 
             CadObjectDB db = Controller.DB;
 
@@ -937,7 +937,7 @@ namespace Plotter.Controller
 
         public void FaceToDirection(Vector3d dir)
         {
-            DrawContext dc = Controller.CurrentDC;
+            DrawContext dc = Controller.DC;
 
             CadObjectDB db = Controller.DB;
 
@@ -1486,7 +1486,7 @@ namespace Plotter.Controller
 
         public Vector3d ViewDir()
         {
-            return Controller.CurrentDC.ViewDir;
+            return Controller.DC.ViewDir;
         }
 
         public Vector3d InputUnitVector()
@@ -1584,7 +1584,7 @@ namespace Plotter.Controller
             CadSize2D deviceSize = new CadSize2D(827, 1169);
             CadSize2D pageSize = new CadSize2D(210, 297);
 
-            DrawContext dc = Controller.CurrentDC.CreatePrinterContext(pageSize, deviceSize);
+            DrawContext dc = Controller.DC.CreatePrinterContext(pageSize, deviceSize);
             dc.SetupDrawing();
             dc.SetupTools(DrawTools.ToolsType.PRINTER);
 

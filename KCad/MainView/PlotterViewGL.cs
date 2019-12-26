@@ -1,4 +1,4 @@
-﻿//#define MOUSE_THREAD
+﻿#define MOUSE_THREAD
 //#define VSYNC
 
 using OpenTK;
@@ -203,7 +203,7 @@ namespace Plotter
         {
             ThreadUtil.RunOnMainThread(() =>
             {
-                mController.Redraw(mController.CurrentDC);
+                mController.Redraw(mController.DC);
             }, wait: false);
         }
 

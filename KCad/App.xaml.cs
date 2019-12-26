@@ -11,7 +11,6 @@
  * Visual studio 2017 15.8.4では、Windowsアプリケーションのまま、普通にコンソールに出力される
  * Visual studio 2017 15.9.4では、またこの手順が必要になった
  **/
-
 #define USE_CONSOLE
 //#define USE_CONSOL_INPUT
 
@@ -24,10 +23,8 @@ using Plotter;
 using Plotter.Serializer;
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Resources;
@@ -37,17 +34,16 @@ namespace KCad
 {
     public partial class App : Application
     {
-        public DebugInputThread InputThread = null;
-
-        public MySplashWindow SplashWindow = null;
-
-        TaskScheduler mMainThreadScheduler;
-
 #if USE_CONSOLE
         public const bool UseConsole = true;
 #else
         public const bool UseConsole = false;
 #endif
+        private MySplashWindow SplashWindow = null;
+
+        private TaskScheduler mMainThreadScheduler;
+
+        private DebugInputThread InputThread = null;
 
         private DebugClient DClient;
 

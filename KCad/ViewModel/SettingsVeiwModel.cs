@@ -260,7 +260,7 @@ namespace KCad.ViewModel
 
         private void Redraw()
         {
-            mContext.Controller.Redraw(mContext.Controller.CurrentDC);
+            mContext.Controller.Redraw(mContext.Controller.DC);
         }
 
         public void Load()

@@ -6,9 +6,11 @@ using System.Drawing;
 
 namespace Plotter.Controller
 {
-    public static class PlotterPrinter
+    public class PlotterPrinter
     {
-        public static void PrintPage(PlotterController pc, Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        public int PenWidth = 1;
+
+        public void PrintPage(PlotterController pc, Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
         {
             DOut.pl($"Dev Width:{deviceSize.Width} Height:{deviceSize.Height}");
 #if PRINT_WITH_GL_ONLY
@@ -21,31 +23,31 @@ namespace Plotter.Controller
 #endif
         }
 
-        private static void PrintPageSwitch(PlotterController pc, Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
+        private void PrintPageSwitch(PlotterController pc, Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
         {
-            if (!(pc.CurrentDC.GetType() == typeof(DrawContextGLPers)))
-            {
-                DrawContextPrinter dc = new DrawContextPrinter(pc.CurrentDC, printerGraphics, pageSize, deviceSize);
-                dc.SetupDrawing();
-                dc.SetupTools(DrawTools.ToolsType.PRINTER);
-
-                pc.DrawAllFigures(dc);
-            }
-            else
+            if (pc.DC.GetType() == typeof(DrawContextGLPers))
             {
                 Bitmap bmp = GetPrintableBmp(pc, pageSize, deviceSize);
                 printerGraphics.DrawImage(bmp, 0, 0);
+            }
+            else
+            {
+                DrawContextPrinter dc = new DrawContextPrinter(pc.DC, printerGraphics, pageSize, deviceSize);
+                dc.SetupDrawing();
+                dc.SetupTools(DrawTools.ToolsType.PRINTER, PenWidth);
+
+                pc.DrawAllFigures(dc);
             }
         }
 
         private static Bitmap GetPrintableBmp(PlotterController pc, CadSize2D pageSize, CadSize2D deviceSize)
         {
-            if (!(pc.CurrentDC is DrawContextGL))
+            if (!(pc.DC is DrawContextGL))
             {
                 return null;
             }
 
-            DrawContext dc = pc.CurrentDC.CreatePrinterContext(pageSize, deviceSize);
+            DrawContext dc = pc.DC.CreatePrinterContext(pageSize, deviceSize);
             dc.SetupDrawing();
             dc.SetupTools(DrawTools.ToolsType.PRINTER);
 

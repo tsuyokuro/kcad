@@ -76,7 +76,7 @@ namespace Plotter.Controller
                 }
                 else if (ss[1] == "dc")
                 {
-                    Controller.CurrentDC.dump();
+                    Controller.DC.dump();
                 }
                 else if (ss[1] == "fig")
                 {

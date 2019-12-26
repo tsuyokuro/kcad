@@ -46,6 +46,7 @@ namespace KCad
 
 
         public const int WM_SIZE = 0x0005;
+        public const int WM_MOVE = 0x0003;
         public const int WM_ENTERSIZEMOVE = 0x0231;
         public const int WM_EXITSIZEMOVE = 0x0232;
 

@@ -9,10 +9,10 @@ using System.Collections.Generic;
 
 namespace Plotter.Controller
 {
+    // User interface handling
     public partial class PlotterController
     {
         private InteractCtrl mInteractCtrl = new InteractCtrl();
-
         public InteractCtrl InteractCtrl
         {
             get => mInteractCtrl;
@@ -635,7 +635,7 @@ namespace Plotter.Controller
         {
             for (int i = 0; i < fig.PointCount; i++)
             {
-                Vector3d p = CurrentDC.WorldPointToDevPoint(fig.PointList[i].vector);
+                Vector3d p = DC.WorldPointToDevPoint(fig.PointList[i].vector);
 
                 if (CadUtil.IsInRect2D(minp, maxp, p))
                 {
@@ -1119,7 +1119,7 @@ namespace Plotter.Controller
 
             ItConsole.println(res.ToInfoString());
 
-            Vector3d sv = CurrentDC.WorldPointToDevPoint(res.WoldPoint.vector);
+            Vector3d sv = DC.WorldPointToDevPoint(res.WoldPoint.vector);
 
             LockCursorScrn(sv);
 
@@ -1130,7 +1130,7 @@ namespace Plotter.Controller
         {
             CursorLocked = true;
 
-            SnapPoint = CurrentDC.DevPointToWorldPoint(p);
+            SnapPoint = DC.DevPointToWorldPoint(p);
             CrossCursor.Pos = p;
         }
 
@@ -1152,7 +1152,7 @@ namespace Plotter.Controller
         public void SetCursorWoldPos(Vector3d v)
         {
             SnapPoint = v;
-            CrossCursor.Pos = CurrentDC.WorldPointToDevPoint(SnapPoint);
+            CrossCursor.Pos = DC.WorldPointToDevPoint(SnapPoint);
 
             Observer.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);
         }

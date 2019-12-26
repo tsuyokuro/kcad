@@ -80,19 +80,19 @@ namespace Plotter
             FontTbl = new Font[FONT_TBL_SIZE];
         }
 
-        public void Setup(ToolsType t)
+        public void Setup(ToolsType t, int penW = 0)
         {
             if (t == ToolsType.DARK)
             {
-                SetupDarkSet();
+                SetupDarkSet(penW);
             }
             else if (t == ToolsType.PRINTER)
             {
-                SetupPrinterSet();
+                SetupPrinterSet(penW);
             }
         }
 
-        private void SetupDarkSet()
+        private void SetupDarkSet(int penW)
         {
             AllocGDITbl();
 
@@ -101,7 +101,7 @@ namespace Plotter
 
             for (int i=0; i<PEN_TBL_SIZE; i++)
             {
-                PenTbl[i] = new DrawPen(new Pen(PenColorTbl[i]));
+                PenTbl[i] = new DrawPen(new Pen(PenColorTbl[i], penW));
                 PenTbl[i].ID = i;
             }
 
@@ -119,7 +119,7 @@ namespace Plotter
             FontTbl[FONT_SMALL]   = new Font(fontFamily, FONT_SIZE_SMALL);
         }
 
-        private void SetupPrinterSet()
+        private void SetupPrinterSet(int penW)
         {
             AllocGDITbl();
 
@@ -128,7 +128,7 @@ namespace Plotter
 
             for (int i = 0; i < PEN_TBL_SIZE; i++)
             {
-                PenTbl[i] = new DrawPen(new Pen(PenColorTbl[i], 1));
+                PenTbl[i] = new DrawPen(new Pen(PenColorTbl[i], penW));
                 PenTbl[i].ID = i;
             }
 
