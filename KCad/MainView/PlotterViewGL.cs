@@ -1,4 +1,4 @@
-﻿#define MOUSE_THREAD
+﻿//#define MOUSE_THREAD
 //#define VSYNC
 
 using OpenTK;
@@ -201,10 +201,14 @@ namespace Plotter
 
         public void Redraw()
         {
+#if MOUSE_THREAD
             ThreadUtil.RunOnMainThread(() =>
             {
                 mController.Redraw(mController.DC);
             }, wait: false);
+#else
+            mController.Redraw(mController.DC);
+#endif
         }
 
         private void OnPaint(object sender, PaintEventArgs e)

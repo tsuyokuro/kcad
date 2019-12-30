@@ -423,7 +423,7 @@ namespace Plotter.Controller
 
                         StoredObjDownPoint = ObjDownPoint;
 
-                        Redraw(dc);
+                        //Redraw(dc);
                     }
                     else
                     {
