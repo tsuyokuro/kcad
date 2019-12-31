@@ -41,8 +41,12 @@ namespace Plotter.Controller.TaskRunner
                     res.p1 - res.p0, (Controller.DC.ViewDir));
 
                 FlipWithPlane(rootFigList, res.p0, normal);
-                Controller.EndEdit();
-                Controller.Redraw();
+
+                RunOnMainThread(() =>
+                {
+                    Controller.EndEdit();
+                    Controller.Redraw();
+                });
             });
         }
 
@@ -113,7 +117,7 @@ namespace Plotter.Controller.TaskRunner
             RunOnMainThread(() =>
             {
                 Controller.Redraw();
-                Controller.UpdateObjectTree(true);
+                Controller.UpdateObjectTree(remakeTree : true);
             });
         }
 
@@ -164,7 +168,12 @@ namespace Plotter.Controller.TaskRunner
                     CadMath.Deg2Rad(angle));
 
                 Controller.EndEdit();
-                Controller.Redraw();
+
+                RunOnMainThread(() =>
+                {
+                    Controller.Redraw();
+                    Controller.UpdateObjectTree(remakeTree : false);
+                });
             });
         }
 

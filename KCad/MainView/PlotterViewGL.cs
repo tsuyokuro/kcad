@@ -1,4 +1,4 @@
-﻿//#define MOUSE_THREAD
+﻿#define MOUSE_THREAD
 //#define VSYNC
 
 using OpenTK;
@@ -418,6 +418,8 @@ namespace Plotter
                     mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
                 }
             }
+
+            Redraw();
         }
 
         private void HandleMouseWheel(MouseEventArgs e)

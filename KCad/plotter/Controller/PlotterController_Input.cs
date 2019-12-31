@@ -108,6 +108,8 @@ namespace Plotter.Controller
 
         private List<HighlightPointListItem> HighlightPointList = new List<HighlightPointListItem>();
 
+        private List<MarkSegment> HighlightSegList = new List<MarkSegment>();
+
         private Gridding mGridding = new Gridding();
 
         public Gridding Grid
@@ -401,11 +403,8 @@ namespace Plotter.Controller
 
             if (mInteractCtrl.IsActive)
             {
-                mInteractCtrl.Draw(dc, SnapPoint);
                 mInteractCtrl.SetPoint(SnapPoint);
-
                 LastDownPoint = SnapPoint;
-
                 return;
             }
 
@@ -422,8 +421,6 @@ namespace Plotter.Controller
                         OffsetScreen = pixp - CrossCursor.Pos;
 
                         StoredObjDownPoint = ObjDownPoint;
-
-                        //Redraw(dc);
                     }
                     else
                     {
@@ -560,7 +557,6 @@ namespace Plotter.Controller
             if (pointer.MDownPoint.X == x && pointer.MDownPoint.Y == y)
             {
                 ViewCtrl.AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
-                //Redraw();
             }
 
             State = mBackState;
@@ -583,8 +579,6 @@ namespace Plotter.Controller
             ViewCtrl.SetOrigin(dc, (int)op.X, (int)op.Y);
 
             CrossCursor.Pos = CrossCursor.StorePos + d;
-
-            //Redraw();
         }
 
         private void Wheel(CadMouse pointer, DrawContext dc, double x, double y, int delta)
@@ -605,13 +599,11 @@ namespace Plotter.Controller
                 }
 
                 ViewCtrl.DpiUpDown(dc, f);
-                //Redraw();
             }
         }
 
         private void RButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
-            //DrawAll(dc);
             mContextMenuMan.RequestContextMenu(x, y);
         }
 
@@ -787,8 +779,7 @@ namespace Plotter.Controller
             {
                 if (markSeg.Distance < si.Distance)
                 {
-                    CadFigure fig = mDB.GetFigure(markSeg.FigureID);
-                    fig.DrawSeg(dc, dc.GetPen(DrawTools.PEN_MATCH_SEG), markSeg.PtIndexA, markSeg.PtIndexB);
+                    HighlightSegList.Add(markSeg);
 
                     Vector3d center = markSeg.CenterPoint;
 
@@ -961,6 +952,8 @@ namespace Plotter.Controller
             mSegSearcher.SetRangePixel(dc, SettingsHolder.Settings.LineSnapRange);
             mSegSearcher.SetTargetPoint(si.Cursor);
             mSegSearcher.SetCheckPriorityWithSnapInfo(si);
+
+            HighlightSegList.Clear();
 
             if (SettingsHolder.Settings.SnapToSegment)
             {
