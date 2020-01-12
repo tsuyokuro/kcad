@@ -18,6 +18,11 @@ namespace Plotter
             MainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
         }
 
+        public static bool IsMainThread()
+        {
+            return MainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId;
+        }
+
         public static void RunOnMainThread(Action action, bool wait)
         {
             if (MainThreadID == System.Threading.Thread.CurrentThread.ManagedThreadId)

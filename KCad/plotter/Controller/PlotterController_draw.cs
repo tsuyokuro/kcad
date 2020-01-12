@@ -57,6 +57,8 @@ namespace Plotter.Controller
 
             DrawHighlightPoint(dc);
 
+            DrawHighlightSeg(dc);
+
             DrawExtendSnapPoint(dc);
 
             DrawAccordingState(dc);
@@ -285,6 +287,16 @@ namespace Plotter.Controller
         {
             dc.Drawing.DrawHighlightPoints(HighlightPointList);
         }
+
+        protected void DrawHighlightSeg(DrawContext dc)
+        {
+            foreach (MarkSegment markSeg in HighlightSegList)
+            {
+                CadFigure fig = mDB.GetFigure(markSeg.FigureID);
+                fig.DrawSeg(dc, dc.GetPen(DrawTools.PEN_MATCH_SEG), markSeg.PtIndexA, markSeg.PtIndexB);
+            }
+        }
+
 
         protected void DrawExtendSnapPoint(DrawContext dc)
         {
