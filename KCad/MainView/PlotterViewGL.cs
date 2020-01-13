@@ -202,10 +202,8 @@ namespace Plotter
         public void Redraw()
         {
 #if MOUSE_THREAD
-            ThreadUtil.RunOnMainThread(() =>
-            {
-                mController.Redraw(mController.DC);
-            }, wait: false);
+            ThreadUtil.RunOnMainThread(
+                mController.Redraw, wait: false);
 #else
             mController.Redraw(mController.DC);
 #endif

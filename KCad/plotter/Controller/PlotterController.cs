@@ -343,7 +343,7 @@ namespace Plotter.Controller
 
             UpdateObjectTree(true);
 
-            Redraw(DC);
+            Redraw();
         }
 
         public void SetCurrentLayer(uint id)

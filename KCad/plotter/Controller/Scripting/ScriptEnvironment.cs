@@ -75,27 +75,6 @@ namespace Plotter.Controller
             mAutoCompleteList.AddRange(mSimpleCommands.GetAutoCompleteForSimpleCmd());
         }
 
-        public void ExecuteCommandSync(string s)
-        {
-            s = s.Trim();
-            ItConsole.println(AnsiEsc.White + s);
-
-            if (s.StartsWith("@"))
-            {
-                if (!mSimpleCommands.ExecCommand(s))
-                {
-                    mTestCommands.ExecCommand(s);
-                }
-                return;
-            }
-
-            RunScript(s);
-
-            Controller.Clear();
-            Controller.DrawAll();
-            Controller.PushDraw();
-        }
-
         public async void ExecuteCommandAsync(string s)
         {
             s = s.Trim();

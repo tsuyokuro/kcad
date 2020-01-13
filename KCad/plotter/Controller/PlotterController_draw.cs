@@ -12,13 +12,13 @@ namespace Plotter.Controller
             DC.PushDraw();
         }
 
-        public void Redraw(DrawContext dc = null)
+        public void Redraw()
         {
-            if (dc == null)
-            {
-                dc = DC;
-            }
+            Redraw(DC);
+        }
 
+        public void Redraw(DrawContext dc)
+        {
             dc.StartDraw();
             Clear(dc);
             DrawAll(dc);
@@ -26,13 +26,18 @@ namespace Plotter.Controller
             dc.PushDraw();
         }
 
+        public void RedrawOnMainThread()
+        {
+            ThreadUtil.RunOnMainThread(Redraw, false);
+        }
+
+        public void Clear()
+        {
+            Clear(DC);
+        }
+        
         public void Clear(DrawContext dc = null)
         {
-            if (dc == null)
-            {
-                dc = DC;
-            }
-
             dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
         }
 

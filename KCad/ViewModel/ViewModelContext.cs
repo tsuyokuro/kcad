@@ -15,10 +15,7 @@ namespace KCad.ViewModel
 
         public void Redraw()
         {
-            ThreadUtil.RunOnMainThread(() =>
-            {
-                mController.Redraw();
-            }, true);
+            ThreadUtil.RunOnMainThread(mController.Redraw, true);
         }
     }
 }
