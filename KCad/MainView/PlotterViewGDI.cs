@@ -11,7 +11,7 @@ using Plotter.Controller;
 
 namespace Plotter
 {
-    public partial class PlotterView : PictureBox, IPlotterView
+    public partial class PlotterViewGDI : PictureBox, IPlotterView
     {
         private PlotterController mController = null;
 
@@ -36,7 +36,7 @@ namespace Plotter
             get => this;
         }
 
-        public PlotterView()
+        public PlotterViewGDI()
         {
             mDrawContext = new DrawContextGDI(this);
             mDrawContext.SetupDrawing();
@@ -52,7 +52,7 @@ namespace Plotter
 
             mEventSequencer.Start();
 
-            mDrawContext.OnPushDraw = OnPushDraw;
+            mDrawContext.ReflectToViewAction = ReflectToFront;
 
             MouseMove += OnMouseMove;
             MouseDown += OnMouseDown;
@@ -121,7 +121,7 @@ namespace Plotter
             }
         }
 
-        public void OnPushDraw(DrawContext dc)
+        public void ReflectToFront(DrawContext dc)
         {
             //DOut.tpl("PushDraw");
 
@@ -130,7 +130,7 @@ namespace Plotter
                 if (dc == mDrawContext)
                 {
                     //Image = mDrawContext.Image;
-                    mDrawContext.Refresh();
+                    mDrawContext.Render();
                 }
             }, true);
         }
@@ -276,7 +276,7 @@ namespace Plotter
 
             // PushDraw is called to redraw
             // PushDrawが呼ばれて再描画が行われる
-            mController.Redraw(mController.DC);
+            mController.Redraw();
         }
 
         public void SetController(PlotterController controller)
@@ -336,9 +336,9 @@ namespace Plotter
             public const int MOUSE_DOWN = 3;
             public const int MOUSE_UP = 4;
 
-            private PlotterView mPlotterView;
+            private PlotterViewGDI mPlotterView;
 
-            public MyEventSequencer(PlotterView view, int queueSize) : base(queueSize)
+            public MyEventSequencer(PlotterViewGDI view, int queueSize) : base(queueSize)
             {
                 mPlotterView = view;
             }

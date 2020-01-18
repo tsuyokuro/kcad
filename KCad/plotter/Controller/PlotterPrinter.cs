@@ -36,7 +36,7 @@ namespace Plotter.Controller
                 dc.SetupDrawing();
                 dc.SetupTools(DrawTools.ToolsType.PRINTER, PenWidth);
 
-                pc.DrawAllFigures(dc);
+                pc.DrawFiguresRaw(dc);
             }
         }
 
@@ -63,7 +63,7 @@ namespace Plotter.Controller
 
             dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
 
-            pc.DrawAllFigures(dc);
+            pc.DrawFiguresRaw(dc);
 
             dc.EndDraw();
 

@@ -7,42 +7,48 @@ namespace Plotter.Controller
 {
     public partial class PlotterController
     {
-        public void PushDraw()
+        public void ReflectToView()
         {
-            DC.PushDraw();
+            DC.ReflectToView();
         }
 
-        public void Redraw(DrawContext dc = null)
+        public void Redraw()
         {
-            if (dc == null)
-            {
-                dc = DC;
-            }
+            Redraw(DC);
+        }
 
+        public void Redraw(DrawContext dc)
+        {
             dc.StartDraw();
             Clear(dc);
             DrawAll(dc);
             dc.EndDraw();
-            dc.PushDraw();
+
+            dc.ReflectToView();
         }
 
+        public void RedrawOnMainThread()
+        {
+            ThreadUtil.RunOnMainThread(Redraw, false);
+        }
+
+        public void Clear()
+        {
+            Clear(DC);
+        }
+        
         public void Clear(DrawContext dc = null)
         {
-            if (dc == null)
-            {
-                dc = DC;
-            }
-
             dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
         }
 
-        public void DrawAll(DrawContext dc = null)
+        public void DrawAll()
         {
-            if (dc == null)
-            {
-                dc = DC;
-            }
+            DrawAll(DC);
+        }
 
+        public void DrawAll(DrawContext dc)
+        {
             DrawBase(dc);
 
             DrawDragLine(dc);
@@ -64,20 +70,6 @@ namespace Plotter.Controller
             DrawAccordingState(dc);
         }
 
-        public void DrawAllFigures(DrawContext dc)
-        {
-            foreach (CadLayer layer in mDB.LayerList)
-            {
-                if (!layer.Visible) continue;
-
-                foreach (CadFigure fig in layer.FigureList)
-                {
-                    fig.DrawEach(dc);
-                }
-            }
-        }
-
-
         protected void DrawBase(DrawContext dc)
         {
             if (SettingsHolder.Settings.DrawAxis)
@@ -91,6 +83,19 @@ namespace Plotter.Controller
 
             dc.Drawing.DrawPageFrame(PageSize.Width, PageSize.Height, Vector3d.Zero);
             DrawGrid(dc);
+        }
+
+        public void DrawFiguresRaw(DrawContext dc)
+        {
+            foreach (CadLayer layer in mDB.LayerList)
+            {
+                if (!layer.Visible) continue;
+
+                foreach (CadFigure fig in layer.FigureList)
+                {
+                    fig.DrawEach(dc);
+                }
+            }
         }
 
         protected void DrawFigures(DrawContext dc)

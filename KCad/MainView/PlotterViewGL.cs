@@ -18,14 +18,14 @@ namespace Plotter
 
         private PlotterController mController = null;
 
-        Vector3d PrevMousePos = default;
+        private Vector3d PrevMousePos = default;
 
-        MouseButtons DownButton = MouseButtons.None;
+        private MouseButtons DownButton = MouseButtons.None;
 
-        ContextMenuEx mCurrentContextMenu = null;
-        ContextMenuEx mContextMenu = null;
+        private ContextMenuEx mCurrentContextMenu = null;
+        private ContextMenuEx mContextMenu = null;
 
-        MyEventSequencer mEventSequencer;
+        private MyEventSequencer mEventSequencer;
 
         private Cursor PointCursor;
 
@@ -111,8 +111,8 @@ namespace Plotter
 
             mDrawContext = mDrawContextOrtho;
 
-            mDrawContextOrtho.OnPushDraw = OnPushDraw;
-            mDrawContextPers.OnPushDraw = OnPushDraw;
+            mDrawContextOrtho.ReflectToViewAction = ReflectToFront;
+            mDrawContextPers.ReflectToViewAction = ReflectToFront;
 
             SwapBuffers();
         }
@@ -202,10 +202,8 @@ namespace Plotter
         public void Redraw()
         {
 #if MOUSE_THREAD
-            ThreadUtil.RunOnMainThread(() =>
-            {
-                mController.Redraw(mController.DC);
-            }, wait: false);
+            ThreadUtil.RunOnMainThread(
+                mController.Redraw, wait: false);
 #else
             mController.Redraw(mController.DC);
 #endif
@@ -289,7 +287,7 @@ namespace Plotter
             }
         }
 
-        public void OnPushDraw(DrawContext dc)
+        public void ReflectToFront(DrawContext dc)
         {
             if (dc == mDrawContext)
             {
