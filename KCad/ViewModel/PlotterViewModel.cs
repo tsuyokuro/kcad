@@ -116,7 +116,10 @@ namespace KCad.ViewModel
             get => mViewMode;
         }
 
-        public DrawContext CurrentDC => mController?.DC;
+        public DrawContext DC
+        {
+            get => mController?.DC;
+        }
 
         private SettingsVeiwModel SettingsVM;
         public SettingsVeiwModel Settings
@@ -127,7 +130,7 @@ namespace KCad.ViewModel
         private ICadMainWindow mMainWindow;
 
 #if USE_GDI_VIEW
-        private PlotterView PlotterView1 = null;
+        private PlotterViewGDI PlotterView1GDI1 = null;
 #endif
         private PlotterViewGL PlotterViewGL1 = null;
 
@@ -191,7 +194,7 @@ namespace KCad.ViewModel
             mController.UpdateLayerList();
 
 #if USE_GDI_VIEW
-            PlotterView1 = new PlotterView();
+            PlotterView1GDI1 = new PlotterViewGDI();
 #endif
             PlotterViewGL1 = PlotterViewGL.Create();
 
@@ -513,7 +516,7 @@ namespace KCad.ViewModel
             CurrentFileName = null;
 
 #if USE_GDI_VIEW
-            PlotterView1.SetWorldScale(1.0);
+            PlotterView1GDI1.SetWorldScale(1.0);
 #endif
             PlotterViewGL1.SetWorldScale(1.0);
 
@@ -878,7 +881,7 @@ namespace KCad.ViewModel
         public void SetWorldScale(double scale)
         {
 #if USE_GDI_VIEW
-            PlotterView1.SetWorldScale(scale);
+            PlotterView1GDI1.SetWorldScale(scale);
 #endif
             PlotterViewGL1.SetWorldScale(scale);
         }
@@ -1053,7 +1056,7 @@ namespace KCad.ViewModel
             switch (mViewMode)
             {
                 case ViewModes.FRONT:
-                    view = PlotterView1;
+                    view = PlotterView1GDI1;
                     view.DrawContext.SetCamera(
                         Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
@@ -1061,7 +1064,7 @@ namespace KCad.ViewModel
                     break;
 
                 case ViewModes.BACK:
-                    view = PlotterView1;
+                    view = PlotterView1GDI1;
                     view.DrawContext.SetCamera(
                         -Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
@@ -1070,7 +1073,7 @@ namespace KCad.ViewModel
                     break;
 
                 case ViewModes.TOP:
-                    view = PlotterView1;
+                    view = PlotterView1GDI1;
                     view.DrawContext.SetCamera(
                         Vector3d.UnitY * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, -Vector3d.UnitZ);
@@ -1079,7 +1082,7 @@ namespace KCad.ViewModel
                     break;
 
                 case ViewModes.BOTTOM:
-                    view = PlotterView1;
+                    view = PlotterView1GDI1;
                     view.DrawContext.SetCamera(
                         -Vector3d.UnitY * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitZ);
@@ -1088,7 +1091,7 @@ namespace KCad.ViewModel
                     break;
 
                 case ViewModes.RIGHT:
-                    view = PlotterView1;
+                    view = PlotterView1GDI1;
                     view.DrawContext.SetCamera(
                         Vector3d.UnitX * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
@@ -1097,7 +1100,7 @@ namespace KCad.ViewModel
                     break;
 
                 case ViewModes.LEFT:
-                    view = PlotterView1;
+                    view = PlotterView1GDI1;
                     view.DrawContext.SetCamera(
                         -Vector3d.UnitX * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);

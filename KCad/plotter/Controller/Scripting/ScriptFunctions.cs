@@ -1550,7 +1550,7 @@ namespace Plotter.Controller
             {
                 Controller.Clear();
                 Controller.DrawAll();
-                Controller.PushDraw();
+                Controller.ReflectToView();
             });
         }
 
@@ -1597,7 +1597,7 @@ namespace Plotter.Controller
 
             dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
 
-            Controller.DrawAllFigures(dc);
+            Controller.DrawFiguresRaw(dc);
 
             dc.EndDraw();
 

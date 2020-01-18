@@ -169,7 +169,7 @@ namespace KCad
 
             ViewModel.Open();
 
-            System.Drawing.Color c = ViewModel.CurrentDC.Tools.BrushColor(DrawTools.BRUSH_BACKGROUND);
+            System.Drawing.Color c = ViewModel.DC.Tools.BrushColor(DrawTools.BRUSH_BACKGROUND);
             viewRoot.Background = new SolidColorBrush(Color.FromRgb(c.R, c.G, c.B));
         }
 

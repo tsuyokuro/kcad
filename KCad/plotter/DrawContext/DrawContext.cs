@@ -13,11 +13,11 @@ namespace Plotter
             Perspective,
         }
 
-        protected Action<DrawContext> mOnPushDraw;
-        public Action<DrawContext> OnPushDraw
+        protected Action<DrawContext> mReflectToViewAction;
+        public Action<DrawContext> ReflectToViewAction
         {
-            set => mOnPushDraw = value;
-            get => mOnPushDraw;
+            set => mReflectToViewAction = value;
+            get => mReflectToViewAction;
         }
 
         // 画素/Milli
@@ -143,11 +143,10 @@ namespace Plotter
         {
         }
 
-        public void PushDraw()
+        public void ReflectToView()
         {
-            mOnPushDraw?.Invoke(this);
+            mReflectToViewAction?.Invoke(this);
         }
-
 
         public CadVertex WorldPointToDevPoint(CadVertex pt)
         {

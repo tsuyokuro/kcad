@@ -146,10 +146,14 @@ namespace Plotter
             return Tools.BrushColorTbl[id];
         }
 
-        public void Refresh()
+        public void Render()
         {
             if (Buffer != null)
+            {
+                // Bufferの内容を既定のデバイスに書き込む
+                // Push buffered image to device
                 Buffer.Render();
+            }
         }
 
         public override DrawPen GetPen(int idx)

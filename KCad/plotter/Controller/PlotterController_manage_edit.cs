@@ -5,7 +5,7 @@ namespace Plotter.Controller
 {
     // Management Edit
 
-    partial class PlotterController
+    public partial class PlotterController
     {
         private CadOpeFigureSnapShotList mSnapShotList;
 

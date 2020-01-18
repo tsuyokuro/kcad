@@ -82,7 +82,7 @@
             {
                 Env.Controller.Clear();
                 Env.Controller.DrawAll();
-                Env.Controller.PushDraw();
+                Env.Controller.ReflectToView();
             });
         }
     }

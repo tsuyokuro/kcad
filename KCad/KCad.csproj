@@ -434,7 +434,7 @@
     <Compile Include="ViewModel\LayerHolder.cs" />
     <Compile Include="ViewModel\PlotterViewModel.cs" />
     <Compile Include="MainView\IPlotterView.cs" />
-    <Compile Include="MainView\PlotterView.cs">
+    <Compile Include="MainView\PlotterViewGDI.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MainView\PlotterViewGL.cs">
