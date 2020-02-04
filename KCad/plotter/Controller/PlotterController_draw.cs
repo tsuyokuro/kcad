@@ -1,7 +1,9 @@
 ﻿
 using CadDataTypes;
+using MyCollections;
 using OpenTK;
 using Plotter.Settings;
+using System.Runtime.CompilerServices;
 
 namespace Plotter.Controller
 {
@@ -98,6 +100,9 @@ namespace Plotter.Controller
             }
         }
 
+        FlexArray<CadFigure> AlphaFigList = new FlexArray<CadFigure>(100);
+        FlexArray<CadFigure> AlphaFigListCurrentLayer = new FlexArray<CadFigure>(100);
+
         protected void DrawFigures(DrawContext dc)
         {
             if (dc == null) return;
@@ -130,6 +135,9 @@ namespace Plotter.Controller
             measure_dp.FillBrush = DrawBrush.NullBrush;
             measure_dp.TextBrush = dc.GetBrush(DrawTools.BRUSH_TEXT);
 
+            AlphaFigList.Clear();
+            AlphaFigListCurrentLayer.Clear();
+
             lock (DB)
             {
                 foreach (CadLayer layer in mDB.LayerList)
@@ -142,6 +150,12 @@ namespace Plotter.Controller
 
                     foreach (CadFigure fig in layer.FigureList)
                     {
+                        if (fig.Type == CadFigure.Types.DIMENTION_LINE)
+                        {
+                            AlphaFigList.Add(fig);
+                            continue;
+                        }
+                        
                         if (fig.Current)
                         {
                             fig.DrawEach(dc, current_dp);
@@ -158,6 +172,12 @@ namespace Plotter.Controller
                 {
                     foreach (CadFigure fig in CurrentLayer.FigureList)
                     {
+                        if (fig.Type == CadFigure.Types.DIMENTION_LINE)
+                        {
+                            AlphaFigListCurrentLayer.Add(fig);
+                            continue;
+                        }
+
                         if (fig.Current)
                         {
                             fig.DrawEach(dc, current_dp);
@@ -171,12 +191,64 @@ namespace Plotter.Controller
 
                 foreach (CadFigure fig in TempFigureList)
                 {
+                    if (fig.Type == CadFigure.Types.DIMENTION_LINE)
+                    {
+                        continue;
+                    }
+
                     fig.DrawEach(dc, test_dp);
                 }
 
                 if (MeasureFigureCreator != null)
                 {
-                    MeasureFigureCreator.Figure.Draw(dc, measure_dp);
+                    if (MeasureFigureCreator.Figure.Type != CadFigure.Types.DIMENTION_LINE)
+                    {
+                        MeasureFigureCreator.Figure.Draw(dc, measure_dp);
+                    }
+                }
+
+                // Alpha指定があるFigureを描画
+                foreach (CadFigure fig in AlphaFigList)
+                {
+                    if (fig.Current)
+                    {
+                        fig.DrawEach(dc, current_dp);
+                    }
+                    else
+                    {
+                        fig.DrawEach(dc, pale_dp);
+                    }
+                }
+
+                foreach (CadFigure fig in AlphaFigListCurrentLayer)
+                {
+                    if (fig.Current)
+                    {
+                        fig.DrawEach(dc, current_dp);
+                    }
+                    else
+                    {
+                        fig.DrawEach(dc);
+                    }
+                }
+
+
+                foreach (CadFigure fig in TempFigureList)
+                {
+                    if (fig.Type != CadFigure.Types.DIMENTION_LINE)
+                    {
+                        continue;
+                    }
+
+                    fig.DrawEach(dc, test_dp);
+                }
+
+                if (MeasureFigureCreator != null)
+                {
+                    if (MeasureFigureCreator.Figure.Type == CadFigure.Types.DIMENTION_LINE)
+                    {
+                        MeasureFigureCreator.Figure.Draw(dc, measure_dp);
+                    }
                 }
             }
         }
