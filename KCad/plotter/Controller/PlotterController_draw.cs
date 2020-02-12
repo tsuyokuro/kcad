@@ -24,7 +24,6 @@ namespace Plotter.Controller
             Clear(dc);
             DrawAll(dc);
             dc.EndDraw();
-
             dc.ReflectToView();
         }
 
