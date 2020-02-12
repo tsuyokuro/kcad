@@ -1,24 +1,22 @@
 ﻿using OpenTK;
 using System;
 using CadDataTypes;
-using System.Drawing;
 
 namespace Plotter
 {
     public abstract class DrawContext : IDisposable
     {
-        protected Action<DrawContext> mPushDraw;
-
         public enum ProjectionType
         {
             Orthographic,
             Perspective,
         }
 
-        public Action<DrawContext> PushDraw
+        protected Action<DrawContext> mReflectToViewAction;
+        public Action<DrawContext> ReflectToViewAction
         {
-            set => mPushDraw = value;
-            get => mPushDraw;
+            set => mReflectToViewAction = value;
+            get => mReflectToViewAction;
         }
 
         // 画素/Milli
@@ -125,17 +123,9 @@ namespace Plotter
             mViewOrg = org;
         }
 
-        public virtual void CopyProjectionMetrics(DrawContext dc)
+        public void SetupTools(DrawTools.ToolsType type, int penW=0)
         {
-            mUnitPerMilli = dc.mUnitPerMilli;
-            mProjectionNear = dc.mProjectionNear;
-            mProjectionFar = dc.mProjectionFar;
-            mFovY = dc.mFovY;
-        }
-
-        public virtual void SetupTools(DrawTools.ToolsType type)
-        {
-            Tools.Setup(type);
+            Tools.Setup(type, penW);
         }
 
         public virtual void SetViewSize(double w, double h)
@@ -152,51 +142,51 @@ namespace Plotter
         {
         }
 
-        public void Push()
+        public void ReflectToView()
         {
-            mPushDraw?.Invoke(this);
+            mReflectToViewAction?.Invoke(this);
         }
 
-        public virtual CadVertex WorldPointToDevPoint(CadVertex pt)
+        public CadVertex WorldPointToDevPoint(CadVertex pt)
         {
             pt.vector = WorldVectorToDevVector(pt.vector);
             pt.vector += mViewOrg;
             return pt;
         }
 
-        public virtual CadVertex DevPointToWorldPoint(CadVertex pt)
+        public CadVertex DevPointToWorldPoint(CadVertex pt)
         {
             pt.vector -= mViewOrg;
             pt.vector = DevVectorToWorldVector(pt.vector);
             return pt;
         }
 
-        public virtual CadVertex WorldVectorToDevVector(CadVertex pt)
+        public CadVertex WorldVectorToDevVector(CadVertex pt)
         {
             pt.vector = WorldVectorToDevVector(pt.vector);
             return pt;
         }
 
-        public virtual CadVertex DevVectorToWorldVector(CadVertex pt)
+        public CadVertex DevVectorToWorldVector(CadVertex pt)
         {
             pt.vector = DevVectorToWorldVector(pt.vector);
             return pt;
         }
 
-        public virtual Vector3d WorldPointToDevPoint(Vector3d pt)
+        public Vector3d WorldPointToDevPoint(Vector3d pt)
         {
             Vector3d p = WorldVectorToDevVector(pt);
             p = p + mViewOrg;
             return p;
         }
 
-        public virtual Vector3d DevPointToWorldPoint(Vector3d pt)
+        public Vector3d DevPointToWorldPoint(Vector3d pt)
         {
             pt = pt - mViewOrg;
             return DevVectorToWorldVector(pt);
         }
 
-        public virtual Vector3d WorldVectorToDevVector(Vector3d pt)
+        public Vector3d WorldVectorToDevVector(Vector3d pt)
         {
             pt *= WorldScale;
 
@@ -219,7 +209,7 @@ namespace Plotter
             return dv.ToVector3d();
         }
 
-        public virtual Vector3d DevVectorToWorldVector(Vector3d pt)
+        public Vector3d DevVectorToWorldVector(Vector3d pt)
         {
             pt.X = pt.X / DeviceScaleX;
             pt.Y = pt.Y / DeviceScaleY;
@@ -240,21 +230,21 @@ namespace Plotter
             return wv.ToVector3d();
         }
 
-        public virtual double DevSizeToWoldSize(double s)
+        public double DevSizeToWoldSize(double s)
         {
             CadVertex size = DevVectorToWorldVector(CadVertex.UnitX * s);
             return size.Norm();
         }
 
 
-        protected virtual void CalcViewDir()
+        protected void CalcViewDir()
         {
             Vector3d ret = mLookAt - mEye;
             ret.Normalize();
             mViewDir = ret;
         }
 
-        protected virtual void CalcProjectionZW()
+        protected void CalcProjectionZW()
         {
             Vector4d wv = Vector4d.Zero;
             wv.W = 1.0f;
@@ -266,31 +256,38 @@ namespace Plotter
             mProjectionZ = pv.Z;
         }
 
-        protected virtual void CalcViewMatrix()
+        protected void CalcViewMatrix()
         {
             mViewMatrix = Matrix4d.LookAt(mEye, mLookAt, mUpVector);
             mViewMatrixInv = mViewMatrix.Invert();
         }
 
+        public void CopyProjectionMetrics(DrawContext dc)
+        {
+            mUnitPerMilli = dc.mUnitPerMilli;
+            mProjectionNear = dc.mProjectionNear;
+            mProjectionFar = dc.mProjectionFar;
+            mFovY = dc.mFovY;
+        }
 
-        public virtual void CopyCamera(DrawContext dc)
+        public void CopyCamera(DrawContext dc)
         {
             SetCamera(dc.mEye, dc.mLookAt, dc.mUpVector);
         }
 
-        public virtual void CopyProjectionMatrix(DrawContext dc)
+        public void CopyProjectionMatrix(DrawContext dc)
         {
             mProjectionMatrix = dc.mProjectionMatrix;
             mProjectionMatrixInv = dc.mProjectionMatrixInv;
         }
 
-        public virtual void CopyVewMatrix(DrawContext dc)
+        public void CopyViewMatrix(DrawContext dc)
         {
             mViewMatrix = dc.mViewMatrix;
             mViewMatrixInv = dc.mViewMatrixInv;
         }
 
-        public virtual void SetCamera(Vector3d eye, Vector3d lookAt, Vector3d upVector)
+        public void SetCamera(Vector3d eye, Vector3d lookAt, Vector3d upVector)
         {
             mEye = eye;
             mLookAt = lookAt;
@@ -305,6 +302,14 @@ namespace Plotter
         {
             return null;
         }
+
+        public abstract void CalcProjectionMatrix();
+        public abstract void Dispose();
+        public abstract void SetupDrawing();
+        
+        public abstract DrawContext Clone();
+        public abstract DrawPen GetPen(int idx);
+        public abstract DrawBrush GetBrush(int idx);
 
         public virtual void dump()
         {
@@ -324,12 +329,5 @@ namespace Plotter
             DOut.pl($"ProjectionW={mProjectionW}");
             DOut.pl($"ProjectionZ={mProjectionZ}");
         }
-
-        public abstract void CalcProjectionMatrix();
-        public abstract void Dispose();
-        public abstract void SetupDrawing();
-        public abstract DrawContext Clone();
-        public abstract DrawPen GetPen(int idx);
-        public abstract DrawBrush GetBrush(int idx);
     }
 }

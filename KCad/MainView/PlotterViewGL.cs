@@ -1,4 +1,5 @@
-﻿//#define MOUSE_THREAD
+﻿#define MOUSE_THREAD
+//#define VSYNC
 
 using OpenTK;
 using OpenTK.Graphics;
@@ -17,14 +18,14 @@ namespace Plotter
 
         private PlotterController mController = null;
 
-        Vector3d PrevMousePos = default;
+        private Vector3d PrevMousePos = default;
 
-        MouseButtons DownButton = MouseButtons.None;
+        private MouseButtons DownButton = MouseButtons.None;
 
-        ContextMenuEx mCurrentContextMenu = null;
-        ContextMenuEx mContextMenu = null;
+        private ContextMenuEx mCurrentContextMenu = null;
+        private ContextMenuEx mContextMenu = null;
 
-        MyEventSequencer mEventSequencer;
+        private MyEventSequencer mEventSequencer;
 
         private Cursor PointCursor;
 
@@ -48,8 +49,6 @@ namespace Plotter
 
         private DrawContextGLPers mDrawContextPers;
 
-        private bool mEnablePerse = false;
-
         public static PlotterViewGL Create()
         {
             GraphicsMode mode = GraphicsMode.Default;
@@ -66,6 +65,12 @@ namespace Plotter
         private PlotterViewGL(GraphicsMode mode) : base(mode)
         {
             SetupContextMenu();
+
+#if VSYNC
+            VSync = true;
+#else
+            VSync = false;
+#endif
 
             Load += OnLoad;
             SizeChanged += OnResize;
@@ -106,8 +111,8 @@ namespace Plotter
 
             mDrawContext = mDrawContextOrtho;
 
-            mDrawContextOrtho.PushDraw = OnPushDraw;
-            mDrawContextPers.PushDraw = OnPushDraw;
+            mDrawContextOrtho.ReflectToViewAction = ReflectToFront;
+            mDrawContextPers.ReflectToViewAction = ReflectToFront;
 
             SwapBuffers();
         }
@@ -140,14 +145,6 @@ namespace Plotter
 #endif
         }
 
-        private void HandleMouseUp(MouseEventArgs e)
-        {
-            DownButton = MouseButtons.None;
-            mController.Mouse.MouseUp(mDrawContext, e.Button, e.X, e.Y);
-
-            Redraw();
-        }
-
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
 #if MOUSE_THREAD
@@ -164,32 +161,6 @@ namespace Plotter
 #else
             HandleMouseDown(e);
 #endif
-        }
-        private void HandleMouseDown(MouseEventArgs e)
-        {
-            if (mCurrentContextMenu != null)
-            {
-                if (mCurrentContextMenu.Visible)
-                {
-                    mCurrentContextMenu.Close();
-                    return;
-                }
-            }
-
-            if (mDrawContext is DrawContextGLOrtho)
-            {
-                mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
-            }
-            else
-            {
-                VectorExt.Set(out PrevMousePos, e.X, e.Y, 0);
-                DownButton = e.Button;
-
-                if (DownButton != MouseButtons.Middle)
-                {
-                    mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
-                }
-            }
         }
 
         private void OnMouseWheel(object sender, MouseEventArgs e)
@@ -210,33 +181,6 @@ namespace Plotter
 #endif
         }
 
-        private void HandleMouseWheel(MouseEventArgs e)
-        {
-            if (mDrawContext is DrawContextGLOrtho)
-            {
-                mController.Mouse.MouseWheel(mDrawContext, e.X, e.Y, e.Delta);
-                Redraw();
-            }
-            else
-            {
-                DrawContextGLPers dc = mDrawContext as DrawContextGLPers;
-
-                if (CadKeyboard.IsCtrlKeyDown())
-                {
-                    if (e.Delta > 0)
-                    {
-                        dc.MoveForwardEyePoint(3);
-                    }
-                    else if (e.Delta < 0)
-                    {
-                        dc.MoveForwardEyePoint(-3);
-                    }
-
-                    Redraw();
-                }
-            }
-        }
-
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
 #if MOUSE_THREAD
@@ -255,55 +199,14 @@ namespace Plotter
 #endif
         }
 
-        private void HandleMouseMove(MouseEventArgs e)
-        {
-            if (mDrawContext is DrawContextGLOrtho)
-            {
-                mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
-                Redraw();
-            }
-            else
-            {
-                DrawContextGLPers dc = mDrawContext as DrawContextGLPers;
-
-                if (DownButton == MouseButtons.Middle)
-                {
-                    Vector3d t = new Vector3d(e.X, e.Y, 0);
-
-                    Vector2 prev = default(Vector2);
-
-                    prev.X = (float)PrevMousePos.X;
-                    prev.Y = (float)PrevMousePos.Y;
-
-                    Vector2 current = default(Vector2);
-
-                    current.X = (float)t.X;
-                    current.Y = (float)t.Y;
-
-                    dc.RotateEyePoint(prev, current);
-
-                    Redraw();
-
-                    PrevMousePos = t;
-                }
-                // TODO とりあえずDragできない様にしときます
-                else if (DownButton == MouseButtons.None)
-                {
-                    //DrawContext dc = StartDraw();
-
-                    mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
-
-                    Redraw();
-                }
-            }
-        }
-
         public void Redraw()
         {
-            ThreadUtil.RunOnMainThread(() =>
-            {
-                mController.Redraw(mController.CurrentDC);
-            }, wait: false);
+#if MOUSE_THREAD
+            ThreadUtil.RunOnMainThread(
+                mController.Redraw, wait: false);
+#else
+            mController.Redraw(mController.DC);
+#endif
         }
 
         private void OnPaint(object sender, PaintEventArgs e)
@@ -384,7 +287,7 @@ namespace Plotter
             }
         }
 
-        public void OnPushDraw(DrawContext dc)
+        public void ReflectToFront(DrawContext dc)
         {
             if (dc == mDrawContext)
             {
@@ -394,12 +297,30 @@ namespace Plotter
 
         public void CursorLocked(bool locked)
         {
-            // NOP
+            if (locked)
+            {
+                base.Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                base.Cursor = PointCursor;
+            }
         }
 
         public void ChangeMouseCursor(PlotterObserver.MouseCursorType cursorType)
         {
-            // NOP
+            switch (cursorType)
+            {
+                case PlotterObserver.MouseCursorType.CROSS:
+                    base.Cursor = PointCursor;
+                    break;
+                case PlotterObserver.MouseCursorType.NORMAL_ARROW:
+                    base.Cursor = Cursors.Arrow;
+                    break;
+                case PlotterObserver.MouseCursorType.HAND:
+                    base.Cursor = Cursors.SizeAll;
+                    break;
+            }
         }
 
         private void SetupContextMenu()
@@ -445,7 +366,7 @@ namespace Plotter
 
             foreach (MenuInfo.Item item in menuInfo.Items)
             {
-                ToolStripMenuItem m = new ToolStripMenuItem(item.DefaultText);
+                ToolStripMenuItem m = new ToolStripMenuItem(item.Text);
                 m.Tag = item;
                 m.Click += ContextMenueClick;
 
@@ -460,6 +381,113 @@ namespace Plotter
         {
             mDrawContextPers.WorldScale = scale;
             mDrawContextOrtho.WorldScale = scale;
+        }
+
+        private void HandleMouseUp(MouseEventArgs e)
+        {
+            DownButton = MouseButtons.None;
+            mController.Mouse.MouseUp(mDrawContext, e.Button, e.X, e.Y);
+
+            Redraw();
+        }
+
+        private void HandleMouseDown(MouseEventArgs e)
+        {
+            if (mCurrentContextMenu != null)
+            {
+                if (mCurrentContextMenu.Visible)
+                {
+                    mCurrentContextMenu.Close();
+                    return;
+                }
+            }
+
+            if (mDrawContext is DrawContextGLOrtho)
+            {
+                mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
+            }
+            else
+            {
+                VectorExt.Set(out PrevMousePos, e.X, e.Y, 0);
+                DownButton = e.Button;
+
+                if (DownButton != MouseButtons.Middle)
+                {
+                    mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
+                }
+            }
+
+            Redraw();
+        }
+
+        private void HandleMouseWheel(MouseEventArgs e)
+        {
+            if (mDrawContext is DrawContextGLOrtho)
+            {
+                mController.Mouse.MouseWheel(mDrawContext, e.X, e.Y, e.Delta);
+                Redraw();
+            }
+            else
+            {
+                DrawContextGLPers dc = mDrawContext as DrawContextGLPers;
+
+                if (CadKeyboard.IsCtrlKeyDown())
+                {
+                    if (e.Delta > 0)
+                    {
+                        dc.MoveForwardEyePoint(3);
+                    }
+                    else if (e.Delta < 0)
+                    {
+                        dc.MoveForwardEyePoint(-3);
+                    }
+
+                    Redraw();
+                }
+            }
+        }
+
+        private void HandleMouseMove(MouseEventArgs e)
+        {
+            if (mDrawContext is DrawContextGLOrtho)
+            {
+                mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
+                Redraw();
+            }
+            else
+            {
+                DrawContextGLPers dc = mDrawContext as DrawContextGLPers;
+
+                if (DownButton == MouseButtons.Middle)
+                {
+                    Vector3d t = new Vector3d(e.X, e.Y, 0);
+
+                    Vector2 prev = default(Vector2);
+
+                    prev.X = (float)PrevMousePos.X;
+                    prev.Y = (float)PrevMousePos.Y;
+
+                    Vector2 current = default(Vector2);
+
+                    current.X = (float)t.X;
+                    current.Y = (float)t.Y;
+
+                    dc.RotateEyePoint(prev, current);
+
+                    Redraw();
+
+                    PrevMousePos = t;
+                }
+                // TODO とりあえずDragできない様にしときます
+                else if (DownButton == MouseButtons.None)
+                {
+                    //DrawContext dc = StartDraw();
+
+                    mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
+
+                    Redraw();
+                }
+            }
         }
 
         class MyEvent : EventSequencer<MyEvent>.Event

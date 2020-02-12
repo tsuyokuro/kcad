@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace Plotter.Controller
 {
+    // Actions for DB
+
     public partial class PlotterController
     {
         public void ClearAll()
@@ -13,7 +15,7 @@ namespace Plotter.Controller
             HistoryMan.Clear();
 
             UpdateLayerList();
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
         }
 
         #region Layer
@@ -156,7 +158,7 @@ namespace Plotter.Controller
 
             foreach (CadFigure fig in figList)
             {
-                fig.MoveSelectedPointsFromStored(CurrentDC, d);
+                fig.MoveSelectedPointsFromStored(DC, d);
             }
         }
 
@@ -190,7 +192,7 @@ namespace Plotter.Controller
         public void Paste()
         {
             PlotterClipboard.PasteFiguresAsBin(this);
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
         }
     }
 }

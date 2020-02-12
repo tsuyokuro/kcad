@@ -11,10 +11,14 @@
  * Visual studio 2017 15.8.4では、Windowsアプリケーションのまま、普通にコンソールに出力される
  * Visual studio 2017 15.9.4では、またこの手順が必要になった
  **/
-
 #define USE_CONSOLE
 //#define USE_CONSOL_INPUT
 
+// 強制的にリソース文字列をUSにする
+// Force resource string to US
+//#define FORCE_US
+
+using KCad.Util;
 using Plotter;
 using Plotter.Serializer;
 using System;
@@ -30,17 +34,18 @@ namespace KCad
 {
     public partial class App : Application
     {
-        public DebugInputThread InputThread = null;
-
-        public MySplashWindow SplashWindow = null;
-
-        TaskScheduler mMainThreadScheduler;
-
 #if USE_CONSOLE
         public const bool UseConsole = true;
 #else
         public const bool UseConsole = false;
 #endif
+        private MySplashWindow SplashWindow = null;
+
+        private TaskScheduler mMainThreadScheduler;
+
+        private DebugInputThread InputThread = null;
+
+        private DebugClient DClient;
 
         public static App GetCurrent()
         {
@@ -59,11 +64,12 @@ namespace KCad
 
         public App()
         {
-            //CultureInfo ci = new CultureInfo("en-US");
-            //Thread.CurrentThread.CurrentCulture = ci;
-            //Thread.CurrentThread.CurrentUICulture = ci;
-
-            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+#if FORCE_US
+            CultureInfo ci = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = ci;
+            Thread.CurrentThread.CurrentUICulture = ci;
+#endif
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
             AppDomain currentDomain = AppDomain.CurrentDomain;
@@ -143,6 +149,12 @@ namespace KCad
         {
             base.OnStartup(e);
 
+            SplashWindow = new MySplashWindow();
+            SplashWindow.Show();
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
 #if USE_CONSOLE
             WinAPI.AllocConsole();
             Console.WriteLine("App OnStartup USE_CONSOLE");
@@ -159,18 +171,14 @@ namespace KCad
 
             OpenTK.Toolkit.Init();
 
-            SplashWindow = new MySplashWindow();
-            SplashWindow.Show();
-
-            Stopwatch sw = new Stopwatch();
-                       
-            sw.Start();
-
             // MessagePack for C# は、初回の実行が遅いので、起動時にダミーを実行して
             // 紛れさせる
             MpInitializer.Init();
 
             MainWindow = new MainWindow();
+
+            SetupDebugConsole();
+
             MainWindow.Show();
 
             sw.Stop();
@@ -180,6 +188,34 @@ namespace KCad
             SplashWindow.Close();
             SplashWindow = null;
         }
+
+        private void SetupDebugConsole()
+        {
+            if (UseConsole)
+            {
+                DOut.PrintFunc = Console.Write;
+                DOut.PrintLnFunc = Console.WriteLine;
+
+                DOut.pl("DOut's output setting is Console");
+
+                //DClient = new DebugClient();
+
+                ////if (DClient.IsValid)
+                //{
+                //    DOut.PrintFunc = DClient.Write;
+                //    DOut.PrintLnFunc = DClient.WriteLine;
+
+                //    DOut.pl("DOut's output setting is DebugServer");
+                //}
+            }
+            else
+            {
+                MainWindow wnd = (MainWindow)MainWindow;
+                DOut.PrintFunc = wnd.GetBuiltinConsole().Print;
+                DOut.PrintLnFunc = wnd.GetBuiltinConsole().PrintLn;
+            }
+        }
+
 
         // e.g. ReadResourceText("/Shader/font_fragment.shader")
         public static string ReadResourceText(string path)

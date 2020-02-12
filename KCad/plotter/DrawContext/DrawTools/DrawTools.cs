@@ -1,6 +1,4 @@
-﻿
-using OpenTK.Graphics;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
@@ -43,14 +41,16 @@ namespace Plotter
         public const int PEN_DRAG_LINE = 29;
         public const int PEN_NORMAL = 30;
         public const int PEN_EXT_SNAP = 31;
-        public const int PEN_TBL_SIZE = 32;
+        public const int PEN_HANDLE_LINE = 32;
+        public const int PEN_TBL_SIZE = 33;
 
         public const int BRUSH_DEFAULT = 1;
         public const int BRUSH_BACKGROUND = 2;
         public const int BRUSH_TEXT = 3;
         public const int BRUSH_TRANSPARENT = 4;
         public const int BRUSH_DEFAULT_MESH_FILL = 5;
-        public const int BRUSH_TBL_SIZE = 6;
+        public const int BRUSH_PALE_TEXT = 6;
+        public const int BRUSH_TBL_SIZE = 7;
 
         public const int FONT_DEFAULT = 1;
         public const int FONT_SMALL = 2;
@@ -80,19 +80,19 @@ namespace Plotter
             FontTbl = new Font[FONT_TBL_SIZE];
         }
 
-        public void Setup(ToolsType t)
+        public void Setup(ToolsType t, int penW = 0)
         {
             if (t == ToolsType.DARK)
             {
-                SetupDarkSet();
+                SetupDarkSet(penW);
             }
             else if (t == ToolsType.PRINTER)
             {
-                SetupPrinterSet();
+                SetupPrinterSet(penW);
             }
         }
 
-        private void SetupDarkSet()
+        private void SetupDarkSet(int penW)
         {
             AllocGDITbl();
 
@@ -101,7 +101,7 @@ namespace Plotter
 
             for (int i=0; i<PEN_TBL_SIZE; i++)
             {
-                PenTbl[i] = new DrawPen(new Pen(PenColorTbl[i]));
+                PenTbl[i] = new DrawPen(new Pen(PenColorTbl[i], penW));
                 PenTbl[i].ID = i;
             }
 
@@ -119,7 +119,7 @@ namespace Plotter
             FontTbl[FONT_SMALL]   = new Font(fontFamily, FONT_SIZE_SMALL);
         }
 
-        private void SetupPrinterSet()
+        private void SetupPrinterSet(int penW)
         {
             AllocGDITbl();
 
@@ -128,7 +128,7 @@ namespace Plotter
 
             for (int i = 0; i < PEN_TBL_SIZE; i++)
             {
-                PenTbl[i] = new DrawPen(new Pen(PenColorTbl[i]));
+                PenTbl[i] = new DrawPen(new Pen(PenColorTbl[i], penW));
                 PenTbl[i].ID = i;
             }
 
@@ -254,166 +254,6 @@ namespace Plotter
         public Font font(int id)
         {
             return FontTbl[id];
-        }
-    }
-
-    [StructLayout(LayoutKind.Explicit)]
-    public struct DrawColor
-    {
-        [FieldOffset(0)]
-        public int Argb;
-
-        [FieldOffset(3)]
-        public byte A;
-
-        [FieldOffset(2)]
-        public byte R;
-
-        [FieldOffset(1)]
-        public byte G;
-
-        [FieldOffset(0)]
-        public byte B;
-    }
-
-    public static class Color4Util
-    {
-        public static Color4 FromArgb(int argb)
-        {
-            DrawColor c = default;
-            c.Argb = argb;
-
-            return new Color4(
-                    c.R,
-                    c.G,
-                    c.B,
-                    c.A
-                );
-        }
-    }
-
-    public struct DrawPen
-    {
-        public int ID;
-
-        public int Argb;
-
-        public float Width;
-
-        public Pen mGdiPen;
-        public Pen GdiPen
-        {
-            get => mGdiPen;
-        }
-
-        public static DrawPen NullPen = new DrawPen(Color.FromArgb(0, 0, 0, 0), 0);
-
-        public bool IsNullPen
-        {
-            get => ((uint)Argb & 0xff000000) == 0;
-        }
-
-        public void Dispose()
-        {
-            if (mGdiPen != null)
-            {
-                mGdiPen.Dispose();
-                mGdiPen = null;
-            }
-        }
-
-        public Color4 Color4()
-        {
-            return Color4Util.FromArgb(Argb);
-        }
-
-        public Color GdiColor()
-        {
-            return Color.FromArgb(Argb);
-        }
-
-        public DrawPen(Pen pen)
-        {
-            ID = 0;
-            mGdiPen = pen;
-            Argb = pen.Color.ToArgb();
-            Width = pen.Width;
-        }
-
-        public DrawPen(Color color, float width)
-        {
-            ID = 0;
-            mGdiPen = null;
-            Argb = color.ToArgb();
-            Width = width;
-        }
-
-        public DrawPen(Color4 color, float width)
-        {
-            ID = 0;
-            mGdiPen = null;
-            Argb = color.ToArgb();
-            Width = width;
-        }
-    }
-
-    public struct DrawBrush
-    {
-        public int ID;
-
-        public int Argb;
-
-        public SolidBrush mGdiBrush;
-        public SolidBrush GdiBrush
-        {
-            get => mGdiBrush;
-        }
-
-        public static DrawBrush NullBrush = new DrawBrush(Color.FromArgb(0, 0, 0, 0));
-
-        public bool IsNullBrush
-        {
-            get => ((uint)Argb & 0xff000000) == 0;
-        }
-
-        public void Dispose()
-        {
-            if (mGdiBrush != null)
-            {
-                mGdiBrush.Dispose();
-                mGdiBrush = null;
-            }
-        }
-
-        public Color4 Color4()
-        {
-            return Color4Util.FromArgb(Argb);
-        }
-
-        public Color GdiColor()
-        {
-            return Color.FromArgb(Argb);
-        }
-
-        public DrawBrush(SolidBrush brush)
-        {
-            ID = 0;
-            mGdiBrush = brush;
-            Argb = brush.Color.ToArgb();
-        }
-
-        public DrawBrush(Color color)
-        {
-            ID = 0;
-            mGdiBrush = null;
-            Argb = color.ToArgb();
-        }
-
-        public DrawBrush(Color4 color)
-        {
-            ID = 0;
-            mGdiBrush = null;
-            Argb = color.ToArgb();
         }
     }
 }

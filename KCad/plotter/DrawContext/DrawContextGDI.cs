@@ -1,8 +1,6 @@
 ﻿using OpenTK;
 using System.Drawing;
-using CadDataTypes;
 using System.Windows.Forms;
-using System.Drawing.Drawing2D;
 
 namespace Plotter
 {
@@ -30,50 +28,18 @@ namespace Plotter
             get => mUnitPerMilli;
         }
 
-        private SmoothingMode mSmoothingMode = SmoothingMode.HighSpeed;
-
-        public SmoothingMode SmoothingMode
-        {
-            set
-            {
-                mSmoothingMode = value;
-                if (mGdiGraphics != null)
-                {
-                    mGdiGraphics.SmoothingMode = mSmoothingMode;
-                }
-            }
-
-            get => mSmoothingMode;
-        }
-
-        private PixelOffsetMode mPixelOffsetMode = PixelOffsetMode.HighSpeed;
-
-        public PixelOffsetMode PixelOffsetMode
-        {
-            set
-            {
-                mPixelOffsetMode = value;
-                if (mGdiGraphics != null)
-                {
-                    mGdiGraphics.PixelOffsetMode = mPixelOffsetMode;
-                }
-            }
-
-            get => mPixelOffsetMode;
-        }
-
         public DrawContextGDI()
         {
         }
 
-        public DrawContextGDI(Control control)
+        public DrawContextGDI(Control formsControl)
         {
-            Init(control);
+            Init(formsControl);
         }
 
-        private void Init(Control control)
+        private void Init(Control formsControl)
         {
-            ViewCtrl = control;
+            ViewCtrl = formsControl;
 
             SetViewSize(1, 1);  // Create dummy Graphics
 
@@ -118,13 +84,12 @@ namespace Plotter
         {
             BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current;
 
-            Buffer = currentContext.Allocate(ViewCtrl.CreateGraphics(),
-                               ViewCtrl.DisplayRectangle);
+            Buffer = currentContext.Allocate(
+                ViewCtrl.CreateGraphics(),
+                ViewCtrl.DisplayRectangle
+                );
 
             mGdiGraphics = Buffer.Graphics;
-
-            mGdiGraphics.SmoothingMode = mSmoothingMode;
-            mGdiGraphics.PixelOffsetMode = mPixelOffsetMode;
         }
 
         public override void Dispose()
@@ -145,7 +110,8 @@ namespace Plotter
         public override void CalcProjectionMatrix()
         {
             mProjectionMatrix = Matrix4d.CreateOrthographic(
-                                            ViewWidth / mUnitPerMilli, ViewHeight / mUnitPerMilli,
+                                            ViewWidth / mUnitPerMilli,
+                                            ViewHeight / mUnitPerMilli,
                                             mProjectionNear,
                                             mProjectionFar
                                             );
@@ -180,10 +146,14 @@ namespace Plotter
             return Tools.BrushColorTbl[id];
         }
 
-        public void Refresh()
+        public void Render()
         {
             if (Buffer != null)
+            {
+                // Bufferの内容を既定のデバイスに書き込む
+                // Push buffered image to device
                 Buffer.Render();
+            }
         }
 
         public override DrawPen GetPen(int idx)

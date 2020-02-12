@@ -4,8 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:KCad"
+    xmlns:cc="clr-namespace:KCad.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pl="clr-namespace:Plotter"
+    xmlns:vm="clr-namespace:KCad.ViewModel"
     xmlns:properties="clr-namespace:KCad.Properties"
     Title="KCad"
     Width="1177.667"
@@ -87,10 +88,10 @@
             </Style>
 
 
-            <pl:SelectModeConverter x:Key="SelModeConv" />
-            <pl:FigureTypeConverter x:Key="FigTypeConv" />
-            <pl:ViewModeConverter x:Key="ViewModeConv" />
-            <pl:MeasureModeConverter x:Key="MeasureModeConv" />
+            <vm:SelectModeConverter x:Key="SelModeConv" />
+            <vm:FigureTypeConverter x:Key="FigTypeConv" />
+            <vm:ViewModeConverter x:Key="ViewModeConv" />
+            <vm:MeasureModeConverter x:Key="MeasureModeConv" />
 
 
             <!--<DataTemplate x:Key="AutoCompleteBoxItemTemplate">
@@ -132,7 +133,7 @@
             <RowDefinition Height="100*" />
         </Grid.RowDefinitions>
 
-        <local:PopupEx
+        <cc:PopupEx
             x:Name="PopupMessage"
             Focusable="false"
             IsOpen="False"
@@ -159,7 +160,7 @@
                         VerticalAlignment="Center" />
                 </StackPanel>
             </Border>
-        </local:PopupEx>
+        </cc:PopupEx>
 
         <!--  Caption area  -->
         <Grid
@@ -442,13 +443,15 @@
                 Orientation="Vertical">
 
                 <StackPanel
-                    x:Name="ToolBar1"
+                    x:Name="SnapToolBar"
                     Height="Auto"
-                    HorizontalAlignment="Stretch"
+                    Width="Auto"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
                     Background="{StaticResource BaseColor}"
                     Orientation="Horizontal">
 
-                    <Label Width="16" Height="16" />
+                    <Label Width="4" Height="Auto" />
 
                     <ToggleButton
                         Margin="1,2,0,2"
@@ -549,6 +552,7 @@
                         </Border>
                     </ToggleButton>
 
+                    <Label Width="4" Height="Auto" />
                 </StackPanel>
 
                 <Label
@@ -585,7 +589,7 @@
                             <RowDefinition Height="100*" />
                         </Grid.RowDefinitions>
 
-                        <StackPanel x:Name="SlsectModePanel" Grid.Row="0">
+                        <StackPanel x:Name="SelectModePanel" Grid.Row="0">
                             <Label
                                 Height="Auto"
                                 Content="Select mode"
@@ -715,19 +719,18 @@
                             Style="{StaticResource CustomScrollViewerStyle}"
                             VerticalScrollBarVisibility="Auto">
 
-                            <local:CadConsoleView
+                            <cc:CadConsoleView
                                 x:Name="MyConsole"
                                 VerticalAlignment="Top"
                                 Background="{StaticResource MsgBGColor}"
                                 Focusable="True"
+                                FontSize="14"
                                 FontFamily="Fonts/mplus-1m-light.ttf#M+ 1m light"
                                 Foreground="#FFAAAAAA"
-                                LineHeight="20"
-                                SelectedBackground="{StaticResource MsgSelectedBGColor}"
-                                SelectedForeground="{StaticResource MsgTextColor}"
+                                LineHeight="17"
                                 SnapsToDevicePixels="True"
                                 TextOptions.TextFormattingMode="Display"
-                                TextSize="13" />
+                                />
 
                         </ScrollViewer>
                         <Grid Grid.Row="1" Height="auto">
@@ -746,7 +749,7 @@
                                     Tag="run_text_command" />
                             </Border>
 
-                            <local:AutoCompleteTextBox
+                            <cc:AutoCompleteTextBox
                                 x:Name="textCommand"
                                 Grid.Column="1"
                                 Padding="2,2,2,2"
@@ -906,7 +909,7 @@
                                     <StackPanel x:Name="TreeViewToolBar" Orientation="Horizontal">
                                         <ToggleButton
                                             Margin="2,2,2,2"
-                                            IsChecked="{Binding FilterTreeView}"
+                                            IsChecked="{Binding FilterObjectTree}"
                                             Style="{StaticResource ToolToggleButton}">
 
                                             <Border>
@@ -931,7 +934,7 @@
                                     Style="{StaticResource CustomScrollViewerStyle}"
                                     VerticalScrollBarVisibility="Visible">
 
-                                    <local:CadObjectTreeView
+                                    <cc:CadObjectTreeView
                                         x:Name="ObjTree"
                                         Height="0"
                                         HorizontalAlignment="Stretch"

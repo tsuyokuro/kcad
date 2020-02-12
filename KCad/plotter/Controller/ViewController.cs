@@ -1,5 +1,4 @@
-﻿using CadDataTypes;
-using OpenTK;
+﻿using OpenTK;
 
 namespace Plotter.Controller
 {

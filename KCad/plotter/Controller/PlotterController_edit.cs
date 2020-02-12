@@ -6,31 +6,42 @@ using OpenTK;
 
 namespace Plotter.Controller
 {
+    // Edit figure functions
+
     public partial class PlotterController
     {
-        public void ToBezier()
+        public bool ToBezier()
         {
             if (LastSelSegment == null)
             {
-                return;
+                return false;
             }
 
-            ToBezier(LastSelSegment.Value);
-            ClearSelection();
+            bool ret = ToBezier(LastSelSegment.Value);
+
+            if (ret)
+            {
+                ClearSelection();
+                UpdateObjectTree(true);
+            }
+
+            return ret;
         }
 
-        public void ToBezier(MarkSegment seg)
+        public bool ToBezier(MarkSegment seg)
         {
             if (seg.FigureID == 0)
             {
-                return;
+                return false;
             }
 
             CadFigure fig = mDB.GetFigure(seg.FigureID);
 
-            int num = CadUtil.InitBezier(fig, seg.PtIndexA, seg.PtIndexB);
+            int num = CadUtil.InsertBezierHandle(fig, seg.PtIndexA, seg.PtIndexB);
 
-            if (num > 0)
+            bool ret = num > 0;
+
+            if (ret)
             {
                 CadOpe ope = new CadOpeInsertPoints(
                     fig.LayerID, fig.ID, seg.PtIndexA + 1, num);
@@ -38,7 +49,7 @@ namespace Plotter.Controller
                 HistoryMan.foward(ope);
             }
 
-            ClearSelection();
+            return ret;
         }
 
         public void SeparateFigures()
@@ -269,7 +280,7 @@ namespace Plotter.Controller
                 fig.RemoveGarbageChildren();
             }
 
-            UpdateTreeView(true);
+            UpdateObjectTree(true);
         }
 
         public void FlipNormal()
@@ -360,7 +371,7 @@ namespace Plotter.Controller
             CadFigure pointFig = mDB.NewFigure(CadFigure.Types.POINT);
             pointFig.AddPoint((CadVertex)cent.Point);
 
-            pointFig.EndCreate(CurrentDC);
+            pointFig.EndCreate(DC);
 
             CadOpe ope = new CadOpeAddFigure(CurrentLayer.ID, pointFig.ID);
             HistoryMan.foward(ope);

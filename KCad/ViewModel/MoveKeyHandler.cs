@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using CadDataTypes;
 using OpenTK;
+using Plotter;
 using Plotter.Controller;
 using Plotter.Settings;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
     public class MoveKeyHandler
     {
@@ -42,11 +42,11 @@ namespace Plotter
                 IsStarted = true;
             }
 
-            Vector3d wx = Controller.CurrentDC.DevVectorToWorldVector(Vector3d.UnitX);
-            Vector3d wy = Controller.CurrentDC.DevVectorToWorldVector(Vector3d.UnitY);
+            Vector3d wx = Controller.DC.DevVectorToWorldVector(Vector3d.UnitX);
+            Vector3d wy = Controller.DC.DevVectorToWorldVector(Vector3d.UnitY);
 
-            wx = wx.UnitVector() / Controller.CurrentDC.WorldScale;
-            wy = wy.UnitVector() / Controller.CurrentDC.WorldScale;
+            wx = wx.UnitVector() / Controller.DC.WorldScale;
+            wy = wy.UnitVector() / Controller.DC.WorldScale;
 
             wx *= SettingsHolder.Settings.KeyMoveUnit;
             wy *= SettingsHolder.Settings.KeyMoveUnit;

@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 
-namespace KCad
+namespace KCad.Controls
 {
     public class PopupEx : Popup
     {

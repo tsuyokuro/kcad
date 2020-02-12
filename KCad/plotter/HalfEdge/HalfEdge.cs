@@ -140,13 +140,11 @@ namespace HalfEdgeNS
                     VertexStore[c.Next.Next.Vertex].vector
                     );
 
-                int nidx = newNormalStore.Add(n);
-
-                face.Normal = nidx;
-
+                face.Normal = newNormalStore.Add(n);
+                
                 for (; ; )
                 {
-                    c.Normal = nidx;
+                    c.Normal = newNormalStore.Add(n);
 
                     c = c.Next;
 
@@ -324,10 +322,6 @@ namespace HalfEdgeNS
 
         public FlexArray<int> GetOuterEdge()
         {
-            // TODO 全てのHalfEdgeをチェックしているので遅い
-            // HalfEdgeのリンクをたどる方式にいづれ変更する必要がある
-
-
             // Pairを持たないHalfEdgeのリストを作成
             List<HalfEdge> heList = new List<HalfEdge>();
             

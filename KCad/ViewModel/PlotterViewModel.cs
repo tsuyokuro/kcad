@@ -2,50 +2,51 @@
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Drawing;
-using KCad;
+using KCad.Controls;
 using System.Drawing.Printing;
-using CadDataTypes;
 using Plotter.Controller;
-using Plotter.Settings;
 using KCad.Dialogs;
 using System.Text.RegularExpressions;
 using Plotter.svg;
 using System.Xml.Linq;
+using Plotter;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
-    public class SelectModeConverter : EnumBoolConverter<SelectModes> { }
-    public class FigureTypeConverter : EnumBoolConverter<CadFigure.Types> { }
-    public class MeasureModeConverter : EnumBoolConverter<MeasureModes> { }
-    public class ViewModeConverter : EnumBoolConverter<ViewModes> { }
 
-    public partial class PlotterViewModel : INotifyPropertyChanged
+    public class PlotterViewModel : ViewModelContext, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private PlotterController mController;
-
-        public PlotterController Controller
+        public class KeyAction
         {
-            get => mController;
+            public Action Down;
+            public Action Up;
+            public string Description;
+
+            public KeyAction(Action down, Action up, string description = null)
+            {
+                Down = down;
+                Up = up;
+                Description = description;
+            }
         }
 
         private Dictionary<string, Action> CommandMap;
 
         private Dictionary<string, KeyAction> KeyMap;
 
-        private SelectModes mSelectMode = SelectModes.POINT;
-
-        public ObservableCollection<LayerHolder> LayerList = new ObservableCollection<LayerHolder>();
-
         public CursorPosViewModel CursorPosVM = new CursorPosViewModel();
 
+        public ObjectTreeViewModel ObjTreeVM;
+
+        public LayerListViewModel LayerListVM;
+
+        private SelectModes mSelectMode = SelectModes.OBJECT;
         public SelectModes SelectMode
         {
             set
@@ -115,122 +116,22 @@ namespace Plotter
             get => mViewMode;
         }
 
-        public DrawContext CurrentDC => mController?.CurrentDC;
+        public DrawContext DC
+        {
+            get => mController?.DC;
+        }
 
-        private SettingsVeiwModel mSettingsVeiwModel;
-
+        private SettingsVeiwModel SettingsVM;
         public SettingsVeiwModel Settings
         {
-            get => mSettingsVeiwModel;
+            get => SettingsVM;
         }
 
-#region Tree view
-        private void UpdateTreeView(bool remakeTree)
-        {
-            ThreadUtil.RunOnMainThread(() =>
-            {
-                UpdateTreeViewProc(remakeTree);
-            }, true);
-        }
+        private ICadMainWindow mMainWindow;
 
-        private void UpdateTreeViewProc(bool remakeTree)
-        {
-            if (mCadObjectTreeView == null)
-            {
-                return;
-            }
-
-            if (SettingsHolder.Settings.FilterTreeView)
-            {
-                CadLayerTreeItem item = new CadLayerTreeItem();
-                item.AddChildren(Controller.CurrentLayer, fig =>
-                {
-                    return fig.HasSelectedPointInclueChild();
-                });
-
-                mCadObjectTreeView.AttachRoot(item);
-                mCadObjectTreeView.Redraw();
-            }
-            else
-            {
-                if (remakeTree)
-                {
-                    CadLayerTreeItem item = new CadLayerTreeItem(Controller.CurrentLayer);
-                    mCadObjectTreeView.AttachRoot(item);
-                    mCadObjectTreeView.Redraw();
-                }
-                else
-                {
-                    mCadObjectTreeView.Redraw();
-                }
-            }
-        }
-
-        private void SetTreeViewPos(int index)
-        {
-            if (mCadObjectTreeView == null)
-            {
-                return;
-            }
-
-            ThreadUtil.RunOnMainThread(() => {
-                mCadObjectTreeView.SetVPos(index);
-            }, true);
-        }
-
-        private int FindTreeViewItem(uint id)
-        {
-            int idx = mCadObjectTreeView.Find((item) =>
-            {
-                if (item is CadFigTreeItem)
-                {
-                    CadFigTreeItem figItem = (CadFigTreeItem)item;
-
-                    if (figItem.Fig.ID == id)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
-
-            return idx;
-        }
-
-#endregion
-
-
-        ListBox mLayerListView;
-
-        public ListBox LayerListView
-        {
-            set
-            {
-                if (value == null)
-                {
-                    if (mLayerListView != null)
-                    {
-                        mLayerListView.SelectionChanged -= LayerListSelectionChanged;
-                    }
-                }
-                else
-                {
-                    value.SelectionChanged += LayerListSelectionChanged;
-                    int idx = GetLayerListIndex(mController.CurrentLayer.ID);
-                    value.SelectedIndex = idx;
-                }
-
-                mLayerListView = value;
-            }
-
-            get => mLayerListView;
-        }
-
-        private MainWindow mMainWindow;
-
-        private PlotterView PlotterView1 = null;
-
+#if USE_GDI_VIEW
+        private PlotterViewGDI PlotterView1GDI1 = null;
+#endif
         private PlotterViewGL PlotterViewGL1 = null;
 
 
@@ -246,7 +147,6 @@ namespace Plotter
         MoveKeyHandler mMoveKeyHandler;
 
         private string mCurrentFileName = null;
-
         public string CurrentFileName
         {
             get => mCurrentFileName;
@@ -254,23 +154,19 @@ namespace Plotter
             private set
             {
                 mCurrentFileName = value;
-
-                if (mCurrentFileName != null)
-                {
-                    mMainWindow.FileName.Content = mCurrentFileName;
-                }
-                else
-                {
-                    mMainWindow.FileName.Content = "";
-                }
+                ChangeCurrentFileName(mCurrentFileName);
             }
         }
 
-        public PlotterViewModel(MainWindow mainWindow)
+        public PlotterViewModel(ICadMainWindow mainWindow)
         {
             mController = new PlotterController();
 
-            mSettingsVeiwModel = new SettingsVeiwModel(mController);
+            SettingsVM = new SettingsVeiwModel(this);
+
+            ObjTreeVM = new ObjectTreeViewModel(this);
+
+            LayerListVM = new LayerListViewModel(this);
 
             mMainWindow = mainWindow;
 
@@ -282,17 +178,7 @@ namespace Plotter
 
             mController.Observer.StateChanged = StateChanged;
 
-            mController.Observer.LayerListChanged =  LayerListChanged;
-
-            //mController.Observer.DataChanged = DataChanged;
-
             mController.Observer.CursorPosChanged = CursorPosChanged;
-
-            mController.Observer.UpdateTreeView = UpdateTreeView;
-
-            mController.Observer.SetTreeViewPos = SetTreeViewPos;
-
-            mController.Observer.FindTreeViewItem = FindTreeViewItem;
 
             mController.Observer.OpenPopupMessage = OpenPopupMessage;
 
@@ -304,12 +190,11 @@ namespace Plotter
 
             mController.Observer.HelpOfKey = HelpOfKey;
 
-            //LayerListChanged(mController, mController.GetLayerListInfo());
 
             mController.UpdateLayerList();
 
 #if USE_GDI_VIEW
-            PlotterView1 = new PlotterView();
+            PlotterView1GDI1 = new PlotterViewGDI();
 #endif
             PlotterViewGL1 = PlotterViewGL.Create();
 
@@ -318,6 +203,19 @@ namespace Plotter
             ViewMode = ViewModes.FRONT;
 
             mMoveKeyHandler = new MoveKeyHandler(Controller);
+        }
+
+        #region handling IMainWindow
+        private void ChangeCurrentFileName(string fname)
+        {
+            if (fname != null)
+            {
+                mMainWindow.SetCurrentFileName(fname);
+            }
+            else
+            {
+                mMainWindow.SetCurrentFileName("");
+            }
         }
 
         private void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
@@ -346,40 +244,11 @@ namespace Plotter
 
             mPlotterView.SetController(mController);
 
-            mController.CurrentDC = view.DrawContext;
+            mController.DC = view.DrawContext;
 
-            mMainWindow.SetMainView(view);
+            mMainWindow.SetPlotterView(view);
         }
-
-        CadObjectTreeView mCadObjectTreeView;
-
-        public CadObjectTreeView ObjectTreeView
-        {
-            set
-            {
-                if (mCadObjectTreeView != null)
-                {
-                    mCadObjectTreeView.CheckChanged -= ObjectTreeView_CheckChanged;
-                }
-
-                mCadObjectTreeView = value;
-
-                if (mCadObjectTreeView != null)
-                {
-                    mCadObjectTreeView.CheckChanged += ObjectTreeView_CheckChanged;
-                }
-            }
-
-            get => mCadObjectTreeView;
-        }
-
-        private void ObjectTreeView_CheckChanged(CadObjTreeItem item)
-        {
-            mController.CurrentFigure = 
-                TreeViewUtil.GetCurrentFigure(item, mController.CurrentFigure);
-
-            Redraw();
-        }
+#endregion handling IMainWindow
 
         public void ViewFocus()
         {
@@ -515,32 +384,24 @@ namespace Plotter
 
         public void ExecCommand(string cmd)
         {
-            if (!CommandMap.ContainsKey(cmd))
-            {
-                return;
-            }
-
-            Action action = CommandMap[cmd];
+            Action action;
+            CommandMap.TryGetValue(cmd, out action);
 
             action?.Invoke();
         }
 
         public bool ExecShortcutKey(string keyCmd, bool down)
         {
-            if (!KeyMap.ContainsKey(keyCmd))
-            {
-                return false;
-            }
-
-            KeyAction ka = KeyMap[keyCmd];
+            KeyAction ka;
+            KeyMap.TryGetValue(keyCmd, out ka);
 
             if (down)
             {
-                ka.Down?.Invoke();
+                ka?.Down?.Invoke();
             }
             else
             {
-                ka.Up?.Invoke();
+                ka?.Up?.Invoke();
             }
 
             return true;
@@ -655,10 +516,8 @@ namespace Plotter
             CurrentFileName = null;
 
 #if USE_GDI_VIEW
-            //PlotterView1.DrawContext.WorldScale = 1.0;
-            PlotterView1.SetWorldScale(1.0);
+            PlotterView1GDI1.SetWorldScale(1.0);
 #endif
-            //PlotterViewGL1.DrawContext.WorldScale = 1.0;
             PlotterViewGL1.SetWorldScale(1.0);
 
             mController.ClearAll();
@@ -670,7 +529,7 @@ namespace Plotter
             System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                LoadFile(ofd.FileName);
+                CadFileAccessor.LoadFile(ofd.FileName, this);
                 CurrentFileName = ofd.FileName;
             }
         }
@@ -679,7 +538,7 @@ namespace Plotter
         {
             if (CurrentFileName != null)
             {
-                SaveFile(CurrentFileName);
+                CadFileAccessor.SaveFile(CurrentFileName, this);
                 return;
             }
 
@@ -691,7 +550,7 @@ namespace Plotter
             System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                SaveFile(sfd.FileName);
+                CadFileAccessor.SaveFile(sfd.FileName, this);
                 CurrentFileName = sfd.FileName;
             }
         }
@@ -702,14 +561,13 @@ namespace Plotter
 
             dlg.GridSize = Settings.GridSize;
 
-            dlg.Owner = mMainWindow;
+            dlg.Owner = mMainWindow.GetWindow();
 
             bool? result = dlg.ShowDialog();
 
             if (result.Value)
             {
                 Settings.GridSize = dlg.GridSize;
-
                 Redraw();
             }
         }
@@ -718,7 +576,7 @@ namespace Plotter
         {
             SnapSettingsDialog dlg = new SnapSettingsDialog();
 
-            dlg.Owner = mMainWindow;
+            dlg.Owner = mMainWindow.GetWindow();
 
             dlg.PointSnapRange = Settings.PointSnapRange;
             dlg.LineSnapRange = Settings.LineSnapRange;
@@ -739,7 +597,7 @@ namespace Plotter
             if (mEditorWindow == null)
             {
                 mEditorWindow = new EditorWindow(mController.ScriptEnv);
-                mEditorWindow.Owner = mMainWindow;
+                mEditorWindow.Owner = mMainWindow.GetWindow();
                 mEditorWindow.Show();
 
                 mEditorWindow.Closed += delegate
@@ -761,13 +619,18 @@ namespace Plotter
             {
                 List<CadFigure> figList = Controller.DB.GetSelectedFigList();
 
-                XDocument doc = SvgExporter.ToSvg(figList, Controller.CurrentDC,
+                SvgExporter exporter = new SvgExporter();
+
+                XDocument doc = exporter.ToSvg(figList, Controller.DC,
                     Controller.PageSize.Width, Controller.PageSize.Height);
 
                 try
                 {
                     doc.Save(sfd.FileName);
                     ItConsole.println("Success Export SVG: " + sfd.FileName);
+
+                    System.Diagnostics.Process.Start(
+                        "EXPLORER.EXE", $@"/select,""{sfd.FileName}""");
                 }
                 catch (Exception e)
                 {
@@ -840,18 +703,10 @@ namespace Plotter
             Redraw();
         }
 
-        #endregion
+#endregion
 
         // Handle events from PlotterController
-        #region Event From PlotterController
-
-        //public void DataChanged(PlotterController sender, bool redraw)
-        //{
-        //    if (redraw)
-        //    {
-        //        Redraw();
-        //    }
-        //}
+#region Event From PlotterController
 
         public void StateChanged(PlotterController sender, PlotterStateInfo si)
         {
@@ -864,45 +719,6 @@ namespace Plotter
             {
                 MeasureMode = si.MeasureMode;
             }
-        }
-
-        public void LayerListChanged(PlotterController sender, LayerListInfo layerListInfo)
-        {
-            foreach (LayerHolder lh in LayerList)
-            {
-                lh.PropertyChanged -= LayerListItemPropertyChanged;
-            }
-
-            LayerList.Clear();
-
-            foreach (CadLayer layer in layerListInfo.LayerList)
-            {
-                LayerHolder layerHolder = new LayerHolder(layer);
-                layerHolder.PropertyChanged += LayerListItemPropertyChanged;
-
-                LayerList.Add(layerHolder);
-            }
-
-            if (mLayerListView != null)
-            {
-                int idx = GetLayerListIndex(layerListInfo.CurrentID);
-                mLayerListView.SelectedIndex = idx;
-            }
-        }
-
-        private int GetLayerListIndex(uint id)
-        {
-            int idx = 0;
-            foreach (LayerHolder layer in LayerList)
-            {
-                if (layer.ID == id)
-                {
-                    return idx;
-                }
-                idx++;
-            }
-
-            return -1;
         }
 
         private void CursorPosChanged(PlotterController sender, Vector3d pt, Plotter.Controller.CursorType type)
@@ -935,38 +751,12 @@ namespace Plotter
             }, true);
         }
 
-#endregion
-
-
-        // Layer list handling
-#region LayerList
-        public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            LayerHolder lh = (LayerHolder)sender;
-            //Draw(clearFlag:true);
-            Redraw();
-        }
-
-        public void LayerListSelectionChanged(object sender, SelectionChangedEventArgs args)
-        {
-            if (args.AddedItems.Count > 0)
-            {
-                LayerHolder layer = (LayerHolder)args.AddedItems[0];
-
-                if (mController.CurrentLayer.ID != layer.ID)
-                {
-                    mController.SetCurrentLayer(layer.ID);
-
-                    Redraw();
-                }
-            }
-        }
-#endregion
+#endregion Event From PlotterController
 
 
         // Keyboard handling
 #region Keyboard handling
-        private string ModifyerKeysStr()
+        private string GetModifyerKeysString()
         {
             ModifierKeys modifierKeys = Keyboard.Modifiers;
 
@@ -992,7 +782,7 @@ namespace Plotter
 
         private string KeyString(KeyEventArgs e)
         {
-            string ks = ModifyerKeysStr();
+            string ks = GetModifyerKeysString();
 
             ks += e.Key.ToString().ToLower();
 
@@ -1011,19 +801,10 @@ namespace Plotter
             string ks = KeyString(e);
             return ExecShortcutKey(ks, false);
         }
-#endregion
+#endregion Keyboard handling
 
-#region helper
-        public void Redraw()
-        {
-            ThreadUtil.RunOnMainThread(() =>
-            {
-                mController.Redraw();
-            }, true);
-        }
-#endregion
 
-#region "print"
+#region print
         public void StartPrint()
         {
             PrintDocument pd =
@@ -1057,7 +838,7 @@ namespace Plotter
 
             Controller.PrintPage(g, pageSize, deviceSize);
         }
-#endregion
+#endregion print
 
         public void PageSetting()
         {
@@ -1084,7 +865,7 @@ namespace Plotter
         {
             DocumentSettingsDialog dlg = new DocumentSettingsDialog();
 
-            dlg.Owner = mMainWindow;
+            dlg.Owner = mMainWindow.GetWindow();
 
             dlg.WorldScale = mPlotterView.DrawContext.WorldScale;
 
@@ -1100,10 +881,8 @@ namespace Plotter
         public void SetWorldScale(double scale)
         {
 #if USE_GDI_VIEW
-            //PlotterView1.DrawContext.WorldScale = scale;
-            PlotterView1.SetWorldScale(scale);
+            PlotterView1GDI1.SetWorldScale(scale);
 #endif
-            //PlotterViewGL1.DrawContext.WorldScale = scale;
             PlotterViewGL1.SetWorldScale(scale);
         }
 
@@ -1260,6 +1039,7 @@ namespace Plotter
             return true;
         }
 
+#if (USE_GDI_VIEW)
         private bool ChangeViewModeGdi(ViewModes newMode)
         {
             if (mViewMode == newMode)
@@ -1276,7 +1056,7 @@ namespace Plotter
             switch (mViewMode)
             {
                 case ViewModes.FRONT:
-                    view = PlotterView1;
+                    view = PlotterView1GDI1;
                     view.DrawContext.SetCamera(
                         Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
@@ -1284,7 +1064,7 @@ namespace Plotter
                     break;
 
                 case ViewModes.BACK:
-                    view = PlotterView1;
+                    view = PlotterView1GDI1;
                     view.DrawContext.SetCamera(
                         -Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
@@ -1293,7 +1073,7 @@ namespace Plotter
                     break;
 
                 case ViewModes.TOP:
-                    view = PlotterView1;
+                    view = PlotterView1GDI1;
                     view.DrawContext.SetCamera(
                         Vector3d.UnitY * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, -Vector3d.UnitZ);
@@ -1302,7 +1082,7 @@ namespace Plotter
                     break;
 
                 case ViewModes.BOTTOM:
-                    view = PlotterView1;
+                    view = PlotterView1GDI1;
                     view.DrawContext.SetCamera(
                         -Vector3d.UnitY * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitZ);
@@ -1311,7 +1091,7 @@ namespace Plotter
                     break;
 
                 case ViewModes.RIGHT:
-                    view = PlotterView1;
+                    view = PlotterView1GDI1;
                     view.DrawContext.SetCamera(
                         Vector3d.UnitX * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
@@ -1320,7 +1100,7 @@ namespace Plotter
                     break;
 
                 case ViewModes.LEFT:
-                    view = PlotterView1;
+                    view = PlotterView1GDI1;
                     view.DrawContext.SetCamera(
                         -Vector3d.UnitX * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
@@ -1342,7 +1122,7 @@ namespace Plotter
             Redraw();
             return true;
         }
-
+#endif
 
         public void SetupTextCommandView(AutoCompleteTextBox textBox)
         {

@@ -78,20 +78,16 @@ namespace HalfEdgeNS
                 mHeModel.VertexStore[v1].vector,
                 mHeModel.VertexStore[v2].vector);
 
-            int normalIndex = HeModel.INVALID_INDEX;
+            // Faceの設定
+            HeFace face = mHeModel.CreateFace(he0);
 
             if (!normal.IsInvalid())
             {
-                normalIndex = mHeModel.NormalStore.Add(normal);
+                face.Normal = mHeModel.NormalStore.Add(normal);
+                he0.Normal = mHeModel.NormalStore.Add(normal);
+                he1.Normal = mHeModel.NormalStore.Add(normal);
+                he2.Normal = mHeModel.NormalStore.Add(normal);
             }
-
-            he0.Normal = normalIndex;
-            he1.Normal = normalIndex;
-            he2.Normal = normalIndex;
-
-            // Faceの設定
-            HeFace face = mHeModel.CreateFace(he0);
-            face.Normal = normalIndex;
 
             int faceIndex = mHeModel.FaceStore.Add(face);
 

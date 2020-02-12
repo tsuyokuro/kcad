@@ -42,6 +42,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_DRAG_LINE] = Color.Black;
             PenColorTbl[DrawTools.PEN_NORMAL] = Color.Black;
             PenColorTbl[DrawTools.PEN_EXT_SNAP] = Color.Transparent;
+            PenColorTbl[DrawTools.PEN_HANDLE_LINE] = Color.Black;
 
 
             BrushColorTbl = new Color[DrawTools.BRUSH_TBL_SIZE];
@@ -51,6 +52,7 @@ namespace Plotter
             BrushColorTbl[DrawTools.BRUSH_TEXT] = Color.Black;
             BrushColorTbl[DrawTools.BRUSH_DEFAULT_MESH_FILL] = Color.LightGray;
             BrushColorTbl[DrawTools.BRUSH_TRANSPARENT] = Color.Transparent;
+            BrushColorTbl[DrawTools.BRUSH_PALE_TEXT] = Color.Black;
         }
     }
 }

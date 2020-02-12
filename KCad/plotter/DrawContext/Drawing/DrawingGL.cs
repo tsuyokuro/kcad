@@ -1,8 +1,4 @@
-﻿#define DEBUG_DRAW_NORMAL
-#define DRAW_HALF_EDGE_OUTLINE
-
-using System.Collections.Generic;
-
+﻿using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
@@ -14,7 +10,7 @@ using Plotter.Settings;
 
 namespace Plotter
 {
-    class DrawingGL : IDrawing
+    public class DrawingGL : IDrawing
     {
         private DrawContextGL DC;
 
@@ -45,34 +41,13 @@ namespace Plotter
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
-        public void Draw(List<CadFigure> list, DrawPen pen)
-        {
-            foreach (CadFigure fig in list)
-            {
-                fig.ForEachFig((Action<CadFigure>)(a =>
-                {
-                    if (a.Current)
-                    {
-                        a.Draw(DC, DC.GetPen(DrawTools.PEN_FIGURE_HIGHLIGHT));
-                    }
-                    else
-                    {
-                        a.Draw(DC, pen);
-                    }
-                }));
-            }
-        }
-
-        public void DrawSelected(List<CadFigure> list, DrawPen pen)
+        public void DrawSelected(List<CadFigure> list)
         {
             DisableLight();
 
             foreach (CadFigure fig in list)
             {
-                fig.ForEachFig(a =>
-                {
-                    a.DrawSelected(DC, pen);
-                });
+                fig.DrawSelectedEach(DC);
             }
         }
 
@@ -381,7 +356,7 @@ namespace Plotter
             Vector3d p = DC.WorldPointToDevPoint(pt);
             Start2D();
             GL.Color4(pen.Color4());
-            GL.PointSize(5);
+            GL.PointSize(4);
 
             GL.Begin(PrimitiveType.Points);
 
@@ -395,7 +370,7 @@ namespace Plotter
         {
             Start2D();
             GL.Color4(pen.Color4());
-            GL.PointSize(5);
+            GL.PointSize(4);
 
             GL.Begin(PrimitiveType.Points);
 

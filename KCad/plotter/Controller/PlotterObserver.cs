@@ -31,11 +31,11 @@ namespace Plotter.Controller
 
         public Action<PlotterController, Vector3d, CursorType> CursorPosChanged = (controller, pos, cursorType) => { };
 
-        public Action<bool> UpdateTreeView = (remakeTree) => { };
+        public Action<bool> UpdateObjectTree = (remakeTree) => { };
 
-        public Action<int> SetTreeViewPos = (index) => { };
+        public Action<int> SetObjectTreePos = (index) => { };
 
-        public Func<uint, int> FindTreeViewItem = (id) => { return 0; /* index. It can be used with SetTreeViewPos */ };
+        public Func<uint, int> FindObjectTreeItemIndex = (id) => { return 0; };
 
         public Action<string, MessageType> OpenPopupMessage = (text, messageType) => { };
 

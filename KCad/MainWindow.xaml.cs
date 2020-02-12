@@ -1,4 +1,5 @@
-﻿using Plotter;
+﻿using KCad.Util;
+using Plotter;
 using Plotter.Controller;
 using System;
 using System.Threading;
@@ -9,10 +10,12 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using KCad.Controls;
+using KCad.ViewModel;
 
 namespace KCad
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, ICadMainWindow
     {
         public PlotterViewModel ViewModel;
 
@@ -22,15 +25,14 @@ namespace KCad
         {
             InitializeComponent();
 
-            SetupDebugConsole();
             SetupInteractionConsole();
 
             ViewModel = new PlotterViewModel(this);
 
             viewContainer.Focusable = true;
 
-            ViewModel.LayerListView = LayerListView;
-            ViewModel.ObjectTreeView = ObjTree;
+            ViewModel.LayerListVM.LayerListView = LayerListView;
+            ViewModel.ObjTreeVM.ObjectTreeView = ObjTree;
 
             ViewModel.SetupTextCommandView(textCommand);
             textCommand.Determine += TextCommand_OnDetermine;
@@ -43,8 +45,6 @@ namespace KCad
 
             RunTextCommandButton.Click += RunTextCommandButtonClicked;
 
-            MyConsole.Posting = ConsolePosting;
-
             SetupDataContext();
 
             InitWindowChrome();
@@ -52,27 +52,9 @@ namespace KCad
             InitPopup();
         }
 
-        private void ConsolePosting(string s)
+        public CadConsoleView GetBuiltinConsole()
         {
-            string[] del = { "\n" };
-            string[] lines = s.Split(del, StringSplitOptions.None);
-            textCommand.Text = lines[0].Trim();
-        }
-
-        private void SetupDebugConsole()
-        {
-            if (App.UseConsole)
-            {
-                // DOutの出力はデフォルトでConsoleになっているので、UseConsoleの場合は、
-                // あらためて設定する必要はない
-                DOut.pl("DOut's output setting is Console");
-            }
-            else
-            {
-                DOut.PrintFunc = MyConsole.Print;
-                DOut.PrintLnFunc = MyConsole.PrintLn;
-                DOut.FormatPrintFunc = MyConsole.Printf;
-            }
+            return MyConsole;
         }
 
         private void SetupInteractionConsole()
@@ -85,9 +67,9 @@ namespace KCad
 
         private void SetupDataContext()
         {
-            LayerListView.DataContext = ViewModel.LayerList;
+            LayerListView.DataContext = ViewModel.LayerListVM.LayerList;
 
-            SlsectModePanel.DataContext = ViewModel;
+            SelectModePanel.DataContext = ViewModel;
             FigurePanel.DataContext = ViewModel;
 
             textBlockXYZ.DataContext = ViewModel.CursorPosVM;
@@ -101,7 +83,7 @@ namespace KCad
 
             DrawOptionMenu.DataContext = ViewModel.Settings;
 
-            ToolBar1.DataContext = ViewModel.Settings;
+            SnapToolBar.DataContext = ViewModel.Settings;
 
             TreeViewToolBar.DataContext = ViewModel.Settings;
         }
@@ -148,40 +130,10 @@ namespace KCad
             return ttplaces;
         }
 
-        public void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
-        {
-            Application.Current.Dispatcher.Invoke(() => {
-                if (PopupMessage.IsOpen)
-                {
-                    return;
-                }
-
-                PopupMessageIcon.Source = SelectPopupMessageIcon(messageType);
-
-                PopupMessageText.Text = text;
-                PopupMessage.IsOpen = true;
-            }); 
-        }
-
-        public void ClosePopupMessage()
-        {
-            if (Application.Current.Dispatcher.Thread.ManagedThreadId ==
-                System.Threading.Thread.CurrentThread.ManagedThreadId)
-            {
-                PopupMessage.IsOpen = false;
-                return;
-            }
-
-            Application.Current.Dispatcher.Invoke(() => {
-                PopupMessage.IsOpen = false;
-            });
-        }
-
         ImageSource SelectPopupMessageIcon(PlotterObserver.MessageType type)
         {
             return PopupMessageIcons[(int)type];
         }
-
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
         {
@@ -217,7 +169,7 @@ namespace KCad
 
             ViewModel.Open();
 
-            System.Drawing.Color c = ViewModel.CurrentDC.Tools.BrushColor(DrawTools.BRUSH_BACKGROUND);
+            System.Drawing.Color c = ViewModel.DC.Tools.BrushColor(DrawTools.BRUSH_BACKGROUND);
             viewRoot.Background = new SolidColorBrush(Color.FromRgb(c.R, c.G, c.B));
         }
 
@@ -283,7 +235,7 @@ namespace KCad
         }
         #endregion
 
-        public void SetMainView(IPlotterView view)
+        public void SetPlotterView(IPlotterView view)
         {
             viewContainer.Child = view.FormsControl;
         }
@@ -298,16 +250,73 @@ namespace KCad
                         wnd.viewContainer.Visibility = Visibility.Hidden;
                     }
                     break;
+                
                 case WinAPI.WM_EXITSIZEMOVE:
                     {
                         MainWindow wnd = (MainWindow)Application.Current.MainWindow;
-                        wnd.viewContainer.Visibility = Visibility.Visible;
-
-                        ViewModel.Redraw();
+                        if (wnd.viewContainer.Visibility != Visibility.Visible)
+                        {
+                            wnd.viewContainer.Visibility = Visibility.Visible;
+                            ViewModel.Redraw();
+                        }
                     }
+                    break;
+                
+                case WinAPI.WM_MOVE:
+                    {
+                        MainWindow wnd = (MainWindow)Application.Current.MainWindow;
+                        if (wnd.viewContainer.Visibility != Visibility.Visible)
+                        {
+                            wnd.viewContainer.Visibility = Visibility.Visible;
+                        }
+                    }
+                    break;
+
+                case WinAPI.WM_SIZE:
                     break;
             }
             return IntPtr.Zero;
         }
+
+        #region IMainWindow
+        public Window GetWindow()
+        {
+            return this;
+        }
+
+        public void SetCurrentFileName(string file_name)
+        {
+            FileName.Content = file_name;
+        }
+
+        public void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
+        {
+            Application.Current.Dispatcher.Invoke(() => {
+                if (PopupMessage.IsOpen)
+                {
+                    return;
+                }
+
+                PopupMessageIcon.Source = SelectPopupMessageIcon(messageType);
+
+                PopupMessageText.Text = text;
+                PopupMessage.IsOpen = true;
+            });
+        }
+
+        public void ClosePopupMessage()
+        {
+            if (Application.Current.Dispatcher.Thread.ManagedThreadId ==
+                System.Threading.Thread.CurrentThread.ManagedThreadId)
+            {
+                PopupMessage.IsOpen = false;
+                return;
+            }
+
+            Application.Current.Dispatcher.Invoke(() => {
+                PopupMessage.IsOpen = false;
+            });
+        }
+        #endregion
     }
 }

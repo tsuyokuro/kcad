@@ -159,15 +159,8 @@ namespace Plotter
             return d;
         }
 
-        public static int InitBezier(CadFigure fig, int idx1, int idx2)
+        public static int InsertBezierHandle(CadFigure fig, int idx1, int idx2)
         {
-            if (idx1 > idx2)
-            {
-                int t = idx1;
-                idx1 = idx2;
-                idx2 = t;
-            }
-
             CadVertex a = fig.GetPointAt(idx1);
             CadVertex b = fig.GetPointAt(idx2);
 
@@ -186,130 +179,6 @@ namespace Plotter
             fig.InsertPointAt(idx1 + 2, hp2);
 
             return 2;
-        }
-
-        public static void BezierPoints(
-            CadVertex p0, CadVertex p1, CadVertex p2, int s, VertexList ret)
-        {
-            double t = 0;
-            double d = 1.0 / (double)s;
-
-            t = d;
-
-            int n = 3;
-
-            CadVertex t0 = p0;
-            CadVertex t1 = p0;
-
-            ret.Add(t0);
-
-            while (t <= 1.0)
-            {
-                t1 = default(CadVertex);
-                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
-                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
-                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
-
-                ret.Add(t1);
-
-                t0 = t1;
-
-                t += d;
-            }
-        }
-
-        public static bool ForEachBezierPoints(
-            CadVertex p0, CadVertex p1, CadVertex p2, int s, Action<CadVertex> action)
-        {
-            double t = 0;
-            double d = 1.0 / (double)s;
-
-            t = d;
-
-            int n = 3;
-
-            CadVertex t0 = p0;
-            CadVertex t1 = p0;
-
-            action(t0);
-
-            while (t <= 1.0)
-            {
-                t1 = default(CadVertex);
-                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
-                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
-                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
-
-                action(t1);
-
-                t0 = t1;
-
-                t += d;
-            }
-
-            return true;
-        }
-
-        public static void BezierPoints(
-            CadVertex p0, CadVertex p1, CadVertex p2, CadVertex p3, int s, VertexList ret)
-        {
-            double t = 0;
-            double d = 1.0 / (double)s;
-
-            t = d;
-
-            int n = 4;
-
-            CadVertex t0 = p0;
-            CadVertex t1 = p0;
-
-            ret.Add(t0);
-
-            while (t <= 1.0)
-            {
-                t1 = default(CadVertex);
-                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
-                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
-                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
-                t1 += p3 * CadMath.BernsteinBasisF(n - 1, 3, t);
-
-                ret.Add(t1);
-
-                t0 = t1;
-
-                t += d;
-            }
-        }
-
-        public static void ForEachBezierPoints(
-            CadVertex p0, CadVertex p1, CadVertex p2, CadVertex p3, int s, Action<CadVertex> action)
-        {
-            double t = 0;
-            double d = 1.0 / (double)s;
-
-            t = d;
-
-            int n = 4;
-
-            CadVertex t0 = p0;
-            CadVertex t1 = p0;
-
-            action(t0);
-
-            while (t <= 1.0)
-            {
-                t1 = default(CadVertex);
-                t1 += p0 * CadMath.BernsteinBasisF(n - 1, 0, t);
-                t1 += p1 * CadMath.BernsteinBasisF(n - 1, 1, t);
-                t1 += p2 * CadMath.BernsteinBasisF(n - 1, 2, t);
-                t1 += p3 * CadMath.BernsteinBasisF(n - 1, 3, t);
-
-                action(t1);
-
-                t0 = t1;
-
-                t += d;
-            }
         }
 
         // 指定された座標から最も遠いPointのIndexを求める

@@ -298,6 +298,10 @@ namespace Plotter.Serializer.v1001
         [Key("GeoData")]
         public MpGeometricData_v1002 GeoData;
 
+        [Key("Name")]
+        public string Name;
+
+
         [IgnoreMember]
         public CadFigure TempFigure = null;
 
@@ -362,6 +366,8 @@ namespace Plotter.Serializer.v1001
             Normal = MpVector3d_v1002.Create(fig.Normal);
 
             GeoData = fig.GeometricDataToMp_v1002();
+
+            Name = fig.Name;
         }
 
         public void StoreChildIdList(CadFigure fig)
@@ -397,6 +403,8 @@ namespace Plotter.Serializer.v1001
             }
 
             fig.GeometricDataFromMp_v1002(GeoData);
+
+            fig.Name = Name;
         }
 
         public CadFigure Restore()
@@ -408,44 +416,6 @@ namespace Plotter.Serializer.v1001
             return fig;
         }
     }
-
-    [MessagePack.Union(0, typeof(MpSimpleGeometricData_v1002))]
-    [MessagePack.Union(1, typeof(MpMeshGeometricData_v1002))]
-    [MessagePack.Union(2, typeof(MpNurbsLineGeometricData_v1002))]
-    [MessagePack.Union(3, typeof(MpNurbsSurfaceGeometricData_v1002))]
-    public interface MpGeometricData_v1002
-    {
-    }
-
-    [MessagePackObject]
-    public class MpSimpleGeometricData_v1002 : MpGeometricData_v1002
-    {
-        [Key("PointList")]
-        public List<MpVertex_v1002> PointList;
-    }
-
-
-    [MessagePackObject]
-    public class MpMeshGeometricData_v1002 : MpGeometricData_v1002
-    {
-        [Key("HeModel")]
-        public MpHeModel_v1002 HeModel;
-    }
-
-    [MessagePackObject]
-    public class MpNurbsLineGeometricData_v1002 : MpGeometricData_v1002
-    {
-        [Key("Nurbs")]
-        public MpNurbsLine_v1002 Nurbs;
-    }
-
-    [MessagePackObject]
-    public class MpNurbsSurfaceGeometricData_v1002 : MpGeometricData_v1002
-    {
-        [Key("Nurbs")]
-        public MpNurbsSurface_v1002 Nurbs;
-    }
-
 
     [MessagePackObject]
     public struct MpVector3d_v1002
@@ -505,6 +475,41 @@ namespace Plotter.Serializer.v1001
         }
     }
 
+    [MessagePack.Union(0, typeof(MpSimpleGeometricData_v1002))]
+    [MessagePack.Union(1, typeof(MpMeshGeometricData_v1002))]
+    [MessagePack.Union(2, typeof(MpNurbsLineGeometricData_v1002))]
+    [MessagePack.Union(3, typeof(MpNurbsSurfaceGeometricData_v1002))]
+    public interface MpGeometricData_v1002
+    {
+    }
+
+    [MessagePackObject]
+    public class MpSimpleGeometricData_v1002 : MpGeometricData_v1002
+    {
+        [Key("PointList")]
+        public List<MpVertex_v1002> PointList;
+    }
+
+    [MessagePackObject]
+    public class MpMeshGeometricData_v1002 : MpGeometricData_v1002
+    {
+        [Key("HeModel")]
+        public MpHeModel_v1002 HeModel;
+    }
+
+    [MessagePackObject]
+    public class MpNurbsLineGeometricData_v1002 : MpGeometricData_v1002
+    {
+        [Key("Nurbs")]
+        public MpNurbsLine_v1002 Nurbs;
+    }
+
+    [MessagePackObject]
+    public class MpNurbsSurfaceGeometricData_v1002 : MpGeometricData_v1002
+    {
+        [Key("Nurbs")]
+        public MpNurbsSurface_v1002 Nurbs;
+    }
 
     [MessagePackObject]
     public class MpHeModel_v1002

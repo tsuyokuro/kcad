@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
+﻿using Plotter;
+using System.ComponentModel;
 
-namespace Plotter
+namespace KCad.ViewModel
 {
     public class LayerHolder : INotifyPropertyChanged
     {

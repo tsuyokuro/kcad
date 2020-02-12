@@ -57,7 +57,9 @@ namespace Plotter
                 return null;
             }
 
-            return mLayerIdMap[id];
+            CadLayer layer;
+            mLayerIdMap.TryGetValue(id, out layer);
+            return layer;
         }
 
         public CadLayer NewLayer()
@@ -135,7 +137,10 @@ namespace Plotter
                 return null;
             }
 
-            return mFigureIdMap[id];
+            CadFigure fig;
+            mFigureIdMap.TryGetValue(id, out fig);
+
+            return fig;
         }
 
         public CadFigure NewFigure(CadFigure.Types type)
@@ -164,45 +169,58 @@ namespace Plotter
 
         
         #region Walk
+        //public static Func<CadLayer, bool> EditableLayerFilter = (layer) =>
+        //{
+        //    if (layer.Locked) return false;
+        //    if (!layer.Visible) return false;
 
-        public void Walk(Action<CadLayer, CadFigure> walk, Func<CadLayer, bool> layerFilter)
+        //    return true;
+        //};
+
+        //public void ForEachEditableFigure(Action<CadLayer, CadFigure> walk)
+        //{
+        //    mLayerList.ForEach(layer =>
+        //    {
+        //        if (!EditableLayerFilter(layer))
+        //        {
+        //            return;
+        //        }
+
+        //        layer.ForEachFig(fig =>
+        //        {
+        //            walk(layer, fig);
+        //        });
+        //    });
+        //}
+
+
+        private void FigureAction(CadLayer layer, CadFigure fig, Action<CadLayer, CadFigure> action)
         {
-            mLayerList.ForEach(layer =>
-            {
-                if (layerFilter != null && !layerFilter(layer))
-                {
-                    return;
-                }
+            action(layer, fig);
 
-                layer.ForEachFig(fig =>
-                {
-                    walk(layer, fig);
-                });
-            });
+            if (fig.ChildList == null)
+            {
+                return;
+            }
+
+            foreach (CadFigure c in fig.ChildList)
+            {
+                FigureAction(layer, c, action);
+            }
         }
 
-        public static Func<CadLayer, bool> EditableLayerFilter = (layer) =>
+        public void ForEachEditableFigure(Action<CadLayer, CadFigure> action)
         {
-            if (layer.Locked) return false;
-            if (!layer.Visible) return false;
-
-            return true;
-        };
-
-        public void WalkEditable(Action<CadLayer, CadFigure> walk)
-        {
-            mLayerList.ForEach(layer =>
+            foreach (CadLayer layer in mLayerList)
             {
-                if (!EditableLayerFilter(layer))
-                {
-                    return;
-                }
+                if (layer.Locked) continue;
+                if (!layer.Visible) continue;
 
-                layer.ForEachFig(fig =>
+                foreach (CadFigure fig in layer.FigureList)
                 {
-                    walk(layer, fig);
-                });
-            });
+                    FigureAction(layer, fig, action);
+                }
+            }
         }
 
         #endregion Walk

@@ -19,6 +19,10 @@ namespace Plotter
         private const double ARROW_LEN = 2;
         private const double ARROW_W = 1;
 
+        public int FontID { set; get; } = DrawTools.FONT_SMALL;
+
+        public int TextBrushID = DrawTools.BRUSH_TEXT;
+
         public CadFigureDimLine()
         {
             Type = Types.DIMENTION_LINE;
@@ -31,7 +35,7 @@ namespace Plotter
 
         public override Centroid GetCentroid()
         {
-            Centroid ret = default(Centroid);
+            Centroid ret = default;
 
             ret.IsInvalid = true;
 
@@ -58,21 +62,21 @@ namespace Plotter
             }
         }
 
-        public override void Draw(DrawContext dc, DrawPen pen)
+        public override void Draw(DrawContext dc)
         {
-            if (pen.ID == DrawTools.PEN_DEFAULT_FIGURE)
-            {
-                pen = dc.GetPen(DrawTools.PEN_DIMENTION);
-            }
+            DrawDim(dc, dc.GetPen(DrawTools.PEN_DIMENTION), dc.GetBrush(DrawTools.BRUSH_TEXT));
+        }
 
-            DrawDim(dc, pen);
+        public override void Draw(DrawContext dc, DrawParams dp)
+        {
+            DrawDim(dc, dp.LinePen, dp.TextBrush);
         }
 
         public override void DrawSeg(DrawContext dc, DrawPen pen, int idxA, int idxB)
         {
         }
 
-        public override void DrawSelected(DrawContext dc, DrawPen pen)
+        public override void DrawSelected(DrawContext dc)
         {
             foreach (CadVertex p in PointList)
             {
@@ -259,19 +263,36 @@ namespace Plotter
             dc.Drawing.DrawArrow(pen, cp, seg.P1.vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
         }
 
-        private void DrawDim(DrawContext dc, DrawPen pen)
+        private void DrawDim(DrawContext dc, DrawPen linePen, DrawBrush textBrush)
         {
-            dc.Drawing.DrawLine(pen, PointList[0].vector, PointList[3].vector);
-            dc.Drawing.DrawLine(pen, PointList[1].vector, PointList[2].vector);
+            dc.Drawing.DrawLine(linePen, PointList[0].vector, PointList[3].vector);
+            dc.Drawing.DrawLine(linePen, PointList[1].vector, PointList[2].vector);
 
             Vector3d cp = CadMath.CenterPoint(PointList[3].vector, PointList[2].vector);
 
             double arrowW = ARROW_W / dc.WorldScale;
             double arrowL = ARROW_LEN / dc.WorldScale;
 
-            dc.Drawing.DrawArrow(pen, cp, PointList[3].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
-            dc.Drawing.DrawArrow(pen, cp, PointList[2].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            double ww = (PointList[1] - PointList[0]).Norm() / 4.0;
 
+            if (ww > arrowL)
+            {
+                dc.Drawing.DrawArrow(linePen, cp, PointList[3].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+                dc.Drawing.DrawArrow(linePen, cp, PointList[2].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+            }
+            else
+            {
+                Vector3d v0 = cp - PointList[3].vector;
+                Vector3d v1 = cp - PointList[2].vector;
+
+                v0 = -(v0.Normalized() * (arrowL * 1.5)) + PointList[3].vector;
+                v1 = -(v1.Normalized() * (arrowL * 1.5)) + PointList[2].vector;
+
+                dc.Drawing.DrawArrow(linePen, v0, PointList[3].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+                dc.Drawing.DrawArrow(linePen, v1, PointList[2].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
+
+                dc.Drawing.DrawLine(linePen, PointList[2].vector, PointList[3].vector);
+            }
 
             CadVertex lineV = PointList[2] - PointList[3];
 
@@ -280,6 +301,8 @@ namespace Plotter
             string lenStr = CadUtil.ValToString(len);
 
             CadVertex p = PointList[3] + (lineV / 2);
+
+            p += (PointList[3] - PointList[0]).UnitVector() * (arrowW);
 
             CadVertex up = PointList[3] - PointList[0];
 
@@ -300,7 +323,7 @@ namespace Plotter
             // |  |                            |
             // up 0                            1 
             // 
-            dc.Drawing.DrawText(FontID, dc.GetBrush(BrushID), p.vector, lineV.vector, up.vector,
+            dc.Drawing.DrawText(FontID, textBrush, p.vector, lineV.vector, up.vector,
                 new DrawTextOption(DrawTextOption.H_CENTER),
                 lenStr);
         }

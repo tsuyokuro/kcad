@@ -5,6 +5,10 @@ using OpenTK.Graphics.OpenGL;
 
 namespace GLUtil
 {
+    /**
+     * OpenGLで描画可能なFrame buffer
+     * Frame buffer that can be drawn with OpenGL 
+     */
     class FrameBufferW
     {
         int Width;
@@ -14,63 +18,6 @@ namespace GLUtil
         //int DepthRenderBufferDesc;
         int ColorTexDesc;
         int DepthTexDesc;
-
-        public Bitmap GetBitmap()
-        {
-            Bitmap bmp = new Bitmap(Width, Height);
-            BitmapData bmpData
-                = bmp.LockBits(new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height),
-                                ImageLockMode.WriteOnly,
-                                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-            GL.ReadBuffer(ReadBufferMode.Front);
-
-            GL.ReadPixels(
-                0, 0,
-                Width, Height,
-                OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
-                PixelType.UnsignedByte,
-                bmpData.Scan0);
-
-            // debug
-            //byte[] ba = new byte[32];
-            //unsafe
-            //{
-            //    byte* p = (byte*)bmpData.Scan0;
-
-            //    for (int i = 0; i < 32; i++)
-            //    {
-            //        ba[i] = *(p + i);
-            //    }
-            //}
-
-            bmp.UnlockBits(bmpData);
-
-            bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
-
-            return bmp;
-        }
-
-        public void Begin()
-        {
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, FrameBufferDesc);
-            GL.Viewport(0, 0, Width, Height);
-            GL.Enable(EnableCap.DepthTest);
-        }
-
-        public void End()
-        {
-            GL.BindTexture(TextureTarget.Texture2D, 0);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-        }
-
-        public void Dispose()
-        {
-            GL.DeleteTexture(ColorTexDesc);
-            GL.DeleteTexture(DepthTexDesc);
-            //GL.DeleteRenderbuffer(DepthRenderBufferDesc);
-            GL.DeleteFramebuffer(FrameBufferDesc);
-        }
 
         public void Create(int width, int height)
         {
@@ -140,6 +87,75 @@ namespace GLUtil
             // Since setup is completed, unbind objects.
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+        }
+
+        public void Dispose()
+        {
+            GL.DeleteTexture(ColorTexDesc);
+            GL.DeleteTexture(DepthTexDesc);
+            //GL.DeleteRenderbuffer(DepthRenderBufferDesc);
+            GL.DeleteFramebuffer(FrameBufferDesc);
+        }
+
+        /**
+         * OpenGLの描画対象をこのFrameBufferにする
+         * Atach the OpenGL drawing target to this FrameBuffer
+         */
+        public void Begin()
+        {
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, FrameBufferDesc);
+            GL.Viewport(0, 0, Width, Height);
+            GL.Enable(EnableCap.DepthTest);
+        }
+
+        /**
+         * OpenGLの描画対象をDefaultに戻す
+         * Atach the OpenGL drawing target to default
+         */
+        public void End()
+        {
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+        }
+
+        /**
+         * Frame bufferをBitmapに変換
+         * Convert Frame buffer to Bitmap
+         */
+        public Bitmap GetBitmap()
+        {
+            Bitmap bmp = new Bitmap(Width, Height);
+            BitmapData bmpData
+                = bmp.LockBits(new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height),
+                                ImageLockMode.WriteOnly,
+                                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            GL.ReadBuffer(ReadBufferMode.Front);
+
+            GL.ReadPixels(
+                0, 0,
+                Width, Height,
+                OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
+                PixelType.UnsignedByte,
+                bmpData.Scan0);
+
+            // debug
+            //byte[] ba = new byte[32];
+            //unsafe
+            //{
+            //    byte* p = (byte*)bmpData.Scan0;
+
+            //    for (int i = 0; i < 32; i++)
+            //    {
+            //        ba[i] = *(p + i);
+            //    }
+            //}
+
+            bmp.UnlockBits(bmpData);
+
+            bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
+            return bmp;
         }
     }
 }

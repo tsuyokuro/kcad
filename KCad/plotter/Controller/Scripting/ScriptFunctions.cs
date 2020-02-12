@@ -8,7 +8,7 @@ using HalfEdgeNS;
 using CarveWapper;
 using MeshUtilNS;
 using MeshMakerNS;
-using KCad;
+using KCad.Controls;
 using static Plotter.CadFigure;
 using LibiglWrapper;
 using GLUtil;
@@ -16,94 +16,6 @@ using OpenTK;
 
 namespace Plotter.Controller
 {
-    public class ScriptSession
-    {
-        ScriptEnvironment Env;
-
-        private CadOpeList mCadOpeList = null;
-
-        private bool NeedUpdateTreeView = false;
-        private bool NeedRemakeTreeView = false;
-        private bool NeedRedraw = false;
-
-        public ScriptSession(ScriptEnvironment env)
-        {
-            Env = env;
-        }
-
-        public CadOpeList OpeList
-        {
-            get => mCadOpeList;
-        }
-
-        public void AddOpe(CadOpe ope)
-        {
-            mCadOpeList.Add(ope);
-        }
-
-        public void Start()
-        {
-            mCadOpeList = new CadOpeList();
-
-            ResetFlags();
-        }
-
-        public void End()
-        {
-            if (NeedUpdateTreeView)
-            {
-                UpdateTV(NeedRemakeTreeView);
-            }
-
-            if (NeedRedraw)
-            {
-                Redraw();
-            }
-        }
-
-        public void ResetFlags()
-        {
-            NeedUpdateTreeView = false;
-            NeedRemakeTreeView = false;
-            NeedRedraw = false;
-        }
-
-        public void PostUpdateTreeView()
-        {
-            NeedUpdateTreeView = true;
-        }
-
-        public void PostRemakeTreeView()
-        {
-            NeedUpdateTreeView = true;
-            NeedRemakeTreeView = true;
-        }
-
-        public void PostRedraw()
-        {
-            NeedRedraw = true;
-        }
-
-        public void UpdateTV(bool remakeTree)
-        {
-            Env.RunOnMainThread(() =>
-            {
-                Env.Controller.UpdateTreeView(remakeTree);
-            });
-        }
-
-        public void Redraw()
-        {
-            Env.RunOnMainThread(() =>
-            {
-                Env.Controller.Clear();
-                Env.Controller.DrawAll();
-                Env.Controller.PushDraw();
-            });
-        }
-    }
-
-
     public class ScriptFunctions
     {
         PlotterController Controller;
@@ -135,9 +47,14 @@ namespace Plotter.Controller
             }
         }
 
-        public void PutMsg(string s)
+        public void Println(string s)
         {
             ItConsole.println(s);
+        }
+
+        public void Print(string s)
+        {
+            ItConsole.print(s);
         }
 
         public void CursorAngleX(double d)
@@ -171,22 +88,22 @@ namespace Plotter.Controller
 
         public Vector3d WorldVToDevV(Vector3d w)
         {
-            return Controller.CurrentDC.WorldVectorToDevVector(w);
+            return Controller.DC.WorldVectorToDevVector(w);
         }
 
         public Vector3d DevVToWorldV(Vector3d d)
         {
-            return Controller.CurrentDC.DevVectorToWorldVector(d);
+            return Controller.DC.DevVectorToWorldVector(d);
         }
 
         public Vector3d WorldPToDevP(Vector3d w)
         {
-            return Controller.CurrentDC.WorldVectorToDevVector(w);
+            return Controller.DC.WorldVectorToDevVector(w);
         }
 
         public Vector3d DevPToWorldP(Vector3d d)
         {
-            return Controller.CurrentDC.DevVectorToWorldVector(d);
+            return Controller.DC.DevVectorToWorldVector(d);
         }
 
         public void DumpVector(Vector3d v)
@@ -212,12 +129,12 @@ namespace Plotter.Controller
 
         public Vector3d GetProjectionDir()
         {
-            return -Controller.CurrentDC.ViewDir;
+            return -Controller.DC.ViewDir;
         }
 
         public void FindFigureById(uint id)
         {
-            int idx = Controller.FindTreeViewItem(id);
+            int idx = Controller.FindObjectTreeItem(id);
 
             if (idx < 0)
             {
@@ -226,7 +143,7 @@ namespace Plotter.Controller
                 return;
             }
 
-            Controller.SetTreeViewPos(idx);
+            Controller.SetObjectTreePos(idx);
         }
 
         public void LayerList()
@@ -369,7 +286,7 @@ namespace Plotter.Controller
                     global::KCad.Properties.Resources.notice_was_grouped
                 );
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void Ungroup(IList<int> idList)
@@ -428,10 +345,10 @@ namespace Plotter.Controller
             Session.AddOpe(opeList);
 
             ItConsole.println(
-                global::KCad.Properties.Resources.notice_was_ungrouped
+                KCad.Properties.Resources.notice_was_ungrouped
                 );
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void MoveLastDownPoint(double x, double y, double z)
@@ -462,7 +379,7 @@ namespace Plotter.Controller
             fig.AddPoint((CadVertex)v0);
             fig.AddPoint((CadVertex)v1);
 
-            fig.EndCreate(Controller.CurrentDC);
+            fig.EndCreate(Controller.DC);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
@@ -480,11 +397,38 @@ namespace Plotter.Controller
             CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POINT);
             fig.AddPoint((CadVertex)p);
 
-            fig.EndCreate(Controller.CurrentDC);
+            fig.EndCreate(Controller.DC);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
+        }
+
+        public Vector3d GetPoint(uint figID, int index)
+        {
+            CadFigure fig = Controller.DB.GetFigure(figID);
+            if (fig == null)
+            {
+                return VectorExt.InvalidVector3d;
+            }
+
+            return fig.GetPointAt(index).vector;
+        }
+
+        public bool IsValidVector(Vector3d v)
+        {
+            return v.IsInvalid();
+        }
+
+        public void SetPoint(uint figID, int index, Vector3d v)
+        {
+            CadFigure fig = Controller.DB.GetFigure(figID);
+            if (fig == null)
+            {
+                return;
+            }
+
+            fig.PointList.Ref(index).vector = v;
         }
 
         public int Rect(double w, double h)
@@ -494,8 +438,8 @@ namespace Plotter.Controller
 
         public int RectAt(Vector3d p, double w, double h)
         {
-            Vector3d viewDir = Controller.CurrentDC.ViewDir;
-            Vector3d upDir = Controller.CurrentDC.UpVector;
+            Vector3d viewDir = Controller.DC.ViewDir;
+            Vector3d upDir = Controller.DC.UpVector;
 
             Vector3d wd = CadMath.Normal(viewDir, upDir) * w;
             Vector3d hd = upDir.UnitVector() * h;
@@ -518,13 +462,75 @@ namespace Plotter.Controller
 
             fig.IsLoop = true;
 
-            fig.EndCreate(Controller.CurrentDC);
+            fig.EndCreate(Controller.DC);
 
             CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
+
+            return (int)fig.ID;
+        }
+
+        public int RectChamfer(double w, double h, double c)
+        {
+            return RectRectChamferAt(Controller.LastDownPoint, w, h, c);
+        }
+
+        public int RectRectChamferAt(Vector3d p, double w, double h, double c)
+        {
+            Vector3d viewDir = Controller.DC.ViewDir;
+            Vector3d upDir = Controller.DC.UpVector;
+
+            Vector3d wdir = CadMath.Normal(viewDir, upDir);
+            Vector3d hdir = upDir.UnitVector();
+
+            Vector3d wd = wdir * w;
+            Vector3d hd = hdir * h;
+
+            CadVertex sp = (CadVertex)p;
+            CadVertex tp = sp;
+
+            Vector3d wc = wdir * c;
+            Vector3d hc = hdir * c;
+
+
+            CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.RECT);
+
+            fig.AddPoint(tp + wc);
+
+            tp += wd;
+
+            fig.AddPoint(tp - wc);
+
+            fig.AddPoint(tp + hc);
+
+            tp += hd;
+
+            fig.AddPoint(tp - hc);
+
+            fig.AddPoint(tp - wc);
+
+            tp = sp + hd;
+
+            fig.AddPoint(tp + wc);
+
+            fig.AddPoint(tp - hc);
+
+            tp = sp;
+
+            fig.AddPoint(tp + hc);
+
+            fig.IsLoop = true;
+
+            fig.EndCreate(Controller.DC);
+
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
+            Session.AddOpe(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+
+            Session.PostRemakeObjectTree();
 
             return (int)fig.ID;
         }
@@ -597,7 +603,7 @@ namespace Plotter.Controller
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void AddTetrahedron(Vector3d pos, double x, double y, double z)
@@ -611,7 +617,7 @@ namespace Plotter.Controller
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void AddOctahedron(Vector3d pos, double x, double y, double z)
@@ -625,7 +631,7 @@ namespace Plotter.Controller
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void AddCylinder(Vector3d pos, int slices, double r, double len)
@@ -638,7 +644,7 @@ namespace Plotter.Controller
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void AddSphere(Vector3d pos, int slices, double r)
@@ -651,7 +657,7 @@ namespace Plotter.Controller
             Session.AddOpe(ope);
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void AddLayer(string name)
@@ -846,9 +852,7 @@ namespace Plotter.Controller
 
         public void CreateBitmap(int w, int h, uint argb, int lineW, string fname)
         {
-            // TODO tdcのスケーリングがおかしいので直す必要がある
-
-            DrawContext dc = Controller.CurrentDC;
+            DrawContext dc = Controller.DC;
 
             CadObjectDB db = Controller.DB;
 
@@ -901,6 +905,11 @@ namespace Plotter.Controller
 
             tdc.SetViewOrg(tdc.ViewOrg - d);
 
+            DrawParams dp = default;
+
+            dp.LinePen = drawPen;
+            dp.EdgePen = drawPen;
+
             Env.RunOnMainThread((Action)(() =>
             {
                 tdc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_TRANSPARENT));
@@ -909,7 +918,7 @@ namespace Plotter.Controller
 
                 foreach (CadFigure fig in figList)
                 {
-                    fig.Draw(tdc, drawPen);
+                    fig.Draw(tdc, dp);
                 }
 
                 if (fname.Length > 0)
@@ -928,7 +937,7 @@ namespace Plotter.Controller
 
         public void FaceToDirection(Vector3d dir)
         {
-            DrawContext dc = Controller.CurrentDC;
+            DrawContext dc = Controller.DC;
 
             CadObjectDB db = Controller.DB;
 
@@ -1057,7 +1066,7 @@ namespace Plotter.Controller
             Controller.CurrentLayer.RemoveFigureByID(figID);
             Controller.CurrentFigure = null;
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         // 押し出し
@@ -1098,7 +1107,7 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
             Controller.CurrentLayer.RemoveFigureByID(tfig.ID);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void ToPolyLine(uint id)
@@ -1152,7 +1161,7 @@ namespace Plotter.Controller
                 Controller.ClearSelection();
             });
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void ToMesh(uint id)
@@ -1222,7 +1231,7 @@ namespace Plotter.Controller
                 Controller.ClearSelection();
             });
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
             //PrintSuccess();
         }
 
@@ -1243,6 +1252,20 @@ namespace Plotter.Controller
             }
 
             Session.AddOpe(opeRoot);
+        }
+
+        public void SetFigName(uint id, string name)
+        {
+            CadFigure fig = Controller.DB.GetFigure(id);
+            if (fig == null)
+            {
+                return;
+            }
+
+            if (name == "") name = null;
+            fig.Name = name;
+
+            UpdateTV();
         }
 
         private CadFigureMesh GetCadFigureMesh(uint id)
@@ -1286,7 +1309,7 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void Union(uint idA, uint idB)
@@ -1321,7 +1344,7 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void Intersection(uint idA, uint idB)
@@ -1356,7 +1379,7 @@ namespace Plotter.Controller
 
             Controller.CurrentLayer.AddFigure(fig);
 
-            Session.PostRemakeTreeView();
+            Session.PostRemakeObjectTree();
         }
 
         public void DumpMesh(uint id)
@@ -1463,7 +1486,7 @@ namespace Plotter.Controller
 
         public Vector3d ViewDir()
         {
-            return Controller.CurrentDC.ViewDir;
+            return Controller.DC.ViewDir;
         }
 
         public Vector3d InputUnitVector()
@@ -1517,7 +1540,7 @@ namespace Plotter.Controller
         {
             Env.RunOnMainThread(() =>
             {
-                Controller.UpdateTreeView(true);
+                Controller.UpdateObjectTree(true);
             });
         }
 
@@ -1527,7 +1550,7 @@ namespace Plotter.Controller
             {
                 Controller.Clear();
                 Controller.DrawAll();
-                Controller.PushDraw();
+                Controller.ReflectToView();
             });
         }
 
@@ -1561,7 +1584,7 @@ namespace Plotter.Controller
             CadSize2D deviceSize = new CadSize2D(827, 1169);
             CadSize2D pageSize = new CadSize2D(210, 297);
 
-            DrawContext dc = Controller.CurrentDC.CreatePrinterContext(pageSize, deviceSize);
+            DrawContext dc = Controller.DC.CreatePrinterContext(pageSize, deviceSize);
             dc.SetupDrawing();
             dc.SetupTools(DrawTools.ToolsType.PRINTER);
 
@@ -1574,7 +1597,7 @@ namespace Plotter.Controller
 
             dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
 
-            Controller.DrawAllFigure(dc);
+            Controller.DrawFiguresRaw(dc);
 
             dc.EndDraw();
 

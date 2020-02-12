@@ -1,44 +1,39 @@
-﻿using Plotter;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-
-namespace KCad
+using KCad.Controls.CadConsole;
+namespace KCad.Controls
 {
     public partial class CadConsoleView : FrameworkElement
     {
-        protected FontFamily mFontFamily = new FontFamily("ＭＳ ゴシック");
+        protected FontFamily mFontFamily = null;
+
+        protected double mFontSize = 10.0;
 
         protected Typeface mTypeface;
+
 
         protected Brush mForeground = Brushes.Black;
 
         protected Brush mBackground = Brushes.White;
 
-        protected Brush mSelectedForeground = Brushes.White;
+        protected Brush mSelectedBackground = Brushes.GreenYellow;
 
-        protected Brush mSelectedBackground = new SolidColorBrush(Color.FromRgb(0x22, 0x8B, 0x22));
-
+        protected double mSelectedBackgroundOpacity = 0.3;
 
         protected double mLineHeight = 14.0;
 
-        protected double mTextSize = 10.0;
-
         protected double mIndentSize = 8.0;
-
-        protected int mMaxLine = 200;
 
         protected int mTopIndex = 0;
 
         protected double mTextLeftMargin = 4.0;
 
         protected bool mIsLoaded = false;
-
-        public Action<string> Posting = s => { };
 
         #region Properties
         public Brush Background
@@ -59,16 +54,10 @@ namespace KCad
             set => mSelectedBackground = value;
         }
 
-        public Brush SelectedForeground
+        public double SelectedBackgroundOpacity
         {
-            get => mSelectedForeground;
-            set => mSelectedForeground = value;
-        }
-
-        public double TextSize
-        {
-            get => mTextSize;
-            set => mTextSize = value;
+            get => mSelectedBackgroundOpacity;
+            set => mSelectedBackgroundOpacity = value;
         }
 
         public double TextLeftMargin
@@ -87,41 +76,32 @@ namespace KCad
             set => mLineHeight = value;
         }
 
-        public int MaxLine
-        {
-            set
-            {
-                mMaxLine = value;
-
-                if (mList.Count > mMaxLine)
-                {
-                    mList.RemoveRange(0, mList.Count - mMaxLine);
-                }
-            }
-
-            get => mMaxLine;
-        }
-
         public FontFamily FontFamily
         {
             get => mFontFamily;
-            set => mFontFamily = value;
+            set
+            {
+                mFontFamily = value;
+                mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.UltraLight, FontStretches.Normal);
+                RecalcCharaSize();
+            }
+        }
+
+        public double FontSize
+        {
+            get => mFontSize;
+            set
+            {
+                mFontSize = value;
+                RecalcCharaSize();
+            }
         }
 
         #endregion
 
-
-        public event EventHandler SelectionChanged;
-
-        protected virtual void OnSelectionChanged(EventArgs e)
-        {
-            SelectionChanged?.Invoke(this, e);
-        }
-
-
         protected ScrollViewer Scroll;
 
-        protected List<TextLine> mList = new List<TextLine>();
+        protected RingBuffer<TextLine> mList = new RingBuffer<TextLine>(); 
 
         protected AnsiEsc Esc = new AnsiEsc();
 
@@ -130,15 +110,22 @@ namespace KCad
         protected TextAttr CurrentAttr = default;
 
         protected Pen FocusedBorderPen = new Pen(
-                new SolidColorBrush(Color.FromRgb(0x56, 0x9D, 0xE5)), 1);
+                new SolidColorBrush(Color.FromArgb(0xff, 0x56, 0x9D, 0xE5)), 1.5);
 
         protected double CW = 1;
 
+        protected double CWF = 2;
+
         protected double CH = 1;
 
+        private TextRange RawSel = new TextRange();
+        private TextRange Sel = new TextRange();
+        private bool Selecting = false;
 
         public CadConsoleView()
         {
+            mList.CreateBuffer(200);
+
             Focusable = true;
 
             Loaded += CadConsoleView_Loaded;
@@ -149,6 +136,9 @@ namespace KCad
             KeyUp += CadConsoleView_KeyUp;
 
             SizeChanged += CadConsoleView_SizeChanged;
+
+            RawSel.Reset();
+            Sel.Reset();
         }
 
         private void CadConsoleView_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -164,28 +154,17 @@ namespace KCad
             {
                 if (e.Key == Key.C || e.Key == Key.Insert)
                 {
-                    string copyString = GetSelectedString();
-                    System.Windows.Clipboard.SetDataObject(copyString, true);
+                    CopySelected(this, null);
                 }
-                else if (e.Key == Key.D)
+                else if (e.Key == Key.X)
                 {
-                    string postString = GetSelectedString();
-
-                    if (postString != null && postString.Length > 0)
-                    {
-                        Posting(postString);
-                    }
+                    Clear();
                 }
-            }
-            else if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.X)
-            {
-                Clear();
             }
         }
 
         private void CadConsoleView_LostFocus(object sender, RoutedEventArgs e)
         {
-            CleanSelection();
             UpdateView();
         }
 
@@ -197,7 +176,10 @@ namespace KCad
         {
             mIsLoaded = true;
 
-            mTypeface = new Typeface(mFontFamily, FontStyles.Normal, FontWeights.UltraLight, FontStretches.Normal);
+            if (FontFamily == null)
+            {
+                FontFamily = new FontFamily("ＭＳ ゴシック");
+            }
 
             FrameworkElement parent = (FrameworkElement)Parent;
 
@@ -219,14 +201,100 @@ namespace KCad
 
             CurrentAttr = DefaultAttr;
 
-            FormattedText ft = GetFormattedText("A", mForeground);
-
-            CW = ft.Width;
-            CH = ft.Height;
+            RecalcCharaSize();
 
             NewLine();
 
             UpdateView();
+
+            SetContextMenu();
+        }
+
+        private void RecalcCharaSize()
+        {
+            if (mTypeface == null)
+            {
+                return;
+            }
+
+            FormattedText ft = GetFormattedText("A", mForeground);
+
+            if (ft != null)
+            {
+                CW = ft.Width;
+                CH = ft.Height;
+
+                FormattedText ftk = GetFormattedText("漢", mForeground);
+                if (ftk != null)
+                {
+                    CWF = ftk.Width;
+                }
+                else
+                {
+                    CWF = CW * 2;
+                }
+            }
+            else
+            {
+                CW = 1;
+                CH = 1;
+                CWF = 1;
+            }
+        }
+
+        private void CopySelected(Object obj, RoutedEventArgs args)
+        {
+            string copyString = GetSelectedString();
+
+            if (copyString == null || copyString.Length == 0)
+            {
+                return;
+            }
+
+            Clipboard.SetDataObject(copyString, true);
+        }
+
+        private void SetContextMenu()
+        {
+            ContextMenu = new ContextMenu();
+
+            ContextMenu.BorderBrush = Brushes.Black;
+            ContextMenu.Padding = new Thickness(0, 1, 0, 1);
+
+            MenuItem menuItem = new MenuItem();
+
+            menuItem.Header = CadConsoleRes.menu_copy;
+            menuItem.Click += CopySelected;
+
+            SetupMenuItem(menuItem);
+
+            ContextMenu.Items.Add(menuItem);
+        }
+
+        private void SetupMenuItem(MenuItem menuItem)
+        {
+            menuItem.Foreground = Brushes.White;
+            menuItem.BorderThickness = new Thickness(0, 0, 0, 0);
+
+            menuItem.MouseEnter += (sender, e) =>
+            {
+                menuItem.Foreground = Brushes.Black;
+            };
+
+            menuItem.MouseLeave += (sender, e) =>
+            {
+                menuItem.Foreground = Brushes.White;
+            };
+        }
+
+        private void RemoveContextMenu()
+        {
+            if (ContextMenu != null)
+            {
+                ContextMenu.IsOpen = false;
+            }
+
+            ContextMenu = null;
         }
 
         //
@@ -238,33 +306,16 @@ namespace KCad
         {
             Point p = e.GetPosition(this);
 
-            int idx = (int)(p.Y / mLineHeight);
-
-            int col = (int)(p.X / CW);
-
-            //DOut.pl($"line:{idx} col:{col}");
-
-            CleanSelection();
-
-            if (idx >= mList.Count)
+            if (e.ClickCount == 1)
             {
-                UpdateView();
-                return;
+                StartSelect(p);
             }
-
-            TextLine item = mList[idx];
-
-            if (item == null)
+            else if (e.ClickCount == 2)
             {
-                UpdateView();
-                return;
+                SelectWord(p);
             }
-
-            item.IsSelected = true;
 
             UpdateView();
-
-            OnSelectionChanged(EventArgs.Empty);
 
             if (Focus())
             {
@@ -274,12 +325,186 @@ namespace KCad
             base.OnMouseDown(e);
         }
 
-        private void CleanSelection()
+        protected void StartSelect(Point p)
         {
-            int i = 0;
-            for (; i < mList.Count; i++)
+            TextPos tp = PointToTextPos(p);
+
+            Sel.Reset();
+
+            RawSel.Start(tp.Row, tp.Col);
+            Selecting = true;
+        }
+
+        private Regex WordRegex = new Regex(@"([^ \t,:=/\\]+)");
+
+        protected void SelectWord(Point p)
+        {
+            TextPos tp = PointToTextPos(p);
+            Sel.Reset();
+
+            if (tp.Row >= mList.Count)
             {
-                mList[i].IsSelected = false;
+                return;
+            }
+
+            TextLine item = mList[tp.Row];
+
+            if (tp.Col >= item.Data.Length)
+            {
+                return;
+            }
+
+            MatchCollection matches = WordRegex.Matches(item.Data);
+
+            foreach (Match match in matches)
+            {
+                int sp = match.Index;
+                int ep = match.Index + match.Length - 1;
+
+                if (tp.Col >= sp && tp.Col <= ep)
+                {
+                    Sel.SP.Row = tp.Row;
+                    Sel.SP.Col = sp;
+                    Sel.EP.Row = tp.Row;
+                    Sel.EP.Col = ep;
+                    break;
+                }
+            }
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            Selecting = false;
+            //DOut.pl($"Sel.IsValid:{Sel.IsValid}");
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (Selecting)
+            {
+                Point p = e.GetPosition(this);
+
+                TextPos tp = PointToTextPos(p);
+
+                RawSel.End(tp.Row, tp.Col);
+
+                Sel = TextRange.Naormalized(RawSel);
+
+                InvalidateVisual();
+
+                //DOut.pl($"sr:{Sel.SP.Row} sc:{Sel.SP.Col} - er:{Sel.EP.Row} ec:{Sel.EP.Col}");
+            }
+        }
+
+        protected TextPos PointToTextPos(Point p)
+        {
+            TextPos tp = new TextPos();
+
+            int row = (int)(p.Y / mLineHeight);
+
+            row = Math.Min(row, mList.Count - 1);
+
+            if (row < 0)
+            {
+                row = 0;
+            }
+
+            int col = PointToTextCol(p.X - mTextLeftMargin, mList[row].Data, CW, CWF);
+
+            tp.Row = row;
+            tp.Col = col;
+
+            return tp;
+        }
+
+        protected static int PointToTextCol(double x, string s, double cw, double cwf)
+        {
+            //return (int)(x / cw);
+
+            int col = -1;
+
+            double p = 0;
+
+            int i = 0;
+            for (;i<s.Length;i++)
+            {
+                char c = s[i];
+
+                if (IsHankaku(c))
+                {
+                    p += cw;
+                }
+                else
+                {
+                    p += cwf;
+                }
+
+                if (p >= x)
+                {
+                    col = i;
+                    break;
+                }
+            }
+
+            if (col == -1)
+            {
+                col = s.Length - 1 + (int)((x - p) / cw);
+            }
+
+            return col;
+        }
+
+        protected static double TextColToPoint(int col, string s, double cw, double cwf)
+        {
+            //return (col + 1) * cw;
+
+            double w = 0;
+
+            if (col < 0)
+            {
+                return 0;
+            }
+
+            int endCol = s.Length - 1;
+
+            int e = Math.Min(col, endCol);
+            int i = 0;
+
+            for (; i <= e; i++)
+            {
+                char c = s[i];
+
+                if (IsHankaku(c))
+                {
+                    w += cw;
+                }
+                else
+                {
+                    w += cwf;
+                }
+            }
+
+            if (col > endCol)
+            {
+                w += cw * (col - endCol);
+            }
+
+            return w;
+        }
+
+        protected static bool IsHankaku(char c)
+        {
+            if ((c <= '\u007e') || // 英数字
+                (c == '\u00a5') || // \記号
+                (c == '\u203e') || // ~記号
+                (c >= '\uff61' && c <= '\uff9f') // 半角カナ
+            )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -358,10 +583,10 @@ namespace KCad
             var line = new TextLine(DefaultAttr);
             mList.Add(line);
 
-            while (mList.Count > mMaxLine)
-            {
-                mList.RemoveAt(0);
-            }
+            //while (mList.Count > mMaxLine)
+            //{
+            //    mList.RemoveAt(0);
+            //}
 
             if (prevCnt != mList.Count)
             {
@@ -411,31 +636,37 @@ namespace KCad
             UpdateView();
         }
 
-        public List<string> GetSelectedStrings()
-        {
-            List<string> lines = new List<string>();
-
-            for (int i = 0; i < mList.Count; i++)
-            {
-                TextLine line = mList[i];
-                if (line.IsSelected)
-                {
-                    lines.Add(line.Data);
-                }
-            }
-
-            return lines;
-        }
-
         public string GetSelectedString()
         {
             string s = "";
 
-            foreach (TextLine line in mList)
+            if (!Sel.IsValid)
             {
-                if (line.IsSelected)
+                return s;
+            }
+
+            TextSpan tr;
+
+            int i = Sel.SP.Row;
+
+            int end = Sel.EP.Row;
+
+            for (; i <= end; i++)
+            {
+                TextLine item = mList[i];
+                int strLen = item.Data.Length;
+
+                tr = Sel.GetRowSpan(i, strLen);
+
+                if (tr.Len > 0)
                 {
-                    s += line.Data + "\n";
+                    int len = Math.Min(strLen - tr.Start, tr.Len);
+                    s += mList[i].Data.Substring(tr.Start, len);
+                }
+
+                if (i < end)
+                {
+                    s += "\n";
                 }
             }
 
@@ -445,7 +676,6 @@ namespace KCad
         protected override void OnRender(DrawingContext dc)
         {
             double offset = 0;
-
             double dispHeight = ActualHeight;
 
             if (Scroll != null)
@@ -455,15 +685,16 @@ namespace KCad
             }
 
             Point p = default(Point);
-            Point tp = default(Point);
             Rect rect = default(Rect);
 
             long topNumber = (long)offset / (long)mLineHeight;
 
-            double textOffset = (mLineHeight - mTextSize) / 2.0 - 3;
+            double textOffset = (mLineHeight - mFontSize) / 2.0 - 3;
 
             p.X = 0;
             p.Y = mLineHeight * topNumber;
+
+            Point tp;
 
             rect.X = 0;
             rect.Y = p.Y;
@@ -473,6 +704,8 @@ namespace KCad
             int n = (int)topNumber;
 
             double rangeY = offset + dispHeight;
+
+            //DOut.pl($"sr:{Sel.SP.Row} sc:{Sel.SP.Col} - er:{Sel.EP.Row} ec:{Sel.EP.Col}");
 
             while (p.Y < rangeY)
             {
@@ -486,21 +719,16 @@ namespace KCad
 
                 rect.Y = p.Y;
 
-                if (item.IsSelected)
-                {
-                    dc.DrawRectangle(mSelectedBackground, null, rect);
-                }
-                else
-                {
-                    dc.DrawRectangle(mBackground, null, rect);
-                }
+                dc.DrawRectangle(mBackground, null, rect);
 
                 tp = p;
 
                 tp.X = mTextLeftMargin;
                 tp.Y += textOffset;
 
-                DrawText(dc, item, tp);
+                DrawText(dc, item, tp, n - 1);
+
+                DrawSelectedRange(dc, n - 1);
 
                 p.Y += mLineHeight;
             }
@@ -513,37 +741,50 @@ namespace KCad
 
             if (IsFocused)
             {
-                Rect sr = new Rect(0, offset, ActualWidth, dispHeight);
+                Rect sr = new Rect(0, offset + 1, ActualWidth, dispHeight-1);
                 dc.DrawRectangle(null, FocusedBorderPen, sr);
             }
         }
 
         #region draw text
 
-        protected void DrawText(DrawingContext dc, TextLine line, Point pt)
+        protected void DrawText(DrawingContext dc, TextLine line, Point pt, int row)
         {
             int sp = 0;
-
             foreach (AttrSpan attr in line.Attrs)
             {
                 string s = line.Data.Substring(sp, attr.Len);
-                pt = RenderText(dc, attr.Attr, s, pt, line.IsSelected);
+                pt = RenderText(dc, attr.Attr, s, pt, row, sp);
                 sp += attr.Len;
             }
         }
 
-        protected Point RenderText(DrawingContext dc, TextAttr attr, string s, Point pt, bool selected)
+        protected void DrawSelectedRange(DrawingContext dc, int row)
         {
-            Brush foreground;
+            if (Sel.IsValid && row >= Sel.SP.Row && row <= Sel.EP.Row)
+            {
+                Rect r = new Rect(mTextLeftMargin, row * mLineHeight, 0, mLineHeight);
 
-            if (selected)
-            {
-                foreground = Esc.Palette[Esc.DefaultFColor];
+                TextSpan ts = Sel.GetRowSpan(row, mList[row].Data.Length);
+
+                //DOut.pl($"row:{row} ts.Start:{ts.Start} ts.Len{ts.Len}");
+
+                double sp = TextColToPoint(ts.Start - 1, mList[row].Data, CW, CWF);
+                double ep = TextColToPoint(ts.Start + ts.Len - 1, mList[row].Data, CW, CWF);
+
+                r.X = sp + mTextLeftMargin;
+                r.Width = ep - sp;
+
+                dc.PushOpacity(mSelectedBackgroundOpacity);
+                dc.DrawRectangle(mSelectedBackground, null, r);
+                dc.Pop();
             }
-            else
-            {
-                foreground = Esc.Palette[attr.FColor];
-            }
+        }
+
+        protected Point RenderText(
+            DrawingContext dc, TextAttr attr, string s, Point pt, int row, int col)
+        {
+            Brush foreground = Esc.Palette[attr.FColor];
 
             FormattedText ft = GetFormattedText(s, foreground);
 
@@ -551,16 +792,7 @@ namespace KCad
             pt2.X += ft.WidthIncludingTrailingWhitespace; // 末尾のspaceも含む幅
             pt2.Y += mLineHeight;
 
-            Brush background;
-
-            if (selected)
-            {
-                background = mSelectedBackground;
-            }
-            else
-            {
-                background = Esc.Palette[attr.BColor];
-            }
+            Brush background = Esc.Palette[attr.BColor];
 
             dc.DrawRectangle(background, null, new Rect(pt, pt2));
 
@@ -578,9 +810,9 @@ namespace KCad
         {
             FormattedText formattedText = new FormattedText(s,
                                                       System.Globalization.CultureInfo.CurrentCulture,
-                                                      System.Windows.FlowDirection.LeftToRight,
+                                                      FlowDirection.LeftToRight,
                                                       mTypeface,
-                                                      mTextSize,
+                                                      mFontSize,
                                                       brush,
                                                       VisualTreeHelper.GetDpi(this).PixelsPerDip);
             return formattedText;
@@ -594,31 +826,6 @@ namespace KCad
             }
 
             Scroll.ScrollToEnd();
-        }
-
-
-        private int GetTopIndexForEnd()
-        {
-            double offset = 0;
-
-            double dispHeight = ActualHeight;
-
-            if (Scroll != null)
-            {
-                offset = Scroll.VerticalOffset;
-                dispHeight = Scroll.ActualHeight;
-            }
-
-            int dispCnt = (int)(dispHeight / mLineHeight);
-
-            int topIndex = mList.Count - dispCnt;
-
-            if (topIndex < 0)
-            {
-                topIndex = 0;
-            }
-
-            return topIndex;
         }
 
         private void UpdateView()

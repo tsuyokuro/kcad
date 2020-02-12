@@ -1,5 +1,5 @@
 ﻿using CadDataTypes;
-using KCad;
+using KCad.Controls;
 using KCad.Dialogs;
 using OpenTK;
 using System;
@@ -38,11 +38,15 @@ namespace Plotter.Controller.TaskRunner
                 }
 
                 Vector3d normal = CadMath.Normal(
-                    res.p1 - res.p0, (Controller.CurrentDC.ViewDir));
+                    res.p1 - res.p0, (Controller.DC.ViewDir));
 
                 FlipWithPlane(rootFigList, res.p0, normal);
-                Controller.EndEdit();
-                Controller.Redraw();
+
+                RunOnMainThread(() =>
+                {
+                    Controller.EndEdit();
+                    Controller.Redraw();
+                });
             });
         }
 
@@ -80,7 +84,7 @@ namespace Plotter.Controller.TaskRunner
                 }
 
                 Vector3d normal = CadMath.Normal(
-                    res.p1 - res.p0, Controller.CurrentDC.ViewDir);
+                    res.p1 - res.p0, Controller.DC.ViewDir);
 
                 FlipAndCopyWithPlane(rootFigList, res.p0, normal);
             });
@@ -113,7 +117,7 @@ namespace Plotter.Controller.TaskRunner
             RunOnMainThread(() =>
             {
                 Controller.Redraw();
-                Controller.UpdateTreeView(true);
+                Controller.UpdateObjectTree(remakeTree : true);
             });
         }
 
@@ -160,11 +164,16 @@ namespace Plotter.Controller.TaskRunner
                 RotateWithAxis(
                     rootFigList,
                     p0,
-                    Controller.CurrentDC.ViewDir,
+                    Controller.DC.ViewDir,
                     CadMath.Deg2Rad(angle));
 
                 Controller.EndEdit();
-                Controller.Redraw();
+
+                RunOnMainThread(() =>
+                {
+                    Controller.Redraw();
+                    Controller.UpdateObjectTree(remakeTree : false);
+                });
             });
         }
 

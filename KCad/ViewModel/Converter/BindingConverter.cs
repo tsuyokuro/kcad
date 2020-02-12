@@ -1,0 +1,10 @@
+﻿using Plotter;
+using Plotter.Controller;
+
+namespace KCad.ViewModel
+{
+    public class SelectModeConverter : EnumBoolConverter<SelectModes> { }
+    public class FigureTypeConverter : EnumBoolConverter<CadFigure.Types> { }
+    public class MeasureModeConverter : EnumBoolConverter<MeasureModes> { }
+    public class ViewModeConverter : EnumBoolConverter<ViewModes> { }
+}
