@@ -1,6 +1,4 @@
-﻿#define LOG_DEBUG
-
-using CadDataTypes;
+﻿using CadDataTypes;
 using KCad.Controls;
 using OpenTK;
 using Plotter.Settings;

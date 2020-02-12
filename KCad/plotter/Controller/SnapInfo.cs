@@ -1,6 +1,4 @@
-﻿#define LOG_DEBUG
-
-using System;
+﻿using System;
 using OpenTK;
 
 namespace Plotter.Controller

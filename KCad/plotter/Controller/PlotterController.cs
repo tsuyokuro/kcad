@@ -1,7 +1,5 @@
 ﻿using CadDataTypes;
-using OpenTK;
 using Plotter.Controller.TaskRunner;
-using Plotter.Settings;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
@@ -55,7 +53,7 @@ namespace Plotter.Controller
         {
             set;
             get;
-        } = SelectModes.POINT;
+        } = SelectModes.OBJECT;
 
         public CadLayer CurrentLayer
         {
@@ -159,7 +157,7 @@ namespace Plotter.Controller
 
         public int FindObjectTreeItem(uint id)
         {
-            return Observer.FindObjectTreeItem(id);
+            return Observer.FindObjectTreeItemIndex(id);
         }
         #endregion ObjectTree handling
 

@@ -35,7 +35,7 @@ namespace Plotter.Controller
 
         public Action<int> SetObjectTreePos = (index) => { };
 
-        public Func<uint, int> FindObjectTreeItem = (id) => { return 0; /* index. It can be used with FindObjectTreeItem */ };
+        public Func<uint, int> FindObjectTreeItemIndex = (id) => { return 0; };
 
         public Action<string, MessageType> OpenPopupMessage = (text, messageType) => { };
 

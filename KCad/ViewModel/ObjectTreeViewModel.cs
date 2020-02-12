@@ -41,7 +41,7 @@ namespace KCad.ViewModel
 
             mVMContext.Controller.Observer.SetObjectTreePos = SetTreeViewPos;
 
-            mVMContext.Controller.Observer.FindObjectTreeItem = FindTreeViewItem;
+            mVMContext.Controller.Observer.FindObjectTreeItemIndex = FindTreeViewItemIndex;
         }
 
         private void ObjectTreeView_CheckChanged(CadObjTreeItem item)
@@ -105,7 +105,7 @@ namespace KCad.ViewModel
             }, true);
         }
 
-        private int FindTreeViewItem(uint id)
+        private int FindTreeViewItemIndex(uint id)
         {
             int idx = mCadObjectTreeView.Find((item) =>
             {

@@ -3,7 +3,6 @@ using CadDataTypes;
 using MyCollections;
 using OpenTK;
 using Plotter.Settings;
-using System.Runtime.CompilerServices;
 
 namespace Plotter.Controller
 {

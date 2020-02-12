@@ -317,14 +317,14 @@ namespace KCad.Controls
             }
         }
 
-        public int Find(Func<CadObjTreeItem, bool> comp)
+        public int Find(Func<CadObjTreeItem, bool> match)
         {
             int idx = -1;
             int cnt = 0;
 
             mRoot.ForEach((item) =>
             {
-                if (comp(item))
+                if (match(item))
                 {
                     idx = cnt;
                     return false;

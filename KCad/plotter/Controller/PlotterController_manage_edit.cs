@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 namespace Plotter.Controller
 {
-    // Management Edit
-
     public partial class PlotterController
     {
         private CadOpeFigureSnapShotList mSnapShotList;
