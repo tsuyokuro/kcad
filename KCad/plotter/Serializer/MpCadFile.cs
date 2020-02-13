@@ -26,7 +26,7 @@ namespace Plotter.Serializer
         private static byte[] Sign;
         private static byte[] Version = { 1, 0, 0, 2 };
         private static string JsonSign = "KCAD_JSON";
-        private static string JsonVersion = "1001";
+        private static string JsonVersion = "1002";
 
         static MpCadFile()
         {
@@ -111,7 +111,7 @@ namespace Plotter.Serializer
             js = js.Substring(0, js.Length - 1);
             js = "{" + js + "}";
 
-            byte[] bin = MessagePackSerializer.FromJson(js);
+            byte[] bin = MessagePackSerializer.ConvertFromJson(js);
 
             if (version == "1001")
             {
@@ -161,7 +161,7 @@ namespace Plotter.Serializer
         public static void SaveAsJson(string fname, CadData cd)
         {
             MpCadData_v1002 data = MpUtil_v1002.CreateMpCadData_v1002(cd);
-            string s = MessagePackSerializer.ToJson<MpCadData_v1002>(data);
+            string s = MessagePackSerializer.SerializeToJson(data);
 
             s = s.Trim();
 
