@@ -72,12 +72,15 @@ namespace Plotter.Serializer
         public static byte[] FigToLz4Bin(CadFigure fig, bool withChild = false)
         {
             MpFigure_v1002 mpf = MpFigure_v1002.Create(fig, withChild);
-            return LZ4MessagePackSerializer.Serialize(mpf);
+            var lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
+            return MessagePackSerializer.Serialize(mpf, lz4Options);
         }
 
         public static CadFigure Lz4BinToFig(byte[] bin, CadObjectDB db = null)
         {
-            MpFigure_v1002 mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure_v1002>(bin);
+            var lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
+            MpFigure_v1002 mpfig = MessagePackSerializer.Deserialize<MpFigure_v1002>(bin, lz4Options);
+
             CadFigure fig = mpfig.Restore();
 
             if (db != null)
@@ -90,7 +93,8 @@ namespace Plotter.Serializer
 
         public static void Lz4BinRestoreFig(byte[] bin, CadFigure fig, CadObjectDB db = null)
         {
-            MpFigure_v1002 mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure_v1002>(bin);
+            var lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
+            MpFigure_v1002 mpfig = MessagePackSerializer.Deserialize<MpFigure_v1002>(bin, lz4Options);
             mpfig.RestoreTo(fig);
 
             SetChildren(fig, mpfig.ChildIdList, db);
@@ -103,7 +107,8 @@ namespace Plotter.Serializer
                 return;
             }
 
-            MpFigure_v1002 mpfig = LZ4MessagePackSerializer.Deserialize<MpFigure_v1002>(bin);
+            var lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
+            MpFigure_v1002 mpfig = MessagePackSerializer.Deserialize<MpFigure_v1002>(bin, lz4Options);
 
             CadFigure fig = db.GetFigure(mpfig.ID);
 
