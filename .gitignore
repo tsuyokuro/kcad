@@ -18,3 +18,7 @@ TestResults/
 /CadDataTypes/obj
 /KCad/bin
 /KCad/obj
+/TestApp/bin
+/TestApp/obj
+/GeoLibWrapper/Win32
+/GeoLibWrapper/x64
