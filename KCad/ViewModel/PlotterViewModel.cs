@@ -293,6 +293,10 @@ namespace KCad.ViewModel
                 { "snap_settings", SnapSettings },
                 { "show_editor", ShowEditor },
                 { "export_svg", ExportSVG },
+                { "obj_order_down", ObjOrderDown },
+                { "obj_order_up", ObjOrderUp },
+                { "obj_order_bottom", ObjOrderBottom },
+                { "obj_order_top", ObjOrderTop },
             };
         }
 
@@ -637,6 +641,26 @@ namespace KCad.ViewModel
                     ItConsole.printError(e.Message);
                 }
             }
+        }
+
+        public void ObjOrderDown()
+        {
+            mController.ObjOrderDown();
+        }
+
+        public void ObjOrderUp()
+        {
+            mController.ObjOrderUp();
+        }
+
+        public void ObjOrderBottom()
+        {
+            mController.ObjOrderBottom();
+        }
+
+        public void ObjOrderTop()
+        {
+            mController.ObjOrderTop();
         }
 
         public void AddLayer()

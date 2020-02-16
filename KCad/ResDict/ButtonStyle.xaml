@@ -73,4 +73,30 @@
 
     </ControlTemplate>
 
+    <ControlTemplate x:Key="MyButtonTemplateR" TargetType="{x:Type Button}">
+        <Border
+            x:Name="MyBorder"
+            Background="{StaticResource ButtonColor}"
+            BorderBrush="{StaticResource BaseColor}"
+            BorderThickness="1"
+            CornerRadius="4">
+            <ContentPresenter
+                TextBlock.Foreground="{StaticResource TextColor}"
+                TextBlock.TextAlignment="Center"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+
+        </Border>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="ContentTemplate" Value="{StaticResource MyButtonMouseOverStyle}" />
+                <Setter TargetName="MyBorder" Property="Background" Value="{StaticResource ToggleButtonMouseOverBGColor}" />
+            </Trigger>
+
+        </ControlTemplate.Triggers>
+
+    </ControlTemplate>
+
+
 </ResourceDictionary>
