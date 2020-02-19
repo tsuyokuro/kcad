@@ -812,22 +812,28 @@
                                     Grid.Column="1"
                                     Width="24"
                                     Click="Command_Clicked"
-                                    Content="+"
-                                    FontSize="18"
-                                    FontWeight="ExtraBold"
                                     Tag="add_layer"
-                                    Template="{StaticResource MyButtonTemplateR}" />
+                                    Template="{StaticResource MyButtonTemplateR}">
+                                    <Image
+                                        Width="18"
+                                        Height="18"
+                                        VerticalAlignment="Top"
+                                        Source="{StaticResource addDrawingImage}" />
+                                </Button>
 
                                 <Button
                                     Name="RemoveLayerButton"
                                     Grid.Column="2"
                                     Width="24"
                                     Click="Command_Clicked"
-                                    Content="-"
-                                    FontSize="18"
-                                    FontWeight="ExtraBold"
                                     Tag="remove_layer"
-                                    Template="{StaticResource MyButtonTemplateR}" />
+                                    Template="{StaticResource MyButtonTemplateR}">
+                                    <Image
+                                        Width="18"
+                                        Height="18"
+                                        VerticalAlignment="Top"
+                                        Source="{StaticResource deleteDrawingImage}" />
+                                </Button>
                             </Grid>
                         </Border>
 

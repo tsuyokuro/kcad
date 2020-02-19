@@ -19,7 +19,7 @@
     <SolidColorBrush x:Key="ToggleButtonCheckedBGColor" Color="#FF007ACC" />
     <!--<SolidColorBrush x:Key="ToggleButtonCheckedBGColor" Color="#FF000000" />-->
 
-    <SolidColorBrush x:Key="ToggleButtonMouseOverBGColor" Color="#FF303060" />
+    <SolidColorBrush x:Key="ToggleButtonMouseOverBGColor" Color="CadetBlue" />
     <SolidColorBrush x:Key="ToggleButtonCheckedFGColor" Color="White" />
     <SolidColorBrush x:Key="ToggleButtonMouseOverFGColor" Color="White" />
 
