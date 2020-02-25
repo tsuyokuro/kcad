@@ -10,10 +10,6 @@ namespace KCad.Controls
 {
     public partial class CadConsoleView : FrameworkElement
     {
-        protected int mTopIndex = 0;
-
-        protected bool mIsLoaded = false;
-
         #region Properties
         protected Brush mBackground = Brushes.White;
         public Brush Background
@@ -88,13 +84,17 @@ namespace KCad.Controls
 
         #endregion
 
+        protected int mTopIndex = 0;
+
+        protected bool mIsLoaded = false;
+
         protected ScrollViewer Scroll;
 
         protected RingBuffer<TextLine> mList = new RingBuffer<TextLine>(); 
 
         protected AnsiEsc Esc = new AnsiEsc();
 
-        protected TextAttr DefaultAttr = new TextAttr();
+        protected TextAttr DefaultAttr = default;
 
         protected TextAttr CurrentAttr = default;
 
@@ -596,7 +596,7 @@ namespace KCad.Controls
             line.Parse(s);
         }
 
-        public void Printf(string format, params object[] args)
+        public void PrintF(string format, params object[] args)
         {
             string s = String.Format(format, args);
             Print(s);

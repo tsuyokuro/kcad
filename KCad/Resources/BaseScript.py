@@ -223,6 +223,10 @@ def rotate(id, p0, v, t):
 def ins_point():
     SE.InsPoint()
 
+#[AC] get_str(msg="Input", defStr="")
+def get_str(msg, defStr):
+    SE.GetString(msg, defStr)
+
 #[AC] set_seg_len(len)
 def set_seg_len(len):
     SE.SetSelectedSegLen(len)

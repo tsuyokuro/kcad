@@ -12,6 +12,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using KCad.Controls;
 using KCad.ViewModel;
+using KCad.Dialogs;
 
 namespace KCad
 {
@@ -59,12 +60,31 @@ namespace KCad
 
         private void SetupInteractionConsole()
         {
-            ItConsole.PrintFunc = MyConsole.Print;
-            ItConsole.PrintLnFunc = MyConsole.PrintLn;
-            ItConsole.FormatPrintFunc = MyConsole.Printf;
-            ItConsole.clear = MyConsole.Clear;
+            ItConsole.Print = MyConsole.Print;
+            ItConsole.PrintLn = MyConsole.PrintLn;
+            ItConsole.PrintF = MyConsole.PrintF;
+            ItConsole.Clear = MyConsole.Clear;
+            ItConsole.GetString = TextInput;
         }
 
+        private string TextInput(string msg, string def)
+        {
+            InputStringDialog dlg = new InputStringDialog();
+
+            dlg.Message = msg;
+
+            dlg.InputString = def;
+
+            bool? dlgRet = dlg.ShowDialog();
+
+            if (!dlgRet.Value)
+            {
+                return null;
+            }
+
+            return dlg.InputString;
+        }
+        
         private void SetupDataContext()
         {
             LayerListView.DataContext = ViewModel.LayerListVM.LayerList;

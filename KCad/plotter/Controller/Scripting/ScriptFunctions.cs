@@ -1484,6 +1484,17 @@ namespace Plotter.Controller
             return p;
         }
 
+        public string GetString(string msg, string defStr)
+        {
+            string s = null;
+
+            ThreadUtil.RunOnMainThread(() => {
+                    s = ItConsole.getString(msg, defStr);
+                }, true);
+
+            return s;
+        }
+
         public Vector3d ViewDir()
         {
             return Controller.DC.ViewDir;
