@@ -225,7 +225,7 @@ def ins_point():
 
 #[AC] get_str(msg="Input", defStr="")
 def get_str(msg, defStr):
-    SE.GetString(msg, defStr)
+    return SE.GetString(msg, defStr)
 
 #[AC] set_seg_len(len)
 def set_seg_len(len):

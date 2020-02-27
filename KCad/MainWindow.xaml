@@ -698,14 +698,13 @@
                     <GridSplitter
                         x:Name="viewBottom"
                         Grid.Row="1"
-                        Height="4"
+                        Height="5"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
                         Background="{StaticResource BoarderColor}"
                         BorderThickness="0"
                         PreviewStyle="{StaticResource GridSplitterPreviewStyle}"
-                        ShowsPreview="false" />
-
+                        ShowsPreview="false"/>
 
                     <Grid Grid.Row="2">
                         <Grid.RowDefinitions>
@@ -896,7 +895,7 @@
 
                             <GridSplitter
                                 Grid.Row="1"
-                                Height="6"
+                                Height="4"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Center"
                                 Background="{StaticResource BoarderColor}"
