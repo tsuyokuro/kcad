@@ -698,13 +698,19 @@
                     <GridSplitter
                         x:Name="viewBottom"
                         Grid.Row="1"
-                        Height="5"
+                        Height="6"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
                         Background="{StaticResource BoarderColor}"
                         BorderThickness="0"
                         PreviewStyle="{StaticResource GridSplitterPreviewStyle}"
-                        ShowsPreview="false"/>
+                        ShowsPreview="false" ResizeDirection="Rows"/>
+                    
+                    <!-- Grip for splitter -->
+                    <Image Grid.Row="1"
+                        Height="4"
+                        Source="{StaticResource grip_vDrawingImage}"
+                        IsHitTestVisible="False"/>
 
                     <Grid Grid.Row="2">
                         <Grid.RowDefinitions>
@@ -1002,13 +1008,8 @@
                                 </ScrollViewer>
                             </Grid>
                         </Grid>
-
-
                     </Grid>
-
-
                 </Border>
-
             </Grid>
 
             <!--  Status bar area  -->
