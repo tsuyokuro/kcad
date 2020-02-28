@@ -28,6 +28,10 @@
     <SolidColorBrush x:Key="MsgSelectedBGColor" Color="#FF2B537D" />
     <SolidColorBrush x:Key="MsgTextColor" Color="#FFDDDDDD" />
 
+    <SolidColorBrush x:Key="TextBoxBGColor" Color="#FF101010" />
+    <SolidColorBrush x:Key="TextBoxFGColor" Color="#FFA0A0A0" />
+
+
     <SolidColorBrush x:Key="DialogBaseColor" Color="#FFEBEBEB" />
 
     <SolidColorBrush x:Key="DiagramBackColor" Color="#FF080808" />
