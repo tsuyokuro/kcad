@@ -29,4 +29,7 @@
     <SolidColorBrush x:Key="MsgTextColor" Color="#FFDDDDDD" />
 
     <SolidColorBrush x:Key="DialogBaseColor" Color="#FFEBEBEB" />
+
+    <SolidColorBrush x:Key="DiagramBackColor" Color="#FF080808" />
+
 </ResourceDictionary>
