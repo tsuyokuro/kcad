@@ -9,7 +9,7 @@
     </ResourceDictionary.MergedDictionaries>
 
 
-    <DataTemplate x:Key="ToggleRadioCheckedStyle">
+    <!--<DataTemplate x:Key="ToggleRadioCheckedStyle">
         <Grid Background="{StaticResource ToggleButtonCheckedBGColor}">
             <ContentPresenter Content="{Binding}" TextBlock.TextAlignment="Center" />
         </Grid>
@@ -19,10 +19,10 @@
         <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}">
             <ContentPresenter Content="{Binding}" TextBlock.TextAlignment="Center" />
         </Grid>
-    </DataTemplate>
+    </DataTemplate>-->
 
 
-    <Style
+    <!--<Style
         x:Key="ToggleRadio"
         BasedOn="{StaticResource {x:Type ToggleButton}}"
         TargetType="{x:Type RadioButton}">
@@ -46,12 +46,12 @@
                 <Setter Property="ContentTemplate" Value="{StaticResource ToggleRadioCheckedStyle}" />
             </Trigger>
         </Style.Triggers>
-    </Style>
+    </Style>-->
 
 
     <!--  Custom Toggle button  -->
 
-    <DataTemplate x:Key="CustomToggleCheckedStyle">
+    <!--<DataTemplate x:Key="CustomToggleCheckedStyle">
         <Grid Background="{StaticResource ToggleButtonCheckedBGColor}">
             <ContentPresenter Content="{Binding}" />
         </Grid>
@@ -61,10 +61,10 @@
         <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}">
             <ContentPresenter Content="{Binding}" />
         </Grid>
-    </DataTemplate>
+    </DataTemplate>-->
 
 
-    <Style
+    <!--<Style
         x:Key="CustomRadioButton"
         BasedOn="{StaticResource {x:Type ToggleButton}}"
         TargetType="{x:Type RadioButton}">
@@ -84,9 +84,9 @@
                 <Setter Property="ContentTemplate" Value="{StaticResource CustomToggleCheckedStyle}" />
             </Trigger>
         </Style.Triggers>
-    </Style>
+    </Style>-->
 
-    <Style
+    <!--<Style
         x:Key="CustomToggleButton"
         BasedOn="{StaticResource {x:Type ToggleButton}}"
         TargetType="{x:Type ToggleButton}">
@@ -106,12 +106,12 @@
                 <Setter Property="ContentTemplate" Value="{StaticResource CustomToggleCheckedStyle}" />
             </Trigger>
         </Style.Triggers>
-    </Style>
+    </Style>-->
 
 
     <!--  Custom toggle button 2  -->
 
-    <DataTemplate x:Key="CustomToggleCheckedStyle2">
+    <!--<DataTemplate x:Key="CustomToggleCheckedStyle2">
         <Grid Background="#FF5064A0">
             <ContentPresenter Content="{Binding}" />
         </Grid>
@@ -121,9 +121,9 @@
         <Grid Background="{StaticResource ToggleButtonMouseOverBGColor}">
             <ContentPresenter Content="{Binding}" />
         </Grid>
-    </DataTemplate>
+    </DataTemplate>-->
 
-    <Style
+    <!--<Style
         x:Key="CustomToggleButton2"
         BasedOn="{StaticResource {x:Type ToggleButton}}"
         TargetType="{x:Type ToggleButton}">
@@ -144,7 +144,7 @@
                 <Setter Property="ContentTemplate" Value="{StaticResource CustomToggleCheckedStyle2}" />
             </Trigger>
         </Style.Triggers>
-    </Style>
+    </Style>-->
 
 
 
@@ -184,8 +184,7 @@
         </Setter>
     </Style>
 
-
-    <Style
+    <!--<Style
         x:Key="ColorToggleButton"
         BasedOn="{StaticResource {x:Type ToggleButton}}"
         TargetType="{x:Type ToggleButton}">
@@ -217,7 +216,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
     <Style
         x:Key="ColorRadioButton"
@@ -258,7 +257,7 @@
 
     <!--  Toggle button template  -->
 
-    <DataTemplate x:Key="MyToggleButtonCheckedStyle">
+    <!--<DataTemplate x:Key="MyToggleButtonCheckedStyle">
         <Grid Background="{StaticResource ToggleButtonCheckedBGColor}">
             <ContentPresenter
                 Content="{Binding}"
@@ -297,6 +296,6 @@
                 <Setter TargetName="MyBorder" Property="Background" Value="{StaticResource ToggleButtonCheckedBGColor}" />
             </Trigger>
         </ControlTemplate.Triggers>
-    </ControlTemplate>
+    </ControlTemplate>-->
 
 </ResourceDictionary>

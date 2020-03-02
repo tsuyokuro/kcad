@@ -3,4 +3,9 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:Double x:Key="MainSplitterSize">6</system:Double>
     <system:Double x:Key="SplitterSize">4</system:Double>
+    <system:Double x:Key="ViewModeButtonWidth">52</system:Double>
+    <system:Double x:Key="ViewModeButtonHeight">22</system:Double>
+
+    <system:Double x:Key="LayoutListIconSize">24</system:Double>
+
 </ResourceDictionary>

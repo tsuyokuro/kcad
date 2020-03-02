@@ -6,9 +6,8 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Colors.xaml" />
         <ResourceDictionary Source="Images.xaml" />
+        <ResourceDictionary Source="Dimen.xaml" />
     </ResourceDictionary.MergedDictionaries>
-
-    <system:Double x:Key="LayoutListIconSize">20.0</system:Double>
 
     <Style x:Key="VisibleCheckBox" TargetType="{x:Type CheckBox}">
         <Setter Property="Template">
@@ -20,8 +19,6 @@
                                 <Image
                                     Name="TickImage"
                                     Grid.Column="0"
-                                    Width="{StaticResource LayoutListIconSize}"
-                                    Height="{StaticResource LayoutListIconSize}"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Source="{StaticResource baseline_visible_off_DrawingImage}" />
@@ -55,8 +52,6 @@
                                 <Image
                                     Name="TickImage"
                                     Grid.Column="0"
-                                    Width="{StaticResource LayoutListIconSize}"
-                                    Height="{StaticResource LayoutListIconSize}"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Source="{StaticResource baseline_lock_open_DrawingImage}" />
