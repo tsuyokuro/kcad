@@ -7,5 +7,6 @@
     <system:Double x:Key="ViewModeButtonHeight">22</system:Double>
 
     <system:Double x:Key="LayoutListIconSize">24</system:Double>
+    <Thickness x:Key="LayoutListIconPadding">2,3,2,2</Thickness>
 
 </ResourceDictionary>

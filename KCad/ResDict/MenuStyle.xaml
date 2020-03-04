@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:KCad">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style x:Key="MLB_Separator" TargetType="{x:Type Separator}">
         <Setter Property="Margin" Value="0,3,0,3" />

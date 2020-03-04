@@ -109,7 +109,7 @@
 
             <Style BasedOn="{StaticResource MLB_MenuItem}" TargetType="MenuItem">
                 <Setter Property="Background" Value="{StaticResource MenuColor}" />
-                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="BorderBrush" Value="{StaticResource MenuColor}" />
                 <Setter Property="Padding" Value="0,0,0,0" />
             </Style>

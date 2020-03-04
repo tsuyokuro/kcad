@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Colors.xaml" />
@@ -15,7 +14,7 @@
                 <ControlTemplate TargetType="CheckBox">
                     <BulletDecorator>
                         <BulletDecorator.Bullet>
-                            <Border Padding="4">
+                            <Border Padding="{StaticResource LayoutListIconPadding}">
                                 <Image
                                     Name="TickImage"
                                     Grid.Column="0"
@@ -48,7 +47,7 @@
                     <BulletDecorator>
                         <BulletDecorator.Bullet>
                             <!--  off image  -->
-                            <Border Padding="4">
+                            <Border Padding="{StaticResource LayoutListIconPadding}">
                                 <Image
                                     Name="TickImage"
                                     Grid.Column="0"
