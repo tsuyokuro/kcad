@@ -64,10 +64,10 @@ namespace KCad
             ItConsole.PrintLn = MyConsole.PrintLn;
             ItConsole.PrintF = MyConsole.PrintF;
             ItConsole.Clear = MyConsole.Clear;
-            ItConsole.GetString = TextInput;
+            ItConsole.GetString = PromptTextInput;
         }
 
-        private string TextInput(string msg, string def)
+        private string PromptTextInput(string msg, string def)
         {
             InputStringDialog dlg = new InputStringDialog();
 
@@ -284,11 +284,12 @@ namespace KCad
                 
                 case WinAPI.WM_MOVE:
                     {
-                        MainWindow wnd = (MainWindow)Application.Current.MainWindow;
-                        if (wnd.viewContainer.Visibility != Visibility.Visible)
-                        {
-                            wnd.viewContainer.Visibility = Visibility.Visible;
-                        }
+                        // キャプションの上端でResizeすると画面崩れするのでコメントアウト
+                        //MainWindow wnd = (MainWindow)Application.Current.MainWindow;
+                        //if (wnd.viewContainer.Visibility != Visibility.Visible)
+                        //{
+                        //    wnd.viewContainer.Visibility = Visibility.Visible;
+                        //}
                     }
                     break;
 
