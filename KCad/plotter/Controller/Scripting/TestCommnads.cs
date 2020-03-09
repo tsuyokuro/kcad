@@ -508,33 +508,6 @@ namespace Plotter.Controller
             Controller.UpdateObjectTree(true);
         }
 
-        private void GetSegsTest()
-        {
-            CadFigure fig = Controller.CurrentFigure;
-
-            if (fig == null) return;
-
-            VertexList vl = new VertexList(20);
-
-            PolyLineExpander.ForEachSegs<Object>(fig.PointList, fig.IsLoop, 4, local, null);
-
-
-            CadFigurePolyLines tmpFig = (CadFigurePolyLines)Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
-
-            tmpFig.AddPoints(vl);
-
-            Controller.CurrentLayer.AddFigure(tmpFig);
-
-            Controller.UpdateObjectTree(true);
-
-
-            void local(CadVertex v1, CadVertex v2, Object p)
-            {
-                vl.Add(v1);
-            }
-        }
-
-
         private void Test()
         {
             GetPointsTest();
