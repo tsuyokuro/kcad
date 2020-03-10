@@ -16,6 +16,21 @@ namespace KCad.ViewModel
         public ViewModelContext mContext;
 
         [UserSettingData]
+        public bool ContinueCreateFigure
+        {
+            set
+            {
+                if (SettingsHolder.Settings.ContinueCreateFigure != value)
+                {
+                    SettingsHolder.Settings.ContinueCreateFigure = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SnapToGrid)));
+                }
+            }
+
+            get => SettingsHolder.Settings.ContinueCreateFigure;
+        }
+
+        [UserSettingData]
         public bool SnapToGrid
         {
             set

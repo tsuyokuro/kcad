@@ -14,6 +14,8 @@ namespace Plotter.Settings
 
     public class PlotterSettings
     {
+        public bool ContinueCreateFigure = true;
+
         public bool SnapToPoint = true;
 
         public bool SnapToSegment = true;
@@ -75,6 +77,8 @@ namespace Plotter.Settings
             JObject root = new JObject();
 
             JObject jo;
+
+            root.Add("ContinueCreateFigure", ContinueCreateFigure);
 
             jo = new JObject();
             jo.Add("enable", SnapToPoint);
@@ -147,6 +151,8 @@ namespace Plotter.Settings
             JObject root = JObject.Parse(js);
 
             JObject jo;
+
+            ContinueCreateFigure = root.GetBool("ContinueCreateFigure", ContinueCreateFigure);
 
             jo = (JObject)root["PointSnap"];
             SnapToPoint = jo.GetBool("enable", SnapToPoint);

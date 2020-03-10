@@ -132,6 +132,9 @@
   <data name="menu_change_fig_name" xml:space="preserve">
     <value>図形の名前を変更</value>
   </data>
+  <data name="menu_continue_create_figure" xml:space="preserve">
+    <value>図形の作成を継続する</value>
+  </data>
   <data name="menu_copy" xml:space="preserve">
     <value>コピー</value>
   </data>
@@ -155,6 +158,9 @@
   </data>
   <data name="menu_fill_mesh" xml:space="preserve">
     <value>Meshを塗りつぶす</value>
+  </data>
+  <data name="menu_grid_settings" xml:space="preserve">
+    <value>グリッド設定...</value>
   </data>
   <data name="menu_insert_point" xml:space="preserve">
     <value>点の挿入</value>
@@ -191,6 +197,30 @@
   </data>
   <data name="menu_snap" xml:space="preserve">
     <value>スナップ</value>
+  </data>
+  <data name="menu_snap_settings" xml:space="preserve">
+    <value>スナップ設定...</value>
+  </data>
+  <data name="menu_snap_to_grid" xml:space="preserve">
+    <value>グリッドにスナップ</value>
+  </data>
+  <data name="menu_snap_to_last_down" xml:space="preserve">
+    <value>ラストダウンポイントにスナップ</value>
+  </data>
+  <data name="menu_snap_to_line" xml:space="preserve">
+    <value>延長線にスナップ</value>
+  </data>
+  <data name="menu_snap_to_point" xml:space="preserve">
+    <value>ポイントにスナップ</value>
+  </data>
+  <data name="menu_snap_to_seg" xml:space="preserve">
+    <value>線分にスナップ</value>
+  </data>
+  <data name="menu_snap_to_self" xml:space="preserve">
+    <value>選択されたポイントにスナップ</value>
+  </data>
+  <data name="menu_snap_to_zero" xml:space="preserve">
+    <value>原点にスナップ</value>
   </data>
   <data name="menu_sttings" xml:space="preserve">
     <value>設定</value>

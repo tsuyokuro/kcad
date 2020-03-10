@@ -364,41 +364,46 @@
                     <MenuItem x:Name="SettingsMenu" Header="{x:Static properties:Resources.menu_sttings}">
                         <MenuItem
                             Click="Command_Clicked"
-                            Header="Grid Settings..."
+                            Header="{x:Static properties:Resources.menu_grid_settings}"
                             Tag="grid_settings" />
                         <MenuItem
                             Click="Command_Clicked"
-                            Header="Snap Settings..."
+                            Header="{x:Static properties:Resources.menu_snap_settings}"
                             Tag="snap_settings" />
+                        <MenuItem
+                            Header="{x:Static properties:Resources.menu_continue_create_figure}"
+                            IsCheckable="True"
+                            IsChecked="{Binding ContinueCreateFigure}" />
+
                     </MenuItem>
 
                     <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
                         <MenuItem
-                            Header="Snap to grid"
+                            Header="{x:Static properties:Resources.menu_snap_to_grid}"
                             IsCheckable="True"
                             IsChecked="{Binding SnapToGrid}" />
                         <MenuItem
-                            Header="Snap to point"
+                            Header="{x:Static properties:Resources.menu_snap_to_point}"
                             IsCheckable="True"
                             IsChecked="{Binding SnapToPoint}" />
                         <MenuItem
-                            Header="Snap to segment"
+                            Header="{x:Static properties:Resources.menu_snap_to_seg}"
                             IsCheckable="True"
                             IsChecked="{Binding SnapToSegment}" />
                         <MenuItem
-                            Header="Snap to Line"
+                            Header="{x:Static properties:Resources.menu_snap_to_line}"
                             IsCheckable="True"
                             IsChecked="{Binding SnapToLine}" />
                         <MenuItem
-                            Header="Snap to zero"
+                            Header="{x:Static properties:Resources.menu_snap_to_zero}"
                             IsCheckable="True"
                             IsChecked="{Binding SnapToZero}" />
                         <MenuItem
-                            Header="Snap to last down"
+                            Header="{x:Static properties:Resources.menu_snap_to_last_down}"
                             IsCheckable="True"
                             IsChecked="{Binding SnapToLastDownPoint}" />
                         <MenuItem
-                            Header="Snap to self"
+                            Header="{x:Static properties:Resources.menu_snap_to_self}"
                             IsCheckable="True"
                             IsChecked="{Binding SnapToSelfPoint}" />
                     </MenuItem>

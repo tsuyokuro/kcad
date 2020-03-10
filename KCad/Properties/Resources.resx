@@ -142,6 +142,9 @@
   <data name="menu_change_fig_name" xml:space="preserve">
     <value>Change Figure Name ...</value>
   </data>
+  <data name="menu_continue_create_figure" xml:space="preserve">
+    <value>Continue create figure</value>
+  </data>
   <data name="menu_copy" xml:space="preserve">
     <value>Copy</value>
   </data>
@@ -165,6 +168,9 @@
   </data>
   <data name="menu_fill_mesh" xml:space="preserve">
     <value>Fill mesh</value>
+  </data>
+  <data name="menu_grid_settings" xml:space="preserve">
+    <value>Grid settings...</value>
   </data>
   <data name="menu_insert_point" xml:space="preserve">
     <value>Insert point</value>
@@ -201,6 +207,30 @@
   </data>
   <data name="menu_snap" xml:space="preserve">
     <value>Snap</value>
+  </data>
+  <data name="menu_snap_settings" xml:space="preserve">
+    <value>Snap settings...</value>
+  </data>
+  <data name="menu_snap_to_grid" xml:space="preserve">
+    <value>Snap to grid</value>
+  </data>
+  <data name="menu_snap_to_last_down" xml:space="preserve">
+    <value>Snap to last down</value>
+  </data>
+  <data name="menu_snap_to_line" xml:space="preserve">
+    <value>Snap to line</value>
+  </data>
+  <data name="menu_snap_to_point" xml:space="preserve">
+    <value>Snap to point</value>
+  </data>
+  <data name="menu_snap_to_seg" xml:space="preserve">
+    <value>Snap to segment</value>
+  </data>
+  <data name="menu_snap_to_self" xml:space="preserve">
+    <value>Snap to self</value>
+  </data>
+  <data name="menu_snap_to_zero" xml:space="preserve">
+    <value>Snap to zero</value>
   </data>
   <data name="menu_sttings" xml:space="preserve">
     <value>Settings</value>

@@ -411,7 +411,7 @@ namespace Plotter
             return p0;
         }
 
-        private static CadVertex DrawBezier3(
+        public static CadVertex DrawBezier3(
             CadVertex p0, CadVertex p1, CadVertex p2, int s, DrawContext dc, DrawPen pen)
         {
             double t = 0;
@@ -441,7 +441,7 @@ namespace Plotter
             return t1;
         }
 
-        private static CadVertex DrawBezier4(
+        public static CadVertex DrawBezier4(
             CadVertex p0, CadVertex p1, CadVertex p2, CadVertex p3, int s, DrawContext dc, DrawPen pen)
         {
             double t = 0;
