@@ -305,7 +305,6 @@ namespace Plotter
 
         public abstract void CalcProjectionMatrix();
         public abstract void Dispose();
-        public abstract void SetupDrawing();
         
         public abstract DrawContext Clone();
         public abstract DrawPen GetPen(int idx);

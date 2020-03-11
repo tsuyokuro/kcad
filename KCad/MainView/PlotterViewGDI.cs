@@ -39,7 +39,6 @@ namespace Plotter
         public PlotterViewGDI()
         {
             mDrawContext = new DrawContextGDI(this);
-            mDrawContext.SetupDrawing();
             mDrawContext.SetupTools(DrawTools.ToolsType.DARK);
 
             SetupContextMenu();

@@ -101,11 +101,9 @@ namespace Plotter
             GL.Enable(EnableCap.DepthTest);
 
             mDrawContextOrtho = new DrawContextGLOrtho(this);
-            mDrawContextOrtho.SetupDrawing();
             mDrawContextOrtho.SetupTools(DrawTools.ToolsType.DARK);
 
             mDrawContextPers = new DrawContextGLPers(this);
-            mDrawContextPers.SetupDrawing();
             mDrawContextPers.SetupTools(DrawTools.ToolsType.DARK);
 
 

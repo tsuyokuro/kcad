@@ -74,6 +74,8 @@ namespace Plotter
             MaterialDiffuse = new Color4(0.7f, 0.7f, 0.7f, 1.0f);
             MaterialSpecular = new Color4(0.0f, 0.0f, 0.0f, 1.0f);
             MaterialShininess = new Color4(0.1f, 0.1f, 0.1f, 1.0f);
+
+            SetupDrawing();
         }
 
         public void InitCamera(ViewingAngleType type)
@@ -165,7 +167,7 @@ namespace Plotter
             return Tools.Brush(idx);
         }
 
-        public override void SetupDrawing()
+        protected void SetupDrawing()
         {
             mDrawing = new DrawingGL(this);
         }
