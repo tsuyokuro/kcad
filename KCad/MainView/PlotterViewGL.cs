@@ -109,8 +109,8 @@ namespace Plotter
 
             mDrawContext = mDrawContextOrtho;
 
-            mDrawContextOrtho.ReflectToViewAction = ReflectToFront;
-            mDrawContextPers.ReflectToViewAction = ReflectToFront;
+            mDrawContextOrtho.PushToViewAction = PushToFront;
+            mDrawContextPers.PushToViewAction = PushToFront;
 
             SwapBuffers();
         }
@@ -285,7 +285,7 @@ namespace Plotter
             }
         }
 
-        public void ReflectToFront(DrawContext dc)
+        public void PushToFront(DrawContext dc)
         {
             if (dc == mDrawContext)
             {

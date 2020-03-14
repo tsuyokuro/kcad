@@ -10,7 +10,7 @@ namespace Plotter.Controller
     {
         public void ReflectToView()
         {
-            DC.ReflectToView();
+            DC.PushToView();
         }
 
         public void Redraw()
@@ -24,7 +24,7 @@ namespace Plotter.Controller
             Clear(dc);
             DrawAll(dc);
             dc.EndDraw();
-            dc.ReflectToView();
+            dc.PushToView();
         }
 
         //public void RedrawOnMainThread()
