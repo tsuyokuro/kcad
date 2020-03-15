@@ -8,8 +8,10 @@
     <SolidColorBrush x:Key="BoarderColor" Color="#FF3F3F46" />
     <SolidColorBrush x:Key="TextColor" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="BGColor" Color="#FF252526" />
-    <SolidColorBrush x:Key="MenuColor" Color="#FF3F3F46" />
-    <SolidColorBrush x:Key="SubMenuColor" Color="#FF1E1E1E" />
+    <!--<SolidColorBrush x:Key="SubMenuColor" Color="#FF1E1E1E" />-->
+    <SolidColorBrush x:Key="MenuBGColor" Color="#FF3F3F46" />
+    <SolidColorBrush x:Key="MenuTextColor" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="MenuSepColor" Color="#FF909090" />
 
     <!--<SolidColorBrush x:Key="ListBoxSelColor" Color="#FF228b22" />-->
     <SolidColorBrush x:Key="ListBoxSelColor" Color="#FF007ACC" />

@@ -103,21 +103,38 @@
 
 
             <Style TargetType="Menu">
-                <Setter Property="Foreground" Value="{StaticResource TextColor}" />
-                <Setter Property="Background" Value="{StaticResource MenuColor}" />
+                <Setter Property="Foreground" Value="{StaticResource MenuTextColor}" />
+                <Setter Property="Background" Value="{StaticResource MenuBGColor}" />
             </Style>
 
             <Style TargetType="MenuItem" BasedOn="{StaticResource MLB_MenuItem}">
-                <Setter Property="Background" Value="{StaticResource MenuColor}" />
+                <Setter Property="Foreground" Value="{StaticResource MenuTextColor}" />
+                <Setter Property="Background" Value="{StaticResource MenuBGColor}" />
                 <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="BorderBrush" Value="{StaticResource MenuColor}" />
+                <Setter Property="BorderBrush" Value="{StaticResource MenuBGColor}" />
                 <Setter Property="Padding" Value="0,0,0,0" />
             </Style>
-
+            
             <Style
                 x:Key="{x:Static MenuItem.SeparatorStyleKey}"
                 TargetType="Separator">
-                <Setter Property="Margin" Value="-30,3,0,3" />
+                <Setter Property="Margin" Value="0,3,0,3" />
+                <Setter Property="Padding" Value="0,0,0,0" />
+                <Setter Property="Height" Value="Auto" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Separator}">
+                            <Grid>
+                                <!--<Rectangle Height="1"
+                                           Stroke="{TemplateBinding Foreground}"
+                                           Fill="{TemplateBinding Foreground}"/>-->
+                                <Rectangle Height="1"
+                                           Stroke="{StaticResource MenuSepColor}"
+                                           Fill="{StaticResource MenuSepColor}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
 
             <Style x:Key="GridSplitterPreviewStyle">
@@ -256,7 +273,7 @@
             </Grid.RowDefinitions>
 
             <!--  Menu area  -->
-            <Border Grid.Row="0" Background="{StaticResource MenuColor}">
+            <Border Grid.Row="0" Background="{StaticResource MenuTextColor}">
                 <Menu Margin="4,0,0,0">
                     <MenuItem Header="{x:Static properties:Resources.menu_file}">
                         <MenuItem
@@ -416,7 +433,8 @@
                     <MenuItem x:Name="DrawOptionMenu" Header="{x:Static properties:Resources.menu_draw}">
                         <MenuItem
                             x:Name="DrawModeMenu"
-                            Header="{x:Static properties:Resources.menu_draw_mode}">
+                            Header="{x:Static properties:Resources.menu_draw_mode}"
+                            IsCheckable="False">
                             <MenuItem
                                 Header="Light"
                                 IsCheckable="True"
