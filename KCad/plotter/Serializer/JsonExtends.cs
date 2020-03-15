@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using System;
 
 namespace Plotter.Serializer
 {
@@ -26,6 +27,27 @@ namespace Plotter.Serializer
             }
 
             return (bool)jt;
+        }
+
+        public static T GetEnum<T>(this JObject jo, string key, T defaultValue)
+        {
+            JToken jt = jo[key];
+
+            if (jt == null)
+            {
+                return defaultValue;
+            }
+
+            int num = (int)jt;
+
+            try
+            {
+                return (T)Enum.ToObject(typeof(T), num);
+            }
+            catch (ArgumentException e)
+            {
+                return defaultValue;
+            }
         }
     }
 }

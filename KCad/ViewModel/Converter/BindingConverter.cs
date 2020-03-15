@@ -7,4 +7,5 @@ namespace KCad.ViewModel
     public class FigureTypeConverter : EnumBoolConverter<CadFigure.Types> { }
     public class MeasureModeConverter : EnumBoolConverter<MeasureModes> { }
     public class ViewModeConverter : EnumBoolConverter<ViewModes> { }
+    public class DrawModeConverter : EnumBoolConverter<DrawTools.DrawMode> { }
 }

@@ -29,6 +29,7 @@ namespace KCad
             SetupInteractionConsole();
 
             ViewModel = new PlotterViewModel(this);
+            ViewModel.Open();
 
             viewContainer.Focusable = true;
 
@@ -100,6 +101,8 @@ namespace KCad
             SnapMenu.DataContext = ViewModel.Settings;
 
             SettingsMenu.DataContext = ViewModel.Settings;
+
+            DrawModeMenu.DataContext = ViewModel.Settings;
 
             DrawOptionMenu.DataContext = ViewModel.Settings;
 
@@ -185,9 +188,6 @@ namespace KCad
         {
             var hsrc = HwndSource.FromVisual(this) as HwndSource;
             hsrc.AddHook(WndProc);
-
-
-            ViewModel.Open();
 
             System.Drawing.Color c = ViewModel.DC.Tools.BrushColor(DrawTools.BRUSH_BACKGROUND);
             viewRoot.Background = new SolidColorBrush(Color.FromRgb(c.R, c.G, c.B));

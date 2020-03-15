@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using OpenTK;
 using Plotter.Settings;
+using Plotter;
 
 namespace KCad.ViewModel
 {
@@ -268,6 +269,21 @@ namespace KCad.ViewModel
             get => SettingsHolder.Settings.KeyMoveUnit;
         }
 
+        [UserSettingData]
+        public DrawTools.DrawMode DrawMode
+        {
+            set
+            {
+                SettingsHolder.Settings.DrawMode = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawMode)));
+
+                UpdateDrawMode(value);
+                Redraw();
+            }
+
+            get => SettingsHolder.Settings.DrawMode;
+        }
+
         public SettingsVeiwModel(ViewModelContext context)
         {
             mContext = context;
@@ -276,6 +292,11 @@ namespace KCad.ViewModel
         private void Redraw()
         {
             mContext.Controller.Redraw();
+        }
+
+        private void UpdateDrawMode(DrawTools.DrawMode mode)
+        {
+            mContext.DrawModeUpdated(mode);
         }
 
         public void Load()

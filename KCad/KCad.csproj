@@ -59,7 +59,8 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>KCad.App</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -242,6 +243,8 @@
     <Compile Include="plotter\DrawContext\DrawTools\DrawToolUtil.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\DrawBrush.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\DrawPen.cs" />
+    <Compile Include="plotter\DrawContext\DrawTools\ColorSet.cs" />
+    <Compile Include="plotter\DrawContext\DrawTools\LightColors.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\PrintColors.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\DarkColors.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGLOrtho.cs" />

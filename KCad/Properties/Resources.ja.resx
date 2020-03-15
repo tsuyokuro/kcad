@@ -147,6 +147,9 @@
   <data name="menu_draw_mesh_outline" xml:space="preserve">
     <value>Meshのアウトラインを描画</value>
   </data>
+  <data name="menu_draw_mode" xml:space="preserve">
+    <value>描画モード</value>
+  </data>
   <data name="menu_edit" xml:space="preserve">
     <value>編集</value>
   </data>

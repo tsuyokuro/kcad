@@ -33,7 +33,7 @@ namespace Plotter.Controller
             else
             {
                 DrawContextPrinter dc = new DrawContextPrinter(pc.DC, printerGraphics, pageSize, deviceSize);
-                dc.SetupTools(DrawTools.ToolsType.PRINTER, PenWidth);
+                dc.SetupTools(DrawTools.DrawMode.PRINTER, PenWidth);
 
                 pc.DrawFiguresRaw(dc);
             }
@@ -47,7 +47,7 @@ namespace Plotter.Controller
             }
 
             DrawContext dc = pc.DC.CreatePrinterContext(pageSize, deviceSize);
-            dc.SetupTools(DrawTools.ToolsType.PRINTER);
+            dc.SetupTools(DrawTools.DrawMode.PRINTER);
 
             // Bitmapを印刷すると大きさが小さくされてしまうので、補正
             dc.UnitPerMilli *= 0.96;

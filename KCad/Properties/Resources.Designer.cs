@@ -179,6 +179,15 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Draw mode に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_draw_mode {
+            get {
+                return ResourceManager.GetString("menu_draw_mode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Edit に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_edit {

@@ -39,7 +39,7 @@ namespace Plotter
         public PlotterViewGDI()
         {
             mDrawContext = new DrawContextGDI(this);
-            mDrawContext.SetupTools(DrawTools.ToolsType.DARK);
+            mDrawContext.SetupTools(DrawTools.DrawMode.DARK);
 
             SetupContextMenu();
 
@@ -318,6 +318,14 @@ namespace Plotter
                 case PlotterObserver.MouseCursorType.HAND:
                     base.Cursor = Cursors.Hand;
                     break;
+            }
+        }
+
+        public void DrawModeUpdated(DrawTools.DrawMode mode)
+        {
+            if (mDrawContext != null)
+            {
+                mDrawContext.SetupTools(mode);
             }
         }
 

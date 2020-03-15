@@ -11,7 +11,6 @@ namespace Plotter
     {
         public const int PEN_DEFAULT = 1;
         public const int PEN_DEFAULT_FIGURE = 2;
-
         public const int PEN_SELECT_POINT = 3;
         public const int PEN_CURSOR = 4;
         public const int PEN_CURSOR2 = 5;
@@ -59,12 +58,12 @@ namespace Plotter
         public const int FONT_SIZE_DEFAULT = 11;
         public const int FONT_SIZE_SMALL = 11;
 
-        public enum ToolsType
+        public enum DrawMode
         {
-            DARK,
-            PRINTER,
+            LIGHT = 1,
+            DARK = 2,
+            PRINTER = 100,
         }
-
 
         public Color[] PenColorTbl;
         public Color[] BrushColorTbl;
@@ -80,24 +79,30 @@ namespace Plotter
             FontTbl = new Font[FONT_TBL_SIZE];
         }
 
-        public void Setup(ToolsType t, int penW = 0)
+        public void Setup(DrawMode t, int penW = 0)
         {
-            if (t == ToolsType.DARK)
+            Dispose();
+
+            if (t == DrawMode.DARK)
             {
-                SetupDarkSet(penW);
+                SetupScrrenSet(DarkColors.Instance, penW);
             }
-            else if (t == ToolsType.PRINTER)
+            else if (t == DrawMode.LIGHT)
+            {
+                SetupScrrenSet(LightColors.Instance, penW);
+            }
+            else if (t == DrawMode.PRINTER)
             {
                 SetupPrinterSet(penW);
             }
         }
 
-        private void SetupDarkSet(int penW)
+        private void SetupScrrenSet(ColorSet colorSet, int penW)
         {
             AllocGDITbl();
 
-            PenColorTbl = DarkColors.PenColorTbl;
-            BrushColorTbl = DarkColors.BrushColorTbl;
+            PenColorTbl = colorSet.PenColorTbl;
+            BrushColorTbl = colorSet.BrushColorTbl;
 
             for (int i=0; i<PEN_TBL_SIZE; i++)
             {
@@ -123,8 +128,10 @@ namespace Plotter
         {
             AllocGDITbl();
 
-            PenColorTbl = PrintColors.PenColorTbl;
-            BrushColorTbl = PrintColors.BrushColorTbl;
+            ColorSet colorSet = PrintColors.Instance;
+
+            PenColorTbl = colorSet.PenColorTbl;
+            BrushColorTbl = colorSet.BrushColorTbl;
 
             for (int i = 0; i < PEN_TBL_SIZE; i++)
             {

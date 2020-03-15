@@ -93,7 +93,7 @@
             <vm:FigureTypeConverter x:Key="FigTypeConv" />
             <vm:ViewModeConverter x:Key="ViewModeConv" />
             <vm:MeasureModeConverter x:Key="MeasureModeConv" />
-
+            <vm:DrawModeConverter x:Key="DrawModeConv" />
 
             <!--<DataTemplate x:Key="AutoCompleteBoxItemTemplate">
                 <StackPanel Orientation="Horizontal">
@@ -107,11 +107,17 @@
                 <Setter Property="Background" Value="{StaticResource MenuColor}" />
             </Style>
 
-            <Style BasedOn="{StaticResource MLB_MenuItem}" TargetType="MenuItem">
+            <Style TargetType="MenuItem" BasedOn="{StaticResource MLB_MenuItem}">
                 <Setter Property="Background" Value="{StaticResource MenuColor}" />
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="BorderBrush" Value="{StaticResource MenuColor}" />
                 <Setter Property="Padding" Value="0,0,0,0" />
+            </Style>
+
+            <Style
+                x:Key="{x:Static MenuItem.SeparatorStyleKey}"
+                TargetType="Separator">
+                <Setter Property="Margin" Value="-30,3,0,3" />
             </Style>
 
             <Style x:Key="GridSplitterPreviewStyle">
@@ -408,6 +414,23 @@
                             IsChecked="{Binding SnapToSelfPoint}" />
                     </MenuItem>
                     <MenuItem x:Name="DrawOptionMenu" Header="{x:Static properties:Resources.menu_draw}">
+                        <MenuItem
+                            x:Name="DrawModeMenu"
+                            Header="{x:Static properties:Resources.menu_draw_mode}">
+                            <MenuItem
+                                Header="Light"
+                                IsCheckable="True"
+                                IsChecked="{Binding DrawMode, ConverterParameter=LIGHT, Converter={StaticResource DrawModeConv}}"
+                            />
+                            <MenuItem
+                                Header="Drak"
+                                IsCheckable="True"
+                                IsChecked="{Binding DrawMode, ConverterParameter=DARK, Converter={StaticResource DrawModeConv}}"
+                            />
+                        </MenuItem>
+
+                        <Separator />
+
                         <MenuItem
                             Header="{x:Static properties:Resources.menu_draw_mesh_outline}"
                             IsCheckable="True"

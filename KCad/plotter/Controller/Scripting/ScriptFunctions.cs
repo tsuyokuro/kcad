@@ -882,7 +882,7 @@ namespace Plotter.Controller
 
             tdc.SetViewOrg(new Vector3d(w / 2, h / 2, 0));
 
-            tdc.SetupTools(DrawTools.ToolsType.DARK);
+            tdc.SetupTools(DrawTools.DrawMode.DARK);
 
             Pen pen = new Pen(Color.FromArgb((int)argb), lineW);
 
@@ -1595,7 +1595,7 @@ namespace Plotter.Controller
             CadSize2D pageSize = new CadSize2D(210, 297);
 
             DrawContext dc = Controller.DC.CreatePrinterContext(pageSize, deviceSize);
-            dc.SetupTools(DrawTools.ToolsType.PRINTER);
+            dc.SetupTools(DrawTools.DrawMode.PRINTER);
 
             FrameBufferW fb = new FrameBufferW();
             fb.Create((int)deviceSize.Width, (int)deviceSize.Height);

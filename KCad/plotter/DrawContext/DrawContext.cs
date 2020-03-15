@@ -123,7 +123,7 @@ namespace Plotter
             mViewOrg = org;
         }
 
-        public void SetupTools(DrawTools.ToolsType type, int penW=0)
+        public void SetupTools(DrawTools.DrawMode type, int penW=0)
         {
             Tools.Setup(type, penW);
         }

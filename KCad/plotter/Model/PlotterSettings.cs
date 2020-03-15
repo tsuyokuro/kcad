@@ -43,13 +43,15 @@ namespace Plotter.Settings
         public bool SnapToSelfPoint = true;
 
         #region Draw settings
+        public DrawTools.DrawMode DrawMode = DrawTools.DrawMode.DARK;
+
         public bool DrawMeshEdge = true;
 
         public bool FillMesh = true;
 
         public bool DrawNormal = false;
 
-        public bool DrawAxis = true;       
+        public bool DrawAxis = true;
         #endregion
 
         public PlotterSettings()
@@ -119,6 +121,7 @@ namespace Plotter.Settings
 
 
             jo = new JObject();
+            jo.Add("DrawMode", (int)DrawMode);
             jo.Add("DrawFaceOutline", DrawMeshEdge);
             jo.Add("FillFace", FillMesh);
             jo.Add("DrawNormal", DrawNormal);
@@ -190,6 +193,7 @@ namespace Plotter.Settings
             }
 
             jo = (JObject)root["DrawSettings"];
+            DrawMode = jo.GetEnum<DrawTools.DrawMode>("DrawMode", DrawMode);
             DrawMeshEdge = jo.GetBool("DrawFaceOutline", DrawMeshEdge);
             FillMesh = jo.GetBool("FillFace", FillMesh);
             DrawNormal = jo.GetBool("DrawNormal", DrawNormal);

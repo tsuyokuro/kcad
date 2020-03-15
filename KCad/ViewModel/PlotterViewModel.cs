@@ -193,6 +193,11 @@ namespace KCad.ViewModel
 
             mController.UpdateLayerList();
 
+            mMoveKeyHandler = new MoveKeyHandler(Controller);
+        }
+
+        private void SetupViews()
+        {
 #if USE_GDI_VIEW
             PlotterView1GDI1 = new PlotterViewGDI();
 #endif
@@ -201,8 +206,6 @@ namespace KCad.ViewModel
             ViewMode = ViewModes.FRONT;
             ViewMode = ViewModes.FREE;  // 一旦GL側を設定してViewをLoadしておく
             ViewMode = ViewModes.FRONT;
-
-            mMoveKeyHandler = new MoveKeyHandler(Controller);
         }
 
         #region handling IMainWindow
@@ -1156,6 +1159,7 @@ namespace KCad.ViewModel
         public void Open()
         {
             Settings.Load();
+            SetupViews();
         }
 
         public void Close()
@@ -1167,6 +1171,14 @@ namespace KCad.ViewModel
                 mEditorWindow.Close();
                 mEditorWindow = null;
             }
+        }
+
+        public override void DrawModeUpdated(DrawTools.DrawMode mode)
+        {
+#if USE_GDI_VIEW
+            PlotterView1GDI1.DrawModeUpdated(mode);
+#endif
+            PlotterViewGL1.DrawModeUpdated(mode);
         }
     }
 }
