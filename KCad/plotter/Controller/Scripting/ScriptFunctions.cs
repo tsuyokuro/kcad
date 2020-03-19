@@ -373,37 +373,6 @@ namespace Plotter.Controller
             Session.PostRedraw();
         }
 
-        public void AddLine(Vector3d v0, Vector3d v1)
-        {
-            CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
-            fig.AddPoint((CadVertex)v0);
-            fig.AddPoint((CadVertex)v1);
-
-            fig.EndCreate(Controller.DC);
-
-            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Session.AddOpe(ope);
-            Controller.CurrentLayer.AddFigure(fig);
-        }
-
-        public void AddPoint(double x, double y, double z)
-        {
-            Vector3d p = new Vector3d(x, y, z);
-            AddPoint(p);
-        }
-
-        public void AddPoint(Vector3d p)
-        {
-            CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POINT);
-            fig.AddPoint((CadVertex)p);
-
-            fig.EndCreate(Controller.DC);
-
-            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Session.AddOpe(ope);
-            Controller.CurrentLayer.AddFigure(fig);
-        }
-
         public Vector3d GetPoint(uint figID, int index)
         {
             CadFigure fig = Controller.DB.GetFigure(figID);
@@ -431,12 +400,47 @@ namespace Plotter.Controller
             fig.PointList.Ref(index).vector = v;
         }
 
-        public int Rect(double w, double h)
+        public CadFigure AddLine(Vector3d v0, Vector3d v1)
         {
-            return RectAt(Controller.LastDownPoint, w, h);
+            CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POLY_LINES);
+            fig.AddPoint((CadVertex)v0);
+            fig.AddPoint((CadVertex)v1);
+
+            fig.EndCreate(Controller.DC);
+
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
+            Session.AddOpe(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+
+            return fig;
         }
 
-        public int RectAt(Vector3d p, double w, double h)
+        public CadFigure AddPoint(double x, double y, double z)
+        {
+            Vector3d p = new Vector3d(x, y, z);
+            return AddPoint(p);
+        }
+
+        public CadFigure AddPoint(Vector3d p)
+        {
+            CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.POINT);
+            fig.AddPoint((CadVertex)p);
+
+            fig.EndCreate(Controller.DC);
+
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
+            Session.AddOpe(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+
+            return fig;
+        }
+
+        public CadFigure AddRect(double w, double h)
+        {
+            return AddRectAt(Controller.LastDownPoint, w, h);
+        }
+
+        public CadFigure AddRectAt(Vector3d p, double w, double h)
         {
             Vector3d viewDir = Controller.DC.ViewDir;
             Vector3d upDir = Controller.DC.UpVector;
@@ -470,15 +474,15 @@ namespace Plotter.Controller
 
             Session.PostRemakeObjectTree();
 
-            return (int)fig.ID;
+            return fig;
         }
 
-        public int RectChamfer(double w, double h, double c)
+        public CadFigure AddRectChamfer(double w, double h, double c)
         {
-            return RectRectChamferAt(Controller.LastDownPoint, w, h, c);
+            return AddRectRectChamferAt(Controller.LastDownPoint, w, h, c);
         }
 
-        public int RectRectChamferAt(Vector3d p, double w, double h, double c)
+        public CadFigure AddRectRectChamferAt(Vector3d p, double w, double h, double c)
         {
             Vector3d viewDir = Controller.DC.ViewDir;
             Vector3d upDir = Controller.DC.UpVector;
@@ -532,7 +536,7 @@ namespace Plotter.Controller
 
             Session.PostRemakeObjectTree();
 
-            return (int)fig.ID;
+            return fig;
         }
 
         public CadMesh CreateCadMesh(List<Vector3d> plist, List<CadFace> flist)
@@ -592,7 +596,7 @@ namespace Plotter.Controller
             return MesthToFig(cm);
         }
 
-        public void AddBox(Vector3d pos, double x, double y, double z)
+        public CadFigure AddBox(Vector3d pos, double x, double y, double z)
         {
             CadMesh cm =
                 MeshMaker.CreateBox(pos, new Vector3d(x, y, z), MeshMaker.FaceType.TRIANGLE);
@@ -604,9 +608,11 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
 
             Session.PostRemakeObjectTree();
+
+            return fig;
         }
 
-        public void AddTetrahedron(Vector3d pos, double x, double y, double z)
+        public CadFigure AddTetrahedron(Vector3d pos, double x, double y, double z)
         {
             CadMesh cm =
                 MeshMaker.CreateTetrahedron(pos, new Vector3d(x, y, z));
@@ -618,9 +624,11 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
 
             Session.PostRemakeObjectTree();
+
+            return fig;
         }
 
-        public void AddOctahedron(Vector3d pos, double x, double y, double z)
+        public CadFigure AddOctahedron(Vector3d pos, double x, double y, double z)
         {
             CadMesh cm =
                 MeshMaker.CreateOctahedron(pos, new Vector3d(x, y, z));
@@ -632,9 +640,11 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
 
             Session.PostRemakeObjectTree();
+
+            return fig;
         }
 
-        public void AddCylinder(Vector3d pos, int slices, double r, double len)
+        public CadFigure AddCylinder(Vector3d pos, int slices, double r, double len)
         {
             CadMesh cm = MeshMaker.CreateCylinder(pos, slices, r, len);
 
@@ -645,9 +655,11 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
 
             Session.PostRemakeObjectTree();
+
+            return fig;
         }
 
-        public void AddSphere(Vector3d pos, int slices, double r)
+        public CadFigure AddSphere(Vector3d pos, int slices, double r)
         {
             CadMesh cm = MeshMaker.CreateSphere(pos, r, slices, slices);
 
@@ -658,6 +670,8 @@ namespace Plotter.Controller
             Controller.CurrentLayer.AddFigure(fig);
 
             Session.PostRemakeObjectTree();
+
+            return fig;
         }
 
         public void AddLayer(string name)
@@ -788,17 +802,17 @@ namespace Plotter.Controller
                 );
         }
 
-        public double Area()
+        public double AreaOfSelected()
         {
-            double area = PlotterUtil.Area(Controller);
-            ItConsole.println("Area: " + AnsiEsc.BYellow + (area / 100).ToString() + " (㎠)");
+            double area = PlotterUtil.Area(Controller.DB.GetSelectedFigList());
+            ItConsole.println("Area: " + AnsiEsc.BYellow + (area / 100).ToString());
 
             return area;
         }
 
-        public Vector3d Centroid()
+        public Vector3d CentroidOfSelected()
         {
-            Centroid c = PlotterUtil.Centroid(Controller);
+            Centroid c = PlotterUtil.Centroid(Controller.DB.GetSelectedFigList());
             return c.Point;
         }
 
@@ -1579,6 +1593,11 @@ namespace Plotter.Controller
                 CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
                 Session.AddOpe(ope);
             }
+        }
+
+        public List<CadFigure> GetSlectedFigList()
+        {
+            return Controller.DB.GetSelectedFigList();
         }
 
         public void Test()

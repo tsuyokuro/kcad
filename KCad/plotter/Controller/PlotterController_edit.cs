@@ -361,7 +361,7 @@ namespace Plotter.Controller
 
         public void AddCentroid()
         {
-            Centroid cent = PlotterUtil.Centroid(this);
+            Centroid cent = PlotterUtil.Centroid(DB.GetSelectedFigList());
 
             if (cent.IsInvalid)
             {
