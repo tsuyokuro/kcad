@@ -54,6 +54,10 @@ namespace Plotter.Settings
         public bool DrawAxis = true;
         #endregion
 
+        public string LastDataDir = null;
+
+        public string LastScriptDir = null;
+
         public PlotterSettings()
         {
             GridSize = new Vector3d(10, 10, 10);
@@ -81,6 +85,8 @@ namespace Plotter.Settings
             JObject jo;
 
             root.Add("ContinueCreateFigure", ContinueCreateFigure);
+            root.Add("LastDataDir", LastDataDir);
+            root.Add("LastScriptDir", LastScriptDir);
 
             jo = new JObject();
             jo.Add("enable", SnapToPoint);
@@ -156,6 +162,9 @@ namespace Plotter.Settings
             JObject jo;
 
             ContinueCreateFigure = root.GetBool("ContinueCreateFigure", ContinueCreateFigure);
+
+            LastDataDir = root.GetString("LastDataDir", LastDataDir);
+            LastScriptDir = root.GetString("LastScriptDir", LastScriptDir);
 
             jo = (JObject)root["PointSnap"];
             SnapToPoint = jo.GetBool("enable", SnapToPoint);

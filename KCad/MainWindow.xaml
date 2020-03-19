@@ -273,8 +273,8 @@
             </Grid.RowDefinitions>
 
             <!--  Menu area  -->
-            <Border Grid.Row="0" Background="{StaticResource MenuTextColor}">
-                <Menu Margin="4,0,0,0">
+            <Border Grid.Row="0" Background="{StaticResource MenuBGColor}">
+                <Menu Margin="0,0,0,0">
                     <MenuItem Header="{x:Static properties:Resources.menu_file}">
                         <MenuItem
                             Click="Command_Clicked"

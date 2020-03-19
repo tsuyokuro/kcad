@@ -14,6 +14,8 @@ using System.Text.RegularExpressions;
 using Plotter.svg;
 using System.Xml.Linq;
 using Plotter;
+using Plotter.Settings;
+using System.IO;
 
 namespace KCad.ViewModel
 {
@@ -531,11 +533,34 @@ namespace KCad.ViewModel
             Redraw();
         }
 
+        private bool IsVaridDir(string path)
+        {
+            if (path == null)
+            {
+                return false;
+            }
+
+            if (path.Length == 0)
+            {
+                return false;
+            }
+
+            return Directory.Exists(path);
+        }
+
         public void Load()
         {
             System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
+            
+            if (IsVaridDir(SettingsHolder.Settings.LastDataDir))
+            {
+                ofd.InitialDirectory = SettingsHolder.Settings.LastDataDir;
+            }
+            
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                SettingsHolder.Settings.LastDataDir = Path.GetDirectoryName(ofd.FileName);
+
                 CadFileAccessor.LoadFile(ofd.FileName, this);
                 CurrentFileName = ofd.FileName;
             }
@@ -555,8 +580,11 @@ namespace KCad.ViewModel
         public void SaveAs()
         {
             System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
+
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                SettingsHolder.Settings.LastDataDir = Path.GetDirectoryName(sfd.FileName);
+
                 CadFileAccessor.SaveFile(sfd.FileName, this);
                 CurrentFileName = sfd.FileName;
             }
