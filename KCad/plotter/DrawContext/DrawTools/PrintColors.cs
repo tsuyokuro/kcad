@@ -15,7 +15,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_DEFAULT] = Color.Black;
             PenColorTbl[DrawTools.PEN_SELECT_POINT] = Color.Black;
             PenColorTbl[DrawTools.PEN_CURSOR] = Color.Black;
-            PenColorTbl[DrawTools.PEN_CURSOR2] = Color.Gray;
+            PenColorTbl[DrawTools.PEN_CROSS_CURSOR] = Color.Gray;
             PenColorTbl[DrawTools.PEN_DEFAULT_FIGURE] = Color.Black;
             PenColorTbl[DrawTools.PEN_TEMP_FIGURE] = Color.Black;
             PenColorTbl[DrawTools.PEN_POINT_HIGHLIGHT] = Color.Black;

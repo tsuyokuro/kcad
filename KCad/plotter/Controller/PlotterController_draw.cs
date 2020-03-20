@@ -296,7 +296,7 @@ namespace Plotter.Controller
 
         protected void DrawCrossCursor(DrawContext dc)
         {
-            dc.Drawing.DrawCrossCursorScrn(CrossCursor, dc.GetPen(DrawTools.PEN_CURSOR2));
+            dc.Drawing.DrawCrossCursorScrn(CrossCursor, dc.GetPen(DrawTools.PEN_CROSS_CURSOR));
 
             if (CursorLocked)
             {

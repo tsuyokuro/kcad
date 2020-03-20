@@ -13,7 +13,7 @@ namespace Plotter
         public const int PEN_DEFAULT_FIGURE = 2;
         public const int PEN_SELECT_POINT = 3;
         public const int PEN_CURSOR = 4;
-        public const int PEN_CURSOR2 = 5;
+        public const int PEN_CROSS_CURSOR = 5;
         public const int PEN_TEMP_FIGURE = 6;
         public const int PEN_POINT_HIGHLIGHT = 7;
         public const int PEN_MATCH_FIGURE = 8;
