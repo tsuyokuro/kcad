@@ -64,7 +64,6 @@ namespace KCad.ViewModel
 
 
         private CadFigure.Types mCreatingFigureType = CadFigure.Types.NONE;
-
         public CadFigure.Types CreatingFigureType
         {
             set
@@ -81,7 +80,6 @@ namespace KCad.ViewModel
         }
 
         private MeasureModes mMeasureMode = MeasureModes.NONE;
-
         public MeasureModes MeasureMode
         {
             set
@@ -953,25 +951,24 @@ namespace KCad.ViewModel
             if (mCreatingFigureType == newType)
             {
                 // 現在のタイプを再度選択したら解除する
-                mCreatingFigureType = CadFigure.Types.NONE;
-            }
-            else
-            {
-                mCreatingFigureType = newType;
+                if (mCreatingFigureType != CadFigure.Types.NONE)
+                {
+                    mController.Cancel();
+                    Redraw();
+                    return true;
+                }
             }
 
-            if (mCreatingFigureType != CadFigure.Types.NONE)
+            mCreatingFigureType = newType;
+
+            if (newType != CadFigure.Types.NONE)
             {
                 MeasureMode = MeasureModes.NONE;
-                mController.StartCreateFigure(mCreatingFigureType);
+                mController.StartCreateFigure(newType);
 
                 Redraw();
-            }
-            else if (prev != CadFigure.Types.NONE)
-            {
-                mController.EndCreateFigure();
 
-                Redraw();
+                return prev != mCreatingFigureType;
             }
 
             return prev != mCreatingFigureType;
