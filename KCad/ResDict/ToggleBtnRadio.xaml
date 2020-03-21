@@ -12,6 +12,8 @@
         BasedOn="{StaticResource {x:Type ToggleButton}}"
         TargetType="{x:Type ToggleButton}">
 
+        <Setter Property="Foreground" Value="White"/>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -19,7 +21,7 @@
                         Name="CustomBorder"
                         Background="{StaticResource ButtonColor}"
                         BorderBrush="{StaticResource ButtonColor}"
-                        BorderThickness="1"
+                        BorderThickness="0"
                         CornerRadius="4">
 
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -27,16 +29,17 @@
                     </Border>
 
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="CustomBorder" Property="BorderBrush" Value="{StaticResource ToggleButtonCheckedBGColor}" />
+                            <Setter TargetName="CustomBorder" Property="Background" Value="{StaticResource ToggleButtonCheckedBGColor}" />
+                        </Trigger>
+
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="CustomBorder" Property="BorderBrush" Value="{StaticResource ToggleButtonMouseOverBGColor}" />
                             <Setter TargetName="CustomBorder" Property="Background" Value="{StaticResource ToggleButtonMouseOverBGColor}" />
                             <Setter Property="Foreground" Value="White" />
                         </Trigger>
 
-                        <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="CustomBorder" Property="BorderBrush" Value="{StaticResource ToggleButtonCheckedBGColor}" />
-                            <Setter TargetName="CustomBorder" Property="Background" Value="{StaticResource ToggleButtonCheckedBGColor}" />
-                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -60,14 +63,15 @@
                     </Canvas>
 
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="BG" Property="Fill" Value="{StaticResource ToggleButtonCheckedBGColor}" />
+                        </Trigger>
+
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="BG" Property="Fill" Value="{StaticResource ToggleButtonMouseOverBGColor}" />
                             <Setter Property="Foreground" Value="White" />
                         </Trigger>
 
-                        <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="BG" Property="Fill" Value="{StaticResource ToggleButtonCheckedBGColor}" />
-                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -75,6 +79,12 @@
     </Style>
 
     <Style
+        x:Key="ToolRadioButton"
+        BasedOn="{StaticResource ToolToggleButton}"
+        TargetType="{x:Type RadioButton}">
+    </Style>
+
+    <!--<Style
         x:Key="ColorRadioButton"
         BasedOn="{StaticResource {x:Type ToggleButton}}"
         TargetType="{x:Type RadioButton}">
@@ -108,8 +118,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
-
+    </Style>-->
 
     <!--<DataTemplate x:Key="ToggleRadioCheckedStyle">
         <Grid Background="{StaticResource ToggleButtonCheckedBGColor}">
