@@ -43,22 +43,15 @@ namespace KCad.Dialogs
 
             Point p = wnd.viewContainer.PointToScreen(cp);
 
-            Left = p.X;
-            Top = p.Y;
+            this.Left = p.X;
+            this.Top = p.Y;
 
             cancel_button.Click += Cancel_button_Click;
             ok_button.Click += Ok_button_Click;
 
-            Loaded += InputStringDialog_Loaded;
-
             LayoutRoot.MouseLeftButtonDown += LayoutRoot_MouseLeftButtonDown;
 
             PreviewKeyDown += FigureNameDialog_PreviewKeyDown;
-        }
-
-        private void InputStringDialog_Loaded(object sender, RoutedEventArgs e)
-        {
-            input.Focus();
         }
 
         private Point GetRightBottomPoint(FrameworkElement view)

@@ -1,6 +1,5 @@
 ﻿using CadDataTypes;
 using Plotter.Controller.TaskRunner;
-using Plotter.Settings;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
@@ -95,7 +94,7 @@ namespace Plotter.Controller
 
         private List<CadFigure> EditFigList = new List<CadFigure>();
 
-        public bool ContinueCreate { set; get; } = true;
+        public bool ContinueCreate { set; get; } = false;
 
 
         public PlotterObserver Observer = new PlotterObserver();
@@ -224,11 +223,10 @@ namespace Plotter.Controller
         {
             if (State == States.CREATING)
             {
-                if (SettingsHolder.Settings.ContinueCreateFigure)
+                if (ContinueCreate)
                 {
                     mFigureCreator = null;
                     StartCreateFigure(CreatingFigType);
-                    UpdateObjectTree(true);
                 }
                 else
                 {

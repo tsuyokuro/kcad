@@ -5,7 +5,6 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using Plotter.Controller;
-using Plotter.Settings;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -102,18 +101,18 @@ namespace Plotter
             GL.Enable(EnableCap.DepthTest);
 
             mDrawContextOrtho = new DrawContextGLOrtho(this);
-            mDrawContextOrtho.SetupTools(SettingsHolder.Settings.DrawMode);
-            //mDrawContextOrtho.SetupTools(DrawTools.ToolsType.DARK);
+            mDrawContextOrtho.SetupDrawing();
+            mDrawContextOrtho.SetupTools(DrawTools.ToolsType.DARK);
 
             mDrawContextPers = new DrawContextGLPers(this);
-            mDrawContextPers.SetupTools(SettingsHolder.Settings.DrawMode);
-            //mDrawContextPers.SetupTools(DrawTools.ToolsType.DARK);
+            mDrawContextPers.SetupDrawing();
+            mDrawContextPers.SetupTools(DrawTools.ToolsType.DARK);
 
 
             mDrawContext = mDrawContextOrtho;
 
-            mDrawContextOrtho.PushToViewAction = PushToFront;
-            mDrawContextPers.PushToViewAction = PushToFront;
+            mDrawContextOrtho.ReflectToViewAction = ReflectToFront;
+            mDrawContextPers.ReflectToViewAction = ReflectToFront;
 
             SwapBuffers();
         }
@@ -288,7 +287,7 @@ namespace Plotter
             }
         }
 
-        public void PushToFront(DrawContext dc)
+        public void ReflectToFront(DrawContext dc)
         {
             if (dc == mDrawContext)
             {
@@ -488,19 +487,6 @@ namespace Plotter
 
                     Redraw();
                 }
-            }
-        }
-
-        public void DrawModeUpdated(DrawTools.DrawMode mode)
-        {
-            if (mDrawContextOrtho != null)
-            {
-                mDrawContextOrtho.SetupTools(mode);
-            }
-
-            if (mDrawContextPers != null)
-            {
-                mDrawContextPers.SetupTools(mode);
             }
         }
 

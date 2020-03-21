@@ -10,7 +10,7 @@ namespace Plotter.Controller
     {
         public void ReflectToView()
         {
-            DC.PushToView();
+            DC.ReflectToView();
         }
 
         public void Redraw()
@@ -24,7 +24,7 @@ namespace Plotter.Controller
             Clear(dc);
             DrawAll(dc);
             dc.EndDraw();
-            dc.PushToView();
+            dc.ReflectToView();
         }
 
         //public void RedrawOnMainThread()
@@ -296,7 +296,7 @@ namespace Plotter.Controller
 
         protected void DrawCrossCursor(DrawContext dc)
         {
-            dc.Drawing.DrawCrossCursorScrn(CrossCursor, dc.GetPen(DrawTools.PEN_CROSS_CURSOR));
+            dc.Drawing.DrawCrossCursorScrn(CrossCursor, dc.GetPen(DrawTools.PEN_CURSOR2));
 
             if (CursorLocked)
             {

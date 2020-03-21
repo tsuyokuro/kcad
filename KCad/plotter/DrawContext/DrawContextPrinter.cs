@@ -39,8 +39,6 @@ namespace Plotter
             org.Y = deviceSize.Height / 2.0;
             
             SetViewOrg(org);
-
-            SetupDrawing();
         }
 
         public DrawContextPrinter()
@@ -70,6 +68,11 @@ namespace Plotter
             dc.SetViewOrg(ViewOrg);
 
             return dc;
+        }
+
+        public override void SetupDrawing()
+        {
+            mDrawing = new DrawingGDI(this);
         }
     }
 }

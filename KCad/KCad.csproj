@@ -59,8 +59,7 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>KCad.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -243,8 +242,6 @@
     <Compile Include="plotter\DrawContext\DrawTools\DrawToolUtil.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\DrawBrush.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\DrawPen.cs" />
-    <Compile Include="plotter\DrawContext\DrawTools\ColorSet.cs" />
-    <Compile Include="plotter\DrawContext\DrawTools\LightColors.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\PrintColors.cs" />
     <Compile Include="plotter\DrawContext\DrawTools\DarkColors.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGLOrtho.cs" />
@@ -254,7 +251,6 @@
     <Compile Include="plotter\HalfEdge\HeModelConverter.cs" />
     <Compile Include="plotter\Math\BezierFuncs.cs" />
     <Compile Include="plotter\Math\CrossInfo.cs" />
-    <Compile Include="plotter\Util\ItConsole.cs" />
     <Compile Include="ViewModel\ICadMainWindow.cs" />
     <Compile Include="ViewModel\SettingsVeiwModel.cs" />
     <Compile Include="plotter\primitive\CadRect.cs" />
@@ -394,10 +390,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ResDict\CaptionButtonStyle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ResDict\Dimen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

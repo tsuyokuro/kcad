@@ -49,8 +49,6 @@ namespace Plotter
 
             CalcProjectionMatrix();
             CalcProjectionZW();
-
-            SetupDrawing();
         }
 
         public override void SetViewSize(double w, double h)
@@ -183,7 +181,7 @@ namespace Plotter
             return dc;
         }
 
-        protected void SetupDrawing()
+        public override void SetupDrawing()
         {
             mDrawing = new DrawingGDI(this);
         }

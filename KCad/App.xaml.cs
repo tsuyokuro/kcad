@@ -193,8 +193,8 @@ namespace KCad
         {
             if (UseConsole)
             {
-                DOut.PrintF = Console.Write;
-                DOut.PrintLn = Console.WriteLine;
+                DOut.PrintFunc = Console.Write;
+                DOut.PrintLnFunc = Console.WriteLine;
 
                 DOut.pl("DOut's output setting is Console");
 
@@ -211,8 +211,8 @@ namespace KCad
             else
             {
                 MainWindow wnd = (MainWindow)MainWindow;
-                DOut.PrintF = wnd.GetBuiltinConsole().Print;
-                DOut.PrintLn = wnd.GetBuiltinConsole().PrintLn;
+                DOut.PrintFunc = wnd.GetBuiltinConsole().Print;
+                DOut.PrintLnFunc = wnd.GetBuiltinConsole().PrintLn;
             }
         }
 

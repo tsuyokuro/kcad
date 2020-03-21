@@ -2,20 +2,19 @@
 
 namespace Plotter
 {
-    public class PrintColors : ColorSet
+    public class PrintColors
     {
-        private static PrintColors mInstance = new PrintColors();
-        public static PrintColors Instance
-        {
-            get { return mInstance; }
-        }
+        public static Color[] PenColorTbl;
+        public static Color[] BrushColorTbl;
 
-        private PrintColors()
+        static PrintColors()
         {
+            PenColorTbl = new Color[DrawTools.PEN_TBL_SIZE];
+
             PenColorTbl[DrawTools.PEN_DEFAULT] = Color.Black;
             PenColorTbl[DrawTools.PEN_SELECT_POINT] = Color.Black;
             PenColorTbl[DrawTools.PEN_CURSOR] = Color.Black;
-            PenColorTbl[DrawTools.PEN_CROSS_CURSOR] = Color.Gray;
+            PenColorTbl[DrawTools.PEN_CURSOR2] = Color.Gray;
             PenColorTbl[DrawTools.PEN_DEFAULT_FIGURE] = Color.Black;
             PenColorTbl[DrawTools.PEN_TEMP_FIGURE] = Color.Black;
             PenColorTbl[DrawTools.PEN_POINT_HIGHLIGHT] = Color.Black;
@@ -45,6 +44,8 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_EXT_SNAP] = Color.Transparent;
             PenColorTbl[DrawTools.PEN_HANDLE_LINE] = Color.Black;
 
+
+            BrushColorTbl = new Color[DrawTools.BRUSH_TBL_SIZE];
 
             BrushColorTbl[DrawTools.BRUSH_DEFAULT] = Color.Gray;
             BrushColorTbl[DrawTools.BRUSH_BACKGROUND] = Color.Transparent;

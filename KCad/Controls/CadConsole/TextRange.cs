@@ -51,7 +51,7 @@
             get
             {
                 if (SP.Row < 0 && EP.Row < 0) return false;
-                //if (SP.Row == EP.Row && SP.Col == EP.Col) return false;
+                if (SP.Row == EP.Row && SP.Col == EP.Col) return false;
                 return true;
             }
         }

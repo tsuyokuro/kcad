@@ -27,8 +27,8 @@
 
 
             <Style x:Key="MyMenu" TargetType="Menu">
-                <Setter Property="Foreground" Value="{StaticResource MenuTextColor}" />
-                <Setter Property="Background" Value="{StaticResource MenuBGColor}" />
+                <Setter Property="Foreground" Value="{StaticResource TextColor}" />
+                <Setter Property="Background" Value="{StaticResource MenuColor}" />
             </Style>
 
             <Style
@@ -36,9 +36,9 @@
                 BasedOn="{StaticResource MLB_MenuItem}"
                 TargetType="MenuItem">
                 <Setter Property="Foreground" Value="White" />
-                <Setter Property="Background" Value="{StaticResource MenuBGColor}" />
+                <Setter Property="Background" Value="{StaticResource MenuColor}" />
                 <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="BorderBrush" Value="{StaticResource MenuBGColor}" />
+                <Setter Property="BorderBrush" Value="{StaticResource MenuColor}" />
                 <Setter Property="Padding" Value="0,0,0,0" />
             </Style>
 

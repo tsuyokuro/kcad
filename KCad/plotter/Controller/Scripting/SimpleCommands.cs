@@ -59,7 +59,7 @@ namespace Plotter.Controller
 
             if (cmd == "@clear" || s == "@cls")
             {
-                ItConsole.Clear();
+                ItConsole.clear();
             }
             else if (cmd == "@bench")
             {

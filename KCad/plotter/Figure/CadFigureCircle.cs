@@ -78,13 +78,13 @@ namespace Plotter
             CadVertex c = -(a - cp) + cp;
             CadVertex d = -(b - cp) + cp;
 
-            //CircleExpander.ForEachSegs(cp, a, b, 32,
-            //    (CadVertex p0, CadVertex p1) =>
-            //    {
-            //        dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
-            //    });
 
-            CircleExpander.Draw(cp, a, b, 32, dc, pen);
+            CircleExpander.ForEachSegs(cp, a, b, 32,
+                (CadVertex p0, CadVertex p1) =>
+                {
+                    dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
+                });
+
 
             dc.Drawing.DrawLine(pen, cp.vector, a.vector);
             dc.Drawing.DrawLine(pen, cp.vector, b.vector);
@@ -108,12 +108,10 @@ namespace Plotter
 
             Vector3d normal = CadMath.Normal(PointList[0].vector, PointList[2].vector, PointList[1].vector);
 
-            //CircleExpander.ForEachSegs(PointList[0], PointList[1], PointList[2], 32, (p0, p1) =>
-            //{
-            //    dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
-            //});
-
-            CircleExpander.Draw(PointList[0], PointList[1], PointList[2], 32, dc, pen);
+            CircleExpander.ForEachSegs(PointList[0], PointList[1], PointList[2], 32, (p0, p1) =>
+            {
+                dc.Drawing.DrawLine(pen, p0.vector, p1.vector);
+            });
 
             double size = dc.DevSizeToWoldSize(4);
             dc.Drawing.DrawCross(pen, PointList[0].vector, size);

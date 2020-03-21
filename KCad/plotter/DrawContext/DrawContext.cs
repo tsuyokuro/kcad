@@ -12,11 +12,11 @@ namespace Plotter
             Perspective,
         }
 
-        protected Action<DrawContext> mPushToViewAction;
-        public Action<DrawContext> PushToViewAction
+        protected Action<DrawContext> mReflectToViewAction;
+        public Action<DrawContext> ReflectToViewAction
         {
-            set => mPushToViewAction = value;
-            get => mPushToViewAction;
+            set => mReflectToViewAction = value;
+            get => mReflectToViewAction;
         }
 
         // 画素/Milli
@@ -123,7 +123,7 @@ namespace Plotter
             mViewOrg = org;
         }
 
-        public void SetupTools(DrawTools.DrawMode type, int penW=0)
+        public void SetupTools(DrawTools.ToolsType type, int penW=0)
         {
             Tools.Setup(type, penW);
         }
@@ -142,9 +142,9 @@ namespace Plotter
         {
         }
 
-        public void PushToView()
+        public void ReflectToView()
         {
-            mPushToViewAction?.Invoke(this);
+            mReflectToViewAction?.Invoke(this);
         }
 
         public CadVertex WorldPointToDevPoint(CadVertex pt)
@@ -305,6 +305,7 @@ namespace Plotter
 
         public abstract void CalcProjectionMatrix();
         public abstract void Dispose();
+        public abstract void SetupDrawing();
         
         public abstract DrawContext Clone();
         public abstract DrawPen GetPen(int idx);

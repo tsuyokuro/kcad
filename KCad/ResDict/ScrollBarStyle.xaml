@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:KCad"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--  サイズと色の定義。簡潔に記述する為に半透明の白で指定しているので、親の背景色が白の場合は白以外の色を指定してください  -->

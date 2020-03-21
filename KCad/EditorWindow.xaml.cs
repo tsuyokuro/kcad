@@ -4,12 +4,9 @@ using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Search;
-using Plotter;
 using Plotter.Controller;
-using Plotter.Settings;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -32,15 +29,16 @@ namespace KCad
 
         private bool Modified = false;
 
-        private const string FileFilter = "Python files|*.py";
-
         public EditorWindow(ScriptEnvironment scriptEnvironment)
         {
             InitializeComponent();
 
             ScriptEnv = scriptEnvironment;
 
-            SetupHighlightForPython();
+            using (var reader = new XmlTextReader("Resources\\Python-Mode.xshd"))
+            {
+                textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+            }
 
             mSearchPanel = SearchPanel.Install(textEditor);
 
@@ -59,14 +57,6 @@ namespace KCad
             PreviewKeyUp += EditorWindow_PreviewKeyUp;
 
             ShowRowCol();
-        }
-
-        private void SetupHighlightForPython()
-        {
-            using (var reader = new XmlTextReader("Resources\\Python-Mode.xshd"))
-            {
-                textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-            }
         }
 
         private void EditorWindow_PreviewKeyUp(object sender, KeyEventArgs e)
@@ -138,7 +128,7 @@ namespace KCad
 
             WordData wd = getDocumentWord(offset - 1);
 
-            //DOut.pl(wd.StartPos.ToString() + " " + wd.Word);
+            //DebugOut.println(w.StartPos.ToString() + " " + w.Word);
 
             showCompletionWindow(wd);
         }
@@ -177,7 +167,6 @@ namespace KCad
                     data.Add(cd);
                 }
 
-                mCompletionWindow.Width = 512;
                 mCompletionWindow.Show();
                 mCompletionWindow.Closed += delegate
                 {
@@ -203,7 +192,7 @@ namespace KCad
             {
                 char c = textEditor.TextArea.Document.GetCharAt(p);
 
-                if (Char.IsLetterOrDigit(c) || c == '-' || c == '_')
+                if (Char.IsLetterOrDigit(c))
                 {
                     p--;
                 }
@@ -221,7 +210,7 @@ namespace KCad
             {
                 char c = textEditor.TextArea.Document.GetCharAt(p);
 
-                if (Char.IsLetterOrDigit(c) || c == '-' || c == '_')
+                if (Char.IsLetterOrDigit(c))
                 {
                     s += c;
                     p++;
@@ -292,39 +281,13 @@ namespace KCad
             }
         }
 
-        private bool IsVaridDir(string path)
-        {
-            if (path == null)
-            {
-                return false;
-            }
-
-            if (path.Length == 0)
-            {
-                return false;
-            }
-
-            return Directory.Exists(path);
-        }
-
         public void LoadWithDialog()
         {
             System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
-
-            if (IsVaridDir(SettingsHolder.Settings.LastScriptDir))
-            {
-                ofd.InitialDirectory = SettingsHolder.Settings.LastScriptDir;
-            }
-            else
-            {
-                ofd.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            }
-
-            ofd.Filter = FileFilter;
+            ofd.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            ofd.Filter = "Python files|*.py";
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                SettingsHolder.Settings.LastScriptDir = Path.GetDirectoryName(ofd.FileName);
-
                 textEditor.Load(ofd.FileName);
                 FileName = ofd.FileName;
                 UpdateTitle(false, true);
@@ -334,26 +297,11 @@ namespace KCad
         public void SaveWithDialog()
         {
             System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
-
-            if (FileName != null && FileName.Length > 0)
-            {
-                sfd.InitialDirectory = Path.GetDirectoryName(FileName);
-            }
-            else if (IsVaridDir(SettingsHolder.Settings.LastScriptDir))
-            {
-                sfd.InitialDirectory = SettingsHolder.Settings.LastScriptDir;
-            }
-            else
-            {
-                sfd.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            }
-
-            sfd.Filter = FileFilter;
+            sfd.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            sfd.Filter = "Python files|*.py";
 
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                SettingsHolder.Settings.LastScriptDir = Path.GetDirectoryName(sfd.FileName);
-
                 textEditor.Save(sfd.FileName);
                 FileName = sfd.FileName;
                 UpdateTitle(false, true);

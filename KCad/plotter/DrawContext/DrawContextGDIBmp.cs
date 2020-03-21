@@ -31,8 +31,6 @@ namespace Plotter
 
             CalcProjectionMatrix();
             CalcProjectionZW();
-
-            SetupDrawing();
         }
 
         protected override void DisposeGraphics()
@@ -119,7 +117,7 @@ namespace Plotter
             return dc;
         }
 
-        protected void SetupDrawing()
+        public override void SetupDrawing()
         {
             mDrawing = new DrawingGDIBmp(this);
         }
