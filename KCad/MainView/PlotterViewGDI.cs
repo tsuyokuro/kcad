@@ -39,8 +39,7 @@ namespace Plotter
         public PlotterViewGDI()
         {
             mDrawContext = new DrawContextGDI(this);
-            mDrawContext.SetupDrawing();
-            mDrawContext.SetupTools(DrawTools.ToolsType.DARK);
+            mDrawContext.SetupTools(DrawTools.DrawMode.DARK);
 
             SetupContextMenu();
 
@@ -52,7 +51,7 @@ namespace Plotter
 
             mEventSequencer.Start();
 
-            mDrawContext.ReflectToViewAction = ReflectToFront;
+            mDrawContext.PushToViewAction = PushToFront;
 
             MouseMove += OnMouseMove;
             MouseDown += OnMouseDown;
@@ -121,7 +120,7 @@ namespace Plotter
             }
         }
 
-        public void ReflectToFront(DrawContext dc)
+        public void PushToFront(DrawContext dc)
         {
             //DOut.tpl("PushDraw");
 
@@ -319,6 +318,14 @@ namespace Plotter
                 case PlotterObserver.MouseCursorType.HAND:
                     base.Cursor = Cursors.Hand;
                     break;
+            }
+        }
+
+        public void DrawModeUpdated(DrawTools.DrawMode mode)
+        {
+            if (mDrawContext != null)
+            {
+                mDrawContext.SetupTools(mode);
             }
         }
 

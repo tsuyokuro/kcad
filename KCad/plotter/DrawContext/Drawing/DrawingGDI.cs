@@ -322,10 +322,26 @@ namespace Plotter
 
         public void DrawCross(DrawPen pen, Vector3d p, double size)
         {
-            Vector3d a = DC.WorldPointToDevPoint(p);
+            double hs = size;
 
-            DrawLineScrn(pen, a.X - size, a.Y + 0, a.X + size, a.Y + 0);
-            DrawLineScrn(pen, a.X + 0, a.Y + size, a.X + 0, a.Y - size);
+            Vector3d px0 = p;
+            px0.X -= hs;
+            Vector3d px1 = p;
+            px1.X += hs;
+
+            Vector3d py0 = p;
+            py0.Y -= hs;
+            Vector3d py1 = p;
+            py1.Y += hs;
+
+            Vector3d pz0 = p;
+            pz0.Z -= hs;
+            Vector3d pz1 = p;
+            pz1.Z += hs;
+
+            DrawLine(pen, px0, px1);
+            DrawLine(pen, py0, py1);
+            DrawLine(pen, pz0, pz1);
         }
 
         public void DrawCrossScrn(DrawPen pen, Vector3d p, double size)

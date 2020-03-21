@@ -4,7 +4,7 @@ using Plotter;
 
 namespace KCad.ViewModel
 {
-    public class ViewModelContext
+    public abstract class ViewModelContext
     {
         protected PlotterController mController;
 
@@ -17,5 +17,7 @@ namespace KCad.ViewModel
         {
             ThreadUtil.RunOnMainThread(mController.Redraw, true);
         }
+
+        public abstract void DrawModeUpdated(DrawTools.DrawMode mode);
     }
 }

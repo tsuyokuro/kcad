@@ -5,8 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Figure name"
-    Width="368.285"
-    Height="89.823"
+    Width="389.618"
+    Height="95.156"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner"
     WindowStyle="None"
@@ -16,6 +16,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../ResDict/Colors.xaml" />
+                <ResourceDictionary Source="../ResDict/ButtonStyle.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -23,7 +25,9 @@
     <Grid
         x:Name="LayoutRoot"
         Width="Auto"
-        Height="Auto">
+        Height="Auto"
+        Background="{StaticResource BaseColor}"
+        >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="100*" />
@@ -40,46 +44,53 @@
         <Border
             Grid.Row="1"
             Padding="8,4,8,4"
-            Background="{StaticResource DialogBaseColor}">
+            Background="{StaticResource BaseColor}">
             <StackPanel
                 Height="Auto"
                 HorizontalAlignment="Stretch"
                 Orientation="Vertical">
                 <Label
                     x:Name="message"
-                    Height="Auto"
+                    Height="24"
+                    Foreground="White"
                     HorizontalAlignment="Stretch" Content="" Margin="0,0,0,4"/>
-                    
+
                 <TextBox
                     x:Name="input"
+                    Background="{StaticResource TextBoxBGColor}"                    
+                    Foreground="{StaticResource TextBoxFGColor}"
                     Height="Auto"
-                    HorizontalAlignment="Stretch" />
+                    HorizontalAlignment="Stretch"
+                    BorderBrush="Black"
+                    />
 
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="2" Padding="4,4,4,4">
+        <Border Grid.Row="2" Padding="4,4,4,4" Background="{StaticResource BaseColor}">
 
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+            <StackPanel Height="24" HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button
                     x:Name="cancel_button"
+                    Template="{StaticResource MyButtonTemplateR}"                    
                     Width="75"
                     Height="Auto"
                     Margin="0,0,8,0"
                     Padding="2"
                     HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
+                    VerticalAlignment="Stretch"
                     BorderThickness="0"
                     Content="Cancel" />
 
                 <Button
                     x:Name="ok_button"
+                    Template="{StaticResource MyButtonTemplateR}"                    
                     Width="75"
                     Height="Auto"
                     Margin="0,0,0,0"
                     Padding="2"
                     HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
+                    VerticalAlignment="Stretch"
                     BorderThickness="0"
                     Content="OK" />
 

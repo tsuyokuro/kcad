@@ -10,56 +10,36 @@ namespace KCad.Controls
 {
     public partial class CadConsoleView : FrameworkElement
     {
-        protected FontFamily mFontFamily = null;
-
-        protected double mFontSize = 10.0;
-
-        protected Typeface mTypeface;
-
-
-        protected Brush mForeground = Brushes.Black;
-
-        protected Brush mBackground = Brushes.White;
-
-        protected Brush mSelectedBackground = Brushes.GreenYellow;
-
-        protected double mSelectedBackgroundOpacity = 0.3;
-
-        protected double mLineHeight = 14.0;
-
-        protected double mIndentSize = 8.0;
-
-        protected int mTopIndex = 0;
-
-        protected double mTextLeftMargin = 4.0;
-
-        protected bool mIsLoaded = false;
-
         #region Properties
+        protected Brush mBackground = Brushes.White;
         public Brush Background
         {
             get => mBackground;
             set => mBackground = value;
         }
 
+        protected Brush mForeground = Brushes.Black;
         public Brush Foreground
         {
             get => mForeground;
             set => mForeground = value;
         }
 
+        protected Brush mSelectedBackground = Brushes.GreenYellow;
         public Brush SelectedBackground
         {
             get => mSelectedBackground;
             set => mSelectedBackground = value;
         }
 
+        protected double mSelectedBackgroundOpacity = 0.3;
         public double SelectedBackgroundOpacity
         {
             get => mSelectedBackgroundOpacity;
             set => mSelectedBackgroundOpacity = value;
         }
 
+        protected double mTextLeftMargin = 4.0;
         public double TextLeftMargin
         {
             get => mTextLeftMargin;
@@ -70,12 +50,16 @@ namespace KCad.Controls
             }
         }
 
+        protected double mLineHeight = 14.0;
         public double LineHeight
         {
             get => mLineHeight;
             set => mLineHeight = value;
         }
 
+        protected string DefaultFontName = "ＭＳ ゴシック";
+        protected Typeface mTypeface;
+        protected FontFamily mFontFamily = null;
         public FontFamily FontFamily
         {
             get => mFontFamily;
@@ -87,6 +71,7 @@ namespace KCad.Controls
             }
         }
 
+        protected double mFontSize = 10.0;
         public double FontSize
         {
             get => mFontSize;
@@ -99,13 +84,17 @@ namespace KCad.Controls
 
         #endregion
 
+        protected int mTopIndex = 0;
+
+        protected bool mIsLoaded = false;
+
         protected ScrollViewer Scroll;
 
         protected RingBuffer<TextLine> mList = new RingBuffer<TextLine>(); 
 
         protected AnsiEsc Esc = new AnsiEsc();
 
-        protected TextAttr DefaultAttr = new TextAttr();
+        protected TextAttr DefaultAttr = default;
 
         protected TextAttr CurrentAttr = default;
 
@@ -178,7 +167,7 @@ namespace KCad.Controls
 
             if (FontFamily == null)
             {
-                FontFamily = new FontFamily("ＭＳ ゴシック");
+                FontFamily = new FontFamily(DefaultFontName);
             }
 
             FrameworkElement parent = (FrameworkElement)Parent;
@@ -607,7 +596,7 @@ namespace KCad.Controls
             line.Parse(s);
         }
 
-        public void Printf(string format, params object[] args)
+        public void PrintF(string format, params object[] args)
         {
             string s = String.Format(format, args);
             Print(s);
@@ -684,8 +673,8 @@ namespace KCad.Controls
                 dispHeight = Scroll.ActualHeight;
             }
 
-            Point p = default(Point);
-            Rect rect = default(Rect);
+            Point p = default;
+            Rect rect = default;
 
             long topNumber = (long)offset / (long)mLineHeight;
 
@@ -699,7 +688,7 @@ namespace KCad.Controls
             rect.X = 0;
             rect.Y = p.Y;
             rect.Width = ActualWidth;
-            rect.Height = mLineHeight + 1;
+            rect.Height = mLineHeight;
 
             int n = (int)topNumber;
 
@@ -788,13 +777,11 @@ namespace KCad.Controls
 
             FormattedText ft = GetFormattedText(s, foreground);
 
-            Point pt2 = pt;
-            pt2.X += ft.WidthIncludingTrailingWhitespace; // 末尾のspaceも含む幅
-            pt2.Y += mLineHeight;
+            Rect r = new Rect(pt.X, row * mLineHeight, ft.WidthIncludingTrailingWhitespace, mLineHeight); 
 
             Brush background = Esc.Palette[attr.BColor];
 
-            dc.DrawRectangle(background, null, new Rect(pt, pt2));
+            dc.DrawRectangle(background, null, r);
 
             Point tpt = pt;
 

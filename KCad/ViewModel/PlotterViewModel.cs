@@ -14,6 +14,8 @@ using System.Text.RegularExpressions;
 using Plotter.svg;
 using System.Xml.Linq;
 using Plotter;
+using Plotter.Settings;
+using System.IO;
 
 namespace KCad.ViewModel
 {
@@ -62,7 +64,6 @@ namespace KCad.ViewModel
 
 
         private CadFigure.Types mCreatingFigureType = CadFigure.Types.NONE;
-
         public CadFigure.Types CreatingFigureType
         {
             set
@@ -79,7 +80,6 @@ namespace KCad.ViewModel
         }
 
         private MeasureModes mMeasureMode = MeasureModes.NONE;
-
         public MeasureModes MeasureMode
         {
             set
@@ -193,6 +193,11 @@ namespace KCad.ViewModel
 
             mController.UpdateLayerList();
 
+            mMoveKeyHandler = new MoveKeyHandler(Controller);
+        }
+
+        private void SetupViews()
+        {
 #if USE_GDI_VIEW
             PlotterView1GDI1 = new PlotterViewGDI();
 #endif
@@ -201,8 +206,6 @@ namespace KCad.ViewModel
             ViewMode = ViewModes.FRONT;
             ViewMode = ViewModes.FREE;  // 一旦GL側を設定してViewをLoadしておく
             ViewMode = ViewModes.FRONT;
-
-            mMoveKeyHandler = new MoveKeyHandler(Controller);
         }
 
         #region handling IMainWindow
@@ -293,6 +296,10 @@ namespace KCad.ViewModel
                 { "snap_settings", SnapSettings },
                 { "show_editor", ShowEditor },
                 { "export_svg", ExportSVG },
+                { "obj_order_down", ObjOrderDown },
+                { "obj_order_up", ObjOrderUp },
+                { "obj_order_bottom", ObjOrderBottom },
+                { "obj_order_top", ObjOrderTop },
             };
         }
 
@@ -524,11 +531,34 @@ namespace KCad.ViewModel
             Redraw();
         }
 
+        private bool IsVaridDir(string path)
+        {
+            if (path == null)
+            {
+                return false;
+            }
+
+            if (path.Length == 0)
+            {
+                return false;
+            }
+
+            return Directory.Exists(path);
+        }
+
         public void Load()
         {
             System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
+            
+            if (IsVaridDir(SettingsHolder.Settings.LastDataDir))
+            {
+                ofd.InitialDirectory = SettingsHolder.Settings.LastDataDir;
+            }
+            
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                SettingsHolder.Settings.LastDataDir = Path.GetDirectoryName(ofd.FileName);
+
                 CadFileAccessor.LoadFile(ofd.FileName, this);
                 CurrentFileName = ofd.FileName;
             }
@@ -548,8 +578,11 @@ namespace KCad.ViewModel
         public void SaveAs()
         {
             System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
+
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                SettingsHolder.Settings.LastDataDir = Path.GetDirectoryName(sfd.FileName);
+
                 CadFileAccessor.SaveFile(sfd.FileName, this);
                 CurrentFileName = sfd.FileName;
             }
@@ -637,6 +670,26 @@ namespace KCad.ViewModel
                     ItConsole.printError(e.Message);
                 }
             }
+        }
+
+        public void ObjOrderDown()
+        {
+            mController.ObjOrderDown();
+        }
+
+        public void ObjOrderUp()
+        {
+            mController.ObjOrderUp();
+        }
+
+        public void ObjOrderBottom()
+        {
+            mController.ObjOrderBottom();
+        }
+
+        public void ObjOrderTop()
+        {
+            mController.ObjOrderTop();
         }
 
         public void AddLayer()
@@ -898,25 +951,24 @@ namespace KCad.ViewModel
             if (mCreatingFigureType == newType)
             {
                 // 現在のタイプを再度選択したら解除する
-                mCreatingFigureType = CadFigure.Types.NONE;
-            }
-            else
-            {
-                mCreatingFigureType = newType;
+                if (mCreatingFigureType != CadFigure.Types.NONE)
+                {
+                    mController.Cancel();
+                    Redraw();
+                    return true;
+                }
             }
 
-            if (mCreatingFigureType != CadFigure.Types.NONE)
+            mCreatingFigureType = newType;
+
+            if (newType != CadFigure.Types.NONE)
             {
                 MeasureMode = MeasureModes.NONE;
-                mController.StartCreateFigure(mCreatingFigureType);
+                mController.StartCreateFigure(newType);
 
                 Redraw();
-            }
-            else if (prev != CadFigure.Types.NONE)
-            {
-                mController.EndCreateFigure();
 
-                Redraw();
+                return prev != mCreatingFigureType;
             }
 
             return prev != mCreatingFigureType;
@@ -1132,6 +1184,7 @@ namespace KCad.ViewModel
         public void Open()
         {
             Settings.Load();
+            SetupViews();
         }
 
         public void Close()
@@ -1143,6 +1196,14 @@ namespace KCad.ViewModel
                 mEditorWindow.Close();
                 mEditorWindow = null;
             }
+        }
+
+        public override void DrawModeUpdated(DrawTools.DrawMode mode)
+        {
+#if USE_GDI_VIEW
+            PlotterView1GDI1.DrawModeUpdated(mode);
+#endif
+            PlotterViewGL1.DrawModeUpdated(mode);
         }
     }
 }
