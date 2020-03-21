@@ -2,19 +2,20 @@
 
 namespace Plotter
 {
-    public class DarkColors
+    public class DarkColors : ColorSet
     {
-        public static Color[] PenColorTbl;
-        public static Color[] BrushColorTbl;
-
-        static DarkColors()
+        private static DarkColors mInstance = new DarkColors();
+        public static DarkColors Instance
         {
-            PenColorTbl = new Color[DrawTools.PEN_TBL_SIZE];
+            get { return mInstance; }
+        }
 
+        private DarkColors()
+        {
             PenColorTbl[DrawTools.PEN_DEFAULT] = Color.White;
             PenColorTbl[DrawTools.PEN_SELECT_POINT] = Color.FromArgb(128, 255, 0);
             PenColorTbl[DrawTools.PEN_CURSOR] = Color.LightBlue;
-            PenColorTbl[DrawTools.PEN_CURSOR2] = Color.FromArgb(32, 64, 64);
+            PenColorTbl[DrawTools.PEN_CROSS_CURSOR] = Color.FromArgb(32, 64, 64);
             PenColorTbl[DrawTools.PEN_DEFAULT_FIGURE] = Color.White;
             PenColorTbl[DrawTools.PEN_TEMP_FIGURE] = Color.CadetBlue;
             PenColorTbl[DrawTools.PEN_POINT_HIGHLIGHT] = Color.Orange;
@@ -45,13 +46,11 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_HANDLE_LINE] = Color.YellowGreen;
 
 
-            BrushColorTbl = new Color[DrawTools.BRUSH_TBL_SIZE];
-
             BrushColorTbl[DrawTools.BRUSH_DEFAULT] = Color.FromArgb(255, 255, 255);
             BrushColorTbl[DrawTools.BRUSH_BACKGROUND] = Color.FromArgb(0x8, 0x8, 0x8);
             BrushColorTbl[DrawTools.BRUSH_TEXT] = Color.White;
-            BrushColorTbl[DrawTools.BRUSH_DEFAULT_MESH_FILL] = Color.FromArgb(204,204,204);
-            BrushColorTbl[DrawTools.BRUSH_TRANSPARENT] = Color.FromArgb(0,0,0,0);
+            BrushColorTbl[DrawTools.BRUSH_DEFAULT_MESH_FILL] = Color.FromArgb(204, 204, 204);
+            BrushColorTbl[DrawTools.BRUSH_TRANSPARENT] = Color.FromArgb(0, 0, 0, 0);
             BrushColorTbl[DrawTools.BRUSH_PALE_TEXT] = Color.FromArgb(0x7E, 0x7E, 0x7E);
         }
     }

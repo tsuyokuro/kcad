@@ -14,6 +14,8 @@ namespace Plotter.Settings
 
     public class PlotterSettings
     {
+        public bool ContinueCreateFigure = true;
+
         public bool SnapToPoint = true;
 
         public bool SnapToSegment = true;
@@ -41,14 +43,20 @@ namespace Plotter.Settings
         public bool SnapToSelfPoint = true;
 
         #region Draw settings
+        public DrawTools.DrawMode DrawMode = DrawTools.DrawMode.DARK;
+
         public bool DrawMeshEdge = true;
 
         public bool FillMesh = true;
 
         public bool DrawNormal = false;
 
-        public bool DrawAxis = true;       
+        public bool DrawAxis = true;
         #endregion
+
+        public string LastDataDir = null;
+
+        public string LastScriptDir = null;
 
         public PlotterSettings()
         {
@@ -75,6 +83,10 @@ namespace Plotter.Settings
             JObject root = new JObject();
 
             JObject jo;
+
+            root.Add("ContinueCreateFigure", ContinueCreateFigure);
+            root.Add("LastDataDir", LastDataDir);
+            root.Add("LastScriptDir", LastScriptDir);
 
             jo = new JObject();
             jo.Add("enable", SnapToPoint);
@@ -115,6 +127,7 @@ namespace Plotter.Settings
 
 
             jo = new JObject();
+            jo.Add("DrawMode", (int)DrawMode);
             jo.Add("DrawFaceOutline", DrawMeshEdge);
             jo.Add("FillFace", FillMesh);
             jo.Add("DrawNormal", DrawNormal);
@@ -147,6 +160,11 @@ namespace Plotter.Settings
             JObject root = JObject.Parse(js);
 
             JObject jo;
+
+            ContinueCreateFigure = root.GetBool("ContinueCreateFigure", ContinueCreateFigure);
+
+            LastDataDir = root.GetString("LastDataDir", LastDataDir);
+            LastScriptDir = root.GetString("LastScriptDir", LastScriptDir);
 
             jo = (JObject)root["PointSnap"];
             SnapToPoint = jo.GetBool("enable", SnapToPoint);
@@ -184,6 +202,7 @@ namespace Plotter.Settings
             }
 
             jo = (JObject)root["DrawSettings"];
+            DrawMode = jo.GetEnum<DrawTools.DrawMode>("DrawMode", DrawMode);
             DrawMeshEdge = jo.GetBool("DrawFaceOutline", DrawMeshEdge);
             FillMesh = jo.GetBool("FillFace", FillMesh);
             DrawNormal = jo.GetBool("DrawNormal", DrawNormal);

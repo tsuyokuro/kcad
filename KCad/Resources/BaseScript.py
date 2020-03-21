@@ -82,7 +82,6 @@ def to_fig_id_array(list):
 		ret = ret + [int(f.ID)]
 	return ret
 
-
 ###############################################################################
 # Group management
 #
@@ -123,57 +122,57 @@ def intersection(id1, id2):
 
 #[AC] add_rect(w=10, h=10)
 def add_rect(w=10, h=10):
-    SE.Rect(w, h)
+    return SE.AddRect(w, h)
 
 #[AC] add_rect_at(pv=last_down(), w=10, h=10)
 def add_rect_at(pv, w=10, h=10):
-    SE.RectAt(pv, w, h)
+    return SE.AddRectAt(pv, w, h)
 
 
 #[AC] add_rectc(w=10, h=10, c=1)
 def add_rectc(w=10, h=10, c=1):
-    SE.RectChamfer(w, h, c)
+    return SE.AddRectChamfer(w, h, c)
 
 #[AC] add_rectc_at(pv=last_down(), w=10, h=10, c=1)
 def add_rectc_at(pv, w=10, h=10, c=1):
-    SE.RectChamferAt(pv, w, h, c)
+    return SE.AddRectChamferAt(pv, w, h, c)
 
 
 #[AC] add_point(x=0, y=0, z=0)
 def add_point(x, y, z):
-    SE.AddPoint(x, y, z)
+    return SE.AddPoint(x, y, z)
 
 #[AC] add_point_v(last_down())
 def add_point_v(p):
-    SE.AddPoint(p)
+    return SE.AddPoint(p)
 
 #[AC] add_box(last_down(), size_x=40, size_y=40, size_z=20)
 def add_box(pos, size_x, size_y, size_z):
-    SE.AddBox(pos, size_x, size_y, size_z)
+    return SE.AddBox(pos, size_x, size_y, size_z)
 
 #[AC] add_1x4(last_down(), len=200)
 def add_1x4(pos, len):
-    SE.AddBox(pos, w_1x4, len, t_1x4)
+    return SE.AddBox(pos, w_1x4, len, t_1x4)
 
 #[AC] add_cylinder(pos=last_down(), slices=16, r=10, len=40)
 def add_cylinder(pos, slices, r, len):
-    SE.AddCylinder(pos, slices, r, len)
+    return SE.AddCylinder(pos, slices, r, len)
 
 #[AC] add_sphere(pos=last_down(), slices=16, r=20)
 def add_sphere(pos, slices, r):
-    SE.AddSphere(pos, slices, r)
+    return SE.AddSphere(pos, slices, r)
 
 #[AC] add_line(vector(0, 0, 0), vector(10, 20, 0))
 def add_line(v0, v1):
-    SE.AddLine(v0, v1)
+    return SE.AddLine(v0, v1)
 
 #[AC] add_tetra(last_down(), size_x=20, size_y=20, size_z=20)
 def add_tetra(pos, size_x, size_y, size_z):
-    SE.AddTetrahedron(pos, size_x, size_y, size_z)
+    return SE.AddTetrahedron(pos, size_x, size_y, size_z)
 
 #[AC] add_octa(last_down(), size_x=20, size_y=20, size_z=20)
 def add_octa(pos, size_x, size_y, size_z):
-    SE.AddOctahedron(pos, size_x, size_y, size_z)
+    return SE.AddOctahedron(pos, size_x, size_y, size_z)
 
 
 ###############################################################################
@@ -222,6 +221,10 @@ def rotate(id, p0, v, t):
 #[AC] ins_point()
 def ins_point():
     SE.InsPoint()
+
+#[AC] get_str(msg="Input", defStr="")
+def get_str(msg, defStr):
+    return SE.GetString(msg, defStr)
 
 #[AC] set_seg_len(len)
 def set_seg_len(len):
@@ -318,13 +321,16 @@ def proj_dir():
 
 
 ###############################################################################
-#
+# Mesure
 #
 
-#[AC] area()
-def area():
-    return SE.Area()
+#[AC] area_of_selected()
+def area_of_selected():
+    return SE.AreaOfSelected()
 
+#[AC] centroid_of_selected()
+def centroid_of_selected():
+	return SE.CentroidOfSelected()
 
 ###############################################################################
 
@@ -333,20 +339,20 @@ def area():
 def to_bmp(bw, bh, argb=0xffffffff, linew=1, fname=""):
     SE.CreateBitmap(bw, bh, argb, linew, fname)
 
-#[AC] devPToWorldP(p)
-def devPToWorldP(p):
+#[AC] dev_p_to_world_p(p)
+def dev_p_to_world_p(p):
     return SE.DevPToWorldP(p)
 
-#[AC] worldPToDevP(p)
-def worldPToDevP(p):
+#[AC] world_p_to_dev_p(p)
+def world_p_to_dev_p(p):
     return SE.WorldPToDevP(p)
 
-#[AC] devVToWorldV(v)
-def devPToWorldP(v):
+#[AC] dev_v_to_world_v(v)
+def dev_v_to_world_v(v):
     return SE.DevVToWorldV(v)
 
-#[AC] worldVToDevV(v)
-def worldVToDevV(v):
+#[AC] world_v_to_dev_v(v)
+def world_v_to_dev_v(v):
     return SE.WorldVToDevV(v)
 
 
@@ -357,7 +363,6 @@ def rad2deg(rad):
 #[AC] deg2rad(deg)
 def deg2rad(deg):
 	return math.pi * deg / 180.0
-
 
 
 #[AC] test()

@@ -16,7 +16,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ResDict/ToggleBtnRadio.xaml" />
+                <ResourceDictionary Source="ResDict/ToggleAndRadioStyle.xaml" />
                 <ResourceDictionary Source="ResDict/Colors.xaml" />
                 <ResourceDictionary Source="ResDict/Images.xaml" />
                 <ResourceDictionary Source="ResDict/ButtonStyle.xaml" />
@@ -27,8 +27,8 @@
 
 
             <Style x:Key="MyMenu" TargetType="Menu">
-                <Setter Property="Foreground" Value="{StaticResource TextColor}" />
-                <Setter Property="Background" Value="{StaticResource MenuColor}" />
+                <Setter Property="Foreground" Value="{StaticResource MenuTextColor}" />
+                <Setter Property="Background" Value="{StaticResource MenuBGColor}" />
             </Style>
 
             <Style
@@ -36,9 +36,9 @@
                 BasedOn="{StaticResource MLB_MenuItem}"
                 TargetType="MenuItem">
                 <Setter Property="Foreground" Value="White" />
-                <Setter Property="Background" Value="{StaticResource MenuColor}" />
+                <Setter Property="Background" Value="{StaticResource MenuBGColor}" />
                 <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="BorderBrush" Value="{StaticResource MenuColor}" />
+                <Setter Property="BorderBrush" Value="{StaticResource MenuBGColor}" />
                 <Setter Property="Padding" Value="0,0,0,0" />
             </Style>
 

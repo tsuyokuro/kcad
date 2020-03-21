@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CadDataTypes;
 using OpenTK;
 
@@ -11,17 +7,6 @@ namespace Plotter
     // 円を点リストに展開
     public static class CircleExpander
     {
-        public static VertexList GetExpandList(
-            CadVertex cp, CadVertex pa, CadVertex pb,
-            int splitCnt)
-        {
-            VertexList ret = new VertexList(splitCnt + 1);
-
-            ForEachPoints(cp , pa, pb, splitCnt, (v)=> { ret.Add(v); });
-
-            return ret;
-        }
-
         public static void ForEachSegs(
             CadVertex cp, CadVertex pa, CadVertex pb,
             int splitCnt,
@@ -68,11 +53,10 @@ namespace Plotter
             action(tp1, pa);
         }
 
-
-        public static void ForEachPoints(
+        public static void Draw(
             CadVertex cp, CadVertex pa, CadVertex pb,
             int splitCnt,
-            Action<CadVertex> action)
+            DrawContext dc, DrawPen pen)
         {
             CadVertex va = pa - cp;
             CadVertex vb = pb - cp;
@@ -92,7 +76,8 @@ namespace Plotter
             CadQuaternion r = q.Conjugate();
 
             CadVertex p = va;
-            CadVertex tp = pa;
+            CadVertex tp1 = pa;
+            CadVertex tp2 = pa;
 
 
             int i = 0;
@@ -104,10 +89,13 @@ namespace Plotter
 
                 p.vector = qp.ToPoint();
 
-                tp = p + cp;
+                tp2 = p + cp;
 
-                action(tp);
+                dc.Drawing.DrawLine(pen, tp1.vector, tp2.vector);
+                tp1 = tp2;
             }
+
+            dc.Drawing.DrawLine(pen, tp1.vector, pa.vector);
         }
     }
 }

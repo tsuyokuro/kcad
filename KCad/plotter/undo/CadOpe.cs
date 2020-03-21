@@ -554,4 +554,28 @@ namespace Plotter
             db.InserLayer(Layer, Index);
         }
     }
+
+    public class CadOpeChangeFigureList : CadOpe
+    {
+        private CadLayer Layer;
+        private List<CadFigure> OldList;
+        private List<CadFigure> NewList;
+
+        public CadOpeChangeFigureList(CadLayer layer, List<CadFigure> oldList, List<CadFigure> newList)
+        {
+            Layer = layer;
+            OldList = oldList;
+            NewList = newList;
+        }
+
+        public override void Redo(CadObjectDB db)
+        {
+            Layer.FigureList = NewList;
+        }
+
+        public override void Undo(CadObjectDB db)
+        {
+            Layer.FigureList = OldList;
+        }
+    }
 }

@@ -134,6 +134,15 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Continue create figure に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_continue_create_figure {
+            get {
+                return ResourceManager.GetString("menu_continue_create_figure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Copy に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_copy {
@@ -170,6 +179,15 @@ namespace KCad.Properties {
         }
         
         /// <summary>
+        ///   Draw mode に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_draw_mode {
+            get {
+                return ResourceManager.GetString("menu_draw_mode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Edit に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_edit {
@@ -202,6 +220,15 @@ namespace KCad.Properties {
         public static string menu_fill_mesh {
             get {
                 return ResourceManager.GetString("menu_fill_mesh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Grid settings... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_grid_settings {
+            get {
+                return ResourceManager.GetString("menu_grid_settings", resourceCulture);
             }
         }
         
@@ -310,6 +337,78 @@ namespace KCad.Properties {
         public static string menu_snap {
             get {
                 return ResourceManager.GetString("menu_snap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Snap settings... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_snap_settings {
+            get {
+                return ResourceManager.GetString("menu_snap_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Snap to grid に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_snap_to_grid {
+            get {
+                return ResourceManager.GetString("menu_snap_to_grid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Snap to last down に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_snap_to_last_down {
+            get {
+                return ResourceManager.GetString("menu_snap_to_last_down", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Snap to line に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_snap_to_line {
+            get {
+                return ResourceManager.GetString("menu_snap_to_line", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Snap to point に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_snap_to_point {
+            get {
+                return ResourceManager.GetString("menu_snap_to_point", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Snap to segment に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_snap_to_seg {
+            get {
+                return ResourceManager.GetString("menu_snap_to_seg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Snap to self に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_snap_to_self {
+            get {
+                return ResourceManager.GetString("menu_snap_to_self", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Snap to zero に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string menu_snap_to_zero {
+            get {
+                return ResourceManager.GetString("menu_snap_to_zero", resourceCulture);
             }
         }
         

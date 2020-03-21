@@ -215,12 +215,14 @@ namespace Plotter
                 return;
             }
 
-            DrawParam dp = new DrawParam(dc, pen);
-            PolyLineExpander.ForEachSegs<DrawParam>(pl, IsLoop, 8, 
-                (v0, v1, p) =>
-                {
-                    p.DC.Drawing.DrawLine(p.Pen, v0.vector, v1.vector);
-                }, dp);
+            //DrawParam dp = new DrawParam(dc, pen);
+            //PolyLineExpander.ForEachSegs<DrawParam>(pl, IsLoop, 8, 
+            //    (v0, v1, p) =>
+            //    {
+            //        p.DC.Drawing.DrawLine(p.Pen, v0.vector, v1.vector);
+            //    }, dp);
+
+            PolyLineExpander.Draw(pl, IsLoop, 8, dc, pen);
         }
 
         public override VertexList GetPoints(int curveSplitNum)

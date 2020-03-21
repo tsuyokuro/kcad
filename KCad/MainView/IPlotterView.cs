@@ -21,5 +21,7 @@ namespace Plotter
         void ChangeMouseCursor(PlotterObserver.MouseCursorType cursorType);
 
         void SetWorldScale(double scale);
+
+        void DrawModeUpdated(DrawTools.DrawMode mode);
     }
 }

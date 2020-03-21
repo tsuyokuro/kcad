@@ -12,6 +12,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using KCad.Controls;
 using KCad.ViewModel;
+using KCad.Dialogs;
 
 namespace KCad
 {
@@ -28,6 +29,7 @@ namespace KCad
             SetupInteractionConsole();
 
             ViewModel = new PlotterViewModel(this);
+            ViewModel.Open();
 
             viewContainer.Focusable = true;
 
@@ -59,12 +61,31 @@ namespace KCad
 
         private void SetupInteractionConsole()
         {
-            ItConsole.PrintFunc = MyConsole.Print;
-            ItConsole.PrintLnFunc = MyConsole.PrintLn;
-            ItConsole.FormatPrintFunc = MyConsole.Printf;
-            ItConsole.clear = MyConsole.Clear;
+            ItConsole.Print = MyConsole.Print;
+            ItConsole.PrintLn = MyConsole.PrintLn;
+            ItConsole.PrintF = MyConsole.PrintF;
+            ItConsole.Clear = MyConsole.Clear;
+            ItConsole.GetString = PromptTextInput;
         }
 
+        private string PromptTextInput(string msg, string def)
+        {
+            InputStringDialog dlg = new InputStringDialog();
+
+            dlg.Message = msg;
+
+            dlg.InputString = def;
+
+            bool? dlgRet = dlg.ShowDialog();
+
+            if (!dlgRet.Value)
+            {
+                return null;
+            }
+
+            return dlg.InputString;
+        }
+        
         private void SetupDataContext()
         {
             LayerListView.DataContext = ViewModel.LayerListVM.LayerList;
@@ -80,6 +101,8 @@ namespace KCad
             SnapMenu.DataContext = ViewModel.Settings;
 
             SettingsMenu.DataContext = ViewModel.Settings;
+
+            DrawModeMenu.DataContext = ViewModel.Settings;
 
             DrawOptionMenu.DataContext = ViewModel.Settings;
 
@@ -165,9 +188,6 @@ namespace KCad
         {
             var hsrc = HwndSource.FromVisual(this) as HwndSource;
             hsrc.AddHook(WndProc);
-
-
-            ViewModel.Open();
 
             System.Drawing.Color c = ViewModel.DC.Tools.BrushColor(DrawTools.BRUSH_BACKGROUND);
             viewRoot.Background = new SolidColorBrush(Color.FromRgb(c.R, c.G, c.B));
@@ -264,11 +284,12 @@ namespace KCad
                 
                 case WinAPI.WM_MOVE:
                     {
-                        MainWindow wnd = (MainWindow)Application.Current.MainWindow;
-                        if (wnd.viewContainer.Visibility != Visibility.Visible)
-                        {
-                            wnd.viewContainer.Visibility = Visibility.Visible;
-                        }
+                        // キャプションの上端でResizeすると画面崩れするのでコメントアウト
+                        //MainWindow wnd = (MainWindow)Application.Current.MainWindow;
+                        //if (wnd.viewContainer.Visibility != Visibility.Visible)
+                        //{
+                        //    wnd.viewContainer.Visibility = Visibility.Visible;
+                        //}
                     }
                     break;
 

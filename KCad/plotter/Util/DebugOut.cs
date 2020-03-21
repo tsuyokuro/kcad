@@ -12,8 +12,8 @@ namespace Plotter
 
         public static String space = "";
 
-        public static PrintFunc PrintFunc = (s)=> { };
-        public static PrintFunc PrintLnFunc = (s)=> { };
+        public static Action<string> PrintF = (s)=> { };
+        public static Action<string> PrintLn = (s)=> { };
 
         public static Mutex Lock = new Mutex();
 
@@ -60,7 +60,7 @@ namespace Plotter
         {
             Begin();
             PutCount++;
-            PrintFunc(s);
+            PrintF(s);
             End();
         }
 
@@ -69,7 +69,7 @@ namespace Plotter
         {
             Begin();
             PutCount++;
-            PrintLnFunc(space + s);
+            PrintLn(space + s);
             End();
         }
 
@@ -80,7 +80,7 @@ namespace Plotter
 
             Begin();
             PutCount++;
-            PrintLnFunc(dt.ToString("HH:mm:ss.fff") + " " + space + s);
+            PrintLn(dt.ToString("HH:mm:ss.fff") + " " + space + s);
             End();
         }
     }

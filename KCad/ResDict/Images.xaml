@@ -72,6 +72,50 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
+    <!-- Move Object order -->
+    <DrawingImage x:Key="downDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V6.3500002 H6.3499999 V0 H0 Z">
+                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M6.3499999,6.3500002z M0,0z M1.8520833,1.8520833L3.175,4.7625 4.4979167,1.8520833z" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="upDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V6.3500002 H6.3499999 V0 H0 Z">
+                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M6.3499999,6.3500002z M0,0z M1.8520833,4.4979167L3.175,1.8520833 4.4979167,4.4979167z" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="bottomDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V6.3500002 H6.3499999 V0 H0 Z">
+                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M6.3499999,6.3500002z M0,0z M1.8520833,1.8520833L3.175,4.4979167 4.4979167,1.8520833z" />
+                <GeometryDrawing Brush="#FFFFFFFF">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry RadiusX="0" RadiusY="0" Rect="1.5875,4.4979,3.175,0.5292" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="topDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V6.3500002 H6.3499999 V0 H0 Z">
+                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M6.3499999,6.3500002z M0,0z M1.8520833,4.4979167L3.175,1.8520833 4.4979167,4.4979167z" />
+                <GeometryDrawing Brush="#FFFFFFFF">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry RadiusX="0" RadiusY="0" Rect="1.5875,1.3229,3.175,0.5292" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+    
+    
     <DrawingImage x:Key="baseline_visible_DrawingImage">
         <DrawingImage.Drawing>
             <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">
@@ -323,4 +367,37 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
+    <DrawingImage x:Key="addDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V6.3500002 H6.3499999 V0 H0 Z">
+                <GeometryDrawing Brush="#FF8DFF42" Geometry="F1 M6.3499999,6.3500002z M0,0z M1.3229167,2.6458334L1.3229167,3.4395834 2.9104167,3.4395834 2.9104167,5.0270834 3.4395834,5.0270834 3.4395834,3.4395834 5.0270834,3.4395834 5.0270834,2.9104167 3.4395834,2.9104167 3.4395834,1.3229167 2.9104167,1.3229167 2.9104167,2.9104167 1.3229167,2.9104167" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+    
+    <DrawingImage x:Key="deleteDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V6.3500002 H6.3499999 V0 H0 Z">
+                <GeometryDrawing Brush="#FFFF0000" Geometry="F1 M6.3499999,6.3500002z M0,0z M4.1104434,4.8587982L4.6717094,4.2975321 3.5491774,3.1750001 4.6717094,2.052468 4.297532,1.6782907 3.175,2.8008227 2.052468,1.6782907 1.6782906,2.052468 2.8008227,3.1750001 1.6782906,4.2975321 2.052468,4.6717094 3.175,3.5491774 4.297532,4.6717094" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="grip_vDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V1.3229168 H4.7624999 V0 H0 Z">
+                <GeometryDrawing Brush="#FF9E9E9E">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry RadiusX="0" RadiusY="0" Rect="0.2646,0.2646,4.2333,0.2646" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#FF9E9E9E">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry RadiusX="0" RadiusY="0" Rect="0.2646,0.7938,4.2333,0.2646" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+    
 </ResourceDictionary>
