@@ -36,6 +36,12 @@
                 <ResourceDictionary Source="ResDict/Dimen.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <Style
+                x:Key="SnapSettingToggleButton"
+                BasedOn="{StaticResource CircleToggleButton}"
+                TargetType="{x:Type ToggleButton}">
+            </Style>
+
             <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
 
                 <Setter Property="Background" Value="{StaticResource BaseColor}" />
@@ -503,100 +509,67 @@
                     <ToggleButton
                         Margin="1,2,0,2"
                         IsChecked="{Binding SnapToPoint}"
-                        Style="{StaticResource ToolToggleButton}">
-                        <Border
-                            Width="20"
-                            Height="20"
-                            Padding="2">
-                            <Image
-                                Width="16"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Source="{StaticResource SnapToPointDrawingImage}" />
-                        </Border>
-
+                        Style="{StaticResource SnapSettingToggleButton}" Width="22" Height="22">
+                        <Image
+                            Width="16"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Source="{StaticResource SnapToPointDrawingImage}" />
                     </ToggleButton>
 
                     <ToggleButton
-                        Margin="1,2,0,2"
+                        Margin="4,2,0,2"
                         IsChecked="{Binding SnapToSegment}"
-                        Style="{StaticResource ToolToggleButton}">
-                        <Border
-                            Width="20"
-                            Height="20"
-                            Padding="2">
-                            <Image
-                                Width="16"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Source="{StaticResource SnapToSegDrawingImage}" />
-                        </Border>
-
+                        Style="{StaticResource SnapSettingToggleButton}" Width="22" Height="22">
+                        <Image
+                            Width="16"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Source="{StaticResource SnapToSegDrawingImage}" />
                     </ToggleButton>
 
                     <ToggleButton
-                        Margin="1,2,0,2"
+                        Margin="4,2,0,2"
                         IsChecked="{Binding SnapToLine}"
-                        Style="{StaticResource ToolToggleButton}">
-                        <Border
-                            Width="20"
-                            Height="20"
-                            Padding="2">
-                            <Image
-                                Width="16"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Source="{StaticResource SnapToLineDrawingImage}" />
-                        </Border>
-
+                        Style="{StaticResource SnapSettingToggleButton}" Width="22" Height="22">
+                        <Image
+                            Width="16"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Source="{StaticResource SnapToLineDrawingImage}" />
                     </ToggleButton>
 
                     <ToggleButton
-                        Margin="1,2,0,2"
+                        Margin="4,2,0,2"
                         IsChecked="{Binding SnapToZero}"
-                        Style="{StaticResource ToolToggleButton}">
-                        <Border
-                            Width="20"
-                            Height="20"
-                            Padding="2">
-                            <Image
-                                Width="16"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Source="{StaticResource SnapToZeroDrawingImage}" />
-                        </Border>
+                        Style="{StaticResource SnapSettingToggleButton}" Width="22" Height="22">
+                        <Image
+                            Width="16"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Source="{StaticResource SnapToZeroDrawingImage}" />
                     </ToggleButton>
 
                     <ToggleButton
-                        Margin="1,2,0,2"
+                        Margin="4,2,0,2"
                         IsChecked="{Binding SnapToLastDownPoint}"
-                        Style="{StaticResource ToolToggleButton}">
-                        <Border
-                            Width="20"
-                            Height="20"
-                            Padding="2">
-                            <Image
-                                Width="16"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Source="{StaticResource SnapToLastDownDrawingImage}" />
-                        </Border>
+                        Style="{StaticResource SnapSettingToggleButton}" Width="22" Height="22">
+                        <Image
+                            Width="16"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Source="{StaticResource SnapToLastDownDrawingImage}" />
                     </ToggleButton>
 
                     <ToggleButton
-                        Margin="1,2,0,2"
+                        Margin="4,2,0,2"
                         IsChecked="{Binding SnapToGrid}"
-                        Style="{StaticResource ToolToggleButton}">
-                        <Border
-                            Width="20"
-                            Height="20"
-                            Padding="2">
-                            <Image
-                                Width="16"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Source="{StaticResource SnapToGridDrawingImage}" />
-                        </Border>
+                        Style="{StaticResource SnapSettingToggleButton}" Width="22" Height="22">
+                        <Image
+                            Width="16"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Source="{StaticResource SnapToGridDrawingImage}" />
                     </ToggleButton>
 
                     <Label Width="4" Height="Auto" />
