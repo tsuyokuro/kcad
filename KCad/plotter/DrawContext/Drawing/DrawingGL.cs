@@ -541,20 +541,23 @@ namespace Plotter
             GL.Enable(EnableCap.DepthTest);
         }
 
+        // Snap時にハイライトされるポイントを描画する
         public void DrawHighlightPoint(Vector3d pt, DrawPen pen)
         {
-            GL.LineWidth(2);
+            GL.LineWidth(DrawingConst.HighlightPointLineWidth);
 
             Start2D();
 
             GL.Color4(pen.Color4());
-            DrawCrossRaw(DC.WorldPointToDevPoint(pt), 6);
+            //DrawCross2D(DC.WorldPointToDevPoint(pt), DrawingConst.HighlightPointLineLength);
+            DrawX2D(DC.WorldPointToDevPoint(pt), DrawingConst.HighlightPointLineLength);
 
             End2D();
 
             GL.LineWidth(1);
         }
 
+        // Snap時にハイライトされるポイントを描画する
         public void DrawHighlightPoints(List<HighlightPointListItem> list)
         {
             GL.Disable(EnableCap.Lighting);
@@ -562,12 +565,13 @@ namespace Plotter
 
             Start2D();
 
-            GL.LineWidth(2);
+            GL.LineWidth(DrawingConst.HighlightPointLineWidth);
 
             list.ForEach(item =>
             {
                 GL.Color4(item.Pen.Color4());
-                DrawCrossRaw(DC.WorldPointToDevPoint(item.Point), 6);
+                //DrawCross2D(DC.WorldPointToDevPoint(item.Point), DrawingConst.HighlightPointLineLength);
+                DrawX2D(DC.WorldPointToDevPoint(item.Point), DrawingConst.HighlightPointLineLength);
             });
 
             GL.LineWidth(1);
@@ -576,7 +580,7 @@ namespace Plotter
         }
 
         // Point sizeをそのまま使って十字を描画
-        private void DrawCrossRaw(Vector3d p, double size)
+        private void DrawCross2D(Vector3d p, double size)
         {
             double hs = size;
 
@@ -590,10 +594,10 @@ namespace Plotter
             Vector3d py1 = p;
             py1.Y += hs;
 
-            Vector3d pz0 = p;
-            pz0.Z -= hs;
-            Vector3d pz1 = p;
-            pz1.Z += hs;
+            //Vector3d pz0 = p;
+            //pz0.Z -= hs;
+            //Vector3d pz1 = p;
+            //pz1.Z += hs;
 
             GL.Begin(PrimitiveType.LineStrip);
             GL.Vertex3(px0);
@@ -605,9 +609,41 @@ namespace Plotter
             GL.Vertex3(py1);
             GL.End();
 
+            //GL.Begin(PrimitiveType.LineStrip);
+            //GL.Vertex3(pz0);
+            //GL.Vertex3(pz1);
+            //GL.End();
+        }
+
+        // Point sizeをそのまま使って十字を描画
+        private void DrawX2D(Vector3d p, double size)
+        {
+            double hs = size;
+
+            Vector3d pa = p;
+            pa.X -= hs;
+            pa.Y += hs;
+
+            Vector3d pa_ = p;
+            pa_.X += hs;
+            pa_.Y -= hs;
+
+            Vector3d pb = p;
+            pb.X += hs;
+            pb.Y += hs;
+
+            Vector3d pb_ = p;
+            pb_.X -= hs;
+            pb_.Y -= hs;
+
             GL.Begin(PrimitiveType.LineStrip);
-            GL.Vertex3(pz0);
-            GL.Vertex3(pz1);
+            GL.Vertex3(pa);
+            GL.Vertex3(pa_);
+            GL.End();
+
+            GL.Begin(PrimitiveType.LineStrip);
+            GL.Vertex3(pb);
+            GL.Vertex3(pb_);
             GL.End();
         }
 
@@ -838,12 +874,12 @@ namespace Plotter
 
             Start2D();
 
-            GL.LineWidth(1);
+            GL.LineWidth(DrawingConst.HighlightPointLineWidth);
             GL.Color4(pen.Color4());
 
             pointList.ForEach(v =>
             {
-                DrawCrossRaw(DC.WorldPointToDevPoint(v), 6);
+                DrawCross2D(DC.WorldPointToDevPoint(v), DrawingConst.HighlightPointLineLength);
             });
 
             GL.LineWidth(1);

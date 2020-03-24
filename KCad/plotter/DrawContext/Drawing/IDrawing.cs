@@ -18,6 +18,12 @@ namespace Plotter
         }
     }
 
+    public class DrawingConst
+    {
+        public const float HighlightPointLineWidth = 2;
+        public const float HighlightPointLineLength = 6;
+    }
+
     public interface IDrawing : IDisposable
     {
         void Clear(DrawBrush brush);

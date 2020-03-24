@@ -350,6 +350,13 @@ namespace Plotter
             DrawLineScrn(pen, p.X + 0, p.Y + size, p.X + 0, p.Y - size);
         }
 
+        private void DrawXScrn(DrawPen pen, Vector3d p, double size)
+        {
+            DrawLineScrn(pen, p.X - size, p.Y + size, p.X + size, p.Y - size);
+            DrawLineScrn(pen, p.X - size, p.Y - size, p.X + size, p.Y + size);
+        }
+
+
         public void DrawLine(DrawPen pen, Vector3d a, Vector3d b)
         {
             if (pen.GdiPen == null) return;
