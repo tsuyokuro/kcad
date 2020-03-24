@@ -13,6 +13,8 @@
     <SolidColorBrush x:Key="MenuTextColor" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="MenuSepColor" Color="#FF909090" />
 
+    <SolidColorBrush x:Key="ToolBarBGColor" Color="#FF3F3F46" />
+
     <!--<SolidColorBrush x:Key="ListBoxSelColor" Color="#FF228b22" />-->
     <SolidColorBrush x:Key="ListBoxSelColor" Color="#FF007ACC" />
     <!--<SolidColorBrush x:Key="ListBoxSelColor" Color="#FF000000" />-->

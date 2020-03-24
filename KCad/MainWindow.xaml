@@ -492,16 +492,17 @@
                 Grid.Row="1"
                 Height="Auto"
                 HorizontalAlignment="Stretch"
-                Background="{StaticResource BaseColor}"
+                Background="{StaticResource ToolBarBGColor}"
                 Orientation="Vertical">
 
                 <StackPanel
                     x:Name="SnapToolBar"
+                    Margin="0,3,0,0"
                     Height="Auto"
                     Width="Auto"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Background="{StaticResource BaseColor}"
+                    Background="Transparent"
                     Orientation="Horizontal">
 
                     <Label Width="4" Height="Auto" />
