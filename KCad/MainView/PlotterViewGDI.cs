@@ -71,7 +71,7 @@ namespace Plotter
         protected void SetupCursor()
         {
             StreamResourceInfo si = System.Windows.Application.GetResourceStream(
-                new Uri("/KCad;component/Resources/dot.cur", UriKind.Relative));
+                new Uri("/KCad;component/Resources/Cursors/dot.cur", UriKind.Relative));
 
             PointCursor = new Cursor(si.Stream);
 

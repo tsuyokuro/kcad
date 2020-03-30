@@ -9,20 +9,20 @@
     Title="Script editor"
     Width="442.5"
     Height="440"
-    Icon="ResDict/Images/script_icon.png"
+    Icon="Resources/Images/script_icon.png"
     ResizeMode="CanResizeWithGrip"
     mc:Ignorable="d">
 
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ResDict/ToggleAndRadioStyle.xaml" />
-                <ResourceDictionary Source="ResDict/Colors.xaml" />
-                <ResourceDictionary Source="ResDict/Images.xaml" />
-                <ResourceDictionary Source="ResDict/ButtonStyle.xaml" />
-                <ResourceDictionary Source="ResDict/ImageCheckBoxs.xaml" />
-                <ResourceDictionary Source="ResDict/MenuStyle.xaml" />
-                <ResourceDictionary Source="ResDict/ScrollBarStyle.xaml" />
+                <ResourceDictionary Source="Resources/ToggleAndRadioStyle.xaml" />
+                <ResourceDictionary Source="Resources/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Images.xaml" />
+                <ResourceDictionary Source="Resources/ButtonStyle.xaml" />
+                <ResourceDictionary Source="Resources/ImageCheckBoxs.xaml" />
+                <ResourceDictionary Source="Resources/MenuStyle.xaml" />
+                <ResourceDictionary Source="Resources/ScrollBarStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
 
