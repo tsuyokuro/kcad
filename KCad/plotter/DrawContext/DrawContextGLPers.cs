@@ -22,6 +22,7 @@ namespace Plotter
         public override void StartDraw()
         {
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
+            //GL.Viewport((int)(ViewOrg.X - (mViewWidth/2)), (int)(-ViewOrg.Y + (mViewHeight/2)), (int)(mViewWidth), (int)(mViewHeight));
 
             GL.Enable(EnableCap.DepthTest);
 
@@ -30,6 +31,7 @@ namespace Plotter
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
+
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref mViewMatrix.Matrix);

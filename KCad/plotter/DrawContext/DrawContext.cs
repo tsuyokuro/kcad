@@ -118,7 +118,7 @@ namespace Plotter
 
         }
 
-        public void SetViewOrg(Vector3d org)
+        public virtual void SetViewOrg(Vector3d org)
         {
             mViewOrg = org;
         }
@@ -147,46 +147,46 @@ namespace Plotter
             mPushToViewAction?.Invoke(this);
         }
 
-        public CadVertex WorldPointToDevPoint(CadVertex pt)
+        public virtual CadVertex WorldPointToDevPoint(CadVertex pt)
         {
             pt.vector = WorldVectorToDevVector(pt.vector);
             pt.vector += mViewOrg;
             return pt;
         }
 
-        public CadVertex DevPointToWorldPoint(CadVertex pt)
+        public virtual CadVertex DevPointToWorldPoint(CadVertex pt)
         {
             pt.vector -= mViewOrg;
             pt.vector = DevVectorToWorldVector(pt.vector);
             return pt;
         }
 
-        public CadVertex WorldVectorToDevVector(CadVertex pt)
+        public virtual CadVertex WorldVectorToDevVector(CadVertex pt)
         {
             pt.vector = WorldVectorToDevVector(pt.vector);
             return pt;
         }
 
-        public CadVertex DevVectorToWorldVector(CadVertex pt)
+        public virtual CadVertex DevVectorToWorldVector(CadVertex pt)
         {
             pt.vector = DevVectorToWorldVector(pt.vector);
             return pt;
         }
 
-        public Vector3d WorldPointToDevPoint(Vector3d pt)
+        public virtual Vector3d WorldPointToDevPoint(Vector3d pt)
         {
             Vector3d p = WorldVectorToDevVector(pt);
             p = p + mViewOrg;
             return p;
         }
 
-        public Vector3d DevPointToWorldPoint(Vector3d pt)
+        public virtual Vector3d DevPointToWorldPoint(Vector3d pt)
         {
             pt = pt - mViewOrg;
             return DevVectorToWorldVector(pt);
         }
 
-        public Vector3d WorldVectorToDevVector(Vector3d pt)
+        public virtual Vector3d WorldVectorToDevVector(Vector3d pt)
         {
             pt *= WorldScale;
 
@@ -209,7 +209,7 @@ namespace Plotter
             return dv.ToVector3d();
         }
 
-        public Vector3d DevVectorToWorldVector(Vector3d pt)
+        public virtual Vector3d DevVectorToWorldVector(Vector3d pt)
         {
             pt.X = pt.X / DeviceScaleX;
             pt.Y = pt.Y / DeviceScaleY;

@@ -103,12 +103,9 @@ namespace Plotter
 
             mDrawContextOrtho = new DrawContextGLOrtho(this);
             mDrawContextOrtho.SetupTools(SettingsHolder.Settings.DrawMode);
-            //mDrawContextOrtho.SetupTools(DrawTools.ToolsType.DARK);
 
             mDrawContextPers = new DrawContextGLPers(this);
             mDrawContextPers.SetupTools(SettingsHolder.Settings.DrawMode);
-            //mDrawContextPers.SetupTools(DrawTools.ToolsType.DARK);
-
 
             mDrawContext = mDrawContextOrtho;
 
@@ -412,7 +409,7 @@ namespace Plotter
                 VectorExt.Set(out PrevMousePos, e.X, e.Y, 0);
                 DownButton = e.Button;
 
-                if (DownButton != MouseButtons.Middle)
+                //if (DownButton != MouseButtons.Middle)
                 {
                     mController.Mouse.MouseDown(mDrawContext, e.Button, e.X, e.Y);
                 }
@@ -459,16 +456,16 @@ namespace Plotter
             {
                 DrawContextGLPers dc = mDrawContext as DrawContextGLPers;
 
-                if (DownButton == MouseButtons.Middle)
+                if (DownButton == MouseButtons.Middle && !CadKeyboard.IsCtrlKeyDown())
                 {
                     Vector3d t = new Vector3d(e.X, e.Y, 0);
 
-                    Vector2 prev = default(Vector2);
+                    Vector2 prev = default;
 
                     prev.X = (float)PrevMousePos.X;
                     prev.Y = (float)PrevMousePos.Y;
 
-                    Vector2 current = default(Vector2);
+                    Vector2 current = default;
 
                     current.X = (float)t.X;
                     current.Y = (float)t.Y;
@@ -479,13 +476,9 @@ namespace Plotter
 
                     PrevMousePos = t;
                 }
-                // TODO とりあえずDragできない様にしときます
-                else if (DownButton == MouseButtons.None)
+                else
                 {
-                    //DrawContext dc = StartDraw();
-
                     mController.Mouse.MouseMove(mDrawContext, e.X, e.Y);
-
                     Redraw();
                 }
             }
