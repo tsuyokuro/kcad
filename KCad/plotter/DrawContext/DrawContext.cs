@@ -96,6 +96,13 @@ namespace Plotter
         public double ViewWidth => mViewWidth;
         public double ViewHeight => mViewHeight;
 
+        // Viewの中心
+        protected Vector3d mViewCenter;
+        public virtual Vector3d ViewCenter
+        {
+            get => mViewCenter;
+        }
+
         // 縮尺
         public double WorldScale = 1.0;
 
@@ -118,7 +125,7 @@ namespace Plotter
 
         }
 
-        public void SetViewOrg(Vector3d org)
+        public virtual void SetViewOrg(Vector3d org)
         {
             mViewOrg = org;
         }
@@ -132,6 +139,9 @@ namespace Plotter
         {
             mViewWidth = w;
             mViewHeight = h;
+
+            mViewCenter.X = w / 2.0;
+            mViewCenter.Y = h / 2.0;
         }
 
         public virtual void StartDraw()
@@ -147,46 +157,47 @@ namespace Plotter
             mPushToViewAction?.Invoke(this);
         }
 
-        public CadVertex WorldPointToDevPoint(CadVertex pt)
+        #region Point converter
+        public virtual CadVertex WorldPointToDevPoint(CadVertex pt)
         {
             pt.vector = WorldVectorToDevVector(pt.vector);
             pt.vector += mViewOrg;
             return pt;
         }
 
-        public CadVertex DevPointToWorldPoint(CadVertex pt)
+        public virtual CadVertex DevPointToWorldPoint(CadVertex pt)
         {
             pt.vector -= mViewOrg;
             pt.vector = DevVectorToWorldVector(pt.vector);
             return pt;
         }
 
-        public CadVertex WorldVectorToDevVector(CadVertex pt)
+        public virtual CadVertex WorldVectorToDevVector(CadVertex pt)
         {
             pt.vector = WorldVectorToDevVector(pt.vector);
             return pt;
         }
 
-        public CadVertex DevVectorToWorldVector(CadVertex pt)
+        public virtual CadVertex DevVectorToWorldVector(CadVertex pt)
         {
             pt.vector = DevVectorToWorldVector(pt.vector);
             return pt;
         }
 
-        public Vector3d WorldPointToDevPoint(Vector3d pt)
+        public virtual Vector3d WorldPointToDevPoint(Vector3d pt)
         {
             Vector3d p = WorldVectorToDevVector(pt);
             p = p + mViewOrg;
             return p;
         }
 
-        public Vector3d DevPointToWorldPoint(Vector3d pt)
+        public virtual Vector3d DevPointToWorldPoint(Vector3d pt)
         {
             pt = pt - mViewOrg;
             return DevVectorToWorldVector(pt);
         }
 
-        public Vector3d WorldVectorToDevVector(Vector3d pt)
+        public virtual Vector3d WorldVectorToDevVector(Vector3d pt)
         {
             pt *= WorldScale;
 
@@ -209,7 +220,7 @@ namespace Plotter
             return dv.ToVector3d();
         }
 
-        public Vector3d DevVectorToWorldVector(Vector3d pt)
+        public virtual Vector3d DevVectorToWorldVector(Vector3d pt)
         {
             pt.X = pt.X / DeviceScaleX;
             pt.Y = pt.Y / DeviceScaleY;
@@ -230,12 +241,14 @@ namespace Plotter
             return wv.ToVector3d();
         }
 
-        public double DevSizeToWoldSize(double s)
+        public virtual double DevSizeToWoldSize(double s)
         {
-            CadVertex size = DevVectorToWorldVector(CadVertex.UnitX * s);
-            return size.Norm();
+            CadVertex vd = DevVectorToWorldVector(CadVertex.UnitX * s);
+            CadVertex v0 = DevVectorToWorldVector(CadVertex.Zero);
+            CadVertex v = vd - v0;
+            return v.Norm();
         }
-
+        #endregion
 
         protected void CalcViewDir()
         {

@@ -385,23 +385,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResDict\AutoCompTextBoxStyle.xaml">
+    <Page Include="Resources\AutoCompTextBoxStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResDict\ButtonStyle.xaml">
+    <Page Include="Resources\ButtonStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResDict\CaptionButtonStyle.xaml">
+    <Page Include="Resources\CaptionButtonStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResDict\Dimen.xaml">
+    <Page Include="Resources\Dimen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResDict\ImageCheckBoxs.xaml">
+    <Page Include="Resources\ImageCheckBoxs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -421,23 +421,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ResDict\Images.xaml">
+    <Page Include="Resources\Images.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResDict\MenuStyle.xaml">
+    <Page Include="Resources\MenuStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResDict\Colors.xaml">
+    <Page Include="Resources\Colors.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResDict\ScrollBarStyle.xaml">
+    <Page Include="Resources\ScrollBarStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResDict\ToggleAndRadioStyle.xaml">
+    <Page Include="Resources\ToggleAndRadioStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -558,11 +558,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ResDict\Images\triangle2.png" />
-    <Resource Include="Resources\null.cur" />
-    <Resource Include="Resources\dot.cur" />
-    <Resource Include="Resources\mini_cross.cur" />
-    <Resource Include="ResDict\Images\script_icon.png" />
+    <Resource Include="Resources\Images\triangle2.png" />
+    <Resource Include="Resources\Cursors\null.cur" />
+    <Resource Include="Resources\Cursors\dot.cur" />
+    <Resource Include="Resources\Cursors\mini_cross.cur" />
+    <Resource Include="Resources\Images\script_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CadDataTypes\CadDataTypes.csproj">
@@ -577,6 +577,7 @@
   <ItemGroup>
     <Analyzer Include="..\packages\MessagePackAnalyzer.2.1.90\analyzers\dotnet\MessagePackAnalyzer.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "$(PlatformName)" == "x64" (

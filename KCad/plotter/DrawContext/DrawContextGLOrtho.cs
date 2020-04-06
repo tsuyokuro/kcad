@@ -76,6 +76,9 @@ namespace Plotter
             DeviceScaleX = w / 2.0;
             DeviceScaleY = -h / 2.0;
 
+            mViewCenter.X = w / 2.0;
+            mViewCenter.Y = h / 2.0;
+
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
 
             CalcProjectionMatrix();

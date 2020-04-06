@@ -375,7 +375,10 @@ namespace Plotter.Controller
 
         protected void DrawExtendSnapPoint(DrawContext dc)
         {
-            dc.Drawing.DrawExtSnapPoints(ExtendSnapPointList, dc.GetPen(DrawTools.PEN_EXT_SNAP));
+            if (ExtendSnapPointList.Count > 0)
+            {
+                dc.Drawing.DrawExtSnapPoints(ExtendSnapPointList, dc.GetPen(DrawTools.PEN_EXT_SNAP));
+            }
         }
     }
 }

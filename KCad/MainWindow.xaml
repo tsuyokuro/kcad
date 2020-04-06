@@ -14,7 +14,7 @@
     Background="Black"
     BorderBrush="#FF14A9FF"
     BorderThickness="1"
-    Icon="ResDict/Images/triangle2.png"
+    Icon="Resources/Images/triangle2.png"
     mc:Ignorable="d">
 
     <WindowChrome.WindowChrome>
@@ -24,16 +24,16 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ResDict/ToggleAndRadioStyle.xaml" />
-                <ResourceDictionary Source="ResDict/Colors.xaml" />
-                <ResourceDictionary Source="ResDict/Images.xaml" />
-                <ResourceDictionary Source="ResDict/ButtonStyle.xaml" />
-                <ResourceDictionary Source="ResDict/ImageCheckBoxs.xaml" />
-                <ResourceDictionary Source="ResDict/MenuStyle.xaml" />
-                <ResourceDictionary Source="ResDict/ScrollBarStyle.xaml" />
-                <ResourceDictionary Source="ResDict/CaptionButtonStyle.xaml" />
-                <ResourceDictionary Source="ResDict/AutoCompTextBoxStyle.xaml" />
-                <ResourceDictionary Source="ResDict/Dimen.xaml" />
+                <ResourceDictionary Source="Resources/ToggleAndRadioStyle.xaml" />
+                <ResourceDictionary Source="Resources/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Images.xaml" />
+                <ResourceDictionary Source="Resources/ButtonStyle.xaml" />
+                <ResourceDictionary Source="Resources/ImageCheckBoxs.xaml" />
+                <ResourceDictionary Source="Resources/MenuStyle.xaml" />
+                <ResourceDictionary Source="Resources/ScrollBarStyle.xaml" />
+                <ResourceDictionary Source="Resources/CaptionButtonStyle.xaml" />
+                <ResourceDictionary Source="Resources/AutoCompTextBoxStyle.xaml" />
+                <ResourceDictionary Source="Resources/Dimen.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style
@@ -212,7 +212,7 @@
                 Width="20"
                 Margin="8,0,0,0"
                 VerticalAlignment="Center"
-                Source="ResDict/Images/triangle2.png" />
+                Source="Resources/Images/triangle2.png" />
             <Label
                 Grid.Column="1"
                 Margin="8,0,0,0"
@@ -492,16 +492,17 @@
                 Grid.Row="1"
                 Height="Auto"
                 HorizontalAlignment="Stretch"
-                Background="{StaticResource BaseColor}"
+                Background="{StaticResource ToolBarBGColor}"
                 Orientation="Vertical">
 
                 <StackPanel
                     x:Name="SnapToolBar"
+                    Margin="0,3,0,0"
                     Height="Auto"
                     Width="Auto"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Background="{StaticResource BaseColor}"
+                    Background="Transparent"
                     Orientation="Horizontal">
 
                     <Label Width="4" Height="Auto" />
@@ -688,7 +689,7 @@
                                 Style="{StaticResource ToolRadioButton}"
                                 Tag="DIMENTION_LINE" />
 
-                            <Separator />
+                            <Separator Margin="4,4,4,4"/>
 
                             <RadioButton
                                 Margin="1,3,1,3"

@@ -207,10 +207,10 @@ namespace Plotter
             if (cnt == 1)
             {
                 dc.Drawing.DrawCross(pen, a.vector, 2);
-                if (a.Selected)
-                {
-                    dc.Drawing.DrawHighlightPoint(a.vector, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT));
-                }
+                //if (a.Selected)
+                //{
+                //    dc.Drawing.DrawHighlightPoint(a.vector, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT));
+                //}
 
                 return;
             }

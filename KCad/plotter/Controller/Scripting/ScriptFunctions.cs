@@ -86,24 +86,14 @@ namespace Plotter.Controller
             ItConsole.println(sb.ToString());
         }
 
-        public Vector3d WorldVToDevV(Vector3d w)
-        {
-            return Controller.DC.WorldVectorToDevVector(w);
-        }
-
-        public Vector3d DevVToWorldV(Vector3d d)
-        {
-            return Controller.DC.DevVectorToWorldVector(d);
-        }
-
         public Vector3d WorldPToDevP(Vector3d w)
         {
-            return Controller.DC.WorldVectorToDevVector(w);
+            return Controller.DC.WorldPointToDevPoint(w);
         }
 
         public Vector3d DevPToWorldP(Vector3d d)
         {
-            return Controller.DC.DevVectorToWorldVector(d);
+            return Controller.DC.DevPointToWorldPoint(d);
         }
 
         public void DumpVector(Vector3d v)
