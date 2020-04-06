@@ -96,6 +96,13 @@ namespace Plotter
         public double ViewWidth => mViewWidth;
         public double ViewHeight => mViewHeight;
 
+        // Viewの中心
+        protected Vector3d mViewCenter;
+        public virtual Vector3d ViewCenter
+        {
+            get => mViewCenter;
+        }
+
         // 縮尺
         public double WorldScale = 1.0;
 
@@ -132,6 +139,9 @@ namespace Plotter
         {
             mViewWidth = w;
             mViewHeight = h;
+
+            mViewCenter.X = w / 2.0;
+            mViewCenter.Y = h / 2.0;
         }
 
         public virtual void StartDraw()
@@ -147,6 +157,7 @@ namespace Plotter
             mPushToViewAction?.Invoke(this);
         }
 
+        #region Point converter
         public virtual CadVertex WorldPointToDevPoint(CadVertex pt)
         {
             pt.vector = WorldVectorToDevVector(pt.vector);
@@ -230,12 +241,14 @@ namespace Plotter
             return wv.ToVector3d();
         }
 
-        public double DevSizeToWoldSize(double s)
+        public virtual double DevSizeToWoldSize(double s)
         {
-            CadVertex size = DevVectorToWorldVector(CadVertex.UnitX * s);
-            return size.Norm();
+            CadVertex vd = DevVectorToWorldVector(CadVertex.UnitX * s);
+            CadVertex v0 = DevVectorToWorldVector(CadVertex.Zero);
+            CadVertex v = vd - v0;
+            return v.Norm();
         }
-
+        #endregion
 
         protected void CalcViewDir()
         {

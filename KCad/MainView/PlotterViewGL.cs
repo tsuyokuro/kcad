@@ -456,7 +456,7 @@ namespace Plotter
             {
                 DrawContextGLPers dc = mDrawContext as DrawContextGLPers;
 
-                if (DownButton == MouseButtons.Middle && !CadKeyboard.IsCtrlKeyDown())
+                if (DownButton == MouseButtons.Middle)
                 {
                     Vector3d t = new Vector3d(e.X, e.Y, 0);
 
@@ -470,7 +470,15 @@ namespace Plotter
                     current.X = (float)t.X;
                     current.Y = (float)t.Y;
 
-                    dc.RotateEyePoint(prev, current);
+                    if (CadKeyboard.IsCtrlKeyDown())
+                    {
+                        //MoveCamera(dc, prev, current);
+                        PanCamera(dc, prev, current);
+                    }
+                    else
+                    {
+                        dc.RotateEyePoint(prev, current);
+                    }
 
                     Redraw();
 
@@ -483,6 +491,73 @@ namespace Plotter
                 }
             }
         }
+
+        private void MoveCamera(DrawContext dc, Vector2 prev, Vector2 current)
+        {
+            Vector3d pv = new Vector3d(prev.X, prev.Y, 0);
+            Vector3d cv = new Vector3d(current.X, current.Y, 0);
+
+            Vector3d dv = cv - pv;
+
+            dv.X *= -1.0;
+
+            dc.WorldVectorToDevVector(dv);
+
+            Vector3d lookAt = dc.LookAt + dv;
+            Vector3d eye = dc.Eye + dv;
+
+            dc.SetCamera(eye, lookAt, dc.UpVector);
+        }
+
+        public void PanCamera(DrawContext dc, Vector2 prev, Vector2 current)
+        {
+            Vector2 d = current - prev;
+
+            double rx = d.X * (Math.PI / 1000);
+            double ry = d.Y * (Math.PI / 1000);
+
+            CadQuaternion q;
+            CadQuaternion r;
+            CadQuaternion qp;
+
+            Vector3d lookv = dc.LookAt - dc.Eye;
+            Vector3d upv = dc.UpVector;
+
+            q = CadQuaternion.RotateQuaternion(upv, rx);
+            r = q.Conjugate();
+
+            qp = CadQuaternion.FromVector(lookv);
+            qp = r * qp;
+            qp = qp * q;
+            lookv = qp.ToVector3d();
+
+            Vector3d ev = dc.LookAt - dc.Eye;
+
+            Vector3d a = new Vector3d(ev);
+            Vector3d b = new Vector3d(upv);
+
+            Vector3d axis = CadMath.Normal(a, b);
+
+            if (!axis.IsZero())
+            {
+                q = CadQuaternion.RotateQuaternion(axis, ry);
+                r = q.Conjugate();
+
+                qp = CadQuaternion.FromVector(lookv);
+                qp = r * qp;
+                qp = qp * q;
+
+                lookv = qp.ToVector3d();
+
+                qp = CadQuaternion.FromVector(upv);
+                qp = r * qp;
+                qp = qp * q;
+                upv = qp.ToVector3d();
+            }
+
+            dc.SetCamera(dc.Eye, lookv + dc.Eye, upv);
+        }
+
 
         public void DrawModeUpdated(DrawTools.DrawMode mode)
         {

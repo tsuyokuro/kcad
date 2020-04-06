@@ -509,8 +509,11 @@ namespace Plotter
         {
             GL.Disable(EnableCap.DepthTest);
 
-            Vector3d size = DC.DevVectorToWorldVector(Vector3d.UnitX * pix_size);
-            DrawCross(pen, p, size.Norm());
+            //Vector3d size = DC.DevVectorToWorldVector(Vector3d.UnitX * pix_size);
+            //DrawCross(pen, p, size.Norm());
+
+            double size = DC.DevSizeToWoldSize(pix_size);
+            DrawCross(pen, p, size);
 
             GL.Enable(EnableCap.DepthTest);
         }

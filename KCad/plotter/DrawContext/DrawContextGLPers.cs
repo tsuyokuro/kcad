@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using CadDataTypes;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -22,7 +23,6 @@ namespace Plotter
         public override void StartDraw()
         {
             GL.Viewport(0, 0, (int)mViewWidth, (int)mViewHeight);
-            //GL.Viewport((int)(ViewOrg.X - (mViewWidth/2)), (int)(-ViewOrg.Y + (mViewHeight/2)), (int)(mViewWidth), (int)(mViewHeight));
 
             GL.Enable(EnableCap.DepthTest);
 
@@ -49,6 +49,9 @@ namespace Plotter
 
             mViewOrg.X = w / 2.0;
             mViewOrg.Y = h / 2.0;
+
+            mViewCenter.X = w / 2.0;
+            mViewCenter.Y = h / 2.0;
 
             DeviceScaleX = w / 2.0;
             DeviceScaleY = -h / 2.0;
@@ -199,5 +202,102 @@ namespace Plotter
 
             return dc;
         }
+
+
+        #region Point converter
+        public override CadVertex WorldPointToDevPoint(CadVertex pt)
+        {
+            pt.vector = WorldVectorToDevVector(pt.vector);
+            pt.vector += mViewCenter;
+            return pt;
+        }
+
+        public override CadVertex DevPointToWorldPoint(CadVertex pt)
+        {
+            pt.vector -= mViewCenter;
+            pt.vector = DevVectorToWorldVector(pt.vector);
+            return pt;
+        }
+
+
+        public override CadVertex WorldVectorToDevVector(CadVertex pt)
+        {
+            pt.vector = WorldVectorToDevVector(pt.vector);
+            return pt;
+        }
+
+        public override CadVertex DevVectorToWorldVector(CadVertex pt)
+        {
+            pt.vector = DevVectorToWorldVector(pt.vector);
+            return pt;
+        }
+
+
+        public override Vector3d WorldPointToDevPoint(Vector3d pt)
+        {
+            Vector3d p = WorldVectorToDevVector(pt);
+            p = p + mViewCenter;
+            return p;
+        }
+
+        public override Vector3d DevPointToWorldPoint(Vector3d pt)
+        {
+            pt = pt - mViewCenter;
+            return DevVectorToWorldVector(pt);
+        }
+
+
+        public override Vector3d WorldVectorToDevVector(Vector3d pt)
+        {
+            pt *= WorldScale;
+
+            Vector4d wv = pt.ToVector4d(1.0);
+
+            Vector4d sv = wv * mViewMatrix;
+            Vector4d pv = sv * mProjectionMatrix;
+
+            Vector4d dv;
+
+            dv.X = pv.X / pv.W;
+            dv.Y = pv.Y / pv.W;
+            dv.Z = pv.Z / pv.W;
+            dv.W = pv.W;
+
+            dv.X = dv.X * DeviceScaleX;
+            dv.Y = dv.Y * DeviceScaleY;
+            dv.Z = 0;
+
+            return dv.ToVector3d();
+        }
+
+        public override Vector3d DevVectorToWorldVector(Vector3d pt)
+        {
+            pt.X = pt.X / DeviceScaleX;
+            pt.Y = pt.Y / DeviceScaleY;
+
+            Vector4d wv;
+
+            wv.W = mProjectionW;
+            wv.Z = mProjectionZ;
+
+            wv.X = pt.X * wv.W;
+            wv.Y = pt.Y * wv.W;
+
+            wv = wv * mProjectionMatrixInv;
+            wv = wv * mViewMatrixInv;
+
+            wv /= WorldScale;
+
+            return wv.ToVector3d();
+        }
+
+        public override double DevSizeToWoldSize(double s)
+        {
+            Vector3d vd = DevVectorToWorldVector(Vector3d.UnitX * s);
+            Vector3d v0 = DevVectorToWorldVector(Vector3d.Zero);
+            Vector3d v = vd - v0;
+            return v.Norm();
+        }
+        #endregion
     }
 }

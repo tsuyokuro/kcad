@@ -347,15 +347,6 @@ def dev_p_to_world_p(p):
 def world_p_to_dev_p(p):
     return SE.WorldPToDevP(p)
 
-#[AC] dev_v_to_world_v(v)
-def dev_v_to_world_v(v):
-    return SE.DevVToWorldV(v)
-
-#[AC] world_v_to_dev_v(v)
-def world_v_to_dev_v(v):
-    return SE.WorldVToDevV(v)
-
-
 #[AC] rad2deg(rad)
 def rad2deg(rad):
 	return 180.0 * rad / math.pi
