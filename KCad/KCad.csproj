@@ -279,6 +279,7 @@
     <Compile Include="plotter\Util\VectorExt.cs" />
     <Compile Include="ViewModel\Converter\BindingConverter.cs" />
     <Compile Include="ViewModel\ViewModelContext.cs" />
+    <Compile Include="ViewModel\ViewManager.cs" />
     <Compile Include="WIndowsAPI\WindowsAPI.cs" />
     <Compile Include="Dialogs\AngleInputDialog.xaml.cs">
       <DependentUpon>AngleInputDialog.xaml</DependentUpon>

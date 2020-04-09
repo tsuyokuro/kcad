@@ -96,7 +96,7 @@ namespace KCad
             textBlockXYZ.DataContext = ViewModel.CursorPosVM;
             textBlockXYZ2.DataContext = ViewModel.CursorPosVM;
 
-            ViewModePanel.DataContext = ViewModel;
+            ViewModePanel.DataContext = ViewModel.mViewManager;
 
             SnapMenu.DataContext = ViewModel.Settings;
 

@@ -1,5 +1,4 @@
-﻿//#define USE_GDI_VIEW
-using OpenTK;
+﻿using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -48,6 +47,8 @@ namespace KCad.ViewModel
 
         public LayerListViewModel LayerListVM;
 
+        public ViewManager mViewManager;
+
         private SelectModes mSelectMode = SelectModes.OBJECT;
         public SelectModes SelectMode
         {
@@ -95,27 +96,6 @@ namespace KCad.ViewModel
             get => mMeasureMode;
         }
 
-
-        private ViewModes mViewMode = ViewModes.NONE;
-
-        public ViewModes ViewMode
-        {
-            set
-            {
-#if (USE_GDI_VIEW)
-                bool changed = ChangeViewModeGdi(value);
-#else
-                bool changed = ChangeViewMode(value);
-#endif
-                if (changed)
-                {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewMode)));
-                }
-            }
-
-            get => mViewMode;
-        }
-
         public DrawContext DC
         {
             get => mController?.DC;
@@ -125,21 +105,6 @@ namespace KCad.ViewModel
         public SettingsVeiwModel Settings
         {
             get => SettingsVM;
-        }
-
-        private ICadMainWindow mMainWindow;
-
-#if USE_GDI_VIEW
-        private PlotterViewGDI PlotterView1GDI1 = null;
-#endif
-        private PlotterViewGL PlotterViewGL1 = null;
-
-
-        private IPlotterView mPlotterView = null;
-
-        public System.Windows.Forms.Control CurrentView
-        {
-            get => mPlotterView.FormsControl;
         }
 
         Window mEditorWindow;
@@ -167,6 +132,8 @@ namespace KCad.ViewModel
             ObjTreeVM = new ObjectTreeViewModel(this);
 
             LayerListVM = new LayerListViewModel(this);
+
+            mViewManager = new ViewManager(this);
 
             mMainWindow = mainWindow;
 
@@ -196,17 +163,6 @@ namespace KCad.ViewModel
             mMoveKeyHandler = new MoveKeyHandler(Controller);
         }
 
-        private void SetupViews()
-        {
-#if USE_GDI_VIEW
-            PlotterView1GDI1 = new PlotterViewGDI();
-#endif
-            PlotterViewGL1 = PlotterViewGL.Create();
-
-            ViewMode = ViewModes.FRONT;
-            ViewMode = ViewModes.FREE;  // 一旦GL側を設定してViewをLoadしておく
-            ViewMode = ViewModes.FRONT;
-        }
 
         #region handling IMainWindow
         private void ChangeCurrentFileName(string fname)
@@ -230,36 +186,7 @@ namespace KCad.ViewModel
         {
             mMainWindow.ClosePopupMessage();
         }
-
-        private void SetView(IPlotterView view)
-        {
-            //if (view == mPlotterView)
-            //{
-            //    return;
-            //}
-
-            if (mPlotterView != null)
-            {
-                mPlotterView.SetController(null);
-            }
-
-            mPlotterView = view;
-
-            mPlotterView.SetController(mController);
-
-            mController.DC = view.DrawContext;
-
-            mMainWindow.SetPlotterView(view);
-        }
 #endregion handling IMainWindow
-
-        public void ViewFocus()
-        {
-            if (CurrentView != null)
-            {
-                CurrentView.Focus();
-            }
-        }
 
 #region Maps
         private void InitCommandMap()
@@ -522,10 +449,7 @@ namespace KCad.ViewModel
         {
             CurrentFileName = null;
 
-#if USE_GDI_VIEW
-            PlotterView1GDI1.SetWorldScale(1.0);
-#endif
-            PlotterViewGL1.SetWorldScale(1.0);
+            mViewManager.SetWorldScale(1.0);
 
             mController.ClearAll();
             Redraw();
@@ -724,7 +648,7 @@ namespace KCad.ViewModel
 
         public void SearchNearPoint()
         {
-            mController.MoveCursorToNearPoint(mPlotterView.DrawContext);
+            mController.MoveCursorToNearPoint(mViewManager.DrawContext);
             Redraw();
         }
 
@@ -790,17 +714,15 @@ namespace KCad.ViewModel
         {
             ThreadUtil.RunOnMainThread(() =>
             {
-                mPlotterView.CursorLocked(locked);
+                mViewManager.PlotterView.CursorLocked(locked);
             }, true);
         }
 
         private void ChangeMouseCursor(PlotterObserver.MouseCursorType cursorType)
         {
-            //DOut.pl("ViewModel: ChangeMouseCursor");
-
             ThreadUtil.RunOnMainThread(() =>
             {
-                mPlotterView.ChangeMouseCursor(cursorType);
+                mViewManager.PlotterView.ChangeMouseCursor(cursorType);
             }, true);
         }
 
@@ -920,7 +842,7 @@ namespace KCad.ViewModel
 
             dlg.Owner = mMainWindow.GetWindow();
 
-            dlg.WorldScale = mPlotterView.DrawContext.WorldScale;
+            dlg.WorldScale = mViewManager.DrawContext.WorldScale;
 
             bool? result = dlg.ShowDialog();
 
@@ -933,10 +855,7 @@ namespace KCad.ViewModel
 
         public void SetWorldScale(double scale)
         {
-#if USE_GDI_VIEW
-            PlotterView1GDI1.SetWorldScale(scale);
-#endif
-            PlotterViewGL1.SetWorldScale(scale);
+            mViewManager.SetWorldScale(scale);
         }
 
         public void TextCommand(string s)
@@ -1002,179 +921,7 @@ namespace KCad.ViewModel
             return true;
         }
 
-        private bool ChangeViewMode(ViewModes newMode)
-        {
-            if (mViewMode == newMode)
-            {
-                return false;
-            }
 
-            mViewMode = newMode;
-
-            DrawContext currentDC = mPlotterView == null? null : mPlotterView.DrawContext;
-            DrawContext nextDC = mPlotterView == null ? null : mPlotterView.DrawContext;
-            IPlotterView view = mPlotterView;
-
-            switch (mViewMode)
-            {
-                case ViewModes.FRONT:
-                    PlotterViewGL1.EnablePerse(false);
-                    view = PlotterViewGL1;
-                    view.DrawContext.SetCamera(
-                        Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
-                        Vector3d.Zero, Vector3d.UnitY);
-                    nextDC = view.DrawContext;
-                    break;
-
-                case ViewModes.BACK:
-                    PlotterViewGL1.EnablePerse(false);
-                    view = PlotterViewGL1;
-                    view.DrawContext.SetCamera(
-                        -Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
-                        Vector3d.Zero, Vector3d.UnitY);
-
-                    nextDC = view.DrawContext;
-                    break;
-
-                case ViewModes.TOP:
-                    PlotterViewGL1.EnablePerse(false);
-                    view = PlotterViewGL1;
-                    view.DrawContext.SetCamera(
-                        Vector3d.UnitY * DrawContext.STD_EYE_DIST,
-                        Vector3d.Zero, -Vector3d.UnitZ);
-
-                    nextDC = view.DrawContext;
-                    break;
-
-                case ViewModes.BOTTOM:
-                    PlotterViewGL1.EnablePerse(false);
-                    view = PlotterViewGL1;
-                    view.DrawContext.SetCamera(
-                        -Vector3d.UnitY * DrawContext.STD_EYE_DIST,
-                        Vector3d.Zero, Vector3d.UnitZ);
-
-                    nextDC = view.DrawContext;
-                    break;
-
-                case ViewModes.RIGHT:
-                    PlotterViewGL1.EnablePerse(false);
-                    view = PlotterViewGL1;
-                    view.DrawContext.SetCamera(
-                        Vector3d.UnitX * DrawContext.STD_EYE_DIST,
-                        Vector3d.Zero, Vector3d.UnitY);
-
-                    nextDC = view.DrawContext;
-                    break;
-
-                case ViewModes.LEFT:
-                    PlotterViewGL1.EnablePerse(false);
-                    view = PlotterViewGL1;
-                    view.DrawContext.SetCamera(
-                        -Vector3d.UnitX * DrawContext.STD_EYE_DIST,
-                        Vector3d.Zero, Vector3d.UnitY);
-
-                    nextDC = view.DrawContext;
-                    break;
-
-                case ViewModes.FREE:
-                    PlotterViewGL1.EnablePerse(true);
-                    view = PlotterViewGL1;
-                    nextDC = view.DrawContext;
-                    break;
-            }
-
-            if (currentDC != null) currentDC.Deactive();
-            if (nextDC != null) nextDC.Active();
-
-            SetView(view);
-            Redraw();
-            return true;
-        }
-
-#if (USE_GDI_VIEW)
-        private bool ChangeViewModeGdi(ViewModes newMode)
-        {
-            if (mViewMode == newMode)
-            {
-                return false;
-            }
-
-            mViewMode = newMode;
-
-            DrawContext currentDC = mPlotterView == null ? null : mPlotterView.DrawContext;
-            DrawContext nextDC = mPlotterView == null ? null : mPlotterView.DrawContext;
-            IPlotterView view = mPlotterView;
-
-            switch (mViewMode)
-            {
-                case ViewModes.FRONT:
-                    view = PlotterView1GDI1;
-                    view.DrawContext.SetCamera(
-                        Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
-                        Vector3d.Zero, Vector3d.UnitY);
-                    nextDC = view.DrawContext;
-                    break;
-
-                case ViewModes.BACK:
-                    view = PlotterView1GDI1;
-                    view.DrawContext.SetCamera(
-                        -Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
-                        Vector3d.Zero, Vector3d.UnitY);
-
-                    nextDC = view.DrawContext;
-                    break;
-
-                case ViewModes.TOP:
-                    view = PlotterView1GDI1;
-                    view.DrawContext.SetCamera(
-                        Vector3d.UnitY * DrawContext.STD_EYE_DIST,
-                        Vector3d.Zero, -Vector3d.UnitZ);
-
-                    nextDC = view.DrawContext;
-                    break;
-
-                case ViewModes.BOTTOM:
-                    view = PlotterView1GDI1;
-                    view.DrawContext.SetCamera(
-                        -Vector3d.UnitY * DrawContext.STD_EYE_DIST,
-                        Vector3d.Zero, Vector3d.UnitZ);
-
-                    nextDC = view.DrawContext;
-                    break;
-
-                case ViewModes.RIGHT:
-                    view = PlotterView1GDI1;
-                    view.DrawContext.SetCamera(
-                        Vector3d.UnitX * DrawContext.STD_EYE_DIST,
-                        Vector3d.Zero, Vector3d.UnitY);
-
-                    nextDC = view.DrawContext;
-                    break;
-
-                case ViewModes.LEFT:
-                    view = PlotterView1GDI1;
-                    view.DrawContext.SetCamera(
-                        -Vector3d.UnitX * DrawContext.STD_EYE_DIST,
-                        Vector3d.Zero, Vector3d.UnitY);
-
-                    nextDC = view.DrawContext;
-                    break;
-
-                case ViewModes.FREE:
-                    PlotterViewGL1.EnablePerse(true);
-                    view = PlotterViewGL1;
-                    nextDC = view.DrawContext;
-                    break;
-            }
-
-            if (currentDC != null) currentDC.Deactive();
-            if (nextDC != null) nextDC.Active();
-
-            SetView(view);
-            Redraw();
-            return true;
-        }
-#endif
 
         public void SetupTextCommandView(AutoCompleteTextBox textBox)
         {
@@ -1184,7 +931,7 @@ namespace KCad.ViewModel
         public void Open()
         {
             Settings.Load();
-            SetupViews();
+            mViewManager.SetupViews();
         }
 
         public void Close()
@@ -1200,10 +947,7 @@ namespace KCad.ViewModel
 
         public override void DrawModeUpdated(DrawTools.DrawMode mode)
         {
-#if USE_GDI_VIEW
-            PlotterView1GDI1.DrawModeUpdated(mode);
-#endif
-            PlotterViewGL1.DrawModeUpdated(mode);
+            mViewManager.DrawModeUpdated(mode);
         }
     }
 }
