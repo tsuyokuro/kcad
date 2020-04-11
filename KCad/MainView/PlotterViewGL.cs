@@ -224,7 +224,7 @@ namespace Plotter
                 return;
             }
 
-            if (sizeChangeCnt == 2)
+            if (sizeChangeCnt == 1)
             {
                 Vector3d org = default;
                 org.X = Width / 2;

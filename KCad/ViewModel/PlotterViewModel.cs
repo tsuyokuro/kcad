@@ -227,6 +227,7 @@ namespace KCad.ViewModel
                 { "obj_order_up", ObjOrderUp },
                 { "obj_order_bottom", ObjOrderBottom },
                 { "obj_order_top", ObjOrderTop },
+                { "reset_camera", ResetCamera },
             };
         }
 
@@ -614,6 +615,12 @@ namespace KCad.ViewModel
         public void ObjOrderTop()
         {
             mController.ObjOrderTop();
+        }
+
+        public void ResetCamera()
+        {
+            mViewManager.ResetCamera();
+            Redraw();
         }
 
         public void AddLayer()

@@ -62,8 +62,11 @@ namespace KCad.ViewModel
             PlotterViewGL1 = PlotterViewGL.Create();
 
             ViewMode = ViewModes.FRONT;
+
+#if USE_GDI_VIEW
             ViewMode = ViewModes.FREE;  // 一旦GL側を設定してViewをLoadしておく
             ViewMode = ViewModes.FRONT;
+#endif
         }
 
         public void SetWorldScale(double scale)
@@ -82,6 +85,32 @@ namespace KCad.ViewModel
             PlotterViewGL1.DrawModeUpdated(mode);
         }
 
+        public void ResetCamera()
+        {
+            DrawContext dc = mPlotterView.DrawContext;
+
+            switch (mViewMode)
+            {
+                case ViewModes.FRONT:
+                case ViewModes.BACK:
+                case ViewModes.TOP:
+                case ViewModes.BOTTOM:
+                case ViewModes.RIGHT:
+                case ViewModes.LEFT:
+                    dc.SetViewOrg(
+                        new Vector3d(
+                                dc.ViewWidth / 2, dc.ViewHeight / 2, 0
+                            ));
+                    break;
+
+                case ViewModes.FREE:
+                    Vector3d eye = new Vector3d(0, 0, DrawContextGL.DEFAULT_EYE_Z);
+                    Vector3d lookAt = Vector3d.Zero;
+                    Vector3d up = Vector3d.UnitY;
+                    dc.SetCamera(eye, lookAt, up);
+                    break;
+            }
+        }
 
         private bool ChangeViewMode(ViewModes newMode)
         {

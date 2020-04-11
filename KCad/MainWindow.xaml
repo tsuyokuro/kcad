@@ -1194,6 +1194,20 @@
                                 TextAlignment="Center" />
 
                         </RadioButton>
+
+                        <Button
+                            Name="ResetCamera"
+                            Height="{StaticResource ViewModeButtonHeight}"
+                            Width="{StaticResource ViewModeButtonWidth}"
+                            Click="Command_Clicked"
+                            Tag="reset_camera"
+                            Margin="8,1,1,1"
+                            Style="{StaticResource ToolButton}">
+                            <TextBlock
+		                        Text="Reset"
+		                        TextAlignment="Center" />
+                        </Button>
+
                     </StackPanel>
 
                     <!--  予備  -->
