@@ -72,7 +72,7 @@
             <StackPanel Height="24" HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button
                     x:Name="cancel_button"
-                    Template="{StaticResource MyButtonTemplateR}"                    
+                    Style="{StaticResource DialogButton}"                    
                     Width="75"
                     Height="Auto"
                     Margin="0,0,8,0"
@@ -84,7 +84,7 @@
 
                 <Button
                     x:Name="ok_button"
-                    Template="{StaticResource MyButtonTemplateR}"                    
+                    Style="{StaticResource DialogButton}"                    
                     Width="75"
                     Height="Auto"
                     Margin="0,0,0,0"
