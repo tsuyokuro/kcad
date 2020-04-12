@@ -788,6 +788,9 @@ namespace Plotter
 
                 v = cp - d;
 
+                v.Attr = vl[i].Attr;
+                v.Flag = vl[i].Flag;
+
                 vl[i] = v;
             }
 
