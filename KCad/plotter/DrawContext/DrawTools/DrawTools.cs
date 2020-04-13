@@ -41,7 +41,10 @@ namespace Plotter
         public const int PEN_NORMAL = 30;
         public const int PEN_EXT_SNAP = 31;
         public const int PEN_HANDLE_LINE = 32;
-        public const int PEN_TBL_SIZE = 33;
+        public const int PEN_AXIS_X = 33;
+        public const int PEN_AXIS_Y = 34;
+        public const int PEN_AXIS_Z = 35;
+        public const int PEN_TBL_SIZE = 36;
 
         public const int BRUSH_DEFAULT = 1;
         public const int BRUSH_BACKGROUND = 2;

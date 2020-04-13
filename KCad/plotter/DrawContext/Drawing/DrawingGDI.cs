@@ -57,7 +57,7 @@ namespace Plotter
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
 
-            DrawLine(DC.GetPen(DrawTools.PEN_AXIS), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS_X), p0, p1);
 
             // Y軸
             p0.X = 0;
@@ -71,7 +71,7 @@ namespace Plotter
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
 
-            DrawLine(DC.GetPen(DrawTools.PEN_AXIS), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS_Y), p0, p1);
 
             // Z軸
             p0.X = 0;
@@ -85,7 +85,7 @@ namespace Plotter
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
 
-            DrawLine(DC.GetPen(DrawTools.PEN_AXIS), p0, p1);
+            DrawLine(DC.GetPen(DrawTools.PEN_AXIS_Z), p0, p1);
         }
 
         public virtual void DrawGrid(Gridding grid)
