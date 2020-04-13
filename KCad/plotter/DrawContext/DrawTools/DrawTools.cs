@@ -12,16 +12,16 @@ namespace Plotter
         public const int PEN_DEFAULT = 1;
         public const int PEN_DEFAULT_FIGURE = 2;
         public const int PEN_SELECT_POINT = 3;
-        public const int PEN_CURSOR = 4;
+        public const int PEN_CURSOR = 4; // 
         public const int PEN_CROSS_CURSOR = 5;
         public const int PEN_TEMP_FIGURE = 6;
         public const int PEN_POINT_HIGHLIGHT = 7;
-        public const int PEN_MATCH_FIGURE = 8;
+        public const int PEN_MATCH_FIGURE = 8; //
         public const int PEN_MATCH_SEG = 9;
         public const int PEN_LAST_POINT_MARKER = 10;
         public const int PEN_LAST_POINT_MARKER2 = 11;
         public const int PEN_AXIS = 12;
-        public const int PEN_ARROW_AXIS = 13;
+        public const int PEN_ARROW_AXIS = 13; //
         public const int PEN_PAGE_FRAME = 14;
         public const int PEN_RELATIVE_POINT = 15;
         public const int PEN_TEST_FIGURE = 16;
@@ -44,7 +44,8 @@ namespace Plotter
         public const int PEN_AXIS_X = 33;
         public const int PEN_AXIS_Y = 34;
         public const int PEN_AXIS_Z = 35;
-        public const int PEN_TBL_SIZE = 36;
+        public const int PEN_OLD_FIGURE = 36;
+        public const int PEN_TBL_SIZE = 37;
 
         public const int BRUSH_DEFAULT = 1;
         public const int BRUSH_BACKGROUND = 2;
