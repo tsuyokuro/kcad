@@ -269,7 +269,7 @@ namespace Plotter
                 td *= (r / tr);
                 td += c;
 
-                FigureSegment fseg = new FigureSegment(fig, 0, 0, idxB);
+                FigureSegment fseg = new FigureSegment(fig, 0, 0, 0);
 
                 MarkSeg.Layer = layer;
                 MarkSeg.FigSeg = fseg;
