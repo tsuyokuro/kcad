@@ -2,31 +2,28 @@
 
 namespace Plotter.Controller
 {
-    public class ViewController
+    public class ViewUtil
     {
-        public void SetOrigin(DrawContext dc, int pixX, int pixY)
+        private ViewUtil() { }
+
+        public static void SetOrigin(DrawContext dc, int pixX, int pixY)
         {
             Vector3d op = new Vector3d(pixX, pixY, 0);
 
             dc.SetViewOrg(op);
         }
 
-        public void MoveOrigin(DrawContext dc, double pixDx, double pixDy)
-        {
-            Vector3d d = new Vector3d(pixDx, pixDy, 0);
-
-            dc.SetViewOrg(dc.ViewOrg + d);
-        }
-
-        public void AdjustOrigin(DrawContext dc, double pixX, double pixY, int vw, int vh)
+        public static void AdjustOrigin(DrawContext dc, double pixX, double pixY, int vw, int vh)
         {
             double dx = vw / 2 - pixX;
             double dy = vh / 2 - pixY;
 
-            MoveOrigin(dc, dx, dy);
+            Vector3d d = new Vector3d(dx, dy, 0);
+
+            dc.SetViewOrg(dc.ViewOrg + d);
         }
 
-        public void DpiUpDown(DrawContext dc, double f)
+        public static void DpiUpDown(DrawContext dc, double f)
         {
             Vector3d op = dc.ViewOrg;
 

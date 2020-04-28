@@ -112,8 +112,6 @@ namespace Plotter.Controller
 
         public ScriptEnvironment ScriptEnv;
 
-        public ViewController ViewCtrl;
-
         public PlotterTaskRunner mPlotterTaskRunner;
 
         private Vector3dList ExtendSnapPointList = new Vector3dList(20);
@@ -129,8 +127,6 @@ namespace Plotter.Controller
             CadLayer layer = mDB.NewLayer();
             mDB.LayerList.Add(layer);
             CurrentLayer = layer;
-
-            ViewCtrl = new ViewController();
 
             HistoryMan = new HistoryManager(mDB);
 

@@ -554,7 +554,7 @@ namespace Plotter.Controller
         {
             if (pointer.MDownPoint.X == x && pointer.MDownPoint.Y == y)
             {
-                ViewCtrl.AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
+                ViewUtil.AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
             }
 
             State = mBackState;
@@ -574,7 +574,7 @@ namespace Plotter.Controller
 
             Vector3d op = StoreViewOrg + d;
 
-            ViewCtrl.SetOrigin(dc, (int)op.X, (int)op.Y);
+            ViewUtil.SetOrigin(dc, (int)op.X, (int)op.Y);
 
             CrossCursor.Pos = CrossCursor.StorePos + d;
         }
@@ -596,7 +596,7 @@ namespace Plotter.Controller
                     f = 0.8;
                 }
 
-                ViewCtrl.DpiUpDown(dc, f);
+                ViewUtil.DpiUpDown(dc, f);
             }
         }
 
