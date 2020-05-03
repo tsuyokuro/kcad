@@ -798,6 +798,8 @@ namespace KCad.ViewModel
 
             pd.DefaultPageSettings.Landscape = Controller.PageSize.mLandscape;
 
+            pd.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
+
             pd.PrintPage += PrintPage;
 
             System.Windows.Forms.PrintDialog pdlg = new System.Windows.Forms.PrintDialog();
@@ -830,7 +832,9 @@ namespace KCad.ViewModel
 
             pageSettings.PaperSize = Controller.PageSize.GetPaperSize();
             pageSettings.Landscape = Controller.PageSize.mLandscape;
+            pageSettings.Margins = new Margins(0, 0, 0, 0);
 
+            pageDlg.EnableMetric = true;
             pageDlg.PageSettings = pageSettings;
 
             System.Windows.Forms.DialogResult result = pageDlg.ShowDialog();

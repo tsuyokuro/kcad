@@ -2,6 +2,7 @@
 //#define PRINT_WITH_GDI_ONLY
 
 using GLUtil;
+using OpenTK;
 using System.Drawing;
 
 namespace Plotter.Controller
@@ -51,6 +52,13 @@ namespace Plotter.Controller
 
             // Bitmapを印刷すると大きさが小さくされてしまうので、補正
             dc.UnitPerMilli *= 0.96;
+
+            Vector3d org = dc.ViewOrg;
+
+            org *= 0.96;
+
+            dc.SetViewOrg(org);
+
 
             FrameBufferW fb = new FrameBufferW();
             fb.Create((int)deviceSize.Width, (int)deviceSize.Height);
