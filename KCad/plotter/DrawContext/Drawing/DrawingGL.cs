@@ -261,6 +261,8 @@ namespace Plotter
             Vector3d p0 = default(Vector3d);
             Vector3d p1 = default(Vector3d);
 
+            Vector3d pp = default;
+
             double len = 100.0;
             double arrowLen = 4.0 / DC.WorldScale;
             double arrowW2 = 2.0 / DC.WorldScale;
@@ -279,7 +281,13 @@ namespace Plotter
 
             if (!CadMath.IsParallel(p1 - p0, (Vector3d)DC.ViewDir))
             {
-                DrawArrow(DC.GetPen(DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+                DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_X), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+            }
+
+            if (SettingsHolder.Settings.DrawAxisLabel)
+            {
+                pp = DC.WorldPointToDevPoint(p1);
+                DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_PALE_TEXT), pp, Vector3d.UnitX, -Vector3d.UnitY, "X");
             }
 
             // Y軸
@@ -296,7 +304,13 @@ namespace Plotter
 
             if (!CadMath.IsParallel(p1 - p0, (Vector3d)DC.ViewDir))
             {
-                DrawArrow(DC.GetPen(DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+                DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_Y), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+            }
+
+            if (SettingsHolder.Settings.DrawAxisLabel)
+            {
+                pp = DC.WorldPointToDevPoint(p1);
+                DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_PALE_TEXT), pp, Vector3d.UnitX, -Vector3d.UnitY, "Y");
             }
 
             // Z軸
@@ -313,7 +327,13 @@ namespace Plotter
 
             if (!CadMath.IsParallel(p1 - p0, (Vector3d)DC.ViewDir))
             {
-                DrawArrow(DC.GetPen(DrawTools.PEN_AXIS), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+                DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_Z), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+            }
+
+            if (SettingsHolder.Settings.DrawAxisLabel)
+            {
+                pp = DC.WorldPointToDevPoint(p1);
+                DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_PALE_TEXT), pp, Vector3d.UnitX, -Vector3d.UnitY, "Z");
             }
         }
 
@@ -478,6 +498,28 @@ namespace Plotter
             GL.Color4(brush.Color4());
             
             mFontRenderer.Render(tex, a, xv, yv);
+        }
+
+        private void DrawTextScrn(int font, DrawBrush brush, Vector3d a, Vector3d xdir, Vector3d ydir, string s)
+        {
+            Start2D();
+            a *= DC.WorldScale;
+
+            FontTex tex = mFontFaceW.CreateTexture(s);
+
+            Vector3d xv = xdir.UnitVector() * tex.ImgW * 0.6;
+            Vector3d yv = ydir.UnitVector() * tex.ImgH * 0.6;
+
+            if (xv.IsZero() || yv.IsZero())
+            {
+                return;
+            }
+
+            GL.Color4(brush.Color4());
+
+            mFontRenderer.Render(tex, a, xv, yv);
+
+            End2D();
         }
 
         public void DrawCrossCursorScrn(CadCursor pp, DrawPen pen)

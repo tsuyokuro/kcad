@@ -471,6 +471,10 @@
                             Header="Draw axis"
                             IsCheckable="True"
                             IsChecked="{Binding DrawAxis}" />
+                        <MenuItem
+                            Header="Draw axis label"
+                            IsCheckable="True"
+                            IsChecked="{Binding DrawAxisLabel}" />
                     </MenuItem>
                     <MenuItem Header="{x:Static properties:Resources.menu_script}">
                         <MenuItem
@@ -716,7 +720,7 @@
                 <Grid
                     x:Name="viewRoot"
                     Grid.Column="2"
-                    Background="{DynamicResource BGColor}">
+                    Background="{StaticResource BGColor}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="100*" />
                         <RowDefinition Height="auto" />
@@ -1194,6 +1198,20 @@
                                 TextAlignment="Center" />
 
                         </RadioButton>
+
+                        <Button
+                            Name="ResetCamera"
+                            Height="{StaticResource ViewModeButtonHeight}"
+                            Width="{StaticResource ViewModeButtonWidth}"
+                            Click="Command_Clicked"
+                            Tag="reset_camera"
+                            Margin="8,1,1,1"
+                            Style="{StaticResource ToolButton}">
+                            <TextBlock
+		                        Text="Reset"
+		                        TextAlignment="Center" />
+                        </Button>
+
                     </StackPanel>
 
                     <!--  予備  -->

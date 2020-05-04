@@ -7,10 +7,16 @@ namespace KCad.ViewModel
     public abstract class ViewModelContext
     {
         protected PlotterController mController;
-
         public PlotterController Controller
         {
             get => mController;
+        }
+
+
+        protected ICadMainWindow mMainWindow;
+        public ICadMainWindow MainWindow
+        {
+            get => mMainWindow;
         }
 
         public void Redraw()

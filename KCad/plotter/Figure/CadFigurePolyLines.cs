@@ -119,17 +119,12 @@ namespace Plotter
 
         public void DrawPolyLines(DrawContext dc, DrawPen pen)
         {
-            bool drawed = false;
-
-            if (!drawed)
+            if (mStoreList != null)
             {
-                if (mStoreList != null)
-                {
-                    DrawLines(dc, dc.GetPen(DrawTools.PEN_PAGE_FRAME), mStoreList);
-                }
-
-                DrawLines(dc, pen, mPointList);
+                DrawLines(dc, dc.GetPen(DrawTools.PEN_OLD_FIGURE), mStoreList);
             }
+
+            DrawLines(dc, pen, mPointList);
 
             if (SettingsHolder.Settings.DrawNormal && !Normal.IsZero())
             {

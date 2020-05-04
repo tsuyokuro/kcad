@@ -174,6 +174,20 @@ namespace KCad.ViewModel
         }
 
         [UserSettingData]
+        public bool DrawAxisLabel
+        {
+            set
+            {
+                SettingsHolder.Settings.DrawAxisLabel = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawAxisLabel)));
+
+                Redraw();
+            }
+
+            get => SettingsHolder.Settings.DrawAxisLabel;
+        }
+
+        [UserSettingData]
         public double InitialMoveLimit
         {
             set

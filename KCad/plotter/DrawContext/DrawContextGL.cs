@@ -9,6 +9,10 @@ namespace Plotter
 {
     public abstract class DrawContextGL : DrawContext
     {
+        public const double DEFAULT_EYE_Z = 250.0;
+        public const double DEFAULT_NEAR = 0.1;
+        public const double DEFAULT_FAR = 2000;
+
         protected Control ViewCtrl;
 
         Vector4 LightPosition;
@@ -80,9 +84,9 @@ namespace Plotter
 
         public void InitCamera(ViewingAngleType type)
         {
-            double ez = 250;
-            double near = 0.1;
-            double far = 2000;
+            double ez = DEFAULT_EYE_Z;
+            double near = DEFAULT_NEAR;
+            double far = DEFAULT_FAR;
 
             mLookAt = Vector3d.Zero;
             mUpVector = Vector3d.UnitY;
