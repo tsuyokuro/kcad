@@ -52,6 +52,8 @@ namespace Plotter.Settings
         public bool DrawNormal = false;
 
         public bool DrawAxis = true;
+
+        public bool DrawAxisLabel = false;
         #endregion
 
         public string LastDataDir = null;
@@ -132,6 +134,7 @@ namespace Plotter.Settings
             jo.Add("FillFace", FillMesh);
             jo.Add("DrawNormal", DrawNormal);
             jo.Add("DrawAxis", DrawAxis);
+            jo.Add("DrawAxisLabel", DrawAxisLabel);
             root.Add("DrawSettings", jo);
 
             StreamWriter writer = new StreamWriter(fileName);
@@ -207,6 +210,7 @@ namespace Plotter.Settings
             FillMesh = jo.GetBool("FillFace", FillMesh);
             DrawNormal = jo.GetBool("DrawNormal", DrawNormal);
             DrawAxis = jo.GetBool("DrawAxis", DrawAxis);
+            DrawAxisLabel = jo.GetBool("DrawAxisLabel", DrawAxisLabel);
 
             jo = (JObject)root["GridInfo"];
             if (jo != null)
