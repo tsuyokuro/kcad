@@ -14,7 +14,7 @@ namespace Plotter
         {
             PenColorTbl[DrawTools.PEN_DEFAULT] = Color.Black;
             PenColorTbl[DrawTools.PEN_SELECT_POINT] = Color.FromArgb(128, 255, 0);
-            PenColorTbl[DrawTools.PEN_CROSS_CURSOR] = Color.FromArgb(92, 92, 255);
+            PenColorTbl[DrawTools.PEN_CROSS_CURSOR] = Color.FromArgb(64, 192, 192);
             PenColorTbl[DrawTools.PEN_DEFAULT_FIGURE] = Color.Black;
             PenColorTbl[DrawTools.PEN_TEMP_FIGURE] = Color.CadetBlue;
             PenColorTbl[DrawTools.PEN_POINT_HIGHLIGHT] = Color.Orange;
@@ -37,9 +37,9 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_NORMAL] = Color.FromArgb(0xFF, 0x00, 0xff, 0x7f);
             PenColorTbl[DrawTools.PEN_EXT_SNAP] = Color.FromArgb(0xFF, 0xff, 0x00, 0x00);
             PenColorTbl[DrawTools.PEN_HANDLE_LINE] = Color.YellowGreen;
-            PenColorTbl[DrawTools.PEN_AXIS_X] = Color.FromArgb(60, 60, 192);
-            PenColorTbl[DrawTools.PEN_AXIS_Y] = Color.FromArgb(60, 192, 60);
-            PenColorTbl[DrawTools.PEN_AXIS_Z] = Color.FromArgb(192, 60, 60);
+            PenColorTbl[DrawTools.PEN_AXIS_X] = Color.FromArgb(192, 60, 60);
+            PenColorTbl[DrawTools.PEN_AXIS_Y] = Color.FromArgb(60, 128, 60);
+            PenColorTbl[DrawTools.PEN_AXIS_Z] = Color.FromArgb(60, 60, 192);
             PenColorTbl[DrawTools.PEN_OLD_FIGURE] = Color.FromArgb(92, 92, 92);
 
             BrushColorTbl[DrawTools.BRUSH_DEFAULT] = Color.FromArgb(128, 128, 128);

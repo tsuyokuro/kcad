@@ -37,9 +37,9 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_NORMAL] = Color.Black;
             PenColorTbl[DrawTools.PEN_EXT_SNAP] = Color.Transparent;
             PenColorTbl[DrawTools.PEN_HANDLE_LINE] = Color.Black;
-            PenColorTbl[DrawTools.PEN_AXIS_X] = Color.FromArgb(60, 60, 192);
-            PenColorTbl[DrawTools.PEN_AXIS_Y] = Color.FromArgb(60, 192, 60);
-            PenColorTbl[DrawTools.PEN_AXIS_Z] = Color.FromArgb(192, 60, 60);
+            PenColorTbl[DrawTools.PEN_AXIS_X] = Color.FromArgb(192, 60, 60);
+            PenColorTbl[DrawTools.PEN_AXIS_Y] = Color.FromArgb(60, 128, 60);
+            PenColorTbl[DrawTools.PEN_AXIS_Z] = Color.FromArgb(60, 60, 192);
             PenColorTbl[DrawTools.PEN_OLD_FIGURE] = Color.FromArgb(92, 92, 92);
 
 
