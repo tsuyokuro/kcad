@@ -8,24 +8,22 @@
     <SolidColorBrush x:Key="BoarderColor" Color="#FF3F3F46" />
     <SolidColorBrush x:Key="TextColor" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="BGColor" Color="#FF252526" />
-    <!--<SolidColorBrush x:Key="SubMenuColor" Color="#FF1E1E1E" />-->
     <SolidColorBrush x:Key="MenuBGColor" Color="#FF3F3F46" />
     <SolidColorBrush x:Key="MenuTextColor" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="MenuSepColor" Color="#FF909090" />
 
     <SolidColorBrush x:Key="ToolBarBGColor" Color="#FF3F3F46" />
 
-    <!--<SolidColorBrush x:Key="ListBoxSelColor" Color="#FF228b22" />-->
+
+    <SolidColorBrush x:Key="AutoCompListBGColor" Color="#FF2F2F33" />
+    <SolidColorBrush x:Key="AutoCompListSelColor" Color="#FF007ACC" />
+
     <SolidColorBrush x:Key="ListBoxSelColor" Color="#FF007ACC" />
-    <!--<SolidColorBrush x:Key="ListBoxSelColor" Color="#FF000000" />-->
 
     <SolidColorBrush x:Key="ToggleButtonCheckedBGColor" Color="#FF007ACC" />
-    <!--<SolidColorBrush x:Key="ToggleButtonCheckedBGColor" Color="#FF000000" />-->
-
     <SolidColorBrush x:Key="ToggleButtonMouseOverBGColor" Color="CadetBlue" />
     <SolidColorBrush x:Key="ToggleButtonCheckedFGColor" Color="White" />
     <SolidColorBrush x:Key="ToggleButtonMouseOverFGColor" Color="White" />
-
 
     <SolidColorBrush x:Key="MsgBGColor" Color="#FF101010" />
     <SolidColorBrush x:Key="MsgSelectedBGColor" Color="#FF2B537D" />
@@ -34,9 +32,5 @@
     <SolidColorBrush x:Key="TextBoxBGColor" Color="#FF101010" />
     <SolidColorBrush x:Key="TextBoxFGColor" Color="#FFA0A0A0" />
 
-
     <SolidColorBrush x:Key="DialogBaseColor" Color="#FFEBEBEB" />
-
-    <SolidColorBrush x:Key="DiagramBackColor" Color="#FF080808" />
-
 </ResourceDictionary>
