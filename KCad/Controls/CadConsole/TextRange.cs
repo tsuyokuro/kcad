@@ -85,6 +85,11 @@
             EP.Col = col;
         }
 
+        public bool IsEmpty()
+        {
+            return (SP.Row == EP.Row) && (SP.Col == EP.Col);
+        }
+
         public static TextRange Naormalized(TextRange tr)
         {
             if (tr.EP < tr.SP)
