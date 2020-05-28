@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define TEX_DEPTH_BUFFER
+
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using OpenTK.Graphics.OpenGL;
@@ -11,18 +13,26 @@ namespace GLUtil
      */
     class FrameBufferW
     {
-        int Width;
-        int Height;
+        private int mWidth = 0;
+        public int Width {
+            get => mWidth;
+        }
 
-        int FrameBufferDesc;
-        //int DepthRenderBufferDesc;
-        int ColorTexDesc;
-        int DepthTexDesc;
+        private int mHeight = 0;
+        public int Height
+        {
+            get => mHeight;
+        }
+
+        private int FrameBufferDesc = 0;
+        private int DepthRenderBufferDesc = 0;
+        private int ColorTexDesc = 0;
+        private int DepthTexDesc = 0;
 
         public void Create(int width, int height)
         {
-            Width = width;
-            Height = height;
+            mWidth = width;
+            mHeight = height;
 
             // Color Texture
             ColorTexDesc = GL.GenTexture();
@@ -40,7 +50,9 @@ namespace GLUtil
                 PixelType.UnsignedByte,
                 IntPtr.Zero);
 
+            GL.BindTexture(TextureTarget.Texture2D, 0);
 
+#if TEX_DEPTH_BUFFER
             // Depth Texture
             DepthTexDesc = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, DepthTexDesc);
@@ -56,20 +68,23 @@ namespace GLUtil
                 PixelType.UnsignedInt,
                 IntPtr.Zero);
 
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+#else
+            // Create Depth RenderBuffer
+            DepthRenderBufferDesc = GL.GenRenderbuffer();
+
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, DepthRenderBufferDesc);
+
+            GL.RenderbufferStorage(
+                RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent32, width, height);
+
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
+#endif
+
 
             // Create FrameBuffer
             FrameBufferDesc = GL.GenFramebuffer();
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, FrameBufferDesc);
-
-            // Create RenderBuffer
-            //DepthRenderBufferDesc = GL.GenRenderbuffer();
-
-            // フレームバッファにデプスバッファを割り当てる。
-            //GL.FramebufferRenderbuffer(
-            //    FramebufferTarget.Framebuffer,
-            //    FramebufferAttachment.Depth,
-            //    RenderbufferTarget.Renderbuffer,
-            //    DepthRenderBufferDesc);
 
             // フレームバッファにカラーバッファを割り当てる
             GL.FramebufferTexture2D(
@@ -78,23 +93,44 @@ namespace GLUtil
                 TextureTarget.Texture2D,
                 ColorTexDesc, 0);
 
+#if TEX_DEPTH_BUFFER
             GL.FramebufferTexture2D(
                 FramebufferTarget.Framebuffer,
                 FramebufferAttachment.DepthAttachment,
                 TextureTarget.Texture2D,
                 DepthTexDesc, 0);
-
+#else
+            GL.FramebufferRenderbuffer(
+                FramebufferTarget.Framebuffer,
+                FramebufferAttachment.DepthAttachment,
+                RenderbufferTarget.Renderbuffer,
+                DepthRenderBufferDesc);
+#endif
             // Since setup is completed, unbind objects.
-            GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
         public void Dispose()
         {
-            GL.DeleteTexture(ColorTexDesc);
-            GL.DeleteTexture(DepthTexDesc);
-            //GL.DeleteRenderbuffer(DepthRenderBufferDesc);
-            GL.DeleteFramebuffer(FrameBufferDesc);
+            if (ColorTexDesc != 0)
+            {
+                GL.DeleteTexture(ColorTexDesc);
+            }
+            
+            if (DepthTexDesc != 0)
+            {
+                GL.DeleteTexture(DepthTexDesc);
+            }
+            
+            if (DepthRenderBufferDesc != 0)
+            {
+                GL.DeleteRenderbuffer(DepthRenderBufferDesc);
+            }
+            
+            if (FrameBufferDesc != 0)
+            {
+                GL.DeleteFramebuffer(FrameBufferDesc);
+            }
         }
 
         /**
@@ -104,7 +140,7 @@ namespace GLUtil
         public void Begin()
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, FrameBufferDesc);
-            GL.Viewport(0, 0, Width, Height);
+            GL.Viewport(0, 0, mWidth, mHeight);
             GL.Enable(EnableCap.DepthTest);
         }
 
@@ -114,7 +150,6 @@ namespace GLUtil
          */
         public void End()
         {
-            GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
@@ -124,7 +159,7 @@ namespace GLUtil
          */
         public Bitmap GetBitmap()
         {
-            Bitmap bmp = new Bitmap(Width, Height);
+            Bitmap bmp = new Bitmap(mWidth, mHeight);
             BitmapData bmpData
                 = bmp.LockBits(new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height),
                                 ImageLockMode.WriteOnly,
@@ -134,7 +169,7 @@ namespace GLUtil
 
             GL.ReadPixels(
                 0, 0,
-                Width, Height,
+                mWidth, mHeight,
                 OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
                 PixelType.UnsignedByte,
                 bmpData.Scan0);

@@ -9,12 +9,12 @@
 
     <Style x:Key="AutoCompListBoxStyle" TargetType="ListBox">
         <Setter Property="Padding" Value="4" />
-        <Setter Property="Background" Value="{StaticResource BGColor}" />
+        <Setter Property="Background" Value="{StaticResource AutoCompListBGColor}" />
         <Setter Property="BorderBrush" Value="Black" />
     </Style>
 
     <Style x:Key="AutoCompListBoxItem" TargetType="ListBoxItem">
-        <Setter Property="Background" Value="{StaticResource BaseColor}" />
+        <Setter Property="Background" Value="{StaticResource AutoCompListBGColor}" />
         <Setter Property="Foreground" Value="{StaticResource TextColor}" />
 
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -30,7 +30,7 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="true">
                             <Setter Property="Foreground" Value="White" />
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource ListBoxSelColor}" />
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource AutoCompListSelColor}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

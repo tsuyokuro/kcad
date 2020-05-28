@@ -6,6 +6,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using KCad.Controls.CadConsole;
+using Plotter;
+
 namespace KCad.Controls
 {
     public partial class CadConsoleView : FrameworkElement
@@ -39,7 +41,7 @@ namespace KCad.Controls
             set => mSelectedBackgroundOpacity = value;
         }
 
-        protected double mTextLeftMargin = 4.0;
+        protected double mTextLeftMargin = 8.0;
         public double TextLeftMargin
         {
             get => mTextLeftMargin;
@@ -363,6 +365,19 @@ namespace KCad.Controls
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
+            Point p = e.GetPosition(this);
+            if (RawSel.IsEmpty())
+            {
+                if (p.X < TextLeftMargin)
+                {
+                    TextPos tp = PointToTextPos(p);
+                    Sel.SP = tp;
+                    Sel.EP = tp;
+                    Sel.EP.Col = mList[tp.Row].Data.Length - 1;
+                    InvalidateVisual();
+                }
+            }
+
             Selecting = false;
             //DOut.pl($"Sel.IsValid:{Sel.IsValid}");
         }
