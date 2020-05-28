@@ -239,9 +239,9 @@ namespace Plotter
 
             MpMeshGeometricData_v1001 meshGeo = (MpMeshGeometricData_v1001)mpGeo;
 
-            mHeModel = meshGeo.HeModel.Restore();
-
-            mPointList = mHeModel.VertexStore;
+            //mHeModel = meshGeo.HeModel.Restore();
+            //mPointList = mHeModel.VertexStore;
+            SetMesh(meshGeo.HeModel.Restore());
         }
 
         public override MpGeometricData_v1002 GeometricDataToMp_v1002()
@@ -261,9 +261,9 @@ namespace Plotter
 
             MpMeshGeometricData_v1002 meshGeo = (MpMeshGeometricData_v1002)mpGeo;
 
-            mHeModel = meshGeo.HeModel.Restore();
-
-            mPointList = mHeModel.VertexStore;
+            //mHeModel = meshGeo.HeModel.Restore();
+            //mPointList = mHeModel.VertexStore;
+            SetMesh(meshGeo.HeModel.Restore());
         }
 
         public override void RemoveSelected()
