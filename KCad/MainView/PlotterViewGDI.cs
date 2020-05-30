@@ -36,7 +36,12 @@ namespace Plotter
             get => this;
         }
 
-        public PlotterViewGDI()
+        public static PlotterViewGDI Create()
+        {
+            return new PlotterViewGDI();
+        }
+
+        private PlotterViewGDI()
         {
             mDrawContext = new DrawContextGDI(this);
             mDrawContext.SetupTools(DrawTools.DrawMode.DARK);

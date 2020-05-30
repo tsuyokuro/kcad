@@ -25,7 +25,7 @@ namespace KCad.ViewModel
         }
 
 #if USE_GDI_VIEW
-        private PlotterViewGDI PlotterView1GDI1 = null;
+        private PlotterViewGDI PlotterViewGDI1 = null;
 #endif
         private PlotterViewGL PlotterViewGL1 = null;
 
@@ -57,22 +57,21 @@ namespace KCad.ViewModel
         public void SetupViews()
         {
 #if USE_GDI_VIEW
-            PlotterView1GDI1 = new PlotterViewGDI();
+            PlotterViewGDI1 = PlotterViewGDI.Create();
 #endif
             PlotterViewGL1 = PlotterViewGL.Create();
 
-            ViewMode = ViewModes.FRONT;
-
 #if USE_GDI_VIEW
             ViewMode = ViewModes.FREE;  // 一旦GL側を設定してViewをLoadしておく
-            ViewMode = ViewModes.FRONT;
 #endif
+
+            ViewMode = ViewModes.FRONT;
         }
 
         public void SetWorldScale(double scale)
         {
 #if USE_GDI_VIEW
-            PlotterView1GDI1.SetWorldScale(scale);
+            PlotterViewGDI1.SetWorldScale(scale);
 #endif
             PlotterViewGL1.SetWorldScale(scale);
         }
@@ -80,7 +79,7 @@ namespace KCad.ViewModel
         public void DrawModeUpdated(DrawTools.DrawMode mode)
         {
 #if USE_GDI_VIEW
-            PlotterView1GDI1.DrawModeUpdated(mode);
+            PlotterViewGDI1.DrawModeUpdated(mode);
 #endif
             PlotterViewGL1.DrawModeUpdated(mode);
         }
@@ -121,8 +120,8 @@ namespace KCad.ViewModel
 
             mViewMode = newMode;
 
-            DrawContext currentDC = mPlotterView == null ? null : mPlotterView.DrawContext;
-            DrawContext nextDC = mPlotterView == null ? null : mPlotterView.DrawContext;
+            DrawContext currentDC = mPlotterView?.DrawContext;
+            DrawContext nextDC = mPlotterView?.DrawContext;
             IPlotterView view = mPlotterView;
 
             switch (mViewMode)
@@ -218,7 +217,7 @@ namespace KCad.ViewModel
             switch (mViewMode)
             {
                 case ViewModes.FRONT:
-                    view = PlotterView1GDI1;
+                    view = PlotterViewGDI1;
                     view.DrawContext.SetCamera(
                         Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
@@ -226,7 +225,7 @@ namespace KCad.ViewModel
                     break;
 
                 case ViewModes.BACK:
-                    view = PlotterView1GDI1;
+                    view = PlotterViewGDI1;
                     view.DrawContext.SetCamera(
                         -Vector3d.UnitZ * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
@@ -235,7 +234,7 @@ namespace KCad.ViewModel
                     break;
 
                 case ViewModes.TOP:
-                    view = PlotterView1GDI1;
+                    view = PlotterViewGDI1;
                     view.DrawContext.SetCamera(
                         Vector3d.UnitY * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, -Vector3d.UnitZ);
@@ -244,7 +243,7 @@ namespace KCad.ViewModel
                     break;
 
                 case ViewModes.BOTTOM:
-                    view = PlotterView1GDI1;
+                    view = PlotterViewGDI1;
                     view.DrawContext.SetCamera(
                         -Vector3d.UnitY * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitZ);
@@ -253,7 +252,7 @@ namespace KCad.ViewModel
                     break;
 
                 case ViewModes.RIGHT:
-                    view = PlotterView1GDI1;
+                    view = PlotterViewGDI1;
                     view.DrawContext.SetCamera(
                         Vector3d.UnitX * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
@@ -262,7 +261,7 @@ namespace KCad.ViewModel
                     break;
 
                 case ViewModes.LEFT:
-                    view = PlotterView1GDI1;
+                    view = PlotterViewGDI1;
                     view.DrawContext.SetCamera(
                         -Vector3d.UnitX * DrawContext.STD_EYE_DIST,
                         Vector3d.Zero, Vector3d.UnitY);
@@ -287,15 +286,7 @@ namespace KCad.ViewModel
 #endif
         private void SetView(IPlotterView view)
         {
-            //if (view == mPlotterView)
-            //{
-            //    return;
-            //}
-
-            if (mPlotterView != null)
-            {
-                mPlotterView.SetController(null);
-            }
+            mPlotterView?.SetController(null);
 
             mPlotterView = view;
 
