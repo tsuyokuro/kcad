@@ -1,5 +1,4 @@
-﻿//#define USE_GDI_VIEW
-using System.Windows;
+﻿using System.Windows;
 using Plotter.Controller;
 using Plotter;
 
