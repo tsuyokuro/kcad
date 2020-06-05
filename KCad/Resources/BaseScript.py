@@ -318,7 +318,9 @@ def view_dir():
 def proj_dir():
     return SE.GetProjectionDir()
 
-
+#[AC] cut_mesh(id=current_fig_id())
+def cut_mesh(id):
+    SE.CutMesh(id)
 
 ###############################################################################
 # Mesure

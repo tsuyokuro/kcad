@@ -28,7 +28,7 @@ namespace MeshMakerNS
         }
 
         // 単位立方体作成
-        public static CadMesh CreateUnitCube(FaceType faceType)
+        public static CadMesh CreateUnitCube(FaceType faceType = FaceType.TRIANGLE)
         {
             CadMesh cm = new CadMesh(8, 12);
 
@@ -41,6 +41,64 @@ namespace MeshMakerNS
             cm.VertexStore.Add(CadVertex.Create(-0.5, +0.5, -0.5));
             cm.VertexStore.Add(CadVertex.Create(-0.5, -0.5, -0.5));
             cm.VertexStore.Add(CadVertex.Create(+0.5, -0.5, -0.5));
+
+            if (faceType == FaceType.QUADRANGLE)
+            {
+                cm.FaceStore.Add(new CadFace(0, 1, 2, 3));
+
+                cm.FaceStore.Add(new CadFace(7, 6, 5, 4));
+
+                cm.FaceStore.Add(new CadFace(0, 4, 5, 1));
+
+                cm.FaceStore.Add(new CadFace(1, 5, 6, 2));
+
+                cm.FaceStore.Add(new CadFace(2, 6, 7, 3));
+
+                cm.FaceStore.Add(new CadFace(3, 7, 4, 0));
+            }
+            else
+            {
+                cm.FaceStore.Add(new CadFace(0, 1, 2));
+                cm.FaceStore.Add(new CadFace(2, 3, 0));
+
+                cm.FaceStore.Add(new CadFace(7, 6, 5));
+                cm.FaceStore.Add(new CadFace(5, 4, 7));
+
+                cm.FaceStore.Add(new CadFace(0, 4, 5));
+                cm.FaceStore.Add(new CadFace(5, 1, 0));
+
+                cm.FaceStore.Add(new CadFace(1, 5, 6));
+                cm.FaceStore.Add(new CadFace(6, 2, 1));
+
+                cm.FaceStore.Add(new CadFace(2, 6, 7));
+                cm.FaceStore.Add(new CadFace(7, 3, 2));
+
+                cm.FaceStore.Add(new CadFace(3, 7, 4));
+                cm.FaceStore.Add(new CadFace(4, 0, 3));
+            }
+
+            return cm;
+        }
+
+        public static CadMesh CreateUnitCube(Vector3d wv, Vector3d hv, FaceType faceType = FaceType.TRIANGLE)
+        {
+            Vector3d tv = CadMath.Normal(wv, hv);
+
+            Vector3d wv2 = wv / 2;
+            Vector3d hv2 = hv / 2;
+            Vector3d tv2 = tv / 2;
+
+            CadMesh cm = new CadMesh(8, 12);
+
+            cm.VertexStore.Add(CadVertex.Create(wv2 + hv2 + tv2));
+            cm.VertexStore.Add(CadVertex.Create(-wv2 + hv2 + tv2));
+            cm.VertexStore.Add(CadVertex.Create(-wv2 - hv2 + tv2));
+            cm.VertexStore.Add(CadVertex.Create(wv2 - hv2 + tv2));
+
+            cm.VertexStore.Add(CadVertex.Create(wv2 + hv2 - tv2));
+            cm.VertexStore.Add(CadVertex.Create(-wv2 + hv2 - tv2));
+            cm.VertexStore.Add(CadVertex.Create(-wv2 - hv2 - tv2));
+            cm.VertexStore.Add(CadVertex.Create(wv2 - hv2 - tv2));
 
             if (faceType == FaceType.QUADRANGLE)
             {
