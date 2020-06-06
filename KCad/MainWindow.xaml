@@ -159,7 +159,7 @@
 
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
-            <RowDefinition Height="26" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="100*" />
         </Grid.RowDefinitions>
 
@@ -193,45 +193,266 @@
         </cc:PopupEx>
 
         <!--  Caption area  -->
-        <Grid
+        <Border Padding="2" Background="{StaticResource CaptionColor}">
+            <Grid
             Grid.Row="0"
-            Height="26"
+            Height="Auto"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             Background="{StaticResource CaptionColor}">
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <Image
+                <Image
                 Grid.Column="0"
-                Width="20"
+                Width="{StaticResource AppIconSize}"
                 Margin="8,0,0,0"
                 VerticalAlignment="Center"
                 Source="Resources/Images/triangle2.png" />
-            <Label
+                <Label
                 Grid.Column="1"
-                Margin="8,0,0,0"
+                Margin="4,0,0,0"
                 VerticalAlignment="Center"
                 Content="KCad"
-                FontSize="12"
-                Foreground="White" />
+                FontSize="{StaticResource CaptionFontSize}"
+                FontWeight="ExtraBold"
+                Foreground="{StaticResource AppTitleColor}" />
 
-            <Label
+
+                <!--  Menu area  -->
+                <Border Grid.Column="2" Background="{StaticResource MenuBGColor}" Height="Auto">
+                    <StackPanel Orientation="Horizontal">
+                        <Menu Width="Auto" Height="Auto" VerticalAlignment="Center" Margin="0,0,0,0"
+                          WindowChrome.IsHitTestVisibleInChrome="True" >
+                            <MenuItem Header="{x:Static properties:Resources.menu_file}">
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="{x:Static properties:Resources.menu_new_doc}"
+                            Tag="new_doc" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="{x:Static properties:Resources.menu_load}"
+                            Tag="load" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="{x:Static properties:Resources.menu_save}"
+                            Tag="save" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="{x:Static properties:Resources.menu_save_as}"
+                            Tag="save_as" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="{x:Static properties:Resources.menu_print}"
+                            Tag="print" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="{x:Static properties:Resources.menu_page_settings}"
+                            Tag="page_setting" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="{x:Static properties:Resources.menu_doc_settings}"
+                            Tag="doc_setting" />
+                            </MenuItem>
+                            <MenuItem Header="{x:Static properties:Resources.menu_edit}">
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Undo"
+                            Tag="undo" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Redo"
+                            Tag="redo" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Copy"
+                            Tag="copy" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Paste"
+                            Tag="paste" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Separate"
+                            Tag="separate" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Bond"
+                            Tag="bond" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="To Bezier"
+                            Tag="to_bezier" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Cut Segment"
+                            Tag="cut_segment" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Insert point"
+                            Tag="ins_point" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="To Loop lines"
+                            Tag="to_loop" />
+
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="To Unloop lines"
+                            Tag="to_unloop" />
+
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Rotate"
+                            Tag="rotate_with_point" />
+
+                                <MenuItem Header="Flip">
+                                    <MenuItem
+                                Click="Command_Clicked"
+                                Header="Flip"
+                                Tag="flip_with_vector" />
+                                    <MenuItem
+                                Click="Command_Clicked"
+                                Header="Flip and copy"
+                                Tag="flip_and_copy_with_vector" />
+                                    <MenuItem
+                                Click="Command_Clicked"
+                                Header="Flip Normal"
+                                Tag="flip_normal" />
+                                </MenuItem>
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Clear layer"
+                            Tag="clear_layer" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Centroid"
+                            Tag="centroid" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Select all"
+                            Tag="select_all" />
+                            </MenuItem>
+                            <MenuItem x:Name="SettingsMenu" Header="{x:Static properties:Resources.menu_sttings}">
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="{x:Static properties:Resources.menu_grid_settings}"
+                            Tag="grid_settings" />
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="{x:Static properties:Resources.menu_snap_settings}"
+                            Tag="snap_settings" />
+                                <MenuItem
+                            Header="{x:Static properties:Resources.menu_continue_create_figure}"
+                            IsCheckable="True"
+                            IsChecked="{Binding ContinueCreateFigure}" />
+
+                            </MenuItem>
+
+                            <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
+                                <MenuItem
+                            Header="{x:Static properties:Resources.menu_snap_to_grid}"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToGrid}" />
+                                <MenuItem
+                            Header="{x:Static properties:Resources.menu_snap_to_point}"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToPoint}" />
+                                <MenuItem
+                            Header="{x:Static properties:Resources.menu_snap_to_seg}"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToSegment}" />
+                                <MenuItem
+                            Header="{x:Static properties:Resources.menu_snap_to_line}"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToLine}" />
+                                <MenuItem
+                            Header="{x:Static properties:Resources.menu_snap_to_zero}"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToZero}" />
+                                <MenuItem
+                            Header="{x:Static properties:Resources.menu_snap_to_last_down}"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToLastDownPoint}" />
+                                <MenuItem
+                            Header="{x:Static properties:Resources.menu_snap_to_self}"
+                            IsCheckable="True"
+                            IsChecked="{Binding SnapToSelfPoint}" />
+                            </MenuItem>
+                            <MenuItem x:Name="DrawOptionMenu" Header="{x:Static properties:Resources.menu_draw}">
+                                <MenuItem
+                            x:Name="DrawModeMenu"
+                            Header="{x:Static properties:Resources.menu_draw_mode}"
+                            IsCheckable="False">
+                                    <MenuItem
+                                Header="Light"
+                                IsCheckable="True"
+                                IsChecked="{Binding DrawMode, ConverterParameter=LIGHT, Converter={StaticResource DrawModeConv}}"
+                            />
+                                    <MenuItem
+                                Header="Drak"
+                                IsCheckable="True"
+                                IsChecked="{Binding DrawMode, ConverterParameter=DARK, Converter={StaticResource DrawModeConv}}"
+                            />
+                                </MenuItem>
+
+                                <Separator />
+
+                                <MenuItem
+                            Header="{x:Static properties:Resources.menu_draw_mesh_outline}"
+                            IsCheckable="True"
+                            IsChecked="{Binding DrawMeshEdge}" />
+                                <MenuItem
+                            Header="{x:Static properties:Resources.menu_fill_mesh}"
+                            IsCheckable="True"
+                            IsChecked="{Binding FillMesh}" />
+                                <MenuItem
+                            Header="Draw normal"
+                            IsCheckable="True"
+                            IsChecked="{Binding DrawNormal}" />
+                                <MenuItem
+                            Header="Draw axis"
+                            IsCheckable="True"
+                            IsChecked="{Binding DrawAxis}" />
+                                <MenuItem
+                            Header="Draw axis label"
+                            IsCheckable="True"
+                            IsChecked="{Binding DrawAxisLabel}" />
+                            </MenuItem>
+                            <MenuItem Header="{x:Static properties:Resources.menu_script}">
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="{x:Static properties:Resources.menu_show_script_editor}"
+                            Tag="show_editor" />
+                            </MenuItem>
+                            <MenuItem Header="Experimental">
+                                <MenuItem
+                            Click="Command_Clicked"
+                            Header="Poly lins to SVG"
+                            Tag="export_svg" />
+                            </MenuItem>
+                        </Menu>
+                    </StackPanel>
+                </Border>
+
+
+                <Label
                 x:Name="FileName"
-                Grid.Column="2"
+                Grid.Column="3"
                 Margin="4,0,0,0"
                 VerticalAlignment="Center"
                 Content=""
-                FontSize="12"
+                FontSize="{StaticResource CaptionFontSize}"
                 Foreground="White" />
 
-            <StackPanel
-                Grid.Column="3"
+                <StackPanel
+                Grid.Column="4"
                 Height="26"
                 Margin="0,0,4,0"
                 HorizontalAlignment="Right"
@@ -239,35 +460,35 @@
                 Background="{StaticResource CaptionColor}"
                 Orientation="Horizontal">
 
-                <Button
+                    <Button
                     x:Name="BtnMinWindow"
                     Content="0"
-                    FontSize="16"
+                    FontSize="{StaticResource CaptionButtonFontSize}"
                     Style="{DynamicResource CaptionButtonStyleKey}"
                     WindowChrome.IsHitTestVisibleInChrome="True" />
-                <Button
+                    <Button
                     x:Name="BtnMaxWindow"
                     Content="1"
-                    FontSize="16"
+                    FontSize="{StaticResource CaptionButtonFontSize}"
                     Style="{DynamicResource CaptionButtonStyleKey}"
                     WindowChrome.IsHitTestVisibleInChrome="True" />
-                <Button
+                    <Button
                     x:Name="BtnRestWindow"
                     Content="2"
-                    FontSize="16"
+                    FontSize="{StaticResource CaptionButtonFontSize}"
                     Style="{DynamicResource CaptionButtonStyleKey}"
                     WindowChrome.IsHitTestVisibleInChrome="True" />
-                <Button
+                    <Button
                     x:Name="BtnCloseWindow"
                     Content="r"
-                    FontSize="16"
+                    FontSize="{StaticResource CaptionButtonFontSize}"
                     Style="{DynamicResource CaptionButtonStyleKey}"
                     WindowChrome.IsHitTestVisibleInChrome="True" />
 
-            </StackPanel>
-        </Grid>
-
-
+                </StackPanel>
+            </Grid>
+        </Border>
+ 
         <!--  Client area  -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
@@ -278,218 +499,8 @@
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
-            <!--  Menu area  -->
-            <Border Grid.Row="0" Background="{StaticResource MenuBGColor}">
-                <Menu Margin="0,0,0,0">
-                    <MenuItem Header="{x:Static properties:Resources.menu_file}">
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_new_doc}"
-                            Tag="new_doc" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_load}"
-                            Tag="load" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_save}"
-                            Tag="save" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_save_as}"
-                            Tag="save_as" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_print}"
-                            Tag="print" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_page_settings}"
-                            Tag="page_setting" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_doc_settings}"
-                            Tag="doc_setting" />
-                    </MenuItem>
-                    <MenuItem Header="{x:Static properties:Resources.menu_edit}">
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Undo"
-                            Tag="undo" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Redo"
-                            Tag="redo" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Copy"
-                            Tag="copy" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Paste"
-                            Tag="paste" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Separate"
-                            Tag="separate" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Bond"
-                            Tag="bond" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="To Bezier"
-                            Tag="to_bezier" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Cut Segment"
-                            Tag="cut_segment" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Insert point"
-                            Tag="ins_point" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="To Loop lines"
-                            Tag="to_loop" />
-
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="To Unloop lines"
-                            Tag="to_unloop" />
-
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Rotate"
-                            Tag="rotate_with_point" />
-
-                        <MenuItem Header="Flip">
-                            <MenuItem
-                                Click="Command_Clicked"
-                                Header="Flip"
-                                Tag="flip_with_vector" />
-                            <MenuItem
-                                Click="Command_Clicked"
-                                Header="Flip and copy"
-                                Tag="flip_and_copy_with_vector" />
-                            <MenuItem
-                                Click="Command_Clicked"
-                                Header="Flip Normal"
-                                Tag="flip_normal" />
-                        </MenuItem>
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Clear layer"
-                            Tag="clear_layer" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Centroid"
-                            Tag="centroid" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Select all"
-                            Tag="select_all" />
-                    </MenuItem>
-                    <MenuItem x:Name="SettingsMenu" Header="{x:Static properties:Resources.menu_sttings}">
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_grid_settings}"
-                            Tag="grid_settings" />
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_snap_settings}"
-                            Tag="snap_settings" />
-                        <MenuItem
-                            Header="{x:Static properties:Resources.menu_continue_create_figure}"
-                            IsCheckable="True"
-                            IsChecked="{Binding ContinueCreateFigure}" />
-
-                    </MenuItem>
-
-                    <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
-                        <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_grid}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToGrid}" />
-                        <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_point}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToPoint}" />
-                        <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_seg}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToSegment}" />
-                        <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_line}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToLine}" />
-                        <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_zero}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToZero}" />
-                        <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_last_down}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToLastDownPoint}" />
-                        <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_self}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToSelfPoint}" />
-                    </MenuItem>
-                    <MenuItem x:Name="DrawOptionMenu" Header="{x:Static properties:Resources.menu_draw}">
-                        <MenuItem
-                            x:Name="DrawModeMenu"
-                            Header="{x:Static properties:Resources.menu_draw_mode}"
-                            IsCheckable="False">
-                            <MenuItem
-                                Header="Light"
-                                IsCheckable="True"
-                                IsChecked="{Binding DrawMode, ConverterParameter=LIGHT, Converter={StaticResource DrawModeConv}}"
-                            />
-                            <MenuItem
-                                Header="Drak"
-                                IsCheckable="True"
-                                IsChecked="{Binding DrawMode, ConverterParameter=DARK, Converter={StaticResource DrawModeConv}}"
-                            />
-                        </MenuItem>
-
-                        <Separator />
-
-                        <MenuItem
-                            Header="{x:Static properties:Resources.menu_draw_mesh_outline}"
-                            IsCheckable="True"
-                            IsChecked="{Binding DrawMeshEdge}" />
-                        <MenuItem
-                            Header="{x:Static properties:Resources.menu_fill_mesh}"
-                            IsCheckable="True"
-                            IsChecked="{Binding FillMesh}" />
-                        <MenuItem
-                            Header="Draw normal"
-                            IsCheckable="True"
-                            IsChecked="{Binding DrawNormal}" />
-                        <MenuItem
-                            Header="Draw axis"
-                            IsCheckable="True"
-                            IsChecked="{Binding DrawAxis}" />
-                        <MenuItem
-                            Header="Draw axis label"
-                            IsCheckable="True"
-                            IsChecked="{Binding DrawAxisLabel}" />
-                    </MenuItem>
-                    <MenuItem Header="{x:Static properties:Resources.menu_script}">
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_show_script_editor}"
-                            Tag="show_editor" />
-                    </MenuItem>
-                    <MenuItem Header="Experimental">
-                        <MenuItem
-                            Click="Command_Clicked"
-                            Header="Poly lins to SVG"
-                            Tag="export_svg" />
-                    </MenuItem>
-                </Menu>
-            </Border>
+            <!-- Menu area place holder-->
+            <Border Grid.Row="0" Background="{StaticResource MenuBGColor}" Height="0" />
 
             <!--  Tool bar area  -->
             <StackPanel
