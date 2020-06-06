@@ -8,6 +8,26 @@ namespace MeshUtilNS
 {
     public class MeshUtil
     {
+        public static CadMesh MoveMesh(CadMesh cm, Vector3d mv)
+        {
+            for (int i = 0; i < cm.VertexStore.Count; i++)
+            {
+                cm.VertexStore.Ref(i) += mv;
+            }
+
+            return cm;
+        }
+
+        public static CadMesh ScaleMesh(CadMesh cm, double scale)
+        {
+            for (int i = 0; i < cm.VertexStore.Count; i++)
+            {
+                cm.VertexStore.Ref(i) *= scale;
+            }
+
+            return cm;
+        }
+
         // 全てのFaceを3角形に分割する
         public static void SplitAllFace(CadMesh mesh)
         {
@@ -35,6 +55,7 @@ namespace MeshUtilNS
             mesh.FaceStore = faceStore;
         }
 
+        // Faceを三角形に分割する
         public static List<CadFace> Split(CadFace face, CadMesh mesh)
         {
             CadVertex p0 = default(CadVertex);

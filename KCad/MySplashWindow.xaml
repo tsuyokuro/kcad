@@ -11,6 +11,15 @@
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Colors.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid Background="#ff424247">
         <Grid.RowDefinitions>
             <RowDefinition Height="120" />
@@ -24,7 +33,7 @@
             VerticalAlignment="Bottom"
             Content="KCad"
             FontSize="40"
-            Foreground="PaleGreen" />
+            Foreground="{StaticResource SplashAppTitleColor}" />
         <Label
             Grid.Row="1"
             HorizontalAlignment="Center"

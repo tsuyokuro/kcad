@@ -1,5 +1,4 @@
-﻿//#define USE_GDI_VIEW
-using Plotter.Controller;
+﻿using Plotter.Controller;
 using Plotter;
 
 namespace KCad.ViewModel

@@ -13,6 +13,7 @@ using static Plotter.CadFigure;
 using LibiglWrapper;
 using GLUtil;
 using OpenTK;
+using System.Security.Cryptography;
 
 namespace Plotter.Controller
 {
@@ -1385,6 +1386,89 @@ namespace Plotter.Controller
             Session.PostRemakeObjectTree();
         }
 
+        public void CutMesh(uint id)
+        {
+            CadFigureMesh tfig = GetCadFigureMesh(id);
+            if (tfig == null)
+            {
+                ItConsole.println("invalid ID");
+                return;
+            }
+
+            (Vector3d p0, Vector3d p1) = InputLine();
+
+            if (p0.IsInvalid() || p1.IsInvalid())
+            {
+                return;
+            }
+
+            Vector3d wv = (p1 - p0).UnitVector();
+            Vector3d hv = CadMath.Normal(p1 - p0, ViewDir());
+
+            CadMesh cubeA = MeshMaker.CreateUnitCube(wv, hv, MeshMaker.FaceType.QUADRANGLE);
+            MeshUtil.MoveMesh(cubeA, -hv / 2);
+            MeshUtil.ScaleMesh(cubeA, 10000);
+            MeshUtil.MoveMesh(cubeA, (p1 - p0) / 2 + p0);
+
+            CadMesh cubeB = MeshMaker.CreateUnitCube(wv, hv, MeshMaker.FaceType.QUADRANGLE);
+            MeshUtil.MoveMesh(cubeB, hv / 2);
+            MeshUtil.ScaleMesh(cubeB, 10000);
+            MeshUtil.MoveMesh(cubeB, (p1 - p0) / 2 + p0);
+
+            // TODO tfig - cubeA と tfig - cubeB を作って登録 tfig は削除
+
+            HeModel he = tfig.mHeModel;
+            CadMesh src = HeModelConverter.ToCadMesh(he);
+
+            CadMesh m1;
+            try
+            {
+                m1 = CarveW.AMinusB(src, cubeA);
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+
+            MeshUtil.SplitAllFace(m1);
+
+            CadMesh m2;
+            try
+            {
+                m2 = CarveW.AMinusB(src, cubeB);
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+
+            MeshUtil.SplitAllFace(m2);
+
+            CadFigureMesh fig1 = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+            fig1.SetMesh(HeModelConverter.ToHeModel(m1));
+
+            CadFigureMesh fig2 = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
+            fig2.SetMesh(HeModelConverter.ToHeModel(m2));
+
+            CadOpe ope;
+
+            ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig1.ID);
+            Session.AddOpe(ope);
+            Controller.CurrentLayer.AddFigure(fig1);
+
+            ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig2.ID);
+            Session.AddOpe(ope);
+            Controller.CurrentLayer.AddFigure(fig2);
+
+            ope = new CadOpeRemoveFigure(Controller.CurrentLayer, tfig.ID);
+            Session.AddOpe(ope);
+            Controller.CurrentLayer.RemoveFigureByID(tfig.ID);
+
+            Controller.ClearSelection();
+
+            Session.PostRemakeObjectTree();
+        }
+
         public void DumpMesh(uint id)
         {
             CadFigureMesh fig = GetCadFigureMesh(id);
@@ -1548,6 +1632,46 @@ namespace Plotter.Controller
             ItConsole.println(v.CoordString());
 
             return v;
+        }
+
+        public (Vector3d, Vector3d) InputLine()
+        {
+            InteractCtrl ctrl = Controller.InteractCtrl;
+
+            ctrl.Start();
+
+            ItConsole.println(AnsiEsc.Yellow + "Input point 1 >>");
+
+            InteractCtrl.States ret;
+
+            ret = ctrl.WaitPoint();
+
+            if (ret != InteractCtrl.States.CONTINUE)
+            {
+                ctrl.End();
+                ItConsole.println("Cancel!");
+                return (VectorExt.InvalidVector3d, VectorExt.InvalidVector3d);
+            }
+
+            Vector3d p0 = ctrl.PointList[0];
+            ItConsole.println(p0.CoordString());
+
+            ItConsole.println(AnsiEsc.Yellow + "Input point 2 >>");
+
+            ret = ctrl.WaitPoint();
+
+            if (ret != InteractCtrl.States.CONTINUE)
+            {
+                ctrl.End();
+                ItConsole.println("Cancel!");
+                return (VectorExt.InvalidVector3d, VectorExt.InvalidVector3d);
+            }
+
+            Vector3d p1 = Controller.InteractCtrl.PointList[1];
+
+            ctrl.End();
+
+            return (p0, p1);
         }
 
         public void UpdateTV()
