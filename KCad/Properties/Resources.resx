@@ -230,7 +230,7 @@
     <value>Snap to segment</value>
   </data>
   <data name="menu_snap_to_self" xml:space="preserve">
-    <value>Snap to self</value>
+    <value>Snap to shadow</value>
   </data>
   <data name="menu_snap_to_zero" xml:space="preserve">
     <value>Snap to zero</value>

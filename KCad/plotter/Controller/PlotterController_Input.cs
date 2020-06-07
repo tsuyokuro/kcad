@@ -312,6 +312,7 @@ namespace Plotter.Controller
             mSegSearcher.Clean();
             mSegSearcher.SetRangePixel(sc.DC, SettingsHolder.Settings.LineSnapRange);
             mSegSearcher.SetTargetPoint(sc.Cursor);
+            mSegSearcher.CheckStorePoint = SettingsHolder.Settings.SnapToSelfPoint;
 
             mSegSearcher.SearchAllLayer(sc.DC, mDB);
 
@@ -949,6 +950,7 @@ namespace Plotter.Controller
             mSegSearcher.Clean();
             mSegSearcher.SetRangePixel(dc, SettingsHolder.Settings.LineSnapRange);
             mSegSearcher.SetTargetPoint(si.Cursor);
+            mSegSearcher.CheckStorePoint = SettingsHolder.Settings.SnapToSelfPoint;
             mSegSearcher.SetCheckPriorityWithSnapInfo(si);
 
             HighlightSegList.Clear();

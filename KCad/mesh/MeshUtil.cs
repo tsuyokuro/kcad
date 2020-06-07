@@ -1,7 +1,11 @@
 ﻿using CadDataTypes;
+using CarveWapper;
+using HalfEdgeNS;
+using MeshMakerNS;
 using MyCollections;
 using OpenTK;
 using Plotter;
+using System;
 using System.Collections.Generic;
 
 namespace MeshUtilNS
@@ -272,6 +276,50 @@ namespace MeshUtilNS
             m.FaceStore.Add(face);
 
             return m;
+        }
+
+        public static (CadMesh m1, CadMesh m2) CutMeshWithVector(
+            CadMesh src, Vector3d p0, Vector3d p1, Vector3d normal)
+        {
+            Vector3d wv = (p1 - p0).UnitVector();
+            Vector3d hv = normal;
+
+            CadMesh cubeA = MeshMaker.CreateUnitCube(wv, hv, MeshMaker.FaceType.QUADRANGLE);
+            MoveMesh(cubeA, -hv / 2);
+            ScaleMesh(cubeA, 10000);
+            MoveMesh(cubeA, (p1 - p0) / 2 + p0);
+
+            CadMesh cubeB = MeshMaker.CreateUnitCube(wv, hv, MeshMaker.FaceType.QUADRANGLE);
+            MoveMesh(cubeB, hv / 2);
+            ScaleMesh(cubeB, 10000);
+            MoveMesh(cubeB, (p1 - p0) / 2 + p0);
+
+
+            CadMesh m1;
+            try
+            {
+                m1 = CarveW.AMinusB(src, cubeA);
+            }
+            catch (Exception e)
+            {
+                return (null, null);
+            }
+
+            MeshUtil.SplitAllFace(m1);
+
+            CadMesh m2;
+            try
+            {
+                m2 = CarveW.AMinusB(src, cubeB);
+            }
+            catch (Exception e)
+            {
+                return (null, null);
+            }
+
+            MeshUtil.SplitAllFace(m2);
+
+            return (m1, m2);
         }
     }
 }
