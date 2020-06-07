@@ -228,6 +228,7 @@ namespace KCad.ViewModel
                 { "obj_order_bottom", ObjOrderBottom },
                 { "obj_order_top", ObjOrderTop },
                 { "reset_camera", ResetCamera },
+                { "cut_mesh_with_vector", CutMeshWithVector },
             };
         }
 
@@ -415,6 +416,11 @@ namespace KCad.ViewModel
         public void FlipAndCopyWithVector()
         {
             mController.FlipAndCopyWithVector();
+        }
+
+        public void CutMeshWithVector()
+        {
+            mController.CutMeshWithVector();
         }
 
         public void RotateWithPoint()

@@ -220,7 +220,7 @@
     <value>線分にスナップ</value>
   </data>
   <data name="menu_snap_to_self" xml:space="preserve">
-    <value>選択されたポイントにスナップ</value>
+    <value>シャドウにスナップ</value>
   </data>
   <data name="menu_snap_to_zero" xml:space="preserve">
     <value>原点にスナップ</value>

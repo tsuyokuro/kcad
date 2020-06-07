@@ -2,12 +2,12 @@
     x:Class="KCad.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cc="clr-namespace:KCad.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:KCad"
-    xmlns:cc="clr-namespace:KCad.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:KCad.ViewModel"
     xmlns:properties="clr-namespace:KCad.Properties"
+    xmlns:vm="clr-namespace:KCad.ViewModel"
     Title="KCad"
     Width="1177.667"
     Height="732"
@@ -39,8 +39,7 @@
             <Style
                 x:Key="SnapSettingToggleButton"
                 BasedOn="{StaticResource CircleToggleButton}"
-                TargetType="{x:Type ToggleButton}">
-            </Style>
+                TargetType="{x:Type ToggleButton}" />
 
             <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
 
@@ -113,17 +112,15 @@
                 <Setter Property="Background" Value="{StaticResource MenuBGColor}" />
             </Style>
 
-            <Style TargetType="MenuItem" BasedOn="{StaticResource MLB_MenuItem}">
+            <Style BasedOn="{StaticResource MLB_MenuItem}" TargetType="MenuItem">
                 <Setter Property="Foreground" Value="{StaticResource MenuTextColor}" />
                 <Setter Property="Background" Value="{StaticResource MenuBGColor}" />
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="BorderBrush" Value="{StaticResource MenuBGColor}" />
                 <Setter Property="Padding" Value="0,0,0,0" />
             </Style>
-            
-            <Style
-                x:Key="{x:Static MenuItem.SeparatorStyleKey}"
-                TargetType="Separator">
+
+            <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="Separator">
                 <Setter Property="Margin" Value="0,3,0,3" />
                 <Setter Property="Padding" Value="0,0,0,0" />
                 <Setter Property="Height" Value="Auto" />
@@ -134,9 +131,10 @@
                                 <!--<Rectangle Height="1"
                                            Stroke="{TemplateBinding Foreground}"
                                            Fill="{TemplateBinding Foreground}"/>-->
-                                <Rectangle Height="1"
-                                           Stroke="{StaticResource MenuSepColor}"
-                                           Fill="{StaticResource MenuSepColor}"/>
+                                <Rectangle
+                                    Height="1"
+                                    Fill="{StaticResource MenuSepColor}"
+                                    Stroke="{StaticResource MenuSepColor}" />
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
@@ -195,11 +193,11 @@
         <!--  Caption area  -->
         <Border Padding="2" Background="{StaticResource CaptionColor}">
             <Grid
-            Grid.Row="0"
-            Height="Auto"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top"
-            Background="{StaticResource CaptionColor}">
+                Grid.Row="0"
+                Height="Auto"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Background="{StaticResource CaptionColor}">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -210,232 +208,237 @@
                 </Grid.ColumnDefinitions>
 
                 <Image
-                Grid.Column="0"
-                Width="{StaticResource AppIconSize}"
-                Margin="8,0,0,0"
-                VerticalAlignment="Center"
-                Source="Resources/Images/triangle2.png" />
+                    Grid.Column="0"
+                    Width="{StaticResource AppIconSize}"
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    Source="Resources/Images/triangle2.png" />
                 <Label
-                Grid.Column="1"
-                Margin="4,0,0,0"
-                VerticalAlignment="Center"
-                Content="KCad"
-                FontSize="{StaticResource CaptionFontSize}"
-                FontWeight="ExtraBold"
-                Foreground="{StaticResource AppTitleColor}" />
+                    Grid.Column="1"
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Center"
+                    Content="KCad"
+                    FontSize="{StaticResource CaptionFontSize}"
+                    FontWeight="ExtraBold"
+                    Foreground="{StaticResource AppTitleColor}" />
 
 
                 <!--  Menu area  -->
-                <Border Grid.Column="2" Background="{StaticResource MenuBGColor}" Height="Auto">
+                <Border
+                    Grid.Column="2"
+                    Height="Auto"
+                    Background="{StaticResource MenuBGColor}">
                     <StackPanel Orientation="Horizontal">
-                        <Menu Width="Auto" Height="Auto" VerticalAlignment="Center" Margin="0,0,0,0"
-                          WindowChrome.IsHitTestVisibleInChrome="True" >
+                        <Menu
+                            Width="Auto"
+                            Height="Auto"
+                            Margin="0,0,0,0"
+                            VerticalAlignment="Center"
+                            WindowChrome.IsHitTestVisibleInChrome="True">
                             <MenuItem Header="{x:Static properties:Resources.menu_file}">
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_new_doc}"
-                            Tag="new_doc" />
+                                    Click="Command_Clicked"
+                                    Header="{x:Static properties:Resources.menu_new_doc}"
+                                    Tag="new_doc" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_load}"
-                            Tag="load" />
+                                    Click="Command_Clicked"
+                                    Header="{x:Static properties:Resources.menu_load}"
+                                    Tag="load" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_save}"
-                            Tag="save" />
+                                    Click="Command_Clicked"
+                                    Header="{x:Static properties:Resources.menu_save}"
+                                    Tag="save" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_save_as}"
-                            Tag="save_as" />
+                                    Click="Command_Clicked"
+                                    Header="{x:Static properties:Resources.menu_save_as}"
+                                    Tag="save_as" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_print}"
-                            Tag="print" />
+                                    Click="Command_Clicked"
+                                    Header="{x:Static properties:Resources.menu_print}"
+                                    Tag="print" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_page_settings}"
-                            Tag="page_setting" />
+                                    Click="Command_Clicked"
+                                    Header="{x:Static properties:Resources.menu_page_settings}"
+                                    Tag="page_setting" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_doc_settings}"
-                            Tag="doc_setting" />
+                                    Click="Command_Clicked"
+                                    Header="{x:Static properties:Resources.menu_doc_settings}"
+                                    Tag="doc_setting" />
                             </MenuItem>
                             <MenuItem Header="{x:Static properties:Resources.menu_edit}">
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Undo"
-                            Tag="undo" />
+                                    Click="Command_Clicked"
+                                    Header="Undo"
+                                    Tag="undo" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Redo"
-                            Tag="redo" />
+                                    Click="Command_Clicked"
+                                    Header="Redo"
+                                    Tag="redo" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Copy"
-                            Tag="copy" />
+                                    Click="Command_Clicked"
+                                    Header="Copy"
+                                    Tag="copy" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Paste"
-                            Tag="paste" />
+                                    Click="Command_Clicked"
+                                    Header="Paste"
+                                    Tag="paste" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Separate"
-                            Tag="separate" />
+                                    Click="Command_Clicked"
+                                    Header="Separate"
+                                    Tag="separate" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Bond"
-                            Tag="bond" />
+                                    Click="Command_Clicked"
+                                    Header="Bond"
+                                    Tag="bond" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="To Bezier"
-                            Tag="to_bezier" />
+                                    Click="Command_Clicked"
+                                    Header="To Bezier"
+                                    Tag="to_bezier" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Cut Segment"
-                            Tag="cut_segment" />
+                                    Click="Command_Clicked"
+                                    Header="Cut Segment"
+                                    Tag="cut_segment" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Insert point"
-                            Tag="ins_point" />
+                                    Click="Command_Clicked"
+                                    Header="Cut mesh"
+                                    Tag="cut_mesh_with_vector" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="To Loop lines"
-                            Tag="to_loop" />
-
+                                    Click="Command_Clicked"
+                                    Header="Insert point"
+                                    Tag="ins_point" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="To Unloop lines"
-                            Tag="to_unloop" />
-
+                                    Click="Command_Clicked"
+                                    Header="To Loop lines"
+                                    Tag="to_loop" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Rotate"
-                            Tag="rotate_with_point" />
-
+                                    Click="Command_Clicked"
+                                    Header="To Unloop lines"
+                                    Tag="to_unloop" />
+                                <MenuItem
+                                    Click="Command_Clicked"
+                                    Header="Rotate"
+                                    Tag="rotate_with_point" />
                                 <MenuItem Header="Flip">
                                     <MenuItem
-                                Click="Command_Clicked"
-                                Header="Flip"
-                                Tag="flip_with_vector" />
+                                        Click="Command_Clicked"
+                                        Header="Flip"
+                                        Tag="flip_with_vector" />
                                     <MenuItem
-                                Click="Command_Clicked"
-                                Header="Flip and copy"
-                                Tag="flip_and_copy_with_vector" />
+                                        Click="Command_Clicked"
+                                        Header="Flip and copy"
+                                        Tag="flip_and_copy_with_vector" />
                                     <MenuItem
-                                Click="Command_Clicked"
-                                Header="Flip Normal"
-                                Tag="flip_normal" />
+                                        Click="Command_Clicked"
+                                        Header="Flip Normal"
+                                        Tag="flip_normal" />
                                 </MenuItem>
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Clear layer"
-                            Tag="clear_layer" />
+                                    Click="Command_Clicked"
+                                    Header="Clear layer"
+                                    Tag="clear_layer" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Centroid"
-                            Tag="centroid" />
+                                    Click="Command_Clicked"
+                                    Header="Centroid"
+                                    Tag="centroid" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Select all"
-                            Tag="select_all" />
+                                    Click="Command_Clicked"
+                                    Header="Select all"
+                                    Tag="select_all" />
                             </MenuItem>
                             <MenuItem x:Name="SettingsMenu" Header="{x:Static properties:Resources.menu_sttings}">
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_grid_settings}"
-                            Tag="grid_settings" />
+                                    Click="Command_Clicked"
+                                    Header="{x:Static properties:Resources.menu_grid_settings}"
+                                    Tag="grid_settings" />
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_snap_settings}"
-                            Tag="snap_settings" />
+                                    Click="Command_Clicked"
+                                    Header="{x:Static properties:Resources.menu_snap_settings}"
+                                    Tag="snap_settings" />
                                 <MenuItem
-                            Header="{x:Static properties:Resources.menu_continue_create_figure}"
-                            IsCheckable="True"
-                            IsChecked="{Binding ContinueCreateFigure}" />
-
+                                    Header="{x:Static properties:Resources.menu_continue_create_figure}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding ContinueCreateFigure}" />
                             </MenuItem>
 
                             <MenuItem x:Name="SnapMenu" Header="{x:Static properties:Resources.menu_snap}">
                                 <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_grid}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToGrid}" />
+                                    Header="{x:Static properties:Resources.menu_snap_to_grid}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding SnapToGrid}" />
                                 <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_point}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToPoint}" />
+                                    Header="{x:Static properties:Resources.menu_snap_to_point}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding SnapToPoint}" />
                                 <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_seg}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToSegment}" />
+                                    Header="{x:Static properties:Resources.menu_snap_to_seg}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding SnapToSegment}" />
                                 <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_line}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToLine}" />
+                                    Header="{x:Static properties:Resources.menu_snap_to_line}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding SnapToLine}" />
                                 <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_zero}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToZero}" />
+                                    Header="{x:Static properties:Resources.menu_snap_to_zero}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding SnapToZero}" />
                                 <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_last_down}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToLastDownPoint}" />
+                                    Header="{x:Static properties:Resources.menu_snap_to_last_down}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding SnapToLastDownPoint}" />
                                 <MenuItem
-                            Header="{x:Static properties:Resources.menu_snap_to_self}"
-                            IsCheckable="True"
-                            IsChecked="{Binding SnapToSelfPoint}" />
+                                    Header="{x:Static properties:Resources.menu_snap_to_self}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding SnapToSelfPoint}" />
                             </MenuItem>
                             <MenuItem x:Name="DrawOptionMenu" Header="{x:Static properties:Resources.menu_draw}">
                                 <MenuItem
-                            x:Name="DrawModeMenu"
-                            Header="{x:Static properties:Resources.menu_draw_mode}"
-                            IsCheckable="False">
+                                    x:Name="DrawModeMenu"
+                                    Header="{x:Static properties:Resources.menu_draw_mode}"
+                                    IsCheckable="False">
                                     <MenuItem
-                                Header="Light"
-                                IsCheckable="True"
-                                IsChecked="{Binding DrawMode, ConverterParameter=LIGHT, Converter={StaticResource DrawModeConv}}"
-                            />
+                                        Header="Light"
+                                        IsCheckable="True"
+                                        IsChecked="{Binding DrawMode, ConverterParameter=LIGHT, Converter={StaticResource DrawModeConv}}" />
                                     <MenuItem
-                                Header="Drak"
-                                IsCheckable="True"
-                                IsChecked="{Binding DrawMode, ConverterParameter=DARK, Converter={StaticResource DrawModeConv}}"
-                            />
+                                        Header="Drak"
+                                        IsCheckable="True"
+                                        IsChecked="{Binding DrawMode, ConverterParameter=DARK, Converter={StaticResource DrawModeConv}}" />
                                 </MenuItem>
 
                                 <Separator />
 
                                 <MenuItem
-                            Header="{x:Static properties:Resources.menu_draw_mesh_outline}"
-                            IsCheckable="True"
-                            IsChecked="{Binding DrawMeshEdge}" />
+                                    Header="{x:Static properties:Resources.menu_draw_mesh_outline}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding DrawMeshEdge}" />
                                 <MenuItem
-                            Header="{x:Static properties:Resources.menu_fill_mesh}"
-                            IsCheckable="True"
-                            IsChecked="{Binding FillMesh}" />
+                                    Header="{x:Static properties:Resources.menu_fill_mesh}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding FillMesh}" />
                                 <MenuItem
-                            Header="Draw normal"
-                            IsCheckable="True"
-                            IsChecked="{Binding DrawNormal}" />
+                                    Header="Draw normal"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding DrawNormal}" />
                                 <MenuItem
-                            Header="Draw axis"
-                            IsCheckable="True"
-                            IsChecked="{Binding DrawAxis}" />
+                                    Header="Draw axis"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding DrawAxis}" />
                                 <MenuItem
-                            Header="Draw axis label"
-                            IsCheckable="True"
-                            IsChecked="{Binding DrawAxisLabel}" />
+                                    Header="Draw axis label"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding DrawAxisLabel}" />
                             </MenuItem>
                             <MenuItem Header="{x:Static properties:Resources.menu_script}">
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="{x:Static properties:Resources.menu_show_script_editor}"
-                            Tag="show_editor" />
+                                    Click="Command_Clicked"
+                                    Header="{x:Static properties:Resources.menu_show_script_editor}"
+                                    Tag="show_editor" />
                             </MenuItem>
                             <MenuItem Header="Experimental">
                                 <MenuItem
-                            Click="Command_Clicked"
-                            Header="Poly lins to SVG"
-                            Tag="export_svg" />
+                                    Click="Command_Clicked"
+                                    Header="Poly lins to SVG"
+                                    Tag="export_svg" />
                             </MenuItem>
                         </Menu>
                     </StackPanel>
@@ -443,52 +446,52 @@
 
 
                 <Label
-                x:Name="FileName"
-                Grid.Column="3"
-                Margin="4,0,0,0"
-                VerticalAlignment="Center"
-                Content=""
-                FontSize="{StaticResource CaptionFontSize}"
-                Foreground="White" />
+                    x:Name="FileName"
+                    Grid.Column="3"
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Center"
+                    Content=""
+                    FontSize="{StaticResource CaptionFontSize}"
+                    Foreground="White" />
 
                 <StackPanel
-                Grid.Column="4"
-                Height="26"
-                Margin="0,0,4,0"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Background="{StaticResource CaptionColor}"
-                Orientation="Horizontal">
+                    Grid.Column="4"
+                    Height="26"
+                    Margin="0,0,4,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Background="{StaticResource CaptionColor}"
+                    Orientation="Horizontal">
 
                     <Button
-                    x:Name="BtnMinWindow"
-                    Content="0"
-                    FontSize="{StaticResource CaptionButtonFontSize}"
-                    Style="{DynamicResource CaptionButtonStyleKey}"
-                    WindowChrome.IsHitTestVisibleInChrome="True" />
+                        x:Name="BtnMinWindow"
+                        Content="0"
+                        FontSize="{StaticResource CaptionButtonFontSize}"
+                        Style="{DynamicResource CaptionButtonStyleKey}"
+                        WindowChrome.IsHitTestVisibleInChrome="True" />
                     <Button
-                    x:Name="BtnMaxWindow"
-                    Content="1"
-                    FontSize="{StaticResource CaptionButtonFontSize}"
-                    Style="{DynamicResource CaptionButtonStyleKey}"
-                    WindowChrome.IsHitTestVisibleInChrome="True" />
+                        x:Name="BtnMaxWindow"
+                        Content="1"
+                        FontSize="{StaticResource CaptionButtonFontSize}"
+                        Style="{DynamicResource CaptionButtonStyleKey}"
+                        WindowChrome.IsHitTestVisibleInChrome="True" />
                     <Button
-                    x:Name="BtnRestWindow"
-                    Content="2"
-                    FontSize="{StaticResource CaptionButtonFontSize}"
-                    Style="{DynamicResource CaptionButtonStyleKey}"
-                    WindowChrome.IsHitTestVisibleInChrome="True" />
+                        x:Name="BtnRestWindow"
+                        Content="2"
+                        FontSize="{StaticResource CaptionButtonFontSize}"
+                        Style="{DynamicResource CaptionButtonStyleKey}"
+                        WindowChrome.IsHitTestVisibleInChrome="True" />
                     <Button
-                    x:Name="BtnCloseWindow"
-                    Content="r"
-                    FontSize="{StaticResource CaptionButtonFontSize}"
-                    Style="{DynamicResource CaptionButtonStyleKey}"
-                    WindowChrome.IsHitTestVisibleInChrome="True" />
+                        x:Name="BtnCloseWindow"
+                        Content="r"
+                        FontSize="{StaticResource CaptionButtonFontSize}"
+                        Style="{DynamicResource CaptionButtonStyleKey}"
+                        WindowChrome.IsHitTestVisibleInChrome="True" />
 
                 </StackPanel>
             </Grid>
         </Border>
- 
+
         <!--  Client area  -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
@@ -499,8 +502,11 @@
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
-            <!-- Menu area place holder-->
-            <Border Grid.Row="0" Background="{StaticResource MenuBGColor}" Height="0" />
+            <!--  Menu area place holder  -->
+            <Border
+                Grid.Row="0"
+                Height="0"
+                Background="{StaticResource MenuBGColor}" />
 
             <!--  Tool bar area  -->
             <StackPanel
@@ -512,9 +518,9 @@
 
                 <StackPanel
                     x:Name="SnapToolBar"
-                    Margin="0,3,0,0"
-                    Height="Auto"
                     Width="Auto"
+                    Height="Auto"
+                    Margin="0,3,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Background="Transparent"
@@ -523,9 +529,11 @@
                     <Label Width="4" Height="Auto" />
 
                     <ToggleButton
+                        Width="22"
+                        Height="22"
                         Margin="1,2,0,2"
                         IsChecked="{Binding SnapToPoint}"
-                        Style="{StaticResource SnapSettingToggleButton}" Width="22" Height="22">
+                        Style="{StaticResource SnapSettingToggleButton}">
                         <Image
                             Width="16"
                             HorizontalAlignment="Center"
@@ -534,9 +542,11 @@
                     </ToggleButton>
 
                     <ToggleButton
+                        Width="22"
+                        Height="22"
                         Margin="4,2,0,2"
                         IsChecked="{Binding SnapToSegment}"
-                        Style="{StaticResource SnapSettingToggleButton}" Width="22" Height="22">
+                        Style="{StaticResource SnapSettingToggleButton}">
                         <Image
                             Width="16"
                             HorizontalAlignment="Center"
@@ -545,9 +555,11 @@
                     </ToggleButton>
 
                     <ToggleButton
+                        Width="22"
+                        Height="22"
                         Margin="4,2,0,2"
                         IsChecked="{Binding SnapToLine}"
-                        Style="{StaticResource SnapSettingToggleButton}" Width="22" Height="22">
+                        Style="{StaticResource SnapSettingToggleButton}">
                         <Image
                             Width="16"
                             HorizontalAlignment="Center"
@@ -556,9 +568,11 @@
                     </ToggleButton>
 
                     <ToggleButton
+                        Width="22"
+                        Height="22"
                         Margin="4,2,0,2"
                         IsChecked="{Binding SnapToZero}"
-                        Style="{StaticResource SnapSettingToggleButton}" Width="22" Height="22">
+                        Style="{StaticResource SnapSettingToggleButton}">
                         <Image
                             Width="16"
                             HorizontalAlignment="Center"
@@ -567,9 +581,11 @@
                     </ToggleButton>
 
                     <ToggleButton
+                        Width="22"
+                        Height="22"
                         Margin="4,2,0,2"
                         IsChecked="{Binding SnapToLastDownPoint}"
-                        Style="{StaticResource SnapSettingToggleButton}" Width="22" Height="22">
+                        Style="{StaticResource SnapSettingToggleButton}">
                         <Image
                             Width="16"
                             HorizontalAlignment="Center"
@@ -578,9 +594,11 @@
                     </ToggleButton>
 
                     <ToggleButton
+                        Width="22"
+                        Height="22"
                         Margin="4,2,0,2"
                         IsChecked="{Binding SnapToGrid}"
-                        Style="{StaticResource SnapSettingToggleButton}" Width="22" Height="22">
+                        Style="{StaticResource SnapSettingToggleButton}">
                         <Image
                             Width="16"
                             HorizontalAlignment="Center"
@@ -632,16 +650,16 @@
                                 FontSize="9"
                                 Foreground="DarkGray" />
                             <RadioButton
-                                Margin="1,0,1,3"
                                 Height="{StaticResource ButtonHeight}"
+                                Margin="1,0,1,3"
                                 Content="Select Figure"
                                 IsChecked="{Binding SelectMode, ConverterParameter=OBJECT, Converter={StaticResource SelModeConv}}"
                                 Style="{StaticResource ToolRadioButton}"
                                 Tag="OBJECT" />
 
                             <RadioButton
-                                Margin="1,0,1,3"
                                 Height="{StaticResource ButtonHeight}"
+                                Margin="1,0,1,3"
                                 Content="Select Point"
                                 IsChecked="{Binding SelectMode, ConverterParameter=POINT, Converter={StaticResource SelModeConv}}"
                                 Style="{StaticResource ToolRadioButton}"
@@ -657,58 +675,58 @@
                                 Foreground="DarkGray" />
 
                             <RadioButton
-                                Margin="1,0,1,3"
                                 Height="{StaticResource ButtonHeight}"
+                                Margin="1,0,1,3"
                                 Content="Line"
                                 IsChecked="{Binding CreatingFigureType, ConverterParameter=LINE, Converter={StaticResource FigTypeConv}}"
                                 Style="{StaticResource ToolRadioButton}"
                                 Tag="LINE" />
 
                             <RadioButton
-                                Margin="1,0,1,3"
                                 Height="{StaticResource ButtonHeight}"
+                                Margin="1,0,1,3"
                                 Content="Rect"
                                 IsChecked="{Binding CreatingFigureType, ConverterParameter=RECT, Converter={StaticResource FigTypeConv}}"
                                 Style="{StaticResource ToolRadioButton}"
                                 Tag="RECT" />
 
                             <RadioButton
-                                Margin="1,0,1,3"
                                 Height="{StaticResource ButtonHeight}"
+                                Margin="1,0,1,3"
                                 Content="Poly lines"
                                 IsChecked="{Binding CreatingFigureType, ConverterParameter=POLY_LINES, Converter={StaticResource FigTypeConv}}"
                                 Style="{StaticResource ToolRadioButton}"
                                 Tag="POLY_LINES" />
 
                             <RadioButton
-                                Margin="1,0,1,3"
                                 Height="{StaticResource ButtonHeight}"
+                                Margin="1,0,1,3"
                                 Content="Circle"
                                 IsChecked="{Binding CreatingFigureType, ConverterParameter=CIRCLE, Converter={StaticResource FigTypeConv}}"
                                 Style="{StaticResource ToolRadioButton}"
                                 Tag="CIRCLE" />
 
                             <RadioButton
-                                Margin="1,0,1,3"
                                 Height="{StaticResource ButtonHeight}"
+                                Margin="1,0,1,3"
                                 Content="Point"
                                 IsChecked="{Binding CreatingFigureType, ConverterParameter=POINT, Converter={StaticResource FigTypeConv}}"
                                 Style="{StaticResource ToolRadioButton}"
                                 Tag="POINT" />
 
                             <RadioButton
-                                Margin="1,0,1,3"
                                 Height="{StaticResource ButtonHeight}"
+                                Margin="1,0,1,3"
                                 Content="Dimention"
                                 IsChecked="{Binding CreatingFigureType, ConverterParameter=DIMENTION_LINE, Converter={StaticResource FigTypeConv}}"
                                 Style="{StaticResource ToolRadioButton}"
                                 Tag="DIMENTION_LINE" />
 
-                            <Separator Margin="4,4,4,4"/>
+                            <Separator Margin="4,4,4,4" />
 
                             <RadioButton
-                                Margin="1,3,1,3"
                                 Height="{StaticResource ButtonHeight}"
+                                Margin="1,3,1,3"
                                 Content="Measure"
                                 IsChecked="{Binding MeasureMode, ConverterParameter=POLY_LINE, Converter={StaticResource MeasureModeConv}}"
                                 Style="{StaticResource ToolRadioButton}"
@@ -738,7 +756,10 @@
                         <RowDefinition Height="20*" />
                     </Grid.RowDefinitions>
 
-                    <WindowsFormsHost x:Name="viewContainer" Grid.Row="0" Background="#FF080808"/>
+                    <WindowsFormsHost
+                        x:Name="viewContainer"
+                        Grid.Row="0"
+                        Background="#FF080808" />
 
                     <GridSplitter
                         x:Name="viewBottom"
@@ -749,13 +770,15 @@
                         Background="{StaticResource BoarderColor}"
                         BorderThickness="0"
                         PreviewStyle="{StaticResource GridSplitterPreviewStyle}"
-                        ShowsPreview="false" ResizeDirection="Rows"/>
-                    
-                    <!-- Grip for splitter -->
-                    <Image Grid.Row="1"
+                        ResizeDirection="Rows"
+                        ShowsPreview="false" />
+
+                    <!--  Grip for splitter  -->
+                    <Image
+                        Grid.Row="1"
                         Height="4"
-                        Source="{StaticResource grip_vDrawingImage}"
-                        IsHitTestVisible="False"/>
+                        IsHitTestVisible="False"
+                        Source="{StaticResource grip_vDrawingImage}" />
 
                     <Grid Grid.Row="2">
                         <Grid.RowDefinitions>
@@ -774,13 +797,12 @@
                                 VerticalAlignment="Top"
                                 Background="{StaticResource MsgBGColor}"
                                 Focusable="True"
-                                FontSize="14"
                                 FontFamily="Fonts/mplus-1m-light.ttf#M+ 1m light"
+                                FontSize="14"
                                 Foreground="#FFAAAAAA"
                                 LineHeight="17"
                                 SnapsToDevicePixels="True"
-                                TextOptions.TextFormattingMode="Display"
-                                />
+                                TextOptions.TextFormattingMode="Display" />
 
                         </ScrollViewer>
                         <Grid Grid.Row="1" Height="auto">
@@ -789,15 +811,17 @@
                                 <ColumnDefinition Width="100*" />
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Column="0"
-                                    BorderBrush="{StaticResource BoarderColor}" BorderThickness="0,1,0,1">
+                            <Border
+                                Grid.Column="0"
+                                BorderBrush="{StaticResource BoarderColor}"
+                                BorderThickness="0,1,0,1">
                                 <Button
                                     x:Name="RunTextCommandButton"
                                     Margin="1,1,2,1"
                                     Padding="2,2,2,2"
                                     Content=" Enter &gt; "
                                     Style="{StaticResource ToolButton}"
-                                    Tag="run_text_command"/>
+                                    Tag="run_text_command" />
                             </Border>
 
                             <cc:AutoCompleteTextBox
@@ -862,10 +886,10 @@
                                     Name="AddLayerButton"
                                     Grid.Column="1"
                                     Width="24"
-                                    Click="Command_Clicked"
-                                    Tag="add_layer"
                                     Margin="1,1,1,1"
-                                    Style="{StaticResource ToolButton}">
+                                    Click="Command_Clicked"
+                                    Style="{StaticResource ToolButton}"
+                                    Tag="add_layer">
                                     <Image
                                         Width="18"
                                         Height="18"
@@ -877,10 +901,10 @@
                                     Name="RemoveLayerButton"
                                     Grid.Column="2"
                                     Width="24"
-                                    Click="Command_Clicked"
-                                    Tag="remove_layer"
                                     Margin="1,1,1,1"
-                                    Style="{StaticResource ToolButton}">
+                                    Click="Command_Clicked"
+                                    Style="{StaticResource ToolButton}"
+                                    Tag="remove_layer">
                                     <Image
                                         Width="18"
                                         Height="18"
@@ -925,17 +949,17 @@
                                                     VerticalAlignment="Center"
                                                     Orientation="Horizontal">
                                                     <CheckBox
-                                                        Foreground="White"
-                                                        IsChecked="{Binding Path=Visible}"
                                                         Width="{StaticResource LayoutListIconSize}"
                                                         Height="{StaticResource LayoutListIconSize}"
+                                                        Foreground="White"
+                                                        IsChecked="{Binding Path=Visible}"
                                                         Style="{StaticResource VisibleCheckBox}" />
 
                                                     <CheckBox
-                                                        Foreground="White"
-                                                        IsChecked="{Binding Path=Locked}"
                                                         Width="{StaticResource LayoutListIconSize}"
                                                         Height="{StaticResource LayoutListIconSize}"
+                                                        Foreground="White"
+                                                        IsChecked="{Binding Path=Locked}"
                                                         Style="{StaticResource LockedCheckBox}" />
                                                 </StackPanel>
                                                 <Label
@@ -966,14 +990,14 @@
 
                                 <Border
                                     Grid.Row="0"
+                                    Height="24"
                                     BorderBrush="{StaticResource BoarderColor}"
-                                    BorderThickness="0,1,0,1"
-                                    Height="24">
+                                    BorderThickness="0,1,0,1">
                                     <StackPanel x:Name="TreeViewToolBar" Orientation="Horizontal">
                                         <ToggleButton
-                                            Margin="2,0,0,0"
                                             Width="20"
                                             Height="20"
+                                            Margin="2,0,0,0"
                                             IsChecked="{Binding FilterObjectTree}"
                                             Style="{StaticResource CircleToggleButton}">
 
@@ -981,62 +1005,63 @@
                                                 <Image
                                                     Width="18"
                                                     Height="18"
-                                                    VerticalAlignment="Center"
                                                     HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
                                                     Source="{StaticResource baseline_filter_listDrawingImage}" />
                                             </Border>
 
                                         </ToggleButton>
-                                        <Button 
-                                            Click="Command_Clicked"                                            
+                                        <Button
+                                            Width="20"
+                                            Height="20"
                                             Margin="8,1,1,1"
-                                            Width="20" Height="20"
+                                            Click="Command_Clicked"
                                             Style="{StaticResource ToolButton}"
                                             Tag="obj_order_down">
-                                                <Image
-                                                    Width="18"
-                                                    Height="18"
-                                                    VerticalAlignment="Top"
-                                                    Source="{StaticResource downDrawingImage}" />
+                                            <Image
+                                                Width="18"
+                                                Height="18"
+                                                VerticalAlignment="Top"
+                                                Source="{StaticResource downDrawingImage}" />
                                         </Button>
                                         <Button
-                                            Click="Command_Clicked"                                            
+                                            Width="20"
+                                            Height="20"
                                             Margin="1,1,1,1"
-                                            Width="20" Height="20"
+                                            Click="Command_Clicked"
                                             Style="{StaticResource ToolButton}"
-                                            Tag="obj_order_up"
-                                            >
+                                            Tag="obj_order_up">
                                             <Image
-                                                    Width="18"
-                                                    Height="18"
-                                                    VerticalAlignment="Top"
-                                                    Source="{StaticResource upDrawingImage}" />
+                                                Width="18"
+                                                Height="18"
+                                                VerticalAlignment="Top"
+                                                Source="{StaticResource upDrawingImage}" />
                                         </Button>
                                         <Button
-                                            Click="Command_Clicked"                                            
+                                            Width="20"
+                                            Height="20"
                                             Margin="1,1,1,1"
-                                            Width="20" Height="20"
+                                            Click="Command_Clicked"
                                             Style="{StaticResource ToolButton}"
-                                            Tag="obj_order_bottom"
-                                            >
+                                            Tag="obj_order_bottom">
                                             <Image
-                                                    Width="18"
-                                                    Height="18"
-                                                    VerticalAlignment="Top"
-                                                    Source="{StaticResource bottomDrawingImage}" />
+                                                Width="18"
+                                                Height="18"
+                                                VerticalAlignment="Top"
+                                                Source="{StaticResource bottomDrawingImage}" />
                                         </Button>
                                         <Button
-                                            Click="Command_Clicked"                                            
+                                            Width="20"
+                                            Height="20"
                                             Margin="1,1,1,1"
-                                            Width="20" Height="20"
+                                            Click="Command_Clicked"
                                             Style="{StaticResource ToolButton}"
-                                            Tag="obj_order_top"
-                                            >
+                                            Tag="obj_order_top">
                                             <Image
-                                                    Width="18"
-                                                    Height="18"
-                                                    VerticalAlignment="Top"
-                                                    Source="{StaticResource topDrawingImage}" />
+                                                Width="18"
+                                                Height="18"
+                                                VerticalAlignment="Top"
+                                                Source="{StaticResource topDrawingImage}" />
                                         </Button>
 
                                     </StackPanel>
@@ -1121,106 +1146,83 @@
                         Orientation="Horizontal">
 
                         <RadioButton
+                            Width="{StaticResource ViewModeButtonWidth}"
+                            Height="{StaticResource ViewModeButtonHeight}"
                             Margin="1,1,1,1"
                             IsChecked="{Binding ViewMode, ConverterParameter=FRONT, Converter={StaticResource ViewModeConv}}"
-                            Style="{StaticResource ToolRadioButton}"
-                            Height="{StaticResource ViewModeButtonHeight}"
-                            Width="{StaticResource ViewModeButtonWidth}"
-                            >
-                            <TextBlock
-                                Text="Front"
-                                TextAlignment="Center" />
+                            Style="{StaticResource ToolRadioButton}">
+                            <TextBlock Text="Front" TextAlignment="Center" />
                         </RadioButton>
 
                         <RadioButton
+                            Width="{StaticResource ViewModeButtonWidth}"
+                            Height="{StaticResource ViewModeButtonHeight}"
                             Margin="1,1,1,1"
                             IsChecked="{Binding ViewMode, ConverterParameter=BACK, Converter={StaticResource ViewModeConv}}"
-                            Style="{StaticResource ToolRadioButton}"
-                            Height="{StaticResource ViewModeButtonHeight}"
-                            Width="{StaticResource ViewModeButtonWidth}"
-                            >
-                            <TextBlock
-                                Text="Back"
-                                TextAlignment="Center" />
+                            Style="{StaticResource ToolRadioButton}">
+                            <TextBlock Text="Back" TextAlignment="Center" />
                         </RadioButton>
 
                         <RadioButton
+                            Width="{StaticResource ViewModeButtonWidth}"
+                            Height="{StaticResource ViewModeButtonHeight}"
                             Margin="1,1,1,1"
                             IsChecked="{Binding ViewMode, ConverterParameter=TOP, Converter={StaticResource ViewModeConv}}"
-                            Style="{StaticResource ToolRadioButton}"
-                            Height="{StaticResource ViewModeButtonHeight}"
-                            Width="{StaticResource ViewModeButtonWidth}"
-                            >
-                            <TextBlock
-                                Text="Top"
-                                TextAlignment="Center" />
+                            Style="{StaticResource ToolRadioButton}">
+                            <TextBlock Text="Top" TextAlignment="Center" />
                         </RadioButton>
 
                         <RadioButton
+                            Width="{StaticResource ViewModeButtonWidth}"
+                            Height="{StaticResource ViewModeButtonHeight}"
                             Margin="1,1,1,1"
                             IsChecked="{Binding ViewMode, ConverterParameter=BOTTOM, Converter={StaticResource ViewModeConv}}"
-                            Style="{StaticResource ToolRadioButton}"
-                            Height="{StaticResource ViewModeButtonHeight}"
-                            Width="{StaticResource ViewModeButtonWidth}"
-                            >
+                            Style="{StaticResource ToolRadioButton}">
 
-                            <TextBlock
-                                Text="Bottom"
-                                TextAlignment="Center" />
+                            <TextBlock Text="Bottom" TextAlignment="Center" />
                         </RadioButton>
 
                         <RadioButton
+                            Width="{StaticResource ViewModeButtonWidth}"
+                            Height="{StaticResource ViewModeButtonHeight}"
                             Margin="1,1,1,1"
                             IsChecked="{Binding ViewMode, ConverterParameter=RIGHT, Converter={StaticResource ViewModeConv}}"
-                            Style="{StaticResource ToolRadioButton}"
-                            Height="{StaticResource ViewModeButtonHeight}"
-                            Width="{StaticResource ViewModeButtonWidth}"
-                            >
-                            <TextBlock
-                                Text="Right"
-                                TextAlignment="Center" />
+                            Style="{StaticResource ToolRadioButton}">
+                            <TextBlock Text="Right" TextAlignment="Center" />
 
                         </RadioButton>
 
                         <RadioButton
+                            Width="{StaticResource ViewModeButtonWidth}"
+                            Height="{StaticResource ViewModeButtonHeight}"
                             Margin="1,1,1,1"
                             IsChecked="{Binding ViewMode, ConverterParameter=LEFT, Converter={StaticResource ViewModeConv}}"
-                            Style="{StaticResource ToolRadioButton}"
-                            Height="{StaticResource ViewModeButtonHeight}"
-                            Width="{StaticResource ViewModeButtonWidth}"
-                            >
-                            <TextBlock
-                                Text="Left"
-                                TextAlignment="Center" />
+                            Style="{StaticResource ToolRadioButton}">
+                            <TextBlock Text="Left" TextAlignment="Center" />
 
                         </RadioButton>
 
                         <RadioButton
+                            Width="{StaticResource ViewModeButtonWidth}"
+                            Height="{StaticResource ViewModeButtonHeight}"
                             Margin="1,1,1,1"
                             IsChecked="{Binding ViewMode, ConverterParameter=FREE, Converter={StaticResource ViewModeConv}}"
                             Style="{StaticResource ToolRadioButton}"
-                            Tag="axis_xyz"
-                            Height="{StaticResource ViewModeButtonHeight}"
-                            Width="{StaticResource ViewModeButtonWidth}"
-                            >
+                            Tag="axis_xyz">
 
-                            <TextBlock
-                                Text="3D"
-                                TextAlignment="Center" />
+                            <TextBlock Text="3D" TextAlignment="Center" />
 
                         </RadioButton>
 
                         <Button
                             Name="ResetCamera"
-                            Height="{StaticResource ViewModeButtonHeight}"
                             Width="{StaticResource ViewModeButtonWidth}"
-                            Click="Command_Clicked"
-                            Tag="reset_camera"
+                            Height="{StaticResource ViewModeButtonHeight}"
                             Margin="8,1,1,1"
-                            Style="{StaticResource ToolButton}">
-                            <TextBlock
-		                        Text="Reset"
-		                        TextAlignment="Center" />
+                            Click="Command_Clicked"
+                            Style="{StaticResource ToolButton}"
+                            Tag="reset_camera">
+                            <TextBlock Text="Reset" TextAlignment="Center" />
                         </Button>
 
                     </StackPanel>

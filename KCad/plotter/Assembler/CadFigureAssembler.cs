@@ -134,11 +134,6 @@ namespace Plotter
                 return result;
             }
 
-            if (seg.Figure.IsLoop)
-            {
-                return result;
-            }
-
             CrossInfo ci = CadMath.PerpendicularCrossSeg(seg.pA.vector, seg.pB.vector, p);
 
             if (!ci.IsCross)

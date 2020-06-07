@@ -32,6 +32,8 @@ namespace Plotter
             }
         }
 
+        public bool CheckStorePoint = false;
+
         public Priority CheckPriority = Priority.NONE;
 
         public void SetRangePixel(DrawContext dc, double pixel)
@@ -120,6 +122,11 @@ namespace Plotter
 
             if (fig.StoreList != null && fig.StoreList.Count > 1)
             {
+                if (!CheckStorePoint)
+                {
+                    return;
+                }
+
                 a = fseg.StoredPoint0.vector;
                 b = fseg.StoredPoint1.vector;
             }

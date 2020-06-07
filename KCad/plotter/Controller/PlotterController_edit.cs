@@ -255,6 +255,18 @@ namespace Plotter.Controller
             mPlotterTaskRunner.FlipAndCopyWithInteractive(target);
         }
 
+        public void CutMeshWithVector()
+        {
+            CadFigure target = CurrentFigure;
+            if (target == null)
+            {
+                ItConsole.printFaile("No Figure selected.");
+                return;
+            }
+
+            mPlotterTaskRunner.CutMeshWithInteractive(target);
+        }
+
         public void RotateWithPoint()
         {
             List<CadFigure> target = GetSelectedRootFigureList();

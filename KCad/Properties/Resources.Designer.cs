@@ -395,7 +395,7 @@ namespace KCad.Properties {
         }
         
         /// <summary>
-        ///   Snap to self に類似しているローカライズされた文字列を検索します。
+        ///   Snap to shadow に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string menu_snap_to_self {
             get {

@@ -1402,47 +1402,15 @@ namespace Plotter.Controller
                 return;
             }
 
-            Vector3d wv = (p1 - p0).UnitVector();
-            Vector3d hv = CadMath.Normal(p1 - p0, ViewDir());
-
-            CadMesh cubeA = MeshMaker.CreateUnitCube(wv, hv, MeshMaker.FaceType.QUADRANGLE);
-            MeshUtil.MoveMesh(cubeA, -hv / 2);
-            MeshUtil.ScaleMesh(cubeA, 10000);
-            MeshUtil.MoveMesh(cubeA, (p1 - p0) / 2 + p0);
-
-            CadMesh cubeB = MeshMaker.CreateUnitCube(wv, hv, MeshMaker.FaceType.QUADRANGLE);
-            MeshUtil.MoveMesh(cubeB, hv / 2);
-            MeshUtil.ScaleMesh(cubeB, 10000);
-            MeshUtil.MoveMesh(cubeB, (p1 - p0) / 2 + p0);
-
-            // TODO tfig - cubeA と tfig - cubeB を作って登録 tfig は削除
-
+            
             HeModel he = tfig.mHeModel;
             CadMesh src = HeModelConverter.ToCadMesh(he);
 
-            CadMesh m1;
-            try
-            {
-                m1 = CarveW.AMinusB(src, cubeA);
-            }
-            catch (Exception e)
-            {
-                return;
-            }
+            Vector3d normal = CadMath.Normal(
+                p1 - p0, (Controller.DC.ViewDir));
 
-            MeshUtil.SplitAllFace(m1);
+            (CadMesh m1, CadMesh m2) = MeshUtil.CutMeshWithVector(src, p0, p1, normal);
 
-            CadMesh m2;
-            try
-            {
-                m2 = CarveW.AMinusB(src, cubeB);
-            }
-            catch (Exception e)
-            {
-                return;
-            }
-
-            MeshUtil.SplitAllFace(m2);
 
             CadFigureMesh fig1 = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
             fig1.SetMesh(HeModelConverter.ToHeModel(m1));
