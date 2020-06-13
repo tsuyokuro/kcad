@@ -530,6 +530,34 @@ namespace Plotter.Controller
             return fig;
         }
 
+        public CadFigure AddCircle(double r)
+        {
+            return AddCircleAt(Controller.LastDownPoint, r);
+        }
+
+        public CadFigure AddCircleAt(Vector3d p, double r)
+        {
+            Vector3d viewDir = Controller.DC.ViewDir;
+            Vector3d upDir = Controller.DC.UpVector;
+
+            CadFigure fig = Controller.DB.NewFigure(CadFigure.Types.CIRCLE);
+
+            Vector3d p0 = p;
+            Vector3d p1 = p0 + CadMath.Normal(viewDir, upDir) * r;
+
+            fig.AddPoint((CadVertex)p0);
+            fig.AddPoint((CadVertex)p1);
+            fig.EndCreate(Controller.DC);
+
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
+            Session.AddOpe(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+
+            Session.PostRemakeObjectTree();
+
+            return fig;
+        }
+
         public CadMesh CreateCadMesh(List<Vector3d> plist, List<CadFace> flist)
         {
             CadMesh cm = new CadMesh(plist.Count, flist.Count);

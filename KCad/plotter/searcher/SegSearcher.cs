@@ -219,7 +219,6 @@ namespace Plotter
             }
         }
 
-
         private void CheckCircle(DrawContext dc, CadLayer layer, CadFigure fig)
         {
             if (fig.PointCount < 3)
@@ -234,56 +233,53 @@ namespace Plotter
                 vl = fig.StoreList;
             }
 
-
             Vector3d c = vl[0].vector;
             Vector3d a = vl[1].vector;
             Vector3d b = vl[2].vector;
+            Vector3d normal = CadMath.Normal(a - c, b - c);
 
+            Vector3d tw = Target.Pos;
+            tw.Z = 0;
+            tw = dc.DevPointToWorldPoint(tw);
 
-            Vector3d pc = dc.WorldPointToDevPoint(c);
-            Vector3d pa = dc.WorldPointToDevPoint(a);
-            Vector3d pb = dc.WorldPointToDevPoint(b);
+            Vector3d crossP = CadMath.CrossPlane(tw, tw + dc.ViewDir, c, normal);
 
-            double r = CadMath.SegNorm2D(pa, pc);
-            double tr = CadMath.SegNorm2D(Target.Pos, pc);
-
-            double pad = CadMath.SegNorm2D(Target.Pos, pa);
-            double pbd = CadMath.SegNorm2D(Target.Pos, pb);
-
-            int idxB = 1;
-
-            if (pbd < pad)
+            if (crossP.IsInvalid())
             {
-                idxB = 2;
+                // 真横から見ている場合
+                // viewed edge-on
+                //DOut.tpl("crossP is invalid");
+                return;
             }
 
+            double r = (a - c).Norm();
+            double tr = (crossP - c).Norm();
 
-            double dist = Math.Abs(tr - r);
+            Vector3d cirP = c + (crossP - c) * (r / tr);
 
-            if (dist > Range * 2.0)
+            Vector3d dcirP = dc.WorldPointToDevPoint(cirP);
+            Vector3d dcrossP = dc.WorldPointToDevPoint(crossP);
+
+            dcirP.Z = 0;
+            dcrossP.Z = 0;
+
+            double dist = (dcirP - Target.Pos).Norm();
+
+            if (dist > Range)
             {
+                //DOut.tpl($"dist:{dist} Range:{Range}");
                 return;
             }
 
             if (dist < MinDist)
             {
-                Vector3d tp = dc.DevPointToWorldPoint(Target.Pos);
-                r = CadMath.SegNorm(a, c);
-                tr = CadMath.SegNorm(tp, c);
-
-                Vector3d td = tp - c;
-
-                td *= (r / tr);
-                td += c;
-
                 FigureSegment fseg = new FigureSegment(fig, 0, 0, 0);
 
                 MarkSeg.Layer = layer;
                 MarkSeg.FigSeg = fseg;
-                MarkSeg.CrossPoint = td;
-                MarkSeg.CrossPointScrn = dc.WorldPointToDevPoint(td);
+                MarkSeg.CrossPoint = cirP;
+                MarkSeg.CrossPointScrn = dc.WorldPointToDevPoint(cirP);
                 MarkSeg.Distance = dist;
-
 
                 MinDist = dist;
             }

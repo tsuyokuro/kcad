@@ -137,6 +137,14 @@ def add_rectc(w=10, h=10, c=1):
 def add_rectc_at(pv, w=10, h=10, c=1):
     return SE.AddRectChamferAt(pv, w, h, c)
 
+#[AC] add_circle(r=10)
+def add_circle(r=10):
+    return SE.AddCircle(r)
+
+#[AC] add_circle_at(cv=last_down(), r=10)
+def add_circle_at(cv, r=10):
+    return SE.AddCircleAt(cv, r)
+
 
 #[AC] add_point(x=0, y=0, z=0)
 def add_point(x, y, z):
