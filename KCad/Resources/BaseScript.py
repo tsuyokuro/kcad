@@ -365,6 +365,14 @@ def rad2deg(rad):
 def deg2rad(deg):
 	return math.pi * deg / 180.0
 
+#[AC] get_fig(id=1)
+def get_fig(id):
+	return SE.GetFigure(id)
+
+#[AC] get_vertex(fig, index)
+def get_vertex(fig, index):
+	return SE.FigVertexAt(fig, index)
+
 
 #[AC] test()
 def test():
