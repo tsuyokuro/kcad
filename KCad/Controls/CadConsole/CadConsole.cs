@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Policy;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,7 +8,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using KCad.Controls.CadConsole;
-using Plotter;
 
 namespace KCad.Controls
 {
@@ -113,6 +114,8 @@ namespace KCad.Controls
         private TextRange Sel = new TextRange();
         private bool Selecting = false;
 
+        private AutoScroller mAutoScroller;
+
         public CadConsoleView()
         {
             mList.CreateBuffer(200);
@@ -184,6 +187,9 @@ namespace KCad.Controls
                 Scroll.ScrollChanged += Scroll_ScrollChanged;
             }
 
+            mAutoScroller = new AutoScroller(this);
+            mAutoScroller.Scroll = AutoScrollEvent;
+
             Esc.Palette[Esc.DefaultFColor] = mForeground;
             Esc.Palette[Esc.DefaultBColor] = mBackground;
 
@@ -199,6 +205,11 @@ namespace KCad.Controls
             UpdateView();
 
             SetContextMenu();
+        }
+
+        private void AutoScrollEvent(double x, double y)
+        {
+            Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset + y);
         }
 
         private void RecalcCharaSize()
@@ -313,6 +324,11 @@ namespace KCad.Controls
                 e.Handled = true;
             }
 
+            if (mAutoScroller != null)
+            {
+                mAutoScroller.Start();
+            }
+
             base.OnMouseDown(e);
         }
 
@@ -365,6 +381,11 @@ namespace KCad.Controls
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
+            if (mAutoScroller != null)
+            {
+                mAutoScroller.End();
+            }
+
             Point p = e.GetPosition(this);
             if (RawSel.IsEmpty())
             {
