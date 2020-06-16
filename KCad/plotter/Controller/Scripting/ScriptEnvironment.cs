@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using KCad.Controls;
+using OpenTK;
 
 namespace Plotter.Controller
 {
@@ -17,18 +18,18 @@ namespace Plotter.Controller
 
         private ScriptEngine Engine;
 
-        private ScriptScope Scope;
+        private ScriptScope mScope;
+        public ScriptScope Scope
+        {
+            get => mScope;
+        }
 
         private ScriptSource Source;
 
         private List<string> mAutoCompleteList = new List<string>();
-
         public List<string> AutoCompleteList
         {
-            get
-            {
-                return mAutoCompleteList;
-            }
+            get => mAutoCompleteList;
         }
 
         private ScriptFunctions mScriptFunctions;
@@ -42,13 +43,15 @@ namespace Plotter.Controller
         {
             Controller = controller;
 
-            mScriptFunctions = new ScriptFunctions(this);
+            mScriptFunctions = new ScriptFunctions();
 
             mSimpleCommands = new SipmleCommands(controller);
 
             mTestCommands = new TestCommands(controller);
 
             InitScriptingEngine();
+
+            mScriptFunctions.Init(this, mScope);
         }
 
         Regex AutoCompPtn = new Regex(@"#\[AC\][ \t]*(.+)\n");
@@ -58,11 +61,11 @@ namespace Plotter.Controller
             string script = System.Text.Encoding.GetEncoding("Shift_JIS").GetString(Resources.BaseScript);
 
             Engine = IronPython.Hosting.Python.CreateEngine();
-            Scope = Engine.CreateScope();
+            mScope = Engine.CreateScope();
             Source = Engine.CreateScriptSourceFromString(script);
 
-            Scope.SetVariable("SE", mScriptFunctions);
-            Source.Execute(Scope);
+            mScope.SetVariable("SE", mScriptFunctions);
+            Source.Execute(mScope);
 
             MatchCollection matches = AutoCompPtn.Matches(script);
 
@@ -111,7 +114,7 @@ namespace Plotter.Controller
 
             try
             {
-                ret = Engine.Execute(s, Scope);
+                ret = Engine.Execute(s, mScope);
 
                 if (ret != null)
                 {

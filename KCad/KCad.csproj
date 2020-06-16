@@ -210,6 +210,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\CadConsole\AnsiEsc.cs" />
+    <Compile Include="Controls\AutoScroller.cs" />
     <Compile Include="Controls\CadConsole\CadConsoleRes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

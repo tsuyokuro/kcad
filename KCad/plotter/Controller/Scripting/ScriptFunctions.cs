@@ -14,25 +14,49 @@ using LibiglWrapper;
 using GLUtil;
 using OpenTK;
 using System.Security.Cryptography;
+using Microsoft.Scripting.Hosting;
 
 namespace Plotter.Controller
 {
     public class ScriptFunctions
     {
-        PlotterController Controller;
+        private PlotterController Controller;
 
-        ScriptEnvironment Env;
+        private ScriptEnvironment Env;
 
-        public ScriptSession Session;
+        private ScriptSession Session;
 
-        public ScriptFunctions(ScriptEnvironment env)
+        public ScriptFunctions()
+        {
+        }
+
+        public void Init(ScriptEnvironment env, ScriptScope scope)
         {
             Env = env;
             Controller = env.Controller;
 
             Session = new ScriptSession(Env);
+
+            scope.SetVariable("normal", new Func<Vector3d, Vector3d, Vector3d>(CadMath.Normal));
+            Env.AutoCompleteList.Add("normal(v1, v2)");
+
+            scope.SetVariable("dot_product", new Func<Vector3d, Vector3d, double>(CadMath.InnerProduct));
+            Env.AutoCompleteList.Add("dot_product(v1, v2)");
+
+            scope.SetVariable("cross_product", new Func<Vector3d, Vector3d, Vector3d>(CadMath.CrossProduct));
+            Env.AutoCompleteList.Add("cross_product(v1, v2)");
         }
-        
+
+        public Vector3d FigVertexAt(CadFigure fig, int index)
+        {
+            return fig.GetPointAt(index).vector;
+        }
+
+        public CadFigure GetFigure(uint id)
+        {
+            return Controller.DB.GetFigure(id);
+        }
+
         public void StartSession()
         {
             Session.Start();
