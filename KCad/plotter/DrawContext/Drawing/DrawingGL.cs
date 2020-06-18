@@ -258,83 +258,65 @@ namespace Plotter
 
         public void DrawAxis()
         {
-            Vector3d p0 = default(Vector3d);
-            Vector3d p1 = default(Vector3d);
+            Vector3d p0;
+            Vector3d p1;
 
-            Vector3d pp = default;
-
-            double len = 100.0;
+            double len = DrawingConst.AxisLength;
             double arrowLen = 4.0 / DC.WorldScale;
             double arrowW2 = 2.0 / DC.WorldScale;
 
             // X軸
-            p0.X = -len;
-            p0.Y = 0;
-            p0.Z = 0;
-
-            p1.X = len;
-            p1.Y = 0;
-            p1.Z = 0;
-
-            p0 /= DC.WorldScale;
-            p1 /= DC.WorldScale;
+            p0 = new Vector3d(-len, 0, 0) / DC.WorldScale;
+            p1 = new Vector3d(len, 0, 0) / DC.WorldScale;
 
             if (!CadMath.IsParallel(p1 - p0, (Vector3d)DC.ViewDir))
             {
                 DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_X), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
 
-            if (SettingsHolder.Settings.DrawAxisLabel)
-            {
-                pp = DC.WorldPointToDevPoint(p1);
-                DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_PALE_TEXT), pp, Vector3d.UnitX, -Vector3d.UnitY, "X");
-            }
-
             // Y軸
-            p0.X = 0;
-            p0.Y = -len;
-            p0.Z = 0;
-
-            p1.X = 0;
-            p1.Y = len;
-            p1.Z = 0;
-
-            p0 /= DC.WorldScale;
-            p1 /= DC.WorldScale;
+            p0 = new Vector3d(0, -len, 0) / DC.WorldScale;
+            p1 = new Vector3d(0, len, 0) / DC.WorldScale;
 
             if (!CadMath.IsParallel(p1 - p0, (Vector3d)DC.ViewDir))
             {
                 DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_Y), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
 
-            if (SettingsHolder.Settings.DrawAxisLabel)
-            {
-                pp = DC.WorldPointToDevPoint(p1);
-                DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_PALE_TEXT), pp, Vector3d.UnitX, -Vector3d.UnitY, "Y");
-            }
-
             // Z軸
-            p0.X = 0;
-            p0.Y = 0;
-            p0.Z = -len;
-
-            p1.X = 0;
-            p1.Y = 0;
-            p1.Z = len;
-
-            p0 /= DC.WorldScale;
-            p1 /= DC.WorldScale;
+            p0 = new Vector3d(0, 0, -len) / DC.WorldScale;
+            p1 = new Vector3d(0, 0, len) / DC.WorldScale;
 
             if (!CadMath.IsParallel(p1 - p0, (Vector3d)DC.ViewDir))
             {
                 DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_Z), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
+        }
 
-            if (SettingsHolder.Settings.DrawAxisLabel)
-            {
-                pp = DC.WorldPointToDevPoint(p1);
-                DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_PALE_TEXT), pp, Vector3d.UnitX, -Vector3d.UnitY, "Z");
-            }
+        public void DrawAxisLabel()
+        {
+            Vector3d p1;
+            Vector3d pp;
+
+            double len = DrawingConst.AxisLength;
+
+            // X軸
+            p1 = new Vector3d(len, 0, 0) / DC.WorldScale;
+
+            pp = DC.WorldPointToDevPoint(p1);
+            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_AXIS_LABEL_X), pp, Vector3d.UnitX, -Vector3d.UnitY, "X");
+
+            // Y軸
+            p1 = new Vector3d(0, len, 0) / DC.WorldScale;
+
+            pp = DC.WorldPointToDevPoint(p1);
+            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_AXIS_LABEL_Y), pp, Vector3d.UnitX, -Vector3d.UnitY, "Y");
+
+            // Z軸
+            p1 = new Vector3d(0, 0, len) / DC.WorldScale;
+
+            pp = DC.WorldPointToDevPoint(p1);
+            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_AXIS_LABEL_Z), pp, Vector3d.UnitX, -Vector3d.UnitY, "Z");
         }
 
         private void PushMatrixes()

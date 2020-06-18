@@ -48,6 +48,9 @@ namespace Plotter
             BrushColorTbl[DrawTools.BRUSH_DEFAULT_MESH_FILL] = Color.FromArgb(204, 204, 204);
             BrushColorTbl[DrawTools.BRUSH_TRANSPARENT] = Color.FromArgb(0, 0, 0, 0);
             BrushColorTbl[DrawTools.BRUSH_PALE_TEXT] = Color.FromArgb(0x7E, 0x7E, 0x7E);
+            BrushColorTbl[DrawTools.BRUSH_AXIS_LABEL_X] = Color.FromArgb(0xFF, 0xFF, 0xFF);
+            BrushColorTbl[DrawTools.BRUSH_AXIS_LABEL_Y] = Color.FromArgb(0xFF, 0xFF, 0xFF);
+            BrushColorTbl[DrawTools.BRUSH_AXIS_LABEL_Z] = Color.FromArgb(0xFF, 0xFF, 0xFF);
         }
     }
 }

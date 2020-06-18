@@ -45,12 +45,14 @@ namespace Plotter
             Vector3d p0 = default;
             Vector3d p1 = default;
 
+            double len = DrawingConst.AxisLength;
+
             // X軸
-            p0.X = -100;
+            p0.X = -len;
             p0.Y = 0;
             p0.Z = 0;
 
-            p1.X = 100;
+            p1.X = len;
             p1.Y = 0;
             p1.Z = 0;
 
@@ -61,11 +63,11 @@ namespace Plotter
 
             // Y軸
             p0.X = 0;
-            p0.Y = -100;
+            p0.Y = -len;
             p0.Z = 0;
 
             p1.X = 0;
-            p1.Y = 100;
+            p1.Y = len;
             p1.Z = 0;
 
             p0 /= DC.WorldScale;
@@ -76,16 +78,21 @@ namespace Plotter
             // Z軸
             p0.X = 0;
             p0.Y = 0;
-            p0.Z = -100;
+            p0.Z = -len;
 
             p1.X = 0;
             p1.Y = 0;
-            p1.Z = 100;
+            p1.Z = len;
 
             p0 /= DC.WorldScale;
             p1 /= DC.WorldScale;
 
             DrawLine(DC.GetPen(DrawTools.PEN_AXIS_Z), p0, p1);
+        }
+
+        public void DrawAxisLabel()
+        {
+            // TODO Draw axis label
         }
 
         public virtual void DrawGrid(Gridding grid)

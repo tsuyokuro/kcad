@@ -22,6 +22,8 @@ namespace Plotter
     {
         public const float HighlightPointLineWidth = 2;
         public const float HighlightPointLineLength = 6;
+
+        public const double AxisLength = 100;
     }
 
     public interface IDrawing : IDisposable
@@ -31,6 +33,8 @@ namespace Plotter
         void DrawSelected(List<CadFigure> list);
 
         void DrawAxis();
+
+        void DrawAxisLabel();
 
         void DrawPageFrame(double w, double h, Vector3d center);
 

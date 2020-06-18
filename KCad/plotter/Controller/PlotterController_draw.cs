@@ -68,6 +68,16 @@ namespace Plotter.Controller
             DrawExtendSnapPoint(dc);
 
             DrawAccordingState(dc);
+
+            DrawTop(dc);
+        }
+
+        protected void DrawTop(DrawContext dc)
+        {
+            if (SettingsHolder.Settings.DrawAxis && SettingsHolder.Settings.DrawAxisLabel)
+            {
+                dc.Drawing.DrawAxisLabel();
+            }
         }
 
         protected void DrawBase(DrawContext dc)
