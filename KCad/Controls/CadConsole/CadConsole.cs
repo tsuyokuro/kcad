@@ -207,9 +207,9 @@ namespace KCad.Controls
             SetContextMenu();
         }
 
-        private void AutoScrollEvent(double x, double y)
+        private void AutoScrollEvent(double dx, double dy)
         {
-            Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset + y);
+            Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset + dy);
         }
 
         private void RecalcCharaSize()
