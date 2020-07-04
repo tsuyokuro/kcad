@@ -205,29 +205,10 @@ namespace Plotter.Controller
 
                 if (SettingsHolder.Settings.SnapToGrid)
                 {
-                    Vector3d p = pixp;
-
-                    bool match = false;
-
                     mGridding.Clear();
                     mGridding.Check(dc, pixp);
 
-                    if (mGridding.XMatchU.IsValid())
-                    {
-                        p.X = mGridding.XMatchU.X;
-                        match = true;
-                    }
-
-                    if (mGridding.YMatchU.IsValid())
-                    {
-                        p.Y = mGridding.YMatchU.Y;
-                        match = true;
-                    }
-
-                    if (match)
-                    {
-                        LastDownPoint = dc.DevPointToWorldPoint(p);
-                    }
+                    LastDownPoint = mGridding.MatchW;
                 }
             }
 
@@ -447,7 +428,7 @@ namespace Plotter.Controller
 
                         CadVertex p = (CadVertex)dc.DevPointToWorldPoint(CrossCursor.Pos);
 
-                        SetPointInCreating(dc, p);
+                        SetPointInCreating(dc, (CadVertex)SnapPoint);
                     }
                     break;
 
@@ -457,7 +438,7 @@ namespace Plotter.Controller
 
                         CadVertex p = (CadVertex)dc.DevPointToWorldPoint(CrossCursor.Pos);
 
-                        SetPointInCreating(dc, p);
+                        SetPointInCreating(dc, (CadVertex)SnapPoint);
                     }
                     break;
 
@@ -820,27 +801,13 @@ namespace Plotter.Controller
             mGridding.Clear();
             mGridding.Check(dc, (Vector3d)si.Cursor.Pos);
 
-            bool snapx = false;
-            bool snapy = false;
+            si.Cursor.Pos = mGridding.MatchD;
 
-            if (!mPointSearcher.IsXMatch && mGridding.XMatchU.IsValid())
-            {
-                si.Cursor.Pos.X = mGridding.XMatchU.X;
-                snapx = true;
-            }
 
-            if (!mPointSearcher.IsYMatch && mGridding.YMatchU.IsValid())
-            {
-                si.Cursor.Pos.Y = mGridding.YMatchU.Y;
-                snapy = true;
-            }
+            //si.SnapPoint = dc.DevPointToWorldPoint(si.Cursor.Pos);
+            si.SnapPoint = mGridding.MatchW;
 
-            si.SnapPoint = dc.DevPointToWorldPoint(si.Cursor.Pos);
-
-            if (snapx && snapy)
-            {
-                HighlightPointList.Add(new HighlightPointListItem(si.SnapPoint, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
-            }
+            //HighlightPointList.Add(new HighlightPointListItem(si.SnapPoint, dc.GetPen(DrawTools.PEN_POINT_HIGHLIGHT)));
 
             return si;
         }
