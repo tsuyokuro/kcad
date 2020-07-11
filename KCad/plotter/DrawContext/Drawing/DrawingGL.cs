@@ -291,6 +291,8 @@ namespace Plotter
             {
                 DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_Z), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
             }
+
+            DrawAxis2();
         }
 
         public void DrawAxisLabel()
@@ -317,6 +319,163 @@ namespace Plotter
 
             pp = DC.WorldPointToDevPoint(p1);
             DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_AXIS_LABEL_Z), pp, Vector3d.UnitX, -Vector3d.UnitY, "Z");
+        }
+
+        private void DrawAxis2()
+        {
+            //DrawAxis2Pers();
+            DrawAxis2Ortho();
+        }
+
+        private void DrawAxis2Pers()
+        {
+            PushMatrixes();
+
+            double size = 80;
+
+            double vw = DC.ViewWidth;
+            double vh = DC.ViewHeight;
+
+            double cx = size / 2;
+            double cy = size / 2 + 20;
+
+            double left = -cx;
+            double right = vw - cx;
+            double top = cy;
+            double bottom = -(vh - cy);
+
+            double arrowLen = 20;
+            double arrowW2 = 10;
+
+            Matrix4d prjm = Matrix4d.CreatePerspectiveOffCenter(left, right, bottom, top, 100, 10000);
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref prjm);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            Vector3d lookAt = Vector3d.Zero;
+            Vector3d eye = -DC.ViewDir * 300;
+
+            Matrix4d mdlm = Matrix4d.LookAt(eye, lookAt, DC.UpVector);
+
+            GL.LoadMatrix(ref mdlm);
+
+            Vector3d p0;
+            Vector3d p1;
+
+            GL.LineWidth(2);
+
+            p0 = Vector3d.UnitX * -size;
+            p1 = Vector3d.UnitX * size;
+            DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_X), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+
+            p0 = Vector3d.UnitY * -size;
+            p1 = Vector3d.UnitY * size;
+            DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_Y), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+
+            p0 = Vector3d.UnitZ * -size;
+            p1 = Vector3d.UnitZ * size;
+            DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_Z), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+
+            GL.LineWidth(1);
+
+            FontTex tex;
+
+            Vector3d xv = CadMath.Normal(DC.ViewDir, DC.UpVector);
+            Vector3d yv = CadMath.Normal(DC.ViewDir, DC.UpVector);
+
+            tex = mFontFaceW.CreateTexture("X");
+            p1 = Vector3d.UnitX * size;
+            GL.Color4(DC.GetBrush(DrawTools.BRUSH_AXIS_LABEL_X).Color4());
+            mFontRenderer.Render(tex, p1, xv * tex.ImgW * 1.5, DC.UpVector * tex.ImgH * 1.5);
+
+            tex = mFontFaceW.CreateTexture("Y");
+            p1 = Vector3d.UnitY * size;
+            GL.Color4(DC.GetBrush(DrawTools.BRUSH_AXIS_LABEL_Y).Color4());
+            mFontRenderer.Render(tex, p1, xv * tex.ImgW * 1.5, DC.UpVector * tex.ImgH * 1.5);
+
+            tex = mFontFaceW.CreateTexture("Z");
+            p1 = Vector3d.UnitZ * size;
+            GL.Color4(DC.GetBrush(DrawTools.BRUSH_AXIS_LABEL_Z).Color4());
+            mFontRenderer.Render(tex, p1, xv * tex.ImgW * 1.5, DC.UpVector * tex.ImgH * 1.5);
+
+            PopMatrixes();
+        }
+
+        private void DrawAxis2Ortho()
+        {
+            PushMatrixes();
+
+            double size = 40;
+
+            double vw = DC.ViewWidth;
+            double vh = DC.ViewHeight;
+
+            double cx = size / 2 + 24;
+            double cy = size / 2 + 40;
+
+            double left = -cx;
+            double right = vw - cx;
+            double top = cy;
+            double bottom = -(vh - cy);
+
+            double arrowLen = 10;
+            double arrowW2 = 5;
+
+            Matrix4d prjm = Matrix4d.CreateOrthographicOffCenter(left, right, bottom, top, 100, 10000);
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref prjm);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            Vector3d lookAt = Vector3d.Zero;
+            Vector3d eye = -DC.ViewDir * 300;
+
+            Matrix4d mdlm = Matrix4d.LookAt(eye, lookAt, DC.UpVector);
+
+            GL.LoadMatrix(ref mdlm);
+
+            Vector3d p0;
+            Vector3d p1;
+
+            GL.LineWidth(2);
+
+            p0 = Vector3d.UnitX * -size;
+            p1 = Vector3d.UnitX * size;
+            DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_X), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+
+            p0 = Vector3d.UnitY * -size;
+            p1 = Vector3d.UnitY * size;
+            DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_Y), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+
+            p0 = Vector3d.UnitZ * -size;
+            p1 = Vector3d.UnitZ * size;
+            DrawArrow(DC.GetPen(DrawTools.PEN_AXIS_Z), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+
+            GL.LineWidth(1);
+
+            FontTex tex;
+
+            Vector3d xv = CadMath.Normal(DC.ViewDir, DC.UpVector);
+            Vector3d yv = CadMath.Normal(DC.ViewDir, DC.UpVector);
+            double fs = 0.6;
+
+            tex = mFontFaceW.CreateTexture("X");
+            p1 = Vector3d.UnitX * size;
+            GL.Color4(DC.GetBrush(DrawTools.BRUSH_AXIS_LABEL_X).Color4());
+            mFontRenderer.Render(tex, p1, xv * tex.ImgW * fs, DC.UpVector * tex.ImgH * fs);
+
+            tex = mFontFaceW.CreateTexture("Y");
+            p1 = Vector3d.UnitY * size;
+            GL.Color4(DC.GetBrush(DrawTools.BRUSH_AXIS_LABEL_Y).Color4());
+            mFontRenderer.Render(tex, p1, xv * tex.ImgW * fs, DC.UpVector * tex.ImgH * fs);
+
+            tex = mFontFaceW.CreateTexture("Z");
+            p1 = Vector3d.UnitZ * size;
+            GL.Color4(DC.GetBrush(DrawTools.BRUSH_AXIS_LABEL_Z).Color4());
+            mFontRenderer.Render(tex, p1, xv * tex.ImgW * fs, DC.UpVector * tex.ImgH * fs);
+
+            PopMatrixes();
         }
 
         private void PushMatrixes()
@@ -793,6 +952,86 @@ namespace Plotter
 
         protected void DrawGridPerse(Gridding grid)
         {
+            //double minx = -100;
+            //double maxx = 100;
+
+            //double miny = -100;
+            //double maxy = 100;
+
+            //double minz = -100;
+            //double maxz = 100;
+
+            //DrawPen pen = DC.GetPen(DrawTools.PEN_GRID);
+
+            //Vector3d p = default;
+
+            //double x, y, z;
+            //double sx, sy, sz;
+            //double szx = grid.GridSize.X;
+            //double szy = grid.GridSize.Y;
+            //double szz = grid.GridSize.Z;
+
+            //sx = Math.Round(minx / szx) * szx;
+            //sy = Math.Round(miny / szy) * szy;
+            //sz = Math.Round(minz / szz) * szz;
+
+            //x = sx;
+            //while (x < maxx)
+            //{
+            //    p.X = x;
+            //    p.Z = 0;
+
+            //    y = sy;
+
+            //    while (y < maxy)
+            //    {
+            //        p.Y = y;
+            //        DrawDot(pen, p);
+            //        y += szy;
+            //    }
+
+            //    x += szx;
+            //}
+
+            //z = sz;
+            //y = sy;
+
+            //while (z < maxz)
+            //{
+            //    p.Z = z;
+            //    p.X = 0;
+
+            //    y = sy;
+
+            //    while (y < maxy)
+            //    {
+            //        p.Y = y;
+            //        DrawDot(pen, p);
+            //        y += szy;
+            //    }
+
+            //    z += szz;
+            //}
+
+            //z = sz;
+            //x = sx;
+
+            //while (x < maxx)
+            //{
+            //    p.X = x;
+            //    p.Y = 0;
+
+            //    z = sz;
+
+            //    while (z < maxz)
+            //    {
+            //        p.Z = z;
+            //        DrawDot(pen, p);
+            //        z += szz;
+            //    }
+
+            //    x += szx;
+            //}
         }
 
         public void DrawRectScrn(DrawPen pen, Vector3d pp0, Vector3d pp1)
