@@ -11,15 +11,13 @@ namespace KCad.Controls
     {
         private DispatcherTimer Timer;
 
-        public Action<double, double> Scroll = (x, y) => {};
+        public Action<double, double> Scroll = (dx, dy) => {};
 
-        private FrameworkElement View;
+        private FrameworkElement CaptureView;
 
-        private FrameworkElement CheckView;
+        private FrameworkElement ScrollView;
 
-        private bool IsStarted = false;
-
-        private double CheckInterval = 0.1;
+        private double CheckInterval = 0.05;
 
         public AutoScroller(FrameworkElement view, double checkInterval)
         {
@@ -33,53 +31,38 @@ namespace KCad.Controls
 
         public void Init(FrameworkElement view, double checkInterval)
         {
-            View = view;
-
-            CheckView = view;
+            CaptureView = view;
+            ScrollView = view;
 
             CheckInterval = checkInterval;
 
-            ScrollViewer parent = (ScrollViewer)view.Parent;
+            FrameworkElement parent = (ScrollViewer)view.Parent;
 
             if (parent is ScrollViewer)
             {
-                CheckView = parent;
+                ScrollView = parent;
             }
+
+            Timer = new DispatcherTimer();
+            Timer.Interval = TimeSpan.FromSeconds(CheckInterval);
+            Timer.Tick += TimerTick;
         }
 
         public void Start()
         {
-            if (!IsStarted)
+            if (!CaptureView.IsMouseCaptured)
             {
-                DOut.tpl("AutoScroller.Start");
-
-                IsStarted = true;
-
-                Mouse.Capture(View, CaptureMode.Element);
-
-                Timer = new DispatcherTimer();
-
-                Timer.Interval = TimeSpan.FromSeconds(CheckInterval);
-                Timer.Tick += TimerTick;
+                //DOut.tpl("AutoScroller.Start");
+                Mouse.Capture(CaptureView, CaptureMode.Element);
                 Timer.Start();
             }
         }
 
         public void End()
         {
-            if (IsStarted)
-            {
-                DOut.tpl("AutoScroller.End");
-
-                IsStarted = false;
-                Mouse.Capture(null);
-
-                if (Timer != null)
-                {
-                    Timer.Stop();
-                    Timer = null;
-                }
-            }
+            //DOut.tpl("AutoScroller.End");
+            Timer.Stop();
+            Mouse.Capture(null);
         }
 
         private void TimerTick(object sender, EventArgs e)
@@ -89,7 +72,7 @@ namespace KCad.Controls
 
         private void Check()
         {
-            FrameworkElement v = CheckView;
+            FrameworkElement v = ScrollView;
             
             var Pos = Mouse.GetPosition(v);
 

@@ -1,4 +1,5 @@
 ﻿using Plotter;
+using System;
 using System.Windows.Media;
 
 namespace KCad.Controls
@@ -45,35 +46,41 @@ namespace KCad.Controls
         public const string BMagentaBG = ESC + "105m";
         public const string BCyanBG = ESC + "106m";
         public const string BWhiteBG = ESC + "107m";
+    }
 
-
-        public Brush[] Palette;
-        public Brush[] BrightPalette;
+    public class AnsiPalette
+    {
+        public Brush[] Brushes;
 
         public byte DefaultFColor = 7;
         public byte DefaultBColor = 0;
 
-        public AnsiEsc()
+        public AnsiPalette()
         {
-            Palette = new Brush[16];
+            SetupStdPalette();
+        }
 
-            Palette[0] = Brushes.Black;
-            Palette[1] = Brushes.MediumVioletRed;
-            Palette[2] = Brushes.SeaGreen;
-            Palette[3] = Brushes.Goldenrod;
-            Palette[4] = Brushes.SteelBlue;
-            Palette[5] = Brushes.DarkMagenta;
-            Palette[6] = Brushes.DarkCyan;
-            Palette[7] = Brushes.LightGray;
+        public void SetupStdPalette()
+        {
+            Brushes = new Brush[16];
 
-            Palette[8] = Brushes.Black;
-            Palette[9] = Brushes.LightCoral;
-            Palette[10] = Brushes.GreenYellow;
-            Palette[11] = Brushes.Yellow;
-            Palette[12] = Brushes.CornflowerBlue;
-            Palette[13] = Brushes.MediumOrchid;
-            Palette[14] = Brushes.Turquoise;
-            Palette[15] = Brushes.White;
+            Brushes[0] = new SolidColorBrush(Colors.Black);
+            Brushes[1] = new SolidColorBrush(Colors.MediumVioletRed);
+            Brushes[2] = new SolidColorBrush(Colors.SeaGreen);
+            Brushes[3] = new SolidColorBrush(Colors.Goldenrod);
+            Brushes[4] = new SolidColorBrush(Colors.SteelBlue);
+            Brushes[5] = new SolidColorBrush(Colors.DarkMagenta);
+            Brushes[6] = new SolidColorBrush(Colors.DarkCyan);
+            Brushes[7] = new SolidColorBrush(Colors.LightGray);
+
+            Brushes[8] = new SolidColorBrush(Colors.Black);
+            Brushes[9] = new SolidColorBrush(Colors.LightCoral);
+            Brushes[10] = new SolidColorBrush(Colors.GreenYellow);
+            Brushes[11] = new SolidColorBrush(Colors.Yellow);
+            Brushes[12] = new SolidColorBrush(Colors.CornflowerBlue);
+            Brushes[13] = new SolidColorBrush(Colors.MediumOrchid);
+            Brushes[14] = new SolidColorBrush(Colors.Turquoise);
+            Brushes[15] = new SolidColorBrush(Colors.White);
         }
     }
 }

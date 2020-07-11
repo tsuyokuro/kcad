@@ -24,7 +24,7 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_AXIS] = Color.FromArgb(60, 60, 92);
             PenColorTbl[DrawTools.PEN_PAGE_FRAME] = Color.FromArgb(92, 92, 92);
             PenColorTbl[DrawTools.PEN_TEST_FIGURE] = Color.Yellow;
-            PenColorTbl[DrawTools.PEN_GRID] = Color.FromArgb(192, 128, 92);
+            PenColorTbl[DrawTools.PEN_GRID] = Color.FromArgb(92, 92, 92);
             PenColorTbl[DrawTools.PEN_POINT_HIGHLIGHT2] = Color.FromArgb(64, 255, 255);
             PenColorTbl[DrawTools.PEN_FIGURE_HIGHLIGHT] = Color.HotPink;
             PenColorTbl[DrawTools.PEN_PALE_FIGURE] = Color.FromArgb(0x7E, 0x7E, 0x7E);
@@ -48,6 +48,9 @@ namespace Plotter
             BrushColorTbl[DrawTools.BRUSH_DEFAULT_MESH_FILL] = Color.FromArgb(204, 204, 204);
             BrushColorTbl[DrawTools.BRUSH_TRANSPARENT] = Color.FromArgb(0, 0, 0, 0);
             BrushColorTbl[DrawTools.BRUSH_PALE_TEXT] = Color.FromArgb(0x7E, 0x7E, 0x7E);
+            BrushColorTbl[DrawTools.BRUSH_AXIS_LABEL_X] = Color.FromArgb(0xFF, 0xFF, 0xFF);
+            BrushColorTbl[DrawTools.BRUSH_AXIS_LABEL_Y] = Color.FromArgb(0xFF, 0xFF, 0xFF);
+            BrushColorTbl[DrawTools.BRUSH_AXIS_LABEL_Z] = Color.FromArgb(0xFF, 0xFF, 0xFF);
         }
     }
 }

@@ -23,11 +23,8 @@ namespace Plotter
 
         public double Range = 8;
 
-        public Vector3d XMatchU = default;
-        public Vector3d YMatchU = default;
-
-        public Vector3d XMatchW = default;
-        public Vector3d YMatchW = default;
+        public Vector3d MatchW;
+        public Vector3d MatchD;
 
         public Gridding()
         {
@@ -36,11 +33,7 @@ namespace Plotter
 
         public void Clear()
         {
-            XMatchU = VectorExt.InvalidVector3d;
-            YMatchU = VectorExt.InvalidVector3d;
 
-            XMatchW = VectorExt.InvalidVector3d;
-            YMatchW = VectorExt.InvalidVector3d;
         }
 
         public void CopyFrom(Gridding g)
@@ -49,63 +42,18 @@ namespace Plotter
             Range = g.Range;
         }
 
-        private Vector3d CalcGridSizeU(DrawContext dc, Vector3d gridSizeW)
+        public void Check(DrawContext dc, Vector3d scrp)
         {
-            Vector3d gridSize = dc.WorldPointToDevPoint(gridSizeW) - dc.WorldPointToDevPoint(Vector3d.Zero);
+            Vector3d p = dc.DevPointToWorldPoint(scrp);
 
-            gridSize.X = Math.Abs(gridSize.X);
-            gridSize.Y = Math.Abs(gridSize.Y);
-            gridSize.Z = Math.Abs(gridSize.Z);
+            p.X = (long)((p.X + Math.Sign(p.X) * (GridSize.X / 2.0)) / GridSize.X) * GridSize.X;
+            p.Y = (long)((p.Y + Math.Sign(p.Y) * (GridSize.Y / 2.0)) / GridSize.Y) * GridSize.Y;
+            p.Z = (long)((p.Z + Math.Sign(p.Z) * (GridSize.Z / 2.0)) / GridSize.Z) * GridSize.Z;
 
-            return gridSize;
+            MatchW = p;
+            MatchD = dc.WorldPointToDevPoint(p);
         }
 
-        public void Check(DrawContext dc, Vector3d up)
-        {
-            Vector3d scr = CalcGridSizeU(dc, GridSize);
-
-            Vector3d t = default;
-
-            Vector3d sp = up;
-
-            Vector3d u0 = dc.ViewOrg;
-
-            double range;
-
-            up -= u0;
-
-            t.X = (Math.Round(up.X / scr.X)) * scr.X;
-            t.Y = (Math.Round(up.Y / scr.Y)) * scr.Y;
-            t.Z = 0;
-
-            range = Math.Min(scr.X / 3, Range);
-
-            if (Math.Abs(t.X - up.X) < range)
-            {
-                XMatchU = t + dc.ViewOrg;
-                XMatchU.Y = sp.Y;
-                XMatchU.Z = 0;
-            }
-
-            range = Math.Min(scr.Y / 3, Range);
-
-            if (Math.Abs(t.Y - up.Y) < range)
-            {
-                YMatchU = t + dc.ViewOrg;
-                YMatchU.X = sp.X;
-                YMatchU.Z = 0;
-            }
-
-            if (XMatchU.IsValid())
-            {
-                XMatchW = dc.DevPointToWorldPoint(XMatchU);
-            }
-
-            if (YMatchU.IsValid())
-            {
-                YMatchW = dc.DevPointToWorldPoint(YMatchU);
-            }
-        }
 
         /**
          * 画面上での間隔が min より大きくなるように間引く為のサイズの
@@ -113,104 +61,71 @@ namespace Plotter
          */
         public double Decimate(DrawContext dc, Gridding grid, double min)
         {
-            double n = 1;
+            double scaleX = 1.0;
+            double scaleY = 1.0;
+            double scaleZ = 1.0;
 
-            double szx = grid.GridSize.X;
-            double szy = grid.GridSize.Y;
-            double szz = grid.GridSize.Z;
+            double gridSizeX = grid.GridSize.X;
+            double gridSizeY = grid.GridSize.Y;
+            double gridSizeZ = grid.GridSize.Z;
 
-            Vector3d usz;
+            Vector3d devLen;
             double t = 1;
             double d;
 
-            Vector3d uzero = dc.WorldPointToDevPoint(Vector3d.Zero);
+            double devLenX;
+            double devLenY;
+            double devLenZ;
 
-            double uszx;
-            double uszy;
+            // X axis
+            devLen = dc.WorldVectorToDevVector(new Vector3d(gridSizeX, 0, 0));
 
-            usz = dc.WorldPointToDevPoint(new Vector3d(szx, 0, 0)) - uzero;
-
-            uszx = Math.Abs(usz.X);
-            uszy = Math.Abs(usz.Y);
-
-            if (uszx != 0 && uszx < min)
+            devLenX = Math.Max(Math.Abs(devLen.X), Math.Abs(devLen.Y));
+            if (devLenX != 0 && devLenX < min)
             {
-                d = Math.Ceiling(min / uszx) * uszx;
-                t = d / uszx;
+                d = Math.Ceiling(min / devLenX) * devLenX;
+                t = d / devLenX;
             }
 
-            if (t > n)
+            if (t > scaleX)
             {
-                n = t;
+                scaleX = t;
             }
 
-            if (uszy != 0 && uszy < min)
+
+            // Y axis
+            devLen = dc.WorldVectorToDevVector(new Vector3d(0, gridSizeY, 0));
+
+            devLenY = Math.Max(Math.Abs(devLen.X), Math.Abs(devLen.Y));
+            if (devLenY != 0 && devLenY < min)
             {
-                d = Math.Ceiling(min / uszy) * uszy;
-                t = d / uszy;
+                d = Math.Ceiling(min / devLenY) * devLenY;
+                t = d / devLenY;
             }
 
-            if (t > n)
+            if (t > scaleY)
             {
-                n = t;
+                scaleY = t;
             }
 
-            usz = dc.WorldPointToDevPoint(new Vector3d(0, szy, 0)) - uzero;
 
-            uszx = Math.Abs(usz.X);
-            uszy = Math.Abs(usz.Y);
+            // Z axis
+            devLen = dc.WorldVectorToDevVector(new Vector3d(0, 0, gridSizeZ));
 
-            if (uszx != 0 && uszx < min)
+            devLenZ = Math.Max(Math.Abs(devLen.X), Math.Abs(devLen.Y));
+
+            if (devLenZ != 0 && devLenZ < min)
             {
-                d = Math.Ceiling(min / uszx) * uszx;
-                t = d / uszx;
+                d = Math.Ceiling(min / devLenZ) * devLenZ;
+                t = d / devLenZ;
             }
 
-            if (t > n)
+            if (t > scaleZ)
             {
-                n = t;
+                scaleZ = t;
             }
 
-            if (uszy != 0 && uszy < min)
-            {
-                d = Math.Ceiling(min / uszy) * uszy;
-                t = d / uszy;
-            }
-
-            if (t > n)
-            {
-                n = t;
-            }
-
-            usz = dc.WorldPointToDevPoint(new Vector3d(0, 0, szy)) - uzero;
-
-            uszx = Math.Abs(usz.X);
-            uszy = Math.Abs(usz.Y);
-
-
-            if (uszx != 0 && uszx < min)
-            {
-                d = Math.Ceiling(min / uszx) * uszx;
-                t = d / uszx;
-            }
-
-            if (t > n)
-            {
-                n = t;
-            }
-
-            if (uszy != 0 && uszy < min)
-            {
-                d = Math.Ceiling(min / uszy) * uszy;
-                t = d / uszy;
-            }
-
-            if (t > n)
-            {
-                n = t;
-            }
-
-            return n;
+            return Math.Max(Math.Max(scaleX, scaleY), scaleZ);
         }
     }
 }

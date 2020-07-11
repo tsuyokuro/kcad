@@ -95,7 +95,7 @@ namespace KCad.Controls
 
         protected RingBuffer<TextLine> mList = new RingBuffer<TextLine>(); 
 
-        protected AnsiEsc Esc = new AnsiEsc();
+        protected AnsiPalette Palette = new AnsiPalette();
 
         protected TextAttr DefaultAttr = default;
 
@@ -190,11 +190,11 @@ namespace KCad.Controls
             mAutoScroller = new AutoScroller(this);
             mAutoScroller.Scroll = AutoScrollEvent;
 
-            Esc.Palette[Esc.DefaultFColor] = mForeground;
-            Esc.Palette[Esc.DefaultBColor] = mBackground;
+            Palette.Brushes[Palette.DefaultFColor] = mForeground;
+            Palette.Brushes[Palette.DefaultBColor] = mBackground;
 
-            DefaultAttr.FColor = Esc.DefaultFColor;
-            DefaultAttr.BColor = Esc.DefaultBColor;
+            DefaultAttr.FColor = Palette.DefaultFColor;
+            DefaultAttr.BColor = Palette.DefaultBColor;
 
             CurrentAttr = DefaultAttr;
 
@@ -207,9 +207,9 @@ namespace KCad.Controls
             SetContextMenu();
         }
 
-        private void AutoScrollEvent(double x, double y)
+        private void AutoScrollEvent(double dx, double dy)
         {
-            Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset + y);
+            Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset + dy);
         }
 
         private void RecalcCharaSize()
@@ -809,13 +809,13 @@ namespace KCad.Controls
         protected Point RenderText(
             DrawingContext dc, TextAttr attr, string s, Point pt, int row, int col)
         {
-            Brush foreground = Esc.Palette[attr.FColor];
+            Brush foreground = Palette.Brushes[attr.FColor];
 
             FormattedText ft = GetFormattedText(s, foreground);
 
             Rect r = new Rect(pt.X, row * mLineHeight, ft.WidthIncludingTrailingWhitespace, mLineHeight); 
 
-            Brush background = Esc.Palette[attr.BColor];
+            Brush background = Palette.Brushes[attr.BColor];
 
             dc.DrawRectangle(background, null, r);
 

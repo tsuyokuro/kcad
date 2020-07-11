@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Numerics;
 using CadDataTypes;
+using OpenTK;
 
 namespace Plotter
 {
@@ -163,20 +165,23 @@ namespace Plotter
                 }
                 else
                 {
-                    // 左回りになるように設定
+                    Vector3d p0 = Figure.PointList[0].vector;
+                    Vector3d p2 = p.vector;
 
-                    CadVertex pp0 = dc.WorldPointToDevPoint(Figure.PointList[0]);
-                    CadVertex pp2 = dc.WorldPointToDevPoint(p);
+                    Vector3d hv = CadMath.CrossProduct(dc.UpVector, dc.ViewDir).Normalized();
+                    Vector3d uv = dc.UpVector;
 
-                    CadVertex pp1 = pp0;
-                    pp1.Y = pp2.Y;
+                    Vector3d crossV = p2 - p0;
 
-                    CadVertex pp3 = pp0;
-                    pp3.X = pp2.X;
+                    Vector3d v1 = CadMath.InnerProduct(crossV, hv) * hv;
+                    Vector3d p1 = v1 + p0;
 
-                    Figure.mPointList.Add(dc.DevPointToWorldPoint(pp1));
-                    Figure.mPointList.Add(dc.DevPointToWorldPoint(pp2));
-                    Figure.mPointList.Add(dc.DevPointToWorldPoint(pp3));
+                    Vector3d v3 = CadMath.InnerProduct(crossV, uv) * uv;
+                    Vector3d p3 = v3 + p0;
+
+                    Figure.mPointList.Add(new CadVertex(p3));
+                    Figure.mPointList.Add(new CadVertex(p2));
+                    Figure.mPointList.Add(new CadVertex(p1));
 
                     Figure.IsLoop = true;
                 }
