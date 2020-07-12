@@ -38,7 +38,10 @@ namespace Plotter
         public const int PEN_AXIS_Y             = 27;
         public const int PEN_AXIS_Z             = 28;
         public const int PEN_OLD_FIGURE         = 29;
-        public const int PEN_TBL_SIZE           = 30;
+        public const int PEN_COMPASS_X          = 30;
+        public const int PEN_COMPASS_Y          = 31;
+        public const int PEN_COMPASS_Z          = 32;
+        public const int PEN_TBL_SIZE           = 33;
 
         public const int BRUSH_DEFAULT = 1;
         public const int BRUSH_BACKGROUND = 2;
@@ -49,7 +52,10 @@ namespace Plotter
         public const int BRUSH_AXIS_LABEL_X = 6;
         public const int BRUSH_AXIS_LABEL_Y = 7;
         public const int BRUSH_AXIS_LABEL_Z = 8;
-        public const int BRUSH_TBL_SIZE = 9;
+        public const int BRUSH_COMPASS_LABEL_X = 9;
+        public const int BRUSH_COMPASS_LABEL_Y = 10;
+        public const int BRUSH_COMPASS_LABEL_Z = 11;
+        public const int BRUSH_TBL_SIZE = 12;
 
         public const int FONT_DEFAULT = 1;
         public const int FONT_SMALL = 2;
