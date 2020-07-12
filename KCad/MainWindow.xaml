@@ -427,6 +427,10 @@
                                     Header="Draw axis label"
                                     IsCheckable="True"
                                     IsChecked="{Binding DrawAxisLabel}" />
+                                <MenuItem
+                                    Header="Draw Compass"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding DrawCompass}" />
                             </MenuItem>
                             <MenuItem Header="{x:Static properties:Resources.menu_script}">
                                 <MenuItem

@@ -95,6 +95,11 @@ namespace Plotter
             // TODO Draw axis label
         }
 
+        public void DrawCompass()
+        {
+
+        }
+
         public virtual void DrawGrid(Gridding grid)
         {
             Vector3d lt = Vector3d.Zero;

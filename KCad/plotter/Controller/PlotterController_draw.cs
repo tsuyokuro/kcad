@@ -78,6 +78,11 @@ namespace Plotter.Controller
             {
                 dc.Drawing.DrawAxisLabel();
             }
+
+            if (SettingsHolder.Settings.DrawCompass)
+            {
+                dc.Drawing.DrawCompass();
+            }
         }
 
         protected void DrawBase(DrawContext dc)
