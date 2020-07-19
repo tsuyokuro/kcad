@@ -72,6 +72,11 @@ namespace MyCollections
             return ref Data[idx];
         }
 
+        public T End()
+        {
+            return Data[Count - 1];
+        }
+
         public void RemoveAt(int idx)
         {
             Array.Copy(Data, idx + 1, Data, idx, Count - (idx + 1));

@@ -162,9 +162,9 @@ def add_box(pos, size_x, size_y, size_z):
 def add_1x4(pos, len):
     return SE.AddBox(pos, w_1x4, len, t_1x4)
 
-#[AC] add_cylinder(pos=last_down(), slices=16, r=10, len=40)
-def add_cylinder(pos, slices, r, len):
-    return SE.AddCylinder(pos, slices, r, len)
+#[AC] add_cylinder(pos=last_down(), circleDiv=16, slices=2, r=10, len=40)
+def add_cylinder(pos, circleDiv, slices, r, len):
+    return SE.AddCylinder(pos, circleDiv, slices, r, len)
 
 #[AC] add_sphere(pos=last_down(), slices=16, r=20)
 def add_sphere(pos, slices, r):
@@ -222,9 +222,25 @@ def invert_dir():
 def scale(id, org, ratio):
     SE.Scale(id, org, ratio)
 
-#[AC] rotate(current_fig_id(), input_point(), view_dir(), 45)
+#[AC] rotate(id=current_fig_id(), p0=input_point(), v=view_dir(), t=45)
 def rotate(id, p0, v, t):
+    if is_invalid_vector(p0):
+        return
+
     SE.Rotate(id, p0, v, t)
+
+#[AC] make_rotating_body_itr(current_fig_id(), top_cap=True, btm_cap=True)
+def make_rotating_body_itr(id, top_cap, btm_cap):
+    print esc_b_green_bg + esc_black + " <<<< Input Axis >>>> " + esc_reset
+
+    (p1, p2) = input_line();
+
+    if is_invalid_vector(p1):
+        return
+
+    org = p1;
+    axis = (p2 - p1).Normalized()
+    SE.MakeRotatingBody(id, org, axis, top_cap, btm_cap);
 
 #[AC] ins_point()
 def ins_point():
@@ -276,6 +292,14 @@ def vertex(x, y, z):
 def rotatev(v, axis, deg):
     return SE.RotateVector(v, axis, deg)
 
+#[AC] is_valid_vector(v=unit_vx)
+def is_valid_vector(v):
+    return SE.IsValidVector(v)
+
+#[AC] is_invalid_vector(v=unit_vx)
+def is_invalid_vector(v):
+    return SE.IsInvalidVector(v)
+
 ###############################################################################
 # Print information
 #
@@ -309,6 +333,9 @@ def input_point():
 def input_unit_v():
     return SE.InputUnitVector()
 
+#[AC] input_line()
+def input_line():
+    return SE.InputLine()
 
 ###############################################################################
 # User interface
@@ -406,7 +433,7 @@ t_1x4 = 19
 esc_reset = "\x1b[0m"
 
 # Normal color
-esc_balck = "\x1b[30m"
+esc_black = "\x1b[30m"
 esc_red = "\x1b[31m"
 esc_green = "\x1b[32m"
 esc_yellow = "\x1b[33m"
@@ -424,4 +451,23 @@ esc_b_blue = "\x1b[94m"
 esc_b_magenta = "\x1b[95m"
 esc_b_cyan = "\x1b[96m"
 esc_b_white = "\x1b[97m"
+
+
+esc_black_bg = "\x1b[40m";
+esc_red_bg = "\x1b[41m";
+esc_green_bg = "\x1b[42m";
+esc_yellow_bg = "\x1b[43m";
+esc_blue_bg = "\x1b[44m";
+esc_magenta_bg = "\x1b[45m";
+esc_cyan_bg = "\x1b[46m";
+esc_white_bg = "\x1b[47m";
+
+esc_b_black_bg = "\x1b[100m";
+esc_b_red_bg = "\x1b[101m";
+esc_b_green_bg = "\x1b[102m";
+esc_b_yellow_bg = "\x1b[103m";
+esc_b_blue_bg = "\x1b[104m";
+esc_b_magenta_bg = "\x1b[105m";
+esc_b_cyan_bg = "\x1b[106m";
+esc_b_white_bg = "\x1b[107m";
 

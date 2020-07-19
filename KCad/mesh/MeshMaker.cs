@@ -219,9 +219,9 @@ namespace MeshMakerNS
             return cm;
         }
 
-        public static CadMesh CreateCylinder(Vector3d pos, int slices, double r, double len)
+        public static CadMesh CreateCylinder(Vector3d pos, int circleDiv, int slices, double r, double len)
         {
-            CadMesh mesh = CreateCylinder(slices, r, len);
+            CadMesh mesh = CreateCylinder(circleDiv, slices, r, len);
 
             for (int i = 0; i < mesh.VertexStore.Count; i++)
             {
@@ -231,44 +231,24 @@ namespace MeshMakerNS
             return mesh;
         }
 
-
-        public static CadMesh CreateCylinder(int slices, double r, double len)
+        public static CadMesh CreateCylinder(int circleDiv, int slices, double r, double len)
         {
-            CadMesh mesh = new CadMesh(slices * 2 + 2, slices * 3);
+            VertexList vl = new VertexList();
 
-            mesh.VertexStore.Add(CadVertex.Create(0, 0, len / 2));
-            mesh.VertexStore.Add(CadVertex.Create(0, 0, -len / 2));
+            double sl = slices;
 
-            for (int i = 0; i < slices; i++)
+            double dl = len / sl;
+            double y = len / 2;
+
+            for (double i=0; i < sl; i++)
             {
-                double a1 = i * Math.PI * 2.0 / slices;
-                double y = Math.Cos(a1) * r;
-                double x = Math.Sin(a1) * r;
-                mesh.VertexStore.Add(CadVertex.Create(x, y, len / 2));
-                mesh.VertexStore.Add(CadVertex.Create(x, y, -len / 2));
+                vl.Add(new CadVertex(r, y - (i * dl), 0));
             }
 
-            for (int i = 0; i < slices; i++)
-            {
-                mesh.FaceStore.Add(new CadFace(0,
-                             2 + ((i + 1) % slices) * 2,
-                             2 + i * 2));
-            }
-            for (int i = 0; i < slices; i++)
-            {
-                mesh.FaceStore.Add(new CadFace(2 + i * 2,
-                             2 + ((i + 1) % slices) * 2,
-                             3 + ((i + 1) % slices) * 2,
-                             3 + i * 2));
-            }
-            for (int i = 0; i < slices; i++)
-            {
-                mesh.FaceStore.Add(new CadFace(1,
-                             3 + i * 2,
-                             3 + ((i + 1) % slices) * 2));
-            }
-
-            return mesh;
+            vl.Add(new CadVertex(r, -len / 2, 0));
+            
+            return CreateRotatingBody(
+                circleDiv, Vector3d.Zero, Vector3d.UnitY, vl, true, true, FaceType.TRIANGLE);
         }
 
         public static CadMesh CreateSphere(Vector3d pos, double r, int slices1, int slices2)
@@ -291,7 +271,8 @@ namespace MeshMakerNS
             vl.Add(CadVertex.Create(0, -r, 0));
 
 
-            CadMesh mesh = CreateRotatingBody(slices1, vl);
+            CadMesh mesh = CreateRotatingBody(
+                slices1, Vector3d.Zero, Vector3d.UnitY, vl, false, false, FaceType.TRIANGLE);
 
             for (int i = 0; i < mesh.VertexStore.Count; i++)
             {
@@ -301,16 +282,16 @@ namespace MeshMakerNS
             return mesh;
         }
 
-
         // 回転体の作成
-        public static CadMesh CreateRotatingBody(int slices, VertexList vl, FaceType facetype = FaceType.TRIANGLE)
+        // 削除予定
+        public static CadMesh CreateRotatingBody(int circleDiv, VertexList vl, FaceType facetype = FaceType.TRIANGLE)
         {
             if (vl.Count < 2)
             {
                 return null;
             }
 
-            CadMesh mesh = new CadMesh(vl.Count * slices, vl.Count * slices);
+            CadMesh mesh = new CadMesh(vl.Count * circleDiv, vl.Count * circleDiv);
 
             // 上下端が中心軸にあるなら共有
             int s = 0;
@@ -341,9 +322,9 @@ namespace MeshMakerNS
                 ps++;
             }
 
-            double d = Math.PI * 2.0 / slices;
+            double d = Math.PI * 2.0 / circleDiv;
 
-            for (int i = 0; i < slices; i++)
+            for (int i = 0; i < circleDiv; i++)
             {
                 double a = i * d;
 
@@ -364,20 +345,20 @@ namespace MeshMakerNS
 
             if (topCap)
             {
-                for (int i = 0; i < slices; i++)
+                for (int i = 0; i < circleDiv; i++)
                 {
-                    f = new CadFace(0, ((i + 1) % slices) * vc + ps, i * vc + ps);
+                    f = new CadFace(0, ((i + 1) % circleDiv) * vc + ps, i * vc + ps);
                     mesh.FaceStore.Add(f);
                 }
             }
 
             if (bottomCap)
             {
-                for (int i = 0; i < slices; i++)
+                for (int i = 0; i < circleDiv; i++)
                 {
                     int bi = (vc - 1);
 
-                    f = new CadFace(1, (i * vc) + bi + ps, ((i + 1) % slices) * vc + bi + ps);
+                    f = new CadFace(1, (i * vc) + bi + ps, ((i + 1) % circleDiv) * vc + bi + ps);
                     mesh.FaceStore.Add(f);
                 }
             }
@@ -385,9 +366,9 @@ namespace MeshMakerNS
             // 四角形で作成
             if (facetype == FaceType.QUADRANGLE)
             {
-                for (int i = 0; i < slices; i++)
+                for (int i = 0; i < circleDiv; i++)
                 {
-                    int nextSlice = ((i + 1) % slices) * vc + ps;
+                    int nextSlice = ((i + 1) % circleDiv) * vc + ps;
 
                     for (int vi = 0; vi < vc - 1; vi++)
                     {
@@ -405,9 +386,185 @@ namespace MeshMakerNS
             else
             {
                 // 三角形で作成
-                for (int i = 0; i < slices; i++)
+                for (int i = 0; i < circleDiv; i++)
                 {
-                    int nextSlice = ((i + 1) % slices) * vc + ps;
+                    int nextSlice = ((i + 1) % circleDiv) * vc + ps;
+
+                    for (int vi = 0; vi < vc - 1; vi++)
+                    {
+                        f = new CadFace(
+                            (i * vc) + ps + vi,
+                            nextSlice + vi,
+                            (i * vc) + ps + vi + 1
+                            );
+
+                        mesh.FaceStore.Add(f);
+
+                        f = new CadFace(
+                           nextSlice + vi,
+                           nextSlice + vi + 1,
+                           (i * vc) + ps + vi + 1
+                           );
+
+                        mesh.FaceStore.Add(f);
+                    }
+                }
+
+            }
+
+            return mesh;
+        }
+
+        // 回転体の作成
+        public static CadMesh CreateRotatingBody(int circleDiv, Vector3d org, Vector3d axis, VertexList vl, bool topCap, bool btmCap, FaceType facetype = FaceType.TRIANGLE)
+        {
+            if (vl.Count < 2)
+            {
+                return null;
+            }
+
+            #region 面の向きが外から中心に向かってみた場合に左回りになるように回転軸の向きを調整
+            // vlの全体的な向きを求めるためvl[0]から一番遠い点を求める
+            int fi = CadUtil.FindMaxDistantPointIndex(vl[0], vl);
+            Vector3d vldir = (Vector3d)(vl[fi] - vl[0]);
+
+            // vlの全体的な向きと回転軸の向きが同じ場合、回転軸の向きを反転
+            double dot = CadMath.InnerProduct(axis, vldir);
+            if (dot > 0)
+            {
+                axis *= -1;
+            }
+            #endregion
+
+            CadMesh mesh = new CadMesh(vl.Count * circleDiv, vl.Count * circleDiv);
+
+            CrossInfo crossS = CadMath.PerpCrossLine(org, org + axis, (Vector3d)vl[0]);
+            CrossInfo crossE = CadMath.PerpCrossLine(org, org + axis, (Vector3d)vl.End());
+
+            crossS.Distance = (crossS.CrossPoint - (Vector3d)vl[0]).Length;
+            crossE.Distance = (crossE.CrossPoint - (Vector3d)vl.End()).Length;
+
+            int s = 0;
+            int e = vl.Count;
+
+            int vc = vl.Count;
+            int ps = 0;
+
+            // VertexStoreの並びは以下の様になる。vlの個数をnとする。
+            // topCap中心点, btmCap中心点, 側面点0, 側面点1 ..... 側面点n-1
+            // 変数ps: 側面の点0の位置
+            // 変数s:  vlから取り出す先頭位置
+            //        最初の点をtopCapの中心とする場合、側面点0ではなくなるので、+1する
+            // 変数e:  vlから取り出す終端
+            //        最後の点をbtmCapの中心とする場合、側面点n-1ではなくなるので、-1する
+            // 変数vc: 側面1列の点の数
+
+            if (crossS.Distance < CadMath.Epsilon)
+            {
+                mesh.VertexStore.Add(vl[0]);
+                s += 1;
+                topCap = true;
+                vc--;
+                ps++;
+            }
+            else if (topCap)
+            {
+                mesh.VertexStore.Add((CadVertex)crossS.CrossPoint);
+                ps++;
+            }
+
+            if (crossE.Distance < CadMath.Epsilon)
+            {
+                mesh.VertexStore.Add(vl.End());
+                e -= 1;
+                btmCap = true;
+                vc--;
+                ps++;
+            }
+            else if (btmCap)
+            {
+                mesh.VertexStore.Add((CadVertex)crossE.CrossPoint);
+                ps++;
+            }
+
+            double d = Math.PI * 2.0 / circleDiv;
+
+
+            CadQuaternion qp;
+
+            for (int i = 0; i < circleDiv; i++)
+            {
+                double a = i * d;
+                CadQuaternion q = CadQuaternion.RotateQuaternion(axis, a);
+                CadQuaternion con = q.Conjugate();
+
+                for (int vi = s; vi < e; vi++)
+                {
+                    CadVertex p = vl[vi];
+
+                    p.vector -= org;
+
+                    qp = CadQuaternion.FromPoint(p.vector);
+
+                    qp = con * qp;
+                    qp = qp * q;
+
+                    p.vector = qp.ToPoint();
+
+                    p += org;
+
+                    mesh.VertexStore.Add(p);
+                }
+            }
+
+            CadFace f;
+
+            if (topCap)
+            {
+                for (int i = 0; i < circleDiv; i++)
+                {
+                    f = new CadFace(0, ((i + 1) % circleDiv) * vc + ps, i * vc + ps);
+                    mesh.FaceStore.Add(f);
+                }
+            }
+
+            if (btmCap)
+            {
+                for (int i = 0; i < circleDiv; i++)
+                {
+                    int bi = (vc - 1);
+
+                    f = new CadFace(1, (i * vc) + bi + ps, ((i + 1) % circleDiv) * vc + bi + ps);
+                    mesh.FaceStore.Add(f);
+                }
+            }
+
+            // 四角形で作成
+            if (facetype == FaceType.QUADRANGLE)
+            {
+                for (int i = 0; i < circleDiv; i++)
+                {
+                    int nextSlice = ((i + 1) % circleDiv) * vc + ps;
+
+                    for (int vi = 0; vi < vc - 1; vi++)
+                    {
+                        f = new CadFace(
+                            (i * vc) + ps + vi,
+                            nextSlice + vi,
+                            nextSlice + vi + 1,
+                            (i * vc) + ps + vi + 1
+                            );
+
+                        mesh.FaceStore.Add(f);
+                    }
+                }
+            }
+            else
+            {
+                // 三角形で作成
+                for (int i = 0; i < circleDiv; i++)
+                {
+                    int nextSlice = ((i + 1) % circleDiv) * vc + ps;
 
                     for (int vi = 0; vi < vc - 1; vi++)
                     {
