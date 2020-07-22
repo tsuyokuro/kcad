@@ -33,7 +33,6 @@ namespace KCad
 
             viewContainer.Focusable = true;
 
-            ViewModel.LayerListVM.LayerListView = LayerListView;
             ViewModel.ObjTreeVM.ObjectTreeView = ObjTree;
 
             ViewModel.SetupTextCommandView(textCommand);
@@ -88,7 +87,7 @@ namespace KCad
         
         private void SetupDataContext()
         {
-            LayerListView.DataContext = ViewModel.LayerListVM.LayerList;
+            LayerListView.DataContext = ViewModel.LayerListVM;
 
             SelectModePanel.DataContext = ViewModel;
             FigurePanel.DataContext = ViewModel;

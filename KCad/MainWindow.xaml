@@ -937,7 +937,8 @@
                                     BorderBrush="{StaticResource BoarderColor}"
                                     BorderThickness="1"
                                     ItemContainerStyle="{StaticResource SimpleListBoxItem}"
-                                    ItemsSource="{Binding}"
+                                    ItemsSource="{Binding LayerList}"
+                                    SelectedItem="{Binding SelectedItem}"
                                     SelectionMode="Single">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
