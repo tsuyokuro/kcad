@@ -58,9 +58,13 @@ def set_last_down(x, y, z):
 # Figure list
 #
 
-#[AC] find_fig_by_id(id=current_fig_id())
-def find_fig_by_id(id):
-    SE.FindFigureById(id)
+#[AC] get_tree_view_pos(id=current_fig_id())
+def get_tree_view_pos(id):
+    return SE.GetTreeViewPos(id)
+
+#[AC] set_tree_view_pos(idx=0)
+def set_tree_view_pos(idx):
+    return SE.SetTreeViewPos(idx)
 
 #[AC] sel_fig(id)
 def sel_fig(id):

@@ -147,7 +147,7 @@ namespace Plotter.Controller
             return -Controller.DC.ViewDir;
         }
 
-        public void FindFigureById(uint id)
+        public int GetTreeViewPos(uint id)
         {
             int idx = Controller.FindObjectTreeItem(id);
 
@@ -155,10 +155,15 @@ namespace Plotter.Controller
             {
                 ItConsole.println(
                     String.Format("ID:{0} is not found", id));
-                return;
+                return -1;
             }
 
-            Controller.SetObjectTreePos(idx);
+            return idx;
+        }
+
+        public void SetTreeViewPos(int pos)
+        {
+            Controller.SetObjectTreePos(pos);
         }
 
         public void LayerList()

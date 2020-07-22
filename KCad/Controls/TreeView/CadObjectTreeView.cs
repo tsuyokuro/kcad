@@ -1,4 +1,6 @@
-﻿using System;
+﻿using KCad.ViewModel;
+using Plotter;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,7 +10,18 @@ using System.Windows.Threading;
 
 namespace KCad.Controls
 {
-    public class CadObjectTreeView : FrameworkElement
+    public interface ICadObjectTree
+    {
+        event Action<CadObjTreeItem> CheckChanged;
+        event Action<CadObjTreeItem, string> ItemCommand;
+
+        void Update(bool remakeTree, bool filter, CadLayer layer);
+        int FindIndex(uint id);
+        void SetPos(int index);
+    }
+
+
+    public class CadObjectTreeView : FrameworkElement, ICadObjectTree
     {
         static CadObjectTreeView()
         {
@@ -146,7 +159,7 @@ namespace KCad.Controls
 
         protected ContextMenu mContextMenu;
 
-        public Action<CadObjTreeItem, string> ItemCommand; 
+        public event Action<CadObjTreeItem, string> ItemCommand; 
 
         FormattedText mExpand;
 
@@ -540,5 +553,61 @@ namespace KCad.Controls
         {
             InvalidateVisual();
         }
+
+        #region ICadObjectTree implements
+        public void Update(bool remakeTree, bool filter, CadLayer layer)
+        {
+            if (filter)
+            {
+                CadLayerTreeItem item = new CadLayerTreeItem();
+                item.AddChildren(layer, fig =>
+                {
+                    return fig.HasSelectedPointInclueChild();
+                });
+
+                AttachRoot(item);
+                Redraw();
+            }
+            else
+            {
+                if (remakeTree)
+                {
+                    CadLayerTreeItem item = new CadLayerTreeItem(layer);
+                    AttachRoot(item);
+                    Redraw();
+                }
+                else
+                {
+                    Redraw();
+                }
+            }
+        }
+
+        public int FindIndex(uint id)
+        {
+            int idx = Find((item) =>
+            {
+                if (item is CadFigTreeItem)
+                {
+                    CadFigTreeItem figItem = (CadFigTreeItem)item;
+
+                    if (figItem.Fig.ID == id)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+
+            return idx;
+        }
+
+        public void SetPos(int index)
+        {
+            SetVPos(index);
+        }
+
+        #endregion
     }
 }

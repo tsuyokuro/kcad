@@ -9,28 +9,28 @@ namespace KCad.ViewModel
     {
         ViewModelContext mVMContext;
 
-        CadObjectTreeView mCadObjectTreeView;
+        ICadObjectTree mObjectTree;
 
-        public CadObjectTreeView ObjectTreeView
+        public ICadObjectTree ObjectTree
         {
             set
             {
-                if (mCadObjectTreeView != null)
+                if (mObjectTree != null)
                 {
-                    mCadObjectTreeView.CheckChanged -= ObjectTreeView_CheckChanged;
-                    mCadObjectTreeView.ItemCommand -= ObjectTreeView_ItemCommand;
+                    mObjectTree.CheckChanged -= CheckChanged;
+                    mObjectTree.ItemCommand -= ItemCommand;
                 }
 
-                mCadObjectTreeView = value;
+                mObjectTree = value;
 
-                if (mCadObjectTreeView != null)
+                if (mObjectTree != null)
                 {
-                    mCadObjectTreeView.CheckChanged += ObjectTreeView_CheckChanged;
-                    mCadObjectTreeView.ItemCommand += ObjectTreeView_ItemCommand;
+                    mObjectTree.CheckChanged += CheckChanged;
+                    mObjectTree.ItemCommand += ItemCommand;
                 }
             }
 
-            get => mCadObjectTreeView;
+            get => mObjectTree;
         }
 
         public ObjectTreeViewModel(ViewModelContext context)
@@ -44,7 +44,7 @@ namespace KCad.ViewModel
             mVMContext.Controller.Observer.FindObjectTreeItemIndex = FindTreeViewItemIndex;
         }
 
-        private void ObjectTreeView_CheckChanged(CadObjTreeItem item)
+        private void CheckChanged(CadObjTreeItem item)
         {
             mVMContext.Controller.CurrentFigure =
                 TreeViewUtil.GetCurrentFigure(item, mVMContext.Controller.CurrentFigure);
@@ -62,70 +62,39 @@ namespace KCad.ViewModel
 
         private void UpdateTreeViewProc(bool remakeTree)
         {
-            if (mCadObjectTreeView == null)
+            if (mObjectTree == null)
             {
                 return;
             }
 
-            if (SettingsHolder.Settings.FilterObjectTree)
-            {
-                CadLayerTreeItem item = new CadLayerTreeItem();
-                item.AddChildren(mVMContext.Controller.CurrentLayer, fig =>
-                {
-                    return fig.HasSelectedPointInclueChild();
-                });
-
-                mCadObjectTreeView.AttachRoot(item);
-                mCadObjectTreeView.Redraw();
-            }
-            else
-            {
-                if (remakeTree)
-                {
-                    CadLayerTreeItem item = new CadLayerTreeItem(mVMContext.Controller.CurrentLayer);
-                    mCadObjectTreeView.AttachRoot(item);
-                    mCadObjectTreeView.Redraw();
-                }
-                else
-                {
-                    mCadObjectTreeView.Redraw();
-                }
-            }
+            mObjectTree.Update(remakeTree, SettingsHolder.Settings.FilterObjectTree, mVMContext.Controller.CurrentLayer);
         }
 
         private void SetTreeViewPos(int index)
         {
-            if (mCadObjectTreeView == null)
+            if (mObjectTree == null)
             {
                 return;
             }
 
             ThreadUtil.RunOnMainThread(() => {
-                mCadObjectTreeView.SetVPos(index);
+                mObjectTree.SetPos(index);
             }, true);
         }
 
         private int FindTreeViewItemIndex(uint id)
         {
-            int idx = mCadObjectTreeView.Find((item) =>
+            if (mObjectTree == null)
             {
-                if (item is CadFigTreeItem)
-                {
-                    CadFigTreeItem figItem = (CadFigTreeItem)item;
+                return -1;
+            }
 
-                    if (figItem.Fig.ID == id)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
+            int idx = mObjectTree.FindIndex(id);
 
             return idx;
         }
 
-        public void ObjectTreeView_ItemCommand(CadObjTreeItem treeItem, string cmd)
+        public void ItemCommand(CadObjTreeItem treeItem, string cmd)
         {
             if (!(treeItem is CadFigTreeItem))
             {
