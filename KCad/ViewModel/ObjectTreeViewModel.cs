@@ -37,11 +37,11 @@ namespace KCad.ViewModel
         {
             mVMContext = context;
 
-            mVMContext.Controller.Observer.UpdateObjectTree = UpdateTreeView;
+            mVMContext.Controller.Callback.UpdateObjectTree = UpdateTreeView;
 
-            mVMContext.Controller.Observer.SetObjectTreePos = SetTreeViewPos;
+            mVMContext.Controller.Callback.SetObjectTreePos = SetTreeViewPos;
 
-            mVMContext.Controller.Observer.FindObjectTreeItemIndex = FindTreeViewItemIndex;
+            mVMContext.Controller.Callback.FindObjectTreeItemIndex = FindTreeViewItemIndex;
         }
 
         private void CheckChanged(CadObjTreeItem item)

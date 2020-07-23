@@ -168,14 +168,14 @@ namespace Plotter.Controller
             ThreadUtil.RunOnMainThread(action, true);
         }
 
-        public void OpenPopupMessage(string text, PlotterObserver.MessageType type)
+        public void OpenPopupMessage(string text, PlotterCallback.MessageType type)
         {
-            Controller.Observer.OpenPopupMessage(text, type);
+            Controller.Callback.OpenPopupMessage(text, type);
         }
 
         public void ClosePopupMessage()
         {
-            Controller.Observer.ClosePopupMessage();
+            Controller.Callback.ClosePopupMessage();
         }
     }
 }

@@ -117,7 +117,7 @@ namespace Plotter.Controller
 
         private void HelpOfKey(string keyword)
         {
-            List<string> res = Controller.Observer.HelpOfKey(keyword);
+            List<string> res = Controller.Callback.HelpOfKey(keyword);
 
             res.ForEach((s) =>
             {

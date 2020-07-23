@@ -309,7 +309,7 @@
     <Compile Include="plotter\Controller\PlotterTaskRunner.cs" />
     <Compile Include="plotter\Controller\PlotterUtil.cs" />
     <Compile Include="plotter\Controller\PlotterClipboard.cs" />
-    <Compile Include="plotter\Controller\PlotterObserver.cs" />
+    <Compile Include="plotter\Controller\PlotterCallback.cs" />
     <Compile Include="plotter\Controller\Scripting\ScriptFunctions.cs" />
     <Compile Include="plotter\Controller\ControllerTypes.cs" />
     <Compile Include="plotter\DrawContext\DrawContextGDIBmp.cs" />

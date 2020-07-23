@@ -1603,7 +1603,7 @@ namespace Plotter.Controller
 
         public Vector3d InputPoint()
         {
-            Env.OpenPopupMessage("Input point", PlotterObserver.MessageType.INPUT);
+            Env.OpenPopupMessage("Input point", PlotterCallback.MessageType.INPUT);
 
             InteractCtrl ctrl = Controller.InteractCtrl;
 

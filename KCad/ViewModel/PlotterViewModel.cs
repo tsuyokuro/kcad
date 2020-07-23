@@ -143,19 +143,19 @@ namespace KCad.ViewModel
             SelectMode = mController.SelectMode;
             CreatingFigureType = mController.CreatingFigType;
 
-            mController.Observer.StateChanged = StateChanged;
+            mController.Callback.StateChanged = StateChanged;
 
-            mController.Observer.CursorPosChanged = CursorPosChanged;
+            mController.Callback.CursorPosChanged = CursorPosChanged;
 
-            mController.Observer.OpenPopupMessage = OpenPopupMessage;
+            mController.Callback.OpenPopupMessage = OpenPopupMessage;
 
-            mController.Observer.ClosePopupMessage = ClosePopupMessage;
+            mController.Callback.ClosePopupMessage = ClosePopupMessage;
 
-            mController.Observer.CursorLocked = CursorLocked;
+            mController.Callback.CursorLocked = CursorLocked;
 
-            mController.Observer.ChangeMouseCursor = ChangeMouseCursor;
+            mController.Callback.ChangeMouseCursor = ChangeMouseCursor;
 
-            mController.Observer.HelpOfKey = HelpOfKey;
+            mController.Callback.HelpOfKey = HelpOfKey;
 
 
             mController.UpdateLayerList();
@@ -177,7 +177,7 @@ namespace KCad.ViewModel
             }
         }
 
-        private void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
+        private void OpenPopupMessage(string text, PlotterCallback.MessageType messageType)
         {
             mMainWindow.OpenPopupMessage(text, messageType);
         }
@@ -731,7 +731,7 @@ namespace KCad.ViewModel
             }, true);
         }
 
-        private void ChangeMouseCursor(PlotterObserver.MouseCursorType cursorType)
+        private void ChangeMouseCursor(PlotterCallback.MouseCursorType cursorType)
         {
             ThreadUtil.RunOnMainThread(() =>
             {

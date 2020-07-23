@@ -65,7 +65,7 @@ namespace KCad.ViewModel
         public LayerListViewModel(ViewModelContext context)
         {
             mContext = context;
-            mContext.Controller.Observer.LayerListChanged = LayerListChanged;
+            mContext.Controller.Callback.LayerListChanged = LayerListChanged;
         }
 
         public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)

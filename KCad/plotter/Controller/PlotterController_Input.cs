@@ -89,15 +89,15 @@ namespace Plotter.Controller
             set
             {
                 mCursorLocked = value;
-                Observer.CursorLocked(mCursorLocked);
+                Callback.CursorLocked(mCursorLocked);
                 if (!mCursorLocked)
                 {
                     mSpPointList = null;
-                    Observer.ClosePopupMessage();
+                    Callback.ClosePopupMessage();
                 }
                 else
                 {
-                    Observer.OpenPopupMessage("Cursor locked", PlotterObserver.MessageType.INFO);
+                    Callback.OpenPopupMessage("Cursor locked", PlotterCallback.MessageType.INFO);
                 }
             }
 
@@ -472,7 +472,7 @@ namespace Plotter.Controller
                 CursorLocked = false;
             }
 
-            Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
+            Callback.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
         }
 
         private void PutMeasure()
@@ -529,7 +529,7 @@ namespace Plotter.Controller
 
             CrossCursor.Store();
 
-            Observer.ChangeMouseCursor(PlotterObserver.MouseCursorType.HAND);
+            Callback.ChangeMouseCursor(PlotterCallback.MouseCursorType.HAND);
         }
 
         private void MButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
@@ -543,7 +543,7 @@ namespace Plotter.Controller
 
             CrossCursor.Pos = new Vector3d(x, y, 0);
 
-            Observer.ChangeMouseCursor(PlotterObserver.MouseCursorType.CROSS);
+            Callback.ChangeMouseCursor(PlotterCallback.MouseCursorType.CROSS);
         }
 
         private void ViewOrgDrag(CadMouse pointer, DrawContext dc, double x, double y)
@@ -1010,8 +1010,8 @@ namespace Plotter.Controller
                 ObjDownPoint = StoredObjDownPoint + delta;
             }
 
-            Observer.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);
-            Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
+            Callback.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);
+            Callback.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
         }
 
         private void LDrag(CadMouse pointer, DrawContext dc, int x, int y)
@@ -1114,7 +1114,7 @@ namespace Plotter.Controller
             SnapPoint = v;
             CrossCursor.Pos = DC.WorldPointToDevPoint(SnapPoint);
 
-            Observer.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);
+            Callback.CursorPosChanged(this, SnapPoint, CursorType.TRACKING);
         }
 
 
@@ -1126,7 +1126,7 @@ namespace Plotter.Controller
         public void SetLastDownPoint(Vector3d v)
         {
             LastDownPoint = v;
-            Observer.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
+            Callback.CursorPosChanged(this, LastDownPoint, CursorType.LAST_DOWN);
         }
 
         public void AddExtendSnapPoint()

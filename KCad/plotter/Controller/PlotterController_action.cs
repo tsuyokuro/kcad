@@ -326,7 +326,7 @@ namespace Plotter.Controller
 
             layer.FigureList = newFigList;
 
-            Observer.UpdateObjectTree(true);
+            Callback.UpdateObjectTree(true);
         }
 
         #endregion

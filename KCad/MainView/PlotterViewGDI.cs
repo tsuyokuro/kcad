@@ -287,14 +287,14 @@ namespace Plotter
         {
             if (mController != null)
             {
-                mController.Observer.RequestContextMenu -= ShowContextMenu;
+                mController.Callback.RequestContextMenu -= ShowContextMenu;
             }
 
             mController = controller;
 
             if (controller != null)
             {
-                mController.Observer.RequestContextMenu += ShowContextMenu;
+                mController.Callback.RequestContextMenu += ShowContextMenu;
             }
         }
 
@@ -310,17 +310,17 @@ namespace Plotter
             }
         }
 
-        public void ChangeMouseCursor(PlotterObserver.MouseCursorType cursorType)
+        public void ChangeMouseCursor(PlotterCallback.MouseCursorType cursorType)
         {
             switch (cursorType)
             {
-                case PlotterObserver.MouseCursorType.CROSS:
+                case PlotterCallback.MouseCursorType.CROSS:
                     base.Cursor = PointCursor;
                     break;
-                case PlotterObserver.MouseCursorType.NORMAL_ARROW:
+                case PlotterCallback.MouseCursorType.NORMAL_ARROW:
                     base.Cursor = Cursors.Arrow;
                     break;
-                case PlotterObserver.MouseCursorType.HAND:
+                case PlotterCallback.MouseCursorType.HAND:
                     base.Cursor = Cursors.Hand;
                     break;
             }
