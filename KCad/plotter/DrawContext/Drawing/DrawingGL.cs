@@ -73,6 +73,18 @@ namespace Plotter
             GL.End();
         }
 
+        private void DrawLineRaw(DrawPen pen, Vector3d a, Vector3d b)
+        {
+            GL.Color4(pen.Color4());
+
+            GL.Begin(PrimitiveType.LineStrip);
+
+            GL.Vertex3(a);
+            GL.Vertex3(b);
+
+            GL.End();
+        }
+
         public void DrawHarfEdgeModel(
             DrawBrush brush, DrawPen pen, DrawPen edgePen, double edgeThreshold, HeModel model)
         {
@@ -374,15 +386,15 @@ namespace Plotter
 
             p0 = Vector3d.UnitX * -size;
             p1 = Vector3d.UnitX * size;
-            DrawArrow(DC.GetPen(DrawTools.PEN_COMPASS_X), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+            DrawArrowRaw(DC.GetPen(DrawTools.PEN_COMPASS_X), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
             p0 = Vector3d.UnitY * -size;
             p1 = Vector3d.UnitY * size;
-            DrawArrow(DC.GetPen(DrawTools.PEN_COMPASS_Y), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+            DrawArrowRaw(DC.GetPen(DrawTools.PEN_COMPASS_Y), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
             p0 = Vector3d.UnitZ * -size;
             p1 = Vector3d.UnitZ * size;
-            DrawArrow(DC.GetPen(DrawTools.PEN_COMPASS_Z), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
+            DrawArrowRaw(DC.GetPen(DrawTools.PEN_COMPASS_Z), p0, p1, ArrowTypes.CROSS, ArrowPos.END, arrowLen, arrowW2);
 
             GL.LineWidth(1);
 
@@ -1187,7 +1199,12 @@ namespace Plotter
 
         public void DrawArrow(DrawPen pen, Vector3d pt0, Vector3d pt1, ArrowTypes type, ArrowPos pos, double len, double width)
         {
-            DrawUtil.DrawArrow(this, pen, pt0, pt1, type, pos, len, width);
+            DrawUtil.DrawArrow(DrawLine, pen, pt0, pt1, type, pos, len/ DC.WorldScale, width / DC.WorldScale);
+        }
+
+        private void DrawArrowRaw(DrawPen pen, Vector3d pt0, Vector3d pt1, ArrowTypes type, ArrowPos pos, double len, double width)
+        {
+            DrawUtil.DrawArrow(DrawLineRaw, pen, pt0, pt1, type, pos, len, width);
         }
 
         public void DrawExtSnapPoints(Vector3dList pointList, DrawPen pen)
