@@ -275,14 +275,23 @@ namespace Plotter
             }
         }
 
+        private const double AXIS_MARGIN = 24;
+
         public void DrawAxis()
         {
             Vector3d p0;
             Vector3d p1;
 
-            double len = DrawingConst.AxisLength;
-            double arrowLen = 4.0 / DC.WorldScale;
-            double arrowW2 = 2.0 / DC.WorldScale;
+            double wh = Math.Min(DC.ViewWidth, DC.ViewHeight)/2;
+
+
+            //double len = DrawingConst.AxisLength;
+            //double arrowLen = 4.0 / DC.WorldScale;
+            //double arrowW2 = 2.0 / DC.WorldScale;
+
+            double len = DC.DevSizeToWoldSize(wh - AXIS_MARGIN) * DC.WorldScale;
+            double arrowLen = DC.DevSizeToWoldSize(16) * DC.WorldScale;
+            double arrowW2 = DC.DevSizeToWoldSize(8) * DC.WorldScale;
 
             // X軸
             p0 = new Vector3d(-len, 0, 0) / DC.WorldScale;
@@ -317,7 +326,9 @@ namespace Plotter
             Vector3d p1;
             Vector3d pp;
 
-            double len = DrawingConst.AxisLength;
+            //double len = DrawingConst.AxisLength;
+            double wh = Math.Min(DC.ViewWidth, DC.ViewHeight) / 2;
+            double len = DC.DevSizeToWoldSize(wh - AXIS_MARGIN) * DC.WorldScale;
 
             DrawTextOption opt = default;
 
@@ -412,21 +423,21 @@ namespace Plotter
             p = WorldPointToDevPoint(p, vw, vh, mdlm, prjm);
             p.X = p.X - fw2;
             p.Y = p.Y + fh2 - 2;
-            DrawTextScrnRaw(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_COMPASS_LABEL_X),
+            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_COMPASS_LABEL_X),
                 p, Vector3d.UnitX, -Vector3d.UnitY, "X", fontScale, opt);
 
             p = Vector3d.UnitY * size;
             p = WorldPointToDevPoint(p, vw, vh, mdlm, prjm);
             p.X = p.X - fw2;
             p.Y = p.Y + fh2 - 2;
-            DrawTextScrnRaw(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_COMPASS_LABEL_Y),
+            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_COMPASS_LABEL_Y),
                 p, Vector3d.UnitX, -Vector3d.UnitY, "Y", fontScale, opt);
 
             p = Vector3d.UnitZ * size;
             p = WorldPointToDevPoint(p, vw, vh, mdlm, prjm);
             p.X = p.X - fw2;
             p.Y = p.Y + fh2 - 2;
-            DrawTextScrnRaw(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_COMPASS_LABEL_Z),
+            DrawTextScrn(DrawTools.FONT_SMALL, DC.GetBrush(DrawTools.BRUSH_COMPASS_LABEL_Z),
                 p, Vector3d.UnitX, -Vector3d.UnitY, "Z", fontScale, opt);
 
             PopMatrixes();
@@ -700,12 +711,6 @@ namespace Plotter
         }
 
         private void DrawTextScrn(int font, DrawBrush brush, Vector3d a, Vector3d xdir, Vector3d ydir, string s, double imgScale, DrawTextOption opt)
-        {
-            a *= DC.WorldScale;
-            DrawTextScrnRaw(font, brush, a, xdir, ydir, s, imgScale, opt);
-        }
-
-        private void DrawTextScrnRaw(int font, DrawBrush brush, Vector3d a, Vector3d xdir, Vector3d ydir, string s, double imgScale, DrawTextOption opt)
         {
             Start2D();
 
