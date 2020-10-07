@@ -427,6 +427,10 @@
                                     Header="Draw axis label"
                                     IsCheckable="True"
                                     IsChecked="{Binding DrawAxisLabel}" />
+                                <MenuItem
+                                    Header="Draw Compass"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding DrawCompass}" />
                             </MenuItem>
                             <MenuItem Header="{x:Static properties:Resources.menu_script}">
                                 <MenuItem
@@ -933,7 +937,8 @@
                                     BorderBrush="{StaticResource BoarderColor}"
                                     BorderThickness="1"
                                     ItemContainerStyle="{StaticResource SimpleListBoxItem}"
-                                    ItemsSource="{Binding}"
+                                    ItemsSource="{Binding LayerList}"
+                                    SelectedItem="{Binding SelectedItem}"
                                     SelectionMode="Single">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>

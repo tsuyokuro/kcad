@@ -54,6 +54,8 @@ namespace Plotter.Settings
         public bool DrawAxis = true;
 
         public bool DrawAxisLabel = false;
+
+        public bool DrawCompass = true;
         #endregion
 
         public string LastDataDir = null;
@@ -135,6 +137,7 @@ namespace Plotter.Settings
             jo.Add("DrawNormal", DrawNormal);
             jo.Add("DrawAxis", DrawAxis);
             jo.Add("DrawAxisLabel", DrawAxisLabel);
+            jo.Add("DrawCompass", DrawCompass);
             root.Add("DrawSettings", jo);
 
             StreamWriter writer = new StreamWriter(fileName);
@@ -211,6 +214,7 @@ namespace Plotter.Settings
             DrawNormal = jo.GetBool("DrawNormal", DrawNormal);
             DrawAxis = jo.GetBool("DrawAxis", DrawAxis);
             DrawAxisLabel = jo.GetBool("DrawAxisLabel", DrawAxisLabel);
+            DrawCompass = jo.GetBool("DrawCompass", DrawCompass);
 
             jo = (JObject)root["GridInfo"];
             if (jo != null)

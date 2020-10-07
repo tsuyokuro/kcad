@@ -33,8 +33,7 @@ namespace KCad
 
             viewContainer.Focusable = true;
 
-            ViewModel.LayerListVM.LayerListView = LayerListView;
-            ViewModel.ObjTreeVM.ObjectTreeView = ObjTree;
+            ViewModel.ObjTreeVM.ObjectTree = ObjTree;
 
             ViewModel.SetupTextCommandView(textCommand);
             textCommand.Determine += TextCommand_OnDetermine;
@@ -88,7 +87,7 @@ namespace KCad
         
         private void SetupDataContext()
         {
-            LayerListView.DataContext = ViewModel.LayerListVM.LayerList;
+            LayerListView.DataContext = ViewModel.LayerListVM;
 
             SelectModePanel.DataContext = ViewModel;
             FigurePanel.DataContext = ViewModel;
@@ -129,13 +128,13 @@ namespace KCad
 
         private void InitPopupMessageIcons()
         {
-            PopupMessageIcons[(int)PlotterObserver.MessageType.INFO] =
+            PopupMessageIcons[(int)PlotterCallback.MessageType.INFO] =
                 (ImageSource)TryFindResource("infoIconDrawingImage");
 
-            PopupMessageIcons[(int)PlotterObserver.MessageType.INPUT] =
+            PopupMessageIcons[(int)PlotterCallback.MessageType.INPUT] =
                 (ImageSource)TryFindResource("inputIconDrawingImage");
 
-            PopupMessageIcons[(int)PlotterObserver.MessageType.ERROR] =
+            PopupMessageIcons[(int)PlotterCallback.MessageType.ERROR] =
                 (ImageSource)TryFindResource("errorIconDrawingImage");
         }
 
@@ -153,7 +152,7 @@ namespace KCad
             return ttplaces;
         }
 
-        ImageSource SelectPopupMessageIcon(PlotterObserver.MessageType type)
+        ImageSource SelectPopupMessageIcon(PlotterCallback.MessageType type)
         {
             return PopupMessageIcons[(int)type];
         }
@@ -310,7 +309,7 @@ namespace KCad
             FileName.Content = file_name;
         }
 
-        public void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
+        public void OpenPopupMessage(string text, PlotterCallback.MessageType messageType)
         {
             Application.Current.Dispatcher.Invoke(() => {
                 if (PopupMessage.IsOpen)

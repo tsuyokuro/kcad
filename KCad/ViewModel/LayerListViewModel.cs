@@ -1,13 +1,8 @@
 ﻿using Plotter;
 using Plotter.Controller;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace KCad.ViewModel
 {
@@ -15,32 +10,54 @@ namespace KCad.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<LayerHolder> LayerList = new ObservableCollection<LayerHolder>();
-
-        ListBox mLayerListView;
-
-        public ListBox LayerListView
+        private void NotifyPropertyChanged(String info)
         {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+        }
+
+        public ObservableCollection<LayerHolder> LayerList_ = new ObservableCollection<LayerHolder>();
+        public ObservableCollection<LayerHolder> LayerList
+        {
+            get
+            {
+                return LayerList_;
+            }
             set
             {
-                if (value == null)
-                {
-                    if (mLayerListView != null)
-                    {
-                        mLayerListView.SelectionChanged -= LayerListSelectionChanged;
-                    }
-                }
-                else
-                {
-                    value.SelectionChanged += LayerListSelectionChanged;
-                    int idx = GetLayerListIndex(mContext.Controller.CurrentLayer.ID);
-                    value.SelectedIndex = idx;
-                }
+                LayerList_ = value;
+                NotifyPropertyChanged("LayerList");
+            }
+        }
 
-                mLayerListView = value;
+        public LayerHolder SelectedItem
+        {
+            get
+            {
+                int idx = GetLayerListIndex(mContext.Controller.CurrentLayer.ID);
+                if (idx < 0)
+                {
+                    return null;
+                }
+                return LayerList[idx];
             }
 
-            get => mLayerListView;
+            set
+            {
+                LayerHolder lh = value;
+                if (lh == null)
+                {
+                    return;
+                }
+
+                if (mContext.Controller.CurrentLayer.ID != lh.ID)
+                {
+                    mContext.Controller.SetCurrentLayer(lh.ID);
+
+                    mContext.Redraw();
+                }
+
+                NotifyPropertyChanged("SelectedItem");
+            }
         }
 
         private ViewModelContext mContext;
@@ -48,28 +65,13 @@ namespace KCad.ViewModel
         public LayerListViewModel(ViewModelContext context)
         {
             mContext = context;
-            mContext.Controller.Observer.LayerListChanged = LayerListChanged;
+            mContext.Controller.Callback.LayerListChanged = LayerListChanged;
         }
 
         public void LayerListItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             LayerHolder lh = (LayerHolder)sender;
             mContext.Redraw();
-        }
-
-        public void LayerListSelectionChanged(object sender, SelectionChangedEventArgs args)
-        {
-            if (args.AddedItems.Count > 0)
-            {
-                LayerHolder layer = (LayerHolder)args.AddedItems[0];
-
-                if (mContext.Controller.CurrentLayer.ID != layer.ID)
-                {
-                    mContext.Controller.SetCurrentLayer(layer.ID);
-
-                    mContext.Redraw();
-                }
-            }
         }
 
         public void LayerListChanged(PlotterController sender, LayerListInfo layerListInfo)
@@ -89,10 +91,10 @@ namespace KCad.ViewModel
                 LayerList.Add(layerHolder);
             }
 
-            if (mLayerListView != null)
+            int idx = GetLayerListIndex(layerListInfo.CurrentID);
+            if (idx >= 0)
             {
-                int idx = GetLayerListIndex(layerListInfo.CurrentID);
-                mLayerListView.SelectedIndex = idx;
+                SelectedItem = LayerList[idx];
             }
         }
 

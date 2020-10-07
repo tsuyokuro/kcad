@@ -188,6 +188,20 @@ namespace KCad.ViewModel
         }
 
         [UserSettingData]
+        public bool DrawCompass
+        {
+            set
+            {
+                SettingsHolder.Settings.DrawCompass = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DrawCompass)));
+
+                Redraw();
+            }
+
+            get => SettingsHolder.Settings.DrawCompass;
+        }
+
+        [UserSettingData]
         public double InitialMoveLimit
         {
             set

@@ -36,6 +36,8 @@ namespace Plotter
 
         void DrawAxisLabel();
 
+        void DrawCompass();
+
         void DrawPageFrame(double w, double h, Vector3d center);
 
         void DrawGrid(Gridding grid);

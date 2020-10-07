@@ -107,9 +107,9 @@ namespace KCad.ViewModel
             get => SettingsVM;
         }
 
-        Window mEditorWindow;
+        private Window mEditorWindow;
 
-        MoveKeyHandler mMoveKeyHandler;
+        private MoveKeyHandler mMoveKeyHandler;
 
         private string mCurrentFileName = null;
         public string CurrentFileName
@@ -143,19 +143,19 @@ namespace KCad.ViewModel
             SelectMode = mController.SelectMode;
             CreatingFigureType = mController.CreatingFigType;
 
-            mController.Observer.StateChanged = StateChanged;
+            mController.Callback.StateChanged = StateChanged;
 
-            mController.Observer.CursorPosChanged = CursorPosChanged;
+            mController.Callback.CursorPosChanged = CursorPosChanged;
 
-            mController.Observer.OpenPopupMessage = OpenPopupMessage;
+            mController.Callback.OpenPopupMessage = OpenPopupMessage;
 
-            mController.Observer.ClosePopupMessage = ClosePopupMessage;
+            mController.Callback.ClosePopupMessage = ClosePopupMessage;
 
-            mController.Observer.CursorLocked = CursorLocked;
+            mController.Callback.CursorLocked = CursorLocked;
 
-            mController.Observer.ChangeMouseCursor = ChangeMouseCursor;
+            mController.Callback.ChangeMouseCursor = ChangeMouseCursor;
 
-            mController.Observer.HelpOfKey = HelpOfKey;
+            mController.Callback.HelpOfKey = HelpOfKey;
 
 
             mController.UpdateLayerList();
@@ -177,7 +177,7 @@ namespace KCad.ViewModel
             }
         }
 
-        private void OpenPopupMessage(string text, PlotterObserver.MessageType messageType)
+        private void OpenPopupMessage(string text, PlotterCallback.MessageType messageType)
         {
             mMainWindow.OpenPopupMessage(text, messageType);
         }
@@ -236,55 +236,45 @@ namespace KCad.ViewModel
         {
             KeyMap = new Dictionary<string, KeyAction>
             {
-                { "ctrl+z", new KeyAction(Undo , null,
-                    AnsiEsc.BGreen + "Ctrl+Z" + AnsiEsc.Reset + " Undo")},
-
-                { "ctrl+y", new KeyAction(Redo , null,
-                    AnsiEsc.BGreen + "Ctrl+Y" + AnsiEsc.Reset + " Rendo")},
-
-                { "ctrl+c", new KeyAction(Copy , null,
-                    AnsiEsc.BGreen + "Ctrl+C" + AnsiEsc.Reset + " Copy")},
-
-                { "ctrl+insert", new KeyAction(Copy , null, null)},
-
-                { "ctrl+v", new KeyAction(Paste ,null,
-                    AnsiEsc.BGreen + "Ctrl+C" + AnsiEsc.Reset + " Paste")},
-
-                { "shift+insert", new KeyAction(Paste , null)},
-
+                { "ctrl+z", new KeyAction(Undo , null, "Undo")},
+                { "ctrl+y", new KeyAction(Redo , null, "Rendo")},
+                { "ctrl+c", new KeyAction(Copy , null, "Copy")},
+                { "ctrl+insert", new KeyAction(Copy , null, "Copy")},
+                { "ctrl+v", new KeyAction(Paste ,null, "Paste")},
+                { "shift+insert", new KeyAction(Paste , null, "Paste")},
                 { "delete", new KeyAction(Remove , null)},
-
-                { "ctrl+s", new KeyAction(Save , null,
-                    AnsiEsc.BGreen + "Ctrl+S" + AnsiEsc.Reset + " Save")},
-
-                { "ctrl+a", new KeyAction(SelectAll , null,
-                    AnsiEsc.BGreen + "Ctrl+A" + AnsiEsc.Reset + " Select All")},
-
+                { "ctrl+s", new KeyAction(Save , null, "Save")},
+                { "ctrl+a", new KeyAction(SelectAll , null, "Select All")},
                 { "escape", new KeyAction(Cancel , null)},
-
-                { "ctrl+p", new KeyAction(InsPoint , null,
-                    AnsiEsc.BGreen + "Ctrl+P" + AnsiEsc.Reset + " Inser Point")},
-
-                { "f3", new KeyAction(SearchNearPoint , null,
-                    AnsiEsc.BGreen + "F3" + AnsiEsc.Reset + " Search near Point")},
-
-                { "f2", new KeyAction(CursorLock , null,
-                    AnsiEsc.BGreen + "F2" + AnsiEsc.Reset + " Lock Cursor")},
-
+                { "ctrl+p", new KeyAction(InsPoint , null, "Inser Point")},
+                { "f3", new KeyAction(SearchNearPoint , null, "Search near Point")},
+                { "f2", new KeyAction(CursorLock , null, "Lock Cursor")},
                 { "left", new KeyAction(MoveKeyDown, MoveKeyUp)},
-
                 { "right", new KeyAction(MoveKeyDown, MoveKeyUp)},
-
                 { "up", new KeyAction(MoveKeyDown, MoveKeyUp)},
-
                 { "down", new KeyAction(MoveKeyDown, MoveKeyUp)},
-
-                { "m", new KeyAction(AddMark, null,
-                    AnsiEsc.BGreen + "M" + AnsiEsc.Reset + " Add snap point")},
-
-                { "ctrl+m", new KeyAction(CleanMark, null,
-                    AnsiEsc.BGreen + "Ctrl+M" + AnsiEsc.Reset + " Clear snap points")},
+                { "m", new KeyAction(AddMark, null, " Add snap point")},
+                { "ctrl+m", new KeyAction(CleanMark, null, " Clear snap points")},
             };
+        }
+
+        private string GetDisplayKeyString(string s)
+        {
+            string[] ss = s.Split('+');
+
+            string t = ss[0];
+            string p = Char.ToUpper(t[0]) + t.Substring(1);
+
+            string ret = p;
+
+            for (int i=1; i<ss.Length; i++)
+            {
+                t = ss[i];
+                p = Char.ToUpper(t[0]) + t.Substring(1);
+                ret += "+" + p;
+            }
+
+            return ret;
         }
 
         public List<string> HelpOfKey(string keyword)
@@ -293,11 +283,15 @@ namespace KCad.ViewModel
 
             if (keyword == null)
             {
-                foreach (KeyAction a in KeyMap.Values)
+                foreach (String s in KeyMap.Keys)
                 {
-                    if (a.Description == null) continue;
+                    KeyAction k = KeyMap[s];
 
-                    ret.Add(a.Description);
+                    if (k.Description == null) continue;
+
+                    string t = GetDisplayKeyString(s);
+
+                    ret.Add(AnsiEsc.BGreen + t + AnsiEsc.Reset + " " + k.Description);
                 }
 
                 return ret;
@@ -305,13 +299,16 @@ namespace KCad.ViewModel
 
             Regex re = new Regex(keyword, RegexOptions.IgnoreCase);
 
-            foreach (KeyAction a in KeyMap.Values)
+            foreach (String s in KeyMap.Keys)
             {
-                if (a.Description == null) continue;
+                KeyAction k = KeyMap[s];
 
-                if (re.Match(a.Description).Success)
+                if (k.Description == null) continue;
+
+                if (re.Match(k.Description).Success)
                 {
-                    ret.Add(a.Description);
+                    string t = GetDisplayKeyString(s);
+                    ret.Add(AnsiEsc.BGreen + t + AnsiEsc.Reset + " " + k.Description);
                 }
             }
 
@@ -731,7 +728,7 @@ namespace KCad.ViewModel
             }, true);
         }
 
-        private void ChangeMouseCursor(PlotterObserver.MouseCursorType cursorType)
+        private void ChangeMouseCursor(PlotterCallback.MouseCursorType cursorType)
         {
             ThreadUtil.RunOnMainThread(() =>
             {

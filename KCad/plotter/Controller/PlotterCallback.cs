@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Plotter.Controller
 {
-    public class PlotterObserver
+    public class PlotterCallback
     {
         public enum MessageType
         {

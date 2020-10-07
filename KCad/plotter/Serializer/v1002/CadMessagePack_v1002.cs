@@ -458,7 +458,8 @@ namespace Plotter.Serializer.v1001
         public static MpVertex_v1002 Create(CadVertex v)
         {
             MpVertex_v1002 ret = new MpVertex_v1002();
-            ret.Flag = v.Flag;
+
+            ret.Flag = (byte)(v.Flag & ~CadVertex.SELECTED);
 
             ret.P.X = v.X;
             ret.P.Y = v.Y;

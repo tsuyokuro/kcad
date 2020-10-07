@@ -256,8 +256,8 @@ namespace Plotter
 
             Vector3d cp = CadMath.CenterPoint(seg.P0.vector, seg.P1.vector);
 
-            double arrowW = ARROW_W / dc.WorldScale;
-            double arrowL = ARROW_LEN / dc.WorldScale;
+            double arrowW = ARROW_W;
+            double arrowL = ARROW_LEN;
 
             dc.Drawing.DrawArrow(pen, cp, seg.P0.vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
             dc.Drawing.DrawArrow(pen, cp, seg.P1.vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
@@ -270,8 +270,8 @@ namespace Plotter
 
             Vector3d cp = CadMath.CenterPoint(PointList[3].vector, PointList[2].vector);
 
-            double arrowW = ARROW_W / dc.WorldScale;
-            double arrowL = ARROW_LEN / dc.WorldScale;
+            double arrowW = ARROW_W;
+            double arrowL = ARROW_LEN;
 
             double ww = (PointList[1] - PointList[0]).Norm() / 4.0;
 
@@ -285,8 +285,8 @@ namespace Plotter
                 Vector3d v0 = cp - PointList[3].vector;
                 Vector3d v1 = cp - PointList[2].vector;
 
-                v0 = -(v0.Normalized() * (arrowL * 1.5)) + PointList[3].vector;
-                v1 = -(v1.Normalized() * (arrowL * 1.5)) + PointList[2].vector;
+                v0 = -(v0.Normalized() * (arrowL * 1.5)) / dc.WorldScale + PointList[3].vector;
+                v1 = -(v1.Normalized() * (arrowL * 1.5)) / dc.WorldScale + PointList[2].vector;
 
                 dc.Drawing.DrawArrow(linePen, v0, PointList[3].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);
                 dc.Drawing.DrawArrow(linePen, v1, PointList[2].vector, ArrowTypes.CROSS, ArrowPos.END, arrowL, arrowW);

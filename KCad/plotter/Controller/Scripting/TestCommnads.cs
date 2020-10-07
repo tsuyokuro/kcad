@@ -34,26 +34,6 @@ namespace Plotter.Controller
 
         private void test001()
         {
-            VertexList vl = new VertexList();
-
-            vl.Add(CadVertex.Create(0, 20, 0));
-            vl.Add(CadVertex.Create(15, 15, 0));
-            vl.Add(CadVertex.Create(18, 0, 0));
-            vl.Add(CadVertex.Create(15, -15, 0));
-            vl.Add(CadVertex.Create(10, -20, 0));
-
-            CadMesh cm = MeshMaker.CreateRotatingBody(16, vl);
-
-            HeModel hem = HeModelConverter.ToHeModel(cm);
-
-            CadFigureMesh fig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
-
-            fig.SetMesh(hem);
-
-            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
-            Controller.HistoryMan.foward(ope);
-            Controller.CurrentLayer.AddFigure(fig);
-            Controller.UpdateObjectTree(true);
         }
 
         private void test002()
@@ -395,46 +375,8 @@ namespace Plotter.Controller
             Redraw();
         }
 
-        private void testRB()
-        {
-            CadFigure fig = GetTargetFigure();
-
-            if (fig == null)
-            {
-                return;
-            }
-
-            CadMesh cm = MeshMaker.CreateRotatingBody(32, fig.PointList, MeshMaker.FaceType.QUADRANGLE);
-
-            HeModel hem = HeModelConverter.ToHeModel(cm);
-
-            CadFigureMesh meshFig = (CadFigureMesh)Controller.DB.NewFigure(CadFigure.Types.MESH);
-
-            meshFig.SetMesh(hem);
-
-            Controller.CurrentLayer.AddFigure(meshFig);
-
-            Controller.UpdateObjectTree(true);
-        }
-
         private void testNu()
         {
-            CadFigure fig = GetTargetFigure();
-
-            if (fig == null)
-            {
-                return;
-            }
-
-            CadFigureNurbsLine nfig = (CadFigureNurbsLine)Controller.DB.NewFigure(CadFigure.Types.NURBS_LINE);
-
-            nfig.AddPoints(fig.PointList);
-
-            nfig.Setup(3, 32, false, true);
-
-            Controller.CurrentLayer.AddFigure(nfig);
-
-            Controller.UpdateObjectTree(true);
         }
 
         private void testNus()

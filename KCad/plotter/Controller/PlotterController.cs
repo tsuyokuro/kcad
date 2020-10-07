@@ -98,7 +98,7 @@ namespace Plotter.Controller
         public bool ContinueCreate { set; get; } = true;
 
 
-        public PlotterObserver Observer = new PlotterObserver();
+        public PlotterCallback Callback = new PlotterCallback();
 
 
         public List<CadFigure> TempFigureList = new List<CadFigure>();
@@ -144,17 +144,17 @@ namespace Plotter.Controller
         #region ObjectTree handling
         public void UpdateObjectTree(bool remakeTree)
         {
-            Observer.UpdateObjectTree(remakeTree);
+            Callback.UpdateObjectTree(remakeTree);
         }
 
         public void SetObjectTreePos(int index)
         {
-            Observer.SetObjectTreePos(index);
+            Callback.SetObjectTreePos(index);
         }
 
         public int FindObjectTreeItem(uint id)
         {
-            return Observer.FindObjectTreeItemIndex(id);
+            return Callback.FindObjectTreeItemIndex(id);
         }
         #endregion ObjectTree handling
 
@@ -162,7 +162,7 @@ namespace Plotter.Controller
         #region Notify
         public void UpdateLayerList()
         {
-            Observer.LayerListChanged(this, GetLayerListInfo());
+            Callback.LayerListChanged(this, GetLayerListInfo());
         }
 
         private LayerListInfo GetLayerListInfo()
@@ -179,7 +179,7 @@ namespace Plotter.Controller
             PlotterStateInfo si = default(PlotterStateInfo);
             si.set(this);
 
-            Observer.StateChanged(this, si);
+            Callback.StateChanged(this, si);
         }
         #endregion Notify
 

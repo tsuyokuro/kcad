@@ -191,10 +191,11 @@ namespace Plotter.Controller
 
         public void Paste()
         {
+            ClearSelection();
+
             PlotterClipboard.PasteFiguresAsBin(this);
             UpdateObjectTree(true);
         }
-
 
         private struct ClusterInfo
         {
@@ -326,7 +327,7 @@ namespace Plotter.Controller
 
             layer.FigureList = newFigList;
 
-            Observer.UpdateObjectTree(true);
+            Callback.UpdateObjectTree(true);
         }
 
         #endregion

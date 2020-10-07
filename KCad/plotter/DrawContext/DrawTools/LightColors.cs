@@ -41,6 +41,10 @@ namespace Plotter
             PenColorTbl[DrawTools.PEN_AXIS_Y] = Color.FromArgb(60, 128, 60);
             PenColorTbl[DrawTools.PEN_AXIS_Z] = Color.FromArgb(60, 60, 192);
             PenColorTbl[DrawTools.PEN_OLD_FIGURE] = Color.FromArgb(92, 92, 92);
+            PenColorTbl[DrawTools.PEN_COMPASS_X] = Color.FromArgb(192, 60, 60);
+            PenColorTbl[DrawTools.PEN_COMPASS_Y] = Color.FromArgb(60, 128, 60);
+            PenColorTbl[DrawTools.PEN_COMPASS_Z] = Color.FromArgb(60, 60, 192);
+
 
             BrushColorTbl[DrawTools.BRUSH_DEFAULT] = Color.FromArgb(128, 128, 128);
             BrushColorTbl[DrawTools.BRUSH_BACKGROUND] = Color.FromArgb(220, 220, 220);
@@ -51,6 +55,9 @@ namespace Plotter
             BrushColorTbl[DrawTools.BRUSH_AXIS_LABEL_X] = Color.FromArgb(0x00, 0x00, 0x00);
             BrushColorTbl[DrawTools.BRUSH_AXIS_LABEL_Y] = Color.FromArgb(0x00, 0x00, 0x00);
             BrushColorTbl[DrawTools.BRUSH_AXIS_LABEL_Z] = Color.FromArgb(0x00, 0x00, 0x00);
+            BrushColorTbl[DrawTools.BRUSH_COMPASS_LABEL_X] = Color.FromArgb(0x00, 0x00, 0x00);
+            BrushColorTbl[DrawTools.BRUSH_COMPASS_LABEL_Y] = Color.FromArgb(0x00, 0x00, 0x00);
+            BrushColorTbl[DrawTools.BRUSH_COMPASS_LABEL_Z] = Color.FromArgb(0x00, 0x00, 0x00);
         }
     }
 }

@@ -279,7 +279,7 @@ namespace Plotter.Controller.TaskRunner
 
             ctrl.Start();
 
-            OpenPopupMessage("Input rotate origin", PlotterObserver.MessageType.INPUT);
+            OpenPopupMessage("Input rotate origin", PlotterCallback.MessageType.INPUT);
             ItConsole.println(AnsiEsc.BYellow + "<< Input point >>");
 
             InteractCtrl.States ret;
@@ -311,7 +311,7 @@ namespace Plotter.Controller.TaskRunner
 
             ctrl.Start();
 
-            OpenPopupMessage("Input flip axis", PlotterObserver.MessageType.INPUT);
+            OpenPopupMessage("Input flip axis", PlotterCallback.MessageType.INPUT);
             ItConsole.println(AnsiEsc.BYellow + "<< Input point 1 >>");
 
             InteractCtrl.States ret;
@@ -356,14 +356,14 @@ namespace Plotter.Controller.TaskRunner
             return (p0, p1, InteractCtrl.States.END);
         }
 
-        public void OpenPopupMessage(string text, PlotterObserver.MessageType type)
+        public void OpenPopupMessage(string text, PlotterCallback.MessageType type)
         {
-            Controller.Observer.OpenPopupMessage(text, type);
+            Controller.Callback.OpenPopupMessage(text, type);
         }
 
         public void ClosePopupMessage()
         {
-            Controller.Observer.ClosePopupMessage();
+            Controller.Callback.ClosePopupMessage();
         }
 
         private void RunOnMainThread(Action action)

@@ -119,7 +119,7 @@ namespace Plotter
             return dc;
         }
 
-        protected void SetupDrawing()
+        protected override void SetupDrawing()
         {
             mDrawing = new DrawingGDIBmp(this);
         }

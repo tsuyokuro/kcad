@@ -95,6 +95,11 @@ namespace Plotter
             // TODO Draw axis label
         }
 
+        public void DrawCompass()
+        {
+
+        }
+
         public virtual void DrawGrid(Gridding grid)
         {
             Vector3d lt = Vector3d.Zero;
@@ -589,7 +594,7 @@ namespace Plotter
 
         public void DrawArrow(DrawPen pen, Vector3d pt0, Vector3d pt1, ArrowTypes type, ArrowPos pos, double len, double width)
         {
-            DrawUtil.DrawArrow(this, pen, pt0, pt1, type, pos, len, width);
+            DrawUtil.DrawArrow(DrawLine, pen, pt0, pt1, type, pos, len / DC.WorldScale, width / DC.WorldScale);
         }
 
         public void DrawExtSnapPoints(Vector3dList pointList, DrawPen pen)

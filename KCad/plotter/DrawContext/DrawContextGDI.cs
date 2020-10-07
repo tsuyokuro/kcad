@@ -183,7 +183,7 @@ namespace Plotter
             return dc;
         }
 
-        protected void SetupDrawing()
+        virtual protected void SetupDrawing()
         {
             mDrawing = new DrawingGDI(this);
         }

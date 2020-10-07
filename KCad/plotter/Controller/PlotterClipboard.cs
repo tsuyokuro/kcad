@@ -63,6 +63,9 @@ namespace Plotter.Controller
         private static void PasteFigure(PlotterController controller, CadFigure fig, Vector3d delta)
         {
             fig.MoveAllPoints(delta);
+
+            fig.SelectAllPoints();
+
             controller.DB.AddFigure(fig);
 
             if (fig.ChildList != null)
@@ -70,19 +73,6 @@ namespace Plotter.Controller
                 foreach (CadFigure child in fig.ChildList)
                 {
                     PasteFigure(controller, child, delta);
-                }
-            }
-        }
-
-        private static void PasteFigure(PlotterController controller, CadFigure fig)
-        {
-            controller.DB.AddFigure(fig);
-
-            if (fig.ChildList != null)
-            {
-                foreach (CadFigure child in fig.ChildList)
-                {
-                    PasteFigure(controller, child);
                 }
             }
         }
@@ -101,27 +91,6 @@ namespace Plotter.Controller
         {
             byte[] bin = FigListToBin(src);
             List<CadFigure> dest = BinToFigList(bin);
-            return dest;
-        }
-
-        public static List<CadFigure> CopyFigures(PlotterController controller, List<CadFigure> src)
-        {
-            byte[] bin = FigListToBin(src);
-            List<CadFigure> dest = BinToFigList(bin);
-
-            CadOpeList opeRoot = new CadOpeList();
-
-            foreach (CadFigure fig in dest)
-            {
-                PasteFigure(controller, fig);
-                controller.CurrentLayer.AddFigure(fig);    // 子ObjectはLayerに追加しない
-
-                CadOpe ope = new CadOpeAddFigure(controller.CurrentLayer.ID, fig.ID);
-                opeRoot.OpeList.Add(ope);
-            }
-
-            controller.HistoryMan.foward(opeRoot);
-
             return dest;
         }
     }

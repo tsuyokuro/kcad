@@ -147,7 +147,7 @@ namespace Plotter.Controller
             return -Controller.DC.ViewDir;
         }
 
-        public void FindFigureById(uint id)
+        public int GetTreeViewPos(uint id)
         {
             int idx = Controller.FindObjectTreeItem(id);
 
@@ -155,10 +155,15 @@ namespace Plotter.Controller
             {
                 ItConsole.println(
                     String.Format("ID:{0} is not found", id));
-                return;
+                return -1;
             }
 
-            Controller.SetObjectTreePos(idx);
+            return idx;
+        }
+
+        public void SetTreeViewPos(int pos)
+        {
+            Controller.SetObjectTreePos(pos);
         }
 
         public void LayerList()
@@ -400,6 +405,11 @@ namespace Plotter.Controller
         }
 
         public bool IsValidVector(Vector3d v)
+        {
+            return v.IsValid();
+        }
+
+        public bool IsInvalidVector(Vector3d v)
         {
             return v.IsInvalid();
         }
@@ -687,9 +697,9 @@ namespace Plotter.Controller
             return fig;
         }
 
-        public CadFigure AddCylinder(Vector3d pos, int slices, double r, double len)
+        public CadFigure AddCylinder(Vector3d pos, int circleDiv, int slices, double r, double len)
         {
-            CadMesh cm = MeshMaker.CreateCylinder(pos, slices, r, len);
+            CadMesh cm = MeshMaker.CreateCylinder(pos, circleDiv, slices, r, len);
 
             CadFigure fig = MesthToFig(cm);
 
@@ -715,6 +725,35 @@ namespace Plotter.Controller
             Session.PostRemakeObjectTree();
 
             return fig;
+        }
+
+        public void MakeRotatingBody(uint baseFigID, Vector3d org, Vector3d axis, bool topCap, bool btmCap)
+        {
+            CadFigure baseFig = GetFigure(baseFigID);
+
+            if (baseFig == null)
+            {
+                return;
+            }
+
+            if (baseFig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return;
+            }
+
+            CadMesh cm = MeshMaker.CreateRotatingBody(32, org, axis, baseFig.PointList, topCap, btmCap, MeshMaker.FaceType.TRIANGLE);
+
+            CadFigure fig = MesthToFig(cm);
+
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
+            Session.AddOpe(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+
+            ope = new CadOpeRemoveFigure(Controller.CurrentLayer, baseFig.ID);
+            Session.AddOpe(ope);
+            Controller.CurrentLayer.RemoveFigureByID(baseFig.ID);
+
+            Session.PostRemakeObjectTree();
         }
 
         public void AddLayer(string name)
@@ -1564,13 +1603,13 @@ namespace Plotter.Controller
 
         public Vector3d InputPoint()
         {
-            Env.OpenPopupMessage("Input point", PlotterObserver.MessageType.INPUT);
+            Env.OpenPopupMessage("Input point", PlotterCallback.MessageType.INPUT);
 
             InteractCtrl ctrl = Controller.InteractCtrl;
 
             ctrl.Start();
 
-            ItConsole.println(AnsiEsc.Yellow + "Input point >>");
+            ItConsole.print(AnsiEsc.Yellow + "Input point >> " + AnsiEsc.Reset);
 
             InteractCtrl.States ret = ctrl.WaitPoint();
             ctrl.End();
@@ -1660,7 +1699,7 @@ namespace Plotter.Controller
 
             ctrl.Start();
 
-            ItConsole.println(AnsiEsc.Yellow + "Input point 1 >>");
+            ItConsole.print(AnsiEsc.Yellow + "Input point 1 >>" + AnsiEsc.Reset + " ");
 
             InteractCtrl.States ret;
 
@@ -1676,7 +1715,7 @@ namespace Plotter.Controller
             Vector3d p0 = ctrl.PointList[0];
             ItConsole.println(p0.CoordString());
 
-            ItConsole.println(AnsiEsc.Yellow + "Input point 2 >>");
+            ItConsole.print(AnsiEsc.Yellow + "Input point 2 >>" + AnsiEsc.Reset + " ");
 
             ret = ctrl.WaitPoint();
 
@@ -1688,6 +1727,7 @@ namespace Plotter.Controller
             }
 
             Vector3d p1 = Controller.InteractCtrl.PointList[1];
+            ItConsole.println(p0.CoordString());
 
             ctrl.End();
 
@@ -1736,10 +1776,32 @@ namespace Plotter.Controller
 
         public void Test()
         {
-            Env.RunOnMainThread(() =>
+            CadFigure baseFig = GetTargetFigure();
+
+            if (baseFig == null)
             {
-                testDraw();
-            });
+                return;
+            }
+
+            if (baseFig.Type != CadFigure.Types.POLY_LINES)
+            {
+                return;
+            }
+
+            (Vector3d p1, Vector3d p2) = InputLine();
+
+            Vector3d org = p1;
+            Vector3d axis = (p2 - p1).Normalized();
+
+            CadMesh cm = MeshMaker.CreateRotatingBody(32, org, axis, baseFig.PointList, false, false, MeshMaker.FaceType.QUADRANGLE);
+
+            CadFigure fig = MesthToFig(cm);
+
+            CadOpe ope = new CadOpeAddFigure(Controller.CurrentLayer.ID, fig.ID);
+            Session.AddOpe(ope);
+            Controller.CurrentLayer.AddFigure(fig);
+
+            Session.PostRemakeObjectTree();
         }
 
         private void testDraw()
