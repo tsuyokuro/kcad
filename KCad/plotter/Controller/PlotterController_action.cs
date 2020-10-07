@@ -191,10 +191,11 @@ namespace Plotter.Controller
 
         public void Paste()
         {
+            ClearSelection();
+
             PlotterClipboard.PasteFiguresAsBin(this);
             UpdateObjectTree(true);
         }
-
 
         private struct ClusterInfo
         {

@@ -2,7 +2,7 @@
 
 namespace CadDataTypes
 {
-    public interface ICadVertexAttr
+    public class CadVertexAttr
     {
         Color4 Color4
         {
