@@ -522,6 +522,8 @@ namespace Plotter.Controller
         {
             mBackState = State;
 
+            pointer.MDownPoint = DC.WorldPointToDevPoint(SnapPoint);
+
             State = States.DRAGING_VIEW_ORG;
 
             StoreViewOrg = dc.ViewOrg;
@@ -534,7 +536,9 @@ namespace Plotter.Controller
 
         private void MButtonUp(CadMouse pointer, DrawContext dc, double x, double y)
         {
-            if (pointer.MDownPoint.X == x && pointer.MDownPoint.Y == y)
+            Vector3d p = DC.WorldPointToDevPoint(SnapPoint);
+
+            if (pointer.MDownPoint.X == p.X && pointer.MDownPoint.Y == p.Y)
             {
                 ViewUtil.AdjustOrigin(dc, x, y, (int)dc.ViewWidth, (int)dc.ViewHeight);
             }

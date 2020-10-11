@@ -1,598 +1,116 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\SharpFont.4.0.1\build\SharpFont.props" Condition="Exists('..\packages\SharpFont.4.0.1\build\SharpFont.props')" />
-  <Import Project="..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props" Condition="Exists('..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{783CAD2C-1BF4-495A-817F-18FADFE16C44}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KCad</RootNamespace>
-    <AssemblyName>KCad</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile />
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>2</WarningLevel>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x86</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>7.3</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WIN32</DefineConstants>
-    <WarningLevel>4</WarningLevel>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>7.3</LangVersion>
-    <Optimize>false</Optimize>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;WIN32</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>7.3</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WIN64</DefineConstants>
-    <WarningLevel>2</WarningLevel>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputPath>bin\x86\Release\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE;WIN64</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="ICSharpCode.AvalonEdit, Version=6.0.1.278, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
-      <HintPath>..\packages\AvalonEdit.6.0.1\lib\net45\ICSharpCode.AvalonEdit.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython, Version=2.7.9.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.9\lib\net45\IronPython.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython.Modules, Version=2.7.9.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.9\lib\net45\IronPython.Modules.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython.SQLite, Version=2.7.9.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.9\lib\net45\IronPython.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython.Wpf, Version=2.7.9.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.9\lib\net45\IronPython.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="MessagePack, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
-      <HintPath>..\packages\MessagePack.2.1.90\lib\netstandard2.0\MessagePack.dll</HintPath>
-    </Reference>
-    <Reference Include="MessagePack.Annotations, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
-      <HintPath>..\packages\MessagePack.Annotations.2.1.90\lib\netstandard2.0\MessagePack.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Dynamic, Version=1.2.2.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\DynamicLanguageRuntime.1.2.2\lib\net45\Microsoft.Dynamic.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting, Version=1.2.2.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\DynamicLanguageRuntime.1.2.2\lib\net45\Microsoft.Scripting.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting.Metadata, Version=1.2.2.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\DynamicLanguageRuntime.1.2.2\lib\net45\Microsoft.Scripting.Metadata.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK.GLControl, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.GLControl.3.1.0\lib\net20\OpenTK.GLControl.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpFont, Version=4.0.1.200, Culture=neutral, PublicKeyToken=48add4c483071cdf, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpFont.4.0.1\lib\net45\SharpFont.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.3\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="UIAutomationProvider" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="WindowsFormsIntegration" />
+    <None Remove="Fonts\mplus-1m-light.ttf" />
+    <None Remove="Fonts\mplus-1m-regular.ttf" />
+    <None Remove="Fonts\mplus-1m-thin.ttf" />
+    <None Remove="Resources\BaseScript.py" />
+    <None Remove="Resources\Cursors\dot.cur" />
+    <None Remove="Resources\Cursors\mini_cross.cur" />
+    <None Remove="Resources\Cursors\null.cur" />
+    <None Remove="Resources\Images\script_icon.png" />
+    <None Remove="Resources\Images\triangle2.png" />
   </ItemGroup>
+
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Controls\CadConsole\AnsiEsc.cs" />
-    <Compile Include="Controls\AutoScroller.cs" />
-    <Compile Include="Controls\CadConsole\CadConsoleRes.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CadConsoleRes.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\CadConsole\CadConsoleRes.ja.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CadConsoleRes.ja.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\CadConsole\RingBuffer.cs" />
-    <Compile Include="Controls\CadConsole\TextLine.cs" />
-    <Compile Include="Controls\CadConsole\TextRange.cs" />
-    <Compile Include="Controls\PopupEx.cs" />
-    <Compile Include="Dialogs\InputStringDialog.xaml.cs">
-      <DependentUpon>InputStringDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GLUtil\Font\FontFaceW.cs" />
-    <Compile Include="GLUtil\Font\FontRenderer.cs" />
-    <Compile Include="GLUtil\Font\FontTex.cs" />
-    <Compile Include="GLUtil\FrameBufferW.cs" />
-    <Compile Include="plotter\Controller\PlotterController_draw.cs" />
-    <Compile Include="plotter\Controller\PlotterController_manage_edit.cs" />
-    <Compile Include="plotter\Controller\PlotterPrinter.cs" />
-    <Compile Include="plotter\Controller\Scripting\ScriptSession.cs" />
-    <Compile Include="plotter\Controller\Scripting\SimpleCommands.cs" />
-    <Compile Include="plotter\Controller\SnapInfo.cs" />
-    <Compile Include="plotter\Controller\svg\SvgExporter.cs" />
-    <Compile Include="plotter\DrawContext\Drawing\DrawUtil.cs" />
-    <Compile Include="plotter\DrawContext\DrawParams.cs" />
-    <Compile Include="plotter\DrawContext\DrawTools\DrawToolUtil.cs" />
-    <Compile Include="plotter\DrawContext\DrawTools\DrawBrush.cs" />
-    <Compile Include="plotter\DrawContext\DrawTools\DrawPen.cs" />
-    <Compile Include="plotter\DrawContext\DrawTools\ColorSet.cs" />
-    <Compile Include="plotter\DrawContext\DrawTools\LightColors.cs" />
-    <Compile Include="plotter\DrawContext\DrawTools\PrintColors.cs" />
-    <Compile Include="plotter\DrawContext\DrawTools\DarkColors.cs" />
-    <Compile Include="plotter\DrawContext\DrawContextGLOrtho.cs" />
-    <Compile Include="plotter\DrawContext\DrawContextGLPers.cs" />
-    <Compile Include="plotter\Figure\CadFigureGroup.cs" />
-    <Compile Include="plotter\HalfEdge\HeModelBuilder.cs" />
-    <Compile Include="plotter\HalfEdge\HeModelConverter.cs" />
-    <Compile Include="plotter\Math\BezierFuncs.cs" />
-    <Compile Include="plotter\Math\CrossInfo.cs" />
-    <Compile Include="plotter\Util\Centroid.cs" />
-    <Compile Include="plotter\Util\ItConsole.cs" />
-    <Compile Include="ViewModel\ICadMainWindow.cs" />
-    <Compile Include="ViewModel\SettingsVeiwModel.cs" />
-    <Compile Include="plotter\primitive\CadRect.cs" />
-    <Compile Include="plotter\primitive\CadSegment.cs" />
-    <Compile Include="plotter\primitive\CadSize2D.cs" />
-    <Compile Include="plotter\primitive\FigureSegment.cs" />
-    <Compile Include="plotter\primitive\IndexPair.cs" />
-    <Compile Include="plotter\primitive\MinMax2D.cs" />
-    <Compile Include="plotter\primitive\MinMax3D.cs" />
-    <Compile Include="plotter\searcher\MarkPoint.cs" />
-    <Compile Include="plotter\searcher\MarkSegment.cs" />
-    <Compile Include="plotter\Serializer\MpUtil.cs" />
-    <Compile Include="plotter\Serializer\v1002\CadMessagePack_v1002.cs" />
-    <Compile Include="plotter\Serializer\v1002\MpUtil_v1002.cs" />
-    <Compile Include="plotter\Serializer\v1001\CadMessagePack_v1001.cs" />
-    <Compile Include="plotter\Serializer\v1001\MpUtil_v1001.cs" />
-    <Compile Include="ViewModel\LayerListViewModel.cs" />
-    <Compile Include="ViewModel\ObjectTreeViewModel.cs" />
-    <Compile Include="ViewModel\TreeViewItem\TreeViewUtil.cs" />
-    <Compile Include="Util\DebugClient.cs" />
-    <Compile Include="plotter\Util\StackArray.cs" />
-    <Compile Include="plotter\Util\VectorExt.cs" />
-    <Compile Include="ViewModel\Converter\BindingConverter.cs" />
-    <Compile Include="ViewModel\ViewModelContext.cs" />
-    <Compile Include="ViewModel\ViewManager.cs" />
-    <Compile Include="WIndowsAPI\WindowsAPI.cs" />
-    <Compile Include="Dialogs\AngleInputDialog.xaml.cs">
-      <DependentUpon>AngleInputDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DocumentSettingsDialog.xaml.cs">
-      <DependentUpon>DocumentSettingsDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditorWindow.xaml.cs">
-      <DependentUpon>EditorWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="plotter\searcher\ItemCursor.cs" />
-    <Compile Include="plotter\Util\ThreadUtil.cs" />
-    <Compile Include="ViewModel\CursorPosViewModel.cs" />
-    <Compile Include="ViewModel\MoveKeyHandler.cs" />
-    <Compile Include="ViewModel\CadFileAccessor.cs" />
-    <Compile Include="MainView\ContextMenuEx.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="plotter\Controller\ContextMenu\ContextMenuInfo.cs" />
-    <Compile Include="plotter\Controller\ControllerConst.cs" />
-    <Compile Include="plotter\Controller\HighlightPointListItem.cs" />
-    <Compile Include="plotter\Controller\InteractCtrl.cs" />
-    <Compile Include="plotter\Controller\PlotterController_action.cs" />
-    <Compile Include="plotter\Controller\ContextMenu\ContextMenuManager.cs" />
-    <Compile Include="plotter\Controller\PlotterTaskRunner.cs" />
-    <Compile Include="plotter\Controller\PlotterUtil.cs" />
-    <Compile Include="plotter\Controller\PlotterClipboard.cs" />
-    <Compile Include="plotter\Controller\PlotterCallback.cs" />
-    <Compile Include="plotter\Controller\Scripting\ScriptFunctions.cs" />
-    <Compile Include="plotter\Controller\ControllerTypes.cs" />
-    <Compile Include="plotter\DrawContext\DrawContextGDIBmp.cs" />
-    <Compile Include="plotter\DrawContext\Drawing\DrawingGDIBmp.cs" />
-    <Compile Include="plotter\Figure\CircleExpander.cs" />
-    <Compile Include="plotter\Figure\PolyLineExpander.cs" />
-    <Compile Include="plotter\Controller\CadCursor.cs" />
-    <Compile Include="plotter\Serializer\MpCadFile.cs" />
-    <Compile Include="plotter\Serializer\MpInitializer.cs" />
-    <Compile Include="ViewModel\TreeViewItem\CadFigTreeItem.cs" />
-    <Compile Include="ViewModel\TreeViewItem\CadLayerTreeItem.cs" />
-    <Compile Include="ViewModel\TreeViewItem\CadPointTreeItem.cs" />
-    <Compile Include="plotter\Util\DebugOut.cs" />
-    <Compile Include="plotter\Math\MatrixMN.cs" />
-    <Compile Include="SplineCurve\BSplineParam.cs" />
-    <Compile Include="SplineCurve\NurbsLine.cs" />
-    <Compile Include="Controls\AutoCompleteTextBox.cs" />
-    <Compile Include="Controls\CadConsole\CadConsole.cs" />
-    <Compile Include="SplineCurve\BSpline.cs" />
-    <Compile Include="Dialogs\ExceptionDialog.xaml.cs">
-      <DependentUpon>ExceptionDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="mesh\MeshMaker.cs" />
-    <Compile Include="mesh\MeshUtil.cs" />
-    <Compile Include="plotter\Controller\Scripting\TestCommnads.cs" />
-    <Compile Include="plotter\Figure\CadFigureMesh.cs" />
-    <Compile Include="plotter\Figure\CadFigureNurbsLine.cs" />
-    <Compile Include="plotter\Figure\CadFigureNurbsSurface.cs" />
-    <Compile Include="plotter\HalfEdge\HalfEdge.cs" />
-    <Compile Include="plotter\Figure\FigUtil.cs" />
-    <Compile Include="plotter\Serializer\JsonExtends.cs" />
-    <Compile Include="plotter\Util\BitmapUtil.cs" />
-    <Compile Include="Controls\TreeView\CadObjectTreeView.cs" />
-    <Compile Include="MySplashWindow.xaml.cs">
-      <DependentUpon>MySplashWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="plotter\DrawContext\DrawContextPrinter.cs" />
-    <Compile Include="plotter\DrawContext\Drawing\IDrawing.cs" />
-    <Compile Include="plotter\Figure\CadFigureDimLine.cs" />
-    <Compile Include="plotter\Model\PlotterSettings.cs" />
-    <Compile Include="plotter\primitive\CadRegion2D.cs" />
-    <Compile Include="plotter\searcher\NearPointSearcher.cs" />
-    <Compile Include="plotter\Util\CadDxfLoader.cs" />
-    <Compile Include="plotter\Util\CadRuler.cs" />
-    <Compile Include="Dialogs\SnapSettingsDialog.xaml.cs">
-      <DependentUpon>SnapSettingsDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\TreeView\CadObjTreeItem.cs" />
-    <Compile Include="SplineCurve\NurbsSurface.cs" />
-    <Compile Include="plotter\Util\ColorUtil.cs" />
-    <Page Include="Dialogs\InputStringDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\AngleInputDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DocumentSettingsDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\ExceptionDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\GridSettingsDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="EditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MySplashWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\AutoCompTextBoxStyle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\ButtonStyle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\CaptionButtonStyle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Dimen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\ImageCheckBoxs.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DebugInputThread.cs" />
-    <Compile Include="Dialogs\GridSettingsDialog.xaml.cs">
-      <DependentUpon>GridSettingsDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Resources\Images.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\MenuStyle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Colors.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\ScrollBarStyle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\ToggleAndRadioStyle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\SnapSettingsDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ViewModel\Converter\EnumBoolConverter.cs" />
-    <Compile Include="ViewModel\LayerHolder.cs" />
-    <Compile Include="ViewModel\PlotterViewModel.cs" />
-    <Compile Include="MainView\IPlotterView.cs" />
-    <Compile Include="MainView\PlotterViewGDI.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="MainView\PlotterViewGL.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="plotter\Assembler\TriangleSplitter.cs" />
-    <Compile Include="plotter\Figure\CadFigurePoint.cs" />
-    <Compile Include="plotter\HID\CadKeyboard.cs" />
-    <Compile Include="plotter\DrawContext\DrawTools\ArrowHead.cs" />
-    <Compile Include="plotter\DrawContext\DrawContextGL.cs" />
-    <Compile Include="plotter\DrawContext\DrawContextGDI.cs" />
-    <Compile Include="plotter\DrawContext\Drawing\DrawingGL.cs" />
-    <Compile Include="plotter\DrawContext\Drawing\DrawingGDI.cs" />
-    <Compile Include="plotter\DrawContext\PaperPageSize.cs" />
-    <Compile Include="plotter\DrawContext\DrawTools\DrawTools.cs" />
-    <Compile Include="plotter\Figure\CadFigure.cs" />
-    <Compile Include="plotter\Assembler\CadFigureAssembler.cs" />
-    <Compile Include="plotter\Figure\Creator.cs" />
-    <Compile Include="plotter\Assembler\CadFigureBonder.cs" />
-    <Compile Include="plotter\Figure\CadFigureCircle.cs" />
-    <Compile Include="plotter\Figure\CadFigurePolyLines.cs" />
-    <Compile Include="plotter\Model\CadLayer.cs" />
-    <Compile Include="plotter\Math\Quaternion.cs" />
-    <Compile Include="plotter\Controller\Gridding.cs" />
-    <Compile Include="plotter\searcher\SegSearcher.cs" />
-    <Compile Include="plotter\Math\UMatrix4.cs" />
-    <Compile Include="plotter\Math\CadMath.cs" />
-    <Compile Include="plotter\HID\CadMouse.cs" />
-    <Compile Include="plotter\Model\CadObjectDB.cs" />
-    <Compile Include="plotter\undo\CadOpe.cs" />
-    <Compile Include="plotter\Util\CadUtil.cs" />
-    <Compile Include="plotter\DrawContext\DrawContext.cs" />
-    <Compile Include="plotter\undo\HistoryManager.cs" />
-    <Compile Include="plotter\Util\CadConst.cs" />
-    <Compile Include="plotter\Util\FlexBlockingQueue.cs" />
-    <Compile Include="plotter\Util\EventSequencer.cs" />
-    <Compile Include="plotter\Util\PlotterCommon.cs" />
-    <Compile Include="plotter\Controller\PlotterController.cs" />
-    <Compile Include="plotter\Controller\PlotterController_edit.cs" />
-    <Compile Include="plotter\Controller\PlotterController_Input.cs" />
-    <Compile Include="plotter\Controller\Scripting\ScriptEnvironment.cs" />
-    <Compile Include="plotter\Controller\ViewUtil.cs" />
-    <Compile Include="plotter\searcher\PointSearcher.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Controls\CadConsole\CadConsoleRes.ja.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>CadConsoleRes.ja.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\CadConsole\CadConsoleRes.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>CadConsoleRes.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>KCad.Controls.CadConsole</CustomToolNamespace>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.ja.resx" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Resource Include="Fonts\mplus-1m-thin.ttf" />
     <Resource Include="Fonts\mplus-1m-light.ttf" />
     <Resource Include="Fonts\mplus-1m-regular.ttf" />
-    <None Include="OpenTK.dll.config" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Properties\Settings.settings">
+    <Resource Include="Fonts\mplus-1m-thin.ttf" />
+    <Resource Include="Resources\Cursors\dot.cur" />
+    <Resource Include="Resources\Cursors\mini_cross.cur" />
+    <Resource Include="Resources\Cursors\null.cur" />
+    <Resource Include="Resources\Images\script_icon.png" />
+    <Resource Include="Resources\Images\triangle2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AvalonEdit" Version="6.0.1" />
+    <PackageReference Include="IronPython" Version="2.7.10" />
+    <PackageReference Include="MessagePack" Version="2.2.60" />
+    <PackageReference Include="MessagePack.Annotations" Version="2.2.60" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="OpenTK" Version="3.1.0" />
+    <PackageReference Include="OpenTK.GLControl" Version="3.1.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CadDataTypes\CadDataTypes.csproj" />
+    <ProjectReference Include="..\GeoLibWrapper\GeoLibWrapper.vcxproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\BaseScript.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SharpFont">
+      <HintPath>..\packages\SharpFont.4.0.1\lib\net45\SharpFont.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <AppDesigner Include="Properties\" />
-    <None Include="Resources\Python-Mode.xshd">
+    <None Update="Resources\Python-Mode.xshd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\BaseScript.py" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 および x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\triangle2.png" />
-    <Resource Include="Resources\Cursors\null.cur" />
-    <Resource Include="Resources\Cursors\dot.cur" />
-    <Resource Include="Resources\Cursors\mini_cross.cur" />
-    <Resource Include="Resources\Images\script_icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CadDataTypes\CadDataTypes.csproj">
-      <Project>{dbbdf7f8-d9ea-4b9f-8948-3772fe0f0d3e}</Project>
-      <Name>CadDataTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GeoLibWrapper\GeoLibWrapper.vcxproj">
-      <Project>{f2c011b3-b823-419c-b4c5-d23022e9a706}</Project>
-      <Name>GeoLibWrapper</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\MessagePackAnalyzer.2.1.90\analyzers\dotnet\MessagePackAnalyzer.dll" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>if "$(PlatformName)" == "x64" (
-  copy /Y /V "$(SolutionDir)packages\SharpFont.Dependencies.2.6\bin\msvc12\x64\freetype6.dll" "$(ProjectDir)$(OutDir)"
-)
-</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if &quot;$(PlatformName)&quot; == &quot;x64&quot; (&#xA;  copy /Y /V &quot;$(SolutionDir)packages\SharpFont.Dependencies.2.6\bin\msvc12\x64\freetype6.dll&quot; &quot;$(ProjectDir)$(OutDir)&quot;&#xA;)&#xD;&#xA;if &quot;$(PlatformName)&quot; == &quot;x86&quot; (&#xA;  copy /Y /V &quot;$(SolutionDir)packages\SharpFont.Dependencies.2.6\bin\msvc12\x86\freetype6.dll&quot; &quot;$(ProjectDir)$(OutDir)&quot;&#xA;)" />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

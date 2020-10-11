@@ -13,7 +13,7 @@ namespace CadDataTypes
 
         public byte Flag;
 
-        public ICadVertexAttr Attr;
+        public CadVertexAttr Attr;
 
         public double X
         {
@@ -200,7 +200,7 @@ namespace CadDataTypes
             return p;
         }
 
-        public CadVertex(double x, double y, double z, byte flag, ICadVertexAttr attr)
+        public CadVertex(double x, double y, double z, byte flag, CadVertexAttr attr)
         {
             vector = new Vector3d(x, y, z);
             Flag = flag;
