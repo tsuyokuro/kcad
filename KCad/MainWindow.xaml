@@ -14,7 +14,6 @@
     Background="Black"
     BorderBrush="#FF14A9FF"
     BorderThickness="1"
-    Icon="Resources/Images/triangle2.png"
     mc:Ignorable="d">
 
     <WindowChrome.WindowChrome>

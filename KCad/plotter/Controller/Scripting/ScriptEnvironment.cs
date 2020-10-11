@@ -60,6 +60,8 @@ namespace Plotter.Controller
         {
             string script = System.Text.Encoding.GetEncoding("Shift_JIS").GetString(Resources.BaseScript);
 
+            //string script = "";
+
             Engine = IronPython.Hosting.Python.CreateEngine();
             mScope = Engine.CreateScope();
             Source = Engine.CreateScriptSourceFromString(script);
