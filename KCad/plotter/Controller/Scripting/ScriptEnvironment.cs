@@ -9,6 +9,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using KCad.Controls;
 using OpenTK;
+using System.Threading;
+using IronPython.Hosting;
+using IronPython.Runtime.Exceptions;
+using Microsoft.Scripting;
+using System.Diagnostics;
 
 namespace Plotter.Controller
 {
@@ -38,7 +43,6 @@ namespace Plotter.Controller
 
         private TestCommands mTestCommands;
 
-
         public ScriptEnvironment(PlotterController controller)
         {
             Controller = controller;
@@ -63,6 +67,7 @@ namespace Plotter.Controller
             //string script = "";
 
             Engine = IronPython.Hosting.Python.CreateEngine();
+            
             mScope = Engine.CreateScope();
             Source = Engine.CreateScriptSourceFromString(script);
 
@@ -78,6 +83,19 @@ namespace Plotter.Controller
             }
 
             mAutoCompleteList.AddRange(mSimpleCommands.GetAutoCompleteForSimpleCmd());
+        }
+
+        bool StopScript = false;
+
+        private TracebackDelegate OnTraceback
+            (TraceBackFrame frame, string result, object payload)
+        {
+            if (StopScript)
+            {
+                throw new KeyboardInterruptException("");
+            }
+
+            return OnTraceback;
         }
 
         public async void ExecuteCommandAsync(string s)
@@ -116,7 +134,13 @@ namespace Plotter.Controller
 
             try
             {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                
                 ret = Engine.Execute(s, mScope);
+
+                sw.Stop();
+                ItConsole.println("Exec time:" + sw.ElapsedMilliseconds + "(msec)" );
 
                 if (ret != null)
                 {
@@ -125,6 +149,11 @@ namespace Plotter.Controller
                         ItConsole.println(AnsiEsc.BGreen + ret.ToString());
                     }
                 }
+            }
+            catch (KeyboardInterruptException e)
+            {
+                mScriptFunctions.EndSession();
+                ItConsole.println(AnsiEsc.BRed + "Canceled");
             }
             catch (Exception e)
             {
@@ -144,8 +173,11 @@ namespace Plotter.Controller
                 callback.OnStart();
             }
 
+            StopScript = false;
+
             await Task.Run(() =>
             {
+                Engine.SetTrace(OnTraceback);
                 RunScript(s);
             });
 
@@ -157,6 +189,11 @@ namespace Plotter.Controller
             {
                 callback.OnEnd();
             }
+        }
+
+        public void CancelScript()
+        {
+            StopScript = true;
         }
 
         public class RunCallback

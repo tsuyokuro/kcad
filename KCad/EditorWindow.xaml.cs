@@ -17,9 +17,6 @@ using System.Xml;
 
 namespace KCad
 {
-    /// <summary>
-    /// EditorWindow.xaml の相互作用ロジック
-    /// </summary>
     public partial class EditorWindow : Window
     {
         ScriptEnvironment ScriptEnv;
@@ -45,6 +42,8 @@ namespace KCad
             mSearchPanel = SearchPanel.Install(textEditor);
 
             BtnRun.Click += BtnRun_Click;
+
+            BtnStop.Click += BtnStop_Click;
 
             textEditor.TextArea.TextEntered += TextArea_TextEntered;
 
@@ -259,6 +258,11 @@ namespace KCad
             };
 
             ScriptEnv.RunScriptAsync(s, callback);
+        }
+
+        private void BtnStop_Click(object sender, RoutedEventArgs e)
+        {
+            ScriptEnv.CancelScript();
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)

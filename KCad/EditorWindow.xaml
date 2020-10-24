@@ -45,7 +45,7 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid>
+    <Grid Name="MaineContainer">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="1*" />
@@ -86,7 +86,8 @@
             ShowLineNumbers="True"
             SyntaxHighlighting="python">
             <avalonEdit:TextEditor.Resources>
-                <Style BasedOn="{StaticResource CustomScrollViewerStyle}" TargetType="ScrollViewer" />
+                <!--<Style BasedOn="{StaticResource CustomScrollViewerStyle}" TargetType="ScrollViewer" />-->
+                <Style BasedOn="{StaticResource CustomScrollBarStyle}" TargetType="ScrollBar" />
             </avalonEdit:TextEditor.Resources>
             <avalonEdit:TextEditor.ContextMenu>
                 <ContextMenu>
@@ -106,6 +107,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10*" />
                     <ColumnDefinition Width="120" />
                 </Grid.ColumnDefinitions>
@@ -115,7 +117,7 @@
                     Grid.Column="0"
                     Width="Auto"
                     Height="Auto"
-                    Margin="8,1,4,1"
+                    Margin="8,2,2,2"
                     Padding="0,0,0,0"
                     HorizontalAlignment="Left">
                     <Button.Template>
@@ -126,7 +128,8 @@
                                 Padding="0,0,8,0"
                                 Background="#FF333333"
                                 BorderBrush="Transparent"
-                                BorderThickness="0">
+                                BorderThickness="0"
+                                CornerRadius="3">
                                 <StackPanel Orientation="Horizontal">
                                     <Label
                                         Name="label"
@@ -160,12 +163,64 @@
 
                     </Button.Template>
                 </Button>
+                <Button
+                    x:Name="BtnStop"
+                    Grid.Column="1"
+                    Width="Auto"
+                    Height="Auto"
+                    Margin="2,2,2,2"
+                    Padding="0,0,0,0"
+                    HorizontalAlignment="Left">
+                    <!--  Visibility="Hidden"  -->
+                    <!--  停止の方法がわかったら上のHiddenを消す  -->
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border
+                                Name="border"
+                                Padding="0,0,8,0"
+                                Background="#FF333333"
+                                BorderBrush="Transparent"
+                                BorderThickness="0"
+                                CornerRadius="3">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label
+                                        Name="label"
+                                        Padding="4,2,4,2"
+                                        Foreground="White">
+                                        Stop
+                                    </Label>
+                                    <Polygon
+                                        VerticalAlignment="Center"
+                                        Fill="Red"
+                                        Points="0,0 0,10 10,10 10,0"
+                                        Stroke="Black" />
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="Orange" />
+                                    <Setter TargetName="label" Property="Foreground" Value="Black" />
+                                </Trigger>
 
-                <Label Grid.Column="1" />
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="Orange" />
+                                    <Setter TargetName="label" Property="Foreground" Value="Black" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Background" Value="Gray" />
+                                    <Setter TargetName="label" Property="Foreground" Value="DarkGray" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+
+                    </Button.Template>
+                </Button>
+
+                <Label Grid.Column="2" />
 
                 <Label
                     x:Name="LblCaretPos"
-                    Grid.Column="2"
+                    Grid.Column="3"
                     Content=""
                     Foreground="#FFE6E6E6" />
             </Grid>
