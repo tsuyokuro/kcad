@@ -3,6 +3,7 @@ using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using ICSharpCode.AvalonEdit.Rendering;
 using ICSharpCode.AvalonEdit.Search;
 using Plotter;
 using Plotter.Controller;
@@ -11,8 +12,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using System.Xml;
 
 namespace KCad
@@ -29,7 +32,11 @@ namespace KCad
 
         private bool Modified = false;
 
+        private SolidColorBrush CornerBrush = new SolidColorBrush(Color.FromArgb(0xff, 0x2d, 0x2d, 0x2d));
+
         private const string FileFilter = "Python files|*.py";
+
+        private HashSet<int> BreakPoints;
 
         public EditorWindow(ScriptEnvironment scriptEnvironment)
         {
@@ -57,7 +64,24 @@ namespace KCad
 
             PreviewKeyUp += EditorWindow_PreviewKeyUp;
 
+            BreakPoints = new HashSet<int>();
+
+            BreakPointMargin breakPointMargin = new BreakPointMargin(BreakPoints);
+
+            textEditor.TextArea.LeftMargins.Insert(0, breakPointMargin);
+
+            textEditor.Loaded += TextEditor_Loaded;
+
             ShowRowCol();
+        }
+
+        private void TextEditor_Loaded(object sender, RoutedEventArgs e)
+        {
+            ScrollViewer scrollViewer = (ScrollViewer)textEditor.Template.FindName("PART_ScrollViewer", textEditor);
+
+            Rectangle corner = ((Rectangle)scrollViewer.Template.FindName("Corner", scrollViewer));
+
+            corner.Fill = CornerBrush;
         }
 
         private void SetupHighlightForPython()
@@ -327,7 +351,7 @@ namespace KCad
             ofd.Filter = FileFilter;
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                SettingsHolder.Settings.LastScriptDir = Path.GetDirectoryName(ofd.FileName);
+                SettingsHolder.Settings.LastScriptDir = System.IO.Path.GetDirectoryName(ofd.FileName);
 
                 textEditor.Load(ofd.FileName);
                 FileName = ofd.FileName;
@@ -341,7 +365,7 @@ namespace KCad
 
             if (FileName != null && FileName.Length > 0)
             {
-                sfd.InitialDirectory = Path.GetDirectoryName(FileName);
+                sfd.InitialDirectory = System.IO.Path.GetDirectoryName(FileName);
             }
             else if (IsVaridDir(SettingsHolder.Settings.LastScriptDir))
             {
@@ -356,7 +380,7 @@ namespace KCad
 
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                SettingsHolder.Settings.LastScriptDir = Path.GetDirectoryName(sfd.FileName);
+                SettingsHolder.Settings.LastScriptDir = System.IO.Path.GetDirectoryName(sfd.FileName);
 
                 textEditor.Save(sfd.FileName);
                 FileName = sfd.FileName;
@@ -414,4 +438,79 @@ namespace KCad
             textArea.Document.Replace(mWordData.StartPos, mWordData.Word.Length, Text);
         }
     }
+
+    public class BreakPointMargin : AbstractMargin
+    {
+        private const int margin = 20;
+
+        private HashSet<int> BreakPoints;
+
+        private TextArea textArea;
+
+        public BreakPointMargin(HashSet<int> bps)
+        {
+            BreakPoints = bps;
+        }
+
+        protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
+        {
+            return new PointHitTestResult(this, hitTestParameters.HitPoint);
+        }
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            return new Size(margin, 0);
+        }
+
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            TextView textView = this.TextView;
+            Size renderSize = this.RenderSize;
+            if (textView != null && textView.VisualLinesValid)
+            {
+                foreach (VisualLine line in textView.VisualLines)
+                {
+                    int lineNumber = line.FirstDocumentLine.LineNumber;
+                    if (BreakPoints.Contains(lineNumber))
+                    {
+                        double y = line.GetTextLineVisualYPosition(line.TextLines[0], VisualYPosition.TextTop);
+                        y -= textView.VerticalOffset;
+
+                        double x = (renderSize.Width - 8) / 2;
+
+                        y = (line.Height - 8) / 2 + y; 
+
+                        drawingContext.DrawRectangle(Brushes.Red, null, new Rect(x, y, 8, 8));
+                    }
+                }
+            }
+        }
+
+        protected override void OnTextViewChanged(TextView oldTextView, TextView newTextView)
+        {
+            if (oldTextView != null)
+            {
+                oldTextView.VisualLinesChanged -= TextViewVisualLinesChanged;
+            }
+            base.OnTextViewChanged(oldTextView, newTextView);
+            if (newTextView != null)
+            {
+                newTextView.VisualLinesChanged += TextViewVisualLinesChanged;
+
+                // find the text area belonging to the new text view
+                textArea = newTextView.Services.GetService(typeof(TextArea)) as TextArea;
+            }
+            else
+            {
+                textArea = null;
+            }
+            InvalidateVisual();
+        }
+
+        void TextViewVisualLinesChanged(object sender, EventArgs e)
+        {
+            InvalidateVisual();
+        }
+    }
 }
+

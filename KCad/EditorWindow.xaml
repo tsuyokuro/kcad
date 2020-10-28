@@ -41,7 +41,6 @@
                 <Setter Property="BorderBrush" Value="{StaticResource MenuBGColor}" />
                 <Setter Property="Padding" Value="0,0,0,0" />
             </Style>
-
         </ResourceDictionary>
     </Window.Resources>
 
