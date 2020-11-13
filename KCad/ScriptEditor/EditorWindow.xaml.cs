@@ -1,10 +1,9 @@
 ﻿using ICSharpCode.AvalonEdit.CodeCompletion;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-using ICSharpCode.AvalonEdit.Rendering;
 using ICSharpCode.AvalonEdit.Search;
+using ICSharpCode.AvalonEdit.Utils;
+using OpenTK.Graphics.OpenGL;
 using Plotter;
 using Plotter.Controller;
 using Plotter.Settings;
@@ -18,7 +17,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xml;
 
-namespace KCad
+namespace KCad.ScriptEditor
 {
     public partial class EditorWindow : Window
     {
@@ -281,6 +280,11 @@ namespace KCad
                 BtnRun.IsEnabled = true;
             };
 
+            callback.onTrace = (frame, result, payload) =>
+            {
+                return true;
+            };
+
             ScriptEnv.RunScriptAsync(s, callback);
         }
 
@@ -386,130 +390,6 @@ namespace KCad
                 FileName = sfd.FileName;
                 UpdateTitle(false, true);
             }
-        }
-    }
-
-    public struct WordData
-    {
-        public int StartPos;
-        public string Word;
-    }
-
-    public class MyCompletionData : ICompletionData
-    {
-        //入力候補一覧に表示される内容
-        public object Content
-        {
-            get
-            {
-                return Text;
-            }
-            set
-            {
-            }
-        }
-
-        public object Description { get; set; }
-
-        // Item icon
-        public ImageSource Image { get; set; }
-
-        public double Priority { get; set; }
-
-        public string Text { get; set; }
-
-        public WordData mWordData;
-
-        public MyCompletionData(string text, WordData wd)
-        {
-            Text = text;
-            mWordData = wd;
-        }
-
-        //アイテム選択後の処理
-        public void Complete(
-            TextArea textArea,
-            ISegment completionSegment,
-            EventArgs insertionRequestEventArgs
-            )
-        {
-            //textArea.Document.Replace(completionSegment, Text);
-
-            textArea.Document.Replace(mWordData.StartPos, mWordData.Word.Length, Text);
-        }
-    }
-
-    public class BreakPointMargin : AbstractMargin
-    {
-        private const int margin = 20;
-
-        private HashSet<int> BreakPoints;
-
-        private TextArea textArea;
-
-        public BreakPointMargin(HashSet<int> bps)
-        {
-            BreakPoints = bps;
-        }
-
-        protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
-        {
-            return new PointHitTestResult(this, hitTestParameters.HitPoint);
-        }
-
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            return new Size(margin, 0);
-        }
-
-        protected override void OnRender(DrawingContext drawingContext)
-        {
-            TextView textView = this.TextView;
-            Size renderSize = this.RenderSize;
-            if (textView != null && textView.VisualLinesValid)
-            {
-                foreach (VisualLine line in textView.VisualLines)
-                {
-                    int lineNumber = line.FirstDocumentLine.LineNumber;
-                    if (BreakPoints.Contains(lineNumber))
-                    {
-                        double y = line.GetTextLineVisualYPosition(line.TextLines[0], VisualYPosition.TextTop);
-                        y -= textView.VerticalOffset;
-
-                        double x = (renderSize.Width - 8) / 2;
-
-                        y = (line.Height - 8) / 2 + y; 
-
-                        drawingContext.DrawRectangle(Brushes.Red, null, new Rect(x, y, 8, 8));
-                    }
-                }
-            }
-        }
-
-        protected override void OnTextViewChanged(TextView oldTextView, TextView newTextView)
-        {
-            if (oldTextView != null)
-            {
-                oldTextView.VisualLinesChanged -= TextViewVisualLinesChanged;
-            }
-            base.OnTextViewChanged(oldTextView, newTextView);
-            if (newTextView != null)
-            {
-                newTextView.VisualLinesChanged += TextViewVisualLinesChanged;
-
-                // find the text area belonging to the new text view
-                textArea = newTextView.Services.GetService(typeof(TextArea)) as TextArea;
-            }
-            else
-            {
-                textArea = null;
-            }
-            InvalidateVisual();
-        }
-
-        void TextViewVisualLinesChanged(object sender, EventArgs e)
-        {
-            InvalidateVisual();
         }
     }
 }

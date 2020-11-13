@@ -66,7 +66,7 @@ namespace Plotter.Controller
 
             //string script = "";
 
-            Engine = IronPython.Hosting.Python.CreateEngine();
+            Engine = Python.CreateEngine();
             
             mScope = Engine.CreateScope();
             Source = Engine.CreateScriptSourceFromString(script);
@@ -87,6 +87,7 @@ namespace Plotter.Controller
 
         bool StopScript = false;
 
+        /*
         private TracebackDelegate OnTraceback
             (TraceBackFrame frame, string result, object payload)
         {
@@ -97,6 +98,7 @@ namespace Plotter.Controller
 
             return OnTraceback;
         }
+        */
 
         public async void ExecuteCommandAsync(string s)
         {
@@ -144,7 +146,15 @@ namespace Plotter.Controller
 
                 if (ret != null)
                 {
-                    if (ret is Double || ret is Int32)
+                    if (ret is Double || ret is Int32 || ret is float)
+                    {
+                        ItConsole.println(AnsiEsc.BGreen + ret.ToString());
+                    }
+                    else if (ret is string)
+                    {
+                        ItConsole.println(AnsiEsc.BGreen + ret);
+                    }
+                    else if (ret is bool)
                     {
                         ItConsole.println(AnsiEsc.BGreen + ret.ToString());
                     }
@@ -189,6 +199,25 @@ namespace Plotter.Controller
             {
                 callback.OnEnd();
             }
+
+            TracebackDelegate OnTraceback
+                (TraceBackFrame frame, string result, object payload)
+            {
+                if (StopScript)
+                {
+                    throw new KeyboardInterruptException("");
+                }
+
+                if (callback != null && callback.onTrace != null)
+                {
+                    if (!callback.onTrace(frame, result, payload))
+                    {
+                        throw new KeyboardInterruptException("");
+                    }
+                }
+
+                return OnTraceback;
+            }
         }
 
         public void CancelScript()
@@ -200,6 +229,8 @@ namespace Plotter.Controller
         {
             public Action OnStart = () => { };
             public Action OnEnd = () => { };
+            public Func<TraceBackFrame, string, object, bool> onTrace = 
+                (frame, result, payload) => { return true; };
         }
 
         public void RunOnMainThread(Action action)

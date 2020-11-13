@@ -1,5 +1,5 @@
 ﻿<Window
-    x:Class="KCad.EditorWindow"
+    x:Class="KCad.ScriptEditor.EditorWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
@@ -9,20 +9,20 @@
     Title="Script editor"
     Width="442.5"
     Height="440"
-    Icon="Resources/Images/script_icon.png"
+    Icon="/Resources/Images/script_icon.png"
     ResizeMode="CanResizeWithGrip"
     mc:Ignorable="d">
 
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/ToggleAndRadioStyle.xaml" />
-                <ResourceDictionary Source="Resources/Colors.xaml" />
-                <ResourceDictionary Source="Resources/Images.xaml" />
-                <ResourceDictionary Source="Resources/ButtonStyle.xaml" />
-                <ResourceDictionary Source="Resources/ImageCheckBoxs.xaml" />
-                <ResourceDictionary Source="Resources/MenuStyle.xaml" />
-                <ResourceDictionary Source="Resources/ScrollBarStyle.xaml" />
+                <ResourceDictionary Source="/Resources/ToggleAndRadioStyle.xaml" />
+                <ResourceDictionary Source="/Resources/Colors.xaml" />
+                <ResourceDictionary Source="/Resources/Images.xaml" />
+                <ResourceDictionary Source="/Resources/ButtonStyle.xaml" />
+                <ResourceDictionary Source="/Resources/ImageCheckBoxs.xaml" />
+                <ResourceDictionary Source="/Resources/MenuStyle.xaml" />
+                <ResourceDictionary Source="/Resources/ScrollBarStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
 
