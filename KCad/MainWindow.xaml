@@ -789,25 +789,27 @@
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
 
-                        <ScrollViewer
-                            Grid.Row="0"
-                            Focusable="True"
-                            Style="{StaticResource CustomScrollViewerStyle}"
-                            VerticalScrollBarVisibility="Auto">
-
-                            <cc:CadConsoleView
-                                x:Name="MyConsole"
-                                VerticalAlignment="Top"
-                                Background="{StaticResource MsgBGColor}"
+                        <Border Background="{StaticResource MsgBGColor}">
+                            <ScrollViewer
+                                Grid.Row="0"
                                 Focusable="True"
-                                FontFamily="Fonts/mplus-1m-light.ttf#M+ 1m light"
-                                FontSize="14"
-                                Foreground="#FFAAAAAA"
-                                LineHeight="17"
-                                SnapsToDevicePixels="True"
-                                TextOptions.TextFormattingMode="Display" />
+                                Style="{StaticResource CustomScrollViewerStyle}"
+                                VerticalScrollBarVisibility="Visible">
 
-                        </ScrollViewer>
+                                <cc:CadConsoleView
+                                    x:Name="MyConsole"
+                                    VerticalAlignment="Top"
+                                    Background="{StaticResource MsgBGColor}"
+                                    Focusable="True"
+                                    FontFamily="Fonts/mplus-1m-light.ttf#M+ 1m light"
+                                    FontSize="14"
+                                    Foreground="#FFAAAAAA"
+                                    LineHeight="17"
+                                    SnapsToDevicePixels="True"
+                                    TextOptions.TextFormattingMode="Display" />
+
+                            </ScrollViewer>
+                        </Border>
                         <Grid Grid.Row="1" Height="auto">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
@@ -816,6 +818,7 @@
 
                             <Border
                                 Grid.Column="0"
+                                Background="{StaticResource MsgBGColor}"
                                 BorderBrush="{StaticResource BoarderColor}"
                                 BorderThickness="0,1,0,1">
                                 <Button

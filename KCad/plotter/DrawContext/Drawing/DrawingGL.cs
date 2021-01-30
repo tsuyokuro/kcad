@@ -393,7 +393,7 @@ namespace Plotter
             Vector3d p0;
             Vector3d p1;
 
-            GL.LineWidth(2);
+            GL.LineWidth(1);
 
             p0 = Vector3d.UnitX * -size;
             p1 = Vector3d.UnitX * size;
