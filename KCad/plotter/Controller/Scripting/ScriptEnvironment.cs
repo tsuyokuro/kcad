@@ -9,6 +9,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using KCad.Controls;
 using OpenTK;
+using System.Threading;
+using IronPython.Hosting;
+using IronPython.Runtime.Exceptions;
+using Microsoft.Scripting;
+using System.Diagnostics;
 
 namespace Plotter.Controller
 {
@@ -38,7 +43,6 @@ namespace Plotter.Controller
 
         private TestCommands mTestCommands;
 
-
         public ScriptEnvironment(PlotterController controller)
         {
             Controller = controller;
@@ -60,7 +64,10 @@ namespace Plotter.Controller
         {
             string script = System.Text.Encoding.GetEncoding("Shift_JIS").GetString(Resources.BaseScript);
 
-            Engine = IronPython.Hosting.Python.CreateEngine();
+            //string script = "";
+
+            Engine = Python.CreateEngine();
+            
             mScope = Engine.CreateScope();
             Source = Engine.CreateScriptSourceFromString(script);
 
@@ -77,6 +84,21 @@ namespace Plotter.Controller
 
             mAutoCompleteList.AddRange(mSimpleCommands.GetAutoCompleteForSimpleCmd());
         }
+
+        bool StopScript = false;
+
+        /*
+        private TracebackDelegate OnTraceback
+            (TraceBackFrame frame, string result, object payload)
+        {
+            if (StopScript)
+            {
+                throw new KeyboardInterruptException("");
+            }
+
+            return OnTraceback;
+        }
+        */
 
         public async void ExecuteCommandAsync(string s)
         {
@@ -114,15 +136,34 @@ namespace Plotter.Controller
 
             try
             {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                
                 ret = Engine.Execute(s, mScope);
+
+                sw.Stop();
+                ItConsole.println("Exec time:" + sw.ElapsedMilliseconds + "(msec)" );
 
                 if (ret != null)
                 {
-                    if (ret is Double || ret is Int32)
+                    if (ret is Double || ret is Int32 || ret is float)
+                    {
+                        ItConsole.println(AnsiEsc.BGreen + ret.ToString());
+                    }
+                    else if (ret is string)
+                    {
+                        ItConsole.println(AnsiEsc.BGreen + ret);
+                    }
+                    else if (ret is bool)
                     {
                         ItConsole.println(AnsiEsc.BGreen + ret.ToString());
                     }
                 }
+            }
+            catch (KeyboardInterruptException e)
+            {
+                mScriptFunctions.EndSession();
+                ItConsole.println(AnsiEsc.BRed + "Canceled");
             }
             catch (Exception e)
             {
@@ -142,8 +183,11 @@ namespace Plotter.Controller
                 callback.OnStart();
             }
 
+            StopScript = false;
+
             await Task.Run(() =>
             {
+                Engine.SetTrace(OnTraceback);
                 RunScript(s);
             });
 
@@ -155,12 +199,38 @@ namespace Plotter.Controller
             {
                 callback.OnEnd();
             }
+
+            TracebackDelegate OnTraceback
+                (TraceBackFrame frame, string result, object payload)
+            {
+                if (StopScript)
+                {
+                    throw new KeyboardInterruptException("");
+                }
+
+                if (callback != null && callback.onTrace != null)
+                {
+                    if (!callback.onTrace(frame, result, payload))
+                    {
+                        throw new KeyboardInterruptException("");
+                    }
+                }
+
+                return OnTraceback;
+            }
+        }
+
+        public void CancelScript()
+        {
+            StopScript = true;
         }
 
         public class RunCallback
         {
             public Action OnStart = () => { };
             public Action OnEnd = () => { };
+            public Func<TraceBackFrame, string, object, bool> onTrace = 
+                (frame, result, payload) => { return true; };
         }
 
         public void RunOnMainThread(Action action)

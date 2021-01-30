@@ -15,6 +15,7 @@ using System.Xml.Linq;
 using Plotter;
 using Plotter.Settings;
 using System.IO;
+using KCad.ScriptEditor;
 
 namespace KCad.ViewModel
 {

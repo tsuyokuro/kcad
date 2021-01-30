@@ -724,7 +724,7 @@ namespace KCad.Controls
             rect.X = 0;
             rect.Y = p.Y;
             rect.Width = ActualWidth;
-            rect.Height = mLineHeight;
+            rect.Height = mLineHeight + 0.5;
 
             int n = (int)topNumber;
 
@@ -788,7 +788,7 @@ namespace KCad.Controls
         {
             if (Sel.IsValid && row >= Sel.SP.Row && row <= Sel.EP.Row)
             {
-                Rect r = new Rect(mTextLeftMargin, row * mLineHeight, 0, mLineHeight);
+                Rect r = new Rect(mTextLeftMargin, row * mLineHeight - 0.5, 0, mLineHeight);
 
                 TextSpan ts = Sel.GetRowSpan(row, mList[row].Data.Length);
 
