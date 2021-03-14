@@ -230,6 +230,7 @@ namespace KCad.ViewModel
                 { "obj_order_top", ObjOrderTop },
                 { "reset_camera", ResetCamera },
                 { "cut_mesh_with_vector", CutMeshWithVector },
+                { "print_setting", PrintSettings },
             };
         }
 
@@ -551,6 +552,24 @@ namespace KCad.ViewModel
                 Settings.LineSnapRange = dlg.LineSnapRange;
 
                 Redraw();
+            }
+        }
+
+        public void PrintSettings()
+        {
+            PrintSettingsDialog dlg = new PrintSettingsDialog();
+
+            dlg.Owner = mMainWindow.GetWindow();
+
+            dlg.PrintWithBitmap = Settings.PrintWithBitmap;
+            dlg.MagnificationBitmapPrinting = Settings.MagnificationBitmapPrinting;
+
+            bool? result = dlg.ShowDialog();
+
+            if (result.Value)
+            {
+                Settings.PrintWithBitmap = dlg.PrintWithBitmap;
+                Settings.MagnificationBitmapPrinting = dlg.MagnificationBitmapPrinting;
             }
         }
 

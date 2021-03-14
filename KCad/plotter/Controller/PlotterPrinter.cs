@@ -3,7 +3,10 @@
 
 using GLUtil;
 using OpenTK;
+using Plotter.Settings;
 using System.Drawing;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics;
 
 namespace Plotter.Controller
 {
@@ -26,7 +29,7 @@ namespace Plotter.Controller
 
         private void PrintPageSwitch(PlotterController pc, Graphics printerGraphics, CadSize2D pageSize, CadSize2D deviceSize)
         {
-            if (pc.DC.GetType() == typeof(DrawContextGLPers))
+            if (pc.DC.GetType() == typeof(DrawContextGLPers) || SettingsHolder.Settings.PrintWithBitmap)
             {
                 Bitmap bmp = GetPrintableBmp(pc, pageSize, deviceSize);
                 printerGraphics.DrawImage(bmp, 0, 0);
@@ -50,15 +53,17 @@ namespace Plotter.Controller
             DrawContext dc = pc.DC.CreatePrinterContext(pageSize, deviceSize);
             dc.SetupTools(DrawTools.DrawMode.PRINTER);
 
-            // Bitmapを印刷すると大きさが小さくされてしまうので、補正
-            dc.UnitPerMilli *= 0.96;
+            // Bitmapを印刷すると大きさが変わるので、補正
+            double f = SettingsHolder.Settings.MagnificationBitmapPrinting;
+            dc.UnitPerMilli *= f;
+            //dc.UnitPerMilli *= 0.96;
 
             Vector3d org = dc.ViewOrg;
 
-            org *= 0.96;
+            //org *= 0.96;
+            org *= f;
 
             dc.SetViewOrg(org);
-
 
             FrameBufferW fb = new FrameBufferW();
             fb.Create((int)deviceSize.Width, (int)deviceSize.Height);
@@ -67,9 +72,13 @@ namespace Plotter.Controller
 
             dc.StartDraw();
 
+            GL.Disable(EnableCap.LineSmooth);
+
             dc.Drawing.Clear(dc.GetBrush(DrawTools.BRUSH_BACKGROUND));
 
             pc.DrawFiguresRaw(dc);
+
+            GL.Enable(EnableCap.LineSmooth);
 
             dc.EndDraw();
 

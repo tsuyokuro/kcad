@@ -257,6 +257,13 @@ namespace KCad.Controls
             }
             else
             {
+                if (!CadKeyboard.IsCtrlKeyDown())
+                {
+                    mRoot.ForEachAll((v) => {
+                        v.IsChecked = false;
+                    });
+                }
+
                 int level = item.GetLevel();
 
                 if (item.Children != null)
