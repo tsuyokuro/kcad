@@ -588,6 +588,8 @@ namespace Plotter.Controller
 
         private void RButtonDown(CadMouse pointer, DrawContext dc, double x, double y)
         {
+            LastDownPoint = SnapPoint;
+
             mContextMenuMan.RequestContextMenu(x, y);
         }
 

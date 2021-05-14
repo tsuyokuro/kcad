@@ -337,6 +337,12 @@ namespace KCad
                 PopupMessage.IsOpen = false;
             });
         }
+
+        public void DrawModeUpdated(DrawTools.DrawMode drawMode)
+        {
+            System.Drawing.Color c = ViewModel.DC.Tools.BrushColor(DrawTools.BRUSH_BACKGROUND);
+            viewRoot.Background = new SolidColorBrush(Color.FromRgb(c.R, c.G, c.B));
+        }
         #endregion
     }
 }

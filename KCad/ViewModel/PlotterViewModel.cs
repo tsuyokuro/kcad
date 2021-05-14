@@ -982,6 +982,7 @@ namespace KCad.ViewModel
         public override void DrawModeUpdated(DrawTools.DrawMode mode)
         {
             mViewManager.DrawModeUpdated(mode);
+            mMainWindow.DrawModeUpdated(mode);
         }
     }
 }
