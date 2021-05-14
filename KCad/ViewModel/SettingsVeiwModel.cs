@@ -312,6 +312,30 @@ namespace KCad.ViewModel
             get => SettingsHolder.Settings.DrawMode;
         }
 
+        [UserSettingData]
+        public bool PrintWithBitmap
+        {
+            set
+            {
+                SettingsHolder.Settings.PrintWithBitmap = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PrintWithBitmap)));
+            }
+
+            get => SettingsHolder.Settings.PrintWithBitmap;
+        }
+
+        [UserSettingData]
+        public double MagnificationBitmapPrinting
+        {
+            set
+            {
+                SettingsHolder.Settings.MagnificationBitmapPrinting = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MagnificationBitmapPrinting)));
+            }
+
+            get => SettingsHolder.Settings.MagnificationBitmapPrinting;
+        }
+
         public SettingsVeiwModel(ViewModelContext context)
         {
             mContext = context;

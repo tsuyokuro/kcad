@@ -62,6 +62,11 @@ namespace Plotter.Settings
 
         public string LastScriptDir = null;
 
+        #region Print
+        public bool PrintWithBitmap = true;
+        public double MagnificationBitmapPrinting = 0.96;
+        #endregion
+
         public PlotterSettings()
         {
             GridSize = new Vector3d(10, 10, 10);
@@ -139,6 +144,11 @@ namespace Plotter.Settings
             jo.Add("DrawAxisLabel", DrawAxisLabel);
             jo.Add("DrawCompass", DrawCompass);
             root.Add("DrawSettings", jo);
+
+            jo = new JObject();
+            jo.Add("PrintWithBitmap", PrintWithBitmap);
+            jo.Add("MagnificationBitmapPrinting", MagnificationBitmapPrinting);
+            root.Add("PrintSettings", jo);
 
             StreamWriter writer = new StreamWriter(fileName);
 
@@ -223,6 +233,13 @@ namespace Plotter.Settings
                 GridSize.X = jo.GetDouble("size_x", 10);
                 GridSize.Y = jo.GetDouble("size_y", 10);
                 GridSize.Z = jo.GetDouble("size_z", 10);
+            }
+
+            jo = (JObject)root["PrintSettings"];
+            if (jo != null)
+            {
+                PrintWithBitmap = jo.GetBool("PrintWithBitmap", PrintWithBitmap);
+                MagnificationBitmapPrinting = jo.GetDouble("MagnificationBitmapPrinting", MagnificationBitmapPrinting);
             }
 
             return true;

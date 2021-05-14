@@ -257,6 +257,10 @@
                                     Tag="print" />
                                 <MenuItem
                                     Click="Command_Clicked"
+                                    Header="Print settings"
+                                    Tag="print_setting" />
+                                <MenuItem
+                                    Click="Command_Clicked"
                                     Header="{x:Static properties:Resources.menu_page_settings}"
                                     Tag="page_setting" />
                                 <MenuItem

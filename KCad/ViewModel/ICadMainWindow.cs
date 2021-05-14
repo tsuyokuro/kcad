@@ -11,5 +11,6 @@ namespace KCad.ViewModel
         void OpenPopupMessage(string text, PlotterCallback.MessageType messageType);
         void ClosePopupMessage();
         void SetPlotterView(IPlotterView view);
+        void DrawModeUpdated(DrawTools.DrawMode drawMode);
     }
 }
