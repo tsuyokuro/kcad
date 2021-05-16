@@ -48,7 +48,4 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\TestApp\TestApp.csproj" />
-  </ItemGroup>
 </Project>

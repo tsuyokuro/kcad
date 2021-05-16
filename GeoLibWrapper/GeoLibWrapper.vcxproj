@@ -293,9 +293,6 @@
       <Project>{99f0879c-d576-44d5-b96c-d46dd8efcc0b}</Project>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\TestApp\TestApp.csproj" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

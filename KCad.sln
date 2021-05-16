@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CadDataTypes", "CadDataType
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoLibWrapper", "GeoLibWrapper\GeoLibWrapper.vcxproj", "{9B7A57C2-D91E-4692-A2BC-ED6018E3D2F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,18 +53,6 @@ Global
 		{9B7A57C2-D91E-4692-A2BC-ED6018E3D2F0}.Release|x64.Build.0 = Release|x64
 		{9B7A57C2-D91E-4692-A2BC-ED6018E3D2F0}.Release|x86.ActiveCfg = Release|Win32
 		{9B7A57C2-D91E-4692-A2BC-ED6018E3D2F0}.Release|x86.Build.0 = Release|Win32
-		{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}.Debug|x64.Build.0 = Debug|Any CPU
-		{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}.Debug|x86.Build.0 = Debug|Any CPU
-		{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}.Release|x64.ActiveCfg = Release|Any CPU
-		{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}.Release|x64.Build.0 = Release|Any CPU
-		{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}.Release|x86.ActiveCfg = Release|Any CPU
-		{8BDB400C-E6A3-45A3-82EF-2DB53E5D57D2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
