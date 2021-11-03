@@ -24,6 +24,8 @@ namespace KCad
 
         public MainWindow()
         {
+            DOut.pl("in MainWindow constructor");
+
             InitializeComponent();
 
             SetupInteractionConsole();
@@ -51,6 +53,8 @@ namespace KCad
             InitWindowChrome();
 
             InitPopup();
+
+            DOut.pl("out MainWindow constructor");
         }
 
         public CadConsoleView GetBuiltinConsole()
@@ -185,11 +189,15 @@ namespace KCad
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            DOut.pl("in MainWindow_Loaded");
+
             var hsrc = HwndSource.FromVisual(this) as HwndSource;
             hsrc.AddHook(WndProc);
 
             System.Drawing.Color c = ViewModel.DC.Tools.BrushColor(DrawTools.BRUSH_BACKGROUND);
             viewRoot.Background = new SolidColorBrush(Color.FromRgb(c.R, c.G, c.B));
+
+            DOut.pl("out MainWindow_Loaded");
         }
 
         private void Command_Clicked(object sender, RoutedEventArgs e)

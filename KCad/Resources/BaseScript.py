@@ -18,6 +18,8 @@ import CadDataTypes.CadFace as CadFace
 
 import OpenTK.Vector3d as Vector3d
 
+#version 1.0
+
 
 ###############################################################################
 # Layer

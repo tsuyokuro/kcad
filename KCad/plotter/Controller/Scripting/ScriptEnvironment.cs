@@ -60,9 +60,29 @@ namespace Plotter.Controller
 
         Regex AutoCompPtn = new Regex(@"#\[AC\][ \t]*(.+)\n");
 
+        private string getBaseSacript()
+        {
+            string script;
+
+            //string path = AppDomain.CurrentDomain.BaseDirectory;
+            //string filePath = path + "BaseScript.py";
+            //if (File.Exists(filePath))
+            //{
+            //    script = File.ReadAllText(filePath);
+            //}
+            //else
+            //{
+            //    script = Encoding.GetEncoding("Shift_JIS").GetString(Resources.BaseScript);
+            //}
+
+            script = Encoding.GetEncoding("Shift_JIS").GetString(Resources.BaseScript);
+
+            return script;
+        }
+
         private void InitScriptingEngine()
         {
-            string script = System.Text.Encoding.GetEncoding("Shift_JIS").GetString(Resources.BaseScript);
+            string script = getBaseSacript();
 
             //string script = "";
 

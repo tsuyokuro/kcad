@@ -58,8 +58,10 @@ namespace Plotter
 
         public static PlotterViewGL Create(GraphicsMode mode)
         {
+            DOut.pl("in PlotterViewGL Create");
             PlotterViewGL v = new PlotterViewGL(mode);
             v.MakeCurrent();
+            DOut.pl("out PlotterViewGL Create");
             return v;
         }
 
@@ -98,6 +100,8 @@ namespace Plotter
 
         private void OnLoad(object sender, EventArgs e)
         {
+            DOut.pl("in PlotterViewGL#OnLoad");
+
             GL.ClearColor(Color4.Black);
             GL.Enable(EnableCap.DepthTest);
 
@@ -113,6 +117,8 @@ namespace Plotter
             mDrawContextPers.PushToViewAction = PushToFront;
 
             SwapBuffers();
+
+            DOut.pl("out PlotterViewGL#OnLoad");
         }
 
         protected void SetupCursor()

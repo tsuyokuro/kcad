@@ -178,9 +178,9 @@ namespace KCad
             // 紛れさせる
             MpInitializer.Init();
 
-            MainWindow = new MainWindow();
-
             SetupDebugConsole();
+
+            MainWindow = new MainWindow();
 
             MainWindow.Show();
 
@@ -213,9 +213,9 @@ namespace KCad
             }
             else
             {
-                MainWindow wnd = (MainWindow)MainWindow;
-                DOut.PrintF = wnd.GetBuiltinConsole().Print;
-                DOut.PrintLn = wnd.GetBuiltinConsole().PrintLn;
+                //MainWindow wnd = (MainWindow)MainWindow;
+                //DOut.PrintF = wnd.GetBuiltinConsole().Print;
+                //DOut.PrintLn = wnd.GetBuiltinConsole().PrintLn;
             }
         }
 

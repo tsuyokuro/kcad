@@ -964,8 +964,12 @@ namespace KCad.ViewModel
 
         public void Open()
         {
+            DOut.pl("in PlotterViewModel#Open");
+
             Settings.Load();
             mViewManager.SetupViews();
+
+            DOut.pl("out PlotterViewModel#Open");
         }
 
         public void Close()

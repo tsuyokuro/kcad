@@ -56,6 +56,8 @@ namespace KCad.ViewModel
 
         public void SetupViews()
         {
+            DOut.pl("in ViewManager#SetupViews");
+
 #if USE_GDI_VIEW
             PlotterViewGDI1 = PlotterViewGDI.Create();
 #endif
@@ -66,6 +68,8 @@ namespace KCad.ViewModel
 #endif
 
             ViewMode = ViewModes.FRONT;
+
+            DOut.pl("out ViewManager#SetupViews");
         }
 
         public void SetWorldScale(double scale)
