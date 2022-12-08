@@ -69,7 +69,7 @@
     <PackageReference Include="IronPython" Version="2.7.11" />
     <PackageReference Include="MessagePack" Version="2.2.85" />
     <PackageReference Include="MessagePack.Annotations" Version="2.2.85" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="OpenTK" Version="3.1.0" />
     <PackageReference Include="OpenTK.GLControl" Version="3.1.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
